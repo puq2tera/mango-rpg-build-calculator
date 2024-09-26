@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react";
 import Cookies from "js-cookie";
-import Image from "next/image";
 
 export default function Home() {
   // Sample data for the table
@@ -25,7 +24,7 @@ export default function Home() {
   }, []);
 
   // Handler to toggle checkbox state
-  const handleCheckboxChange = (id, value) => {
+  const handleCheckboxChange = (id: number, value: number) => {
     setCheckedItems((prevState) => {
       const updatedCheckedItems = {
         ...prevState,
