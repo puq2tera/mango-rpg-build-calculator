@@ -1,0 +1,7 @@
+[
+  {"Talent":"Slash Training 1","AvgDmgIncrease":7,"PreReq":null,"Gold":25,"Exp":25},
+  {"Talent":"Slash Training 2","AvgDmgIncrease":null,"PreReq":"Slash Training 1","Gold":25,"Exp":25},
+  {"Talent":"Slash Mastery","AvgDmgIncrease":null,"PreReq":"Slash Training 2","Gold":25,"Exp":25},
+  {"Talent":"Water Elemental 1","AvgDmgIncrease":null,"PreReq":null,"Gold":100,"Exp":100},
+  {"Talent":"Water Elemental 2","AvgDmgIncrease":null,"PreReq":"Water Elemental 1","Gold":100,"Exp":100}
+]

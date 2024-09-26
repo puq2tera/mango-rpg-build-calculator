@@ -8,13 +8,23 @@ interface CheckedItems {
 }
 
 export default function Home() {
-  // Sample data for the table
-  const tableData = [
+  // Sample data for the tables
+  const tableData1 = [
     { id: 1, name: "Item 1", value: 10 },
     { id: 2, name: "Item 2", value: 20 },
     { id: 3, name: "Item 3", value: 30 },
     { id: 4, name: "Item 4", value: 40 },
   ];
+
+  const tableData2 = [
+    { id: 1, name: "Product A", value: 100 },
+    { id: 2, name: "Product B", value: 200 },
+    { id: 3, name: "Product C", value: 300 },
+    { id: 4, name: "Product D", value: 400 },
+  ];
+
+  // State to track the active tab
+  const [activeTab, setActiveTab] = useState(1);
 
   // State to track which rows are checked, using the CheckedItems type
   const [checkedItems, setCheckedItems] = useState<CheckedItems>({});
@@ -43,10 +53,31 @@ export default function Home() {
   // Calculate the total sum of checked rows
   const totalSum = Object.values(checkedItems).reduce((acc, val) => acc + val, 0);
 
+  // Determine which table data to display
+  const tableData = activeTab === 1 ? tableData1 : tableData2;
+
   return (
       <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
         <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
           <h1 className="text-xl mb-4">Checkbox Table with Sum</h1>
+
+          {/* Tab Buttons */}
+          <div className="mb-4">
+            <button
+                className={`px-4 py-2 ${activeTab === 1 ? "bg-blue-500 text-white" : "bg-gray-200"}`}
+                onClick={() => setActiveTab(1)}
+            >
+              Table 1
+            </button>
+            <button
+                className={`px-4 py-2 ml-2 ${activeTab === 2 ? "bg-blue-500 text-white" : "bg-gray-200"}`}
+                onClick={() => setActiveTab(2)}
+            >
+              Table 2
+            </button>
+          </div>
+
+          {/* Table */}
           <table className="table-auto border-collapse">
             <thead>
             <tr>
