@@ -32,7 +32,7 @@ export default function Home() {
           >
             <Image
               className="dark:invert"
-              src="https://nextjs.org/icons/vercel.svg"
+              src="https://nextjs-github-pages/vercel.svg"
               alt="Vercel logomark"
               width={20}
               height={20}
