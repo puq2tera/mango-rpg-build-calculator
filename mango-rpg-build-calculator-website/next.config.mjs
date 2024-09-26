@@ -2,7 +2,7 @@
 const nextConfig = {
     basePath: "/mango-rpg-build-calculator",
     output: "export",
-    reactStrictMode: true,
+    images: {unoptimized: true},
 };  
 
 export default nextConfig;
