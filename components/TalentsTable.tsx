@@ -1,10 +1,26 @@
 import talentsData from '../public/talentdata.json'; // Adjust the path based on where the JSON file is located
 import { useState } from 'react';
 
+// Define the structure of the talent data
+interface Talent {
+    PreReq?: string;
+    "Blocked if Tag"?: string;
+    Gold?: number;
+    Exp?: number;
+    "TP Spent"?: number;
+    Lvl?: number;
+    tankLevels?: number;
+    warriorLevels?: number;
+    casterLevels?: number;
+    healerLevels?: number;
+    Description?: string;
+    "Slash%"?: string;
+}
+
+const typedTalentsData: Record<string, Partial<Talent>> = talentsData;
 
 export default function TalentsTable() {
     // State to track checked rows
-
     const [checkedItems, setCheckedItems] = useState<{ [key: string]: boolean }>({});
 
     // Handle checkbox change
@@ -22,7 +38,6 @@ export default function TalentsTable() {
                 <thead>
                 <tr>
                     <th></th>
-                    {/* Add a column for checkboxes */}
                     <th>Talent</th>
                     <th>PreReq</th>
                     <th>Blocked if Tag</th>
@@ -36,8 +51,9 @@ export default function TalentsTable() {
                 </tr>
                 </thead>
                 <tbody>
-                {Object.keys(talentsData).map((talentName) => {
-                    const talent = talentsData[talentName];
+                {Object.keys(typedTalentsData).map((talentName) => {
+                    // Assert talentName as a valid key of typedTalentsData
+                    const talent = typedTalentsData[talentName as keyof typeof typedTalentsData];
                     return (
                         <tr key={talentName}>
                             <td>
