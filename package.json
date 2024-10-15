@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "js-cookie": "^3.0.5",
-    "next": "14.2.13",
+    "next": "^15.0.0-canary.191",
     "react": "^18",
     "react-dom": "^18"
   },
