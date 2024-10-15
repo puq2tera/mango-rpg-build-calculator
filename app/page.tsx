@@ -1,7 +1,7 @@
 'use client'
 
 import { useRouter } from 'next/navigation'
-import TalentsTable from "@/components/TalentsTable.tsx";
+import TalentsTable from "@/components/TalentsTable";
 
 export default function Page() {
     const router = useRouter()
