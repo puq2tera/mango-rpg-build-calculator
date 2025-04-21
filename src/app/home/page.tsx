@@ -1,6 +1,5 @@
 "use client"
 
-import TarotCardSelector from "@/app/components/TarotCardSelector"
 import Checkboxtest from "../components/Checkboxtest"
 
 export default function Page() {
