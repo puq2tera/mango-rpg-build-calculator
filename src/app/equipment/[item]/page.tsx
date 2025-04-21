@@ -1,7 +1,13 @@
-import React from 'react'
+import Link from 'next/link';
 
-const Page = () => {
+const Page = ({params }: { params: { item: string }}) => {
+    const { item } = params;
+
     return (
-        <div>ITEM DETAIL PAGE</div>
+        <div>
+            <h1>ITEM DETAIL PAGE: {item}</h1>
+        </div>
     )
 }
+
+export default Page
