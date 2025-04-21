@@ -1,5 +1,3 @@
-import Link from 'next/link';
-
 const Page = ({params }: { params: { item: string }}) => {
     const { item } = params;
 
