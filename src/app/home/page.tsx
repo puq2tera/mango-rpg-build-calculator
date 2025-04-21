@@ -1,10 +1,12 @@
-import Hello from "@/app/components/hello";
+"use client"
 
-export default function home() {
-    return (
-        <>
-            <h2 className="text-3xl"> Homepage</h2>
-            <Hello />
-        </>
-    )
+import TarotCardSelector from "@/app/components/TarotCardSelector"
+
+export default function Page() {
+  return (
+    <main className="p-4 space-y-6">
+      <h1 className="text-2xl font-bold">Overlord Talent Selector</h1>
+      <TarotCardSelector />
+    </main>
+  )
 }
