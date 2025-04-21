@@ -1,11 +1,13 @@
-const Page = ({params }: { params: { item: string }}) => {
-    const { item } = params;
+import { FC } from 'react'
 
-    return (
-        <div>
-            <h1>ITEM DETAIL PAGE: {item}</h1>
-        </div>
-    )
+interface PageProps {
+  params: {
+    item: string
+  }
+}
+
+const Page: FC<PageProps> = ({ params }) => {
+  return <div>Item: {params.item}</div>
 }
 
 export default Page
