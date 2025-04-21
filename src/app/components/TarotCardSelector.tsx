@@ -1,16 +1,38 @@
 "use client"
 
 import tarotCards from "@/app/data/tarot-cards"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 
+const STORAGE_KEY = "selectedTarotCards"
 
 export default function TarotCardSelector() {
-  const [selectedCards, setSelectedCards] = useState(() =>
-    tarotCards.map((card) => ({ ...card, selected: false, level: 0 }))
-  )
+  const [selectedCards, setSelectedCards] = useState<any[]>([])
+
+  // Load from localStorage after first render
+  useEffect(() => {
+    const stored = localStorage.getItem(STORAGE_KEY)
+    console.log(selectedCards)
+    if (stored) {
+      try {
+        setSelectedCards(JSON.parse(stored))
+        return
+      } catch {}
+    }
+    // fallback default
+    setSelectedCards(tarotCards.map(card => ({ ...card, selected: false, level: 0 })))
+  }, [])
+
+  // Save to localStorage on change (only if initialized)
+  useEffect(() => {
+    console.log(selectedCards)
+    if (selectedCards.length > 0) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(selectedCards))
+
+    }
+  }, [selectedCards])
 
   const toggleCard = (index: number) => {
-    setSelectedCards((prev) => {
+    setSelectedCards(prev => {
       const copy = [...prev]
       copy[index].selected = !copy[index].selected
       return copy
@@ -18,15 +40,17 @@ export default function TarotCardSelector() {
   }
 
   const updateLevel = (index: number, level: number) => {
-    setSelectedCards((prev) => {
+    setSelectedCards(prev => {
       const copy = [...prev]
       copy[index].level = level
       return copy
     })
   }
 
+  if (selectedCards.length === 0) return <div className="p-4">Loading...</div>
+
   return (
-    <main className="p-4 space-y-6">
+    <div className="p-4 space-y-6">
       <h1 className="text-2xl font-bold">Overlord Talent Selector</h1>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {selectedCards.map((card, i) => (
@@ -58,6 +82,6 @@ export default function TarotCardSelector() {
           </div>
         ))}
       </div>
-    </main>
+    </div>
   )
 }
