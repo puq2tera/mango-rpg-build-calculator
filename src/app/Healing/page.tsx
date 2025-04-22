@@ -60,15 +60,6 @@ export default function HealingPage() {
           />
         </div>
         <div className="space-y-1">
-          <label className="font-semibold">Crit Chance %</label>
-          <input
-            type="number"
-            value={critChance * 100}
-            onChange={e => setCritChance(+e.target.value / 100)}
-            className="w-full p-1 border rounded"
-          />
-        </div>
-        <div className="space-y-1">
           <label className="font-semibold">Effective Stat</label>
           <input
             type="number"
