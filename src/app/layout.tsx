@@ -29,7 +29,7 @@ export default function RootLayout({
           <Link href="/talents" className="hover:underline">
             Talents
           </Link>
-          <Link href="/talents/talent_overview" className="hover:underline">
+          <Link href="/talents/TalentOverview" className="hover:underline">
             Talent Overview
           </Link>
           <Link href="/skills" className="hover:underline">
@@ -38,7 +38,7 @@ export default function RootLayout({
           <Link href="/equipment" className="hover:underline">
             Equipment
           </Link>
-          <Link href="/character_summary" className="hover:underline">
+          <Link href="/CharacterSummary" className="hover:underline">
             Character Summary
           </Link>
           <Link href="/damage" className="hover:underline">
