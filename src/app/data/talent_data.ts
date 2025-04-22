@@ -601,12 +601,7 @@ const talent_data: Record<string, Talent> = {
       "Pierce Res%": 0.1,
       "Blunt Res%": 0.1
     },
-    "conversions": {
-      "Resist": {
-        "ratio": 0.1,
-        "resulting_stat": "blunt"
-      }
-    }
+    "conversions": {}
   },
   "War Protector 1": {
     "category": "",
@@ -21923,7 +21918,7 @@ const talent_data: Record<string, Talent> = {
       "ATK%": 0.5
     },
     "conversions": {
-      "DEF Multiplier": {
+      "DEF%": {
         "ratio": 0.08,
         "resulting_stat": "crit"
       }
