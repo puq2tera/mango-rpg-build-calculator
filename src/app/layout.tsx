@@ -32,7 +32,7 @@ export default function RootLayout({
           <Link href="/talents/TalentOverview" className="hover:underline">
             Talent Overview
           </Link>
-          <Link href="/skills" className="hover:underline">
+          <Link href="/Skills" className="hover:underline">
             Skills
           </Link>
           <Link href="/Skills/Buffs" className="hover:underline">
@@ -50,7 +50,7 @@ export default function RootLayout({
           <Link href="/CharacterSummary" className="hover:underline">
             Character Summary
           </Link>
-          <Link href="/damage" className="hover:underline">
+          <Link href="/Damage" className="hover:underline">
             Damage
           </Link>
           <Link href="/Healing" className="hover:underline">
