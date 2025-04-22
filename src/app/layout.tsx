@@ -35,7 +35,7 @@ export default function RootLayout({
           <Link href="/equipment" className="hover:underline">
             Equipment
           </Link>
-          <Link href="/damage" className="hover:underline">
+          <Link href="/character_summary" className="hover:underline">
             Character Summary
           </Link>
           <Link href="/damage" className="hover:underline">
