@@ -43,6 +43,7 @@ export default function TalentsPage() {
     <div className="p-4 space-y-4">
       <h1 className="text-xl font-bold">Character Summary</h1>
       <div className="overflow-x-auto space-y-4 whitespace-nowrap">
+        <h1 className="text-xl">Stats from Talents</h1>
   
         {/* Primary Stats */}
         <table className="table-fixed border-separate border-spacing-1 text-sm">
@@ -140,7 +141,8 @@ export default function TalentsPage() {
             ))}
           </tbody>
         </table>
-  
+        
+        <h1 className="text-xl">Conversions</h1>
         {/* Conversions */}
         {Object.entries(conversions).map(([from, targets]) => {
           const base = totalStats[from] ?? 0
