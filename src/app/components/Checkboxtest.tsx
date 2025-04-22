@@ -5,30 +5,30 @@ import { useEffect, useState } from "react"
 const STORAGE_KEY = "checkboxTestState"
 
 export default function Checkboxtest() {
-  const [selectedCards, setSelectedCards] = useState<boolean[] | null>(null)
+  const [selectedBoxes, setBoxState] = useState<boolean[] | null>(null)
 
   // Load from localStorage on first client-side mount
   useEffect(() => {
     const stored = localStorage.getItem(STORAGE_KEY)
     if (stored) {
       try {
-        setSelectedCards(JSON.parse(stored))
+        setBoxState(JSON.parse(stored))
         return
       } catch {}
     }
-    setSelectedCards([false, false, false]) // fallback default
+    setBoxState([false, false, false, false]) // fallback default
   }, [])
 
   // Save to localStorage when updated (only after init)
   useEffect(() => {
-    if (selectedCards !== null) {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(selectedCards))
+    if (selectedBoxes !== null) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(selectedBoxes))
     }
-  }, [selectedCards])
+  }, [selectedBoxes])
 
-  const toggleCard = (index: number) => {
-    if (!selectedCards) return
-    setSelectedCards((prev) => {
+  const toggleBox = (index: number) => {
+    if (!selectedBoxes) return
+    setBoxState((prev) => {
       if (!prev) return prev
       const updated = [...prev]
       updated[index] = !updated[index]
@@ -36,16 +36,16 @@ export default function Checkboxtest() {
     })
   }
 
-  if (!selectedCards) return <div className="p-4">Loading...</div>
+  if (!selectedBoxes) return <div className="p-4">Loading...</div>
 
   return (
     <div>
-      {selectedCards.map((selected, i) => (
+      {selectedBoxes.map((selected, i) => (
         <label key={i} className="flex items-center space-x-2">
           <input
             type="checkbox"
             checked={selected}
-            onChange={() => toggleCard(i)}
+            onChange={() => toggleBox(i)}
           />
           <span className="text-sm">Select {i + 1}</span>
         </label>
