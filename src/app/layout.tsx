@@ -35,14 +35,29 @@ export default function RootLayout({
           <Link href="/skills" className="hover:underline">
             Skills
           </Link>
+          <Link href="/Skills/Buffs" className="hover:underline">
+            Buffs
+          </Link>
           <Link href="/equipment" className="hover:underline">
             Equipment
+          </Link>
+          <Link href="/equipment/Runewords" className="hover:underline">
+            Runewords
+          </Link>
+          <Link href="/equipment/TarotCards" className="hover:underline">
+            Tarot Cards
           </Link>
           <Link href="/CharacterSummary" className="hover:underline">
             Character Summary
           </Link>
           <Link href="/damage" className="hover:underline">
             Damage
+          </Link>
+          <Link href="/Healing" className="hover:underline">
+            Healing
+          </Link>
+          <Link href="/WorldBoss" className="hover:underline">
+            World Boss
           </Link>
         </nav>
         {children}
