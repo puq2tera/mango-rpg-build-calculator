@@ -50,7 +50,7 @@ export default function RootLayout({
           <Link href="/CharacterSummary" className="hover:underline">
             Character Summary
           </Link>
-          <Link href="/Damage" className="hover:underline">
+          <Link href="/DamageCalc" className="hover:underline">
             Damage
           </Link>
           <Link href="/Healing" className="hover:underline">
