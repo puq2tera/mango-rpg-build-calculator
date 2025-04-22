@@ -6,7 +6,7 @@ const stats = ["ATK", "DEF", "HEAL", "MATK"]
 const elements = ["Slash", "Pierce", "Blunt", "Fire", "Water", "Lightning", "Wind", "Earth", "Toxic", "Neg", "Holy", "Void"]
 const skills = ["Sword", "Spear", "Void", "Fire", "Shadow Break"]
 
-export default function damage() {
+export default function Damage() {
   const [mainStat, setMainStat] = useState("ATK")
   const [secondStat, setSecondStat] = useState("DEF")
   const [element, setElement] = useState("Blunt")

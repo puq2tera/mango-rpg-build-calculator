@@ -5,7 +5,7 @@ import talent_data from "@/app/data/talent_data"
 
 const STORAGE_KEY = "selectedTalents"
 
-export default function character_summary() {
+export default function CharacterSummary() {
   const [selected, setSelected] = useState<Set<string>>(new Set())
   const [totalStats, setTotalStats] = useState<Record<string, number>>({})
   const [conversions, setConversions] = useState<Record<string, { ratio: number, to: string }[]>>({})
