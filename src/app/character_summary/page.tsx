@@ -5,7 +5,7 @@ import talent_data from "@/app/data/talent_data"
 
 const STORAGE_KEY = "selectedTalents"
 
-export default function TalentsPage() {
+export default function character_summary() {
   const [selected, setSelected] = useState<Set<string>>(new Set())
   const [totalStats, setTotalStats] = useState<Record<string, number>>({})
   const [conversions, setConversions] = useState<Record<string, { ratio: number, to: string }[]>>({})
@@ -39,12 +39,15 @@ export default function TalentsPage() {
     setConversions(convs)
   }, [selected])
 
+  const statStyle = (value: number) =>
+    `border px-2 py-1 ${value === 0 ? "bg-gray-200 text-gray-400" : ""}`
+
   return (
     <div className="p-4 space-y-4">
       <h1 className="text-xl font-bold">Character Summary</h1>
       <div className="overflow-x-auto space-y-4 whitespace-nowrap">
         <h1 className="text-xl">Stats from Talents</h1>
-  
+
         {/* Primary Stats */}
         <table className="table-fixed border-separate border-spacing-1 text-sm">
           <thead>
@@ -62,12 +65,12 @@ export default function TalentsPage() {
           <tbody>
             <tr className="text-center">
               {["ATK", "DEF", "MATK", "HEAL", "HP", "HP Regen", "MP", "MP Regen"].map(stat => (
-                <td key={stat} className="border px-2 py-1">{totalStats[stat] ?? 0}</td>
+                <td key={stat} className={statStyle(totalStats[stat] ?? 0)}>{totalStats[stat] ?? 0}</td>
               ))}
             </tr>
           </tbody>
         </table>
-  
+
         {/* Percent Stats */}
         <table className="table-fixed border-separate border-spacing-1 text-sm">
           <thead>
@@ -84,13 +87,14 @@ export default function TalentsPage() {
           </thead>
           <tbody>
             <tr className="text-center">
-              {["ATK%", "DEF%", "MATK%", "HEAL%", "Crit Chance%", "Crit DMG%", "Focus", "Focus Regen"].map(stat => (
-                <td key={stat} className="border px-2 py-1">{((totalStats[stat] ?? 0) * 100).toFixed(0)}%</td>
-              ))}
+              {["ATK%", "DEF%", "MATK%", "HEAL%", "Crit Chance%", "Crit DMG%", "Focus", "Focus Regen"].map(stat => {
+                const value = (totalStats[stat] ?? 0) * 100
+                return <td key={stat} className={statStyle(value)}>{value.toFixed(0)}%</td>
+              })}
             </tr>
           </tbody>
         </table>
-  
+
         {/* Global Mods */}
         <table className="table-fixed border-separate border-spacing-1 text-sm">
           <thead>
@@ -107,13 +111,14 @@ export default function TalentsPage() {
           </thead>
           <tbody>
             <tr className="text-center">
-              {["GATK%", "GDEF%", "GMATK%", "GHEAL%", "GDMG%", "GHEAL Bonus", "Damage Res", "Extra Threat%", "Threat%"].map(stat => (
-                <td key={stat} className="border px-2 py-1">{((totalStats[stat] ?? 0) * 100).toFixed(0)}%</td>
-              ))}
+              {["GATK%", "GDEF%", "GMATK%", "GHEAL%", "GDMG%", "GHEAL Bonus", "Damage Res", "Extra Threat%", "Threat%"].map(stat => {
+                const value = (totalStats[stat] ?? 0) * 100
+                return <td key={stat} className={statStyle(value)}>{value.toFixed(0)}%</td>
+              })}
             </tr>
           </tbody>
         </table>
-  
+
         {/* Elemental + Physical Damage */}
         <table className="table-fixed border-separate border-spacing-1 text-sm">
           <thead>
@@ -126,24 +131,25 @@ export default function TalentsPage() {
             </tr>
           </thead>
           <tbody>
-            {[
-              "Physical", "Slash", "Pierce", "Blunt",
-              "Fire", "Water", "Lightning", "Wind",
-              "Earth", "Toxic", "Neg", "Holy", "Void"
-            ].map((type) => (
-              <tr key={type} className="text-center">
-                <td className="border px-2 py-1 text-left">{type}</td>
-                <td className="border px-2 py-1">{((totalStats[`${type} DMG`] ?? 0) * 100).toFixed(0)}%</td>
-                <td className="border px-2 py-1">{((totalStats[`${type} Pen%`] ?? 0) * 100).toFixed(0)}%</td>
-                <td className="border px-2 py-1">{((totalStats[`${type} Res%`] ?? 0) * 100).toFixed(0)}%</td>
-                <td className="border px-2 py-1">{((totalStats[`${type}%`] ?? 0) * 100).toFixed(0)}%</td>
-              </tr>
-            ))}
+            {["Physical", "Slash", "Pierce", "Blunt", "Fire", "Water", "Lightning", "Wind", "Earth", "Toxic", "Neg", "Holy", "Void"].map(type => {
+              const dmg = (totalStats[`${type} DMG`] ?? 0) * 100
+              const pen = (totalStats[`${type} Pen%`] ?? 0) * 100
+              const res = (totalStats[`${type} Res%`] ?? 0) * 100
+              const mod = (totalStats[`${type}%`] ?? 0) * 100
+              return (
+                <tr key={type} className="text-center">
+                  <td className="border px-2 py-1 text-left">{type}</td>
+                  <td className={statStyle(dmg)}>{dmg.toFixed(0)}%</td>
+                  <td className={statStyle(pen)}>{pen.toFixed(0)}%</td>
+                  <td className={statStyle(res)}>{res.toFixed(0)}%</td>
+                  <td className={statStyle(mod)}>{mod.toFixed(0)}%</td>
+                </tr>
+              )
+            })}
           </tbody>
         </table>
-        
+
         <h1 className="text-xl">Conversions</h1>
-        {/* Conversions */}
         {Object.entries(conversions).map(([from, targets]) => {
           const base = totalStats[from] ?? 0
           return (
@@ -161,7 +167,6 @@ export default function TalentsPage() {
           )
         })}
 
-        {/* Misc */}
         {"Fire Skill%" in totalStats && (
           <div className="flex gap-2 text-sm">
             <span className="font-mono">Fire Skill%</span>
@@ -171,7 +176,4 @@ export default function TalentsPage() {
       </div>
     </div>
   )
-  
-  
-  
 }

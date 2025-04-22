@@ -6,7 +6,7 @@ const stats = ["ATK", "DEF", "HEAL", "MATK"]
 const elements = ["Slash", "Pierce", "Blunt", "Fire", "Water", "Lightning", "Wind", "Earth", "Toxic", "Neg", "Holy", "Void"]
 const skills = ["Sword", "Spear", "Void", "Fire", "Shadow Break"]
 
-export default function DamageCalculator() {
+export default function damage() {
   const [mainStat, setMainStat] = useState("ATK")
   const [secondStat, setSecondStat] = useState("DEF")
   const [element, setElement] = useState("Blunt")
@@ -33,7 +33,7 @@ export default function DamageCalculator() {
     dmgReduction: 0,
     defCap: 0
   })
-  
+
   console.log(inputs)
   const handleChange = (field: string, value: number) => {
     setInputs(prev => ({ ...prev, [field]: value }))
