@@ -583,7 +583,7 @@ const talent_data: Record<string, Talent> = {
   "Protector of War": {
     "category": "",
     "PreReq": "",
-    "Tag": "",
+    "Tag": "DEF Path 1",
     "BlockedTag": "DEF Path 1",
     "gold": 200,
     "exp": 150,
