@@ -35,8 +35,8 @@ export default function TalentsPage() {
       <h1 className="text-xl font-bold">Talent Summary</h1>
       <div>
         {Object.entries(totalStats).map(([stat, value]) => (
-          <div key={stat} className="flex gap-2">
-            <span className="font-mono w-24">{stat}</span>
+          <div key={stat} className="flex gap-2 whitespace-nowrap">
+            <span className="font-mono min-w-[10rem]">{stat}</span>
             <span className="font-bold">{Math.round(value * 100)}%</span>
           </div>
         ))}

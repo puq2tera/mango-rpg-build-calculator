@@ -27,6 +27,28 @@ export default function ToggleButton({ id, label, selected, toggle }: ToggleButt
         >
           <span className="text-left" style={{ width: labelWidth }}>{label}</span>
           <div className="h-5 w-px bg-black/30" />
+          <span className="text-left">{talent_info.PreReq}</span>
+          <div className="h-5 w-px bg-black/30" />
+          <span className="text-left">{talent_info.Tag}</span>
+          <div className="h-5 w-px bg-black/30" />
+          <span className="text-left">{talent_info.BlockedTag}</span>
+          <div className="h-5 w-px bg-black/30" />
+          <span className="text-left">{talent_info.gold}</span>
+          <div className="h-5 w-px bg-black/30" />
+          <span className="text-left">{talent_info.exp}</span>
+          <div className="h-5 w-px bg-black/30" />
+          <span className="text-left">{talent_info.tp_spent}</span>
+          <div className="h-5 w-px bg-black/30" />
+          <span className="text-left">{talent_info.total_level}</span>
+          <div className="h-5 w-px bg-black/30" />
+          <span className="text-left">{talent_info.class_levels.tank_levels}</span>
+          <div className="h-5 w-px bg-black/30" />
+          <span className="text-left">{talent_info.class_levels.warrior_levels}</span>
+          <div className="h-5 w-px bg-black/30" />
+          <span className="text-left">{talent_info.class_levels.caster_levels}</span>
+          <div className="h-5 w-px bg-black/30" />
+          <span className="text-left">{talent_info.class_levels.healer_levels}</span>
+          <div className="h-5 w-px bg-black/30" />
           <span className="text-left">{talent_info.description}</span>
         </button>
       )

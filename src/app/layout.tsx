@@ -24,8 +24,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        <nav className="bg-gray-800 text-white px-5 flex space-x-3 text-xs ">
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased pt-10`}>
+        <nav className="fixed top-0 left-0 right-0 z-50 bg-gray-800 text-white px-5 py-2 flex space-x-3 text-xs shadow">
           <Link href="/talents" className="hover:underline">
             Talents
           </Link>

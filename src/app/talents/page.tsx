@@ -43,16 +43,33 @@ export default function TalentsPage() {
   if (selected === null) return <div className="p-4">Loading...</div>
 
   return (
-    <div className="p-4 space-y-1">
-      {Object.entries(talent_data).map(([name]) => (
-        <ToggleButton
-          key={name}
-          id={name}
-          label={name}
-          selected={selected.has(name)}
-          toggle={toggle}
-        />
-      ))}
+    <div className="h-[80vh] overflow-y-auto border rounded-md">
+  <div className="grid grid-cols-[minmax(12ch,auto)_repeat(13,minmax(8ch,auto))] gap-x-4">
+    <div className="sticky top-0 bg-white font-bold border-b col-span-full py-2 z-10 contents">
+      <span>Name</span>
+      <span>PreReq</span>
+      <span>Tag</span>
+      <span>BlockedTag</span>
+      <span>Gold</span>
+      <span>Exp</span>
+      <span>TP</span>
+      <span>Lvl</span>
+      <span>Tank</span>
+      <span>Warrior</span>
+      <span>Caster</span>
+      <span>Healer</span>
+      <span>Description</span>
     </div>
-  )
+  </div>
+  {Object.entries(talent_data).map(([name]) => (
+      <ToggleButton
+        key={name}
+        id={name}
+        label={name}
+        selected={selected.has(name)}
+        toggle={toggle}
+      />
+    ))}
+</div>
+  )  
 }
