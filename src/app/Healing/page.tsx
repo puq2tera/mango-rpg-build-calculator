@@ -11,12 +11,11 @@ export default function HealingPage() {
   const [effectiveStat, setEffectiveStat] = useState(0)
   const [totalStat, setTotalStat] = useState(0)
   const [threatPercent, setThreatPercent] = useState(0)
-  const [critChance, setCritChance] = useState(0.2)
 
   const calcAverageHeal = () => {
     const baseHeal = (totalStat * (skillHealPercent / 100)) + skillFlatHeal
     const critHeal = baseHeal * 1
-    const average = baseHeal * (1 - critChance) + critHeal * critChance
+    const average = baseHeal * (1 - 1) + critHeal * 1
     return { baseHeal, critHeal, average }
   }
 
