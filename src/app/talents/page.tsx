@@ -67,7 +67,11 @@ export default function TalentsPage() {
   const toggle = (id: string) => {
     if (!selected) return
     const copy = new Set(selected)
-    copy.has(id) ? copy.delete(id) : copy.add(id)
+    if (copy.has(id)) {
+      copy.delete(id)
+    } else {
+      copy.add(id)
+    }
     setSelected(copy)
   }
 
