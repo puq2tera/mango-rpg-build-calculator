@@ -8,6 +8,7 @@ const STORAGE_KEY = "selectedTalents"
 export default function TalentsPage() {
   const [selected, setSelected] = useState<Set<string>>(new Set())
   const [totalStats, setTotalStats] = useState<Record<string, number>>({})
+  const [conversions, setConversions] = useState<Record<string, { ratio: number, to: string }[]>>({})
 
   useEffect(() => {
     const stored = localStorage.getItem(STORAGE_KEY)
@@ -21,13 +22,21 @@ export default function TalentsPage() {
 
   useEffect(() => {
     const stats: Record<string, number> = {}
+    const convs: Record<string, { ratio: number, to: string }[]> = {}
     for (const [name, data] of Object.entries(talent_data)) {
       if (!selected.has(name)) continue
       for (const [stat, value] of Object.entries(data.stats)) {
         stats[stat] = (stats[stat] || 0) + value
       }
+      if (data.conversions) {
+        for (const [source, conv] of Object.entries(data.conversions)) {
+          if (!convs[source]) convs[source] = []
+          convs[source].push({ ratio: conv.ratio, to: conv.resulting_stat })
+        }
+      }
     }
     setTotalStats(stats)
+    setConversions(convs)
   }, [selected])
 
   return (
@@ -133,36 +142,30 @@ export default function TalentsPage() {
         </table>
   
         {/* Conversions */}
-        <table className="table-fixed border-separate border-spacing-1 text-sm">
-          <thead>
-            <tr className="font-bold text-center bg-gray-100">
-              <th className="px-2 py-1">Source Stat</th>
-              <th className="px-2 py-1">Converted To</th>
-              <th className="px-2 py-1">Ratio</th>
-            </tr>
-          </thead>
-          <tbody>
-            {Object.entries(talent_data).flatMap(([name, talent]) =>
-              talent.conversions
-                ? Object.entries(talent.conversions).map(([source, { resulting_stat, ratio }], i) => (
-                    <tr key={`${name}-${i}`} className="text-center">
-                      <td className="border px-2 py-1">{source}</td>
-                      <td className="border px-2 py-1">{resulting_stat}</td>
-                      <td className="border px-2 py-1">{ratio}</td>
-                    </tr>
-                  ))
-                : []
-            )}
-          </tbody>
-        </table>
-  
+        {Object.entries(conversions).map(([from, targets]) => {
+          const base = totalStats[from] ?? 0
+          return (
+            <div key={from} className="text-sm">
+              <div className="font-mono text-base">◘ {from} : {base.toLocaleString()}</div>
+              {targets.map((entry, idx) => {
+                const result = base * entry.ratio
+                return (
+                  <div key={idx} className="ml-6 font-mono">
+                    ⇒  {(entry.ratio * 100).toFixed(0)}%  ⇒  {Math.round(result).toLocaleString()} {entry.to}
+                  </div>
+                )
+              })}
+            </div>
+          )
+        })}
+
         {/* Misc */}
-        {["Fire Skill%"].map((stat) => (
-          <div key={stat} className="flex gap-2 text-sm">
-            <span className="font-mono">{stat}</span>
-            <span className="font-bold">{((totalStats[stat] ?? 0) * 100).toFixed(0)}%</span>
+        {"Fire Skill%" in totalStats && (
+          <div className="flex gap-2 text-sm">
+            <span className="font-mono">Fire Skill%</span>
+            <span className="font-bold">{((totalStats["Fire Skill%"] ?? 0) * 100).toFixed(0)}%</span>
           </div>
-        ))}
+        )}
       </div>
     </div>
   )
