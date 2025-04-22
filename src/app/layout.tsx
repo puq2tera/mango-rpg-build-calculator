@@ -29,6 +29,9 @@ export default function RootLayout({
           <Link href="/talents" className="hover:underline">
             Talents
           </Link>
+          <Link href="/talents/talent_overview" className="hover:underline">
+            Talent Overview
+          </Link>
           <Link href="/skills" className="hover:underline">
             Skills
           </Link>
