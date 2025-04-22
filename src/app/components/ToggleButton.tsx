@@ -14,26 +14,26 @@ export default function ToggleButton({ id, label, selected, toggle, colWidths }:
   const t = talent_data[label]
   const values = [
     label, t.PreReq, t.Tag, t.BlockedTag,
-    t.gold, t.exp, t.tp_spent, t.total_level,
-    t.class_levels.tank_levels,
-    t.class_levels.warrior_levels,
-    t.class_levels.caster_levels,
-    t.class_levels.healer_levels,
+    String(t.gold), String(t.exp), String(t.tp_spent), String(t.total_level),
+    String(t.class_levels.tank_levels),
+    String(t.class_levels.warrior_levels),
+    String(t.class_levels.caster_levels),
+    String(t.class_levels.healer_levels),
     t.description
   ]
 
   return (
     <button
       onClick={() => toggle(id)}
-      className={`flex w-full text-left transition px-1 py-1 ${
+      className={`grid w-full text-left transition px-0 py-1 ${
         selected ? "bg-blue-100 hover:bg-blue-200" : "hover:bg-gray-100"
       }`}
+      style={{ gridTemplateColumns: colWidths.join(" ") }}
     >
       {values.map((val, i) => (
         <span
           key={i}
-          className="px-1 whitespace-nowrap overflow-hidden"
-          style={{ width: colWidths[i], minWidth: colWidths[i] }}
+          className="px-2 whitespace-nowrap border-r border-gray-300 last:border-r-0 box-border"
         >
           {val}
         </span>
