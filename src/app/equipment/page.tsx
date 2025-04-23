@@ -34,14 +34,19 @@ export default function EquipmentPage() {
 
   useEffect(() => {
     const stored = localStorage.getItem(STORAGE_KEY_SLOTS)
-    const parsed = stored ? JSON.parse(stored) as Slot[] : [
-      initialSlot(), initialSlot(), initialSlot(), initialSlot(),
-      initialSlot(), initialSlot(), initialSlot(), initialSlot()
-    ]
-    setSlots(parsed)
+    if (stored) {
+      try {
+        setSlots(JSON.parse(stored))
+      } catch {
+        setSlots(Array.from({ length: 8 }, initialSlot))
+      }
+    } else {
+      setSlots(Array.from({ length: 8 }, initialSlot))
+    }
   }, [])
 
   useEffect(() => {
+    if (slots.length === 0) return
     localStorage.setItem(STORAGE_KEY_SLOTS, JSON.stringify(slots))
     const enabledIndices = slots.map((slot, i) => slot.enabled ? i : null).filter(i => i !== null)
     localStorage.setItem(STORAGE_KEY_ENABLED, JSON.stringify(enabledIndices))
