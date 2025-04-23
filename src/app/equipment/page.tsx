@@ -22,14 +22,15 @@ const initialSlot = (): Slot => ({
   type: "",
   mainstat: "",
   mainstat_value: 0,
-  affixes: Array.from({ length: 20 }, () => ({ stat: "", value: 0 })),
+  affixes: Array.from({ length: 8 }, () => ({ stat: "", value: 0 })),
   enabled: false
 })
 
 export default function EquipmentPage() {
   const [slots, setSlots] = useState<Slot[]>([
     initialSlot(), initialSlot(), initialSlot(), initialSlot(),
-    initialSlot(), initialSlot(), initialSlot(), initialSlot()
+    initialSlot(), initialSlot(), initialSlot(), initialSlot(),
+    initialSlot(), initialSlot()
   ])
 
   const updateSlot = (index: number, field: string, value: string | number) => {
@@ -48,10 +49,21 @@ export default function EquipmentPage() {
         } else {
           if (field in updatedSlot) {
             (updatedSlot[field as keyof Slot] as typeof value) = value
-          }                 
+          }
         }
         return updatedSlot
       })
+      return updated
+    })
+  }
+
+  const addAffixRow = (slotIndex: number) => {
+    setSlots(prev => {
+      const updated = [...prev]
+      updated[slotIndex] = {
+        ...updated[slotIndex],
+        affixes: [...updated[slotIndex].affixes, { stat: "", value: 0 }]
+      }
       return updated
     })
   }
@@ -73,12 +85,12 @@ export default function EquipmentPage() {
     <div className="p-4 space-y-4">
       <h1 className="text-xl font-bold">Equipment Editor</h1>
 
-      <div className="flex flex-wrap gap-4 mt-4">
+      <div className="grid grid-cols-[repeat(auto-fill,minmax(300px,1fr))] gap-4 mt-4 items-start">
         {slots.map((slot, idx) => (
           <div
             key={idx}
             onClick={() => toggleSlot(idx)}
-            className={`border rounded p-2 w-full max-w-md text-left cursor-pointer transition ${
+            className={`border rounded p-2 text-left cursor-pointer transition flex-shrink-0 ${
               slot.enabled ? "bg-green-100" : "bg-gray-100 opacity-50"
             }`}
           >
@@ -133,7 +145,7 @@ export default function EquipmentPage() {
             <table className="table-fixed border border-collapse text-sm w-full">
               <thead>
                 <tr className="bg-gray-100">
-                  <th className="border px-2 py-1">Stat</th>
+                  <th className="border px-2 py-1">Affix</th>
                   <th className="border px-2 py-1">Value</th>
                 </tr>
               </thead>
@@ -166,6 +178,17 @@ export default function EquipmentPage() {
                 ))}
               </tbody>
             </table>
+            <div className="mt-2">
+              <button
+                onClick={e => {
+                  e.stopPropagation()
+                  addAffixRow(idx)
+                }}
+                className="w-full px-2 py-1 bg-blue-400 text-white rounded"
+              >
+                + Add Affix
+              </button>
+            </div>
           </div>
         ))}
 
