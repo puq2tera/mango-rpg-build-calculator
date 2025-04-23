@@ -116,10 +116,7 @@ export default function Skills() {
 
         <h1 className="font-bold text-xl mt-4">Selected Talents Data</h1>
         <TalentTable data={filtered} />
-
-        <h1 className="font-bold text-xl mt-8">All Talents Data</h1>
-        <TalentTable data={allTalents} />
-
+        
         <h1 className="font-bold text-xl mt-8">All Talent Stat and Conversion Names</h1>
         <div className="overflow-x-auto">
           <table className="min-w-fit border border-collapse text-sm">
@@ -139,6 +136,9 @@ export default function Skills() {
             </tbody>
           </table>
         </div>
+
+        <h1 className="font-bold text-xl mt-8">All Talents Data</h1>
+        <TalentTable data={allTalents} /> 
       </div>
     </div>
   )

@@ -601,12 +601,7 @@ const talent_data: Record<string, Talent> = {
             "Pierce Res%": 0.1,
             "Blunt Res%": 0.1
         },
-        "conversions": {
-            "Resist": {
-                "ratio": 0.1,
-                "resulting_stat": "blunt"
-            }
-        }
+        "conversions": {}
     },
     "War Protector 1": {
         "category": "tank",
@@ -692,12 +687,7 @@ const talent_data: Record<string, Talent> = {
             "Water Res%": 0.1,
             "Earth Res%": 0.1
         },
-        "conversions": {
-            "Resist": {
-                "ratio": 0.1,
-                "resulting_stat": "fire"
-            }
-        }
+        "conversions": {}
     },
     "Magic Protector 1": {
         "category": "tank",
@@ -720,12 +710,7 @@ const talent_data: Record<string, Talent> = {
             "Lightning Res%": 0.1,
             "Wind Res%": 0.1
         },
-        "conversions": {
-            "Resist": {
-                "ratio": 0.1,
-                "resulting_stat": "lightning"
-            }
-        }
+        "conversions": {}
     },
     "Magic Protector 2": {
         "category": "tank",
@@ -789,12 +774,7 @@ const talent_data: Record<string, Talent> = {
             "Neg Res%": 0.1,
             "Holy Res%": 0.1
         },
-        "conversions": {
-            "Resist": {
-                "ratio": 0.1,
-                "resulting_stat": "negative"
-            }
-        }
+        "conversions": {}
     },
     "Divinity Protector 1": {
         "category": "tank",
@@ -816,12 +796,7 @@ const talent_data: Record<string, Talent> = {
             "DEF%": 0.06,
             "Toxic Res%": 0.1
         },
-        "conversions": {
-            "Resist": {
-                "ratio": 0.1,
-                "resulting_stat": "toxic"
-            }
-        }
+        "conversions": {}
     },
     "Divinity Protector 2": {
         "category": "tank",
@@ -4114,9 +4089,9 @@ const talent_data: Record<string, Talent> = {
         "description": "+2% xVoid Pen, Conversion 50% Resvoid to Elevoid",
         "stats": {},
         "conversions": {
-            "Resvoid": {
+            "Void Res%": {
                 "ratio": 0.5,
-                "resulting_stat": "elevoid"
+                "resulting_stat": "Void%"
             }
         }
     },
@@ -4189,9 +4164,9 @@ const talent_data: Record<string, Talent> = {
         "description": "Conversion 50% Resvoid to Elevoid, Penalty 12% Resvoid to All Res",
         "stats": {},
         "conversions": {
-            "Resvoid": {
+            "Void Res%": {
                 "ratio": 0.5,
-                "resulting_stat": "elevoid"
+                "resulting_stat": "Void%"
             }
         }
     },
@@ -8800,9 +8775,9 @@ const talent_data: Record<string, Talent> = {
             "Void Pen%": 0.1
         },
         "conversions": {
-            "Penalty": {
-                "ratio": 0.5,
-                "resulting_stat": "void"
+            "Void%": {
+                "ratio": -0.5,
+                "resulting_stat": "Void%"
             }
         }
     },
@@ -13980,13 +13955,13 @@ const talent_data: Record<string, Talent> = {
             "Holy Pen%": 0.05
         },
         "conversions": {
-            "Holy DMG": {
+            "Holy%": {
                 "ratio": 0.1,
                 "resulting_stat": "mp"
             },
-            "Negative DMG": {
+            "Neg%": {
                 "ratio": 0.1,
-                "resulting_stat": "crit"
+                "resulting_stat": "Crit DMG%"
             }
         }
     },
@@ -21831,7 +21806,7 @@ const talent_data: Record<string, Talent> = {
         "conversions": {
             "MP": {
                 "ratio": 0.2,
-                "resulting_stat": "crit"
+                "resulting_stat": "Crit DMG%"
             }
         }
     },
@@ -21857,7 +21832,7 @@ const talent_data: Record<string, Talent> = {
             "Fire Skill%": 0.15
         },
         "conversions": {
-            "Resfire": {
+            "Fire Res%": {
                 "ratio": 1.5,
                 "resulting_stat": "mp"
             }
@@ -21889,17 +21864,17 @@ const talent_data: Record<string, Talent> = {
             "Toxic Pen%": 0.1
         },
         "conversions": {
-            "Elefire": {
+            "Fire%": {
                 "ratio": 0.6,
                 "resulting_stat": "elemental"
             },
-            "Penfire": {
+            "Fire Pen%": {
                 "ratio": 0.8,
-                "resulting_stat": "crit"
+                "resulting_stat": "Crit DMG%"
             },
-            "Reduction": {
-                "ratio": 0.5,
-                "resulting_stat": "elefire"
+            "Fire%_broken": {
+                "ratio": -0.5,
+                "resulting_stat": "Fire%"
             }
         }
     },
@@ -21923,9 +21898,9 @@ const talent_data: Record<string, Talent> = {
             "ATK%": 0.5
         },
         "conversions": {
-            "DEF Multiplier": {
+            "DEF%": {
                 "ratio": 0.08,
-                "resulting_stat": "crit"
+                "resulting_stat": "Crit DMG%"
             }
         }
     },
@@ -21950,9 +21925,9 @@ const talent_data: Record<string, Talent> = {
             "ATK%": 0.55
         },
         "conversions": {
-            "Penslash": {
+            "Slash Pen%": {
                 "ratio": 0.5,
-                "resulting_stat": "penblunt"
+                "resulting_stat": "Blunt Pen%"
             }
         }
     },
@@ -21976,13 +21951,13 @@ const talent_data: Record<string, Talent> = {
             "ATK%": 0.5
         },
         "conversions": {
-            "Penfire": {
+            "Fire Pen%": {
                 "ratio": 1.1,
-                "resulting_stat": "penslash"
+                "resulting_stat": "Slash Pen%"
             },
-            "Elefire": {
+            "Fire%": {
                 "ratio": 0.5,
-                "resulting_stat": "eleslash"
+                "resulting_stat": "Slash%"
             }
         }
     },
@@ -22006,7 +21981,7 @@ const talent_data: Record<string, Talent> = {
             "DEF%": 0.35
         },
         "conversions": {
-            "Resfire": {
+            "Fire Res%": {
                 "ratio": 1.0,
                 "resulting_stat": "mp"
             }
@@ -22033,7 +22008,7 @@ const talent_data: Record<string, Talent> = {
             "Water Res%": -0.25
         },
         "conversions": {
-            "Resfire": {
+            "Fire Res%": {
                 "ratio": 0.25,
                 "resulting_stat": "reselements"
             }
@@ -22060,11 +22035,11 @@ const talent_data: Record<string, Talent> = {
             "Threat%": 0.25
         },
         "conversions": {
-            "of Penfire": {
+            "Fire Pen%": {
                 "ratio": 0.4,
-                "resulting_stat": "penvoid"
+                "resulting_stat": "Void Pen%"
             },
-            "Elefire": {
+            "Fire%": {
                 "ratio": 0.3,
                 "resulting_stat": "elephysical"
             }
@@ -22116,13 +22091,13 @@ const talent_data: Record<string, Talent> = {
             "HEAL%": 0.35
         },
         "conversions": {
-            "Resfire": {
+            "Fire Res%": {
                 "ratio": 2.0,
-                "resulting_stat": "crit"
+                "resulting_stat": "Crit DMG%"
             },
-            "Reduction": {
-                "ratio": 0.25,
-                "resulting_stat": "resfire"
+            "Resfire_broken": {
+                "ratio": -0.25,
+                "resulting_stat": "Fire Res%"
             }
         }
     },
@@ -22146,11 +22121,11 @@ const talent_data: Record<string, Talent> = {
             "HEAL%": 0.3
         },
         "conversions": {
-            "Elefire": {
+            "Fire%": {
                 "ratio": 1.0,
                 "resulting_stat": "eledivine"
             },
-            "Penfire": {
+            "Fire Pen%": {
                 "ratio": 1.0,
                 "resulting_stat": "pendivine"
             }
@@ -22198,9 +22173,9 @@ const talent_data: Record<string, Talent> = {
             "Water Pen%": 0.1
         },
         "conversions": {
-            "Elewater": {
+            "Water%": {
                 "ratio": 0.7,
-                "resulting_stat": "crit"
+                "resulting_stat": "Crit DMG%"
             }
         }
     },
@@ -22224,13 +22199,13 @@ const talent_data: Record<string, Talent> = {
             "MATK%": 0.35
         },
         "conversions": {
-            "Reswater": {
+            "Water Res%": {
                 "ratio": 2.0,
                 "resulting_stat": "elemental"
             },
             "Reduction": {
                 "ratio": 0.75,
-                "resulting_stat": "reswater"
+                "resulting_stat": "Water Res%"
             }
         }
     },
@@ -22254,13 +22229,13 @@ const talent_data: Record<string, Talent> = {
             "ATK%": 0.4
         },
         "conversions": {
-            "Elewater": {
+            "Water%": {
                 "ratio": 0.25,
-                "resulting_stat": "crit"
+                "resulting_stat": "Crit DMG%"
             },
             "Reudction": {
                 "ratio": 1.0,
-                "resulting_stat": "elewater"
+                "resulting_stat": "Water%"
             }
         }
     },
@@ -22284,9 +22259,9 @@ const talent_data: Record<string, Talent> = {
             "ATK%": 0.4
         },
         "conversions": {
-            "Increase": {
+            "MP": {
                 "ratio": 0.2,
-                "resulting_stat": "mp"
+                "resulting_stat": "MP"
             }
         }
     },
@@ -22310,13 +22285,13 @@ const talent_data: Record<string, Talent> = {
             "ATK%": 0.35
         },
         "conversions": {
-            "Reswater": {
+            "Water Res%": {
                 "ratio": 2.0,
                 "resulting_stat": "physical"
             },
             "Reduction": {
                 "ratio": 0.75,
-                "resulting_stat": "reswater"
+                "resulting_stat": "Water Res%"
             }
         }
     },
@@ -22341,9 +22316,9 @@ const talent_data: Record<string, Talent> = {
             "Threat%": 0.15
         },
         "conversions": {
-            "of MP": {
+            "MP": {
                 "ratio": 6.0,
-                "resulting_stat": "hp"
+                "resulting_stat": "Hp Regen"
             }
         }
     },
@@ -22367,9 +22342,9 @@ const talent_data: Record<string, Talent> = {
             "DEF%": 0.2
         },
         "conversions": {
-            "Elewater": {
+            "Water%": {
                 "ratio": 0.7,
-                "resulting_stat": "elevoid"
+                "resulting_stat": "Void%"
             }
         }
     },
@@ -22393,13 +22368,13 @@ const talent_data: Record<string, Talent> = {
             "DEF%": 0.25
         },
         "conversions": {
-            "Reswater": {
+            "Water Res%": {
                 "ratio": 0.02,
                 "resulting_stat": "mp"
             },
             "Reduction": {
                 "ratio": 0.5,
-                "resulting_stat": "reswater"
+                "resulting_stat": "Water Res%"
             }
         }
     },
@@ -22450,13 +22425,13 @@ const talent_data: Record<string, Talent> = {
             "HEAL%": 0.25
         },
         "conversions": {
-            "Elewater": {
+            "Water%": {
                 "ratio": 1.0,
-                "resulting_stat": "crit"
+                "resulting_stat": "Crit DMG%"
             },
             "Reduction": {
                 "ratio": 1.0,
-                "resulting_stat": "elewater"
+                "resulting_stat": "Water%"
             }
         }
     },
@@ -22480,13 +22455,13 @@ const talent_data: Record<string, Talent> = {
             "HEAL%": 0.3
         },
         "conversions": {
-            "Reswater": {
+            "Water Res%": {
                 "ratio": 1.5,
                 "resulting_stat": "mp"
             },
             "Reduction": {
                 "ratio": 0.5,
-                "resulting_stat": "reswater"
+                "resulting_stat": "Water Res%"
             }
         }
     },
@@ -22513,9 +22488,9 @@ const talent_data: Record<string, Talent> = {
         "conversions": {
             "MP": {
                 "ratio": 0.1,
-                "resulting_stat": "elelightning"
+                "resulting_stat": "Lightning%"
             },
-            "Penlightning": {
+            "Lightning Pen%": {
                 "ratio": 0.3,
                 "resulting_stat": "mp"
             }
@@ -22542,17 +22517,17 @@ const talent_data: Record<string, Talent> = {
             "Wind Pen%": 0.1
         },
         "conversions": {
-            "Penwind": {
+            "Wind Pen%": {
                 "ratio": 0.5,
-                "resulting_stat": "elewind"
+                "resulting_stat": "Wind%"
             },
-            "Reswind": {
+            "Wind Res%": {
                 "ratio": 0.15,
-                "resulting_stat": "penwind"
+                "resulting_stat": "Wind Pen%"
             },
             "Reduction": {
                 "ratio": 0.5,
-                "resulting_stat": "reswind"
+                "resulting_stat": "Wind Res%"
             }
         }
     },
@@ -22578,13 +22553,17 @@ const talent_data: Record<string, Talent> = {
             "MATK%": 0.35
         },
         "conversions": {
-            "Reswind and Reslightning": {
+            "Wind Res%": {
                 "ratio": 1.1,
-                "resulting_stat": "crit"
+                "resulting_stat": "Crit DMG%"
+            },
+            "Lightning Res%": {
+                "ratio": 1.1,
+                "resulting_stat": "Crit DMG%"
             },
             "Reduction": {
                 "ratio": 0.75,
-                "resulting_stat": "reswind"
+                "resulting_stat": "Wind Res%"
             }
         }
     },
@@ -22608,13 +22587,13 @@ const talent_data: Record<string, Talent> = {
             "ATK%": 0.25
         },
         "conversions": {
-            "Elelightning": {
+            "Lightning%": {
                 "ratio": 0.9,
-                "resulting_stat": "eleslash"
+                "resulting_stat": "Slash%"
             },
             "Reduction": {
                 "ratio": 1.0,
-                "resulting_stat": "elelightning"
+                "resulting_stat": "Lightning%"
             }
         }
     },
@@ -22638,9 +22617,9 @@ const talent_data: Record<string, Talent> = {
             "ATK%": 0.3
         },
         "conversions": {
-            "Penwind": {
+            "Wind Pen%": {
                 "ratio": 1.2,
-                "resulting_stat": "penpierce"
+                "resulting_stat": "Pierce Pen%"
             }
         }
     },
@@ -22664,7 +22643,7 @@ const talent_data: Record<string, Talent> = {
             "ATK%": 0.4
         },
         "conversions": {
-            "Elewind": {
+            "Wind%": {
                 "ratio": 0.5,
                 "resulting_stat": "mp"
             }
@@ -22690,7 +22669,7 @@ const talent_data: Record<string, Talent> = {
             "DEF%": 0.2
         },
         "conversions": {
-            "Elelightning": {
+            "Lightning%": {
                 "ratio": 1.0,
                 "resulting_stat": "elephysical"
             }
@@ -22717,13 +22696,13 @@ const talent_data: Record<string, Talent> = {
             "Threat%": 0.15
         },
         "conversions": {
-            "Elewind": {
+            "Wind%": {
                 "ratio": 0.6,
-                "resulting_stat": "elevoid"
+                "resulting_stat": "Void%"
             },
-            "Penwind": {
+            "Wind Pen%": {
                 "ratio": 0.4,
-                "resulting_stat": "penvoid"
+                "resulting_stat": "Void Pen%"
             }
         }
     },
@@ -22748,13 +22727,13 @@ const talent_data: Record<string, Talent> = {
             "Threat%": 0.2
         },
         "conversions": {
-            "Reslightning": {
+            "Lightning Res%": {
                 "ratio": 0.5,
                 "resulting_stat": "physical"
             },
             "Reduction": {
                 "ratio": 0.75,
-                "resulting_stat": "reslightning"
+                "resulting_stat": "Lightning Res%"
             }
         }
     },
@@ -22778,13 +22757,13 @@ const talent_data: Record<string, Talent> = {
             "HEAL%": 0.35
         },
         "conversions": {
-            "Elelightning": {
+            "Lightning%": {
                 "ratio": 0.5,
                 "resulting_stat": "mp"
             },
             "Reduction": {
                 "ratio": 1.0,
-                "resulting_stat": "elelightning"
+                "resulting_stat": "Lightning%"
             }
         }
     },
@@ -22809,13 +22788,13 @@ const talent_data: Record<string, Talent> = {
             "Threat%": -0.3
         },
         "conversions": {
-            "Elewind": {
+            "Wind%": {
                 "ratio": 0.5,
-                "resulting_stat": "crit"
+                "resulting_stat": "Crit DMG%"
             },
             "Reduction": {
                 "ratio": 1.0,
-                "resulting_stat": "crit"
+                "resulting_stat": "Crit DMG%"
             }
         }
     },
@@ -22862,9 +22841,9 @@ const talent_data: Record<string, Talent> = {
             "Void Pen%": 0.05
         },
         "conversions": {
-            "Void Penetration": {
+            "Void Pen%": {
                 "ratio": 1.1,
-                "resulting_stat": "elevoid"
+                "resulting_stat": "Void%"
             }
         }
     },
@@ -22889,17 +22868,17 @@ const talent_data: Record<string, Talent> = {
             "Toxic Pen%": 0.1
         },
         "conversions": {
-            "Restoxic": {
+            "Toxic Res%": {
                 "ratio": 2.0,
-                "resulting_stat": "eletoxic"
+                "resulting_stat": "Toxic%"
             },
-            "Eletoxic": {
+            "Toxic%": {
                 "ratio": 15.0,
                 "resulting_stat": "matk"
             },
             "Reduction": {
                 "ratio": 0.75,
-                "resulting_stat": "restoxic"
+                "resulting_stat": "Toxic Res%"
             }
         }
     },
@@ -22924,17 +22903,17 @@ const talent_data: Record<string, Talent> = {
             "Earth Pen%": 0.1
         },
         "conversions": {
-            "Eleearth": {
+            "Earth%": {
                 "ratio": 20.0,
                 "resulting_stat": "def"
             },
-            "Researth": {
+            "Earth Res%": {
                 "ratio": 1.5,
-                "resulting_stat": "eleearth"
+                "resulting_stat": "Earth%"
             },
-            "Reduction": {
-                "ratio": 0.75,
-                "resulting_stat": "researth"
+            "Earth Res%_Broken": {
+                "ratio": -0.75,
+                "resulting_stat": "Earth Res%"
             }
         }
     },
@@ -22956,20 +22935,17 @@ const talent_data: Record<string, Talent> = {
         "description": "+25% ATK, +5% Penvoid, +50% Crit Chance and +20% DMG to Shadow Break Skills, Conversion 20% Elevoid to MP, Conversion 4% Elevoid to Penvoid, 2% Elepierce to Penvoid",
         "stats": {
             "ATK%": 0.25,
-            "Void Pen%": 0.05
+            "Void Pen%": 0.05,
+            "Shadow Break Skill%": 0.2
         },
         "conversions": {
-            "Elevoid": {
+            "Void%": {
                 "ratio": 0.04,
-                "resulting_stat": "penvoid"
+                "resulting_stat": "Void Pen%"
             },
-            "DMG": {
-                "ratio": 0.2,
-                "resulting_stat": "shadow"
-            },
-            "Elepierce": {
+            "Pierce%": {
                 "ratio": 0.02,
-                "resulting_stat": "penvoid"
+                "resulting_stat": "Void Pen%"
             }
         }
     },
@@ -22993,9 +22969,9 @@ const talent_data: Record<string, Talent> = {
             "ATK%": 0.3
         },
         "conversions": {
-            "Penearth": {
+            "Earth Pen%": {
                 "ratio": 1.2,
-                "resulting_stat": "penblunt"
+                "resulting_stat": "Blunt Pen%"
             }
         }
     },
@@ -23019,11 +22995,11 @@ const talent_data: Record<string, Talent> = {
             "ATK%": 0.4
         },
         "conversions": {
-            "Eleearth": {
+            "Earth%": {
                 "ratio": 8.0,
                 "resulting_stat": "def"
             },
-            "Researth": {
+            "Earth Pen%": {
                 "ratio": 40.0,
                 "resulting_stat": "def"
             }
@@ -23058,13 +23034,13 @@ const talent_data: Record<string, Talent> = {
                 "ratio": 0.2,
                 "resulting_stat": "shadow"
             },
-            "Elevoid": {
+            "Void%": {
                 "ratio": 0.2,
                 "resulting_stat": "mp"
             },
             "Elephysical": {
                 "ratio": 0.03,
-                "resulting_stat": "penvoid"
+                "resulting_stat": "Void Pen%"
             }
         }
     },
@@ -23092,7 +23068,7 @@ const talent_data: Record<string, Talent> = {
         "conversions": {
             "Elephysical": {
                 "ratio": 0.2,
-                "resulting_stat": "elevoid"
+                "resulting_stat": "Void%"
             }
         }
     },
@@ -23117,17 +23093,17 @@ const talent_data: Record<string, Talent> = {
             "Threat%": 0.1
         },
         "conversions": {
-            "Researth": {
+            "Earth Pen%": {
                 "ratio": 75.0,
                 "resulting_stat": "max"
             },
-            "Eleearth": {
+            "Earth%": {
                 "ratio": 4.0,
                 "resulting_stat": "hp"
             },
             "Reduction": {
                 "ratio": 0.5,
-                "resulting_stat": "researth"
+                "resulting_stat": "Earth Pen%"
             }
         }
     },
@@ -23152,7 +23128,7 @@ const talent_data: Record<string, Talent> = {
             "Threat%": 0.2
         },
         "conversions": {
-            "Elevoid": {
+            "Void%": {
                 "ratio": 0.5,
                 "resulting_stat": "mp"
             }
@@ -23199,7 +23175,7 @@ const talent_data: Record<string, Talent> = {
             "HEAL%": 0.15
         },
         "conversions": {
-            "Researth": {
+            "Earth Pen%": {
                 "ratio": 0.2,
                 "resulting_stat": "physical"
             },
@@ -23209,7 +23185,7 @@ const talent_data: Record<string, Talent> = {
             },
             "Reduction": {
                 "ratio": 0.75,
-                "resulting_stat": "researth"
+                "resulting_stat": "Earth Pen%"
             }
         }
     },
@@ -23240,7 +23216,7 @@ const talent_data: Record<string, Talent> = {
             "Void Pen%": 0.05
         },
         "conversions": {
-            "Elevoid": {
+            "Void%": {
                 "ratio": 1.0,
                 "resulting_stat": "elemental"
             }
@@ -23267,9 +23243,9 @@ const talent_data: Record<string, Talent> = {
             "Neg Pen%": 0.1
         },
         "conversions": {
-            "Elenegative": {
+            "Neg%": {
                 "ratio": 0.2,
-                "resulting_stat": "crit"
+                "resulting_stat": "Crit DMG%"
             }
         }
     },
@@ -23295,9 +23271,9 @@ const talent_data: Record<string, Talent> = {
             "Holy Pen%": 0.05
         },
         "conversions": {
-            "ATK Multiplier": {
+            "ATK%": {
                 "ratio": 0.35,
-                "resulting_stat": "eleholy"
+                "resulting_stat": "Holy%"
             }
         }
     },
@@ -23322,7 +23298,7 @@ const talent_data: Record<string, Talent> = {
             "Void Pen%": 0.05
         },
         "conversions": {
-            "Elevoid": {
+            "Void%": {
                 "ratio": 0.2,
                 "resulting_stat": "physical"
             }
@@ -23351,13 +23327,13 @@ const talent_data: Record<string, Talent> = {
             "Blunt%": 0.15
         },
         "conversions": {
-            "Pennegative": {
+            "Neg Pen%": {
                 "ratio": 1.2,
                 "resulting_stat": "penphysical"
             },
-            "Elenegative": {
+            "Neg%": {
                 "ratio": 1.0,
-                "resulting_stat": "crit"
+                "resulting_stat": "Crit DMG%"
             }
         }
     },
@@ -23384,11 +23360,11 @@ const talent_data: Record<string, Talent> = {
             "Blunt%": 0.15
         },
         "conversions": {
-            "Penholy": {
+            "Holy Pen%": {
                 "ratio": 1.4,
                 "resulting_stat": "penphysical"
             },
-            "Eleholy": {
+            "Holy%": {
                 "ratio": 0.15,
                 "resulting_stat": "mp"
             }
@@ -23414,9 +23390,9 @@ const talent_data: Record<string, Talent> = {
             "DEF%": 0.2
         },
         "conversions": {
-            "Resvoid": {
+            "Void Res%": {
                 "ratio": 1.75,
-                "resulting_stat": "crit"
+                "resulting_stat": "Crit DMG%"
             }
         }
     },
@@ -23442,9 +23418,9 @@ const talent_data: Record<string, Talent> = {
             "Threat%": 0.2
         },
         "conversions": {
-            "Resnegative": {
+            "Neg Res%": {
                 "ratio": 0.5,
-                "resulting_stat": "elevoid"
+                "resulting_stat": "Void%"
             }
         }
     },
@@ -23469,7 +23445,7 @@ const talent_data: Record<string, Talent> = {
             "Threat%": 0.1
         },
         "conversions": {
-            "Resholy": {
+            "Holy Res%": {
                 "ratio": 15.0,
                 "resulting_stat": "hp"
             }
@@ -23498,7 +23474,7 @@ const talent_data: Record<string, Talent> = {
         "conversions": {
             "MP": {
                 "ratio": 0.4,
-                "resulting_stat": "elevoid"
+                "resulting_stat": "Void%"
             }
         }
     },
@@ -23523,9 +23499,9 @@ const talent_data: Record<string, Talent> = {
             "Neg Pen%": 0.1
         },
         "conversions": {
-            "Elenegative": {
+            "Neg%": {
                 "ratio": 0.15,
-                "resulting_stat": "crit"
+                "resulting_stat": "Crit DMG%"
             }
         }
     },
@@ -23550,11 +23526,11 @@ const talent_data: Record<string, Talent> = {
             "Holy%": 0.2
         },
         "conversions": {
-            "Max HP": {
+            "HP": {
                 "ratio": 0.15,
                 "resulting_stat": "heal"
             },
-            "Eleholy": {
+            "Holy%": {
                 "ratio": 10.0,
                 "resulting_stat": "heal"
             }
