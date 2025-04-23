@@ -37,6 +37,9 @@ export default function RootLayout({
           <Link href="/Skills" className="hover:underline">
             Skills
           </Link>
+          <Link href="/Levels" className="hover:underline">
+            Levels
+          </Link>
           <Link href="/Skills/Buffs" className="hover:underline">
             Buffs
           </Link>
