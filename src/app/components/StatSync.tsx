@@ -38,15 +38,42 @@ export function computeTalentStats() {
 //   } catch {}
 // }
 
+export function computeDmgReadyStats() {
+  console.log("Updating Dmg Ready Stats")
+  const raw = localStorage.getItem("StatsTalents")
+  if (!raw) return
+
+  try {
+    const stats: Record<string, number> = JSON.parse(raw)
+    const result: Record<string, number> = {}
+
+    const baseStats = ["ATK", "DEF", "MATK", "HEAL"]
+
+    for (const stat of baseStats) {
+      const base = stats[stat] ?? 0
+      const multiplier = stats[`${stat}%`] ?? 0
+      result[stat] = base * (1 + multiplier)
+    }
+
+    localStorage.setItem("StatsDmgReady", JSON.stringify(result))
+    console.log(result)
+  } catch {}
+}
+
+
 
 
 export default function StatSync() {
   useEffect(() => {   //Run once on mount
     // Add custom event listeners for stat updates
     window.addEventListener("talentsUpdated", computeTalentStats)
+    window.addEventListener("talentsUpdated", computeDmgReadyStats)
 
     // Clean up listeners for when unmounted (to prevent multiple updates)
-    return () => window.removeEventListener("talentsUpdated", computeTalentStats)
+    return () => {
+      window.removeEventListener("talentsUpdated", computeTalentStats)
+      window.removeEventListener("talentsUpdated", computeDmgReadyStats)
+    }
   }, [])
   return null
 }

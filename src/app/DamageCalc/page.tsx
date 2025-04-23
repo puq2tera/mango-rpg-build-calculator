@@ -1,12 +1,26 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 
-const stats = ["ATK", "DEF", "HEAL", "MATK"]
+const Mainstats = ["ATK", "DEF", "HEAL", "MATK"]
 const elements = ["Slash", "Pierce", "Blunt", "Fire", "Water", "Lightning", "Wind", "Earth", "Toxic", "Neg", "Holy", "Void"]
 const skills = ["Sword", "Spear", "Void", "Fire", "Shadow Break"]
 
 export default function DamageCalc() {
+  const [stats, setStats] = useState<Record<string, number>>({})
+
+  useEffect(() => {
+    window.dispatchEvent(new Event("talentsUpdated"))
+    const raw = localStorage.getItem("StatsDmgReady")
+    if (raw) {
+      try {
+        const parsed = JSON.parse(raw)
+        setStats(parsed)
+      } catch {}
+    }
+    
+  }, [])
+
   const [mainStat, setMainStat] = useState("ATK")
   const [secondStat, setSecondStat] = useState("DEF")
   const [element, setElement] = useState("Blunt")
@@ -34,7 +48,6 @@ export default function DamageCalc() {
     defCap: 0
   })
 
-  console.log(inputs)
   const handleChange = (field: string, value: number) => {
     setInputs(prev => ({ ...prev, [field]: value }))
   }
@@ -47,7 +60,7 @@ export default function DamageCalc() {
         <div className="space-y-2">
           <label className="font-semibold">Primary Stat</label>
           <select value={mainStat} onChange={e => setMainStat(e.target.value)} className="w-full p-1 border rounded">
-            {stats.map(s => <option key={s}>{s}</option>)}
+            {Mainstats.map(s => <option key={s}>{s}</option>)}
           </select>
 
           <label className="font-semibold">Element</label>
@@ -99,7 +112,7 @@ export default function DamageCalc() {
         <div className="space-y-2">
           <label className="font-semibold">2nd Stat</label>
           <select value={secondStat} onChange={e => setSecondStat(e.target.value)} className="w-full p-1 border rounded">
-            {stats.map(s => <option key={s}>{s}</option>)}
+            {Mainstats.map(s => <option key={s}>{s}</option>)}
           </select>
 
           <label className="font-semibold">2nd Skill DMG%</label>
@@ -150,7 +163,7 @@ export default function DamageCalc() {
       <div className="grid grid-cols-2 gap-6 text-center border rounded-lg p-4 bg-white">
         <div className="space-y-2">
           <h2 className="font-semibold text-lg">Average Damage</h2>
-          <div><strong>Non-Crit:</strong> TBD</div>
+          <div><strong>Non-Crit:</strong> {stats[mainStat]}</div>
           <div><strong>Crit:</strong> TBD</div>
           <div><strong>Overall:</strong> TBD</div>
         </div>
