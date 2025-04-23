@@ -1,7 +1,93 @@
-export default function equipment() {
-    return (
-        <div>
-            <h2 className="text-3xl"> Equipment</h2>
+"use client"
+
+import { useState } from "react"
+
+const initialSlot = () => ({
+  name: "",
+  type: "",
+  mainstat: "",
+  mainstat_value: 0,
+  affixes: Array.from({ length: 20 }, () => ({ stat: "", value: 0 }))
+})
+
+export default function EquipmentPage() {
+  const [slots, setSlots] = useState<Array<ReturnType<typeof initialSlot>>>([
+    initialSlot(), initialSlot(), initialSlot(), initialSlot(),
+    initialSlot(), initialSlot(), initialSlot(), initialSlot()
+  ])
+
+  const updateSlot = (index: number, field: string, value: any) => {
+    setSlots(prev => {
+      const updated = [...prev]
+      if (field.startsWith("affix_")) {
+        const [_, affixIndex, affixField] = field.split("_")
+        updated[index].affixes[+affixIndex][affixField] = value
+      } else {
+        updated[index][field] = value
+      }
+      return updated
+    })
+  }
+
+  const addSlot = () => {
+    setSlots(prev => [...prev, initialSlot()])
+  }
+
+  return (
+    <div className="p-4 space-y-4">
+      <h1 className="text-xl font-bold">Equipment Editor</h1>
+
+      <div className="flex flex-wrap gap-4 mt-4">
+        {slots.map((slot, idx) => (
+          <div key={idx} className="border rounded p-2 w-full max-w-md">
+            <h2 className="font-semibold mb-2">Slot {idx + 1}</h2>
+            <div className="grid grid-cols-2 gap-2 mb-2">
+              <div>
+                <label className="block text-sm font-medium">Name</label>
+                <input value={slot.name} onChange={e => updateSlot(idx, "name", e.target.value)} className="w-full border px-1" />
+              </div>
+              <div>
+                <label className="block text-sm font-medium">Type</label>
+                <input value={slot.type} onChange={e => updateSlot(idx, "type", e.target.value)} className="w-full border px-1" />
+              </div>
+              <div>
+                <label className="block text-sm font-medium">Main Stat</label>
+                <input value={slot.mainstat} onChange={e => updateSlot(idx, "mainstat", e.target.value)} className="w-full border px-1" />
+              </div>
+              <div>
+                <label className="block text-sm font-medium">Main Stat Value</label>
+                <input type="number" value={slot.mainstat_value} onChange={e => updateSlot(idx, "mainstat_value", +e.target.value)} className="w-full border px-1" />
+              </div>
+            </div>
+            <table className="table-fixed border border-collapse text-sm w-full">
+              <thead>
+                <tr className="bg-gray-100">
+                  <th className="border px-2 py-1">Affix #</th>
+                  <th className="border px-2 py-1">Stat</th>
+                  <th className="border px-2 py-1">Value</th>
+                </tr>
+              </thead>
+              <tbody>
+                {slot.affixes.map((affix, i) => (
+                  <tr key={i}>
+                    <td className="border px-2 py-1">Affix {i + 1}</td>
+                    <td className="border px-2 py-1">
+                      <input value={affix.stat} onChange={e => updateSlot(idx, `affix_${i}_stat`, e.target.value)} className="w-full border px-1" />
+                    </td>
+                    <td className="border px-2 py-1">
+                      <input type="number" value={affix.value} onChange={e => updateSlot(idx, `affix_${i}_value`, +e.target.value)} className="w-full border px-1" />
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        ))}
+
+        <div className="flex items-center justify-center w-full max-w-md border-dashed border-2 border-gray-400 rounded p-4">
+          <button onClick={addSlot} className="px-4 py-1 bg-blue-500 text-white rounded">Add Slot</button>
         </div>
-    )
+      </div>
+    </div>
+  )
 }

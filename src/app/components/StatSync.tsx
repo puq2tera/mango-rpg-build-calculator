@@ -21,22 +21,35 @@ export function computeTalentStats() {
   } catch {}
 }
 
-// export function computeConversionStats() {
-//   console.log("Updating Conversion Stats")
-//   const raw = localStorage.getItem("selectedTalents")
-//   if (!raw) return //Skip if selectedTalents doens't return anything
-//   try {
-//     const selected = new Set<string>(JSON.parse(raw))
-//     const conversions: Record<string, number> = {}
-//     for (const [name, data] of Object.entries(talent_data)) {
-//       if (!selected.has(name)) continue
-//       for (const [stat, value] of Object.entries(data.stats)) {
-//         stats[stat] = (stats[stat] || 0) + value
-//       }
-//     }
-//     localStorage.setItem("StatsTalents", JSON.stringify(stats)) // Save totals to StatsTalents
-//   } catch {}
-// }
+
+export function computeConversionStats() {
+  console.log("Updating Conversion Stats")
+
+  const rawSelected = localStorage.getItem("selectedTalents")
+  const rawStats = localStorage.getItem("StatsTalents")
+  if (!rawSelected || !rawStats) return
+
+  try {
+    const selected = new Set<string>(JSON.parse(rawSelected))
+    const baseStats: Record<string, number> = JSON.parse(rawStats)
+    const converted: Record<string, number> = {}
+
+    for (const [name, data] of Object.entries(talent_data)) {
+      if (!selected.has(name)) continue
+      if (!Array.isArray(data.conversions)) continue
+
+      for (const { source, ratio, resulting_stat } of data.conversions) {
+        const base = baseStats[source] ?? 0
+        const amount = base * ratio
+        converted[resulting_stat] = (converted[resulting_stat] || 0) + amount
+      }
+    }
+
+    localStorage.setItem("StatsConverted", JSON.stringify(converted))
+    console.log(converted)
+  } catch {}
+}
+
 
 export function computeDmgReadyStats() {
   console.log("Updating Dmg Ready Stats")
@@ -67,11 +80,13 @@ export default function StatSync() {
   useEffect(() => {   //Run once on mount
     // Add custom event listeners for stat updates
     window.addEventListener("talentsUpdated", computeTalentStats)
+    window.addEventListener("talentsUpdated", computeConversionStats)
     window.addEventListener("talentsUpdated", computeDmgReadyStats)
 
     // Clean up listeners for when unmounted (to prevent multiple updates)
     return () => {
       window.removeEventListener("talentsUpdated", computeTalentStats)
+      window.removeEventListener("talentsUpdated", computeConversionStats)
       window.removeEventListener("talentsUpdated", computeDmgReadyStats)
     }
   }, [])
