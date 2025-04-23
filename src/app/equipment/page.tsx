@@ -2,7 +2,20 @@
 
 import { useState } from "react"
 
-const initialSlot = () => ({
+interface Affix {
+  stat: string
+  value: number
+}
+
+interface Slot {
+  name: string
+  type: string
+  mainstat: string
+  mainstat_value: number
+  affixes: Affix[]
+}
+
+const initialSlot = (): Slot => ({
   name: "",
   type: "",
   mainstat: "",
@@ -11,19 +24,20 @@ const initialSlot = () => ({
 })
 
 export default function EquipmentPage() {
-  const [slots, setSlots] = useState<Array<ReturnType<typeof initialSlot>>>([
+  const [slots, setSlots] = useState<Slot[]>([
     initialSlot(), initialSlot(), initialSlot(), initialSlot(),
     initialSlot(), initialSlot(), initialSlot(), initialSlot()
   ])
 
-  const updateSlot = (index: number, field: string, value: any) => {
+  const updateSlot = (index: number, field: string, value: string | number) => {
     setSlots(prev => {
       const updated = [...prev]
       if (field.startsWith("affix_")) {
-        const [_, affixIndex, affixField] = field.split("_")
-        updated[index].affixes[+affixIndex][affixField] = value
+        const [, affixIndexStr, affixField] = field.split("_")
+        const affixIndex = parseInt(affixIndexStr, 10)
+        updated[index].affixes[affixIndex][affixField as keyof Affix] = value as never
       } else {
-        updated[index][field] = value
+        updated[index][field as keyof Slot] = value as never
       }
       return updated
     })
