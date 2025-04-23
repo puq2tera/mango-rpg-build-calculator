@@ -47,6 +47,9 @@ export default function EquipmentPage() {
     setSlots(prev => [...prev, initialSlot()])
   }
 
+  const typeOptions = ["Helm", "Armor", "Amulet", "Ring", "Weapon", "Runeshard", "Tarot"]
+  const statOptions = ["ATK", "DEF", "MATK", "HEAL"]
+
   return (
     <div className="p-4 space-y-4">
       <h1 className="text-xl font-bold">Equipment Editor</h1>
@@ -62,15 +65,28 @@ export default function EquipmentPage() {
               </div>
               <div>
                 <label className="block text-sm font-medium">Type</label>
-                <input value={slot.type} onChange={e => updateSlot(idx, "type", e.target.value)} className="w-full border px-1" />
+                <select value={slot.type} onChange={e => updateSlot(idx, "type", e.target.value)} className="w-full border px-1">
+                  <option value="">Select</option>
+                  {typeOptions.map(option => (
+                    <option key={option} value={option}>{option}</option>
+                  ))}
+                </select>
               </div>
-              <div>
-                <label className="block text-sm font-medium">Main Stat</label>
-                <input value={slot.mainstat} onChange={e => updateSlot(idx, "mainstat", e.target.value)} className="w-full border px-1" />
-              </div>
-              <div>
-                <label className="block text-sm font-medium">Main Stat Value</label>
-                <input type="number" value={slot.mainstat_value} onChange={e => updateSlot(idx, "mainstat_value", +e.target.value)} className="w-full border px-1" />
+              <div className="col-span-2">
+                <div className="flex gap-2 items-end">
+                  <select value={slot.mainstat} onChange={e => updateSlot(idx, "mainstat", e.target.value)} className="w-1/2 border px-1">
+                    <option value="">Main Stat</option>
+                    {statOptions.map(option => (
+                      <option key={option} value={option}>{option}</option>
+                    ))}
+                  </select>
+                  <input
+                    type="number"
+                    value={slot.mainstat_value}
+                    onChange={e => updateSlot(idx, "mainstat_value", +e.target.value)}
+                    className="w-1/2 border px-1"
+                  />
+                </div>
               </div>
             </div>
             <table className="table-fixed border border-collapse text-sm w-full">
