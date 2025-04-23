@@ -22854,16 +22854,18 @@ const talent_data: Record<string, Talent> = {
             "DEF%": 0.15,
             "Threat%": 0.15
         },
-        "conversions": {
-            "Wind%": {
+        "conversions": [
+            {
+                "source": "Wind%",
                 "ratio": 0.6,
                 "resulting_stat": "Void%"
             },
-            "Wind Pen%": {
+            {
+                "source": "Wind Pen%",
                 "ratio": 0.4,
                 "resulting_stat": "Void Pen%"
             }
-        }
+        ]
     },
     "Paragon's Power of the Tempest": {
         "category": "hybrid",
@@ -22885,16 +22887,18 @@ const talent_data: Record<string, Talent> = {
             "DEF%": 0.25,
             "Threat%": 0.2
         },
-        "conversions": {
-            "Lightning Res%": {
+        "conversions": [
+            {
+                "source": "Lightning Res%",
                 "ratio": 0.5,
                 "resulting_stat": "physical"
             },
-            "Reduction": {
+            {
+                "source": "Reduction",
                 "ratio": 0.75,
                 "resulting_stat": "Lightning Res%"
             }
-        }
+        ]
     },
     "Saint's Touch of the Storm": {
         "category": "hybrid",
@@ -22915,16 +22919,18 @@ const talent_data: Record<string, Talent> = {
         "stats": {
             "HEAL%": 0.35
         },
-        "conversions": {
-            "Lightning%": {
+        "conversions": [
+            {
+                "source": "Lightning%",
                 "ratio": 0.5,
                 "resulting_stat": "mp"
             },
-            "Reduction": {
+            {
+                "source": "Reduction",
                 "ratio": 1.0,
                 "resulting_stat": "Lightning%"
             }
-        }
+        ]
     },
     "Saint's Breath of the Wind": {
         "category": "hybrid",
@@ -22946,16 +22952,18 @@ const talent_data: Record<string, Talent> = {
             "HEAL%": 0.1,
             "Threat%": -0.3
         },
-        "conversions": {
-            "Wind%": {
+        "conversions": [
+            {
+                "source": "Wind%",
                 "ratio": 0.5,
                 "resulting_stat": "Crit DMG%"
             },
-            "Reduction": {
+            {
+                "source": "Reduction",
                 "ratio": 1.0,
                 "resulting_stat": "Crit DMG%"
             }
-        }
+        ]
     },
     "Saint's Power of the Tempest": {
         "category": "hybrid",
@@ -23027,20 +23035,23 @@ const talent_data: Record<string, Talent> = {
             "MATK%": 0.3,
             "Toxic Pen%": 0.1
         },
-        "conversions": {
-            "Toxic Res%": {
+        "conversions": [
+            {
+                "source": "Toxic Res%",
                 "ratio": 2.0,
                 "resulting_stat": "Toxic%"
             },
-            "Toxic%": {
+            {
+                "source": "Toxic%",
                 "ratio": 15.0,
                 "resulting_stat": "matk"
             },
-            "Reduction": {
+            {
+                "source": "Reduction",
                 "ratio": 0.75,
                 "resulting_stat": "Toxic Res%"
             }
-        }
+        ]
     },
     "Mystic Fortitude of the Earth": {
         "category": "hybrid",
@@ -23062,20 +23073,23 @@ const talent_data: Record<string, Talent> = {
             "MATK%": 0.35,
             "Earth Pen%": 0.1
         },
-        "conversions": {
-            "Earth%": {
+        "conversions": [
+            {
+                "source": "Earth%",
                 "ratio": 20.0,
                 "resulting_stat": "def"
             },
-            "Earth Res%": {
+            {
+                "source": "Earth Res%",
                 "ratio": 1.5,
                 "resulting_stat": "Earth%"
             },
-            "Earth Res%_Broken": {
+            {
+                "source": "Earth Res%_Broken",
                 "ratio": -0.75,
                 "resulting_stat": "Earth Res%"
             }
-        }
+        ]
     },
     "Warlord's Will of the Champion": {
         "category": "hybrid",
@@ -23098,16 +23112,18 @@ const talent_data: Record<string, Talent> = {
             "Void Pen%": 0.05,
             "Shadow Break Skill%": 0.2
         },
-        "conversions": {
-            "Void%": {
+        "conversions": [
+            {
+                "source": "Void%",
                 "ratio": 0.04,
                 "resulting_stat": "Void Pen%"
             },
-            "Pierce%": {
+            {
+                "source": "Pierce%",
                 "ratio": 0.02,
                 "resulting_stat": "Void Pen%"
             }
-        }
+        ]
     },
     "Warlord's Aspect of Reality": {
         "category": "hybrid",
@@ -23155,16 +23171,18 @@ const talent_data: Record<string, Talent> = {
         "stats": {
             "ATK%": 0.4
         },
-        "conversions": {
-            "Earth%": {
+        "conversions": [
+            {
+                "source": "Earth%",
                 "ratio": 8.0,
                 "resulting_stat": "def"
             },
-            "Earth Pen%": {
+            {
+                "source": "Earth Pen%",
                 "ratio": 40.0,
                 "resulting_stat": "def"
             }
-        }
+        ]
     },
     "Paragon's Will of the Champion": {
         "category": "hybrid",
@@ -23184,26 +23202,26 @@ const talent_data: Record<string, Talent> = {
         "description": "+20% DEF, +5% Penvoid, +50% Crit Chance and +20% DMG to Shadow Break Skills, Conversion 20% DEF to ATK, 20% Elevoid to MP, 3% Elephysical to Penvoid",
         "stats": {
             "DEF%": 0.2,
-            "Void Pen%": 0.05
+            "Void Pen%": 0.05,
+            "Shadow Break %": 0.2
         },
-        "conversions": {
-            "DEF": {
+        "conversions": [
+            {
+                "source": "DEF",
                 "ratio": 0.2,
                 "resulting_stat": "atk"
             },
-            "DMG": {
-                "ratio": 0.2,
-                "resulting_stat": "shadow"
-            },
-            "Void%": {
+            {
+                "source": "Void%",
                 "ratio": 0.2,
                 "resulting_stat": "mp"
             },
-            "Elephysical": {
+            {
+                "source": "Elephysical",
                 "ratio": 0.03,
                 "resulting_stat": "Void Pen%"
             }
-        }
+        ]
     },
     "Paragon's Aspect of Reality": {
         "category": "hybrid",
@@ -23254,20 +23272,23 @@ const talent_data: Record<string, Talent> = {
             "DEF%": 0.25,
             "Threat%": 0.1
         },
-        "conversions": {
-            "Earth Pen%": {
+        "conversions": [
+            {
+                "source": "Earth Pen%",
                 "ratio": 75.0,
                 "resulting_stat": "max"
             },
-            "Earth%": {
+            {
+                "source": "Earth%",
                 "ratio": 4.0,
                 "resulting_stat": "hp"
             },
-            "Reduction": {
+            {
+                "source": "Reduction",
                 "ratio": 0.5,
                 "resulting_stat": "Earth Pen%"
             }
-        }
+        ]
     },
     "Saint's Will of the Champion": {
         "category": "hybrid",
@@ -23337,20 +23358,23 @@ const talent_data: Record<string, Talent> = {
         "stats": {
             "HEAL%": 0.15
         },
-        "conversions": {
-            "Earth Pen%": {
+        "conversions": [
+            {
+                "source": "Earth Res%",
                 "ratio": 0.2,
                 "resulting_stat": "physical"
             },
-            "Healpower": {
+            {
+                "source": "Healpower",
                 "ratio": 0.05,
                 "resulting_stat": "def"
             },
-            "Reduction": {
-                "ratio": 0.75,
-                "resulting_stat": "Earth Pen%"
+            {
+                "source": "Earth Res%",
+                "ratio": -0.75,
+                "resulting_stat": "Earth Res%"
             }
-        }
+        ]
     },
     "Mystic Primal Soul": {
         "category": "hybrid",
@@ -23493,16 +23517,18 @@ const talent_data: Record<string, Talent> = {
             "Pierce%": 0.15,
             "Blunt%": 0.15
         },
-        "conversions": {
-            "Neg Pen%": {
+        "conversions": [
+            {
+                "source": "Neg Pen%",
                 "ratio": 1.2,
                 "resulting_stat": "penphysical"
             },
-            "Neg%": {
+            {
+                "source": "Neg%",
                 "ratio": 1.0,
                 "resulting_stat": "Crit DMG%"
             }
-        }
+        ]
     },
     "Warlord's Touch of the Yangson": {
         "category": "hybrid",
@@ -23526,16 +23552,18 @@ const talent_data: Record<string, Talent> = {
             "Pierce%": 0.15,
             "Blunt%": 0.15
         },
-        "conversions": {
-            "Holy Pen%": {
+        "conversions": [
+            {
+                "source": "Holy Pen%",
                 "ratio": 1.4,
                 "resulting_stat": "penphysical"
             },
-            "Holy%": {
+            {
+                "source": "Holy%",
                 "ratio": 0.15,
                 "resulting_stat": "mp"
             }
-        }
+        ]
     },
     "Paragon's Primal Soul": {
         "category": "hybrid",

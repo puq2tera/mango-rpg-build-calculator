@@ -4,24 +4,24 @@ import { useEffect, useState } from "react"
 import { talent_data } from "../data/talent_data"
 
 interface TalentRow {
-    name: string
-    category: string
-    PreReq: string
-    Tag: string
-    BlockedTag: string
-    gold: number
-    exp: number
-    tp_spent: number
-    total_level: number
-    class_levels: {
-      tank_levels: number
-      warrior_levels: number
-      caster_levels: number
-      healer_levels: number
-    }
-    description: string
-    stats: Record<string, number>
-    conversions?: Record<string, { ratio: number; resulting_stat: string }>
+  name: string
+  category: string
+  PreReq: string
+  Tag: string
+  BlockedTag: string
+  gold: number
+  exp: number
+  tp_spent: number
+  total_level: number
+  class_levels: {
+    tank_levels: number
+    warrior_levels: number
+    caster_levels: number
+    healer_levels: number
+  }
+  description: string
+  stats: Record<string, number>
+  conversions?: Array<{ source: string; ratio: number; resulting_stat: string }>
 }
 
 export default function Skills() {
@@ -91,9 +91,9 @@ export default function Skills() {
     for (const t of output) {
       Object.keys(t.stats).forEach(k => statSet.add(k))
       if (t.conversions) {
-        for (const [source, { resulting_stat }] of Object.entries(t.conversions)) {
-          convSet.add(source)
-          convSet.add(resulting_stat)
+        for (const conv of t.conversions) {
+          convSet.add(conv.source)
+          convSet.add(conv.resulting_stat)
         }
       }
     }
@@ -117,7 +117,7 @@ export default function Skills() {
 
         <h1 className="font-bold text-xl mt-4">Selected Talents Data</h1>
         <TalentTable data={filtered} />
-        
+
         <h1 className="font-bold text-xl mt-8">All Talent Stat and Conversion Names</h1>
         <div className="overflow-x-auto">
           <table className="min-w-fit border border-collapse text-sm">
@@ -139,7 +139,7 @@ export default function Skills() {
         </div>
 
         <h1 className="font-bold text-xl mt-8">All Talents Data</h1>
-        <TalentTable data={allTalents} /> 
+        <TalentTable data={allTalents} />
       </div>
     </div>
   )
@@ -187,13 +187,7 @@ function TalentTable({ data }: { data: TalentRow[] }) {
                 {Object.entries(t.stats).map(([k, v]) => `${k}: ${v}`).join(", ")}
               </td>
               <td className="border px-2 py-1 font-mono text-xs whitespace-pre-wrap">
-                {t.conversions &&
-                  Object.entries(t.conversions)
-                    .map(([k, v]) => {
-                      const conv = v as { ratio: number; resulting_stat: string }
-                      return `${k} ⇒ ${conv.ratio * 100}% ⇒ ${conv.resulting_stat}`
-                    })
-                    .join("\n")}
+                {t.conversions?.map(c => `${c.source} ⇒ ${c.ratio * 100}% ⇒ ${c.resulting_stat}`).join("\n")}
               </td>
             </tr>
           ))}
