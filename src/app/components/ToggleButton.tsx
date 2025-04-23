@@ -32,11 +32,11 @@ export default function ToggleButton({ talentName, talent, colWidths }: ToggleBu
     if (idx >= 0) {
       list.splice(idx, 1)
       setSelected(false)
-      console.log(`Toggled ${talentName}: Removed ${talentName} from selectedTalents at index ${idx}`)
+      console.log(`Added ${talentName}`)
     } else {
       list.push(talentName)
       setSelected(true)
-      console.log(`Toggled ${talentName}: Added ${talentName} to selectedTalents`)
+      console.log(`Removed ${talentName}`)
     }
 
     // Update selectedTalents

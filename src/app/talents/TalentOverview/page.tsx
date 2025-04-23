@@ -47,14 +47,21 @@ export default function TalentOverview() {
         {Array.from(selected).map((name) => {
           const t = talent_data[name]
           const values = [
-            name, t.PreReq, t.Tag, t.BlockedTag,
-            t.gold, t.exp, t.tp_spent, t.total_level,
+            name,
+            t.PreReq.join(", "),
+            t.Tag,
+            t.BlockedTag,
+            t.gold,
+            t.exp,
+            t.tp_spent,
+            t.total_level,
             t.class_levels.tank_levels,
             t.class_levels.warrior_levels,
             t.class_levels.caster_levels,
             t.class_levels.healer_levels,
             t.description
           ]
+          
           return (
             <div
               key={name}
