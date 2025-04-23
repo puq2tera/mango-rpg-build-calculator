@@ -3560,7 +3560,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Lady's Blessing 1": {
         "category": "tank",
-        "PreReq": [""],
+        "PreReq": ["DeathGodBlessing"],
         "Tag": "",
         "BlockedTag": "",
         "gold": 200,
@@ -3583,7 +3583,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Lady's Blessing 2": {
         "category": "tank",
-        "PreReq": ["Lady's Blessing 1"],
+        "PreReq": ["Lady's Blessing 1", "DeathGodBlessing"],
         "Tag": "",
         "BlockedTag": "",
         "gold": 250,
@@ -3609,8 +3609,8 @@ const talent_data: Record<string, Talent> = {
     },
     "Protection of Galatine": {
         "category": "tank",
-        "PreReq": ["Lady's Blessing 2"],
-        "Tag": "",
+        "PreReq": ["Lady's Blessing 2", "DeathGodBlessing"],
+        "Tag": "Tank125",
         "BlockedTag": "",
         "gold": 300,
         "exp": 12500,
@@ -3631,7 +3631,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Heroic Valour 1": {
         "category": "tank",
-        "PreReq": [""],
+        "PreReq": ["DeathGodBlessing"],
         "Tag": "",
         "BlockedTag": "",
         "gold": 200,
@@ -3652,7 +3652,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Heroic Valour 2": {
         "category": "tank",
-        "PreReq": ["Heroic Valour 1"],
+        "PreReq": ["Heroic Valour 1", "DeathGodBlessing"],
         "Tag": "",
         "BlockedTag": "",
         "gold": 250,
@@ -3673,8 +3673,8 @@ const talent_data: Record<string, Talent> = {
     },
     "Strength of Beowulf": {
         "category": "tank",
-        "PreReq": ["Heroic Valour 2"],
-        "Tag": "",
+        "PreReq": ["Heroic Valour 2", "DeathGodBlessing"],
+        "Tag": "Tank125",
         "BlockedTag": "",
         "gold": 300,
         "exp": 12500,
@@ -3694,7 +3694,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Strange Wyrd 1": {
         "category": "tank",
-        "PreReq": [""],
+        "PreReq": ["DeathGodBlessing"],
         "Tag": "",
         "BlockedTag": "",
         "gold": 200,
@@ -3715,7 +3715,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Strange Wyrd 2": {
         "category": "tank",
-        "PreReq": ["Strange Wyrd 1"],
+        "PreReq": ["Strange Wyrd 1", "DeathGodBlessing"],
         "Tag": "",
         "BlockedTag": "",
         "gold": 250,
@@ -3736,8 +3736,8 @@ const talent_data: Record<string, Talent> = {
     },
     "Riastrad of Cuchulainn": {
         "category": "tank",
-        "PreReq": ["Strange Wyrd 2"],
-        "Tag": "",
+        "PreReq": ["Strange Wyrd 2", "DeathGodBlessing"],
+        "Tag": "Tank125",
         "BlockedTag": "",
         "gold": 300,
         "exp": 12500,
@@ -3757,8 +3757,8 @@ const talent_data: Record<string, Talent> = {
     },
     "Emptiness of Thought": {
         "category": "tank",
-        "PreReq": [""],
-        "Tag": "",
+        "PreReq": ["Tank125"],
+        "Tag": "Tank125Cap",
         "BlockedTag": "Tank125Cap",
         "gold": 500,
         "exp": 15000,
@@ -3780,8 +3780,8 @@ const talent_data: Record<string, Talent> = {
     },
     "Lernaean Blood": {
         "category": "tank",
-        "PreReq": [""],
-        "Tag": "",
+        "PreReq": ["Tank125"],
+        "Tag": "Tank125Cap",
         "BlockedTag": "Tank125Cap",
         "gold": 500,
         "exp": 15000,
@@ -3799,8 +3799,8 @@ const talent_data: Record<string, Talent> = {
     },
     "Morrigan's Guardianship": {
         "category": "tank",
-        "PreReq": [""],
-        "Tag": "",
+        "PreReq": ["Tank125"],
+        "Tag": "Tank125Cap",
         "BlockedTag": "Tank125Cap",
         "gold": 500,
         "exp": 15000,
@@ -3818,8 +3818,8 @@ const talent_data: Record<string, Talent> = {
     },
     "Star Sands of Dawn": {
         "category": "tank",
-        "PreReq": [""],
-        "Tag": "",
+        "PreReq": ["PrimalEssence"],
+        "Tag": "T_AeonShard",
         "BlockedTag": "",
         "gold": 400,
         "exp": 12000,
@@ -3837,8 +3837,8 @@ const talent_data: Record<string, Talent> = {
     },
     "Star Sands of Horizon": {
         "category": "tank",
-        "PreReq": [""],
-        "Tag": "",
+        "PreReq": ["PrimalEssence"],
+        "Tag": "T_AeonShard",
         "BlockedTag": "",
         "gold": 400,
         "exp": 12000,
@@ -3856,8 +3856,8 @@ const talent_data: Record<string, Talent> = {
     },
     "Star Sands of Twilight": {
         "category": "tank",
-        "PreReq": [""],
-        "Tag": "",
+        "PreReq": ["PrimalEssence"],
+        "Tag": "T_AeonShard",
         "BlockedTag": "",
         "gold": 400,
         "exp": 12000,
@@ -3875,8 +3875,8 @@ const talent_data: Record<string, Talent> = {
     },
     "Time Shard of Akonoteth": {
         "category": "tank",
-        "PreReq": [""],
-        "Tag": "",
+        "PreReq": ["T_AeonShard"],
+        "Tag": "T_AeonCore",
         "BlockedTag": "",
         "gold": 500,
         "exp": 15000,
@@ -3894,8 +3894,8 @@ const talent_data: Record<string, Talent> = {
     },
     "Star Light of Ego": {
         "category": "tank",
-        "PreReq": [""],
-        "Tag": "",
+        "PreReq": ["PrimalEssence"],
+        "Tag": "T_InfinityShard",
         "BlockedTag": "",
         "gold": 400,
         "exp": 12000,
@@ -3915,8 +3915,8 @@ const talent_data: Record<string, Talent> = {
     },
     "Star Light of Desire": {
         "category": "tank",
-        "PreReq": [""],
-        "Tag": "",
+        "PreReq": ["PrimalEssence"],
+        "Tag": "T_InfinityShard",
         "BlockedTag": "",
         "gold": 400,
         "exp": 12000,
@@ -3936,8 +3936,8 @@ const talent_data: Record<string, Talent> = {
     },
     "Star Light of Spirit": {
         "category": "tank",
-        "PreReq": [""],
-        "Tag": "",
+        "PreReq": ["PrimalEssence"],
+        "Tag": "T_InfinityShard",
         "BlockedTag": "",
         "gold": 400,
         "exp": 12000,
@@ -3957,8 +3957,8 @@ const talent_data: Record<string, Talent> = {
     },
     "Soul Shard of Akonoteth": {
         "category": "tank",
-        "PreReq": [""],
-        "Tag": "",
+        "PreReq": ["T_InfinityShard"],
+        "Tag": "T_InfinityCore",
         "BlockedTag": "",
         "gold": 500,
         "exp": 15000,
@@ -3976,8 +3976,8 @@ const talent_data: Record<string, Talent> = {
     },
     "Star Gem of Protons": {
         "category": "tank",
-        "PreReq": [""],
-        "Tag": "",
+        "PreReq": ["PrimalEssence"],
+        "Tag": "T_CosmicShard",
         "BlockedTag": "",
         "gold": 400,
         "exp": 12000,
@@ -3999,8 +3999,8 @@ const talent_data: Record<string, Talent> = {
     },
     "Star Gem of Electrons": {
         "category": "tank",
-        "PreReq": [""],
-        "Tag": "",
+        "PreReq": ["PrimalEssence"],
+        "Tag": "T_CosmicShard",
         "BlockedTag": "",
         "gold": 400,
         "exp": 12000,
@@ -4025,8 +4025,8 @@ const talent_data: Record<string, Talent> = {
     },
     "Star Gem of Neutrons": {
         "category": "tank",
-        "PreReq": [""],
-        "Tag": "",
+        "PreReq": ["PrimalEssence"],
+        "Tag": "T_CosmicShard",
         "BlockedTag": "",
         "gold": 400,
         "exp": 12000,
@@ -4047,8 +4047,8 @@ const talent_data: Record<string, Talent> = {
     },
     "Space Shard of Akonoteth": {
         "category": "tank",
-        "PreReq": [""],
-        "Tag": "",
+        "PreReq": ["T_CosmicShard"],
+        "Tag": "T_CosmicCore",
         "BlockedTag": "",
         "gold": 500,
         "exp": 15000,
@@ -4079,8 +4079,8 @@ const talent_data: Record<string, Talent> = {
     },
     "Time Shard of Mogdrolo'toth": {
         "category": "tank",
-        "PreReq": [""],
-        "Tag": "",
+        "PreReq": ["T_StarGodHeart", "StarEssence"],
+        "Tag": "T175 Shard",
         "BlockedTag": "T175 Shard",
         "gold": 1500,
         "exp": 25000,
@@ -4098,8 +4098,8 @@ const talent_data: Record<string, Talent> = {
     },
     "Soul Shard of Mogdrolo'toth": {
         "category": "tank",
-        "PreReq": [""],
-        "Tag": "",
+        "PreReq": ["T_StarGodHeart", "StarEssence"],
+        "Tag": "T175 Shard",
         "BlockedTag": "T175 Shard",
         "gold": 1500,
         "exp": 25000,
@@ -4122,8 +4122,8 @@ const talent_data: Record<string, Talent> = {
     },
     "Space Shard of Mogdrolo'toth": {
         "category": "tank",
-        "PreReq": [""],
-        "Tag": "",
+        "PreReq": ["T_StarGodHeart", "StarEssence"],
+        "Tag": "T175 Shard",
         "BlockedTag": "T175 Shard",
         "gold": 1500,
         "exp": 25000,
@@ -4154,8 +4154,8 @@ const talent_data: Record<string, Talent> = {
     },
     "Time Core of Mogdrolo'toth": {
         "category": "tank",
-        "PreReq": [""],
-        "Tag": "",
+        "PreReq": ["T175 Shard"],
+        "Tag": "T175 Core",
         "BlockedTag": "T175 Core",
         "gold": 1500,
         "exp": 25000,
@@ -4173,8 +4173,8 @@ const talent_data: Record<string, Talent> = {
     },
     "Soul Core of Mogdrolo'toth": {
         "category": "tank",
-        "PreReq": [""],
-        "Tag": "",
+        "PreReq": ["T175 Shard"],
+        "Tag": "T175 Core",
         "BlockedTag": "T175 Core",
         "gold": 1500,
         "exp": 25000,
@@ -4197,8 +4197,8 @@ const talent_data: Record<string, Talent> = {
     },
     "Space Core of Mogdrolo'toth": {
         "category": "tank",
-        "PreReq": [""],
-        "Tag": "",
+        "PreReq": ["T175 Shard"],
+        "Tag": "T175 Core",
         "BlockedTag": "T175 Core",
         "gold": 1500,
         "exp": 25000,
@@ -4229,8 +4229,8 @@ const talent_data: Record<string, Talent> = {
     },
     "Sealed Core of Mogdrolo'toth": {
         "category": "tank",
-        "PreReq": [""],
-        "Tag": "",
+        "PreReq": ["T175 Shard"],
+        "Tag": "T175 Core",
         "BlockedTag": "T175 Core",
         "gold": 1500,
         "exp": 25000,
@@ -9497,8 +9497,8 @@ const talent_data: Record<string, Talent> = {
     },
     "Abyssal Sands of Dawn": {
         "category": "warrior",
-        "PreReq": [""],
-        "Tag": "",
+        "PreReq": ["PrimalEssence"],
+        "Tag": "W_AeonShard",
         "BlockedTag": "",
         "gold": 400,
         "exp": 12000,
@@ -9525,8 +9525,8 @@ const talent_data: Record<string, Talent> = {
     },
     "Abyssal Sands of Horizon": {
         "category": "warrior",
-        "PreReq": [""],
-        "Tag": "",
+        "PreReq": ["PrimalEssence"],
+        "Tag": "W_AeonShard",
         "BlockedTag": "",
         "gold": 400,
         "exp": 12000,
@@ -9553,8 +9553,8 @@ const talent_data: Record<string, Talent> = {
     },
     "Abyssal Sands of Twilight": {
         "category": "warrior",
-        "PreReq": [""],
-        "Tag": "",
+        "PreReq": ["PrimalEssence"],
+        "Tag": "W_AeonShard",
         "BlockedTag": "",
         "gold": 400,
         "exp": 12000,
@@ -9577,8 +9577,8 @@ const talent_data: Record<string, Talent> = {
     },
     "Time Shard of Hapnatra": {
         "category": "warrior",
-        "PreReq": [""],
-        "Tag": "",
+        "PreReq": ["W_AeonShard"],
+        "Tag": "W_AeonCore",
         "BlockedTag": "",
         "gold": 500,
         "exp": 15000,
@@ -9601,8 +9601,8 @@ const talent_data: Record<string, Talent> = {
     },
     "Abyssal Light of Ego": {
         "category": "warrior",
-        "PreReq": [""],
-        "Tag": "",
+        "PreReq": ["PrimalEssence"],
+        "Tag": "W_InfinityShard",
         "BlockedTag": "",
         "gold": 400,
         "exp": 12000,
@@ -9620,8 +9620,8 @@ const talent_data: Record<string, Talent> = {
     },
     "Abyssal Light of Desire": {
         "category": "warrior",
-        "PreReq": [""],
-        "Tag": "",
+        "PreReq": ["PrimalEssence"],
+        "Tag": "W_InfinityShard",
         "BlockedTag": "",
         "gold": 400,
         "exp": 12000,
@@ -9639,8 +9639,8 @@ const talent_data: Record<string, Talent> = {
     },
     "Abyssal Light of Spirit": {
         "category": "warrior",
-        "PreReq": [""],
-        "Tag": "",
+        "PreReq": ["PrimalEssence"],
+        "Tag": "W_InfinityShard",
         "BlockedTag": "",
         "gold": 400,
         "exp": 12000,
@@ -9660,8 +9660,8 @@ const talent_data: Record<string, Talent> = {
     },
     "Soul Shard of Hapnatra": {
         "category": "warrior",
-        "PreReq": [""],
-        "Tag": "",
+        "PreReq": ["W_InfinityShard"],
+        "Tag": "W_InfinityCore",
         "BlockedTag": "",
         "gold": 500,
         "exp": 15000,
@@ -9679,8 +9679,8 @@ const talent_data: Record<string, Talent> = {
     },
     "Abyssal Gem of Protons": {
         "category": "warrior",
-        "PreReq": [""],
-        "Tag": "",
+        "PreReq": ["PrimalEssence"],
+        "Tag": "W_CosmicShard",
         "BlockedTag": "",
         "gold": 400,
         "exp": 12000,
@@ -9705,8 +9705,8 @@ const talent_data: Record<string, Talent> = {
     },
     "Abyssal Gem of Electrons": {
         "category": "warrior",
-        "PreReq": [""],
-        "Tag": "",
+        "PreReq": ["PrimalEssence"],
+        "Tag": "W_CosmicShard",
         "BlockedTag": "",
         "gold": 400,
         "exp": 12000,
@@ -9731,8 +9731,8 @@ const talent_data: Record<string, Talent> = {
     },
     "Abyssal Gem of Neutrons": {
         "category": "warrior",
-        "PreReq": [""],
-        "Tag": "",
+        "PreReq": ["PrimalEssence"],
+        "Tag": "W_CosmicShard",
         "BlockedTag": "",
         "gold": 400,
         "exp": 12000,
@@ -9757,8 +9757,8 @@ const talent_data: Record<string, Talent> = {
     },
     "Space Shard of Hapnatra": {
         "category": "warrior",
-        "PreReq": [""],
-        "Tag": "",
+        "PreReq": ["W_CosmicShard"],
+        "Tag": "W_CosmicCore",
         "BlockedTag": "",
         "gold": 500,
         "exp": 15000,
@@ -9778,8 +9778,8 @@ const talent_data: Record<string, Talent> = {
     },
     "Time Shard of T'sanogora": {
         "category": "warrior",
-        "PreReq": [""],
-        "Tag": "",
+        "PreReq": ["W_StarGodHeart", "StarEssence"],
+        "Tag": "W175 Shard",
         "BlockedTag": "W175 Shard",
         "gold": 1500,
         "exp": 25000,
@@ -9797,8 +9797,8 @@ const talent_data: Record<string, Talent> = {
     },
     "Soul Shard of T'sanogora": {
         "category": "warrior",
-        "PreReq": [""],
-        "Tag": "",
+        "PreReq": ["W_StarGodHeart", "StarEssence"],
+        "Tag": "W175 Shard",
         "BlockedTag": "W175 Shard",
         "gold": 1500,
         "exp": 25000,
@@ -9816,8 +9816,8 @@ const talent_data: Record<string, Talent> = {
     },
     "Space Shard of T'sanogora": {
         "category": "warrior",
-        "PreReq": [""],
-        "Tag": "",
+        "PreReq": ["W_StarGodHeart", "StarEssence"],
+        "Tag": "W175 Shard",
         "BlockedTag": "W175 Shard",
         "gold": 1500,
         "exp": 25000,
@@ -9835,8 +9835,8 @@ const talent_data: Record<string, Talent> = {
     },
     "Time Core of T'sanogora": {
         "category": "warrior",
-        "PreReq": [""],
-        "Tag": "",
+        "PreReq": ["W175 Shard"],
+        "Tag": "W175 Core",
         "BlockedTag": "W175 Core",
         "gold": 1500,
         "exp": 25000,
@@ -9867,8 +9867,8 @@ const talent_data: Record<string, Talent> = {
     },
     "Soul Core of T'sanogora": {
         "category": "warrior",
-        "PreReq": [""],
-        "Tag": "",
+        "PreReq": ["W175 Shard"],
+        "Tag": "W175 Core",
         "BlockedTag": "W175 Core",
         "gold": 1500,
         "exp": 25000,
@@ -9886,8 +9886,8 @@ const talent_data: Record<string, Talent> = {
     },
     "Space Core of T'sanogora": {
         "category": "warrior",
-        "PreReq": [""],
-        "Tag": "",
+        "PreReq": ["W175 Shard"],
+        "Tag": "W175 Core",
         "BlockedTag": "W175 Core",
         "gold": 1500,
         "exp": 25000,
@@ -9910,8 +9910,8 @@ const talent_data: Record<string, Talent> = {
     },
     "Sealed Core of T'sanogora": {
         "category": "warrior",
-        "PreReq": [""],
-        "Tag": "",
+        "PreReq": ["W175 Shard"],
+        "Tag": "W175 Core",
         "BlockedTag": "W175 Core",
         "gold": 1500,
         "exp": 25000,
@@ -14034,8 +14034,8 @@ const talent_data: Record<string, Talent> = {
     },
     "Warping Sands of Dawn": {
         "category": "caster",
-        "PreReq": [""],
-        "Tag": "",
+        "PreReq": ["PrimalEssence"],
+        "Tag": "C_AeonShard",
         "BlockedTag": "",
         "gold": 400,
         "exp": 12000,
@@ -14068,8 +14068,8 @@ const talent_data: Record<string, Talent> = {
     },
     "Warping Sands of Horizon": {
         "category": "caster",
-        "PreReq": [""],
-        "Tag": "",
+        "PreReq": ["PrimalEssence"],
+        "Tag": "C_AeonShard",
         "BlockedTag": "",
         "gold": 400,
         "exp": 12000,
@@ -14102,8 +14102,8 @@ const talent_data: Record<string, Talent> = {
     },
     "Warping Sands of Twilight": {
         "category": "caster",
-        "PreReq": [""],
-        "Tag": "",
+        "PreReq": ["PrimalEssence"],
+        "Tag": "C_AeonShard",
         "BlockedTag": "",
         "gold": 400,
         "exp": 12000,
@@ -14126,8 +14126,8 @@ const talent_data: Record<string, Talent> = {
     },
     "Time Shard of Onirakan": {
         "category": "caster",
-        "PreReq": [""],
-        "Tag": "",
+        "PreReq": ["C_AeonShard"],
+        "Tag": "C_AeonCore",
         "BlockedTag": "",
         "gold": 500,
         "exp": 15000,
@@ -14150,8 +14150,8 @@ const talent_data: Record<string, Talent> = {
     },
     "Warping Light of Ego": {
         "category": "caster",
-        "PreReq": [""],
-        "Tag": "",
+        "PreReq": ["PrimalEssence"],
+        "Tag": "C_InfinityShard",
         "BlockedTag": "",
         "gold": 400,
         "exp": 12000,
@@ -14169,8 +14169,8 @@ const talent_data: Record<string, Talent> = {
     },
     "Warping Light of Desire": {
         "category": "caster",
-        "PreReq": [""],
-        "Tag": "",
+        "PreReq": ["PrimalEssence"],
+        "Tag": "C_InfinityShard",
         "BlockedTag": "",
         "gold": 400,
         "exp": 12000,
@@ -14193,8 +14193,8 @@ const talent_data: Record<string, Talent> = {
     },
     "Warping Light of Spirit": {
         "category": "caster",
-        "PreReq": [""],
-        "Tag": "",
+        "PreReq": ["PrimalEssence"],
+        "Tag": "C_InfinityShard",
         "BlockedTag": "",
         "gold": 400,
         "exp": 12000,
@@ -14212,8 +14212,8 @@ const talent_data: Record<string, Talent> = {
     },
     "Soul Shard of Onirakan": {
         "category": "caster",
-        "PreReq": [""],
-        "Tag": "",
+        "PreReq": ["C_InfinityShard"],
+        "Tag": "C_InfinityCore",
         "BlockedTag": "",
         "gold": 500,
         "exp": 15000,
@@ -14231,8 +14231,8 @@ const talent_data: Record<string, Talent> = {
     },
     "Warping Gem of Protons": {
         "category": "caster",
-        "PreReq": [""],
-        "Tag": "",
+        "PreReq": ["PrimalEssence"],
+        "Tag": "C_CosmicShard",
         "BlockedTag": "",
         "gold": 400,
         "exp": 12000,
@@ -14265,8 +14265,8 @@ const talent_data: Record<string, Talent> = {
     },
     "Warping Gem of Electrons": {
         "category": "caster",
-        "PreReq": [""],
-        "Tag": "",
+        "PreReq": ["PrimalEssence"],
+        "Tag": "C_CosmicShard",
         "BlockedTag": "",
         "gold": 400,
         "exp": 12000,
@@ -14299,8 +14299,8 @@ const talent_data: Record<string, Talent> = {
     },
     "Warping Gem of Neutrons": {
         "category": "caster",
-        "PreReq": [""],
-        "Tag": "",
+        "PreReq": ["PrimalEssence"],
+        "Tag": "C_CosmicShard",
         "BlockedTag": "",
         "gold": 400,
         "exp": 12000,
@@ -14333,8 +14333,8 @@ const talent_data: Record<string, Talent> = {
     },
     "Space Shard of Onirakan": {
         "category": "caster",
-        "PreReq": [""],
-        "Tag": "",
+        "PreReq": ["C_CosmicShard"],
+        "Tag": "C_CosmicCore",
         "BlockedTag": "",
         "gold": 500,
         "exp": 15000,
@@ -14362,8 +14362,8 @@ const talent_data: Record<string, Talent> = {
     },
     "Time Shard of Mephis'ronan": {
         "category": "caster",
-        "PreReq": [""],
-        "Tag": "",
+        "PreReq": ["C_StarGodHeart", "StarEssence"],
+        "Tag": "C175 Shard",
         "BlockedTag": "C175 Shard",
         "gold": 1500,
         "exp": 25000,
@@ -14381,8 +14381,8 @@ const talent_data: Record<string, Talent> = {
     },
     "Soul Shard of Mephis'ronan": {
         "category": "caster",
-        "PreReq": [""],
-        "Tag": "",
+        "PreReq": ["C_StarGodHeart", "StarEssence"],
+        "Tag": "C175 Shard",
         "BlockedTag": "C175 Shard",
         "gold": 1500,
         "exp": 25000,
@@ -14403,8 +14403,8 @@ const talent_data: Record<string, Talent> = {
     },
     "Space Shard of Mephis'ronan": {
         "category": "caster",
-        "PreReq": [""],
-        "Tag": "",
+        "PreReq": ["C_StarGodHeart", "StarEssence"],
+        "Tag": "C175 Shard",
         "BlockedTag": "C175 Shard",
         "gold": 1500,
         "exp": 25000,
@@ -14422,8 +14422,8 @@ const talent_data: Record<string, Talent> = {
     },
     "Time Core of Mephis'ronan": {
         "category": "caster",
-        "PreReq": [""],
-        "Tag": "",
+        "PreReq": ["C175 Shard"],
+        "Tag": "C175 Core",
         "BlockedTag": "C175 Core",
         "gold": 1500,
         "exp": 25000,
@@ -14441,8 +14441,8 @@ const talent_data: Record<string, Talent> = {
     },
     "Soul Core of Mephis'ronan": {
         "category": "caster",
-        "PreReq": [""],
-        "Tag": "",
+        "PreReq": ["C175 Shard"],
+        "Tag": "C175 Core",
         "BlockedTag": "C175 Core",
         "gold": 1500,
         "exp": 25000,
@@ -14460,8 +14460,8 @@ const talent_data: Record<string, Talent> = {
     },
     "Space Core of Mephis'ronan": {
         "category": "caster",
-        "PreReq": [""],
-        "Tag": "",
+        "PreReq": ["C175 Shard"],
+        "Tag": "C175 Core",
         "BlockedTag": "C175 Core",
         "gold": 1500,
         "exp": 25000,
@@ -14487,8 +14487,8 @@ const talent_data: Record<string, Talent> = {
     },
     "Sealed Core of Mephis'ronan": {
         "category": "caster",
-        "PreReq": [""],
-        "Tag": "",
+        "PreReq": ["C175 Shard"],
+        "Tag": "C175 Core",
         "BlockedTag": "C175 Core",
         "gold": 1500,
         "exp": 25000,
@@ -17716,8 +17716,8 @@ const talent_data: Record<string, Talent> = {
     },
     "Keter Malchut": {
         "category": "healer",
-        "PreReq": [""],
-        "Tag": "",
+        "PreReq": ["Heal125"],
+        "Tag": "Heal125Cap",
         "BlockedTag": "Heal125Cap",
         "gold": 500,
         "exp": 15000,
@@ -17739,8 +17739,8 @@ const talent_data: Record<string, Talent> = {
     },
     "Flamel's Triumph": {
         "category": "healer",
-        "PreReq": [""],
-        "Tag": "",
+        "PreReq": ["Heal125"],
+        "Tag": "Heal125Cap",
         "BlockedTag": "Heal125Cap",
         "gold": 500,
         "exp": 15000,
@@ -17760,8 +17760,8 @@ const talent_data: Record<string, Talent> = {
     },
     "Asclepian Secrets": {
         "category": "healer",
-        "PreReq": [""],
-        "Tag": "",
+        "PreReq": ["Heal125"],
+        "Tag": "Heal125Cap",
         "BlockedTag": "Heal125Cap",
         "gold": 500,
         "exp": 15000,
@@ -17783,8 +17783,8 @@ const talent_data: Record<string, Talent> = {
     },
     "Undying Sands of Dawn": {
         "category": "healer",
-        "PreReq": [""],
-        "Tag": "",
+        "PreReq": ["PrimalEssence"],
+        "Tag": "H_AeonShard",
         "BlockedTag": "",
         "gold": 400,
         "exp": 12000,
@@ -17807,8 +17807,8 @@ const talent_data: Record<string, Talent> = {
     },
     "Undying Sands of Horizon": {
         "category": "healer",
-        "PreReq": [""],
-        "Tag": "",
+        "PreReq": ["PrimalEssence"],
+        "Tag": "H_AeonShard",
         "BlockedTag": "",
         "gold": 400,
         "exp": 12000,
@@ -17831,8 +17831,8 @@ const talent_data: Record<string, Talent> = {
     },
     "Undying Sands of Twilight": {
         "category": "healer",
-        "PreReq": [""],
-        "Tag": "",
+        "PreReq": ["PrimalEssence"],
+        "Tag": "H_AeonShard",
         "BlockedTag": "",
         "gold": 400,
         "exp": 12000,
@@ -17855,8 +17855,8 @@ const talent_data: Record<string, Talent> = {
     },
     "Time Shard of Mesofet": {
         "category": "healer",
-        "PreReq": [""],
-        "Tag": "",
+        "PreReq": ["H_AeonShard"],
+        "Tag": "H_AeonCore",
         "BlockedTag": "",
         "gold": 500,
         "exp": 15000,
@@ -17879,8 +17879,8 @@ const talent_data: Record<string, Talent> = {
     },
     "Undying Light of Ego": {
         "category": "healer",
-        "PreReq": [""],
-        "Tag": "",
+        "PreReq": ["PrimalEssence"],
+        "Tag": "H_InfinityShard",
         "BlockedTag": "",
         "gold": 400,
         "exp": 12000,
@@ -17911,8 +17911,8 @@ const talent_data: Record<string, Talent> = {
     },
     "Undying Light of Desire": {
         "category": "healer",
-        "PreReq": [""],
-        "Tag": "",
+        "PreReq": ["PrimalEssence"],
+        "Tag": "H_InfinityShard",
         "BlockedTag": "",
         "gold": 400,
         "exp": 12000,
@@ -17930,8 +17930,8 @@ const talent_data: Record<string, Talent> = {
     },
     "Undying Light of Spirit": {
         "category": "healer",
-        "PreReq": [""],
-        "Tag": "",
+        "PreReq": ["PrimalEssence"],
+        "Tag": "H_InfinityShard",
         "BlockedTag": "",
         "gold": 400,
         "exp": 12000,
@@ -17949,8 +17949,8 @@ const talent_data: Record<string, Talent> = {
     },
     "Soul Shard of Mesofet": {
         "category": "healer",
-        "PreReq": [""],
-        "Tag": "",
+        "PreReq": ["H_InfinityShard"],
+        "Tag": "H_InfinityCore",
         "BlockedTag": "",
         "gold": 500,
         "exp": 15000,
@@ -17981,8 +17981,8 @@ const talent_data: Record<string, Talent> = {
     },
     "Undying Gem of Protons": {
         "category": "healer",
-        "PreReq": [""],
-        "Tag": "",
+        "PreReq": ["PrimalEssence"],
+        "Tag": "H_CosmicShard",
         "BlockedTag": "",
         "gold": 400,
         "exp": 12000,
@@ -18015,8 +18015,8 @@ const talent_data: Record<string, Talent> = {
     },
     "Undying Gem of Electrons": {
         "category": "healer",
-        "PreReq": [""],
-        "Tag": "",
+        "PreReq": ["PrimalEssence"],
+        "Tag": "H_CosmicShard",
         "BlockedTag": "",
         "gold": 400,
         "exp": 12000,
@@ -18049,8 +18049,8 @@ const talent_data: Record<string, Talent> = {
     },
     "Undying Gem of Neutrons": {
         "category": "healer",
-        "PreReq": [""],
-        "Tag": "",
+        "PreReq": ["PrimalEssence"],
+        "Tag": "H_CosmicShard",
         "BlockedTag": "",
         "gold": 400,
         "exp": 12000,
@@ -18083,8 +18083,8 @@ const talent_data: Record<string, Talent> = {
     },
     "Space Shard of Mesofet": {
         "category": "healer",
-        "PreReq": [""],
-        "Tag": "",
+        "PreReq": ["H_CosmicShard"],
+        "Tag": "H_CosmicCore",
         "BlockedTag": "",
         "gold": 500,
         "exp": 15000,
@@ -18112,8 +18112,8 @@ const talent_data: Record<string, Talent> = {
     },
     "Time Shard of Azago'toth": {
         "category": "healer",
-        "PreReq": [""],
-        "Tag": "",
+        "PreReq": ["H_StarGodHeart", "StarEssence"],
+        "Tag": "H175 Shard",
         "BlockedTag": "H175 Shard",
         "gold": 1500,
         "exp": 25000,
@@ -18131,8 +18131,8 @@ const talent_data: Record<string, Talent> = {
     },
     "Soul Shard of Azago'toth": {
         "category": "healer",
-        "PreReq": [""],
-        "Tag": "",
+        "PreReq": ["H_StarGodHeart", "StarEssence"],
+        "Tag": "H175 Shard",
         "BlockedTag": "H175 Shard",
         "gold": 1500,
         "exp": 25000,
@@ -18150,8 +18150,8 @@ const talent_data: Record<string, Talent> = {
     },
     "Space Shard of Azago'toth": {
         "category": "healer",
-        "PreReq": [""],
-        "Tag": "",
+        "PreReq": ["H_StarGodHeart", "StarEssence"],
+        "Tag": "H175 Shard",
         "BlockedTag": "H175 Shard",
         "gold": 1500,
         "exp": 25000,
@@ -18169,8 +18169,8 @@ const talent_data: Record<string, Talent> = {
     },
     "Time Core of Azago'toth": {
         "category": "healer",
-        "PreReq": [""],
-        "Tag": "",
+        "PreReq": ["H175 Shard"],
+        "Tag": "H175 Core",
         "BlockedTag": "H175 Core",
         "gold": 1500,
         "exp": 25000,
@@ -18188,8 +18188,8 @@ const talent_data: Record<string, Talent> = {
     },
     "Soul Core of Azago'toth": {
         "category": "healer",
-        "PreReq": [""],
-        "Tag": "",
+        "PreReq": ["H175 Shard"],
+        "Tag": "H175 Core",
         "BlockedTag": "H175 Core",
         "gold": 1500,
         "exp": 25000,
@@ -18209,8 +18209,8 @@ const talent_data: Record<string, Talent> = {
     },
     "Space Core of Azago'toth": {
         "category": "healer",
-        "PreReq": [""],
-        "Tag": "",
+        "PreReq": ["H175 Shard"],
+        "Tag": "H175 Core",
         "BlockedTag": "H175 Core",
         "gold": 1500,
         "exp": 25000,
@@ -18228,8 +18228,8 @@ const talent_data: Record<string, Talent> = {
     },
     "Sealed Core of Azago'toth": {
         "category": "healer",
-        "PreReq": [""],
-        "Tag": "",
+        "PreReq": ["H175 Shard"],
+        "Tag": "H175 Core",
         "BlockedTag": "H175 Core",
         "gold": 1500,
         "exp": 25000,
@@ -20656,9 +20656,9 @@ const talent_data: Record<string, Talent> = {
         "conversions": {}
     },
     "World Guardian": {
-        "category": "hybrid",
-        "PreReq": [""],
-        "Tag": "",
+        "category": "prestige",
+        "PreReq": ["PleiadesTrial"],
+        "Tag": "SistersPrestige",
         "BlockedTag": "SistersPrestige",
         "gold": 500,
         "exp": 3500,
@@ -20679,9 +20679,9 @@ const talent_data: Record<string, Talent> = {
         "conversions": {}
     },
     "World Slayer": {
-        "category": "hybrid",
-        "PreReq": [""],
-        "Tag": "",
+        "category": "prestige",
+        "PreReq": ["PleiadesTrial"],
+        "Tag": "SistersPrestige",
         "BlockedTag": "SistersPrestige",
         "gold": 500,
         "exp": 3500,
@@ -20702,9 +20702,9 @@ const talent_data: Record<string, Talent> = {
         "conversions": {}
     },
     "World Disaster": {
-        "category": "hybrid",
-        "PreReq": [""],
-        "Tag": "",
+        "category": "prestige",
+        "PreReq": ["PleiadesTrial"],
+        "Tag": "SistersPrestige",
         "BlockedTag": "SistersPrestige",
         "gold": 500,
         "exp": 3500,
@@ -20724,9 +20724,9 @@ const talent_data: Record<string, Talent> = {
         "conversions": {}
     },
     "World Mender": {
-        "category": "hybrid",
-        "PreReq": [""],
-        "Tag": "",
+        "category": "prestige",
+        "PreReq": ["PleiadesTrial"],
+        "Tag": "SistersPrestige",
         "BlockedTag": "SistersPrestige",
         "gold": 500,
         "exp": 3500,
@@ -20747,9 +20747,9 @@ const talent_data: Record<string, Talent> = {
         "conversions": {}
     },
     "World Champion": {
-        "category": "hybrid",
-        "PreReq": [""],
-        "Tag": "",
+        "category": "prestige",
+        "PreReq": ["PleiadesTrial"],
+        "Tag": "SistersPrestige",
         "BlockedTag": "SistersPrestige",
         "gold": 500,
         "exp": 3500,
@@ -20770,9 +20770,9 @@ const talent_data: Record<string, Talent> = {
         "conversions": {}
     },
     "World Liberator": {
-        "category": "hybrid",
-        "PreReq": [""],
-        "Tag": "",
+        "category": "prestige",
+        "PreReq": ["PleiadesTrial"],
+        "Tag": "SistersPrestige",
         "BlockedTag": "SistersPrestige",
         "gold": 500,
         "exp": 3500,
@@ -20793,9 +20793,9 @@ const talent_data: Record<string, Talent> = {
         "conversions": {}
     },
     "World Preserver": {
-        "category": "hybrid",
-        "PreReq": [""],
-        "Tag": "",
+        "category": "prestige",
+        "PreReq": ["PleiadesTrial"],
+        "Tag": "SistersPrestige",
         "BlockedTag": "SistersPrestige",
         "gold": 500,
         "exp": 3500,
@@ -20816,9 +20816,9 @@ const talent_data: Record<string, Talent> = {
         "conversions": {}
     },
     "World Conqueror": {
-        "category": "hybrid",
-        "PreReq": [""],
-        "Tag": "",
+        "category": "prestige",
+        "PreReq": ["PleiadesTrial"],
+        "Tag": "SistersPrestige",
         "BlockedTag": "SistersPrestige",
         "gold": 500,
         "exp": 3500,
@@ -20838,9 +20838,9 @@ const talent_data: Record<string, Talent> = {
         "conversions": {}
     },
     "World Overseer": {
-        "category": "hybrid",
-        "PreReq": [""],
-        "Tag": "",
+        "category": "prestige",
+        "PreReq": ["PleiadesTrial"],
+        "Tag": "SistersPrestige",
         "BlockedTag": "SistersPrestige",
         "gold": 500,
         "exp": 3500,
@@ -20861,9 +20861,9 @@ const talent_data: Record<string, Talent> = {
         "conversions": {}
     },
     "World Emissary": {
-        "category": "hybrid",
-        "PreReq": [""],
-        "Tag": "",
+        "category": "prestige",
+        "PreReq": ["PleiadesTrial"],
+        "Tag": "SistersPrestige",
         "BlockedTag": "SistersPrestige",
         "gold": 500,
         "exp": 3500,
@@ -20884,9 +20884,9 @@ const talent_data: Record<string, Talent> = {
         "conversions": {}
     },
     "Void Guardian": {
-        "category": "hybrid",
-        "PreReq": [""],
-        "Tag": "",
+        "category": "prestige",
+        "PreReq": ["PleiadesTrial"],
+        "Tag": "SistersPrestige",
         "BlockedTag": "SistersPrestige",
         "gold": 500,
         "exp": 3500,
@@ -20907,9 +20907,9 @@ const talent_data: Record<string, Talent> = {
         "conversions": {}
     },
     "Void Slayer": {
-        "category": "hybrid",
-        "PreReq": [""],
-        "Tag": "",
+        "category": "prestige",
+        "PreReq": ["PleiadesTrial"],
+        "Tag": "SistersPrestige",
         "BlockedTag": "SistersPrestige",
         "gold": 500,
         "exp": 3500,
@@ -20929,9 +20929,9 @@ const talent_data: Record<string, Talent> = {
         "conversions": {}
     },
     "Void Disaster": {
-        "category": "hybrid",
-        "PreReq": [""],
-        "Tag": "",
+        "category": "prestige",
+        "PreReq": ["PleiadesTrial"],
+        "Tag": "SistersPrestige",
         "BlockedTag": "SistersPrestige",
         "gold": 500,
         "exp": 3500,
@@ -20951,9 +20951,9 @@ const talent_data: Record<string, Talent> = {
         "conversions": {}
     },
     "Void Mender": {
-        "category": "hybrid",
-        "PreReq": [""],
-        "Tag": "",
+        "category": "prestige",
+        "PreReq": ["PleiadesTrial"],
+        "Tag": "SistersPrestige",
         "BlockedTag": "SistersPrestige",
         "gold": 500,
         "exp": 3500,
@@ -20973,9 +20973,9 @@ const talent_data: Record<string, Talent> = {
         "conversions": {}
     },
     "Void Champion": {
-        "category": "hybrid",
-        "PreReq": [""],
-        "Tag": "",
+        "category": "prestige",
+        "PreReq": ["PleiadesTrial"],
+        "Tag": "SistersPrestige",
         "BlockedTag": "SistersPrestige",
         "gold": 500,
         "exp": 3500,
@@ -20996,9 +20996,9 @@ const talent_data: Record<string, Talent> = {
         "conversions": {}
     },
     "Void Liberator": {
-        "category": "hybrid",
-        "PreReq": [""],
-        "Tag": "",
+        "category": "prestige",
+        "PreReq": ["PleiadesTrial"],
+        "Tag": "SistersPrestige",
         "BlockedTag": "SistersPrestige",
         "gold": 500,
         "exp": 3500,
@@ -21019,9 +21019,9 @@ const talent_data: Record<string, Talent> = {
         "conversions": {}
     },
     "Void Preserver": {
-        "category": "hybrid",
-        "PreReq": [""],
-        "Tag": "",
+        "category": "prestige",
+        "PreReq": ["PleiadesTrial"],
+        "Tag": "SistersPrestige",
         "BlockedTag": "SistersPrestige",
         "gold": 500,
         "exp": 3500,
@@ -21042,9 +21042,9 @@ const talent_data: Record<string, Talent> = {
         "conversions": {}
     },
     "Void Conqueror": {
-        "category": "hybrid",
-        "PreReq": [""],
-        "Tag": "",
+        "category": "prestige",
+        "PreReq": ["PleiadesTrial"],
+        "Tag": "SistersPrestige",
         "BlockedTag": "SistersPrestige",
         "gold": 500,
         "exp": 3500,
@@ -21064,9 +21064,9 @@ const talent_data: Record<string, Talent> = {
         "conversions": {}
     },
     "Void Overseer": {
-        "category": "hybrid",
-        "PreReq": [""],
-        "Tag": "",
+        "category": "prestige",
+        "PreReq": ["PleiadesTrial"],
+        "Tag": "SistersPrestige",
         "BlockedTag": "SistersPrestige",
         "gold": 500,
         "exp": 3500,
@@ -21087,9 +21087,9 @@ const talent_data: Record<string, Talent> = {
         "conversions": {}
     },
     "Void Emissary": {
-        "category": "hybrid",
-        "PreReq": [""],
-        "Tag": "",
+        "category": "prestige",
+        "PreReq": ["PleiadesTrial"],
+        "Tag": "SistersPrestige",
         "BlockedTag": "SistersPrestige",
         "gold": 500,
         "exp": 3500,
@@ -21110,9 +21110,9 @@ const talent_data: Record<string, Talent> = {
         "conversions": {}
     },
     "Spirit Guardian": {
-        "category": "hybrid",
-        "PreReq": [""],
-        "Tag": "",
+        "category": "prestige",
+        "PreReq": ["PleiadesTrial"],
+        "Tag": "SistersPrestige",
         "BlockedTag": "SistersPrestige",
         "gold": 500,
         "exp": 3500,
@@ -21132,9 +21132,9 @@ const talent_data: Record<string, Talent> = {
         "conversions": {}
     },
     "Spirit Slayer": {
-        "category": "hybrid",
-        "PreReq": [""],
-        "Tag": "",
+        "category": "prestige",
+        "PreReq": ["PleiadesTrial"],
+        "Tag": "SistersPrestige",
         "BlockedTag": "SistersPrestige",
         "gold": 500,
         "exp": 3500,
@@ -21155,9 +21155,9 @@ const talent_data: Record<string, Talent> = {
         "conversions": {}
     },
     "Spirit Disaster": {
-        "category": "hybrid",
-        "PreReq": [""],
-        "Tag": "",
+        "category": "prestige",
+        "PreReq": ["PleiadesTrial"],
+        "Tag": "SistersPrestige",
         "BlockedTag": "SistersPrestige",
         "gold": 500,
         "exp": 3500,
@@ -21178,9 +21178,9 @@ const talent_data: Record<string, Talent> = {
         "conversions": {}
     },
     "Spirit Mender": {
-        "category": "hybrid",
-        "PreReq": [""],
-        "Tag": "",
+        "category": "prestige",
+        "PreReq": ["PleiadesTrial"],
+        "Tag": "SistersPrestige",
         "BlockedTag": "SistersPrestige",
         "gold": 500,
         "exp": 3500,
@@ -21200,9 +21200,9 @@ const talent_data: Record<string, Talent> = {
         "conversions": {}
     },
     "Spirit Champion": {
-        "category": "hybrid",
-        "PreReq": [""],
-        "Tag": "",
+        "category": "prestige",
+        "PreReq": ["PleiadesTrial"],
+        "Tag": "SistersPrestige",
         "BlockedTag": "SistersPrestige",
         "gold": 500,
         "exp": 3500,
@@ -21223,9 +21223,9 @@ const talent_data: Record<string, Talent> = {
         "conversions": {}
     },
     "Spirit Liberator": {
-        "category": "hybrid",
-        "PreReq": [""],
-        "Tag": "",
+        "category": "prestige",
+        "PreReq": ["PleiadesTrial"],
+        "Tag": "SistersPrestige",
         "BlockedTag": "SistersPrestige",
         "gold": 500,
         "exp": 3500,
@@ -21246,9 +21246,9 @@ const talent_data: Record<string, Talent> = {
         "conversions": {}
     },
     "Spirit Preserver": {
-        "category": "hybrid",
-        "PreReq": [""],
-        "Tag": "",
+        "category": "prestige",
+        "PreReq": ["PleiadesTrial"],
+        "Tag": "SistersPrestige",
         "BlockedTag": "SistersPrestige",
         "gold": 500,
         "exp": 3500,
@@ -21269,9 +21269,9 @@ const talent_data: Record<string, Talent> = {
         "conversions": {}
     },
     "Spirit Conqueror": {
-        "category": "hybrid",
-        "PreReq": [""],
-        "Tag": "",
+        "category": "prestige",
+        "PreReq": ["PleiadesTrial"],
+        "Tag": "SistersPrestige",
         "BlockedTag": "SistersPrestige",
         "gold": 500,
         "exp": 3500,
@@ -21291,9 +21291,9 @@ const talent_data: Record<string, Talent> = {
         "conversions": {}
     },
     "Spirit Overseer": {
-        "category": "hybrid",
-        "PreReq": [""],
-        "Tag": "",
+        "category": "prestige",
+        "PreReq": ["PleiadesTrial"],
+        "Tag": "SistersPrestige",
         "BlockedTag": "SistersPrestige",
         "gold": 500,
         "exp": 3500,
@@ -21314,9 +21314,9 @@ const talent_data: Record<string, Talent> = {
         "conversions": {}
     },
     "Spirit Emissary": {
-        "category": "hybrid",
-        "PreReq": [""],
-        "Tag": "",
+        "category": "prestige",
+        "PreReq": ["PleiadesTrial"],
+        "Tag": "SistersPrestige",
         "BlockedTag": "SistersPrestige",
         "gold": 500,
         "exp": 3500,
@@ -21337,9 +21337,9 @@ const talent_data: Record<string, Talent> = {
         "conversions": {}
     },
     "Celestial's Herald": {
-        "category": "hybrid",
-        "PreReq": [""],
-        "Tag": "",
+        "category": "prestige",
+        "PreReq": ["DeathGodBlessing"],
+        "Tag": "HeraldPrestige",
         "BlockedTag": "HeraldPrestige",
         "gold": 1250,
         "exp": 10000,
@@ -21361,9 +21361,9 @@ const talent_data: Record<string, Talent> = {
         "conversions": {}
     },
     "Devourer's Herald": {
-        "category": "hybrid",
-        "PreReq": [""],
-        "Tag": "",
+        "category": "prestige",
+        "PreReq": ["DeathGodBlessing"],
+        "Tag": "HeraldPrestige",
         "BlockedTag": "HeraldPrestige",
         "gold": 1250,
         "exp": 10000,
@@ -21384,9 +21384,9 @@ const talent_data: Record<string, Talent> = {
         "conversions": {}
     },
     "Sin's Herald": {
-        "category": "hybrid",
-        "PreReq": [""],
-        "Tag": "",
+        "category": "prestige",
+        "PreReq": ["DeathGodBlessing"],
+        "Tag": "HeraldPrestige",
         "BlockedTag": "HeraldPrestige",
         "gold": 1250,
         "exp": 10000,
@@ -21407,9 +21407,9 @@ const talent_data: Record<string, Talent> = {
         "conversions": {}
     },
     "Sephira's Herald": {
-        "category": "hybrid",
-        "PreReq": [""],
-        "Tag": "",
+        "category": "prestige",
+        "PreReq": ["DeathGodBlessing"],
+        "Tag": "HeraldPrestige",
         "BlockedTag": "HeraldPrestige",
         "gold": 1250,
         "exp": 10000,
@@ -21431,9 +21431,9 @@ const talent_data: Record<string, Talent> = {
         "conversions": {}
     },
     "Bahamut's Herald": {
-        "category": "hybrid",
-        "PreReq": [""],
-        "Tag": "",
+        "category": "prestige",
+        "PreReq": ["DeathGodBlessing"],
+        "Tag": "HeraldPrestige",
         "BlockedTag": "HeraldPrestige",
         "gold": 1250,
         "exp": 10000,
@@ -21456,9 +21456,9 @@ const talent_data: Record<string, Talent> = {
         "conversions": {}
     },
     "Tiamat's Herald": {
-        "category": "hybrid",
-        "PreReq": [""],
-        "Tag": "",
+        "category": "prestige",
+        "PreReq": ["DeathGodBlessing"],
+        "Tag": "HeraldPrestige",
         "BlockedTag": "HeraldPrestige",
         "gold": 1250,
         "exp": 10000,
@@ -21480,9 +21480,9 @@ const talent_data: Record<string, Talent> = {
         "conversions": {}
     },
     "Odin's Herald": {
-        "category": "hybrid",
-        "PreReq": [""],
-        "Tag": "",
+        "category": "prestige",
+        "PreReq": ["DeathGodBlessing"],
+        "Tag": "HeraldPrestige",
         "BlockedTag": "HeraldPrestige",
         "gold": 1250,
         "exp": 10000,
@@ -21504,9 +21504,9 @@ const talent_data: Record<string, Talent> = {
         "conversions": {}
     },
     "Reaper's Herald": {
-        "category": "hybrid",
-        "PreReq": [""],
-        "Tag": "",
+        "category": "prestige",
+        "PreReq": ["DeathGodBlessing"],
+        "Tag": "HeraldPrestige",
         "BlockedTag": "HeraldPrestige",
         "gold": 1250,
         "exp": 10000,
@@ -21528,9 +21528,9 @@ const talent_data: Record<string, Talent> = {
         "conversions": {}
     },
     "Gaia's Herald": {
-        "category": "hybrid",
-        "PreReq": [""],
-        "Tag": "",
+        "category": "prestige",
+        "PreReq": ["DeathGodBlessing"],
+        "Tag": "HeraldPrestige",
         "BlockedTag": "HeraldPrestige",
         "gold": 1250,
         "exp": 10000,
@@ -21551,9 +21551,9 @@ const talent_data: Record<string, Talent> = {
         "conversions": {}
     },
     "Goddess's Herald": {
-        "category": "hybrid",
-        "PreReq": [""],
-        "Tag": "",
+        "category": "prestige",
+        "PreReq": ["DeathGodBlessing"],
+        "Tag": "HeraldPrestige",
         "BlockedTag": "HeraldPrestige",
         "gold": 1250,
         "exp": 10000,
@@ -21575,9 +21575,9 @@ const talent_data: Record<string, Talent> = {
         "conversions": {}
     },
     "Celestial's Anathema": {
-        "category": "hybrid",
-        "PreReq": [""],
-        "Tag": "",
+        "category": "prestige",
+        "PreReq": ["DeathGodBlessing"],
+        "Tag": "HeraldPrestige",
         "BlockedTag": "HeraldPrestige",
         "gold": 1250,
         "exp": 10000,
@@ -21597,9 +21597,9 @@ const talent_data: Record<string, Talent> = {
         "conversions": {}
     },
     "Devourer's Anathema": {
-        "category": "hybrid",
-        "PreReq": [""],
-        "Tag": "",
+        "category": "prestige",
+        "PreReq": ["DeathGodBlessing"],
+        "Tag": "HeraldPrestige",
         "BlockedTag": "HeraldPrestige",
         "gold": 1250,
         "exp": 10000,
@@ -21619,9 +21619,9 @@ const talent_data: Record<string, Talent> = {
         "conversions": {}
     },
     "Sin's Anathema": {
-        "category": "hybrid",
-        "PreReq": [""],
-        "Tag": "",
+        "category": "prestige",
+        "PreReq": ["DeathGodBlessing"],
+        "Tag": "HeraldPrestige",
         "BlockedTag": "HeraldPrestige",
         "gold": 1250,
         "exp": 10000,
@@ -21641,9 +21641,9 @@ const talent_data: Record<string, Talent> = {
         "conversions": {}
     },
     "Sephira's Anathema": {
-        "category": "hybrid",
-        "PreReq": [""],
-        "Tag": "",
+        "category": "prestige",
+        "PreReq": ["DeathGodBlessing"],
+        "Tag": "HeraldPrestige",
         "BlockedTag": "HeraldPrestige",
         "gold": 1250,
         "exp": 10000,
@@ -21666,9 +21666,9 @@ const talent_data: Record<string, Talent> = {
         "conversions": {}
     },
     "Bahamut's Anathema": {
-        "category": "hybrid",
-        "PreReq": [""],
-        "Tag": "",
+        "category": "prestige",
+        "PreReq": ["DeathGodBlessing"],
+        "Tag": "HeraldPrestige",
         "BlockedTag": "HeraldPrestige",
         "gold": 1250,
         "exp": 10000,
@@ -21689,9 +21689,9 @@ const talent_data: Record<string, Talent> = {
         "conversions": {}
     },
     "Tiamat's Anathema": {
-        "category": "hybrid",
-        "PreReq": [""],
-        "Tag": "",
+        "category": "prestige",
+        "PreReq": ["DeathGodBlessing"],
+        "Tag": "HeraldPrestige",
         "BlockedTag": "HeraldPrestige",
         "gold": 1250,
         "exp": 10000,
@@ -21713,9 +21713,9 @@ const talent_data: Record<string, Talent> = {
         "conversions": {}
     },
     "Odin's Anathema": {
-        "category": "hybrid",
-        "PreReq": [""],
-        "Tag": "",
+        "category": "prestige",
+        "PreReq": ["DeathGodBlessing"],
+        "Tag": "HeraldPrestige",
         "BlockedTag": "HeraldPrestige",
         "gold": 1250,
         "exp": 10000,
@@ -21738,9 +21738,9 @@ const talent_data: Record<string, Talent> = {
         "conversions": {}
     },
     "Reaper's Anathema": {
-        "category": "hybrid",
-        "PreReq": [""],
-        "Tag": "",
+        "category": "prestige",
+        "PreReq": ["DeathGodBlessing"],
+        "Tag": "HeraldPrestige",
         "BlockedTag": "HeraldPrestige",
         "gold": 1250,
         "exp": 10000,
@@ -21762,9 +21762,9 @@ const talent_data: Record<string, Talent> = {
         "conversions": {}
     },
     "Gaia's Anathema": {
-        "category": "hybrid",
-        "PreReq": [""],
-        "Tag": "",
+        "category": "prestige",
+        "PreReq": ["DeathGodBlessing"],
+        "Tag": "HeraldPrestige",
         "BlockedTag": "HeraldPrestige",
         "gold": 1250,
         "exp": 10000,
@@ -21785,9 +21785,9 @@ const talent_data: Record<string, Talent> = {
         "conversions": {}
     },
     "Goddess's Anathema": {
-        "category": "hybrid",
-        "PreReq": [""],
-        "Tag": "",
+        "category": "prestige",
+        "PreReq": ["DeathGodBlessing"],
+        "Tag": "HeraldPrestige",
         "BlockedTag": "HeraldPrestige",
         "gold": 1250,
         "exp": 10000,
@@ -21811,8 +21811,8 @@ const talent_data: Record<string, Talent> = {
     },
     "Mystic Heart of the Flame": {
         "category": "hybrid",
-        "PreReq": ["PrimalFire"],
-        "Tag": "",
+        "PreReq": ["IgnisKey"],
+        "Tag": "PrimalFire",
         "BlockedTag": "PrimalFire",
         "gold": 1250,
         "exp": 20000,
@@ -21837,8 +21837,8 @@ const talent_data: Record<string, Talent> = {
     },
     "Mystic Legacy of the Flame": {
         "category": "hybrid",
-        "PreReq": ["PrimalFire"],
-        "Tag": "",
+        "PreReq": ["IgnisKey"],
+        "Tag": "PrimalFire",
         "BlockedTag": "PrimalFire",
         "gold": 1250,
         "exp": 20000,
@@ -21865,8 +21865,8 @@ const talent_data: Record<string, Talent> = {
     },
     "Mystic Essence of the Flame": {
         "category": "hybrid",
-        "PreReq": ["PrimalFire"],
-        "Tag": "",
+        "PreReq": ["IgnisKey"],
+        "Tag": "PrimalFire",
         "BlockedTag": "PrimalFire",
         "gold": 1250,
         "exp": 20000,
@@ -21903,10 +21903,10 @@ const talent_data: Record<string, Talent> = {
             }
         }
     },
-    "Warlord\u2019s Heart of the Flame": {
+    "Warlord's Heart of the Flame": {
         "category": "hybrid",
-        "PreReq": ["PrimalFire"],
-        "Tag": "",
+        "PreReq": ["IgnisKey"],
+        "Tag": "PrimalFire",
         "BlockedTag": "PrimalFire",
         "gold": 1250,
         "exp": 20000,
@@ -21929,10 +21929,10 @@ const talent_data: Record<string, Talent> = {
             }
         }
     },
-    "Warlord\u2019s Legacy of the Flame": {
+    "Warlord's Legacy of the Flame": {
         "category": "hybrid",
-        "PreReq": ["PrimalFire"],
-        "Tag": "",
+        "PreReq": ["IgnisKey"],
+        "Tag": "PrimalFire",
         "BlockedTag": "PrimalFire",
         "gold": 1250,
         "exp": 20000,
@@ -21956,10 +21956,10 @@ const talent_data: Record<string, Talent> = {
             }
         }
     },
-    "Warlord\u2019s Essence of the Flame": {
+    "Warlord's Essence of the Flame": {
         "category": "hybrid",
-        "PreReq": ["PrimalFire"],
-        "Tag": "",
+        "PreReq": ["IgnisKey"],
+        "Tag": "PrimalFire",
         "BlockedTag": "PrimalFire",
         "gold": 1250,
         "exp": 20000,
@@ -21986,10 +21986,10 @@ const talent_data: Record<string, Talent> = {
             }
         }
     },
-    "Paragon\u2019s Heart of the Flame": {
+    "Paragon's Heart of the Flame": {
         "category": "hybrid",
-        "PreReq": ["PrimalFire"],
-        "Tag": "",
+        "PreReq": ["IgnisKey"],
+        "Tag": "PrimalFire",
         "BlockedTag": "PrimalFire",
         "gold": 1250,
         "exp": 20000,
@@ -22012,10 +22012,10 @@ const talent_data: Record<string, Talent> = {
             }
         }
     },
-    "Paragon\u2019s Legacy of the Flame": {
+    "Paragon's Legacy of the Flame": {
         "category": "hybrid",
-        "PreReq": ["PrimalFire"],
-        "Tag": "",
+        "PreReq": ["IgnisKey"],
+        "Tag": "PrimalFire",
         "BlockedTag": "PrimalFire",
         "gold": 1250,
         "exp": 20000,
@@ -22039,10 +22039,10 @@ const talent_data: Record<string, Talent> = {
             }
         }
     },
-    "Paragon\u2019s Essence of the Flame": {
+    "Paragon's Essence of the Flame": {
         "category": "hybrid",
-        "PreReq": ["PrimalFire"],
-        "Tag": "",
+        "PreReq": ["IgnisKey"],
+        "Tag": "PrimalFire",
         "BlockedTag": "PrimalFire",
         "gold": 1250,
         "exp": 20000,
@@ -22070,10 +22070,10 @@ const talent_data: Record<string, Talent> = {
             }
         }
     },
-    "Saint\u2019s Heart of the Flame": {
+    "Saint's Heart of the Flame": {
         "category": "hybrid",
-        "PreReq": ["PrimalFire"],
-        "Tag": "",
+        "PreReq": ["IgnisKey"],
+        "Tag": "PrimalFire",
         "BlockedTag": "PrimalFire",
         "gold": 1250,
         "exp": 20000,
@@ -22096,10 +22096,10 @@ const talent_data: Record<string, Talent> = {
             }
         }
     },
-    "Saint\u2019s Legacy of the Flame": {
+    "Saint's Legacy of the Flame": {
         "category": "hybrid",
-        "PreReq": ["PrimalFire"],
-        "Tag": "",
+        "PreReq": ["IgnisKey"],
+        "Tag": "PrimalFire",
         "BlockedTag": "PrimalFire",
         "gold": 1250,
         "exp": 20000,
@@ -22126,10 +22126,10 @@ const talent_data: Record<string, Talent> = {
             }
         }
     },
-    "Saint\u2019s Essence of the Flame": {
+    "Saint's Essence of the Flame": {
         "category": "hybrid",
-        "PreReq": ["PrimalFire"],
-        "Tag": "",
+        "PreReq": ["AquaKey"],
+        "Tag": "PrimalFire",
         "BlockedTag": "PrimalFire",
         "gold": 1250,
         "exp": 20000,
@@ -22158,8 +22158,8 @@ const talent_data: Record<string, Talent> = {
     },
     "Mystic Flow of the Seas": {
         "category": "hybrid",
-        "PreReq": ["PrimalSea"],
-        "Tag": "",
+        "PreReq": ["AquaKey"],
+        "Tag": "PrimalSea",
         "BlockedTag": "PrimalSea",
         "gold": 1250,
         "exp": 20000,
@@ -22179,8 +22179,8 @@ const talent_data: Record<string, Talent> = {
     },
     "Mystic Wrath of the Seas": {
         "category": "hybrid",
-        "PreReq": ["PrimalSea"],
-        "Tag": "",
+        "PreReq": ["AquaKey"],
+        "Tag": "PrimalSea",
         "BlockedTag": "PrimalSea",
         "gold": 1250,
         "exp": 20000,
@@ -22206,8 +22206,8 @@ const talent_data: Record<string, Talent> = {
     },
     "Mystic Embrace of the Seas": {
         "category": "hybrid",
-        "PreReq": ["PrimalSea"],
-        "Tag": "",
+        "PreReq": ["AquaKey"],
+        "Tag": "PrimalSea",
         "BlockedTag": "PrimalSea",
         "gold": 1250,
         "exp": 20000,
@@ -22234,10 +22234,10 @@ const talent_data: Record<string, Talent> = {
             }
         }
     },
-    "Warlord\u2019s Flow of the Seas": {
+    "Warlord's Flow of the Seas": {
         "category": "hybrid",
-        "PreReq": ["PrimalSea"],
-        "Tag": "",
+        "PreReq": ["AquaKey"],
+        "Tag": "PrimalSea",
         "BlockedTag": "PrimalSea",
         "gold": 1250,
         "exp": 20000,
@@ -22264,10 +22264,10 @@ const talent_data: Record<string, Talent> = {
             }
         }
     },
-    "Warlord\u2019s Wrath of the Seas": {
+    "Warlord's Wrath of the Seas": {
         "category": "hybrid",
-        "PreReq": ["PrimalSea"],
-        "Tag": "",
+        "PreReq": ["AquaKey"],
+        "Tag": "PrimalSea",
         "BlockedTag": "PrimalSea",
         "gold": 1250,
         "exp": 20000,
@@ -22290,10 +22290,10 @@ const talent_data: Record<string, Talent> = {
             }
         }
     },
-    "Warlord\u2019s Embrace of the Seas": {
+    "Warlord's Embrace of the Seas": {
         "category": "hybrid",
-        "PreReq": ["PrimalSea"],
-        "Tag": "",
+        "PreReq": ["AquaKey"],
+        "Tag": "PrimalSea",
         "BlockedTag": "PrimalSea",
         "gold": 1250,
         "exp": 20000,
@@ -22320,10 +22320,10 @@ const talent_data: Record<string, Talent> = {
             }
         }
     },
-    "Paragon\u2019s Flow of the Seas": {
+    "Paragon's Flow of the Seas": {
         "category": "hybrid",
-        "PreReq": ["PrimalSea"],
-        "Tag": "",
+        "PreReq": ["AquaKey"],
+        "Tag": "PrimalSea",
         "BlockedTag": "PrimalSea",
         "gold": 1250,
         "exp": 20000,
@@ -22347,10 +22347,10 @@ const talent_data: Record<string, Talent> = {
             }
         }
     },
-    "Paragon\u2019s Wrath of the Seas": {
+    "Paragon's Wrath of the Seas": {
         "category": "hybrid",
-        "PreReq": ["PrimalSea"],
-        "Tag": "",
+        "PreReq": ["AquaKey"],
+        "Tag": "PrimalSea",
         "BlockedTag": "PrimalSea",
         "gold": 1250,
         "exp": 20000,
@@ -22373,10 +22373,10 @@ const talent_data: Record<string, Talent> = {
             }
         }
     },
-    "Paragon\u2019s Embrace of the Seas": {
+    "Paragon's Embrace of the Seas": {
         "category": "hybrid",
-        "PreReq": ["PrimalSea"],
-        "Tag": "",
+        "PreReq": ["AquaKey"],
+        "Tag": "PrimalSea",
         "BlockedTag": "PrimalSea",
         "gold": 1250,
         "exp": 20000,
@@ -22403,10 +22403,10 @@ const talent_data: Record<string, Talent> = {
             }
         }
     },
-    "Saint\u2019s Flow of the Seas": {
+    "Saint's Flow of the Seas": {
         "category": "hybrid",
-        "PreReq": ["PrimalSea"],
-        "Tag": "",
+        "PreReq": ["AquaKey"],
+        "Tag": "PrimalSea",
         "BlockedTag": "PrimalSea",
         "gold": 1250,
         "exp": 20000,
@@ -22430,10 +22430,10 @@ const talent_data: Record<string, Talent> = {
             }
         }
     },
-    "Saint\u2019s Wrath of the Seas": {
+    "Saint's Wrath of the Seas": {
         "category": "hybrid",
-        "PreReq": ["PrimalSea"],
-        "Tag": "",
+        "PreReq": ["AquaKey"],
+        "Tag": "PrimalSea",
         "BlockedTag": "PrimalSea",
         "gold": 1250,
         "exp": 20000,
@@ -22460,10 +22460,10 @@ const talent_data: Record<string, Talent> = {
             }
         }
     },
-    "Saint\u2019s Embrace of the Seas": {
+    "Saint's Embrace of the Seas": {
         "category": "hybrid",
-        "PreReq": ["PrimalSea"],
-        "Tag": "",
+        "PreReq": ["AquaKey"],
+        "Tag": "PrimalSea",
         "BlockedTag": "PrimalSea",
         "gold": 1250,
         "exp": 20000,
@@ -22492,8 +22492,8 @@ const talent_data: Record<string, Talent> = {
     },
     "Mystic Touch of the Storm": {
         "category": "hybrid",
-        "PreReq": ["PrimalTempest"],
-        "Tag": "",
+        "PreReq": ["TempestKey"],
+        "Tag": "PrimalTempest",
         "BlockedTag": "PrimalTempest",
         "gold": 1250,
         "exp": 20000,
@@ -22523,8 +22523,8 @@ const talent_data: Record<string, Talent> = {
     },
     "Mystic Breath of the Wind": {
         "category": "hybrid",
-        "PreReq": ["PrimalTempest"],
-        "Tag": "",
+        "PreReq": ["TempestKey"],
+        "Tag": "PrimalTempest",
         "BlockedTag": "PrimalTempest",
         "gold": 1250,
         "exp": 20000,
@@ -22558,8 +22558,8 @@ const talent_data: Record<string, Talent> = {
     },
     "Mystic Power of the Tempest": {
         "category": "hybrid",
-        "PreReq": ["PrimalTempest"],
-        "Tag": "",
+        "PreReq": ["TempestKey"],
+        "Tag": "PrimalTempest",
         "BlockedTag": "PrimalTempest",
         "gold": 1250,
         "exp": 20000,
@@ -22588,10 +22588,10 @@ const talent_data: Record<string, Talent> = {
             }
         }
     },
-    "Warlord\u2019s Touch of the Storm": {
+    "Warlord's Touch of the Storm": {
         "category": "hybrid",
-        "PreReq": ["PrimalTempest"],
-        "Tag": "",
+        "PreReq": ["TempestKey"],
+        "Tag": "PrimalTempest",
         "BlockedTag": "PrimalTempest",
         "gold": 1250,
         "exp": 20000,
@@ -22618,10 +22618,10 @@ const talent_data: Record<string, Talent> = {
             }
         }
     },
-    "Warlord\u2019s Breath of the Wind": {
+    "Warlord's Breath of the Wind": {
         "category": "hybrid",
-        "PreReq": ["PrimalTempest"],
-        "Tag": "",
+        "PreReq": ["TempestKey"],
+        "Tag": "PrimalTempest",
         "BlockedTag": "PrimalTempest",
         "gold": 1250,
         "exp": 20000,
@@ -22644,10 +22644,10 @@ const talent_data: Record<string, Talent> = {
             }
         }
     },
-    "Warlord\u2019s Power of the Tempest": {
+    "Warlord's Power of the Tempest": {
         "category": "hybrid",
-        "PreReq": ["PrimalTempest"],
-        "Tag": "",
+        "PreReq": ["TempestKey"],
+        "Tag": "PrimalTempest",
         "BlockedTag": "PrimalTempest",
         "gold": 1250,
         "exp": 20000,
@@ -22670,10 +22670,10 @@ const talent_data: Record<string, Talent> = {
             }
         }
     },
-    "Paragon\u2019s Touch of the Storm": {
+    "Paragon's Touch of the Storm": {
         "category": "hybrid",
-        "PreReq": ["PrimalTempest"],
-        "Tag": "",
+        "PreReq": ["TempestKey"],
+        "Tag": "PrimalTempest",
         "BlockedTag": "PrimalTempest",
         "gold": 1250,
         "exp": 20000,
@@ -22696,10 +22696,10 @@ const talent_data: Record<string, Talent> = {
             }
         }
     },
-    "Paragon\u2019s Breath of the Wind": {
+    "Paragon's Breath of the Wind": {
         "category": "hybrid",
-        "PreReq": ["PrimalTempest"],
-        "Tag": "",
+        "PreReq": ["TempestKey"],
+        "Tag": "PrimalTempest",
         "BlockedTag": "PrimalTempest",
         "gold": 1250,
         "exp": 20000,
@@ -22727,10 +22727,10 @@ const talent_data: Record<string, Talent> = {
             }
         }
     },
-    "Paragon\u2019s Power of the Tempest": {
+    "Paragon's Power of the Tempest": {
         "category": "hybrid",
-        "PreReq": ["PrimalTempest"],
-        "Tag": "",
+        "PreReq": ["TempestKey"],
+        "Tag": "PrimalTempest",
         "BlockedTag": "PrimalTempest",
         "gold": 1250,
         "exp": 20000,
@@ -22758,10 +22758,10 @@ const talent_data: Record<string, Talent> = {
             }
         }
     },
-    "Saint\u2019s Touch of the Storm": {
+    "Saint's Touch of the Storm": {
         "category": "hybrid",
-        "PreReq": ["PrimalTempest"],
-        "Tag": "",
+        "PreReq": ["TempestKey"],
+        "Tag": "PrimalTempest",
         "BlockedTag": "PrimalTempest",
         "gold": 1250,
         "exp": 20000,
@@ -22788,10 +22788,10 @@ const talent_data: Record<string, Talent> = {
             }
         }
     },
-    "Saint\u2019s Breath of the Wind": {
+    "Saint's Breath of the Wind": {
         "category": "hybrid",
-        "PreReq": ["PrimalTempest"],
-        "Tag": "",
+        "PreReq": ["TempestKey"],
+        "Tag": "PrimalTempest",
         "BlockedTag": "PrimalTempest",
         "gold": 1250,
         "exp": 20000,
@@ -22819,10 +22819,10 @@ const talent_data: Record<string, Talent> = {
             }
         }
     },
-    "Saint\u2019s Power of the Tempest": {
+    "Saint's Power of the Tempest": {
         "category": "hybrid",
-        "PreReq": ["PrimalTempest"],
-        "Tag": "",
+        "PreReq": ["TempestKey"],
+        "Tag": "PrimalTempest",
         "BlockedTag": "PrimalTempest",
         "gold": 1250,
         "exp": 20000,
@@ -22843,8 +22843,8 @@ const talent_data: Record<string, Talent> = {
     },
     "Mystic Will of the Champion": {
         "category": "hybrid",
-        "PreReq": ["PrimalTerra"],
-        "Tag": "",
+        "PreReq": ["TerraKey"],
+        "Tag": "PrimalTerra",
         "BlockedTag": "PrimalTerra",
         "gold": 1250,
         "exp": 20000,
@@ -22870,8 +22870,8 @@ const talent_data: Record<string, Talent> = {
     },
     "Mystic Aspect of Reality": {
         "category": "hybrid",
-        "PreReq": ["PrimalTerra"],
-        "Tag": "",
+        "PreReq": ["TerraKey"],
+        "Tag": "PrimalTerra",
         "BlockedTag": "PrimalTerra",
         "gold": 1250,
         "exp": 20000,
@@ -22905,8 +22905,8 @@ const talent_data: Record<string, Talent> = {
     },
     "Mystic Fortitude of the Earth": {
         "category": "hybrid",
-        "PreReq": ["PrimalTerra"],
-        "Tag": "",
+        "PreReq": ["TerraKey"],
+        "Tag": "PrimalTerra",
         "BlockedTag": "PrimalTerra",
         "gold": 1250,
         "exp": 20000,
@@ -22938,10 +22938,10 @@ const talent_data: Record<string, Talent> = {
             }
         }
     },
-    "Warlord\u2019s Will of the Champion": {
+    "Warlord's Will of the Champion": {
         "category": "hybrid",
-        "PreReq": ["PrimalTerra"],
-        "Tag": "",
+        "PreReq": ["TerraKey"],
+        "Tag": "PrimalTerra",
         "BlockedTag": "PrimalTerra",
         "gold": 1250,
         "exp": 20000,
@@ -22973,10 +22973,10 @@ const talent_data: Record<string, Talent> = {
             }
         }
     },
-    "Warlord\u2019s Aspect of Reality": {
+    "Warlord's Aspect of Reality": {
         "category": "hybrid",
-        "PreReq": ["PrimalTerra"],
-        "Tag": "",
+        "PreReq": ["TerraKey"],
+        "Tag": "PrimalTerra",
         "BlockedTag": "PrimalTerra",
         "gold": 1250,
         "exp": 20000,
@@ -22999,10 +22999,10 @@ const talent_data: Record<string, Talent> = {
             }
         }
     },
-    "Warlord\u2019s Fortitude of the Earth": {
+    "Warlord's Fortitude of the Earth": {
         "category": "hybrid",
-        "PreReq": ["PrimalTerra"],
-        "Tag": "",
+        "PreReq": ["TerraKey"],
+        "Tag": "PrimalTerra",
         "BlockedTag": "PrimalTerra",
         "gold": 1250,
         "exp": 20000,
@@ -23029,10 +23029,10 @@ const talent_data: Record<string, Talent> = {
             }
         }
     },
-    "Paragon\u2019s Will of the Champion": {
+    "Paragon's Will of the Champion": {
         "category": "hybrid",
-        "PreReq": ["PrimalTerra"],
-        "Tag": "",
+        "PreReq": ["TerraKey"],
+        "Tag": "PrimalTerra",
         "BlockedTag": "PrimalTerra",
         "gold": 1250,
         "exp": 20000,
@@ -23068,10 +23068,10 @@ const talent_data: Record<string, Talent> = {
             }
         }
     },
-    "Paragon\u2019s Aspect of Reality": {
+    "Paragon's Aspect of Reality": {
         "category": "hybrid",
-        "PreReq": ["PrimalTerra"],
-        "Tag": "",
+        "PreReq": ["TerraKey"],
+        "Tag": "PrimalTerra",
         "BlockedTag": "PrimalTerra",
         "gold": 1250,
         "exp": 20000,
@@ -23096,10 +23096,10 @@ const talent_data: Record<string, Talent> = {
             }
         }
     },
-    "Paragon\u2019s Fortitude of the Earth": {
+    "Paragon's Fortitude of the Earth": {
         "category": "hybrid",
-        "PreReq": ["PrimalTerra"],
-        "Tag": "",
+        "PreReq": ["TerraKey"],
+        "Tag": "PrimalTerra",
         "BlockedTag": "PrimalTerra",
         "gold": 1250,
         "exp": 20000,
@@ -23131,10 +23131,10 @@ const talent_data: Record<string, Talent> = {
             }
         }
     },
-    "Saint\u2019s Will of the Champion": {
+    "Saint's Will of the Champion": {
         "category": "hybrid",
-        "PreReq": ["PrimalTerra"],
-        "Tag": "",
+        "PreReq": ["TerraKey"],
+        "Tag": "PrimalTerra",
         "BlockedTag": "PrimalTerra",
         "gold": 1250,
         "exp": 20000,
@@ -23158,10 +23158,10 @@ const talent_data: Record<string, Talent> = {
             }
         }
     },
-    "Saint\u2019s Aspect of Reality": {
+    "Saint's Aspect of Reality": {
         "category": "hybrid",
-        "PreReq": ["PrimalTerra"],
-        "Tag": "",
+        "PreReq": ["TerraKey"],
+        "Tag": "PrimalTerra",
         "BlockedTag": "PrimalTerra",
         "gold": 1250,
         "exp": 20000,
@@ -23179,10 +23179,10 @@ const talent_data: Record<string, Talent> = {
         },
         "conversions": {}
     },
-    "Saint\u2019s Fortitude of the Earth": {
+    "Saint's Fortitude of the Earth": {
         "category": "hybrid",
-        "PreReq": ["PrimalTerra"],
-        "Tag": "",
+        "PreReq": ["TerraKey"],
+        "Tag": "PrimalTerra",
         "BlockedTag": "PrimalTerra",
         "gold": 1250,
         "exp": 20000,
@@ -23215,8 +23215,8 @@ const talent_data: Record<string, Talent> = {
     },
     "Mystic Primal Soul": {
         "category": "hybrid",
-        "PreReq": ["PrimalSoul"],
-        "Tag": "",
+        "PreReq": ["PrimalEssence"],
+        "Tag": "PrimalSoul",
         "BlockedTag": "PrimalSoul",
         "gold": 1250,
         "exp": 20000,
@@ -23248,8 +23248,8 @@ const talent_data: Record<string, Talent> = {
     },
     "Mystic Flow of Yinshan": {
         "category": "hybrid",
-        "PreReq": ["PrimalSoul"],
-        "Tag": "",
+        "PreReq": ["PrimalEssence"],
+        "Tag": "PrimalSoul",
         "BlockedTag": "PrimalSoul",
         "gold": 1250,
         "exp": 20000,
@@ -23275,8 +23275,8 @@ const talent_data: Record<string, Talent> = {
     },
     "Mystic Touch of the Yangson": {
         "category": "hybrid",
-        "PreReq": ["PrimalSoul"],
-        "Tag": "",
+        "PreReq": ["PrimalEssence"],
+        "Tag": "PrimalSoul",
         "BlockedTag": "PrimalSoul",
         "gold": 1250,
         "exp": 20000,
@@ -23301,10 +23301,10 @@ const talent_data: Record<string, Talent> = {
             }
         }
     },
-    "Warlord\u2019s Primal Soul": {
+    "Warlord's Primal Soul": {
         "category": "hybrid",
-        "PreReq": ["PrimalSoul"],
-        "Tag": "",
+        "PreReq": ["PrimalEssence"],
+        "Tag": "PrimalSoul",
         "BlockedTag": "PrimalSoul",
         "gold": 1250,
         "exp": 20000,
@@ -23328,10 +23328,10 @@ const talent_data: Record<string, Talent> = {
             }
         }
     },
-    "Warlord\u2019s Flow of Yinshan": {
+    "Warlord's Flow of Yinshan": {
         "category": "hybrid",
-        "PreReq": ["PrimalSoul"],
-        "Tag": "",
+        "PreReq": ["PrimalEssence"],
+        "Tag": "PrimalSoul",
         "BlockedTag": "PrimalSoul",
         "gold": 1250,
         "exp": 20000,
@@ -23361,10 +23361,10 @@ const talent_data: Record<string, Talent> = {
             }
         }
     },
-    "Warlord\u2019s Touch of the Yangson": {
+    "Warlord's Touch of the Yangson": {
         "category": "hybrid",
-        "PreReq": ["PrimalSoul"],
-        "Tag": "",
+        "PreReq": ["PrimalEssence"],
+        "Tag": "PrimalSoul",
         "BlockedTag": "PrimalSoul",
         "gold": 1250,
         "exp": 20000,
@@ -23394,10 +23394,10 @@ const talent_data: Record<string, Talent> = {
             }
         }
     },
-    "Paragon\u2019s Primal Soul": {
+    "Paragon's Primal Soul": {
         "category": "hybrid",
-        "PreReq": ["PrimalSoul"],
-        "Tag": "",
+        "PreReq": ["PrimalEssence"],
+        "Tag": "PrimalSoul",
         "BlockedTag": "PrimalSoul",
         "gold": 1250,
         "exp": 20000,
@@ -23420,10 +23420,10 @@ const talent_data: Record<string, Talent> = {
             }
         }
     },
-    "Paragon\u2019s Flow of Yinshan": {
+    "Paragon's Flow of Yinshan": {
         "category": "hybrid",
-        "PreReq": ["PrimalSoul"],
-        "Tag": "",
+        "PreReq": ["PrimalEssence"],
+        "Tag": "PrimalSoul",
         "BlockedTag": "PrimalSoul",
         "gold": 1250,
         "exp": 20000,
@@ -23448,10 +23448,10 @@ const talent_data: Record<string, Talent> = {
             }
         }
     },
-    "Paragon\u2019s Touch of the Yangson": {
+    "Paragon's Touch of the Yangson": {
         "category": "hybrid",
-        "PreReq": ["PrimalSoul"],
-        "Tag": "",
+        "PreReq": ["PrimalEssence"],
+        "Tag": "PrimalSoul",
         "BlockedTag": "PrimalSoul",
         "gold": 1250,
         "exp": 20000,
@@ -23475,10 +23475,10 @@ const talent_data: Record<string, Talent> = {
             }
         }
     },
-    "Saint\u2019s Primal Soul": {
+    "Saint's Primal Soul": {
         "category": "hybrid",
-        "PreReq": ["PrimalSoul"],
-        "Tag": "",
+        "PreReq": ["PrimalEssence"],
+        "Tag": "PrimalSoul",
         "BlockedTag": "PrimalSoul",
         "gold": 1250,
         "exp": 20000,
@@ -23502,10 +23502,10 @@ const talent_data: Record<string, Talent> = {
             }
         }
     },
-    "Saint\u2019s Flow of Yinshan": {
+    "Saint's Flow of Yinshan": {
         "category": "hybrid",
-        "PreReq": ["PrimalSoul"],
-        "Tag": "",
+        "PreReq": ["PrimalEssence"],
+        "Tag": "PrimalSoul",
         "BlockedTag": "PrimalSoul",
         "gold": 1250,
         "exp": 20000,
@@ -23529,10 +23529,10 @@ const talent_data: Record<string, Talent> = {
             }
         }
     },
-    "Saint\u2019s Touch of the Yangson": {
+    "Saint's Touch of the Yangson": {
         "category": "hybrid",
-        "PreReq": ["PrimalSoul"],
-        "Tag": "",
+        "PreReq": ["PrimalEssence"],
+        "Tag": "PrimalSoul",
         "BlockedTag": "PrimalSoul",
         "gold": 1250,
         "exp": 20000,
@@ -23562,8 +23562,8 @@ const talent_data: Record<string, Talent> = {
     },
     "Skeleton Warrior 1": {
         "category": "racial",
-        "PreReq": [""],
-        "Tag": "",
+        "PreReq": ["Skeleton"],
+        "Tag": "Skeleton1",
         "BlockedTag": "Skeleton1",
         "gold": 100,
         "exp": 100,
@@ -23828,7 +23828,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Death Emperor": {
         "category": "racial",
-        "PreReq": ["Death Lord 3"],
+        "PreReq": ["Death Lord 3", "ValkyrieKey"],
         "Tag": "",
         "BlockedTag": "",
         "gold": 1000,
@@ -23852,8 +23852,8 @@ const talent_data: Record<string, Talent> = {
     },
     "Skeleton Mage 1": {
         "category": "racial",
-        "PreReq": [""],
-        "Tag": "",
+        "PreReq": ["Skeleton"],
+        "Tag": "Skeleton1",
         "BlockedTag": "Skeleton1",
         "gold": 100,
         "exp": 100,
@@ -24113,7 +24113,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Overlord": {
         "category": "racial",
-        "PreReq": ["Twilight Lich 3"],
+        "PreReq": ["Twilight Lich 3", "ValkyrieKey"],
         "Tag": "",
         "BlockedTag": "",
         "gold": 1000,
@@ -24135,7 +24135,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Zombie 1": {
         "category": "racial",
-        "PreReq": [""],
+        "PreReq": ["Zombie"],
         "Tag": "",
         "BlockedTag": "",
         "gold": 100,
@@ -24382,7 +24382,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Tomb Emperor": {
         "category": "racial",
-        "PreReq": ["Revenant 3"],
+        "PreReq": ["Revenant 3", "ValkyrieKey"],
         "Tag": "",
         "BlockedTag": "",
         "gold": 1000,
@@ -24404,7 +24404,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Orc 1": {
         "category": "racial",
-        "PreReq": [""],
+        "PreReq": ["Orc"],
         "Tag": "",
         "BlockedTag": "",
         "gold": 100,
@@ -24645,7 +24645,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Orc Deity": {
         "category": "racial",
-        "PreReq": ["Orc Emperor 3"],
+        "PreReq": ["Orc Emperor 3", "ElvenKey"],
         "Tag": "",
         "BlockedTag": "",
         "gold": 1000,
@@ -24667,7 +24667,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Goblin 1": {
         "category": "racial",
-        "PreReq": [""],
+        "PreReq": ["Goblin"],
         "Tag": "",
         "BlockedTag": "",
         "gold": 100,
@@ -24924,7 +24924,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Goblin Deity": {
         "category": "racial",
-        "PreReq": ["Goblin Emperor 3"],
+        "PreReq": ["Goblin Emperor 3", "ElvenKey"],
         "Tag": "",
         "BlockedTag": "",
         "gold": 1000,
@@ -24947,7 +24947,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Lizardman 1": {
         "category": "racial",
-        "PreReq": [""],
+        "PreReq": ["Lizardman"],
         "Tag": "",
         "BlockedTag": "",
         "gold": 100,
@@ -25212,7 +25212,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Elder Scale Deity": {
         "category": "racial",
-        "PreReq": ["Elder Scale 3"],
+        "PreReq": ["Elder Scale 3", "AsuraKey"],
         "Tag": "",
         "BlockedTag": "",
         "gold": 1000,
@@ -25237,7 +25237,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Giant 1": {
         "category": "racial",
-        "PreReq": [""],
+        "PreReq": ["Giant"],
         "Tag": "",
         "BlockedTag": "",
         "gold": 100,
@@ -25298,7 +25298,7 @@ const talent_data: Record<string, Talent> = {
     "Frost Giant 1": {
         "category": "racial",
         "PreReq": ["Giant 3"],
-        "Tag": "",
+        "Tag": "Giant2",
         "BlockedTag": "Giant2",
         "gold": 100,
         "exp": 600,
@@ -25359,7 +25359,7 @@ const talent_data: Record<string, Talent> = {
     "Air Giant 1": {
         "category": "racial",
         "PreReq": ["Giant 3"],
-        "Tag": "",
+        "Tag": "Giant2",
         "BlockedTag": "Giant2",
         "gold": 100,
         "exp": 600,
@@ -25419,7 +25419,7 @@ const talent_data: Record<string, Talent> = {
     "Hill Giant 1": {
         "category": "racial",
         "PreReq": ["Giant 3"],
-        "Tag": "",
+        "Tag": "Giant2",
         "BlockedTag": "Giant2",
         "gold": 100,
         "exp": 600,
@@ -25600,7 +25600,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Jotun Deity": {
         "category": "racial",
-        "PreReq": ["Jotun Emperor 3"],
+        "PreReq": ["Jotun Emperor 3", "ElvenKey"],
         "Tag": "",
         "BlockedTag": "",
         "gold": 1000,
@@ -25744,7 +25744,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Storm Deity": {
         "category": "racial",
-        "PreReq": ["Storm Giant Emperor 3"],
+        "PreReq": ["Storm Giant Emperor 3", "ElvenKey"],
         "Tag": "",
         "BlockedTag": "",
         "gold": 1000,
@@ -25886,7 +25886,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Mountain Deity": {
         "category": "racial",
-        "PreReq": ["Mountain Emperor 3"],
+        "PreReq": ["Mountain Emperor 3", "ElvenKey"],
         "Tag": "",
         "BlockedTag": "",
         "gold": 1000,
@@ -25908,8 +25908,8 @@ const talent_data: Record<string, Talent> = {
     },
     "Dragonspawn 1": {
         "category": "racial",
-        "PreReq": [""],
-        "Tag": "",
+        "PreReq": ["Dragonspawn"],
+        "Tag": "Dragonspawn1",
         "BlockedTag": "Dragonspawn1",
         "gold": 100,
         "exp": 100,
@@ -25978,7 +25978,7 @@ const talent_data: Record<string, Talent> = {
     "Dragonkin 1": {
         "category": "racial",
         "PreReq": ["Dragonspawn 3"],
-        "Tag": "",
+        "Tag": "Dragonkin",
         "BlockedTag": "Dragonkin",
         "gold": 100,
         "exp": 600,
@@ -26170,7 +26170,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Dragonoid Lord": {
         "category": "racial",
-        "PreReq": ["Dragonoid 3"],
+        "PreReq": ["Dragonoid 3", "AsuraKey"],
         "Tag": "",
         "BlockedTag": "",
         "gold": 1000,
@@ -26192,8 +26192,8 @@ const talent_data: Record<string, Talent> = {
     },
     "Dragonspawn Mystic 1": {
         "category": "racial",
-        "PreReq": [""],
-        "Tag": "",
+        "PreReq": ["Dragonspawn"],
+        "Tag": "Dragonspawn1",
         "BlockedTag": "Dragonspawn1",
         "gold": 100,
         "exp": 100,
@@ -26261,7 +26261,7 @@ const talent_data: Record<string, Talent> = {
     "Dragonkin Mage 1": {
         "category": "racial",
         "PreReq": ["Dragonspawn Mystic 3"],
-        "Tag": "",
+        "Tag": "Dragonkin",
         "BlockedTag": "Dragonkin",
         "gold": 100,
         "exp": 600,
@@ -26452,7 +26452,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Dragonoid Sovereign": {
         "category": "racial",
-        "PreReq": ["Dragonoid Mystic 3"],
+        "PreReq": ["Dragonoid Mystic 3", "AsuraKey"],
         "Tag": "",
         "BlockedTag": "",
         "gold": 1000,
@@ -26474,8 +26474,8 @@ const talent_data: Record<string, Talent> = {
     },
     "Devil 1": {
         "category": "racial",
-        "PreReq": [""],
-        "Tag": "",
+        "PreReq": ["Demon"],
+        "Tag": "Demon1",
         "BlockedTag": "Demon1",
         "gold": 100,
         "exp": 100,
@@ -26719,7 +26719,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Aspect of Evil": {
         "category": "racial",
-        "PreReq": ["Evil Lord 3"],
+        "PreReq": ["Evil Lord 3", "ValkyrieKey"],
         "Tag": "",
         "BlockedTag": "",
         "gold": 1000,
@@ -26741,8 +26741,8 @@ const talent_data: Record<string, Talent> = {
     },
     "Imp 1": {
         "category": "racial",
-        "PreReq": [""],
-        "Tag": "",
+        "PreReq": ["Demon"],
+        "Tag": "Demon1",
         "BlockedTag": "Demon1",
         "gold": 100,
         "exp": 100,
@@ -26980,7 +26980,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Lord of Hell": {
         "category": "racial",
-        "PreReq": ["Demon King 3"],
+        "PreReq": ["Demon King 3", "ValkyrieKey"],
         "Tag": "",
         "BlockedTag": "",
         "gold": 1000,
@@ -27004,7 +27004,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Angel 1": {
         "category": "racial",
-        "PreReq": [""],
+        "PreReq": ["Angel"],
         "Tag": "",
         "BlockedTag": "",
         "gold": 100,
@@ -27125,7 +27125,7 @@ const talent_data: Record<string, Talent> = {
     "Dominion 1": {
         "category": "racial",
         "PreReq": ["Archangel 3"],
-        "Tag": "",
+        "Tag": "Angel1",
         "BlockedTag": "Angel1",
         "gold": 100,
         "exp": 1800,
@@ -27186,7 +27186,7 @@ const talent_data: Record<string, Talent> = {
     "Virtues 1": {
         "category": "racial",
         "PreReq": ["Archangel 3"],
-        "Tag": "",
+        "Tag": "Angel1",
         "BlockedTag": "Angel1",
         "gold": 100,
         "exp": 1800,
@@ -27247,7 +27247,7 @@ const talent_data: Record<string, Talent> = {
     "Fallen Angel 1": {
         "category": "racial",
         "PreReq": ["Archangel 3"],
-        "Tag": "",
+        "Tag": "Angel1",
         "BlockedTag": "Angel1",
         "gold": 100,
         "exp": 1800,
@@ -27369,7 +27369,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Cherubrim": {
         "category": "racial",
-        "PreReq": ["Thrones 3"],
+        "PreReq": ["Thrones 3", "ValkyrieKey"],
         "Tag": "",
         "BlockedTag": "",
         "gold": 1000,
@@ -27453,7 +27453,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Empyrean": {
         "category": "racial",
-        "PreReq": ["Seraph 3"],
+        "PreReq": ["Seraph 3", "ValkyrieKey"],
         "Tag": "",
         "BlockedTag": "",
         "gold": 1000,
@@ -27538,7 +27538,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Lucifer": {
         "category": "racial",
-        "PreReq": ["Sin Lord 3"],
+        "PreReq": ["Sin Lord 3", "ValkyrieKey"],
         "Tag": "",
         "BlockedTag": "",
         "gold": 1000,
@@ -27562,7 +27562,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Lesser Vampire 1": {
         "category": "racial",
-        "PreReq": [""],
+        "PreReq": ["Vampire"],
         "Tag": "",
         "BlockedTag": "",
         "gold": 100,
@@ -27824,7 +27824,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Vampire Deity": {
         "category": "racial",
-        "PreReq": ["Vampire Lord 3"],
+        "PreReq": ["Vampire Lord 3", "ValkyrieKey"],
         "Tag": "",
         "BlockedTag": "",
         "gold": 1000,
@@ -27846,7 +27846,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Insectoid 1": {
         "category": "racial",
-        "PreReq": [""],
+        "PreReq": ["Insectoid"],
         "Tag": "",
         "BlockedTag": "",
         "gold": 100,
@@ -27914,8 +27914,8 @@ const talent_data: Record<string, Talent> = {
     "Insect Warrior 1": {
         "category": "racial",
         "PreReq": ["Insectoid 3"],
-        "Tag": "",
-        "BlockedTag": "",
+        "Tag": "Insectoid1",
+        "BlockedTag": "Insectoid1",
         "gold": 100,
         "exp": 600,
         "tp_spent": 0,
@@ -28115,7 +28115,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Vermin Deity": {
         "category": "racial",
-        "PreReq": ["Vermin Emperor 3"],
+        "PreReq": ["Vermin Emperor 3", "AsuraKey"],
         "Tag": "",
         "BlockedTag": "",
         "gold": 1000,
@@ -28142,7 +28142,7 @@ const talent_data: Record<string, Talent> = {
     "Insect Shaman 1": {
         "category": "racial",
         "PreReq": ["Insectoid 3"],
-        "Tag": "",
+        "Tag": "Insectoid1",
         "BlockedTag": "Insectoid1",
         "gold": 100,
         "exp": 600,
@@ -28339,7 +28339,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Venomatid Deity": {
         "category": "racial",
-        "PreReq": ["Venomatid Emperor 3"],
+        "PreReq": ["Venomatid Emperor 3", "AsuraKey"],
         "Tag": "",
         "BlockedTag": "",
         "gold": 1000,
@@ -28361,7 +28361,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Ogre 1": {
         "category": "racial",
-        "PreReq": [""],
+        "PreReq": ["Ogre"],
         "Tag": "",
         "BlockedTag": "",
         "gold": 100,
@@ -28604,7 +28604,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Ogre Deity": {
         "category": "racial",
-        "PreReq": ["Ogre Emperor 3"],
+        "PreReq": ["Ogre Emperor 3", "ElvenKey"],
         "Tag": "",
         "BlockedTag": "",
         "gold": 1000,
@@ -28626,7 +28626,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Troll 1": {
         "category": "racial",
-        "PreReq": [""],
+        "PreReq": ["Troll"],
         "Tag": "",
         "BlockedTag": "",
         "gold": 100,
@@ -28869,7 +28869,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Troll Deity": {
         "category": "racial",
-        "PreReq": ["Troll Emperor 3"],
+        "PreReq": ["Troll Emperor 3", "ElvenKey"],
         "Tag": "",
         "BlockedTag": "",
         "gold": 1000,
@@ -28890,7 +28890,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Quogga 1": {
         "category": "racial",
-        "PreReq": [""],
+        "PreReq": ["Quogga"],
         "Tag": "",
         "BlockedTag": "",
         "gold": 100,
@@ -29162,7 +29162,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Quogga Deity": {
         "category": "racial",
-        "PreReq": ["Quogga Emperor 3"],
+        "PreReq": ["Quogga Emperor 3", "ElvenKey"],
         "Tag": "",
         "BlockedTag": "",
         "gold": 1000,
@@ -29183,7 +29183,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Minotaur 1": {
         "category": "racial",
-        "PreReq": [""],
+        "PreReq": ["Minotaur"],
         "Tag": "",
         "BlockedTag": "",
         "gold": 100,
@@ -29428,7 +29428,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Minotaur Deity": {
         "category": "racial",
-        "PreReq": ["Minotaur Emperor 3"],
+        "PreReq": ["Minotaur Emperor 3", "ElvenKey"],
         "Tag": "",
         "BlockedTag": "",
         "gold": 1000,
@@ -29451,7 +29451,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Tigerman 1": {
         "category": "racial",
-        "PreReq": [""],
+        "PreReq": ["Tigerman"],
         "Tag": "",
         "BlockedTag": "",
         "gold": 100,
@@ -29708,7 +29708,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Tigerman Deity": {
         "category": "racial",
-        "PreReq": ["Tigerman Emperor 3"],
+        "PreReq": ["Tigerman Emperor 3", "ElvenKey"],
         "Tag": "",
         "BlockedTag": "",
         "gold": 1000,
@@ -29730,7 +29730,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Goatman 1": {
         "category": "racial",
-        "PreReq": [""],
+        "PreReq": ["Goatman"],
         "Tag": "",
         "BlockedTag": "",
         "gold": 100,
@@ -29972,7 +29972,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Goatman Deity": {
         "category": "racial",
-        "PreReq": ["Goatman Emperor 3"],
+        "PreReq": ["Goatman Emperor 3", "ElvenKey"],
         "Tag": "",
         "BlockedTag": "",
         "gold": 1000,
@@ -29995,7 +29995,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Half-Golem 1": {
         "category": "racial",
-        "PreReq": [""],
+        "PreReq": ["HalfGolem"],
         "Tag": "",
         "BlockedTag": "",
         "gold": 100,
@@ -30242,7 +30242,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Prismatic Golem": {
         "category": "racial",
-        "PreReq": ["Adamantite Golem 3"],
+        "PreReq": ["Adamantite Golem 3", "AsuraKey"],
         "Tag": "",
         "BlockedTag": "",
         "gold": 1000,
@@ -30265,7 +30265,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Frogman 1": {
         "category": "racial",
-        "PreReq": [""],
+        "PreReq": ["Frogman"],
         "Tag": "",
         "BlockedTag": "",
         "gold": 100,
@@ -30524,7 +30524,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Frogman Deity": {
         "category": "racial",
-        "PreReq": ["Frogman Emperor 3"],
+        "PreReq": ["Frogman Emperor 3", "ElvenKey"],
         "Tag": "",
         "BlockedTag": "",
         "gold": 1000,
@@ -30548,8 +30548,8 @@ const talent_data: Record<string, Talent> = {
     },
     "Fire Elemental 1": {
         "category": "racial",
-        "PreReq": [""],
-        "Tag": "",
+        "PreReq": ["Elemental"],
+        "Tag": "Elemental1",
         "BlockedTag": "Elemental1",
         "gold": 100,
         "exp": 100,
@@ -30808,7 +30808,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Inferno Deity": {
         "category": "racial",
-        "PreReq": ["Primal Flame 3"],
+        "PreReq": ["Primal Flame 3", "AsuraKey"],
         "Tag": "",
         "BlockedTag": "",
         "gold": 1000,
@@ -30831,8 +30831,8 @@ const talent_data: Record<string, Talent> = {
     },
     "Water Elemental 1": {
         "category": "racial",
-        "PreReq": [""],
-        "Tag": "",
+        "PreReq": ["Elemental"],
+        "Tag": "Elemental1",
         "BlockedTag": "Elemental1",
         "gold": 100,
         "exp": 100,
@@ -31091,7 +31091,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Aqua Deity": {
         "category": "racial",
-        "PreReq": ["Primal Water 3"],
+        "PreReq": ["Primal Water 3", "AsuraKey"],
         "Tag": "",
         "BlockedTag": "",
         "gold": 1000,
@@ -31114,8 +31114,8 @@ const talent_data: Record<string, Talent> = {
     },
     "Earth Elemental 1": {
         "category": "racial",
-        "PreReq": [""],
-        "Tag": "",
+        "PreReq": ["Elemental"],
+        "Tag": "Elemental1",
         "BlockedTag": "Elemental1",
         "gold": 100,
         "exp": 100,
@@ -31374,7 +31374,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Terra Deity": {
         "category": "racial",
-        "PreReq": ["Primal Earth 3"],
+        "PreReq": ["Primal Earth 3", "AsuraKey"],
         "Tag": "",
         "BlockedTag": "",
         "gold": 1000,
@@ -31397,8 +31397,8 @@ const talent_data: Record<string, Talent> = {
     },
     "Wind Elemental 1": {
         "category": "racial",
-        "PreReq": [""],
-        "Tag": "",
+        "PreReq": ["Elemental"],
+        "Tag": "Elemental1",
         "BlockedTag": "Elemental1",
         "gold": 100,
         "exp": 100,
@@ -31657,7 +31657,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Whirlwind Deity": {
         "category": "racial",
-        "PreReq": ["Primal Wind 3"],
+        "PreReq": ["Primal Wind 3", "AsuraKey"],
         "Tag": "",
         "BlockedTag": "",
         "gold": 1000,
@@ -31680,8 +31680,8 @@ const talent_data: Record<string, Talent> = {
     },
     "Lightning Elemental 1": {
         "category": "racial",
-        "PreReq": [""],
-        "Tag": "",
+        "PreReq": ["Elemental"],
+        "Tag": "Elemental1",
         "BlockedTag": "Elemental1",
         "gold": 100,
         "exp": 100,
@@ -31940,7 +31940,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Tempest Deity": {
         "category": "racial",
-        "PreReq": ["Primal Storm 3"],
+        "PreReq": ["Primal Storm 3", "AsuraKey"],
         "Tag": "",
         "BlockedTag": "",
         "gold": 1000,
@@ -31963,7 +31963,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Tengu 1": {
         "category": "racial",
-        "PreReq": [""],
+        "PreReq": ["Tengu"],
         "Tag": "",
         "BlockedTag": "",
         "gold": 100,
@@ -32218,7 +32218,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Tengu Deity": {
         "category": "racial",
-        "PreReq": ["Tengu Emperor 3"],
+        "PreReq": ["Tengu Emperor 3", "AsuraKey"],
         "Tag": "",
         "BlockedTag": "",
         "gold": 1000,
@@ -32241,7 +32241,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Birdman 1": {
         "category": "racial",
-        "PreReq": [""],
+        "PreReq": ["Birdman"],
         "Tag": "",
         "BlockedTag": "",
         "gold": 100,
@@ -32484,7 +32484,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Birdman Deity": {
         "category": "racial",
-        "PreReq": ["Birdman Emperor 3"],
+        "PreReq": ["Birdman Emperor 3", "AsuraKey"],
         "Tag": "",
         "BlockedTag": "",
         "gold": 1000,
@@ -32507,7 +32507,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Ghost 1": {
         "category": "racial",
-        "PreReq": [""],
+        "PreReq": ["Ghost"],
         "Tag": "",
         "BlockedTag": "",
         "gold": 100,
@@ -32769,7 +32769,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Nightmare Lord": {
         "category": "racial",
-        "PreReq": ["Spectre 3"],
+        "PreReq": ["Spectre 3", "ValkyrieKey"],
         "Tag": "",
         "BlockedTag": "",
         "gold": 1000,
@@ -32792,7 +32792,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Arachnoid 1": {
         "category": "racial",
-        "PreReq": [""],
+        "PreReq": ["Arachnoid"],
         "Tag": "",
         "BlockedTag": "",
         "gold": 100,
@@ -33076,7 +33076,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Slime 1": {
         "category": "racial",
-        "PreReq": [""],
+        "PreReq": ["AsuraKey"],
         "Tag": "",
         "BlockedTag": "",
         "gold": 100,
@@ -33103,7 +33103,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Slime 2": {
         "category": "racial",
-        "PreReq": ["Slime 1"],
+        "PreReq": ["Slime 1", "Slime"],
         "Tag": "",
         "BlockedTag": "",
         "gold": 100,
@@ -33146,7 +33146,7 @@ const talent_data: Record<string, Talent> = {
     "Predator Slime 1": {
         "category": "racial",
         "PreReq": ["Slime 3"],
-        "Tag": "",
+        "Tag": "Slime1",
         "BlockedTag": "Slime1",
         "gold": 100,
         "exp": 600,
@@ -33340,7 +33340,7 @@ const talent_data: Record<string, Talent> = {
     "Shoggoth": {
         "category": "racial",
         "PreReq": ["Ubbo Sathla 3"],
-        "Tag": "",
+        "Tag": "ValkyrieKey",
         "BlockedTag": "",
         "gold": 1000,
         "exp": 5000,
@@ -33363,7 +33363,7 @@ const talent_data: Record<string, Talent> = {
     "Shield Slime 1": {
         "category": "racial",
         "PreReq": ["Slime 3"],
-        "Tag": "",
+        "Tag": "Slime1",
         "BlockedTag": "Slime1",
         "gold": 100,
         "exp": 600,
@@ -33555,7 +33555,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Elder Guardian Ooze": {
         "category": "racial",
-        "PreReq": ["Elder Pink Slime 3"],
+        "PreReq": ["Elder Pink Slime 3", "ValkyrieKey"],
         "Tag": "",
         "BlockedTag": "",
         "gold": 1000,
@@ -33578,7 +33578,7 @@ const talent_data: Record<string, Talent> = {
     "Poison Slime 1": {
         "category": "racial",
         "PreReq": ["Slime 3"],
-        "Tag": "",
+        "Tag": "Slime1",
         "BlockedTag": "Slime1",
         "gold": 100,
         "exp": 600,
@@ -33781,7 +33781,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Elder Devouring Ooze": {
         "category": "racial",
-        "PreReq": ["Elder Ivy Slime 3"],
+        "PreReq": ["Elder Ivy Slime 3", "ValkyrieKey"],
         "Tag": "",
         "BlockedTag": "",
         "gold": 1000,
@@ -33804,7 +33804,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Tree Spirit 1": {
         "category": "racial",
-        "PreReq": [""],
+        "PreReq": ["TreeSpirit"],
         "Tag": "",
         "BlockedTag": "",
         "gold": 100,
@@ -33867,7 +33867,7 @@ const talent_data: Record<string, Talent> = {
     "Dryad 1": {
         "category": "racial",
         "PreReq": ["Tree Spirit 3"],
-        "Tag": "",
+        "Tag": "TreeSpirit1",
         "BlockedTag": "TreeSpirit1",
         "gold": 100,
         "exp": 600,
@@ -34046,7 +34046,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Earth Mother": {
         "category": "racial",
-        "PreReq": ["Dryad Queen 3"],
+        "PreReq": ["Dryad Queen 3", "ElvenKey"],
         "Tag": "",
         "BlockedTag": "",
         "gold": 1000,
@@ -34069,7 +34069,7 @@ const talent_data: Record<string, Talent> = {
     "Treant 1": {
         "category": "racial",
         "PreReq": ["Tree Spirit 3"],
-        "Tag": "",
+        "Tag": "TreeSpirit1",
         "BlockedTag": "TreeSpirit1",
         "gold": 100,
         "exp": 600,
@@ -34250,7 +34250,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Zy'tl Q'ae": {
         "category": "racial",
-        "PreReq": ["Demon Tree 3"],
+        "PreReq": ["Demon Tree 3", "ValkyrieKey"],
         "Tag": "",
         "BlockedTag": "",
         "gold": 1000,
@@ -34272,7 +34272,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Kitsune 1": {
         "category": "racial",
-        "PreReq": [""],
+        "PreReq": ["Kitsune"],
         "Tag": "",
         "BlockedTag": "",
         "gold": 100,
@@ -34517,7 +34517,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Kyuubi": {
         "category": "racial",
-        "PreReq": ["Nanabi 3"],
+        "PreReq": ["Nanabi 3", "ElvenKey"],
         "Tag": "",
         "BlockedTag": "",
         "gold": 1000,
@@ -34790,7 +34790,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Succubus Goddess": {
         "category": "racial",
-        "PreReq": ["Succubus Archdevil 3"],
+        "PreReq": ["Succubus Archdevil 3", "ValkyrieKey"],
         "Tag": "",
         "BlockedTag": "",
         "gold": 1000,
