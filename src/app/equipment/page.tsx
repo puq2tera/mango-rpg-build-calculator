@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import { __allStatNames } from "@/app/data/talent_data"
 
 interface Affix {
   stat: string
@@ -92,7 +93,6 @@ export default function EquipmentPage() {
             <table className="table-fixed border border-collapse text-sm w-full">
               <thead>
                 <tr className="bg-gray-100">
-                  <th className="border px-2 py-1">Affix #</th>
                   <th className="border px-2 py-1">Stat</th>
                   <th className="border px-2 py-1">Value</th>
                 </tr>
@@ -100,12 +100,25 @@ export default function EquipmentPage() {
               <tbody>
                 {slot.affixes.map((affix, i) => (
                   <tr key={i}>
-                    <td className="border px-2 py-1">Affix {i + 1}</td>
                     <td className="border px-2 py-1">
-                      <input value={affix.stat} onChange={e => updateSlot(idx, `affix_${i}_stat`, e.target.value)} className="w-full border px-1" />
+                      <select
+                        value={affix.stat}
+                        onChange={e => updateSlot(idx, `affix_${i}_stat`, e.target.value)}
+                        className="w-full border px-1"
+                      >
+                        <option value="">Select</option>
+                        {__allStatNames.map(option => (
+                          <option key={option} value={option}>{option}</option>
+                        ))}
+                      </select>
                     </td>
                     <td className="border px-2 py-1">
-                      <input type="number" value={affix.value} onChange={e => updateSlot(idx, `affix_${i}_value`, +e.target.value)} className="w-full border px-1" />
+                      <input
+                        type="number"
+                        value={affix.value}
+                        onChange={e => updateSlot(idx, `affix_${i}_value`, +e.target.value)}
+                        className="w-full border px-1"
+                      />
                     </td>
                   </tr>
                 ))}

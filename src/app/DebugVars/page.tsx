@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { talent_data } from "../data/talent_data"
+import { talent_data, __allStatNames, __allConversionNames } from "../data/talent_data"
 
 interface TalentRow {
   name: string
@@ -29,8 +29,6 @@ export default function Skills() {
   const [stats, setStats] = useState<string | null>(null)
   const [filtered, setFiltered] = useState<TalentRow[]>([])
   const [allTalents, setAllTalents] = useState<TalentRow[]>([])
-  const [allStatNames, setAllStatNames] = useState<Set<string>>(new Set())
-  const [allConversionNames, setAllConversionNames] = useState<Set<string>>(new Set())
 
   useEffect(() => {
     const raw = localStorage.getItem("selectedTalents")
@@ -85,24 +83,10 @@ export default function Skills() {
       conversions: data.conversions
     }))
     setAllTalents(output)
-
-    const statSet = new Set<string>()
-    const convSet = new Set<string>()
-    for (const t of output) {
-      Object.keys(t.stats).forEach(k => statSet.add(k))
-      if (t.conversions) {
-        for (const conv of t.conversions) {
-          convSet.add(conv.source)
-          convSet.add(conv.resulting_stat)
-        }
-      }
-    }
-    setAllStatNames(statSet)
-    setAllConversionNames(convSet)
   }, [])
 
-  const statOnly = Array.from(allStatNames).sort()
-  const convOnly = Array.from(allConversionNames).sort()
+  const statOnly = Array.from(__allStatNames).sort()
+  const convOnly = Array.from(__allConversionNames).sort()
   const maxLength = Math.max(statOnly.length, convOnly.length)
 
   return (

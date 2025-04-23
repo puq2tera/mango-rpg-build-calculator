@@ -35240,9 +35240,21 @@ const talent_data: Record<string, Talent> = {
     }
 };
 
+const statSet = new Set<string>()
+const convSet = new Set<string>()
+
+for (const entry of Object.values(talent_data)) {
+  Object.keys(entry.stats).forEach(stat => statSet.add(stat))
+  entry.conversions.forEach(conv => {
+    convSet.add(conv.source)
+    convSet.add(conv.resulting_stat)
+  })
+}
+
 // inject precomputed widths
 const __columnWidths = computeColumnWidths(talent_data)
+const __allStatNames = Array.from(statSet).sort()
+const __allConversionNames = Array.from(convSet).sort()
 
 // export both
-export { talent_data, __columnWidths }
-
+export { talent_data, __columnWidths, __allStatNames, __allConversionNames }
