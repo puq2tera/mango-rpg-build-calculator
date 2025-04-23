@@ -21,6 +21,44 @@ export function computeTalentStats() {
   } catch {}
 }
 
+export function computeEquipmentStats() {
+  console.log("Updating Equipment Stats")
+  const rawSlots = localStorage.getItem("EquipmentSlots")
+  const rawEnabled = localStorage.getItem("EnabledEquipment")
+  if (!rawSlots || !rawEnabled) return
+
+  try {
+    const slots: {
+      affixes: { stat: string; value: number }[]
+      mainstat: string
+      mainstat_value: number
+    }[] = JSON.parse(rawSlots)
+
+    const enabledIndices = new Set<number>(JSON.parse(rawEnabled))
+    const stats: Record<string, number> = {}
+
+    for (const [i, slot] of slots.entries()) {
+      if (!enabledIndices.has(i)) continue
+
+      // Main stat
+      if (slot.mainstat && slot.mainstat_value) {
+        stats[slot.mainstat] = (stats[slot.mainstat] || 0) + slot.mainstat_value
+      }
+
+      // Affixes
+      for (const affix of slot.affixes) {
+        if (!affix.stat) continue
+        stats[affix.stat] = (stats[affix.stat] || 0) + affix.value
+      }
+    }
+
+    localStorage.setItem("StatsEquipment", JSON.stringify(stats))
+    console.log(stats)
+  } catch (e) {
+    console.error("Failed to compute equipment stats", e)
+  }
+}
+
 
 export function computeConversionStats() {
   console.log("Updating Conversion Stats")
@@ -83,45 +121,16 @@ export default function StatSync() {
     window.addEventListener("talentsUpdated", computeConversionStats)
     window.addEventListener("talentsUpdated", computeDmgReadyStats)
 
+    window.addEventListener("equipmentUpdated", computeEquipmentStats)
+
     // Clean up listeners for when unmounted (to prevent multiple updates)
     return () => {
       window.removeEventListener("talentsUpdated", computeTalentStats)
       window.removeEventListener("talentsUpdated", computeConversionStats)
       window.removeEventListener("talentsUpdated", computeDmgReadyStats)
+
+      window.addEventListener("equipmentUpdated", computeEquipmentStats)
     }
   }, [])
   return null
 }
-
-
-
-
-
-// export function old_StatSync() {
-//   //Run once on mount
-//   useEffect(() => {
-//     const observer = () => {
-//       const raw = localStorage.getItem("selectedTalents")
-//       // Skip if no selectedTalents isn't returned
-//       if (!raw) return
-//       try {
-//         const selected = new Set<string>(JSON.parse(raw))
-//         const stats: Record<string, number> = {}
-//         for (const [name, data] of Object.entries(talent_data)) {
-//           if (!selected.has(name)) continue
-//           for (const [stat, value] of Object.entries(data.stats)) {
-//             stats[stat] = (stats[stat] || 0) + value
-//           }
-//         }
-//         localStorage.setItem("computedStats", JSON.stringify(stats))
-//       } catch {}
-//     }
-
-//     // Make is so that the observer triggers when setItem is called
-//     window.addEventListener("storage", observer)
-//     observer() // run once on mount
-//     return () => window.removeEventListener("storage", observer)
-//   }, [])
-
-//   return (null);
-// }
