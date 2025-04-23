@@ -1,36 +1,67 @@
 "use client"
 
+import { useState, useEffect } from "react"
 import type { Talent } from "../data/talent_data"
 
 type ToggleButtonProps = {
   talentName: string
   talent: Talent
-  selected: boolean
-  toggle: (id: string) => void
   colWidths: string[]
 }
 
-export default function ToggleButton({ talentName, talent, selected, toggle, colWidths }: ToggleButtonProps) {
-  const t = talent
+export default function ToggleButton({ talentName, talent, colWidths }: ToggleButtonProps) {
+  const [selected, setSelected] = useState(false)
+
+  // Initialize selection state from localStorage on mount
+  useEffect(() => {
+    const stored = localStorage.getItem("selectedTalents")
+    if (stored) {
+      const list: string[] = JSON.parse(stored)
+      setSelected(list.includes(talentName))
+    }
+  }, [talentName])
+
+  //
+  const handleClick = () => {
+    const stored = localStorage.getItem("selectedTalents")
+    let list: string[] = stored ? JSON.parse(stored) : []
+
+    // Checks if talentName is in selectedTalents
+    // Only modifies specific index of the talent leaving the rest of the list untouched
+    const idx = list.indexOf(talentName)
+    if (idx >= 0) {
+      list.splice(idx, 1)
+      setSelected(false)
+      console.log(`Toggled ${talentName}: Removed ${talentName} from selectedTalents at index ${idx}`)
+    } else {
+      list.push(talentName)
+      setSelected(true)
+      console.log(`Toggled ${talentName}: Added ${talentName} to selectedTalents`)
+    }
+
+    // Update selectedTalents
+    localStorage.setItem("selectedTalents", JSON.stringify(list))
+  }
+
   const values = [
     talentName,
-    Array.isArray(t.PreReq) ? t.PreReq.join(", ") : t.PreReq,
-    t.Tag,
-    t.BlockedTag,
-    String(t.gold),
-    String(t.exp),
-    String(t.tp_spent),
-    String(t.total_level),
-    String(t.class_levels.tank_levels),
-    String(t.class_levels.warrior_levels),
-    String(t.class_levels.caster_levels),
-    String(t.class_levels.healer_levels),
-    t.description
+    Array.isArray(talent.PreReq) ? talent.PreReq.join(", ") : talent.PreReq,
+    talent.Tag,
+    talent.BlockedTag,
+    String(talent.gold),
+    String(talent.exp),
+    String(talent.tp_spent),
+    String(talent.total_level),
+    String(talent.class_levels.tank_levels),
+    String(talent.class_levels.warrior_levels),
+    String(talent.class_levels.caster_levels),
+    String(talent.class_levels.healer_levels),
+    talent.description
   ]
 
   return (
     <button
-      onClick={() => toggle(talentName)}
+      onClick={handleClick}
       className={`grid w-full text-left transition px-0 py-1 ${
         selected ? "bg-blue-100 hover:bg-blue-200" : "hover:bg-gray-100"
       }`}

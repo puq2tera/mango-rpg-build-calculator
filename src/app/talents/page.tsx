@@ -17,14 +17,6 @@ export default function TalentsPage() {
   const [colWidths] = useState<string[]>(__columnWidths)
   const [selected, setSelected] = useState<Set<string> | null>(null)
 
-  function updateTalents() {
-    console.log(`Updated values in selectedTalents`)
-    if (selected) {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify([...selected]))
-    }
-    console.log(selected)
-  }
-
   // Load selectedTalents on mount
   useEffect(() => {
     console.log(`Loaded selectedTalents into selected`)
@@ -36,21 +28,6 @@ export default function TalentsPage() {
     }
     console.log(stored)
   }, [])
-
-  // Adds/removed talent from selected
-  const toggle = (talentName: string) => {
-    console.log(`Toggled ${talentName}`)
-    if (!selected) return
-    const copy = new Set(selected)
-    // Toggle the selected state
-    if (copy.has(talentName)) {
-      copy.delete(talentName)
-    } else {
-      copy.add(talentName)
-    }
-    setSelected(copy)
-    updateTalents()
-  }
 
   if (selected === null || colWidths.length === 0) return <div className="p-4">Loading...</div>
 
@@ -75,9 +52,7 @@ export default function TalentsPage() {
           <ToggleButton
             key={name}
             talentName={name}
-            talent={talent_data[name]} 
-            selected={selected.has(name)}
-            toggle={toggle}
+            talent={talent_data[name]}
             colWidths={colWidths}
           />
         ))}
