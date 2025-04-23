@@ -3,12 +3,9 @@
 
 import { useEffect } from "react"
 import talent_data from "@/app/data/talent_data"
-console.log("Outside init")
 export default function StatSync() {
-  console.log("Init")
 
   useEffect(() => {
-    console.log("Updating stats to vars")
     const observer = () => {
       const raw = localStorage.getItem("selectedTalents")
       if (!raw) return

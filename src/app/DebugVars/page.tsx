@@ -42,7 +42,18 @@ export default function Skills() {
         const data = talent_data[id]
         return {
           name: id,
-          ...data
+          category: data.category,
+          PreReq: Array.isArray(data.PreReq) ? data.PreReq.join(", ") : data.PreReq,
+          Tag: data.Tag,
+          BlockedTag: data.BlockedTag,
+          gold: data.gold,
+          exp: data.exp,
+          tp_spent: data.tp_spent,
+          total_level: data.total_level,
+          class_levels: data.class_levels,
+          description: data.description,
+          stats: data.stats,
+          conversions: data.conversions
         }
       })
       setFiltered(output)
@@ -57,14 +68,23 @@ export default function Skills() {
     setSelected(selectedTalents)
     setStats(computedStats)
 
-    // All talents
     const output = Object.entries(talent_data).map(([id, data]) => ({
       name: id,
-      ...data
+      category: data.category,
+      PreReq: Array.isArray(data.PreReq) ? data.PreReq.join(", ") : data.PreReq,
+      Tag: data.Tag,
+      BlockedTag: data.BlockedTag,
+      gold: data.gold,
+      exp: data.exp,
+      tp_spent: data.tp_spent,
+      total_level: data.total_level,
+      class_levels: data.class_levels,
+      description: data.description,
+      stats: data.stats,
+      conversions: data.conversions
     }))
     setAllTalents(output)
 
-    // Collect unique stat names
     const statSet = new Set<string>()
     const convSet = new Set<string>()
     for (const t of output) {
@@ -97,6 +117,9 @@ export default function Skills() {
         <h1 className="font-bold text-xl mt-4">Selected Talents Data</h1>
         <TalentTable data={filtered} />
 
+        <h1 className="font-bold text-xl mt-8">All Talents Data</h1>
+        <TalentTable data={allTalents} />
+
         <h1 className="font-bold text-xl mt-8">All Talent Stat and Conversion Names</h1>
         <div className="overflow-x-auto">
           <table className="min-w-fit border border-collapse text-sm">
@@ -116,9 +139,6 @@ export default function Skills() {
             </tbody>
           </table>
         </div>
-
-        <h1 className="font-bold text-xl mt-8">All Talents Data</h1>
-        <TalentTable data={allTalents} />
       </div>
     </div>
   )

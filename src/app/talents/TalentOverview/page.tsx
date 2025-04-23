@@ -39,15 +39,21 @@ export default function TalentOverview() {
     for (const [name, t] of Object.entries(talent_data)) {
       if (!selected.has(name)) continue
       const values = [
-        name, t.PreReq, t.Tag, t.BlockedTag,
-        String(t.gold), String(t.exp), String(t.tp_spent), String(t.total_level),
+        name,
+        Array.isArray(t.PreReq) ? t.PreReq.join(", ") : t.PreReq,
+        t.Tag,
+        t.BlockedTag,
+        String(t.gold),
+        String(t.exp),
+        String(t.tp_spent),
+        String(t.total_level),
         String(t.class_levels.tank_levels),
         String(t.class_levels.warrior_levels),
         String(t.class_levels.caster_levels),
         String(t.class_levels.healer_levels),
         t.description
       ]
-
+      
       values.forEach((val, i) => {
         const width = measureTextWidth(val ?? "", font)
         if (width > longest[i]) longest[i] = width
