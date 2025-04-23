@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { __allStatNames } from "@/app/data/talent_data"
 
 interface Affix {
@@ -17,6 +17,9 @@ interface Slot {
   enabled: boolean
 }
 
+const STORAGE_KEY_SLOTS = "EquipmentSlots"
+const STORAGE_KEY_ENABLED = "EnabledEquipment"
+
 const initialSlot = (): Slot => ({
   name: "",
   type: "",
@@ -27,11 +30,22 @@ const initialSlot = (): Slot => ({
 })
 
 export default function EquipmentPage() {
-  const [slots, setSlots] = useState<Slot[]>([
-    initialSlot(), initialSlot(), initialSlot(), initialSlot(),
-    initialSlot(), initialSlot(), initialSlot(), initialSlot(),
-    initialSlot(), initialSlot()
-  ])
+  const [slots, setSlots] = useState<Slot[]>([])
+
+  useEffect(() => {
+    const stored = localStorage.getItem(STORAGE_KEY_SLOTS)
+    const parsed = stored ? JSON.parse(stored) as Slot[] : [
+      initialSlot(), initialSlot(), initialSlot(), initialSlot(),
+      initialSlot(), initialSlot(), initialSlot(), initialSlot()
+    ]
+    setSlots(parsed)
+  }, [])
+
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEY_SLOTS, JSON.stringify(slots))
+    const enabledIndices = slots.map((slot, i) => slot.enabled ? i : null).filter(i => i !== null)
+    localStorage.setItem(STORAGE_KEY_ENABLED, JSON.stringify(enabledIndices))
+  }, [slots])
 
   const updateSlot = (index: number, field: string, value: string | number) => {
     setSlots(prev => {
