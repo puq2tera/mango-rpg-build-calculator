@@ -21,6 +21,39 @@ export type Talent = {
     }>
 }
 
+function computeColumnWidths(data: Record<string, Talent>): string[] {
+    const headers = [
+      "Name", "PreReq", "Tag", "BlockedTag",
+      "Gold", "Exp", "TP", "Lvl",
+      "Tank", "Warrior", "Caster", "Healer",
+      "Description"
+    ]
+    const longest = headers.map(h => h.length)
+  
+    for (const [name, t] of Object.entries(data)) {
+      const values = [
+        name,
+        Array.isArray(t.PreReq) ? t.PreReq.join(", ") : t.PreReq,
+        t.Tag,
+        t.BlockedTag,
+        String(t.gold),
+        String(t.exp),
+        String(t.tp_spent),
+        String(t.total_level),
+        String(t.class_levels.tank_levels),
+        String(t.class_levels.warrior_levels),
+        String(t.class_levels.caster_levels),
+        String(t.class_levels.healer_levels),
+        t.description
+      ]
+      values.forEach((v, i) => {
+        longest[i] = Math.max(longest[i], v.length)
+      })
+    }
+  
+    return longest.map(chLen => `${Math.ceil(chLen * 8 + 32)}px`)
+}
+
 const talent_data: Record<string, Talent> = {
     "Slash Training 1": {
         "category": "basic",
@@ -270,7 +303,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+4% ATK, +20 ATK",
         "stats": {
-            "ATK%": 0.04
+            "ATK%": 0.04,
+            "ATK": 20
         },
         "conversions": {}
     },
@@ -353,7 +387,9 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+5 DEF",
-        "stats": {},
+        "stats": {
+          "DEF": 5
+        },
         "conversions": {}
     },
     "Tank Basic Training 2": {
@@ -372,7 +408,9 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+8 DEF",
-        "stats": {},
+        "stats": {
+          "DEF": 8
+        },
         "conversions": {}
     },
     "Tank Basic Workout": {
@@ -9487,14 +9525,15 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+1% Global ATK, +10% Physical DMG, Conversion 5% ATK to DEF",
         "stats": {
-            "Conv Slash%": 0.1,
-            "Conv Pierce%": 0.1,
-            "Conv Blunt%": 0.1
+            "Slash%": 0.1,
+            "Pierce%": 0.1,
+            "Blunt%": 0.1,
+            "Global ATK%": 0.01
         },
         "conversions": {
             "ATK": {
                 "ratio": 0.05,
-                "resulting_stat": "def"
+                "resulting_stat": "DEF"
             }
         }
     },
@@ -9515,14 +9554,15 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "-3% Global ATK, +20% Physical DMG, Conversion 5% ATK to DEF",
         "stats": {
-            "Conv Slash%": 0.2,
-            "Conv Pierce%": 0.2,
-            "Conv Blunt%": 0.2
+            "Slash%": 0.2,
+            "Pierce%": 0.2,
+            "Blunt%": 0.2,
+            "Global ATK%": -0.03
         },
         "conversions": {
             "ATK": {
                 "ratio": 0.05,
-                "resulting_stat": "def"
+                "resulting_stat": "DEF"
             }
         }
     },
@@ -34531,11 +34571,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+60 HP, +0.5% Global Max Health, +0.1% HP Regen",
         "stats": {
-            "Conv Slash Res%": 0.1,
-            "Conv Pierce Res%": 0.1,
-            "Conv Blunt Res%": 0.1,
-            "Conv Holy Res%": -0.1,
-            "Conv Void Res%": 0.1
+            "HP": 60,
+            "Global HP%": 0.005,
+            "HP Regen%": 0.001
         },
         "conversions": {}
     },
@@ -35040,6 +35078,9 @@ const talent_data: Record<string, Talent> = {
     }
 };
 
+// inject precomputed widths
+const __columnWidths = computeColumnWidths(talent_data)
 
-export default talent_data;
+// export both
+export { talent_data, __columnWidths }
 

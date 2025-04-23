@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import talent_data from "@/app/data/talent_data"
+import { talent_data } from "@/app/data/talent_data"
 
 const STORAGE_KEY = "selectedTalents"
 

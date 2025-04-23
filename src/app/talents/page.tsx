@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react"
 import ToggleButton from "@/app/components/ToggleButton"
-import talent_data from "@/app/data/talent_data"
+import { talent_data, __columnWidths } from "@/app/data/talent_data"
 
 const STORAGE_KEY = "selectedTalents"
 
@@ -13,73 +13,43 @@ const headerLabels = [
   "Description"
 ]
 
-function measureTextWidth(text: string, font = "14px Inter"): number {
-  const canvas = document.createElement("canvas")
-  const context = canvas.getContext("2d")!
-  context.font = font
-  return context.measureText(text).width
-}
-
 export default function TalentsPage() {
-  const [colWidths, setColWidths] = useState<string[]>([])
+  const [colWidths] = useState<string[]>(__columnWidths)
   const [selected, setSelected] = useState<Set<string> | null>(null)
 
-  useEffect(() => {
-    const font = "14px Inter"
-    const longest: number[] = headerLabels.map(label => measureTextWidth(label, font))
-
-    for (const [name, t] of Object.entries(talent_data)) {
-      const values = [
-        name,
-        Array.isArray(t.PreReq) ? t.PreReq.join(", ") : t.PreReq,
-        t.Tag,
-        t.BlockedTag,
-        String(t.gold),
-        String(t.exp),
-        String(t.tp_spent),
-        String(t.total_level),
-        String(t.class_levels.tank_levels),
-        String(t.class_levels.warrior_levels),
-        String(t.class_levels.caster_levels),
-        String(t.class_levels.healer_levels),
-        t.description
-      ]
-      
-
-      values.forEach((val, i) => {
-        const width = measureTextWidth(val ?? "", font)
-        if (width > longest[i]) longest[i] = width
-      })
+  function updateTalents() {
+    console.log(`Updated values in selectedTalents`)
+    if (selected) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify([...selected]))
     }
+    console.log(selected)
+  }
 
-    const calculated = longest.map(w => `${Math.ceil(w + 32)}px`) // 16px left+right padding
-    setColWidths(calculated)
-  }, [])
-
+  // Load selectedTalents on mount
   useEffect(() => {
+    console.log(`Loaded selectedTalents into selected`)
     const stored = localStorage.getItem(STORAGE_KEY)
     try {
       setSelected(stored ? new Set(JSON.parse(stored)) : new Set())
     } catch {
       setSelected(new Set())
     }
+    console.log(stored)
   }, [])
 
-  useEffect(() => {
-    if (selected) {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify([...selected]))
-    }
-  }, [selected])
-
-  const toggle = (id: string) => {
+  // Adds/removed talent from selected
+  const toggle = (talentName: string) => {
+    console.log(`Toggled ${talentName}`)
     if (!selected) return
     const copy = new Set(selected)
-    if (copy.has(id)) {
-      copy.delete(id)
+    // Toggle the selected state
+    if (copy.has(talentName)) {
+      copy.delete(talentName)
     } else {
-      copy.add(id)
+      copy.add(talentName)
     }
     setSelected(copy)
+    updateTalents()
   }
 
   if (selected === null || colWidths.length === 0) return <div className="p-4">Loading...</div>
@@ -104,8 +74,7 @@ export default function TalentsPage() {
         {Object.entries(talent_data).map(([name]) => (
           <ToggleButton
             key={name}
-            id={name}
-            label={name}
+            talentName={name}
             selected={selected.has(name)}
             toggle={toggle}
             colWidths={colWidths}

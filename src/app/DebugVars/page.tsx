@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import talent_data from "../data/talent_data"
+import { talent_data } from "../data/talent_data"
 
 interface TalentRow {
     name: string
@@ -65,6 +65,7 @@ export default function Skills() {
   useEffect(() => {
     const selectedTalents = localStorage.getItem("selectedTalents")
     const computedStats = localStorage.getItem("computedStats")
+    console.log(computedStats)
     setSelected(selectedTalents)
     setStats(computedStats)
 

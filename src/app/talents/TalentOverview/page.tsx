@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import talent_data from "@/app/data/talent_data"
+import { talent_data, __columnWidths } from "@/app/data/talent_data"
 
 const STORAGE_KEY = "selectedTalents"
 
@@ -12,15 +12,8 @@ const headerLabels = [
   "Description"
 ]
 
-function measureTextWidth(text: string, font = "14px Inter"): number {
-  const canvas = document.createElement("canvas")
-  const context = canvas.getContext("2d")!
-  context.font = font
-  return context.measureText(text).width
-}
-
 export default function TalentOverview() {
-  const [colWidths, setColWidths] = useState<string[]>([])
+  const [colWidths] = useState<string[]>(__columnWidths)
   const [selected, setSelected] = useState<Set<string>>(new Set())
 
   useEffect(() => {
@@ -31,38 +24,6 @@ export default function TalentOverview() {
       setSelected(new Set())
     }
   }, [])
-
-  useEffect(() => {
-    const font = "14px Inter"
-    const longest: number[] = headerLabels.map(label => measureTextWidth(label, font))
-
-    for (const [name, t] of Object.entries(talent_data)) {
-      if (!selected.has(name)) continue
-      const values = [
-        name,
-        Array.isArray(t.PreReq) ? t.PreReq.join(", ") : t.PreReq,
-        t.Tag,
-        t.BlockedTag,
-        String(t.gold),
-        String(t.exp),
-        String(t.tp_spent),
-        String(t.total_level),
-        String(t.class_levels.tank_levels),
-        String(t.class_levels.warrior_levels),
-        String(t.class_levels.caster_levels),
-        String(t.class_levels.healer_levels),
-        t.description
-      ]
-      
-      values.forEach((val, i) => {
-        const width = measureTextWidth(val ?? "", font)
-        if (width > longest[i]) longest[i] = width
-      })
-    }
-
-    const calculated = longest.map(w => `${Math.ceil(w + 56)}px`)
-    setColWidths(calculated)
-  }, [selected])
 
   if (colWidths.length === 0) return <div className="p-4">Loading...</div>
 
