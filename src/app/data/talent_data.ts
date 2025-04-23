@@ -22,6 +22,7 @@ export type Talent = {
 }
 
 function computeColumnWidths(data: Record<string, Talent>): string[] {
+    console.log("Computing talent_data column widths")
     const headers = [
       "Name", "PreReq", "Tag", "BlockedTag",
       "Gold", "Exp", "TP", "Lvl",

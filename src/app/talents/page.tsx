@@ -75,6 +75,7 @@ export default function TalentsPage() {
           <ToggleButton
             key={name}
             talentName={name}
+            talent={talent_data[name]} 
             selected={selected.has(name)}
             toggle={toggle}
             colWidths={colWidths}

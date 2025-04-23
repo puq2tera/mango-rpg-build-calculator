@@ -1,19 +1,26 @@
 "use client"
 
-import { talent_data } from "../data/talent_data"
+import type { Talent } from "../data/talent_data"
 
 type ToggleButtonProps = {
   talentName: string
+  talent: Talent
   selected: boolean
   toggle: (id: string) => void
   colWidths: string[]
 }
 
-export default function ToggleButton({ talentName, selected, toggle, colWidths }: ToggleButtonProps) {
-  const t = talent_data[talentName]
+export default function ToggleButton({ talentName, talent, selected, toggle, colWidths }: ToggleButtonProps) {
+  const t = talent
   const values = [
-    talentName, t.PreReq, t.Tag, t.BlockedTag,
-    String(t.gold), String(t.exp), String(t.tp_spent), String(t.total_level),
+    talentName,
+    Array.isArray(t.PreReq) ? t.PreReq.join(", ") : t.PreReq,
+    t.Tag,
+    t.BlockedTag,
+    String(t.gold),
+    String(t.exp),
+    String(t.tp_spent),
+    String(t.total_level),
     String(t.class_levels.tank_levels),
     String(t.class_levels.warrior_levels),
     String(t.class_levels.caster_levels),
