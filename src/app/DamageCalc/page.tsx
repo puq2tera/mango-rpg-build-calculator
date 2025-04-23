@@ -50,6 +50,7 @@ export default function DamageCalc() {
 
   const handleChange = (field: string, value: number) => {
     setInputs(prev => ({ ...prev, [field]: value }))
+    console.log(inputs)
   }
 
   return (
