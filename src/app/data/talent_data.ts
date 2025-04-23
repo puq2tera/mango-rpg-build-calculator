@@ -1279,7 +1279,9 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+10 MP",
-        "stats": {},
+        "stats": {
+            "MP": 10
+        },
         "conversions": {}
     },
     "Inner Will 2": {
@@ -3589,6 +3591,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+1% Global DEF, +10% Physical Resist",
         "stats": {
+            "Global DEF%": 0.01,
             "Slash Res%": 0.1,
             "Pierce Res%": 0.1,
             "Blunt Res%": 0.1
@@ -9690,7 +9693,13 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+2% Global ATK, +8% xPhys DMG, +2% Global DMG",
-        "stats": {},
+        "stats": {
+            "Global ATK%": 0.02,
+            "xSlash%": 0.08,
+            "xPierce%": 0.08,
+            "xBlunt%": 0.08,
+            "Global DMG%": 0.02
+        },
         "conversions": {}
     },
     "Abyssal Gem of Protons": {
@@ -9918,9 +9927,9 @@ const talent_data: Record<string, Talent> = {
         "description": "+20% Global ATK, Conversion 10% of MP to Focus, -50% Global Elevoid",
         "stats": {},
         "conversions": {
-            "of MP": {
+            "MP": {
                 "ratio": 0.1,
-                "resulting_stat": "focus"
+                "resulting_stat": "Focus"
             }
         }
     },
@@ -13760,7 +13769,8 @@ const talent_data: Record<string, Talent> = {
         "stats": {
             "MATK%": 0.3,
             "Void%": 0.1,
-            "Void Pen%": 0.04
+            "Void Pen%": 0.04,
+            "Void xPen%": 0.1
         },
         "conversions": {}
     },
@@ -14452,7 +14462,9 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+15 MP Regen, -85% Global MP, Temp HP Start of 20% Max HP",
-        "stats": {},
+        "stats": {
+            "MP Regen": 15
+        },
         "conversions": {}
     },
     "Soul Core of Mephis'ronan": {
@@ -17278,7 +17290,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15% Heal, +5% Global Heal Effect",
         "stats": {
-            "HEAL%": 0.15
+            "HEAL%": 0.15,
+            "Global Heal Effect": 0.05
         },
         "conversions": {}
     },
@@ -17552,6 +17565,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+1% Global Healpower, +10% Divine Damage and +15% Toxic Damage",
         "stats": {
+            "Global HEAL%": 0.01,
             "Toxic%": 0.15,
             "Neg%": 0.1,
             "Holy%": 0.1
@@ -18142,7 +18156,11 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+1% Global Heal, Temp HP Start of 20% Max HP, -33% Global MATK/ATK",
-        "stats": {},
+        "stats": {
+            "Global HEAL%": 0.01,
+            "Global MATK%": -0.33,
+            "Global ATK%": -0.33
+        },
         "conversions": {}
     },
     "Soul Shard of Azago'toth": {

@@ -44,7 +44,6 @@ export default function StatSync() {
   useEffect(() => {   //Run once on mount
     // Add custom event listeners for stat updates
     window.addEventListener("talentsUpdated", computeTalentStats)
-    computeTalentStats() // initial sync
 
     // Clean up listeners for when unmounted (to prevent multiple updates)
     return () => window.removeEventListener("talentsUpdated", computeTalentStats)
