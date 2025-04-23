@@ -14,6 +14,7 @@ interface Slot {
   mainstat: string
   mainstat_value: number
   affixes: Affix[]
+  enabled: boolean
 }
 
 const initialSlot = (): Slot => ({
@@ -21,7 +22,8 @@ const initialSlot = (): Slot => ({
   type: "",
   mainstat: "",
   mainstat_value: 0,
-  affixes: Array.from({ length: 20 }, () => ({ stat: "", value: 0 }))
+  affixes: Array.from({ length: 20 }, () => ({ stat: "", value: 0 })),
+  enabled: false
 })
 
 export default function EquipmentPage() {
@@ -32,16 +34,32 @@ export default function EquipmentPage() {
 
   const updateSlot = (index: number, field: string, value: string | number) => {
     setSlots(prev => {
-      const updated = [...prev]
-      if (field.startsWith("affix_")) {
-        const [, affixIndexStr, affixField] = field.split("_")
-        const affixIndex = parseInt(affixIndexStr, 10)
-        updated[index].affixes[affixIndex][affixField as keyof Affix] = value as never
-      } else {
-        updated[index][field as keyof Slot] = value as never
-      }
+      const updated = prev.map((slot, i) => {
+        if (i !== index) return slot
+        const updatedSlot = { ...slot }
+        if (field.startsWith("affix_")) {
+          const [, affixIndexStr, affixField] = field.split("_")
+          const affixIndex = parseInt(affixIndexStr, 10)
+          updatedSlot.affixes = [...slot.affixes]
+          updatedSlot.affixes[affixIndex] = {
+            ...updatedSlot.affixes[affixIndex],
+            [affixField]: value
+          }
+        } else {
+          if (field in updatedSlot) {
+            (updatedSlot[field as keyof Slot] as typeof value) = value
+          }                 
+        }
+        return updatedSlot
+      })
       return updated
     })
+  }
+
+  const toggleSlot = (index: number) => {
+    setSlots(prev =>
+      prev.map((slot, i) => i === index ? { ...slot, enabled: !slot.enabled } : slot)
+    )
   }
 
   const addSlot = () => {
@@ -57,16 +75,32 @@ export default function EquipmentPage() {
 
       <div className="flex flex-wrap gap-4 mt-4">
         {slots.map((slot, idx) => (
-          <div key={idx} className="border rounded p-2 w-full max-w-md">
+          <div
+            key={idx}
+            onClick={() => toggleSlot(idx)}
+            className={`border rounded p-2 w-full max-w-md text-left cursor-pointer transition ${
+              slot.enabled ? "bg-green-100" : "bg-gray-100 opacity-50"
+            }`}
+          >
             <h2 className="font-semibold mb-2">Slot {idx + 1}</h2>
             <div className="grid grid-cols-2 gap-2 mb-2">
               <div>
                 <label className="block text-sm font-medium">Name</label>
-                <input value={slot.name} onChange={e => updateSlot(idx, "name", e.target.value)} className="w-full border px-1" />
+                <input
+                  value={slot.name}
+                  onChange={e => updateSlot(idx, "name", e.target.value)}
+                  className="w-full border px-1"
+                  onClick={e => e.stopPropagation()}
+                />
               </div>
               <div>
                 <label className="block text-sm font-medium">Type</label>
-                <select value={slot.type} onChange={e => updateSlot(idx, "type", e.target.value)} className="w-full border px-1">
+                <select
+                  value={slot.type}
+                  onChange={e => updateSlot(idx, "type", e.target.value)}
+                  className="w-full border px-1"
+                  onClick={e => e.stopPropagation()}
+                >
                   <option value="">Select</option>
                   {typeOptions.map(option => (
                     <option key={option} value={option}>{option}</option>
@@ -75,7 +109,12 @@ export default function EquipmentPage() {
               </div>
               <div className="col-span-2">
                 <div className="flex gap-2 items-end">
-                  <select value={slot.mainstat} onChange={e => updateSlot(idx, "mainstat", e.target.value)} className="w-1/2 border px-1">
+                  <select
+                    value={slot.mainstat}
+                    onChange={e => updateSlot(idx, "mainstat", e.target.value)}
+                    className="w-1/2 border px-1"
+                    onClick={e => e.stopPropagation()}
+                  >
                     <option value="">Main Stat</option>
                     {statOptions.map(option => (
                       <option key={option} value={option}>{option}</option>
@@ -86,6 +125,7 @@ export default function EquipmentPage() {
                     value={slot.mainstat_value}
                     onChange={e => updateSlot(idx, "mainstat_value", +e.target.value)}
                     className="w-1/2 border px-1"
+                    onClick={e => e.stopPropagation()}
                   />
                 </div>
               </div>
@@ -105,6 +145,7 @@ export default function EquipmentPage() {
                         value={affix.stat}
                         onChange={e => updateSlot(idx, `affix_${i}_stat`, e.target.value)}
                         className="w-full border px-1"
+                        onClick={e => e.stopPropagation()}
                       >
                         <option value="">Select</option>
                         {__allStatNames.map(option => (
@@ -118,6 +159,7 @@ export default function EquipmentPage() {
                         value={affix.value}
                         onChange={e => updateSlot(idx, `affix_${i}_value`, +e.target.value)}
                         className="w-full border px-1"
+                        onClick={e => e.stopPropagation()}
                       />
                     </td>
                   </tr>
