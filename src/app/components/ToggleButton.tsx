@@ -24,7 +24,7 @@ export default function ToggleButton({ talentName, talent, colWidths }: ToggleBu
   //
   const handleClick = () => {
     const stored = localStorage.getItem("selectedTalents")
-    let list: string[] = stored ? JSON.parse(stored) : []
+    const list: string[] = stored ? JSON.parse(stored) : []
 
     // Checks if talentName is in selectedTalents
     // Only modifies specific index of the talent leaving the rest of the list untouched
