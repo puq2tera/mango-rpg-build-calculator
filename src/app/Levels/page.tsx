@@ -1,12 +1,36 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
+
+const STORAGE_KEYS = {
+  levels: "LevelsPage-levels",
+  statPoints: "LevelsPage-statPoints",
+  training: "LevelsPage-training",
+  heroPoints: "LevelsPage-heroPoints"
+}
 
 export default function LevelsPage() {
   const [levels, setLevels] = useState({ tank: 0, warrior: 0, caster: 0, healer: 0 })
   const [statPoints, setStatPoints] = useState({ tank: 0, warrior: 0, caster: 0, healer: 0 })
   const [training, setTraining] = useState({ tank: 0, warrior: 0, caster: 0, healer: 0 })
   const [heroPoints, setHeroPoints] = useState<Record<string, number>>({})
+
+  useEffect(() => {
+    const storedLevels = localStorage.getItem(STORAGE_KEYS.levels)
+    const storedStatPoints = localStorage.getItem(STORAGE_KEYS.statPoints)
+    const storedTraining = localStorage.getItem(STORAGE_KEYS.training)
+    const storedHeroPoints = localStorage.getItem(STORAGE_KEYS.heroPoints)
+
+    if (storedLevels) setLevels(JSON.parse(storedLevels))
+    if (storedStatPoints) setStatPoints(JSON.parse(storedStatPoints))
+    if (storedTraining) setTraining(JSON.parse(storedTraining))
+    if (storedHeroPoints) setHeroPoints(JSON.parse(storedHeroPoints))
+  }, [])
+
+  useEffect(() => { localStorage.setItem(STORAGE_KEYS.levels, JSON.stringify(levels)) }, [levels])
+  useEffect(() => { localStorage.setItem(STORAGE_KEYS.statPoints, JSON.stringify(statPoints)) }, [statPoints])
+  useEffect(() => { localStorage.setItem(STORAGE_KEYS.training, JSON.stringify(training)) }, [training])
+  useEffect(() => { localStorage.setItem(STORAGE_KEYS.heroPoints, JSON.stringify(heroPoints)) }, [heroPoints])
 
   const heroStats: [string, number][] = [
     ["atkmulti", 1], ["defmulti", 1], ["matkmulti", 1], ["healmulti", 1],
