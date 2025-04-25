@@ -18,6 +18,7 @@ export function computeTalentStats() {
       }
     }
     localStorage.setItem("StatsTalents", JSON.stringify(stats)) // Save totals to StatsTalents
+    console.log(stats)
   } catch {}
 }
 
@@ -99,11 +100,16 @@ export function computeDmgReadyStats() {
     const result: Record<string, number> = {}
 
     const baseStats = ["ATK", "DEF", "MATK", "HEAL"]
+    const elements = ["Slash%", "Pierce%", "Blunt%", "Fire%", "Water%", "Lightning%", "Wind%", "Earth%", "Toxic%", "Neg%", "Holy%", "Void%"]
 
     for (const stat of baseStats) {
       const base = stats[stat] ?? 0
       const multiplier = stats[`${stat}%`] ?? 0
       result[stat] = base * (1 + multiplier)
+    }
+
+    for (const stat of elements) {
+      result[stat] = stats[stat]
     }
 
     localStorage.setItem("StatsDmgReady", JSON.stringify(result))

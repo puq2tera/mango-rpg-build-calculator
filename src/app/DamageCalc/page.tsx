@@ -48,9 +48,20 @@ export default function DamageCalc() {
     defCap: 0
   })
 
+  const nonCrit =
+    ((stats[mainStat] * inputs["skillDmg"]) -
+      Math.max(0, inputs["enemyArmor"] * inputs["armorIgnore"])) *
+    stats[`${element}%`] *
+    (stats[`${penElement} Pen%`] - inputs["enemyRes"] * inputs["resIgnore"]) *
+    stats[skillType] *
+    stats["Global DMG%"];
+  const crit = nonCrit * inputs['skillCritDmg']
+  const average = 0
+
   const handleChange = (field: string, value: number) => {
     setInputs(prev => ({ ...prev, [field]: value }))
     console.log(inputs)
+    console.log(stats)
   }
 
   return (
@@ -164,9 +175,9 @@ export default function DamageCalc() {
       <div className="grid grid-cols-2 gap-6 text-center border rounded-lg p-4 bg-white">
         <div className="space-y-2">
           <h2 className="font-semibold text-lg">Average Damage</h2>
-          <div><strong>Non-Crit:</strong> {stats[mainStat]}</div>
-          <div><strong>Crit:</strong> TBD</div>
-          <div><strong>Overall:</strong> TBD</div>
+          <div><strong>Non-Crit:</strong> { nonCrit }</div>
+          <div><strong>Crit:</strong> { crit }</div>
+          <div><strong>Overall:</strong> {average}</div>
         </div>
         <div className="space-y-2">
           <h2 className="font-semibold text-lg">Damage Over Time</h2>
