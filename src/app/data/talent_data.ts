@@ -25,34 +25,34 @@ export type Talent = {
 function computeColumnWidths(data: Record<string, Talent>): string[] {
     console.log("Computing talent_data column widths")
     const headers = [
-      "Name", "PreReq", "Tag", "BlockedTag",
-      "Gold", "Exp", "TP", "Lvl",
-      "Tank", "Warrior", "Caster", "Healer",
-      "Description"
+        "Name", "PreReq", "Tag", "BlockedTag",
+        "Gold", "Exp", "TP", "Lvl",
+        "Tank", "Warrior", "Caster", "Healer",
+        "Description"
     ]
     const longest = headers.map(h => h.length)
-  
+
     for (const [name, t] of Object.entries(data)) {
-      const values = [
-        name,
-        Array.isArray(t.PreReq) ? t.PreReq.join(", ") : t.PreReq,
-        t.Tag,
-        t.BlockedTag,
-        String(t.gold),
-        String(t.exp),
-        String(t.tp_spent),
-        String(t.total_level),
-        String(t.class_levels.tank_levels),
-        String(t.class_levels.warrior_levels),
-        String(t.class_levels.caster_levels),
-        String(t.class_levels.healer_levels),
-        t.description
-      ]
-      values.forEach((v, i) => {
-        longest[i] = Math.max(longest[i], v.length)
-      })
+        const values = [
+            name,
+            Array.isArray(t.PreReq) ? t.PreReq.join(", ") : t.PreReq,
+            t.Tag,
+            t.BlockedTag,
+            String(t.gold),
+            String(t.exp),
+            String(t.tp_spent),
+            String(t.total_level),
+            String(t.class_levels.tank_levels),
+            String(t.class_levels.warrior_levels),
+            String(t.class_levels.caster_levels),
+            String(t.class_levels.healer_levels),
+            t.description
+        ]
+        values.forEach((v, i) => {
+            longest[i] = Math.max(longest[i], v.length)
+        })
     }
-  
+
     return longest.map(chLen => `${Math.ceil(chLen * 8 + 32)}px`)
 }
 
@@ -254,9 +254,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 25,
         "exp": 25,
         "tp_spent": 0,
-        "total_level": 0,
+        "total_level": 1,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 1,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -275,9 +275,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 25,
         "exp": 25,
         "tp_spent": 0,
-        "total_level": 0,
+        "total_level": 1,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 1,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -296,9 +296,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 25,
         "exp": 25,
         "tp_spent": 0,
-        "total_level": 0,
+        "total_level": 1,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 1,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -318,9 +318,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 25,
         "exp": 25,
         "tp_spent": 0,
-        "total_level": 0,
+        "total_level": 1,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 1,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -339,9 +339,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 25,
         "exp": 25,
         "tp_spent": 0,
-        "total_level": 0,
+        "total_level": 1,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 1,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -360,9 +360,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 25,
         "exp": 25,
         "tp_spent": 0,
-        "total_level": 0,
+        "total_level": 1,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 1,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -381,16 +381,16 @@ const talent_data: Record<string, Talent> = {
         "gold": 25,
         "exp": 25,
         "tp_spent": 0,
-        "total_level": 0,
+        "total_level": 1,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 1,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
         },
         "description": "+5 DEF",
         "stats": {
-          "DEF": 5
+            "DEF": 5
         },
         "conversions": []
     },
@@ -402,16 +402,16 @@ const talent_data: Record<string, Talent> = {
         "gold": 25,
         "exp": 25,
         "tp_spent": 0,
-        "total_level": 0,
+        "total_level": 1,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 1,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
         },
         "description": "+8 DEF",
         "stats": {
-          "DEF": 8
+            "DEF": 8
         },
         "conversions": []
     },
@@ -423,9 +423,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 25,
         "exp": 25,
         "tp_spent": 0,
-        "total_level": 0,
+        "total_level": 1,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 1,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -442,9 +442,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 40,
         "exp": 100,
         "tp_spent": 2,
-        "total_level": 0,
+        "total_level": 8,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 8,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -464,9 +464,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 40,
         "exp": 100,
         "tp_spent": 2,
-        "total_level": 0,
+        "total_level": 8,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 8,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -486,9 +486,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 40,
         "exp": 100,
         "tp_spent": 2,
-        "total_level": 0,
+        "total_level": 8,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 8,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -508,9 +508,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 40,
         "exp": 100,
         "tp_spent": 2,
-        "total_level": 0,
+        "total_level": 8,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 8,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -529,9 +529,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 40,
         "exp": 100,
         "tp_spent": 2,
-        "total_level": 0,
+        "total_level": 8,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 8,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -550,9 +550,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 40,
         "exp": 100,
         "tp_spent": 2,
-        "total_level": 0,
+        "total_level": 8,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 8,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -571,9 +571,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 40,
         "exp": 100,
         "tp_spent": 2,
-        "total_level": 0,
+        "total_level": 8,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 8,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -590,9 +590,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 40,
         "exp": 100,
         "tp_spent": 2,
-        "total_level": 0,
+        "total_level": 8,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 8,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -609,9 +609,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 40,
         "exp": 100,
         "tp_spent": 2,
-        "total_level": 0,
+        "total_level": 8,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 8,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -628,9 +628,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 150,
         "tp_spent": 2,
-        "total_level": 0,
+        "total_level": 8,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 8,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -651,9 +651,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 150,
         "tp_spent": 2,
-        "total_level": 0,
+        "total_level": 8,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 8,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -672,9 +672,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 150,
         "tp_spent": 2,
-        "total_level": 0,
+        "total_level": 8,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 8,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -693,9 +693,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 150,
         "tp_spent": 2,
-        "total_level": 0,
+        "total_level": 8,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 8,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -714,9 +714,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 150,
         "tp_spent": 2,
-        "total_level": 0,
+        "total_level": 8,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 8,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -737,9 +737,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 150,
         "tp_spent": 2,
-        "total_level": 0,
+        "total_level": 8,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 8,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -760,9 +760,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 150,
         "tp_spent": 2,
-        "total_level": 0,
+        "total_level": 8,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 8,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -781,9 +781,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 150,
         "tp_spent": 2,
-        "total_level": 0,
+        "total_level": 8,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 8,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -802,9 +802,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 150,
         "tp_spent": 2,
-        "total_level": 0,
+        "total_level": 8,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 8,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -824,9 +824,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 150,
         "tp_spent": 2,
-        "total_level": 0,
+        "total_level": 8,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 8,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -846,9 +846,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 150,
         "tp_spent": 2,
-        "total_level": 0,
+        "total_level": 8,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 8,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -867,9 +867,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 150,
         "tp_spent": 2,
-        "total_level": 0,
+        "total_level": 8,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 8,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -888,9 +888,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 150,
         "tp_spent": 4,
-        "total_level": 0,
+        "total_level": 15,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 15,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -909,9 +909,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 150,
         "tp_spent": 4,
-        "total_level": 0,
+        "total_level": 15,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 15,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -930,9 +930,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 150,
         "tp_spent": 4,
-        "total_level": 0,
+        "total_level": 15,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 15,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -951,9 +951,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 150,
         "tp_spent": 4,
-        "total_level": 0,
+        "total_level": 15,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 15,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -970,9 +970,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 150,
         "tp_spent": 4,
-        "total_level": 0,
+        "total_level": 15,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 15,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -989,9 +989,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 150,
         "tp_spent": 4,
-        "total_level": 0,
+        "total_level": 15,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 15,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -1008,9 +1008,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 150,
         "tp_spent": 4,
-        "total_level": 0,
+        "total_level": 15,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 15,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -1029,9 +1029,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 150,
         "tp_spent": 4,
-        "total_level": 0,
+        "total_level": 15,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 15,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -1050,9 +1050,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 150,
         "tp_spent": 4,
-        "total_level": 0,
+        "total_level": 15,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 15,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -1071,9 +1071,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 150,
         "tp_spent": 4,
-        "total_level": 0,
+        "total_level": 15,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 15,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -1092,9 +1092,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 150,
         "tp_spent": 4,
-        "total_level": 0,
+        "total_level": 15,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 15,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -1114,9 +1114,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 150,
         "tp_spent": 4,
-        "total_level": 0,
+        "total_level": 15,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 15,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -1136,9 +1136,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 150,
         "tp_spent": 4,
-        "total_level": 0,
+        "total_level": 15,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 15,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -1158,9 +1158,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 150,
         "tp_spent": 4,
-        "total_level": 0,
+        "total_level": 15,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 15,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -1180,9 +1180,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 150,
         "tp_spent": 4,
-        "total_level": 0,
+        "total_level": 15,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 15,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -1203,9 +1203,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 150,
         "tp_spent": 4,
-        "total_level": 0,
+        "total_level": 15,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 15,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -1226,9 +1226,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 150,
         "tp_spent": 4,
-        "total_level": 0,
+        "total_level": 15,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 15,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -1249,9 +1249,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 150,
         "tp_spent": 4,
-        "total_level": 0,
+        "total_level": 15,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 15,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -1272,9 +1272,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 1500,
         "tp_spent": 11,
-        "total_level": 0,
+        "total_level": 30,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 30,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -1293,9 +1293,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 1500,
         "tp_spent": 11,
-        "total_level": 0,
+        "total_level": 30,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 30,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -1312,9 +1312,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 1500,
         "tp_spent": 11,
-        "total_level": 0,
+        "total_level": 30,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 30,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -1331,9 +1331,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 1500,
         "tp_spent": 11,
-        "total_level": 0,
+        "total_level": 30,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 30,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -1352,9 +1352,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 1500,
         "tp_spent": 11,
-        "total_level": 0,
+        "total_level": 30,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 30,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -1373,9 +1373,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 1500,
         "tp_spent": 11,
-        "total_level": 0,
+        "total_level": 30,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 30,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -1394,9 +1394,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 1500,
         "tp_spent": 11,
-        "total_level": 0,
+        "total_level": 30,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 30,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -1415,9 +1415,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 1500,
         "tp_spent": 11,
-        "total_level": 0,
+        "total_level": 30,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 30,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -1436,9 +1436,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 1500,
         "tp_spent": 11,
-        "total_level": 0,
+        "total_level": 30,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 30,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -1458,9 +1458,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 1500,
         "tp_spent": 11,
-        "total_level": 0,
+        "total_level": 30,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 30,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -1479,9 +1479,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 1500,
         "tp_spent": 11,
-        "total_level": 0,
+        "total_level": 30,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 30,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -1500,9 +1500,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 1500,
         "tp_spent": 11,
-        "total_level": 0,
+        "total_level": 30,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 30,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -1521,9 +1521,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 1500,
         "tp_spent": 11,
-        "total_level": 0,
+        "total_level": 30,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 30,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -1540,9 +1540,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 1500,
         "tp_spent": 11,
-        "total_level": 0,
+        "total_level": 30,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 30,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -1559,9 +1559,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 1500,
         "tp_spent": 11,
-        "total_level": 0,
+        "total_level": 30,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 30,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -1580,9 +1580,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 1500,
         "tp_spent": 11,
-        "total_level": 0,
+        "total_level": 30,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 30,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -1601,9 +1601,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 1500,
         "tp_spent": 11,
-        "total_level": 0,
+        "total_level": 30,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 30,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -1622,9 +1622,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 1500,
         "tp_spent": 11,
-        "total_level": 0,
+        "total_level": 30,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 30,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -1643,9 +1643,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 1500,
         "tp_spent": 11,
-        "total_level": 0,
+        "total_level": 30,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 30,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -1664,9 +1664,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 1500,
         "tp_spent": 11,
-        "total_level": 0,
+        "total_level": 30,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 30,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -1686,9 +1686,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 1500,
         "tp_spent": 11,
-        "total_level": 0,
+        "total_level": 30,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 30,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -1707,9 +1707,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 1500,
         "tp_spent": 11,
-        "total_level": 0,
+        "total_level": 30,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 30,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -1728,9 +1728,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 1500,
         "tp_spent": 11,
-        "total_level": 0,
+        "total_level": 30,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 30,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -1749,9 +1749,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 1500,
         "tp_spent": 11,
-        "total_level": 0,
+        "total_level": 30,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 30,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -1770,9 +1770,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 1500,
         "tp_spent": 11,
-        "total_level": 0,
+        "total_level": 30,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 30,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -1791,9 +1791,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 1500,
         "tp_spent": 11,
-        "total_level": 0,
+        "total_level": 30,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 30,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -1814,9 +1814,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 1500,
         "tp_spent": 11,
-        "total_level": 0,
+        "total_level": 30,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 30,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -1836,9 +1836,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 1500,
         "tp_spent": 11,
-        "total_level": 0,
+        "total_level": 30,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 30,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -1858,9 +1858,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 1500,
         "tp_spent": 11,
-        "total_level": 0,
+        "total_level": 30,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 30,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -1881,9 +1881,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 3000,
         "tp_spent": 20,
-        "total_level": 0,
+        "total_level": 50,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 50,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -1902,9 +1902,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 3000,
         "tp_spent": 20,
-        "total_level": 0,
+        "total_level": 50,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 50,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -1923,9 +1923,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 3000,
         "tp_spent": 20,
-        "total_level": 0,
+        "total_level": 50,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 50,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -1944,9 +1944,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 3000,
         "tp_spent": 20,
-        "total_level": 0,
+        "total_level": 50,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 50,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -1965,9 +1965,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 3000,
         "tp_spent": 20,
-        "total_level": 0,
+        "total_level": 50,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 50,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -1986,9 +1986,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 3000,
         "tp_spent": 20,
-        "total_level": 0,
+        "total_level": 50,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 50,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -2007,9 +2007,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 3000,
         "tp_spent": 20,
-        "total_level": 0,
+        "total_level": 50,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 50,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -2028,9 +2028,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 3000,
         "tp_spent": 20,
-        "total_level": 0,
+        "total_level": 50,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 50,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -2049,9 +2049,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 3000,
         "tp_spent": 20,
-        "total_level": 0,
+        "total_level": 50,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 50,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -2071,9 +2071,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 3000,
         "tp_spent": 20,
-        "total_level": 0,
+        "total_level": 50,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 50,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -2092,9 +2092,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 3000,
         "tp_spent": 20,
-        "total_level": 0,
+        "total_level": 50,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 50,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -2113,9 +2113,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 3000,
         "tp_spent": 20,
-        "total_level": 0,
+        "total_level": 50,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 50,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -2134,9 +2134,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 3000,
         "tp_spent": 20,
-        "total_level": 0,
+        "total_level": 50,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 50,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -2155,9 +2155,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 3000,
         "tp_spent": 20,
-        "total_level": 0,
+        "total_level": 50,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 50,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -2176,9 +2176,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 3000,
         "tp_spent": 20,
-        "total_level": 0,
+        "total_level": 50,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 50,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -2199,9 +2199,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 3000,
         "tp_spent": 20,
-        "total_level": 0,
+        "total_level": 50,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 50,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -2220,9 +2220,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 3000,
         "tp_spent": 20,
-        "total_level": 0,
+        "total_level": 50,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 50,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -2243,9 +2243,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 3000,
         "tp_spent": 20,
-        "total_level": 0,
+        "total_level": 50,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 50,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -2265,9 +2265,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 3000,
         "tp_spent": 20,
-        "total_level": 0,
+        "total_level": 50,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 50,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -2287,9 +2287,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 3000,
         "tp_spent": 20,
-        "total_level": 0,
+        "total_level": 50,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 50,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -2310,9 +2310,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 3000,
         "tp_spent": 20,
-        "total_level": 0,
+        "total_level": 50,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 50,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -2331,9 +2331,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 3000,
         "tp_spent": 20,
-        "total_level": 0,
+        "total_level": 50,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 50,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -2352,9 +2352,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 3000,
         "tp_spent": 20,
-        "total_level": 0,
+        "total_level": 50,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 50,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -2373,9 +2373,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 3000,
         "tp_spent": 20,
-        "total_level": 0,
+        "total_level": 50,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 50,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -2395,9 +2395,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 4000,
         "tp_spent": 30,
-        "total_level": 0,
+        "total_level": 70,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 70,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -2416,9 +2416,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 4000,
         "tp_spent": 30,
-        "total_level": 0,
+        "total_level": 70,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 70,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -2437,9 +2437,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 4000,
         "tp_spent": 30,
-        "total_level": 0,
+        "total_level": 70,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 70,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -2458,9 +2458,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 4000,
         "tp_spent": 30,
-        "total_level": 0,
+        "total_level": 70,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 70,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -2480,9 +2480,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 4000,
         "tp_spent": 30,
-        "total_level": 0,
+        "total_level": 70,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 70,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -2502,9 +2502,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 4000,
         "tp_spent": 30,
-        "total_level": 0,
+        "total_level": 70,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 70,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -2524,9 +2524,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 4000,
         "tp_spent": 30,
-        "total_level": 0,
+        "total_level": 70,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 70,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -2545,9 +2545,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 4000,
         "tp_spent": 30,
-        "total_level": 0,
+        "total_level": 70,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 70,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -2566,9 +2566,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 4000,
         "tp_spent": 30,
-        "total_level": 0,
+        "total_level": 70,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 70,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -2588,9 +2588,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 4000,
         "tp_spent": 30,
-        "total_level": 0,
+        "total_level": 70,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 70,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -2609,9 +2609,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 4000,
         "tp_spent": 30,
-        "total_level": 0,
+        "total_level": 70,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 70,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -2630,9 +2630,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 4000,
         "tp_spent": 30,
-        "total_level": 0,
+        "total_level": 70,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 70,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -2651,9 +2651,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 4000,
         "tp_spent": 30,
-        "total_level": 0,
+        "total_level": 70,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 70,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -2672,9 +2672,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 4000,
         "tp_spent": 30,
-        "total_level": 0,
+        "total_level": 70,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 70,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -2695,9 +2695,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 4000,
         "tp_spent": 30,
-        "total_level": 0,
+        "total_level": 70,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 70,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -2717,9 +2717,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 4000,
         "tp_spent": 30,
-        "total_level": 0,
+        "total_level": 70,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 70,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -2739,9 +2739,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 4000,
         "tp_spent": 30,
-        "total_level": 0,
+        "total_level": 70,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 70,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -2762,9 +2762,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 4000,
         "tp_spent": 30,
-        "total_level": 0,
+        "total_level": 70,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 70,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -2784,9 +2784,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 4000,
         "tp_spent": 30,
-        "total_level": 0,
+        "total_level": 70,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 70,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -2805,9 +2805,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 4000,
         "tp_spent": 30,
-        "total_level": 0,
+        "total_level": 70,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 70,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -2826,9 +2826,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 4000,
         "tp_spent": 30,
-        "total_level": 0,
+        "total_level": 70,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 70,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -2848,9 +2848,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 75,
         "exp": 5000,
         "tp_spent": 40,
-        "total_level": 0,
+        "total_level": 85,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 85,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -2869,9 +2869,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 75,
         "exp": 5000,
         "tp_spent": 40,
-        "total_level": 0,
+        "total_level": 85,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 85,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -2890,9 +2890,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 75,
         "exp": 5000,
         "tp_spent": 40,
-        "total_level": 0,
+        "total_level": 85,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 85,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -2911,9 +2911,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 75,
         "exp": 5000,
         "tp_spent": 40,
-        "total_level": 0,
+        "total_level": 85,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 85,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -2933,9 +2933,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 75,
         "exp": 5000,
         "tp_spent": 40,
-        "total_level": 0,
+        "total_level": 85,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 85,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -2955,9 +2955,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 75,
         "exp": 5000,
         "tp_spent": 40,
-        "total_level": 0,
+        "total_level": 85,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 85,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -2977,9 +2977,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 75,
         "exp": 5000,
         "tp_spent": 40,
-        "total_level": 0,
+        "total_level": 85,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 85,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -2999,9 +2999,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 75,
         "exp": 5000,
         "tp_spent": 40,
-        "total_level": 0,
+        "total_level": 85,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 85,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -3021,9 +3021,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 75,
         "exp": 5000,
         "tp_spent": 40,
-        "total_level": 0,
+        "total_level": 85,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 85,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -3044,9 +3044,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 300,
         "exp": 5000,
         "tp_spent": 40,
-        "total_level": 0,
+        "total_level": 85,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 85,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -3065,9 +3065,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 75,
         "exp": 5000,
         "tp_spent": 40,
-        "total_level": 0,
+        "total_level": 85,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 85,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -3088,9 +3088,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 75,
         "exp": 5000,
         "tp_spent": 40,
-        "total_level": 0,
+        "total_level": 85,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 85,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -3111,9 +3111,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 75,
         "exp": 5000,
         "tp_spent": 40,
-        "total_level": 0,
+        "total_level": 85,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 85,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -3134,9 +3134,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 300,
         "exp": 5000,
         "tp_spent": 40,
-        "total_level": 0,
+        "total_level": 85,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 85,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -3157,9 +3157,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 75,
         "exp": 5000,
         "tp_spent": 40,
-        "total_level": 0,
+        "total_level": 85,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 85,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -3179,9 +3179,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 75,
         "exp": 5000,
         "tp_spent": 40,
-        "total_level": 0,
+        "total_level": 85,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 85,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -3202,9 +3202,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 75,
         "exp": 5000,
         "tp_spent": 40,
-        "total_level": 0,
+        "total_level": 85,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 85,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -3225,9 +3225,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 300,
         "exp": 5000,
         "tp_spent": 40,
-        "total_level": 0,
+        "total_level": 85,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 85,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -3247,9 +3247,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 75,
         "exp": 5000,
         "tp_spent": 40,
-        "total_level": 0,
+        "total_level": 85,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 85,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -3269,9 +3269,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 75,
         "exp": 5000,
         "tp_spent": 40,
-        "total_level": 0,
+        "total_level": 85,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 85,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -3290,9 +3290,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 75,
         "exp": 5000,
         "tp_spent": 40,
-        "total_level": 0,
+        "total_level": 85,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 85,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -3313,9 +3313,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 0,
+        "total_level": 100,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 100,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -3335,9 +3335,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 0,
+        "total_level": 100,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 100,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -3357,9 +3357,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 0,
+        "total_level": 100,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 100,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -3379,9 +3379,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 0,
+        "total_level": 100,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 100,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -3401,9 +3401,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 0,
+        "total_level": 100,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 100,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -3423,9 +3423,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 0,
+        "total_level": 100,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 100,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -3445,9 +3445,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 0,
+        "total_level": 100,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 100,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -3467,9 +3467,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 0,
+        "total_level": 100,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 100,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -3488,9 +3488,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 0,
+        "total_level": 100,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 100,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -3511,9 +3511,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 0,
+        "total_level": 100,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 100,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -3534,9 +3534,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 0,
+        "total_level": 100,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 100,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -3557,9 +3557,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 0,
+        "total_level": 100,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 100,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -3591,7 +3591,7 @@ const talent_data: Record<string, Talent> = {
         "tp_spent": 62,
         "total_level": 125,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 125,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -3615,7 +3615,7 @@ const talent_data: Record<string, Talent> = {
         "tp_spent": 62,
         "total_level": 125,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 125,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -3641,7 +3641,7 @@ const talent_data: Record<string, Talent> = {
         "tp_spent": 62,
         "total_level": 125,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 125,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -3663,7 +3663,7 @@ const talent_data: Record<string, Talent> = {
         "tp_spent": 62,
         "total_level": 125,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 125,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -3684,7 +3684,7 @@ const talent_data: Record<string, Talent> = {
         "tp_spent": 62,
         "total_level": 125,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 125,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -3705,7 +3705,7 @@ const talent_data: Record<string, Talent> = {
         "tp_spent": 62,
         "total_level": 125,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 125,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -3726,7 +3726,7 @@ const talent_data: Record<string, Talent> = {
         "tp_spent": 62,
         "total_level": 125,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 125,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -3747,7 +3747,7 @@ const talent_data: Record<string, Talent> = {
         "tp_spent": 62,
         "total_level": 125,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 125,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -3768,7 +3768,7 @@ const talent_data: Record<string, Talent> = {
         "tp_spent": 62,
         "total_level": 125,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 125,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -3789,7 +3789,7 @@ const talent_data: Record<string, Talent> = {
         "tp_spent": 62,
         "total_level": 125,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 125,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -3812,7 +3812,7 @@ const talent_data: Record<string, Talent> = {
         "tp_spent": 62,
         "total_level": 125,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 125,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -3831,7 +3831,7 @@ const talent_data: Record<string, Talent> = {
         "tp_spent": 62,
         "total_level": 125,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 125,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -3850,7 +3850,7 @@ const talent_data: Record<string, Talent> = {
         "tp_spent": 86,
         "total_level": 175,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 175,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -3869,7 +3869,7 @@ const talent_data: Record<string, Talent> = {
         "tp_spent": 86,
         "total_level": 175,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 175,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -3888,7 +3888,7 @@ const talent_data: Record<string, Talent> = {
         "tp_spent": 86,
         "total_level": 175,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 175,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -3907,7 +3907,7 @@ const talent_data: Record<string, Talent> = {
         "tp_spent": 86,
         "total_level": 175,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 175,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -3926,7 +3926,7 @@ const talent_data: Record<string, Talent> = {
         "tp_spent": 86,
         "total_level": 175,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 175,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -3947,7 +3947,7 @@ const talent_data: Record<string, Talent> = {
         "tp_spent": 86,
         "total_level": 175,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 175,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -3968,7 +3968,7 @@ const talent_data: Record<string, Talent> = {
         "tp_spent": 86,
         "total_level": 175,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 175,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -3989,7 +3989,7 @@ const talent_data: Record<string, Talent> = {
         "tp_spent": 86,
         "total_level": 175,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 175,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -4008,7 +4008,7 @@ const talent_data: Record<string, Talent> = {
         "tp_spent": 86,
         "total_level": 175,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 175,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -4031,7 +4031,7 @@ const talent_data: Record<string, Talent> = {
         "tp_spent": 86,
         "total_level": 175,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 175,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -4057,7 +4057,7 @@ const talent_data: Record<string, Talent> = {
         "tp_spent": 86,
         "total_level": 175,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 175,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -4079,7 +4079,7 @@ const talent_data: Record<string, Talent> = {
         "tp_spent": 86,
         "total_level": 175,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 175,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -4111,7 +4111,7 @@ const talent_data: Record<string, Talent> = {
         "tp_spent": 86,
         "total_level": 175,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 175,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -4130,7 +4130,7 @@ const talent_data: Record<string, Talent> = {
         "tp_spent": 86,
         "total_level": 175,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 175,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -4155,7 +4155,7 @@ const talent_data: Record<string, Talent> = {
         "tp_spent": 86,
         "total_level": 175,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 175,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -4187,7 +4187,7 @@ const talent_data: Record<string, Talent> = {
         "tp_spent": 86,
         "total_level": 175,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 175,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -4206,7 +4206,7 @@ const talent_data: Record<string, Talent> = {
         "tp_spent": 86,
         "total_level": 175,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 175,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -4231,7 +4231,7 @@ const talent_data: Record<string, Talent> = {
         "tp_spent": 86,
         "total_level": 175,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 175,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -4263,7 +4263,7 @@ const talent_data: Record<string, Talent> = {
         "tp_spent": 86,
         "total_level": 175,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 175,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -4280,10 +4280,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 25,
         "exp": 25,
         "tp_spent": 0,
-        "total_level": 0,
+        "total_level": 1,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 1,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -4301,10 +4301,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 25,
         "exp": 25,
         "tp_spent": 0,
-        "total_level": 0,
+        "total_level": 1,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 1,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -4322,10 +4322,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 25,
         "exp": 25,
         "tp_spent": 0,
-        "total_level": 0,
+        "total_level": 1,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 1,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -4343,10 +4343,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 25,
         "exp": 25,
         "tp_spent": 0,
-        "total_level": 0,
+        "total_level": 1,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 1,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -4364,10 +4364,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 25,
         "exp": 25,
         "tp_spent": 0,
-        "total_level": 0,
+        "total_level": 1,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 1,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -4385,10 +4385,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 25,
         "exp": 25,
         "tp_spent": 0,
-        "total_level": 0,
+        "total_level": 1,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 1,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -4406,10 +4406,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 25,
         "exp": 25,
         "tp_spent": 0,
-        "total_level": 0,
+        "total_level": 1,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 1,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -4425,10 +4425,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 25,
         "exp": 25,
         "tp_spent": 0,
-        "total_level": 0,
+        "total_level": 1,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 1,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -4444,10 +4444,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 25,
         "exp": 25,
         "tp_spent": 0,
-        "total_level": 0,
+        "total_level": 1,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 1,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -4463,10 +4463,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 40,
         "exp": 100,
         "tp_spent": 2,
-        "total_level": 0,
+        "total_level": 8,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 8,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -4485,10 +4485,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 40,
         "exp": 100,
         "tp_spent": 2,
-        "total_level": 0,
+        "total_level": 8,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 8,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -4507,10 +4507,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 40,
         "exp": 100,
         "tp_spent": 2,
-        "total_level": 0,
+        "total_level": 8,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 8,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -4529,10 +4529,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 40,
         "exp": 100,
         "tp_spent": 2,
-        "total_level": 0,
+        "total_level": 8,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 8,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -4550,10 +4550,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 40,
         "exp": 100,
         "tp_spent": 2,
-        "total_level": 0,
+        "total_level": 8,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 8,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -4571,10 +4571,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 40,
         "exp": 100,
         "tp_spent": 2,
-        "total_level": 0,
+        "total_level": 8,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 8,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -4592,10 +4592,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 40,
         "exp": 100,
         "tp_spent": 2,
-        "total_level": 0,
+        "total_level": 8,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 8,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -4611,10 +4611,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 40,
         "exp": 100,
         "tp_spent": 2,
-        "total_level": 0,
+        "total_level": 8,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 8,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -4630,10 +4630,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 40,
         "exp": 100,
         "tp_spent": 2,
-        "total_level": 0,
+        "total_level": 8,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 8,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -4649,10 +4649,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 150,
         "tp_spent": 2,
-        "total_level": 0,
+        "total_level": 8,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 8,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -4671,10 +4671,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 150,
         "tp_spent": 2,
-        "total_level": 0,
+        "total_level": 8,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 8,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -4693,10 +4693,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 150,
         "tp_spent": 2,
-        "total_level": 0,
+        "total_level": 8,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 8,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -4715,10 +4715,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 150,
         "tp_spent": 2,
-        "total_level": 0,
+        "total_level": 8,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 8,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -4737,10 +4737,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 150,
         "tp_spent": 2,
-        "total_level": 0,
+        "total_level": 8,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 8,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -4758,10 +4758,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 150,
         "tp_spent": 2,
-        "total_level": 0,
+        "total_level": 8,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 8,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -4779,10 +4779,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 150,
         "tp_spent": 2,
-        "total_level": 0,
+        "total_level": 8,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 8,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -4800,10 +4800,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 150,
         "tp_spent": 2,
-        "total_level": 0,
+        "total_level": 8,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 8,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -4821,10 +4821,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 150,
         "tp_spent": 2,
-        "total_level": 0,
+        "total_level": 8,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 8,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -4842,10 +4842,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 150,
         "tp_spent": 2,
-        "total_level": 0,
+        "total_level": 8,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 8,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -4863,10 +4863,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 150,
         "tp_spent": 2,
-        "total_level": 0,
+        "total_level": 8,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 8,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -4884,10 +4884,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 150,
         "tp_spent": 2,
-        "total_level": 0,
+        "total_level": 8,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 8,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -4905,10 +4905,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 150,
         "tp_spent": 2,
-        "total_level": 0,
+        "total_level": 8,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 8,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -4926,10 +4926,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 150,
         "tp_spent": 2,
-        "total_level": 0,
+        "total_level": 8,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 8,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -4947,10 +4947,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 150,
         "tp_spent": 2,
-        "total_level": 0,
+        "total_level": 8,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 8,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -4968,10 +4968,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 150,
         "tp_spent": 2,
-        "total_level": 0,
+        "total_level": 8,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 8,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -4989,10 +4989,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 150,
         "tp_spent": 2,
-        "total_level": 0,
+        "total_level": 8,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 8,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -5011,10 +5011,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 150,
         "tp_spent": 2,
-        "total_level": 0,
+        "total_level": 8,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 8,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -5033,10 +5033,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 150,
         "tp_spent": 2,
-        "total_level": 0,
+        "total_level": 8,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 8,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -5055,10 +5055,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 150,
         "tp_spent": 2,
-        "total_level": 0,
+        "total_level": 8,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 8,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -5077,10 +5077,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 150,
         "tp_spent": 2,
-        "total_level": 0,
+        "total_level": 8,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 8,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -5099,10 +5099,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 150,
         "tp_spent": 2,
-        "total_level": 0,
+        "total_level": 8,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 8,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -5121,10 +5121,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 150,
         "tp_spent": 2,
-        "total_level": 0,
+        "total_level": 8,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 8,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -5143,10 +5143,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 150,
         "tp_spent": 2,
-        "total_level": 0,
+        "total_level": 8,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 8,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -5165,10 +5165,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 150,
         "tp_spent": 4,
-        "total_level": 0,
+        "total_level": 15,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 15,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -5184,10 +5184,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 150,
         "tp_spent": 4,
-        "total_level": 0,
+        "total_level": 15,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 15,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -5203,10 +5203,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 150,
         "tp_spent": 4,
-        "total_level": 0,
+        "total_level": 15,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 15,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -5225,10 +5225,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 150,
         "tp_spent": 4,
-        "total_level": 0,
+        "total_level": 15,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 15,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -5248,10 +5248,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 150,
         "tp_spent": 4,
-        "total_level": 0,
+        "total_level": 15,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 15,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -5270,10 +5270,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 150,
         "tp_spent": 4,
-        "total_level": 0,
+        "total_level": 15,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 15,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -5292,10 +5292,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 150,
         "tp_spent": 4,
-        "total_level": 0,
+        "total_level": 15,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 15,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -5314,10 +5314,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 150,
         "tp_spent": 4,
-        "total_level": 0,
+        "total_level": 15,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 15,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -5336,10 +5336,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 150,
         "tp_spent": 4,
-        "total_level": 0,
+        "total_level": 15,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 15,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -5357,10 +5357,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 150,
         "tp_spent": 4,
-        "total_level": 0,
+        "total_level": 15,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 15,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -5378,10 +5378,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 150,
         "tp_spent": 4,
-        "total_level": 0,
+        "total_level": 15,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 15,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -5399,10 +5399,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 150,
         "tp_spent": 4,
-        "total_level": 0,
+        "total_level": 15,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 15,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -5421,10 +5421,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 150,
         "tp_spent": 4,
-        "total_level": 0,
+        "total_level": 15,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 15,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -5442,10 +5442,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 150,
         "tp_spent": 4,
-        "total_level": 0,
+        "total_level": 15,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 15,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -5463,10 +5463,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 150,
         "tp_spent": 4,
-        "total_level": 0,
+        "total_level": 15,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 15,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -5484,10 +5484,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 150,
         "tp_spent": 4,
-        "total_level": 0,
+        "total_level": 15,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 15,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -5506,10 +5506,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 150,
         "tp_spent": 4,
-        "total_level": 0,
+        "total_level": 15,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 15,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -5527,10 +5527,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 150,
         "tp_spent": 4,
-        "total_level": 0,
+        "total_level": 15,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 15,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -5548,10 +5548,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 150,
         "tp_spent": 4,
-        "total_level": 0,
+        "total_level": 15,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 15,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -5569,10 +5569,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 150,
         "tp_spent": 4,
-        "total_level": 0,
+        "total_level": 15,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 15,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -5592,10 +5592,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 150,
         "tp_spent": 4,
-        "total_level": 0,
+        "total_level": 15,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 15,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -5614,10 +5614,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 150,
         "tp_spent": 4,
-        "total_level": 0,
+        "total_level": 15,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 15,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -5636,10 +5636,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 150,
         "tp_spent": 4,
-        "total_level": 0,
+        "total_level": 15,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 15,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -5658,10 +5658,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 150,
         "tp_spent": 4,
-        "total_level": 0,
+        "total_level": 15,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 15,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -5681,10 +5681,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 150,
         "tp_spent": 4,
-        "total_level": 0,
+        "total_level": 15,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 15,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -5703,10 +5703,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 150,
         "tp_spent": 4,
-        "total_level": 0,
+        "total_level": 15,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 15,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -5725,10 +5725,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 150,
         "tp_spent": 4,
-        "total_level": 0,
+        "total_level": 15,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 15,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -5747,10 +5747,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 1500,
         "tp_spent": 11,
-        "total_level": 0,
+        "total_level": 30,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 30,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -5768,10 +5768,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 1500,
         "tp_spent": 11,
-        "total_level": 0,
+        "total_level": 30,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 30,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -5789,10 +5789,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 1500,
         "tp_spent": 11,
-        "total_level": 0,
+        "total_level": 30,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 30,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -5810,10 +5810,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 1500,
         "tp_spent": 11,
-        "total_level": 0,
+        "total_level": 30,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 30,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -5831,10 +5831,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 1500,
         "tp_spent": 11,
-        "total_level": 0,
+        "total_level": 30,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 30,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -5852,10 +5852,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 1500,
         "tp_spent": 11,
-        "total_level": 0,
+        "total_level": 30,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 30,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -5873,10 +5873,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 1500,
         "tp_spent": 11,
-        "total_level": 0,
+        "total_level": 30,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 30,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -5892,10 +5892,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 1500,
         "tp_spent": 11,
-        "total_level": 0,
+        "total_level": 30,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 30,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -5911,10 +5911,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 1500,
         "tp_spent": 11,
-        "total_level": 0,
+        "total_level": 30,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 30,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -5930,10 +5930,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 1500,
         "tp_spent": 11,
-        "total_level": 0,
+        "total_level": 30,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 30,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -5952,10 +5952,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 1500,
         "tp_spent": 11,
-        "total_level": 0,
+        "total_level": 30,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 30,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -5974,10 +5974,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 1500,
         "tp_spent": 11,
-        "total_level": 0,
+        "total_level": 30,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 30,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -5996,10 +5996,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 1500,
         "tp_spent": 11,
-        "total_level": 0,
+        "total_level": 30,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 30,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -6019,10 +6019,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 1500,
         "tp_spent": 11,
-        "total_level": 0,
+        "total_level": 30,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 30,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -6041,10 +6041,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 1500,
         "tp_spent": 11,
-        "total_level": 0,
+        "total_level": 30,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 30,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -6063,10 +6063,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 1500,
         "tp_spent": 11,
-        "total_level": 0,
+        "total_level": 30,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 30,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -6085,10 +6085,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 1500,
         "tp_spent": 11,
-        "total_level": 0,
+        "total_level": 30,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 30,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -6107,10 +6107,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 1500,
         "tp_spent": 11,
-        "total_level": 0,
+        "total_level": 30,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 30,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -6129,10 +6129,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 1500,
         "tp_spent": 11,
-        "total_level": 0,
+        "total_level": 30,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 30,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -6151,10 +6151,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 1500,
         "tp_spent": 11,
-        "total_level": 0,
+        "total_level": 30,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 30,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -6173,10 +6173,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 1500,
         "tp_spent": 11,
-        "total_level": 0,
+        "total_level": 30,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 30,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -6195,10 +6195,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 1500,
         "tp_spent": 11,
-        "total_level": 0,
+        "total_level": 30,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 30,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -6217,10 +6217,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 1500,
         "tp_spent": 11,
-        "total_level": 0,
+        "total_level": 30,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 30,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -6239,10 +6239,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 1500,
         "tp_spent": 11,
-        "total_level": 0,
+        "total_level": 30,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 30,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -6261,10 +6261,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 1500,
         "tp_spent": 11,
-        "total_level": 0,
+        "total_level": 30,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 30,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -6283,10 +6283,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 1500,
         "tp_spent": 11,
-        "total_level": 0,
+        "total_level": 30,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 30,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -6305,10 +6305,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 1500,
         "tp_spent": 11,
-        "total_level": 0,
+        "total_level": 30,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 30,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -6327,10 +6327,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 1500,
         "tp_spent": 11,
-        "total_level": 0,
+        "total_level": 30,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 30,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -6349,10 +6349,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 1500,
         "tp_spent": 11,
-        "total_level": 0,
+        "total_level": 30,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 30,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -6372,10 +6372,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 1500,
         "tp_spent": 11,
-        "total_level": 0,
+        "total_level": 30,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 30,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -6394,10 +6394,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 1500,
         "tp_spent": 11,
-        "total_level": 0,
+        "total_level": 30,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 30,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -6416,10 +6416,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 1500,
         "tp_spent": 11,
-        "total_level": 0,
+        "total_level": 30,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 30,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -6438,10 +6438,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 1500,
         "tp_spent": 11,
-        "total_level": 0,
+        "total_level": 30,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 30,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -6460,10 +6460,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 1500,
         "tp_spent": 11,
-        "total_level": 0,
+        "total_level": 30,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 30,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -6482,10 +6482,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 1500,
         "tp_spent": 11,
-        "total_level": 0,
+        "total_level": 30,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 30,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -6504,10 +6504,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 1500,
         "tp_spent": 11,
-        "total_level": 0,
+        "total_level": 30,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 30,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -6526,10 +6526,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 3000,
         "tp_spent": 20,
-        "total_level": 0,
+        "total_level": 50,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 50,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -6545,10 +6545,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 3000,
         "tp_spent": 20,
-        "total_level": 0,
+        "total_level": 50,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 50,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -6564,10 +6564,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 3000,
         "tp_spent": 20,
-        "total_level": 0,
+        "total_level": 50,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 50,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -6583,10 +6583,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 3000,
         "tp_spent": 20,
-        "total_level": 0,
+        "total_level": 50,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 50,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -6604,10 +6604,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 3000,
         "tp_spent": 20,
-        "total_level": 0,
+        "total_level": 50,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 50,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -6625,10 +6625,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 3000,
         "tp_spent": 20,
-        "total_level": 0,
+        "total_level": 50,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 50,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -6646,10 +6646,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 3000,
         "tp_spent": 20,
-        "total_level": 0,
+        "total_level": 50,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 50,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -6668,10 +6668,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 3000,
         "tp_spent": 20,
-        "total_level": 0,
+        "total_level": 50,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 50,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -6690,10 +6690,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 3000,
         "tp_spent": 20,
-        "total_level": 0,
+        "total_level": 50,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 50,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -6712,10 +6712,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 3000,
         "tp_spent": 20,
-        "total_level": 0,
+        "total_level": 50,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 50,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -6735,10 +6735,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 3000,
         "tp_spent": 20,
-        "total_level": 0,
+        "total_level": 50,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 50,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -6758,10 +6758,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 3000,
         "tp_spent": 20,
-        "total_level": 0,
+        "total_level": 50,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 50,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -6781,10 +6781,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 3000,
         "tp_spent": 20,
-        "total_level": 0,
+        "total_level": 50,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 50,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -6804,10 +6804,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 3000,
         "tp_spent": 20,
-        "total_level": 0,
+        "total_level": 50,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 50,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -6826,10 +6826,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 3000,
         "tp_spent": 20,
-        "total_level": 0,
+        "total_level": 50,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 50,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -6849,10 +6849,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 3000,
         "tp_spent": 20,
-        "total_level": 0,
+        "total_level": 50,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 50,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -6872,10 +6872,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 3000,
         "tp_spent": 20,
-        "total_level": 0,
+        "total_level": 50,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 50,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -6895,10 +6895,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 3000,
         "tp_spent": 20,
-        "total_level": 0,
+        "total_level": 50,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 50,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -6917,10 +6917,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 3000,
         "tp_spent": 20,
-        "total_level": 0,
+        "total_level": 50,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 50,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -6940,10 +6940,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 3000,
         "tp_spent": 20,
-        "total_level": 0,
+        "total_level": 50,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 50,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -6963,10 +6963,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 3000,
         "tp_spent": 20,
-        "total_level": 0,
+        "total_level": 50,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 50,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -6986,10 +6986,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 3000,
         "tp_spent": 20,
-        "total_level": 0,
+        "total_level": 50,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 50,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -7008,10 +7008,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 3000,
         "tp_spent": 20,
-        "total_level": 0,
+        "total_level": 50,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 50,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -7031,10 +7031,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 3000,
         "tp_spent": 20,
-        "total_level": 0,
+        "total_level": 50,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 50,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -7054,10 +7054,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 3000,
         "tp_spent": 20,
-        "total_level": 0,
+        "total_level": 50,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 50,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -7077,10 +7077,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 3000,
         "tp_spent": 20,
-        "total_level": 0,
+        "total_level": 50,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 50,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -7100,10 +7100,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 3000,
         "tp_spent": 20,
-        "total_level": 0,
+        "total_level": 50,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 50,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -7123,10 +7123,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 3000,
         "tp_spent": 20,
-        "total_level": 0,
+        "total_level": 50,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 50,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -7146,10 +7146,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 3000,
         "tp_spent": 20,
-        "total_level": 0,
+        "total_level": 50,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 50,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -7169,10 +7169,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 3000,
         "tp_spent": 20,
-        "total_level": 0,
+        "total_level": 50,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 50,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -7192,10 +7192,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 3000,
         "tp_spent": 20,
-        "total_level": 0,
+        "total_level": 50,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 50,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -7215,10 +7215,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 3000,
         "tp_spent": 20,
-        "total_level": 0,
+        "total_level": 50,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 50,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -7238,10 +7238,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 3000,
         "tp_spent": 20,
-        "total_level": 0,
+        "total_level": 50,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 50,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -7261,10 +7261,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 4000,
         "tp_spent": 30,
-        "total_level": 0,
+        "total_level": 70,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 70,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -7284,10 +7284,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 4000,
         "tp_spent": 30,
-        "total_level": 0,
+        "total_level": 70,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 70,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -7307,10 +7307,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 4000,
         "tp_spent": 30,
-        "total_level": 0,
+        "total_level": 70,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 70,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -7326,10 +7326,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 4000,
         "tp_spent": 30,
-        "total_level": 0,
+        "total_level": 70,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 70,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -7347,10 +7347,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 4000,
         "tp_spent": 30,
-        "total_level": 0,
+        "total_level": 70,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 70,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -7368,10 +7368,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 4000,
         "tp_spent": 30,
-        "total_level": 0,
+        "total_level": 70,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 70,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -7389,10 +7389,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 4000,
         "tp_spent": 30,
-        "total_level": 0,
+        "total_level": 70,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 70,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -7411,10 +7411,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 4000,
         "tp_spent": 30,
-        "total_level": 0,
+        "total_level": 70,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 70,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -7433,10 +7433,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 4000,
         "tp_spent": 30,
-        "total_level": 0,
+        "total_level": 70,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 70,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -7455,10 +7455,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 4000,
         "tp_spent": 30,
-        "total_level": 0,
+        "total_level": 70,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 70,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -7478,10 +7478,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 4000,
         "tp_spent": 30,
-        "total_level": 0,
+        "total_level": 70,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 70,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -7501,10 +7501,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 4000,
         "tp_spent": 30,
-        "total_level": 0,
+        "total_level": 70,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 70,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -7524,10 +7524,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 4000,
         "tp_spent": 30,
-        "total_level": 0,
+        "total_level": 70,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 70,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -7547,10 +7547,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 4000,
         "tp_spent": 30,
-        "total_level": 0,
+        "total_level": 70,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 70,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -7569,10 +7569,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 4000,
         "tp_spent": 30,
-        "total_level": 0,
+        "total_level": 70,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 70,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -7592,10 +7592,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 4000,
         "tp_spent": 30,
-        "total_level": 0,
+        "total_level": 70,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 70,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -7615,10 +7615,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 4000,
         "tp_spent": 30,
-        "total_level": 0,
+        "total_level": 70,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 70,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -7638,10 +7638,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 4000,
         "tp_spent": 30,
-        "total_level": 0,
+        "total_level": 70,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 70,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -7660,10 +7660,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 4000,
         "tp_spent": 30,
-        "total_level": 0,
+        "total_level": 70,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 70,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -7683,10 +7683,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 4000,
         "tp_spent": 30,
-        "total_level": 0,
+        "total_level": 70,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 70,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -7706,10 +7706,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 4000,
         "tp_spent": 30,
-        "total_level": 0,
+        "total_level": 70,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 70,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -7729,10 +7729,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 4000,
         "tp_spent": 30,
-        "total_level": 0,
+        "total_level": 70,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 70,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -7751,10 +7751,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 4000,
         "tp_spent": 30,
-        "total_level": 0,
+        "total_level": 70,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 70,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -7774,10 +7774,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 4000,
         "tp_spent": 30,
-        "total_level": 0,
+        "total_level": 70,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 70,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -7797,10 +7797,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 4000,
         "tp_spent": 30,
-        "total_level": 0,
+        "total_level": 70,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 70,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -7820,10 +7820,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 4000,
         "tp_spent": 30,
-        "total_level": 0,
+        "total_level": 70,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 70,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -7843,10 +7843,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 4000,
         "tp_spent": 30,
-        "total_level": 0,
+        "total_level": 70,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 70,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -7866,10 +7866,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 4000,
         "tp_spent": 30,
-        "total_level": 0,
+        "total_level": 70,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 70,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -7889,10 +7889,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 4000,
         "tp_spent": 30,
-        "total_level": 0,
+        "total_level": 70,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 70,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -7912,10 +7912,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 4000,
         "tp_spent": 30,
-        "total_level": 0,
+        "total_level": 70,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 70,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -7935,10 +7935,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 4000,
         "tp_spent": 30,
-        "total_level": 0,
+        "total_level": 70,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 70,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -7958,10 +7958,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 4000,
         "tp_spent": 30,
-        "total_level": 0,
+        "total_level": 70,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 70,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -7981,10 +7981,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 4000,
         "tp_spent": 30,
-        "total_level": 0,
+        "total_level": 70,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 70,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -8004,10 +8004,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 75,
         "exp": 5000,
         "tp_spent": 40,
-        "total_level": 0,
+        "total_level": 85,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 85,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -8027,10 +8027,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 75,
         "exp": 5000,
         "tp_spent": 40,
-        "total_level": 0,
+        "total_level": 85,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 85,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -8050,10 +8050,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 75,
         "exp": 5000,
         "tp_spent": 40,
-        "total_level": 0,
+        "total_level": 85,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 85,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -8069,10 +8069,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 75,
         "exp": 5000,
         "tp_spent": 40,
-        "total_level": 0,
+        "total_level": 85,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 85,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -8090,10 +8090,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 75,
         "exp": 5000,
         "tp_spent": 40,
-        "total_level": 0,
+        "total_level": 85,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 85,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -8111,10 +8111,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 75,
         "exp": 5000,
         "tp_spent": 40,
-        "total_level": 0,
+        "total_level": 85,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 85,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -8132,10 +8132,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 75,
         "exp": 5000,
         "tp_spent": 40,
-        "total_level": 0,
+        "total_level": 85,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 85,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -8154,10 +8154,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 75,
         "exp": 5000,
         "tp_spent": 40,
-        "total_level": 0,
+        "total_level": 85,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 85,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -8176,10 +8176,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 75,
         "exp": 5000,
         "tp_spent": 40,
-        "total_level": 0,
+        "total_level": 85,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 85,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -8199,10 +8199,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 75,
         "exp": 5000,
         "tp_spent": 40,
-        "total_level": 0,
+        "total_level": 85,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 85,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -8222,10 +8222,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 75,
         "exp": 5000,
         "tp_spent": 40,
-        "total_level": 0,
+        "total_level": 85,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 85,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -8245,10 +8245,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 75,
         "exp": 5000,
         "tp_spent": 40,
-        "total_level": 0,
+        "total_level": 85,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 85,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -8268,10 +8268,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 75,
         "exp": 5000,
         "tp_spent": 40,
-        "total_level": 0,
+        "total_level": 85,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 85,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -8291,10 +8291,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 75,
         "exp": 5000,
         "tp_spent": 40,
-        "total_level": 0,
+        "total_level": 85,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 85,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -8313,10 +8313,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 75,
         "exp": 5000,
         "tp_spent": 40,
-        "total_level": 0,
+        "total_level": 85,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 85,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -8336,10 +8336,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 75,
         "exp": 5000,
         "tp_spent": 40,
-        "total_level": 0,
+        "total_level": 85,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 85,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -8359,10 +8359,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 75,
         "exp": 5000,
         "tp_spent": 40,
-        "total_level": 0,
+        "total_level": 85,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 85,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -8382,10 +8382,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 75,
         "exp": 5000,
         "tp_spent": 40,
-        "total_level": 0,
+        "total_level": 85,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 85,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -8404,10 +8404,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 75,
         "exp": 5000,
         "tp_spent": 40,
-        "total_level": 0,
+        "total_level": 85,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 85,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -8427,10 +8427,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 75,
         "exp": 5000,
         "tp_spent": 40,
-        "total_level": 0,
+        "total_level": 85,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 85,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -8450,10 +8450,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 75,
         "exp": 5000,
         "tp_spent": 40,
-        "total_level": 0,
+        "total_level": 85,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 85,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -8473,10 +8473,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 75,
         "exp": 5000,
         "tp_spent": 40,
-        "total_level": 0,
+        "total_level": 85,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 85,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -8495,10 +8495,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 75,
         "exp": 5000,
         "tp_spent": 40,
-        "total_level": 0,
+        "total_level": 85,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 85,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -8518,10 +8518,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 75,
         "exp": 5000,
         "tp_spent": 40,
-        "total_level": 0,
+        "total_level": 85,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 85,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -8541,10 +8541,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 75,
         "exp": 5000,
         "tp_spent": 40,
-        "total_level": 0,
+        "total_level": 85,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 85,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -8564,10 +8564,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 75,
         "exp": 5000,
         "tp_spent": 40,
-        "total_level": 0,
+        "total_level": 85,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 85,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -8587,10 +8587,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 75,
         "exp": 5000,
         "tp_spent": 40,
-        "total_level": 0,
+        "total_level": 85,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 85,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -8610,10 +8610,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 75,
         "exp": 5000,
         "tp_spent": 40,
-        "total_level": 0,
+        "total_level": 85,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 85,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -8633,10 +8633,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 75,
         "exp": 5000,
         "tp_spent": 40,
-        "total_level": 0,
+        "total_level": 85,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 85,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -8656,10 +8656,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 75,
         "exp": 5000,
         "tp_spent": 40,
-        "total_level": 0,
+        "total_level": 85,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 85,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -8679,10 +8679,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 75,
         "exp": 5000,
         "tp_spent": 40,
-        "total_level": 0,
+        "total_level": 85,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 85,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -8702,10 +8702,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 75,
         "exp": 5000,
         "tp_spent": 40,
-        "total_level": 0,
+        "total_level": 85,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 85,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -8725,10 +8725,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 75,
         "exp": 5000,
         "tp_spent": 40,
-        "total_level": 0,
+        "total_level": 85,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 85,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -8748,10 +8748,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 0,
+        "total_level": 100,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 100,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -8771,10 +8771,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 0,
+        "total_level": 100,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 100,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -8792,10 +8792,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 0,
+        "total_level": 100,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 100,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -8814,10 +8814,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 0,
+        "total_level": 100,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 100,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -8841,10 +8841,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 0,
+        "total_level": 100,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 100,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -8863,10 +8863,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 0,
+        "total_level": 100,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 100,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -8884,10 +8884,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 0,
+        "total_level": 100,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 100,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -8906,10 +8906,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 0,
+        "total_level": 100,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 100,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -8928,10 +8928,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 0,
+        "total_level": 100,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 100,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -8950,10 +8950,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 0,
+        "total_level": 100,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 100,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -8971,10 +8971,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 0,
+        "total_level": 100,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 100,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -8993,10 +8993,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 0,
+        "total_level": 100,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 100,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -9012,10 +9012,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 0,
+        "total_level": 100,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 100,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -9034,10 +9034,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 0,
+        "total_level": 100,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 100,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -9055,10 +9055,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 0,
+        "total_level": 100,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 100,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -9077,10 +9077,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 0,
+        "total_level": 100,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 100,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -9099,10 +9099,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 0,
+        "total_level": 100,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 100,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -9122,10 +9122,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 0,
+        "total_level": 100,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 100,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -9143,10 +9143,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 0,
+        "total_level": 100,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 100,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -9165,10 +9165,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 0,
+        "total_level": 100,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 100,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -9186,10 +9186,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 0,
+        "total_level": 100,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 100,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -9209,10 +9209,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 0,
+        "total_level": 100,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 100,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -9230,10 +9230,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 0,
+        "total_level": 100,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 100,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -9252,10 +9252,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 0,
+        "total_level": 100,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 100,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -9277,7 +9277,7 @@ const talent_data: Record<string, Talent> = {
         "total_level": 125,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 125,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -9298,7 +9298,7 @@ const talent_data: Record<string, Talent> = {
         "total_level": 125,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 125,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -9319,7 +9319,7 @@ const talent_data: Record<string, Talent> = {
         "total_level": 125,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 125,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -9340,7 +9340,7 @@ const talent_data: Record<string, Talent> = {
         "total_level": 125,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 125,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -9363,7 +9363,7 @@ const talent_data: Record<string, Talent> = {
         "total_level": 125,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 125,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -9386,7 +9386,7 @@ const talent_data: Record<string, Talent> = {
         "total_level": 125,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 125,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -9405,7 +9405,7 @@ const talent_data: Record<string, Talent> = {
         "total_level": 125,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 125,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -9426,7 +9426,7 @@ const talent_data: Record<string, Talent> = {
         "total_level": 125,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 125,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -9447,7 +9447,7 @@ const talent_data: Record<string, Talent> = {
         "total_level": 125,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 125,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -9468,7 +9468,7 @@ const talent_data: Record<string, Talent> = {
         "total_level": 125,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 125,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -9491,7 +9491,7 @@ const talent_data: Record<string, Talent> = {
         "total_level": 125,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 125,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -9512,7 +9512,7 @@ const talent_data: Record<string, Talent> = {
         "total_level": 125,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 125,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -9533,7 +9533,7 @@ const talent_data: Record<string, Talent> = {
         "total_level": 175,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 175,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -9563,7 +9563,7 @@ const talent_data: Record<string, Talent> = {
         "total_level": 175,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 175,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -9593,7 +9593,7 @@ const talent_data: Record<string, Talent> = {
         "total_level": 175,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 175,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -9618,7 +9618,7 @@ const talent_data: Record<string, Talent> = {
         "total_level": 175,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 175,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -9643,7 +9643,7 @@ const talent_data: Record<string, Talent> = {
         "total_level": 175,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 175,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -9662,7 +9662,7 @@ const talent_data: Record<string, Talent> = {
         "total_level": 175,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 175,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -9681,7 +9681,7 @@ const talent_data: Record<string, Talent> = {
         "total_level": 175,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 175,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -9702,7 +9702,7 @@ const talent_data: Record<string, Talent> = {
         "total_level": 175,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 175,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -9727,7 +9727,7 @@ const talent_data: Record<string, Talent> = {
         "total_level": 175,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 175,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -9754,7 +9754,7 @@ const talent_data: Record<string, Talent> = {
         "total_level": 175,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 175,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -9781,7 +9781,7 @@ const talent_data: Record<string, Talent> = {
         "total_level": 175,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 175,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -9808,7 +9808,7 @@ const talent_data: Record<string, Talent> = {
         "total_level": 175,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 175,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -9829,7 +9829,7 @@ const talent_data: Record<string, Talent> = {
         "total_level": 175,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 175,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -9848,7 +9848,7 @@ const talent_data: Record<string, Talent> = {
         "total_level": 175,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 175,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -9867,7 +9867,7 @@ const talent_data: Record<string, Talent> = {
         "total_level": 175,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 175,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -9886,7 +9886,7 @@ const talent_data: Record<string, Talent> = {
         "total_level": 175,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 175,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -9918,7 +9918,7 @@ const talent_data: Record<string, Talent> = {
         "total_level": 175,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 175,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -9937,7 +9937,7 @@ const talent_data: Record<string, Talent> = {
         "total_level": 175,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 175,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -9962,7 +9962,7 @@ const talent_data: Record<string, Talent> = {
         "total_level": 175,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 175,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -9978,11 +9978,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 25,
         "exp": 25,
         "tp_spent": 0,
-        "total_level": 0,
+        "total_level": 1,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 1,
             "healer_levels": 0
         },
         "description": "+5% MATK",
@@ -9999,11 +9999,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 25,
         "exp": 25,
         "tp_spent": 0,
-        "total_level": 0,
+        "total_level": 1,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 1,
             "healer_levels": 0
         },
         "description": "+5% MATK",
@@ -10020,11 +10020,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 25,
         "exp": 25,
         "tp_spent": 0,
-        "total_level": 0,
+        "total_level": 1,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 1,
             "healer_levels": 0
         },
         "description": "+10% MATK",
@@ -10041,11 +10041,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 25,
         "exp": 25,
         "tp_spent": 0,
-        "total_level": 0,
+        "total_level": 1,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 1,
             "healer_levels": 0
         },
         "description": "+2% MATK, +3% Heal",
@@ -10063,11 +10063,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 25,
         "exp": 25,
         "tp_spent": 0,
-        "total_level": 0,
+        "total_level": 1,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 1,
             "healer_levels": 0
         },
         "description": "+2% MATK, +3% Heal",
@@ -10085,11 +10085,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 25,
         "exp": 25,
         "tp_spent": 0,
-        "total_level": 0,
+        "total_level": 1,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 1,
             "healer_levels": 0
         },
         "description": "+5% MATK, +6% Heal, +20 Heal",
@@ -10107,11 +10107,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 25,
         "exp": 25,
         "tp_spent": 0,
-        "total_level": 0,
+        "total_level": 1,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 1,
             "healer_levels": 0
         },
         "description": "+2 MATK, +5 MP",
@@ -10126,11 +10126,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 25,
         "exp": 25,
         "tp_spent": 0,
-        "total_level": 0,
+        "total_level": 1,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 1,
             "healer_levels": 0
         },
         "description": "+3 MATK, +5 MP",
@@ -10145,11 +10145,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 25,
         "exp": 25,
         "tp_spent": 0,
-        "total_level": 0,
+        "total_level": 1,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 1,
             "healer_levels": 0
         },
         "description": "+4 MATK, +5 MP",
@@ -10164,11 +10164,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 40,
         "exp": 100,
         "tp_spent": 0,
-        "total_level": 0,
+        "total_level": 8,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 8,
             "healer_levels": 0
         },
         "description": "+5% MATK",
@@ -10185,11 +10185,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 40,
         "exp": 100,
         "tp_spent": 0,
-        "total_level": 0,
+        "total_level": 8,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 8,
             "healer_levels": 0
         },
         "description": "+5% MATK",
@@ -10206,11 +10206,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 40,
         "exp": 100,
         "tp_spent": 0,
-        "total_level": 0,
+        "total_level": 8,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 8,
             "healer_levels": 0
         },
         "description": "+10% MATK",
@@ -10227,11 +10227,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 40,
         "exp": 100,
         "tp_spent": 2,
-        "total_level": 0,
+        "total_level": 8,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 8,
             "healer_levels": 0
         },
         "description": "+4% MATK, +2% Heal",
@@ -10249,11 +10249,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 40,
         "exp": 100,
         "tp_spent": 2,
-        "total_level": 0,
+        "total_level": 8,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 8,
             "healer_levels": 0
         },
         "description": "+4% MATK, +2% Heal",
@@ -10271,11 +10271,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 40,
         "exp": 100,
         "tp_spent": 2,
-        "total_level": 0,
+        "total_level": 8,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 8,
             "healer_levels": 0
         },
         "description": "+8% MATK, +8% Heal, +20 Heal",
@@ -10293,11 +10293,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 40,
         "exp": 100,
         "tp_spent": 2,
-        "total_level": 0,
+        "total_level": 8,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 8,
             "healer_levels": 0
         },
         "description": "+5 MATK, +5 MP",
@@ -10312,11 +10312,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 40,
         "exp": 100,
         "tp_spent": 2,
-        "total_level": 0,
+        "total_level": 8,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 8,
             "healer_levels": 0
         },
         "description": "+6 MATK, +5 MP",
@@ -10331,11 +10331,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 40,
         "exp": 100,
         "tp_spent": 2,
-        "total_level": 0,
+        "total_level": 8,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 8,
             "healer_levels": 0
         },
         "description": "+7 MATK, +5 MP",
@@ -10350,11 +10350,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 150,
         "tp_spent": 2,
-        "total_level": 0,
+        "total_level": 8,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 8,
             "healer_levels": 0
         },
         "description": "+16% MATK",
@@ -10371,11 +10371,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 150,
         "tp_spent": 2,
-        "total_level": 0,
+        "total_level": 8,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 8,
             "healer_levels": 0
         },
         "description": "+6% MATK",
@@ -10392,11 +10392,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 150,
         "tp_spent": 2,
-        "total_level": 0,
+        "total_level": 8,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 8,
             "healer_levels": 0
         },
         "description": "+6% MATK",
@@ -10413,11 +10413,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 150,
         "tp_spent": 2,
-        "total_level": 0,
+        "total_level": 8,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 8,
             "healer_levels": 0
         },
         "description": "+6% MATK",
@@ -10434,11 +10434,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 150,
         "tp_spent": 2,
-        "total_level": 0,
+        "total_level": 8,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 8,
             "healer_levels": 0
         },
         "description": "+10% MATK, +10% Holy Damage",
@@ -10456,11 +10456,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 150,
         "tp_spent": 2,
-        "total_level": 0,
+        "total_level": 8,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 8,
             "healer_levels": 0
         },
         "description": "+3% MATK, +4% Holy Damage",
@@ -10478,11 +10478,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 150,
         "tp_spent": 2,
-        "total_level": 0,
+        "total_level": 8,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 8,
             "healer_levels": 0
         },
         "description": "+3% MATK, +4% Holy Damage",
@@ -10500,11 +10500,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 150,
         "tp_spent": 2,
-        "total_level": 0,
+        "total_level": 8,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 8,
             "healer_levels": 0
         },
         "description": "+3% MATK, +4% Holy Damage",
@@ -10522,11 +10522,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 150,
         "tp_spent": 2,
-        "total_level": 0,
+        "total_level": 8,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 8,
             "healer_levels": 0
         },
         "description": "+10% MATK, +10% Negative Damage",
@@ -10544,11 +10544,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 150,
         "tp_spent": 2,
-        "total_level": 0,
+        "total_level": 8,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 8,
             "healer_levels": 0
         },
         "description": "+3% MATK, +4% Negative Damage",
@@ -10566,11 +10566,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 150,
         "tp_spent": 2,
-        "total_level": 0,
+        "total_level": 8,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 8,
             "healer_levels": 0
         },
         "description": "+3% MATK, +4% Negative Damage",
@@ -10588,11 +10588,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 150,
         "tp_spent": 2,
-        "total_level": 0,
+        "total_level": 8,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 8,
             "healer_levels": 0
         },
         "description": "+3% MATK, +4% Negative Damage",
@@ -10610,11 +10610,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 150,
         "tp_spent": 4,
-        "total_level": 0,
+        "total_level": 15,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 15,
             "healer_levels": 0
         },
         "description": "+8 MATK, +5 MP",
@@ -10629,11 +10629,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 150,
         "tp_spent": 4,
-        "total_level": 0,
+        "total_level": 15,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 15,
             "healer_levels": 0
         },
         "description": "+10 MATK, +5 MP",
@@ -10648,11 +10648,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 150,
         "tp_spent": 4,
-        "total_level": 0,
+        "total_level": 15,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 15,
             "healer_levels": 0
         },
         "description": "+15 MATK, +5 MP, +5% Crit Chance",
@@ -10669,11 +10669,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 100,
         "tp_spent": 4,
-        "total_level": 0,
+        "total_level": 15,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 15,
             "healer_levels": 0
         },
         "description": "+15% MATK",
@@ -10690,11 +10690,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 50,
         "tp_spent": 4,
-        "total_level": 0,
+        "total_level": 15,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 15,
             "healer_levels": 0
         },
         "description": "+10% Fire Damage",
@@ -10711,11 +10711,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 150,
         "tp_spent": 4,
-        "total_level": 0,
+        "total_level": 15,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 15,
             "healer_levels": 0
         },
         "description": "+4% Fire Damage",
@@ -10732,11 +10732,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 150,
         "tp_spent": 4,
-        "total_level": 0,
+        "total_level": 15,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 15,
             "healer_levels": 0
         },
         "description": "+8% Fire Damage",
@@ -10753,11 +10753,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 50,
         "tp_spent": 4,
-        "total_level": 0,
+        "total_level": 15,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 15,
             "healer_levels": 0
         },
         "description": "+10% Water Damage",
@@ -10774,11 +10774,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 150,
         "tp_spent": 4,
-        "total_level": 0,
+        "total_level": 15,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 15,
             "healer_levels": 0
         },
         "description": "+4% Water Damage",
@@ -10795,11 +10795,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 150,
         "tp_spent": 4,
-        "total_level": 0,
+        "total_level": 15,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 15,
             "healer_levels": 0
         },
         "description": "+8% Water Damage",
@@ -10816,11 +10816,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 50,
         "tp_spent": 4,
-        "total_level": 0,
+        "total_level": 15,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 15,
             "healer_levels": 0
         },
         "description": "+10% Lightning Damage",
@@ -10837,11 +10837,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 150,
         "tp_spent": 4,
-        "total_level": 0,
+        "total_level": 15,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 15,
             "healer_levels": 0
         },
         "description": "+4% Lightning Damage",
@@ -10858,11 +10858,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 150,
         "tp_spent": 4,
-        "total_level": 0,
+        "total_level": 15,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 15,
             "healer_levels": 0
         },
         "description": "+8% Lightning Damage",
@@ -10879,11 +10879,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 50,
         "tp_spent": 4,
-        "total_level": 0,
+        "total_level": 15,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 15,
             "healer_levels": 0
         },
         "description": "+10% Wind Damage",
@@ -10900,11 +10900,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 150,
         "tp_spent": 4,
-        "total_level": 0,
+        "total_level": 15,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 15,
             "healer_levels": 0
         },
         "description": "+4% Wind Damage",
@@ -10921,11 +10921,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 150,
         "tp_spent": 4,
-        "total_level": 0,
+        "total_level": 15,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 15,
             "healer_levels": 0
         },
         "description": "+8% Wind Damage",
@@ -10942,11 +10942,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 50,
         "tp_spent": 4,
-        "total_level": 0,
+        "total_level": 15,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 15,
             "healer_levels": 0
         },
         "description": "+10% Earth Damage",
@@ -10963,11 +10963,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 150,
         "tp_spent": 4,
-        "total_level": 0,
+        "total_level": 15,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 15,
             "healer_levels": 0
         },
         "description": "+4% Eath Damage",
@@ -10984,11 +10984,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 150,
         "tp_spent": 4,
-        "total_level": 0,
+        "total_level": 15,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 15,
             "healer_levels": 0
         },
         "description": "+8% Eath Damage",
@@ -11005,11 +11005,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 50,
         "tp_spent": 4,
-        "total_level": 0,
+        "total_level": 15,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 15,
             "healer_levels": 0
         },
         "description": "+10% Toxic Damage",
@@ -11026,11 +11026,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 150,
         "tp_spent": 4,
-        "total_level": 0,
+        "total_level": 15,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 15,
             "healer_levels": 0
         },
         "description": "+4% Toxic Damage",
@@ -11047,11 +11047,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 150,
         "tp_spent": 4,
-        "total_level": 0,
+        "total_level": 15,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 15,
             "healer_levels": 0
         },
         "description": "+8% Toxic Damage",
@@ -11068,11 +11068,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 150,
         "tp_spent": 4,
-        "total_level": 0,
+        "total_level": 15,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 15,
             "healer_levels": 0
         },
         "description": "+10% MATK, +10% Holy Damage, +10% Toxic Damage",
@@ -11091,11 +11091,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 150,
         "tp_spent": 4,
-        "total_level": 0,
+        "total_level": 15,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 15,
             "healer_levels": 0
         },
         "description": "+3% MATK, +4% Holy Damage, +4% Toxic Damage",
@@ -11114,11 +11114,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 150,
         "tp_spent": 4,
-        "total_level": 0,
+        "total_level": 15,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 15,
             "healer_levels": 0
         },
         "description": "+3% MATK, +4% Holy Damage, +4% Toxic Damage",
@@ -11137,11 +11137,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 150,
         "tp_spent": 4,
-        "total_level": 0,
+        "total_level": 15,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 15,
             "healer_levels": 0
         },
         "description": "+3% MATK, +4% Holy Damage, +4% Toxic Damage",
@@ -11160,11 +11160,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 150,
         "tp_spent": 4,
-        "total_level": 0,
+        "total_level": 15,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 15,
             "healer_levels": 0
         },
         "description": "+10% MATK, +10% Negative Damage",
@@ -11182,11 +11182,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 150,
         "tp_spent": 4,
-        "total_level": 0,
+        "total_level": 15,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 15,
             "healer_levels": 0
         },
         "description": "+3% MATK, +4% Negative Damage",
@@ -11204,11 +11204,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 150,
         "tp_spent": 4,
-        "total_level": 0,
+        "total_level": 15,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 15,
             "healer_levels": 0
         },
         "description": "+3% MATK, +4% Negative Damage",
@@ -11226,11 +11226,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 150,
         "tp_spent": 4,
-        "total_level": 0,
+        "total_level": 15,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 15,
             "healer_levels": 0
         },
         "description": "+3% MATK, +4% Negative Damage",
@@ -11248,11 +11248,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 1500,
         "tp_spent": 11,
-        "total_level": 0,
+        "total_level": 30,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 30,
             "healer_levels": 0
         },
         "description": "+6% MATK, +2 MP +1% Crit Chance",
@@ -11270,11 +11270,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 1500,
         "tp_spent": 11,
-        "total_level": 0,
+        "total_level": 30,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 30,
             "healer_levels": 0
         },
         "description": "+6% MATK, +2 MP, +1% Crit Chance",
@@ -11292,11 +11292,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 1500,
         "tp_spent": 11,
-        "total_level": 0,
+        "total_level": 30,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 30,
             "healer_levels": 0
         },
         "description": "+6% MATK, +6 MP, +3% Crit Chance",
@@ -11314,11 +11314,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 1500,
         "tp_spent": 11,
-        "total_level": 0,
+        "total_level": 30,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 30,
             "healer_levels": 0
         },
         "description": "+6% MATK, +5% DEF",
@@ -11336,11 +11336,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 1500,
         "tp_spent": 11,
-        "total_level": 0,
+        "total_level": 30,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 30,
             "healer_levels": 0
         },
         "description": "+6% MATK, +5% DEF",
@@ -11358,11 +11358,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 1500,
         "tp_spent": 11,
-        "total_level": 0,
+        "total_level": 30,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 30,
             "healer_levels": 0
         },
         "description": "+6% MATK, +10% DEF",
@@ -11380,11 +11380,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 1500,
         "tp_spent": 11,
-        "total_level": 0,
+        "total_level": 30,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 30,
             "healer_levels": 0
         },
         "description": "+2% Crit Chance, -10 MATK, -4 MP",
@@ -11401,11 +11401,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 1500,
         "tp_spent": 11,
-        "total_level": 0,
+        "total_level": 30,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 30,
             "healer_levels": 0
         },
         "description": "+2% Crit Chance, -10 MATK, -4 MP",
@@ -11422,11 +11422,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 1500,
         "tp_spent": 11,
-        "total_level": 0,
+        "total_level": 30,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 30,
             "healer_levels": 0
         },
         "description": "+4% Crit Chance, -12 MATK, -5 MP",
@@ -11443,11 +11443,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 1500,
         "tp_spent": 11,
-        "total_level": 0,
+        "total_level": 30,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 30,
             "healer_levels": 0
         },
         "description": "+20% MATK",
@@ -11464,11 +11464,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 1500,
         "tp_spent": 11,
-        "total_level": 0,
+        "total_level": 30,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 30,
             "healer_levels": 0
         },
         "description": "+6% MATK, +10% Water and Wind Damage",
@@ -11487,11 +11487,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 1500,
         "tp_spent": 11,
-        "total_level": 0,
+        "total_level": 30,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 30,
             "healer_levels": 0
         },
         "description": "+6% MATK, +10% Fire and Lightning Damage",
@@ -11510,11 +11510,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 1500,
         "tp_spent": 11,
-        "total_level": 0,
+        "total_level": 30,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 30,
             "healer_levels": 0
         },
         "description": "+6% MATK, +10% Earth Damage and Toxic Damage",
@@ -11533,11 +11533,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 1500,
         "tp_spent": 11,
-        "total_level": 0,
+        "total_level": 30,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 30,
             "healer_levels": 0
         },
         "description": "+12% MATK, +10% Heal",
@@ -11555,11 +11555,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 1500,
         "tp_spent": 11,
-        "total_level": 0,
+        "total_level": 30,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 30,
             "healer_levels": 0
         },
         "description": "+5% MATK, +15% Heal, +5% Holy Damage",
@@ -11578,11 +11578,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 1500,
         "tp_spent": 11,
-        "total_level": 0,
+        "total_level": 30,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 30,
             "healer_levels": 0
         },
         "description": "+5% MATK, +40 Heal, +5% Holy Damage",
@@ -11600,11 +11600,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 1500,
         "tp_spent": 11,
-        "total_level": 0,
+        "total_level": 30,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 30,
             "healer_levels": 0
         },
         "description": "+5% MATK, +10% Holy Damage",
@@ -11622,11 +11622,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 1500,
         "tp_spent": 11,
-        "total_level": 0,
+        "total_level": 30,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 30,
             "healer_levels": 0
         },
         "description": "+6% MATK, -30% Heal, +20% Negative Damage",
@@ -11645,11 +11645,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 1500,
         "tp_spent": 11,
-        "total_level": 0,
+        "total_level": 30,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 30,
             "healer_levels": 0
         },
         "description": "+6% Negative Damage, +5% Crit Chance",
@@ -11667,11 +11667,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 1500,
         "tp_spent": 11,
-        "total_level": 0,
+        "total_level": 30,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 30,
             "healer_levels": 0
         },
         "description": "+6% Negative Damage, +20% Crit Damage",
@@ -11689,11 +11689,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 1500,
         "tp_spent": 11,
-        "total_level": 0,
+        "total_level": 30,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 30,
             "healer_levels": 0
         },
         "description": "+6% Negative Damage, +3% Crit Chance, +15% Crit Damage",
@@ -11712,11 +11712,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 3000,
         "tp_spent": 20,
-        "total_level": 0,
+        "total_level": 50,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 50,
             "healer_levels": 0
         },
         "description": "+7% MATK, +1% Crit Chance",
@@ -11734,11 +11734,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 3000,
         "tp_spent": 20,
-        "total_level": 0,
+        "total_level": 50,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 50,
             "healer_levels": 0
         },
         "description": "+7% MATK, +1% Crit Chance",
@@ -11756,11 +11756,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 3000,
         "tp_spent": 20,
-        "total_level": 0,
+        "total_level": 50,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 50,
             "healer_levels": 0
         },
         "description": "+12% MATK, +3% Crit Chance",
@@ -11778,11 +11778,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 3000,
         "tp_spent": 20,
-        "total_level": 0,
+        "total_level": 50,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 50,
             "healer_levels": 0
         },
         "description": "+6% MATK, +2 MP, +5% DEF",
@@ -11800,11 +11800,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 3000,
         "tp_spent": 20,
-        "total_level": 0,
+        "total_level": 50,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 50,
             "healer_levels": 0
         },
         "description": "+6% MATK, +2 MP, +5% DEF",
@@ -11822,11 +11822,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 3000,
         "tp_spent": 20,
-        "total_level": 0,
+        "total_level": 50,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 50,
             "healer_levels": 0
         },
         "description": "+9% MATK, +5 MP, + 6% DEF",
@@ -11844,11 +11844,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 3000,
         "tp_spent": 20,
-        "total_level": 0,
+        "total_level": 50,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 50,
             "healer_levels": 0
         },
         "description": "+20% MATK",
@@ -11865,11 +11865,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 3000,
         "tp_spent": 20,
-        "total_level": 0,
+        "total_level": 50,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 50,
             "healer_levels": 0
         },
         "description": "+6% MATK, +5% Water and Wind Penetration",
@@ -11888,11 +11888,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 3000,
         "tp_spent": 20,
-        "total_level": 0,
+        "total_level": 50,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 50,
             "healer_levels": 0
         },
         "description": "+6% MATK, +5% Fire and Lightning Penetration",
@@ -11911,11 +11911,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 3000,
         "tp_spent": 20,
-        "total_level": 0,
+        "total_level": 50,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 50,
             "healer_levels": 0
         },
         "description": "+6% MATK, +5% Earth Penetration and Toxic Penetration",
@@ -11934,11 +11934,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 3000,
         "tp_spent": 20,
-        "total_level": 0,
+        "total_level": 50,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 50,
             "healer_levels": 0
         },
         "description": "+12% MATK, +4% Crit Chance",
@@ -11956,11 +11956,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 3000,
         "tp_spent": 20,
-        "total_level": 0,
+        "total_level": 50,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 50,
             "healer_levels": 0
         },
         "description": "+5% MATK, +5% Holy and Negative Penetration",
@@ -11979,11 +11979,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 3000,
         "tp_spent": 20,
-        "total_level": 0,
+        "total_level": 50,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 50,
             "healer_levels": 0
         },
         "description": "+5% MATK, +30% Crit Damage",
@@ -12001,11 +12001,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 3000,
         "tp_spent": 20,
-        "total_level": 0,
+        "total_level": 50,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 50,
             "healer_levels": 0
         },
         "description": "+5% MATK, +10% Holy and Negative Damage",
@@ -12024,11 +12024,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 3000,
         "tp_spent": 20,
-        "total_level": 0,
+        "total_level": 50,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 50,
             "healer_levels": 0
         },
         "description": "+12% MATK, +30% Heal",
@@ -12046,11 +12046,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 3000,
         "tp_spent": 20,
-        "total_level": 0,
+        "total_level": 50,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 50,
             "healer_levels": 0
         },
         "description": "+5% MATK, +15% DEF, +250 HP",
@@ -12068,11 +12068,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 3000,
         "tp_spent": 20,
-        "total_level": 0,
+        "total_level": 50,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 50,
             "healer_levels": 0
         },
         "description": "+5% MATK, +10 MP",
@@ -12089,11 +12089,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 3000,
         "tp_spent": 20,
-        "total_level": 0,
+        "total_level": 50,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 50,
             "healer_levels": 0
         },
         "description": "+5% MATK, +10% Heal",
@@ -12111,11 +12111,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 4000,
         "tp_spent": 30,
-        "total_level": 0,
+        "total_level": 70,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 70,
             "healer_levels": 0
         },
         "description": "+12% MATK",
@@ -12132,11 +12132,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 4000,
         "tp_spent": 30,
-        "total_level": 0,
+        "total_level": 70,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 70,
             "healer_levels": 0
         },
         "description": "+12% MATK",
@@ -12153,11 +12153,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 4000,
         "tp_spent": 30,
-        "total_level": 0,
+        "total_level": 70,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 70,
             "healer_levels": 0
         },
         "description": "+18% MATK",
@@ -12174,11 +12174,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 4000,
         "tp_spent": 30,
-        "total_level": 0,
+        "total_level": 70,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 70,
             "healer_levels": 0
         },
         "description": "+6% MATK, +2% Crit Chance",
@@ -12196,11 +12196,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 4000,
         "tp_spent": 30,
-        "total_level": 0,
+        "total_level": 70,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 70,
             "healer_levels": 0
         },
         "description": "+6% MATK, +2% Crit Chance",
@@ -12218,11 +12218,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 4000,
         "tp_spent": 30,
-        "total_level": 0,
+        "total_level": 70,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 70,
             "healer_levels": 0
         },
         "description": "+12% MATK, +5% Crit Chance",
@@ -12240,11 +12240,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 4000,
         "tp_spent": 30,
-        "total_level": 0,
+        "total_level": 70,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 70,
             "healer_levels": 0
         },
         "description": "+6% MATK, +15% Crit Damage",
@@ -12262,11 +12262,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 4000,
         "tp_spent": 30,
-        "total_level": 0,
+        "total_level": 70,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 70,
             "healer_levels": 0
         },
         "description": "+6% MATK, +15% Crit Damage",
@@ -12284,11 +12284,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 4000,
         "tp_spent": 30,
-        "total_level": 0,
+        "total_level": 70,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 70,
             "healer_levels": 0
         },
         "description": "+12% MATK, +25% Crit Damage",
@@ -12306,11 +12306,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 4000,
         "tp_spent": 30,
-        "total_level": 0,
+        "total_level": 70,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 70,
             "healer_levels": 0
         },
         "description": "+20% MATK",
@@ -12327,11 +12327,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 4000,
         "tp_spent": 30,
-        "total_level": 0,
+        "total_level": 70,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 70,
             "healer_levels": 0
         },
         "description": "+6% MATK, +5% Water and Wind Penetration",
@@ -12350,11 +12350,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 4000,
         "tp_spent": 30,
-        "total_level": 0,
+        "total_level": 70,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 70,
             "healer_levels": 0
         },
         "description": "+6% MATK, +5% Fire and Lightning Penetration",
@@ -12373,11 +12373,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 4000,
         "tp_spent": 30,
-        "total_level": 0,
+        "total_level": 70,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 70,
             "healer_levels": 0
         },
         "description": "+6% MATK, +5% Earth Penetration and Toxic Penetration",
@@ -12396,11 +12396,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 4000,
         "tp_spent": 30,
-        "total_level": 0,
+        "total_level": 70,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 70,
             "healer_levels": 0
         },
         "description": "+14% MATK, +4% Crit Chance",
@@ -12418,11 +12418,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 4000,
         "tp_spent": 30,
-        "total_level": 0,
+        "total_level": 70,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 70,
             "healer_levels": 0
         },
         "description": "+4% MATK, +5% Negative Penetration",
@@ -12440,11 +12440,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 4000,
         "tp_spent": 30,
-        "total_level": 0,
+        "total_level": 70,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 70,
             "healer_levels": 0
         },
         "description": "+4% MATK, +30% Crit Damage",
@@ -12462,11 +12462,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 4000,
         "tp_spent": 30,
-        "total_level": 0,
+        "total_level": 70,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 70,
             "healer_levels": 0
         },
         "description": "+4% MATK, +10% Negative Damage",
@@ -12484,11 +12484,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 4000,
         "tp_spent": 30,
-        "total_level": 0,
+        "total_level": 70,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 70,
             "healer_levels": 0
         },
         "description": "+12% MATK, +30% Heal",
@@ -12506,11 +12506,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 4000,
         "tp_spent": 30,
-        "total_level": 0,
+        "total_level": 70,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 70,
             "healer_levels": 0
         },
         "description": "+5% ATK, +10% Holy Damage and Penetration",
@@ -12529,11 +12529,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 4000,
         "tp_spent": 30,
-        "total_level": 0,
+        "total_level": 70,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 70,
             "healer_levels": 0
         },
         "description": "+5% MATK, 12 MP",
@@ -12550,11 +12550,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 4000,
         "tp_spent": 30,
-        "total_level": 0,
+        "total_level": 70,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 70,
             "healer_levels": 0
         },
         "description": "+5% MATK, +12% Heal",
@@ -12572,11 +12572,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 75,
         "exp": 5000,
         "tp_spent": 40,
-        "total_level": 0,
+        "total_level": 85,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 85,
             "healer_levels": 0
         },
         "description": "+20% MATK",
@@ -12593,11 +12593,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 75,
         "exp": 5000,
         "tp_spent": 40,
-        "total_level": 0,
+        "total_level": 85,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 85,
             "healer_levels": 0
         },
         "description": "+20% MATK",
@@ -12614,11 +12614,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 75,
         "exp": 5000,
         "tp_spent": 40,
-        "total_level": 0,
+        "total_level": 85,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 85,
             "healer_levels": 0
         },
         "description": "+35% MATK",
@@ -12635,11 +12635,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 75,
         "exp": 5000,
         "tp_spent": 40,
-        "total_level": 0,
+        "total_level": 85,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 85,
             "healer_levels": 0
         },
         "description": "+8% MATK, +2% Crit Chance",
@@ -12657,11 +12657,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 75,
         "exp": 5000,
         "tp_spent": 40,
-        "total_level": 0,
+        "total_level": 85,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 85,
             "healer_levels": 0
         },
         "description": "+8% MATK, +3% Crit Chance",
@@ -12679,11 +12679,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 75,
         "exp": 5000,
         "tp_spent": 40,
-        "total_level": 0,
+        "total_level": 85,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 85,
             "healer_levels": 0
         },
         "description": "+15% MATK, +5% Crit Chance",
@@ -12701,11 +12701,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 75,
         "exp": 5000,
         "tp_spent": 40,
-        "total_level": 0,
+        "total_level": 85,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 85,
             "healer_levels": 0
         },
         "description": "+6% MATK, +15% Crit Damage",
@@ -12723,11 +12723,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 75,
         "exp": 5000,
         "tp_spent": 40,
-        "total_level": 0,
+        "total_level": 85,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 85,
             "healer_levels": 0
         },
         "description": "+6% MATK, +20% Crit Damage",
@@ -12745,11 +12745,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 75,
         "exp": 5000,
         "tp_spent": 40,
-        "total_level": 0,
+        "total_level": 85,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 85,
             "healer_levels": 0
         },
         "description": "+12% MATK, +25% Crit Damage",
@@ -12767,11 +12767,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 300,
         "exp": 5000,
         "tp_spent": 40,
-        "total_level": 0,
+        "total_level": 85,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 85,
             "healer_levels": 0
         },
         "description": "+20% MATK",
@@ -12788,11 +12788,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 75,
         "exp": 5000,
         "tp_spent": 40,
-        "total_level": 0,
+        "total_level": 85,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 85,
             "healer_levels": 0
         },
         "description": "+6% MATK, +15% Water and Wind Penetration",
@@ -12811,11 +12811,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 75,
         "exp": 5000,
         "tp_spent": 40,
-        "total_level": 0,
+        "total_level": 85,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 85,
             "healer_levels": 0
         },
         "description": "+6% MATK, +15% Fire and Lightning Penetration",
@@ -12834,11 +12834,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 75,
         "exp": 5000,
         "tp_spent": 40,
-        "total_level": 0,
+        "total_level": 85,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 85,
             "healer_levels": 0
         },
         "description": "+6% MATK, +15% Earth Penetration and Toxic Penetration",
@@ -12857,11 +12857,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 300,
         "exp": 5000,
         "tp_spent": 40,
-        "total_level": 0,
+        "total_level": 85,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 85,
             "healer_levels": 0
         },
         "description": "+15% MATK, +5% Crit Chance",
@@ -12879,11 +12879,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 75,
         "exp": 5000,
         "tp_spent": 40,
-        "total_level": 0,
+        "total_level": 85,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 85,
             "healer_levels": 0
         },
         "description": "+6% MATK, +10% Negative Penetration",
@@ -12901,11 +12901,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 75,
         "exp": 5000,
         "tp_spent": 40,
-        "total_level": 0,
+        "total_level": 85,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 85,
             "healer_levels": 0
         },
         "description": "+6% MATK, +30% Crit Damage",
@@ -12923,11 +12923,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 75,
         "exp": 5000,
         "tp_spent": 40,
-        "total_level": 0,
+        "total_level": 85,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 85,
             "healer_levels": 0
         },
         "description": "+6% MATK, +15% Negative Damage",
@@ -12945,11 +12945,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 300,
         "exp": 5000,
         "tp_spent": 40,
-        "total_level": 0,
+        "total_level": 85,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 85,
             "healer_levels": 0
         },
         "description": "+35% MATK",
@@ -12966,11 +12966,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 75,
         "exp": 5000,
         "tp_spent": 40,
-        "total_level": 0,
+        "total_level": 85,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 85,
             "healer_levels": 0
         },
         "description": "+25% MATK",
@@ -12987,11 +12987,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 75,
         "exp": 5000,
         "tp_spent": 40,
-        "total_level": 0,
+        "total_level": 85,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 85,
             "healer_levels": 0
         },
         "description": "+20% MATK, +15% Crit Damage",
@@ -13009,11 +13009,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 75,
         "exp": 5000,
         "tp_spent": 40,
-        "total_level": 0,
+        "total_level": 85,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 85,
             "healer_levels": 0
         },
         "description": "+20% MATK, +15% Holy Damage",
@@ -13031,11 +13031,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 0,
+        "total_level": 100,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 100,
             "healer_levels": 0
         },
         "description": "+5% Elemental Penetration, +15% Elemental Damage",
@@ -13063,11 +13063,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 0,
+        "total_level": 100,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 100,
             "healer_levels": 0
         },
         "description": "+5% Fire Penetration, +10% Elemental Damage",
@@ -13090,11 +13090,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 0,
+        "total_level": 100,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 100,
             "healer_levels": 0
         },
         "description": "+5% Fire Penetration, +10% Elemental Damage",
@@ -13117,11 +13117,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 0,
+        "total_level": 100,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 100,
             "healer_levels": 0
         },
         "description": "+5% Elemental xPen, +20 MP, +10% Elemental Damage",
@@ -13143,11 +13143,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 0,
+        "total_level": 100,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 100,
             "healer_levels": 0
         },
         "description": "+5% Water Penetration, +10% Elemental Damage",
@@ -13170,11 +13170,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 0,
+        "total_level": 100,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 100,
             "healer_levels": 0
         },
         "description": "+5% Water Penetration, +10% Elemental Damage",
@@ -13197,11 +13197,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 0,
+        "total_level": 100,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 100,
             "healer_levels": 0
         },
         "description": "+5% Elemental xPen, +20 MP, +10% Elemental Damage",
@@ -13223,11 +13223,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 0,
+        "total_level": 100,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 100,
             "healer_levels": 0
         },
         "description": "+5% Lightning Penetration, +10% Elemental Damage",
@@ -13250,11 +13250,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 0,
+        "total_level": 100,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 100,
             "healer_levels": 0
         },
         "description": "+5% Lightning Penetration, +10% Elemental Damage",
@@ -13277,11 +13277,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 0,
+        "total_level": 100,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 100,
             "healer_levels": 0
         },
         "description": "+5% Elemental xPen, +20 MP, +10% Elemental Damage",
@@ -13303,11 +13303,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 0,
+        "total_level": 100,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 100,
             "healer_levels": 0
         },
         "description": "+5% Wind Penetration, +10% Elemental Damage",
@@ -13330,11 +13330,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 0,
+        "total_level": 100,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 100,
             "healer_levels": 0
         },
         "description": "+5% Wind Penetration, +10% Elemental Damage",
@@ -13357,11 +13357,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 0,
+        "total_level": 100,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 100,
             "healer_levels": 0
         },
         "description": "+5% Elemental xPen, +20 MP, +10% Elemental Damage",
@@ -13383,11 +13383,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 0,
+        "total_level": 100,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 100,
             "healer_levels": 0
         },
         "description": "+5% Earth Penetration, +10% Elemental Damage",
@@ -13410,11 +13410,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 0,
+        "total_level": 100,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 100,
             "healer_levels": 0
         },
         "description": "+5% Earth Penetration, +10% Elemental Damage",
@@ -13437,11 +13437,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 0,
+        "total_level": 100,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 100,
             "healer_levels": 0
         },
         "description": "+5% Elemental xPen, +20 MP, +10% Elemental Damage",
@@ -13463,11 +13463,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 0,
+        "total_level": 100,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 100,
             "healer_levels": 0
         },
         "description": "+5% Toxic Penetration, +10% Elemental Damage",
@@ -13490,11 +13490,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 0,
+        "total_level": 100,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 100,
             "healer_levels": 0
         },
         "description": "+5% Toxic Penetration, +10% Elemental Damage",
@@ -13517,11 +13517,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 0,
+        "total_level": 100,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 100,
             "healer_levels": 0
         },
         "description": "+5% Elemental xPen, +20 MP, +10% Elemental Damage",
@@ -13543,11 +13543,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 0,
+        "total_level": 100,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 100,
             "healer_levels": 0
         },
         "description": "+5% Divine Penetration, +25% Divine Damage",
@@ -13567,11 +13567,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 0,
+        "total_level": 100,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 100,
             "healer_levels": 0
         },
         "description": "+3% Holy Penetration, +10% Divine Damage",
@@ -13590,11 +13590,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 0,
+        "total_level": 100,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 100,
             "healer_levels": 0
         },
         "description": "+3% Holy Penetration, +10% Divine Damage",
@@ -13613,11 +13613,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 0,
+        "total_level": 100,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 100,
             "healer_levels": 0
         },
         "description": "+6% Holy Penetration, +30% Divine Damage, +10% Divine xPen",
@@ -13636,11 +13636,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 0,
+        "total_level": 100,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 100,
             "healer_levels": 0
         },
         "description": "+5% Negative Penetration, +5% Divine Damage, +15% Crit Damage",
@@ -13660,11 +13660,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 0,
+        "total_level": 100,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 100,
             "healer_levels": 0
         },
         "description": "+5% Negative Penetration, +5% Divine Damage, +15% Crit Damage",
@@ -13684,11 +13684,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 0,
+        "total_level": 100,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 100,
             "healer_levels": 0
         },
         "description": "+5% Negative Penetration, +10% Divine Damage, +10% Divine xPen",
@@ -13707,11 +13707,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 0,
+        "total_level": 100,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 100,
             "healer_levels": 0
         },
         "description": "+2% Void Penetration, +10% Void Damage, +20% MATK",
@@ -13730,11 +13730,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 0,
+        "total_level": 100,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 100,
             "healer_levels": 0
         },
         "description": "+1% Void Penetration, +10% Void Damage, +10% MATK",
@@ -13753,11 +13753,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 0,
+        "total_level": 100,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 100,
             "healer_levels": 0
         },
         "description": "+1% Void Penetration, +10% Void Damage, +10% MATK",
@@ -13776,11 +13776,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 0,
+        "total_level": 100,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 100,
             "healer_levels": 0
         },
         "description": "+4% Void Penetration, +10% Void Damage, +10% Void xPen, +30% MATK",
@@ -13804,7 +13804,7 @@ const talent_data: Record<string, Talent> = {
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 125,
             "healer_levels": 0
         },
         "description": "+1% Global MATK, +12% Crit Damage",
@@ -13825,7 +13825,7 @@ const talent_data: Record<string, Talent> = {
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 125,
             "healer_levels": 0
         },
         "description": "+1% Global MATK, +12% Crit Damage",
@@ -13846,7 +13846,7 @@ const talent_data: Record<string, Talent> = {
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 125,
             "healer_levels": 0
         },
         "description": "+1% Global MATK, +30% Crit Damage, +1% Global Damage",
@@ -13867,7 +13867,7 @@ const talent_data: Record<string, Talent> = {
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 125,
             "healer_levels": 0
         },
         "description": "+1% Global MATK, +12% Elemental Damage",
@@ -13893,7 +13893,7 @@ const talent_data: Record<string, Talent> = {
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 125,
             "healer_levels": 0
         },
         "description": "+1% Global MATK, +18% Elemental Damage",
@@ -13919,7 +13919,7 @@ const talent_data: Record<string, Talent> = {
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 125,
             "healer_levels": 0
         },
         "description": "+1% Global MATK, +12% Elemental Penetration",
@@ -13945,7 +13945,7 @@ const talent_data: Record<string, Talent> = {
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 125,
             "healer_levels": 0
         },
         "description": "+1% Global MATK, +12% Divine Damage, +2% Crit Chance",
@@ -13968,7 +13968,7 @@ const talent_data: Record<string, Talent> = {
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 125,
             "healer_levels": 0
         },
         "description": "+1% Global MATK, +18% Divine Damage, +3% Crit Chance",
@@ -13991,7 +13991,7 @@ const talent_data: Record<string, Talent> = {
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 125,
             "healer_levels": 0
         },
         "description": "+1% Global MATK, +12% Divine Pen, +1% Global Damage",
@@ -14013,7 +14013,7 @@ const talent_data: Record<string, Talent> = {
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 125,
             "healer_levels": 0
         },
         "description": "+40% Divine DMG, +5% Divine Pen, Conversion 10% Holy DMG to MP, Conversion 10% Negative DMG to Crit DMG",
@@ -14048,7 +14048,7 @@ const talent_data: Record<string, Talent> = {
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 125,
             "healer_levels": 0
         },
         "description": "+10% Void Pen, -40 MP, +35% Global Void DMG",
@@ -14069,7 +14069,7 @@ const talent_data: Record<string, Talent> = {
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 125,
             "healer_levels": 0
         },
         "description": "+40% MATK Multi, 6% of MATK Multi converted into Elemental DMG",
@@ -14090,7 +14090,7 @@ const talent_data: Record<string, Talent> = {
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 175,
             "healer_levels": 0
         },
         "description": "+1% Global MATK, +8% Magic DMG, Conversion 4% MATK to DEF",
@@ -14125,7 +14125,7 @@ const talent_data: Record<string, Talent> = {
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 175,
             "healer_levels": 0
         },
         "description": "-3% Global MATK, +16% Magic DMG, Conversion 4% MATK to DEF",
@@ -14160,7 +14160,7 @@ const talent_data: Record<string, Talent> = {
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 175,
             "healer_levels": 0
         },
         "description": "+1% Global MATK, -6% xMagic DMG, Conversion 4% MATK to DEF",
@@ -14185,7 +14185,7 @@ const talent_data: Record<string, Talent> = {
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 175,
             "healer_levels": 0
         },
         "description": "+1% Global MATK, +3% xMagic DMG, Conversion 4% MATK to DEF",
@@ -14210,7 +14210,7 @@ const talent_data: Record<string, Talent> = {
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 175,
             "healer_levels": 0
         },
         "description": "+1% Global MATK, +4% xMagic Pen",
@@ -14229,7 +14229,7 @@ const talent_data: Record<string, Talent> = {
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 175,
             "healer_levels": 0
         },
         "description": "+1% Global MATK,  Transfer 20% DEF to MATK",
@@ -14254,7 +14254,7 @@ const talent_data: Record<string, Talent> = {
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 175,
             "healer_levels": 0
         },
         "description": "+1% Global MATK, +4% xMagic Pen, -10% Max HP Multi",
@@ -14273,7 +14273,7 @@ const talent_data: Record<string, Talent> = {
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 175,
             "healer_levels": 0
         },
         "description": "+2% Global MATK, +6% xMagic DMG",
@@ -14292,7 +14292,7 @@ const talent_data: Record<string, Talent> = {
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 175,
             "healer_levels": 0
         },
         "description": "+1% Global MATK, +8% Magic DMG, Conversion 8% DEF to MATK",
@@ -14327,7 +14327,7 @@ const talent_data: Record<string, Talent> = {
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 175,
             "healer_levels": 0
         },
         "description": "+1% Global MATK, +8% Magic DMG, Conversion 8% ATK to MATK",
@@ -14362,7 +14362,7 @@ const talent_data: Record<string, Talent> = {
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 175,
             "healer_levels": 0
         },
         "description": "+1% Global MATK, +8% Magic DMG, Conversion 8% Healpower to MATK",
@@ -14397,7 +14397,7 @@ const talent_data: Record<string, Talent> = {
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 175,
             "healer_levels": 0
         },
         "description": "+2% Global MATK,  +10% Magic DMG, +2% Global Damage",
@@ -14426,7 +14426,7 @@ const talent_data: Record<string, Talent> = {
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 175,
             "healer_levels": 0
         },
         "description": "+1% Global MATK, Temp HP Start of 20% Max HP, -33% Global ATK/Healpower",
@@ -14445,7 +14445,7 @@ const talent_data: Record<string, Talent> = {
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 175,
             "healer_levels": 0
         },
         "description": "+2% Global MATK, +3% Crit Chance, +25% Crit DMG",
@@ -14467,7 +14467,7 @@ const talent_data: Record<string, Talent> = {
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 175,
             "healer_levels": 0
         },
         "description": "+1% Global MATK, -8% Global MP, +12% xMagic DMG",
@@ -14486,7 +14486,7 @@ const talent_data: Record<string, Talent> = {
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 175,
             "healer_levels": 0
         },
         "description": "+15 MP Regen, -85% Global MP, Temp HP Start of 20% Max HP",
@@ -14507,7 +14507,7 @@ const talent_data: Record<string, Talent> = {
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 175,
             "healer_levels": 0
         },
         "description": "-50% Global Crit Chance, +25% xMagic DMG",
@@ -14526,7 +14526,7 @@ const talent_data: Record<string, Talent> = {
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 175,
             "healer_levels": 0
         },
         "description": "+200% Threat Generated, +10% Crit Chance, Conversion 10% MATK to MATK/Heal/ATK/DEF",
@@ -14554,7 +14554,7 @@ const talent_data: Record<string, Talent> = {
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 175,
             "healer_levels": 0
         },
         "description": "+2% Global MATK, +5% xMagic Pen, +5% Global Crit DMG",
@@ -14569,12 +14569,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 25,
         "exp": 25,
         "tp_spent": 0,
-        "total_level": 0,
+        "total_level": 1,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 1
         },
         "description": "+5% Heal ",
         "stats": {
@@ -14590,12 +14590,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 25,
         "exp": 25,
         "tp_spent": 0,
-        "total_level": 0,
+        "total_level": 1,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 1
         },
         "description": "+5% Heal",
         "stats": {
@@ -14611,12 +14611,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 25,
         "exp": 25,
         "tp_spent": 0,
-        "total_level": 0,
+        "total_level": 1,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 1
         },
         "description": "+10% Heal",
         "stats": {
@@ -14632,12 +14632,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 25,
         "exp": 25,
         "tp_spent": 0,
-        "total_level": 0,
+        "total_level": 1,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 1
         },
         "description": "+3% Heal, +9 ATK",
         "stats": {
@@ -14653,12 +14653,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 25,
         "exp": 25,
         "tp_spent": 0,
-        "total_level": 0,
+        "total_level": 1,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 1
         },
         "description": "+3% Heal, +9 ATK",
         "stats": {
@@ -14674,12 +14674,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 25,
         "exp": 25,
         "tp_spent": 0,
-        "total_level": 0,
+        "total_level": 1,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 1
         },
         "description": "+5% Heal, +15 ATK",
         "stats": {
@@ -14695,12 +14695,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 25,
         "exp": 25,
         "tp_spent": 0,
-        "total_level": 0,
+        "total_level": 1,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 1
         },
         "description": "+2% Heal, +3 MATK",
         "stats": {
@@ -14716,12 +14716,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 25,
         "exp": 25,
         "tp_spent": 0,
-        "total_level": 0,
+        "total_level": 1,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 1
         },
         "description": "+2% Heal, +3 MATK",
         "stats": {
@@ -14737,12 +14737,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 25,
         "exp": 25,
         "tp_spent": 0,
-        "total_level": 0,
+        "total_level": 1,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 1
         },
         "description": "+2% Heal, +4 MATK",
         "stats": {
@@ -14758,12 +14758,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 40,
         "exp": 100,
         "tp_spent": 2,
-        "total_level": 0,
+        "total_level": 8,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 8
         },
         "description": "+5% Heal ",
         "stats": {
@@ -14779,12 +14779,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 40,
         "exp": 100,
         "tp_spent": 2,
-        "total_level": 0,
+        "total_level": 8,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 8
         },
         "description": "+5% Heal",
         "stats": {
@@ -14800,12 +14800,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 40,
         "exp": 100,
         "tp_spent": 2,
-        "total_level": 0,
+        "total_level": 8,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 8
         },
         "description": "+10% Heal",
         "stats": {
@@ -14821,12 +14821,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 40,
         "exp": 100,
         "tp_spent": 2,
-        "total_level": 0,
+        "total_level": 8,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 8
         },
         "description": "+4% Heal, +5% MATK, +10 ATK",
         "stats": {
@@ -14843,12 +14843,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 40,
         "exp": 100,
         "tp_spent": 2,
-        "total_level": 0,
+        "total_level": 8,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 8
         },
         "description": "+4% Heal, +5% MATK, +10 ATK",
         "stats": {
@@ -14865,12 +14865,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 40,
         "exp": 100,
         "tp_spent": 2,
-        "total_level": 0,
+        "total_level": 8,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 8
         },
         "description": "+8% Heal, +10% MATK, +15 ATK",
         "stats": {
@@ -14887,12 +14887,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 40,
         "exp": 100,
         "tp_spent": 2,
-        "total_level": 0,
+        "total_level": 8,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 8
         },
         "description": "+3% Heal, +4 MATK",
         "stats": {
@@ -14908,12 +14908,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 40,
         "exp": 100,
         "tp_spent": 2,
-        "total_level": 0,
+        "total_level": 8,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 8
         },
         "description": "+3% Heal, +4 MATK",
         "stats": {
@@ -14929,12 +14929,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 40,
         "exp": 100,
         "tp_spent": 2,
-        "total_level": 0,
+        "total_level": 8,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 8
         },
         "description": "+5% Heal, +6 MATK",
         "stats": {
@@ -14950,12 +14950,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 150,
         "tp_spent": 2,
-        "total_level": 0,
+        "total_level": 8,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 8
         },
         "description": "+20% Heal",
         "stats": {
@@ -14971,12 +14971,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 150,
         "tp_spent": 2,
-        "total_level": 0,
+        "total_level": 8,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 8
         },
         "description": "+6% Heal",
         "stats": {
@@ -14992,12 +14992,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 150,
         "tp_spent": 2,
-        "total_level": 0,
+        "total_level": 8,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 8
         },
         "description": "+6% Heal",
         "stats": {
@@ -15013,12 +15013,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 150,
         "tp_spent": 2,
-        "total_level": 0,
+        "total_level": 8,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 8
         },
         "description": "+6% Heal",
         "stats": {
@@ -15034,12 +15034,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 150,
         "tp_spent": 2,
-        "total_level": 0,
+        "total_level": 8,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 8
         },
         "description": "+12% Heal, +80 HP, +25 DEF",
         "stats": {
@@ -15055,12 +15055,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 150,
         "tp_spent": 2,
-        "total_level": 0,
+        "total_level": 8,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 8
         },
         "description": "+4% Heal, +2% DEF, +4 DEF",
         "stats": {
@@ -15077,12 +15077,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 150,
         "tp_spent": 2,
-        "total_level": 0,
+        "total_level": 8,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 8
         },
         "description": "+4% Heal, +2% DEF, +4 DEF",
         "stats": {
@@ -15099,12 +15099,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 150,
         "tp_spent": 2,
-        "total_level": 0,
+        "total_level": 8,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 8
         },
         "description": "+4% Heal, +2% DEF, +4 DEF",
         "stats": {
@@ -15121,12 +15121,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 150,
         "tp_spent": 2,
-        "total_level": 0,
+        "total_level": 8,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 8
         },
         "description": "+15% Heal, +8% MATK, +20 MATK",
         "stats": {
@@ -15143,12 +15143,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 150,
         "tp_spent": 2,
-        "total_level": 0,
+        "total_level": 8,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 8
         },
         "description": "+4% Heal, +2% MATK, +4 MATK",
         "stats": {
@@ -15165,12 +15165,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 150,
         "tp_spent": 2,
-        "total_level": 0,
+        "total_level": 8,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 8
         },
         "description": "+4% Heal, +2% MATK, +4 MATK",
         "stats": {
@@ -15187,12 +15187,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 150,
         "tp_spent": 2,
-        "total_level": 0,
+        "total_level": 8,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 8
         },
         "description": "+4% Heal, +2% MATK, +4 MATK",
         "stats": {
@@ -15209,12 +15209,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 150,
         "tp_spent": 4,
-        "total_level": 0,
+        "total_level": 15,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 15
         },
         "description": "+5% Heal, +6 MATK",
         "stats": {
@@ -15230,12 +15230,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 150,
         "tp_spent": 4,
-        "total_level": 0,
+        "total_level": 15,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 15
         },
         "description": "+5% Heal, +6 MATK",
         "stats": {
@@ -15251,12 +15251,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 150,
         "tp_spent": 4,
-        "total_level": 0,
+        "total_level": 15,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 15
         },
         "description": "+20% Heal, +25 MP, +20 MATK, +5% Crit Chance",
         "stats": {
@@ -15273,12 +15273,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 150,
         "tp_spent": 4,
-        "total_level": 0,
+        "total_level": 15,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 15
         },
         "description": "+20% Heal",
         "stats": {
@@ -15294,12 +15294,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 150,
         "tp_spent": 4,
-        "total_level": 0,
+        "total_level": 15,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 15
         },
         "description": "+6% Heal",
         "stats": {
@@ -15315,12 +15315,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 150,
         "tp_spent": 4,
-        "total_level": 0,
+        "total_level": 15,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 15
         },
         "description": "+6% Heal",
         "stats": {
@@ -15336,12 +15336,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 150,
         "tp_spent": 4,
-        "total_level": 0,
+        "total_level": 15,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 15
         },
         "description": "+6% Heal",
         "stats": {
@@ -15357,12 +15357,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 150,
         "tp_spent": 4,
-        "total_level": 0,
+        "total_level": 15,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 15
         },
         "description": "+12% Heal, +10% DEF, +20 DEF",
         "stats": {
@@ -15379,12 +15379,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 150,
         "tp_spent": 4,
-        "total_level": 0,
+        "total_level": 15,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 15
         },
         "description": "+4% Heal, +2% DEF, +4 DEF",
         "stats": {
@@ -15401,12 +15401,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 150,
         "tp_spent": 4,
-        "total_level": 0,
+        "total_level": 15,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 15
         },
         "description": "+4% Heal, +2% DEF, +4 DEF",
         "stats": {
@@ -15423,12 +15423,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 150,
         "tp_spent": 4,
-        "total_level": 0,
+        "total_level": 15,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 15
         },
         "description": "+4% Heal, +2% DEF, +4 DEF",
         "stats": {
@@ -15445,12 +15445,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 150,
         "tp_spent": 4,
-        "total_level": 0,
+        "total_level": 15,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 15
         },
         "description": "+15% Heal, +10% MATK, +10 MATK",
         "stats": {
@@ -15467,12 +15467,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 150,
         "tp_spent": 4,
-        "total_level": 0,
+        "total_level": 15,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 15
         },
         "description": "+4% Heal, +2% MATK, +4 MATK",
         "stats": {
@@ -15489,12 +15489,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 150,
         "tp_spent": 4,
-        "total_level": 0,
+        "total_level": 15,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 15
         },
         "description": "+4% Heal, +2% MATK, +4 MATK",
         "stats": {
@@ -15511,12 +15511,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 150,
         "tp_spent": 4,
-        "total_level": 0,
+        "total_level": 15,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 15
         },
         "description": "+4% Heal, +2% MATK, +4 MATK",
         "stats": {
@@ -15533,12 +15533,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 1500,
         "tp_spent": 11,
-        "total_level": 0,
+        "total_level": 30,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 30
         },
         "description": "+5% Heal, +2 MP",
         "stats": {
@@ -15554,12 +15554,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 1500,
         "tp_spent": 11,
-        "total_level": 0,
+        "total_level": 30,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 30
         },
         "description": "+5% Heal, +2 MP",
         "stats": {
@@ -15575,12 +15575,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 1500,
         "tp_spent": 11,
-        "total_level": 0,
+        "total_level": 30,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 30
         },
         "description": "+8% Heal, +2 MP",
         "stats": {
@@ -15596,12 +15596,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 1500,
         "tp_spent": 11,
-        "total_level": 0,
+        "total_level": 30,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 30
         },
         "description": "+5% Heal, +7% DEF",
         "stats": {
@@ -15618,12 +15618,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 1500,
         "tp_spent": 11,
-        "total_level": 0,
+        "total_level": 30,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 30
         },
         "description": "+5% Heal, +7% DEF",
         "stats": {
@@ -15640,12 +15640,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 1500,
         "tp_spent": 11,
-        "total_level": 0,
+        "total_level": 30,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 30
         },
         "description": "+8% Heal, +15% DEF",
         "stats": {
@@ -15662,12 +15662,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 1500,
         "tp_spent": 11,
-        "total_level": 0,
+        "total_level": 30,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 30
         },
         "description": "+4% Heal, +5 MATK",
         "stats": {
@@ -15683,12 +15683,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 1500,
         "tp_spent": 11,
-        "total_level": 0,
+        "total_level": 30,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 30
         },
         "description": "+4% Heal, +5 MATK",
         "stats": {
@@ -15704,12 +15704,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 1500,
         "tp_spent": 11,
-        "total_level": 0,
+        "total_level": 30,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 30
         },
         "description": "+6% Heal, +12 MATK, +2% Crit Chance",
         "stats": {
@@ -15726,12 +15726,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 1500,
         "tp_spent": 11,
-        "total_level": 0,
+        "total_level": 30,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 30
         },
         "description": "+20% Heal",
         "stats": {
@@ -15747,12 +15747,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 1500,
         "tp_spent": 11,
-        "total_level": 0,
+        "total_level": 30,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 30
         },
         "description": "+10% Heal, +25% Crit Damage",
         "stats": {
@@ -15769,12 +15769,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 1500,
         "tp_spent": 11,
-        "total_level": 0,
+        "total_level": 30,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 30
         },
         "description": "+15% Heal, +15% MATK",
         "stats": {
@@ -15791,12 +15791,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 1500,
         "tp_spent": 11,
-        "total_level": 0,
+        "total_level": 30,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 30
         },
         "description": "+6% Heal",
         "stats": {
@@ -15812,12 +15812,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 1500,
         "tp_spent": 11,
-        "total_level": 0,
+        "total_level": 30,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 30
         },
         "description": "+10% Crit Damage",
         "stats": {
@@ -15833,12 +15833,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 1500,
         "tp_spent": 11,
-        "total_level": 0,
+        "total_level": 30,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 30
         },
         "description": "+4% Heal, +4% MATK",
         "stats": {
@@ -15855,12 +15855,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 1500,
         "tp_spent": 11,
-        "total_level": 0,
+        "total_level": 30,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 30
         },
         "description": "+6% Heal",
         "stats": {
@@ -15876,12 +15876,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 1500,
         "tp_spent": 11,
-        "total_level": 0,
+        "total_level": 30,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 30
         },
         "description": "+10% Crit Damage",
         "stats": {
@@ -15897,12 +15897,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 1500,
         "tp_spent": 11,
-        "total_level": 0,
+        "total_level": 30,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 30
         },
         "description": "+4% Heal, +4% MATK",
         "stats": {
@@ -15919,12 +15919,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 1500,
         "tp_spent": 11,
-        "total_level": 0,
+        "total_level": 30,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 30
         },
         "description": "+10% Heal",
         "stats": {
@@ -15940,12 +15940,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 1500,
         "tp_spent": 11,
-        "total_level": 0,
+        "total_level": 30,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 30
         },
         "description": "+20% Crit Damage",
         "stats": {
@@ -15961,12 +15961,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 1500,
         "tp_spent": 11,
-        "total_level": 0,
+        "total_level": 30,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 30
         },
         "description": "+8% Heal, +12% MATK",
         "stats": {
@@ -15983,12 +15983,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 3000,
         "tp_spent": 20,
-        "total_level": 0,
+        "total_level": 50,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 50
         },
         "description": "+6% Heal, +100 HP",
         "stats": {
@@ -16004,12 +16004,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 3000,
         "tp_spent": 20,
-        "total_level": 0,
+        "total_level": 50,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 50
         },
         "description": "+6% Heal, +100 HP",
         "stats": {
@@ -16025,12 +16025,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 3000,
         "tp_spent": 20,
-        "total_level": 0,
+        "total_level": 50,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 50
         },
         "description": "+10% Heal, +200 HP",
         "stats": {
@@ -16046,12 +16046,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 3000,
         "tp_spent": 20,
-        "total_level": 0,
+        "total_level": 50,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 50
         },
         "description": "+5% Heal, +7% DEF, +3 MP",
         "stats": {
@@ -16068,12 +16068,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 3000,
         "tp_spent": 20,
-        "total_level": 0,
+        "total_level": 50,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 50
         },
         "description": "+5% Heal, +7% DEF, +3 MP",
         "stats": {
@@ -16090,12 +16090,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 3000,
         "tp_spent": 20,
-        "total_level": 0,
+        "total_level": 50,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 50
         },
         "description": "+8% Heal, +15% DEF, +6 MP",
         "stats": {
@@ -16112,12 +16112,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 3000,
         "tp_spent": 20,
-        "total_level": 0,
+        "total_level": 50,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 50
         },
         "description": "+20% Heal, +200 HP",
         "stats": {
@@ -16133,12 +16133,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 3000,
         "tp_spent": 20,
-        "total_level": 0,
+        "total_level": 50,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 50
         },
         "description": "+12% Heal, +5% Crit Chance, +25% Crit Damage",
         "stats": {
@@ -16156,12 +16156,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 3000,
         "tp_spent": 20,
-        "total_level": 0,
+        "total_level": 50,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 50
         },
         "description": "+15% Heal, +15% MATK, +15% ATK",
         "stats": {
@@ -16179,12 +16179,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 3000,
         "tp_spent": 20,
-        "total_level": 0,
+        "total_level": 50,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 50
         },
         "description": "+8% Heal, +75 HP",
         "stats": {
@@ -16200,12 +16200,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 3000,
         "tp_spent": 20,
-        "total_level": 0,
+        "total_level": 50,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 50
         },
         "description": "+4% Heal, +2% Crit Chance, +15% Crit Damage",
         "stats": {
@@ -16223,12 +16223,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 3000,
         "tp_spent": 20,
-        "total_level": 0,
+        "total_level": 50,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 50
         },
         "description": "+6% Heal, MATK, and ATK",
         "stats": {
@@ -16246,12 +16246,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 3000,
         "tp_spent": 20,
-        "total_level": 0,
+        "total_level": 50,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 50
         },
         "description": "+8% Heal, +75 HP",
         "stats": {
@@ -16267,12 +16267,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 3000,
         "tp_spent": 20,
-        "total_level": 0,
+        "total_level": 50,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 50
         },
         "description": "+4% Heal, +2% Crit Chance, +15% Crit Damage",
         "stats": {
@@ -16290,12 +16290,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 3000,
         "tp_spent": 20,
-        "total_level": 0,
+        "total_level": 50,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 50
         },
         "description": "+6% Heal, MATK, and ATK",
         "stats": {
@@ -16313,12 +16313,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 3000,
         "tp_spent": 20,
-        "total_level": 0,
+        "total_level": 50,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 50
         },
         "description": "+12% Heal, +125 HP",
         "stats": {
@@ -16334,12 +16334,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 3000,
         "tp_spent": 20,
-        "total_level": 0,
+        "total_level": 50,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 50
         },
         "description": "+6% Heal, +2% Crit Chance, +25% Crit Damage",
         "stats": {
@@ -16357,12 +16357,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 3000,
         "tp_spent": 20,
-        "total_level": 0,
+        "total_level": 50,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 50
         },
         "description": "+10% Heal, MATK, and ATK",
         "stats": {
@@ -16380,12 +16380,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 4000,
         "tp_spent": 30,
-        "total_level": 0,
+        "total_level": 70,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 70
         },
         "description": "+5% Heal, +10% DEF",
         "stats": {
@@ -16402,12 +16402,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 4000,
         "tp_spent": 30,
-        "total_level": 0,
+        "total_level": 70,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 70
         },
         "description": "+5% Heal, +10% DEF",
         "stats": {
@@ -16424,12 +16424,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 4000,
         "tp_spent": 30,
-        "total_level": 0,
+        "total_level": 70,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 70
         },
         "description": "+8% Heal, +16% DEF",
         "stats": {
@@ -16446,12 +16446,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 4000,
         "tp_spent": 30,
-        "total_level": 0,
+        "total_level": 70,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 70
         },
         "description": "+5% Heal, +4 MP",
         "stats": {
@@ -16467,12 +16467,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 4000,
         "tp_spent": 30,
-        "total_level": 0,
+        "total_level": 70,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 70
         },
         "description": "+5% Heal, +4 MP",
         "stats": {
@@ -16488,12 +16488,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 4000,
         "tp_spent": 30,
-        "total_level": 0,
+        "total_level": 70,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 70
         },
         "description": "+8% Heal, +8 MP",
         "stats": {
@@ -16509,12 +16509,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 4000,
         "tp_spent": 30,
-        "total_level": 0,
+        "total_level": 70,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 70
         },
         "description": "+4% Heal, +3% Crit Chance. +10% Crit Damage",
         "stats": {
@@ -16532,12 +16532,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 4000,
         "tp_spent": 30,
-        "total_level": 0,
+        "total_level": 70,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 70
         },
         "description": "+4% Heal, +3% Crit Chance. +10% Crit Damage",
         "stats": {
@@ -16555,12 +16555,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 4000,
         "tp_spent": 30,
-        "total_level": 0,
+        "total_level": 70,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 70
         },
         "description": "+8% Heal, +6% Crit Chance. +20% Crit Damage",
         "stats": {
@@ -16578,12 +16578,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 4000,
         "tp_spent": 30,
-        "total_level": 0,
+        "total_level": 70,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 70
         },
         "description": "+20% Heal, +300 HP",
         "stats": {
@@ -16599,12 +16599,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 4000,
         "tp_spent": 30,
-        "total_level": 0,
+        "total_level": 70,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 70
         },
         "description": "+12% Heal, +5% Crit Chance, +25% Crit Damage",
         "stats": {
@@ -16622,12 +16622,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 4000,
         "tp_spent": 30,
-        "total_level": 0,
+        "total_level": 70,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 70
         },
         "description": "+15% Heal, +15% MATK, +15% ATK",
         "stats": {
@@ -16645,12 +16645,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 4000,
         "tp_spent": 30,
-        "total_level": 0,
+        "total_level": 70,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 70
         },
         "description": "+8% Heal, +120 HP",
         "stats": {
@@ -16666,12 +16666,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 4000,
         "tp_spent": 30,
-        "total_level": 0,
+        "total_level": 70,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 70
         },
         "description": "+4% Heal, +2% Crit Chance, +15% Crit Damage",
         "stats": {
@@ -16689,12 +16689,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 4000,
         "tp_spent": 30,
-        "total_level": 0,
+        "total_level": 70,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 70
         },
         "description": "+6% Heal, MATK, and ATK",
         "stats": {
@@ -16712,12 +16712,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 4000,
         "tp_spent": 30,
-        "total_level": 0,
+        "total_level": 70,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 70
         },
         "description": "+8% Heal, +120 HP",
         "stats": {
@@ -16733,12 +16733,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 4000,
         "tp_spent": 30,
-        "total_level": 0,
+        "total_level": 70,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 70
         },
         "description": "+4% Heal, +2% Crit Chance, +15% Crit Damage",
         "stats": {
@@ -16756,12 +16756,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 4000,
         "tp_spent": 30,
-        "total_level": 0,
+        "total_level": 70,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 70
         },
         "description": "+6% Heal, MATK, and ATK",
         "stats": {
@@ -16779,12 +16779,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 4000,
         "tp_spent": 30,
-        "total_level": 0,
+        "total_level": 70,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 70
         },
         "description": "+12% Heal, +240 HP",
         "stats": {
@@ -16800,12 +16800,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 4000,
         "tp_spent": 30,
-        "total_level": 0,
+        "total_level": 70,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 70
         },
         "description": "+6% Heal, +2% Crit Chance, +25% Crit Damage",
         "stats": {
@@ -16823,12 +16823,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 4000,
         "tp_spent": 30,
-        "total_level": 0,
+        "total_level": 70,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 70
         },
         "description": "+10% Heal, MATK, and ATK",
         "stats": {
@@ -16846,12 +16846,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 75,
         "exp": 5000,
         "tp_spent": 40,
-        "total_level": 0,
+        "total_level": 85,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 85
         },
         "description": "+10% Heal, +5% Holy Damage, +5% Negative Damage",
         "stats": {
@@ -16869,12 +16869,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 75,
         "exp": 5000,
         "tp_spent": 40,
-        "total_level": 0,
+        "total_level": 85,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 85
         },
         "description": "+10% Heal, +5% Holy Damage, +5% Negative Damage",
         "stats": {
@@ -16892,12 +16892,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 75,
         "exp": 5000,
         "tp_spent": 40,
-        "total_level": 0,
+        "total_level": 85,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 85
         },
         "description": "+12% Heal, +10% Holy Damage, +10% Negative Damage",
         "stats": {
@@ -16915,12 +16915,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 75,
         "exp": 5000,
         "tp_spent": 40,
-        "total_level": 0,
+        "total_level": 85,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 85
         },
         "description": "+10% Heal, +300 HP, +4 MP",
         "stats": {
@@ -16936,12 +16936,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 75,
         "exp": 5000,
         "tp_spent": 40,
-        "total_level": 0,
+        "total_level": 85,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 85
         },
         "description": "+10% Heal, +300 HP, +4 MP",
         "stats": {
@@ -16957,12 +16957,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 75,
         "exp": 5000,
         "tp_spent": 40,
-        "total_level": 0,
+        "total_level": 85,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 85
         },
         "description": "+12% Heal, +500 HP, +6 MP",
         "stats": {
@@ -16978,12 +16978,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 75,
         "exp": 5000,
         "tp_spent": 40,
-        "total_level": 0,
+        "total_level": 85,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 85
         },
         "description": "+10% Heal, +2% Crit Chance. +12% Crit Damage",
         "stats": {
@@ -17001,12 +17001,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 75,
         "exp": 5000,
         "tp_spent": 40,
-        "total_level": 0,
+        "total_level": 85,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 85
         },
         "description": "+10% Heal, +2% Crit Chance. +12% Crit Damage",
         "stats": {
@@ -17024,12 +17024,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 75,
         "exp": 5000,
         "tp_spent": 40,
-        "total_level": 0,
+        "total_level": 85,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 85
         },
         "description": "+12% Heal, +2% Crit Chance. +25% Crit Damage",
         "stats": {
@@ -17047,12 +17047,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 300,
         "exp": 5000,
         "tp_spent": 40,
-        "total_level": 0,
+        "total_level": 85,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 85
         },
         "description": "+20% Heal, +10% Holy Damage",
         "stats": {
@@ -17069,12 +17069,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 300,
         "exp": 5000,
         "tp_spent": 40,
-        "total_level": 0,
+        "total_level": 85,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 85
         },
         "description": "+20% Heal, +15% Negative Damage",
         "stats": {
@@ -17091,12 +17091,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 300,
         "exp": 5000,
         "tp_spent": 40,
-        "total_level": 0,
+        "total_level": 85,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 85
         },
         "description": "+25% Heal, +500 HP",
         "stats": {
@@ -17112,12 +17112,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 75,
         "exp": 5000,
         "tp_spent": 40,
-        "total_level": 0,
+        "total_level": 85,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 85
         },
         "description": "+10% Heal, +5% Holy Damage",
         "stats": {
@@ -17134,12 +17134,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 75,
         "exp": 5000,
         "tp_spent": 40,
-        "total_level": 0,
+        "total_level": 85,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 85
         },
         "description": "+10% Heal, +8% Negative Damage",
         "stats": {
@@ -17156,12 +17156,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 75,
         "exp": 5000,
         "tp_spent": 40,
-        "total_level": 0,
+        "total_level": 85,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 85
         },
         "description": "+12% Heal, +200 HP",
         "stats": {
@@ -17177,12 +17177,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 75,
         "exp": 5000,
         "tp_spent": 40,
-        "total_level": 0,
+        "total_level": 85,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 85
         },
         "description": "+10% Heal, +5% Holy Damage",
         "stats": {
@@ -17199,12 +17199,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 75,
         "exp": 5000,
         "tp_spent": 40,
-        "total_level": 0,
+        "total_level": 85,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 85
         },
         "description": "+10% Heal, +8% Negative Damage",
         "stats": {
@@ -17221,12 +17221,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 75,
         "exp": 5000,
         "tp_spent": 40,
-        "total_level": 0,
+        "total_level": 85,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 85
         },
         "description": "+12% Heal, +200 HP",
         "stats": {
@@ -17242,12 +17242,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 75,
         "exp": 5000,
         "tp_spent": 40,
-        "total_level": 0,
+        "total_level": 85,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 85
         },
         "description": "+20% Heal, +20% Holy Damage, +5% Holy Penetration",
         "stats": {
@@ -17265,12 +17265,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 75,
         "exp": 5000,
         "tp_spent": 40,
-        "total_level": 0,
+        "total_level": 85,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 85
         },
         "description": "+20% Heal, +20% Negative Damage +10% Negative Penetration",
         "stats": {
@@ -17288,12 +17288,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 75,
         "exp": 5000,
         "tp_spent": 40,
-        "total_level": 0,
+        "total_level": 85,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 85
         },
         "description": "+25% Heal, +25% DEF, +600 HP",
         "stats": {
@@ -17310,12 +17310,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 0,
+        "total_level": 100,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 100
         },
         "description": "+15% Heal, +5% Global Heal Effect",
         "stats": {
@@ -17332,12 +17332,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 0,
+        "total_level": 100,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 100
         },
         "description": "+10% Heal, +30% DEF, +2% All Resist",
         "stats": {
@@ -17366,12 +17366,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 0,
+        "total_level": 100,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 100
         },
         "description": "+10% Heal, +8% Divine Penetration",
         "stats": {
@@ -17389,12 +17389,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 0,
+        "total_level": 100,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 100
         },
         "description": "+50% Heal",
         "stats": {
@@ -17410,12 +17410,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 0,
+        "total_level": 100,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 100
         },
         "description": "+10% Heal, +15% DEF, +5% Max HP Multiplier",
         "stats": {
@@ -17432,12 +17432,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 0,
+        "total_level": 100,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 100
         },
         "description": "+10% Heal, +20% Divine Damage",
         "stats": {
@@ -17455,12 +17455,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 0,
+        "total_level": 100,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 100
         },
         "description": "+5% Global Heal Effect, +75% Crit Damage, -10% Global Damage",
         "stats": {
@@ -17476,12 +17476,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 0,
+        "total_level": 100,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 100
         },
         "description": "+50% DEF",
         "stats": {
@@ -17497,12 +17497,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 0,
+        "total_level": 100,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 100
         },
         "description": "+8% Divine Penetration",
         "stats": {
@@ -17519,12 +17519,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 0,
+        "total_level": 100,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 100
         },
         "description": "+15% Crit Chance, +25% Heal, -35% Global Damage",
         "stats": {
@@ -17541,12 +17541,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 0,
+        "total_level": 100,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 100
         },
         "description": "+15% Heal, +45% Threat Bonus, +5% Max HP Multiplier",
         "stats": {
@@ -17563,12 +17563,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 0,
+        "total_level": 100,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 100
         },
         "description": "+3% Divine Penetration Multiplier, +10% Divine Damage",
         "stats": {
@@ -17590,7 +17590,7 @@ const talent_data: Record<string, Talent> = {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 125
         },
         "description": "+1% Global Healpower, +10% Divine Damage and +15% Toxic Damage",
         "stats": {
@@ -17614,7 +17614,7 @@ const talent_data: Record<string, Talent> = {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 125
         },
         "description": "+1% Global Healpower, +10% Divine Damage and +15% Toxic Damage",
         "stats": {
@@ -17637,7 +17637,7 @@ const talent_data: Record<string, Talent> = {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 125
         },
         "description": "+1% Global Healpower, +10% Divine Penetration and +15% Toxic Penetration",
         "stats": {
@@ -17660,7 +17660,7 @@ const talent_data: Record<string, Talent> = {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 125
         },
         "description": "+1% Global Healpower, -6% Threat Generated",
         "stats": {
@@ -17681,7 +17681,7 @@ const talent_data: Record<string, Talent> = {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 125
         },
         "description": "+1% Global Healpower, -6% Threat Generated",
         "stats": {
@@ -17702,7 +17702,7 @@ const talent_data: Record<string, Talent> = {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 125
         },
         "description": "+4% Global Heal Effect, -8% Threat Generated, +6% Global Max Health",
         "stats": {
@@ -17723,7 +17723,7 @@ const talent_data: Record<string, Talent> = {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 125
         },
         "description": "+1% Global Healpower, +10% Crit Damage",
         "stats": {
@@ -17744,7 +17744,7 @@ const talent_data: Record<string, Talent> = {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 125
         },
         "description": "+1% Global Healpower, +15% Crit Damage",
         "stats": {
@@ -17765,7 +17765,7 @@ const talent_data: Record<string, Talent> = {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 125
         },
         "description": "+1% Global Healpower, +25% Crit Damage, +2% Global Heal Effect",
         "stats": {
@@ -17786,7 +17786,7 @@ const talent_data: Record<string, Talent> = {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 125
         },
         "description": "+25% Global Damage, -40% Global Heal Effect, +25% Divine and Toxic Damage",
         "stats": {
@@ -17809,7 +17809,7 @@ const talent_data: Record<string, Talent> = {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 125
         },
         "description": "+10% Global Heal Effect, +10% Global Max Health, +25% Threat Generated",
         "stats": {
@@ -17830,7 +17830,7 @@ const talent_data: Record<string, Talent> = {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 125
         },
         "description": "-20% Threat Generated, +75 MP, +40% Crit Damage, +10% Crit Chance",
         "stats": {
@@ -17853,7 +17853,7 @@ const talent_data: Record<string, Talent> = {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 175
         },
         "description": "+1% Global Heal, +2% Max HP Multi, Conversion 3% Heal to DEF",
         "stats": {},
@@ -17878,7 +17878,7 @@ const talent_data: Record<string, Talent> = {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 175
         },
         "description": "-2% Global Heal, +4% Max HP Multi, Conversion 3% Heal to DEF",
         "stats": {},
@@ -17903,7 +17903,7 @@ const talent_data: Record<string, Talent> = {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 175
         },
         "description": "+2% Global Heal, -5% Max HP Multi, Conversion 3% Heal to DEF",
         "stats": {},
@@ -17928,7 +17928,7 @@ const talent_data: Record<string, Talent> = {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 175
         },
         "description": "+2% Global Heal, +2% Max HP Multi, Conversion 3% Heal to DEF",
         "stats": {},
@@ -17953,7 +17953,7 @@ const talent_data: Record<string, Talent> = {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 175
         },
         "description": "+3% Global Heal, +5% All Res",
         "stats": {
@@ -17985,7 +17985,7 @@ const talent_data: Record<string, Talent> = {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 175
         },
         "description": "+1% Global Heal, +5% Buff Multiplier, -25% Global ATK/MATK/DEF",
         "stats": {},
@@ -18004,7 +18004,7 @@ const talent_data: Record<string, Talent> = {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 175
         },
         "description": "+1% Global Heal, +5% Buff Multiplier, -15% Global ATK/MATK/Max HP",
         "stats": {},
@@ -18023,7 +18023,7 @@ const talent_data: Record<string, Talent> = {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 175
         },
         "description": "+3% Global Heal, +5% All Res",
         "stats": {
@@ -18055,7 +18055,7 @@ const talent_data: Record<string, Talent> = {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 175
         },
         "description": "+1% Global Heal, +8% Magic DMG, Conversion 8% DEF to Heal",
         "stats": {
@@ -18090,7 +18090,7 @@ const talent_data: Record<string, Talent> = {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 175
         },
         "description": "+1% Global Heal, +8% Magic DMG, Conversion 8% ATK to Heal",
         "stats": {
@@ -18125,7 +18125,7 @@ const talent_data: Record<string, Talent> = {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 175
         },
         "description": "+1% Global Heal, +8% Magic DMG, Conversion 8% MATK to Heal",
         "stats": {
@@ -18160,7 +18160,7 @@ const talent_data: Record<string, Talent> = {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 175
         },
         "description": "+2% Global Heal,  +10% Magic DMG, +2% Global Damage",
         "stats": {
@@ -18189,7 +18189,7 @@ const talent_data: Record<string, Talent> = {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 175
         },
         "description": "+1% Global Heal, Temp HP Start of 20% Max HP, -33% Global MATK/ATK",
         "stats": {
@@ -18212,7 +18212,7 @@ const talent_data: Record<string, Talent> = {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 175
         },
         "description": "+1% Global Heal, +3% Buff Multiplier",
         "stats": {},
@@ -18231,7 +18231,7 @@ const talent_data: Record<string, Talent> = {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 175
         },
         "description": "+50% Global DMG, -95% Global MATK/ATK/Void DMG, -40% Global Heal Effect",
         "stats": {},
@@ -18250,7 +18250,7 @@ const talent_data: Record<string, Talent> = {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 175
         },
         "description": "+5% Global Heal & HP Regen Rate, +3 MP Regen, -33% Global Damage",
         "stats": {},
@@ -18269,7 +18269,7 @@ const talent_data: Record<string, Talent> = {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 175
         },
         "description": "+5% Global Heal, +15% Global Max Health, +300% Threat Generated",
         "stats": {
@@ -18290,7 +18290,7 @@ const talent_data: Record<string, Talent> = {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 175
         },
         "description": "+50% Global Heal, -75% Buff Multiplier, -75% Global Heal Effect",
         "stats": {},
@@ -18309,7 +18309,7 @@ const talent_data: Record<string, Talent> = {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 175
         },
         "description": "+3% Global Heal, +3% Buff Multiplier, +33% Crit Damage",
         "stats": {
@@ -18325,10 +18325,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 150,
         "tp_spent": 2,
-        "total_level": 0,
+        "total_level": 8,
         "class_levels": {
-            "tank_levels": 0,
-            "warrior_levels": 0,
+            "tank_levels": 4,
+            "warrior_levels": 4,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -18347,10 +18347,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 150,
         "tp_spent": 4,
-        "total_level": 0,
+        "total_level": 14,
         "class_levels": {
-            "tank_levels": 0,
-            "warrior_levels": 0,
+            "tank_levels": 7,
+            "warrior_levels": 7,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -18369,10 +18369,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 800,
         "tp_spent": 10,
-        "total_level": 0,
+        "total_level": 28,
         "class_levels": {
-            "tank_levels": 0,
-            "warrior_levels": 0,
+            "tank_levels": 14,
+            "warrior_levels": 14,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -18391,10 +18391,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 800,
         "tp_spent": 10,
-        "total_level": 0,
+        "total_level": 28,
         "class_levels": {
-            "tank_levels": 0,
-            "warrior_levels": 0,
+            "tank_levels": 14,
+            "warrior_levels": 14,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -18413,10 +18413,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 800,
         "tp_spent": 10,
-        "total_level": 0,
+        "total_level": 28,
         "class_levels": {
-            "tank_levels": 0,
-            "warrior_levels": 0,
+            "tank_levels": 14,
+            "warrior_levels": 14,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -18435,10 +18435,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 150,
         "exp": 3000,
         "tp_spent": 20,
-        "total_level": 0,
+        "total_level": 48,
         "class_levels": {
-            "tank_levels": 0,
-            "warrior_levels": 0,
+            "tank_levels": 24,
+            "warrior_levels": 24,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -18457,10 +18457,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 150,
         "exp": 3000,
         "tp_spent": 20,
-        "total_level": 0,
+        "total_level": 48,
         "class_levels": {
-            "tank_levels": 0,
-            "warrior_levels": 0,
+            "tank_levels": 24,
+            "warrior_levels": 24,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -18479,10 +18479,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 150,
         "exp": 3000,
         "tp_spent": 20,
-        "total_level": 0,
+        "total_level": 48,
         "class_levels": {
-            "tank_levels": 0,
-            "warrior_levels": 0,
+            "tank_levels": 24,
+            "warrior_levels": 24,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -18501,10 +18501,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 4000,
         "tp_spent": 35,
-        "total_level": 0,
+        "total_level": 80,
         "class_levels": {
-            "tank_levels": 0,
-            "warrior_levels": 0,
+            "tank_levels": 40,
+            "warrior_levels": 40,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -18525,8 +18525,8 @@ const talent_data: Record<string, Talent> = {
         "tp_spent": 40,
         "total_level": 101,
         "class_levels": {
-            "tank_levels": 0,
-            "warrior_levels": 0,
+            "tank_levels": 60,
+            "warrior_levels": 60,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -18547,8 +18547,8 @@ const talent_data: Record<string, Talent> = {
         "tp_spent": 60,
         "total_level": 101,
         "class_levels": {
-            "tank_levels": 0,
-            "warrior_levels": 0,
+            "tank_levels": 75,
+            "warrior_levels": 75,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -18569,8 +18569,8 @@ const talent_data: Record<string, Talent> = {
         "tp_spent": 80,
         "total_level": 101,
         "class_levels": {
-            "tank_levels": 0,
-            "warrior_levels": 0,
+            "tank_levels": 90,
+            "warrior_levels": 90,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -18591,8 +18591,8 @@ const talent_data: Record<string, Talent> = {
         "tp_spent": 80,
         "total_level": 101,
         "class_levels": {
-            "tank_levels": 0,
-            "warrior_levels": 0,
+            "tank_levels": 90,
+            "warrior_levels": 90,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -18613,8 +18613,8 @@ const talent_data: Record<string, Talent> = {
         "tp_spent": 80,
         "total_level": 101,
         "class_levels": {
-            "tank_levels": 0,
-            "warrior_levels": 0,
+            "tank_levels": 110,
+            "warrior_levels": 110,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -18635,8 +18635,8 @@ const talent_data: Record<string, Talent> = {
         "tp_spent": 80,
         "total_level": 101,
         "class_levels": {
-            "tank_levels": 0,
-            "warrior_levels": 0,
+            "tank_levels": 110,
+            "warrior_levels": 110,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -18657,8 +18657,8 @@ const talent_data: Record<string, Talent> = {
         "tp_spent": 80,
         "total_level": 101,
         "class_levels": {
-            "tank_levels": 0,
-            "warrior_levels": 0,
+            "tank_levels": 125,
+            "warrior_levels": 125,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -18679,8 +18679,8 @@ const talent_data: Record<string, Talent> = {
         "tp_spent": 80,
         "total_level": 101,
         "class_levels": {
-            "tank_levels": 0,
-            "warrior_levels": 0,
+            "tank_levels": 125,
+            "warrior_levels": 125,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -18701,8 +18701,8 @@ const talent_data: Record<string, Talent> = {
         "tp_spent": 80,
         "total_level": 101,
         "class_levels": {
-            "tank_levels": 0,
-            "warrior_levels": 0,
+            "tank_levels": 140,
+            "warrior_levels": 140,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -18721,11 +18721,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 150,
         "tp_spent": 2,
-        "total_level": 0,
+        "total_level": 8,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 4,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 4,
             "healer_levels": 0
         },
         "description": "+12% DEF, +12% MATK, +15 MATK",
@@ -18743,11 +18743,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 150,
         "tp_spent": 4,
-        "total_level": 0,
+        "total_level": 14,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 7,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 7,
             "healer_levels": 0
         },
         "description": "+15% DEF, +15% MATK, +15 MATK",
@@ -18765,11 +18765,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 800,
         "tp_spent": 10,
-        "total_level": 0,
+        "total_level": 28,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 14,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 14,
             "healer_levels": 0
         },
         "description": "+15% DEF, +15% MATK, +15 MATK",
@@ -18787,11 +18787,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 800,
         "tp_spent": 10,
-        "total_level": 0,
+        "total_level": 28,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 14,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 14,
             "healer_levels": 0
         },
         "description": "+15% DEF, +15% MATK, +15 MATK",
@@ -18809,11 +18809,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 800,
         "tp_spent": 10,
-        "total_level": 0,
+        "total_level": 28,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 14,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 14,
             "healer_levels": 0
         },
         "description": "+15% DEF, +15% MATK, +15 MATK",
@@ -18831,11 +18831,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 3000,
         "tp_spent": 20,
-        "total_level": 0,
+        "total_level": 48,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 24,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 24,
             "healer_levels": 0
         },
         "description": "+20% DEF, +20% MATK, +15 MATK",
@@ -18853,11 +18853,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 3000,
         "tp_spent": 20,
-        "total_level": 0,
+        "total_level": 48,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 24,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 24,
             "healer_levels": 0
         },
         "description": "+20% DEF, +20% MATK, +15 MATK",
@@ -18875,11 +18875,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 3000,
         "tp_spent": 20,
-        "total_level": 0,
+        "total_level": 48,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 24,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 24,
             "healer_levels": 0
         },
         "description": "+20% DEF, +20% MATK, +15 MATK",
@@ -18897,11 +18897,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 4000,
         "tp_spent": 35,
-        "total_level": 0,
+        "total_level": 80,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 40,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 40,
             "healer_levels": 0
         },
         "description": "+20% DEF, +20% MATK, +15 MATK",
@@ -18921,9 +18921,9 @@ const talent_data: Record<string, Talent> = {
         "tp_spent": 40,
         "total_level": 101,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 60,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 60,
             "healer_levels": 0
         },
         "description": "+20% DEF, +20% MATK, +15 MATK",
@@ -18943,9 +18943,9 @@ const talent_data: Record<string, Talent> = {
         "tp_spent": 60,
         "total_level": 101,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 75,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 75,
             "healer_levels": 0
         },
         "description": "+20% DEF, +20% MATK, +15 MATK",
@@ -18965,9 +18965,9 @@ const talent_data: Record<string, Talent> = {
         "tp_spent": 80,
         "total_level": 101,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 90,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 90,
             "healer_levels": 0
         },
         "description": "+20% DEF, +20% MATK, +15 MATK",
@@ -18987,9 +18987,9 @@ const talent_data: Record<string, Talent> = {
         "tp_spent": 80,
         "total_level": 101,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 90,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 90,
             "healer_levels": 0
         },
         "description": "+20% DEF, +20% MATK, +15 MATK",
@@ -19009,9 +19009,9 @@ const talent_data: Record<string, Talent> = {
         "tp_spent": 80,
         "total_level": 101,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 110,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 110,
             "healer_levels": 0
         },
         "description": "+20% DEF, +20% MATK, +15 MATK",
@@ -19031,9 +19031,9 @@ const talent_data: Record<string, Talent> = {
         "tp_spent": 80,
         "total_level": 101,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 110,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 110,
             "healer_levels": 0
         },
         "description": "+20% DEF, +20% MATK, +15 MATK",
@@ -19053,9 +19053,9 @@ const talent_data: Record<string, Talent> = {
         "tp_spent": 80,
         "total_level": 101,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 125,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 125,
             "healer_levels": 0
         },
         "description": "+25% DEF, +25% MATK, +20 MATK",
@@ -19075,9 +19075,9 @@ const talent_data: Record<string, Talent> = {
         "tp_spent": 80,
         "total_level": 101,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 125,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 125,
             "healer_levels": 0
         },
         "description": "+25% DEF, +25% MATK, +20 MATK",
@@ -19097,9 +19097,9 @@ const talent_data: Record<string, Talent> = {
         "tp_spent": 80,
         "total_level": 101,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 140,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 140,
             "healer_levels": 0
         },
         "description": "+25% DEF, +25% MATK, +20 MATK",
@@ -19117,12 +19117,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 150,
         "tp_spent": 2,
-        "total_level": 0,
+        "total_level": 8,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 4,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 4
         },
         "description": "+12% DEF, +12% Heal, +15 Heal",
         "stats": {
@@ -19139,12 +19139,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 150,
         "tp_spent": 4,
-        "total_level": 0,
+        "total_level": 14,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 7,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 7
         },
         "description": "+15% DEF, +15% Heal, +15 Heal",
         "stats": {
@@ -19161,12 +19161,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 800,
         "tp_spent": 10,
-        "total_level": 0,
+        "total_level": 28,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 14,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 14
         },
         "description": "+15% DEF, +15% Heal, +15 Heal",
         "stats": {
@@ -19183,12 +19183,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 800,
         "tp_spent": 10,
-        "total_level": 0,
+        "total_level": 28,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 14,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 14
         },
         "description": "+15% DEF, +15% Heal, +15 Heal",
         "stats": {
@@ -19205,12 +19205,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 800,
         "tp_spent": 10,
-        "total_level": 0,
+        "total_level": 28,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 14,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 14
         },
         "description": "+15% DEF, +15% Heal, +15 Heal",
         "stats": {
@@ -19227,12 +19227,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 3000,
         "tp_spent": 20,
-        "total_level": 0,
+        "total_level": 48,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 24,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 24
         },
         "description": "+20% DEF, +20% Heal, +15 Heal",
         "stats": {
@@ -19249,12 +19249,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 3000,
         "tp_spent": 20,
-        "total_level": 0,
+        "total_level": 48,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 24,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 24
         },
         "description": "+20% DEF, +20% Heal, +15 Heal",
         "stats": {
@@ -19271,12 +19271,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 3000,
         "tp_spent": 20,
-        "total_level": 0,
+        "total_level": 48,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 24,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 24
         },
         "description": "+20% DEF, +20% Heal, +15 Heal",
         "stats": {
@@ -19293,12 +19293,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 4000,
         "tp_spent": 35,
-        "total_level": 0,
+        "total_level": 80,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 40,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 40
         },
         "description": "+20% DEF, +20% Heal, +15 Heal",
         "stats": {
@@ -19317,10 +19317,10 @@ const talent_data: Record<string, Talent> = {
         "tp_spent": 40,
         "total_level": 101,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 60,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 60
         },
         "description": "+20% DEF, +20% Heal, +15 Heal",
         "stats": {
@@ -19339,10 +19339,10 @@ const talent_data: Record<string, Talent> = {
         "tp_spent": 60,
         "total_level": 101,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 75,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 75
         },
         "description": "+20% DEF, +20% Heal, +15 Heal",
         "stats": {
@@ -19361,10 +19361,10 @@ const talent_data: Record<string, Talent> = {
         "tp_spent": 80,
         "total_level": 101,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 90,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 90
         },
         "description": "+20% DEF, +20% Heal, +15 Heal",
         "stats": {
@@ -19383,10 +19383,10 @@ const talent_data: Record<string, Talent> = {
         "tp_spent": 80,
         "total_level": 101,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 90,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 90
         },
         "description": "+20% DEF, +20% Heal, +15 Heal",
         "stats": {
@@ -19405,10 +19405,10 @@ const talent_data: Record<string, Talent> = {
         "tp_spent": 80,
         "total_level": 101,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 110,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 110
         },
         "description": "+20% DEF, +20% Heal, +15 Heal",
         "stats": {
@@ -19427,10 +19427,10 @@ const talent_data: Record<string, Talent> = {
         "tp_spent": 80,
         "total_level": 101,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 110,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 110
         },
         "description": "+20% DEF, +20% Heal, +15 Heal",
         "stats": {
@@ -19449,10 +19449,10 @@ const talent_data: Record<string, Talent> = {
         "tp_spent": 80,
         "total_level": 101,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 125,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 125
         },
         "description": "+25% DEF, +25% Heal, +20 Heal",
         "stats": {
@@ -19471,10 +19471,10 @@ const talent_data: Record<string, Talent> = {
         "tp_spent": 80,
         "total_level": 101,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 125,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 125
         },
         "description": "+25% DEF, +25% Heal, +20 Heal",
         "stats": {
@@ -19493,10 +19493,10 @@ const talent_data: Record<string, Talent> = {
         "tp_spent": 80,
         "total_level": 101,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 140,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 140
         },
         "description": "+25% DEF, +25% Heal, +20 Heal",
         "stats": {
@@ -19513,11 +19513,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 150,
         "tp_spent": 2,
-        "total_level": 0,
+        "total_level": 8,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
-            "caster_levels": 0,
+            "warrior_levels": 4,
+            "caster_levels": 4,
             "healer_levels": 0
         },
         "description": "+12% ATK, +12% MATK, +45 HP",
@@ -19535,11 +19535,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 150,
         "tp_spent": 4,
-        "total_level": 0,
+        "total_level": 14,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
-            "caster_levels": 0,
+            "warrior_levels": 7,
+            "caster_levels": 7,
             "healer_levels": 0
         },
         "description": "+15% ATK, +15% MATK, +45 HP",
@@ -19557,11 +19557,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 800,
         "tp_spent": 10,
-        "total_level": 0,
+        "total_level": 28,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
-            "caster_levels": 0,
+            "warrior_levels": 14,
+            "caster_levels": 14,
             "healer_levels": 0
         },
         "description": "+15% ATK, +15% MATK, +5% DEF",
@@ -19580,11 +19580,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 800,
         "tp_spent": 10,
-        "total_level": 0,
+        "total_level": 28,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
-            "caster_levels": 0,
+            "warrior_levels": 14,
+            "caster_levels": 14,
             "healer_levels": 0
         },
         "description": "+15% ATK, +15% MATK, +5% DEF",
@@ -19603,11 +19603,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 800,
         "tp_spent": 10,
-        "total_level": 0,
+        "total_level": 28,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
-            "caster_levels": 0,
+            "warrior_levels": 14,
+            "caster_levels": 14,
             "healer_levels": 0
         },
         "description": "+15% ATK, +15% MATK, +5% DEF",
@@ -19626,11 +19626,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 3000,
         "tp_spent": 20,
-        "total_level": 0,
+        "total_level": 48,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
-            "caster_levels": 0,
+            "warrior_levels": 24,
+            "caster_levels": 24,
             "healer_levels": 0
         },
         "description": "+25% ATK, +20% MATK, +5% DEF",
@@ -19649,11 +19649,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 3000,
         "tp_spent": 20,
-        "total_level": 0,
+        "total_level": 48,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
-            "caster_levels": 0,
+            "warrior_levels": 24,
+            "caster_levels": 24,
             "healer_levels": 0
         },
         "description": "+25% ATK, +20% MATK, +5% DEF",
@@ -19672,11 +19672,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 3000,
         "tp_spent": 20,
-        "total_level": 0,
+        "total_level": 48,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
-            "caster_levels": 0,
+            "warrior_levels": 24,
+            "caster_levels": 24,
             "healer_levels": 0
         },
         "description": "+25% ATK, +20% MATK, +5% DEF",
@@ -19695,11 +19695,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 4000,
         "tp_spent": 35,
-        "total_level": 0,
+        "total_level": 80,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
-            "caster_levels": 0,
+            "warrior_levels": 40,
+            "caster_levels": 40,
             "healer_levels": 0
         },
         "description": "+25% ATK, +20% MATK, +5% DEF",
@@ -19721,8 +19721,8 @@ const talent_data: Record<string, Talent> = {
         "total_level": 101,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
-            "caster_levels": 0,
+            "warrior_levels": 60,
+            "caster_levels": 60,
             "healer_levels": 0
         },
         "description": "+25% ATK, +20% MATK, +5% DEF",
@@ -19744,8 +19744,8 @@ const talent_data: Record<string, Talent> = {
         "total_level": 101,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
-            "caster_levels": 0,
+            "warrior_levels": 75,
+            "caster_levels": 75,
             "healer_levels": 0
         },
         "description": "+25% ATK, +20% MATK, +5% DEF",
@@ -19767,8 +19767,8 @@ const talent_data: Record<string, Talent> = {
         "total_level": 101,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
-            "caster_levels": 0,
+            "warrior_levels": 90,
+            "caster_levels": 90,
             "healer_levels": 0
         },
         "description": "+25% ATK, +20% MATK, +5% DEF",
@@ -19790,8 +19790,8 @@ const talent_data: Record<string, Talent> = {
         "total_level": 101,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
-            "caster_levels": 0,
+            "warrior_levels": 90,
+            "caster_levels": 90,
             "healer_levels": 0
         },
         "description": "+25% ATK, +20% MATK, +5% DEF",
@@ -19813,8 +19813,8 @@ const talent_data: Record<string, Talent> = {
         "total_level": 101,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
-            "caster_levels": 0,
+            "warrior_levels": 110,
+            "caster_levels": 110,
             "healer_levels": 0
         },
         "description": "+30% ATK, +25% MATK, +5% DEF",
@@ -19836,8 +19836,8 @@ const talent_data: Record<string, Talent> = {
         "total_level": 101,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
-            "caster_levels": 0,
+            "warrior_levels": 110,
+            "caster_levels": 110,
             "healer_levels": 0
         },
         "description": "+30% ATK, +25% MATK, +5% DEF",
@@ -19859,8 +19859,8 @@ const talent_data: Record<string, Talent> = {
         "total_level": 101,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
-            "caster_levels": 0,
+            "warrior_levels": 125,
+            "caster_levels": 125,
             "healer_levels": 0
         },
         "description": "+40% ATK, +40% MATK, +10% DEF",
@@ -19882,8 +19882,8 @@ const talent_data: Record<string, Talent> = {
         "total_level": 101,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
-            "caster_levels": 0,
+            "warrior_levels": 125,
+            "caster_levels": 125,
             "healer_levels": 0
         },
         "description": "+40% ATK, +40% MATK, +15% DEF",
@@ -19905,8 +19905,8 @@ const talent_data: Record<string, Talent> = {
         "total_level": 101,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
-            "caster_levels": 0,
+            "warrior_levels": 140,
+            "caster_levels": 140,
             "healer_levels": 0
         },
         "description": "+45% ATK, +45% MATK, +20% DEF",
@@ -19925,12 +19925,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 150,
         "tp_spent": 2,
-        "total_level": 0,
+        "total_level": 8,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 4,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 4
         },
         "description": "+12% ATK, +12% Heal, +45 HP",
         "stats": {
@@ -19947,12 +19947,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 150,
         "tp_spent": 4,
-        "total_level": 0,
+        "total_level": 14,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 7,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 7
         },
         "description": "+15% ATK, +15% Heal, +45 HP",
         "stats": {
@@ -19969,12 +19969,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 800,
         "tp_spent": 10,
-        "total_level": 0,
+        "total_level": 28,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 14,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 14
         },
         "description": "+15% ATK, +15% Heal, +5% DEF",
         "stats": {
@@ -19992,12 +19992,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 800,
         "tp_spent": 10,
-        "total_level": 0,
+        "total_level": 28,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 14,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 14
         },
         "description": "+15% ATK, +15% Heal, +5% DEF",
         "stats": {
@@ -20015,12 +20015,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 800,
         "tp_spent": 10,
-        "total_level": 0,
+        "total_level": 28,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 14,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 14
         },
         "description": "+15% ATK, +15% Heal, +5% DEF",
         "stats": {
@@ -20038,12 +20038,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 3000,
         "tp_spent": 20,
-        "total_level": 0,
+        "total_level": 48,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 24,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 24
         },
         "description": "+25% ATK, +20% Heal, +5% DEF",
         "stats": {
@@ -20061,12 +20061,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 3000,
         "tp_spent": 20,
-        "total_level": 0,
+        "total_level": 48,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 24,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 24
         },
         "description": "+25% ATK, +20% Heal, +5% DEF",
         "stats": {
@@ -20084,12 +20084,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 3000,
         "tp_spent": 20,
-        "total_level": 0,
+        "total_level": 48,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 24,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 24
         },
         "description": "+25% ATK, +20% Heal, +5% DEF",
         "stats": {
@@ -20107,12 +20107,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 4000,
         "tp_spent": 35,
-        "total_level": 0,
+        "total_level": 80,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 40,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 40
         },
         "description": "+25% ATK, +20% Heal, +5% DEF",
         "stats": {
@@ -20133,9 +20133,9 @@ const talent_data: Record<string, Talent> = {
         "total_level": 101,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 60,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 60
         },
         "description": "+25% ATK, +20% Heal, +5% DEF",
         "stats": {
@@ -20156,9 +20156,9 @@ const talent_data: Record<string, Talent> = {
         "total_level": 101,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 75,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 75
         },
         "description": "+25% ATK, +20% Heal, +5% DEF",
         "stats": {
@@ -20179,9 +20179,9 @@ const talent_data: Record<string, Talent> = {
         "total_level": 101,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 90,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 90
         },
         "description": "+25% ATK, +20% Heal, +5% DEF",
         "stats": {
@@ -20202,9 +20202,9 @@ const talent_data: Record<string, Talent> = {
         "total_level": 101,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 90,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 90
         },
         "description": "+25% ATK, +20% Heal, +5% DEF",
         "stats": {
@@ -20225,9 +20225,9 @@ const talent_data: Record<string, Talent> = {
         "total_level": 101,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 110,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 110
         },
         "description": "+30% ATK, +25% Heal, +5% DEF",
         "stats": {
@@ -20248,9 +20248,9 @@ const talent_data: Record<string, Talent> = {
         "total_level": 101,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 110,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 110
         },
         "description": "+30% ATK, +25% Heal, +5% DEF",
         "stats": {
@@ -20271,9 +20271,9 @@ const talent_data: Record<string, Talent> = {
         "total_level": 101,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 125,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 125
         },
         "description": "+30% ATK, +25% Heal, +5% DEF",
         "stats": {
@@ -20294,9 +20294,9 @@ const talent_data: Record<string, Talent> = {
         "total_level": 101,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 125,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 125
         },
         "description": "+30% ATK, +25% Heal, +10% DEF",
         "stats": {
@@ -20317,9 +20317,9 @@ const talent_data: Record<string, Talent> = {
         "total_level": 101,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 140,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 140
         },
         "description": "+35% ATK, +25% Heal, +15% DEF",
         "stats": {
@@ -20337,12 +20337,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 150,
         "tp_spent": 2,
-        "total_level": 0,
+        "total_level": 8,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
-            "healer_levels": 0
+            "caster_levels": 4,
+            "healer_levels": 4
         },
         "description": "+12% MATK, +12% Heal, +15 MATK",
         "stats": {
@@ -20359,12 +20359,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 150,
         "tp_spent": 4,
-        "total_level": 0,
+        "total_level": 14,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
-            "healer_levels": 0
+            "caster_levels": 7,
+            "healer_levels": 7
         },
         "description": "+15% MATK, +15% Heal, +15 MATK",
         "stats": {
@@ -20381,12 +20381,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 800,
         "tp_spent": 10,
-        "total_level": 0,
+        "total_level": 28,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
-            "healer_levels": 0
+            "caster_levels": 14,
+            "healer_levels": 14
         },
         "description": "+15% MATK, +15% Heal, +15 MATK",
         "stats": {
@@ -20403,12 +20403,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 800,
         "tp_spent": 10,
-        "total_level": 0,
+        "total_level": 28,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
-            "healer_levels": 0
+            "caster_levels": 14,
+            "healer_levels": 14
         },
         "description": "+15% MATK, +15% Heal, +15 MATK",
         "stats": {
@@ -20425,12 +20425,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 800,
         "tp_spent": 10,
-        "total_level": 0,
+        "total_level": 28,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
-            "healer_levels": 0
+            "caster_levels": 14,
+            "healer_levels": 14
         },
         "description": "+15% MATK, +15% Heal, +15 MATK",
         "stats": {
@@ -20447,12 +20447,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 3000,
         "tp_spent": 20,
-        "total_level": 0,
+        "total_level": 48,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
-            "healer_levels": 0
+            "caster_levels": 24,
+            "healer_levels": 24
         },
         "description": "+20% MATK, +20% Heal, +15 MATK",
         "stats": {
@@ -20469,12 +20469,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 3000,
         "tp_spent": 20,
-        "total_level": 0,
+        "total_level": 48,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
-            "healer_levels": 0
+            "caster_levels": 24,
+            "healer_levels": 24
         },
         "description": "+20% MATK, +20% Heal, +15 MATK",
         "stats": {
@@ -20491,12 +20491,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 3000,
         "tp_spent": 20,
-        "total_level": 0,
+        "total_level": 48,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
-            "healer_levels": 0
+            "caster_levels": 24,
+            "healer_levels": 24
         },
         "description": "+20% MATK, +20% Heal, +15 MATK",
         "stats": {
@@ -20513,12 +20513,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 4000,
         "tp_spent": 35,
-        "total_level": 0,
+        "total_level": 80,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
-            "healer_levels": 0
+            "caster_levels": 40,
+            "healer_levels": 40
         },
         "description": "+20% MATK, +20% Heal, +15 MATK",
         "stats": {
@@ -20539,8 +20539,8 @@ const talent_data: Record<string, Talent> = {
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
-            "healer_levels": 0
+            "caster_levels": 60,
+            "healer_levels": 60
         },
         "description": "+20% MATK, +20% Heal, +15 MATK",
         "stats": {
@@ -20561,8 +20561,8 @@ const talent_data: Record<string, Talent> = {
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
-            "healer_levels": 0
+            "caster_levels": 75,
+            "healer_levels": 75
         },
         "description": "+20% MATK, +20% Heal, +15 MATK",
         "stats": {
@@ -20583,8 +20583,8 @@ const talent_data: Record<string, Talent> = {
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
-            "healer_levels": 0
+            "caster_levels": 90,
+            "healer_levels": 90
         },
         "description": "+20% MATK, +20% Heal, +15 MATK",
         "stats": {
@@ -20605,8 +20605,8 @@ const talent_data: Record<string, Talent> = {
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
-            "healer_levels": 0
+            "caster_levels": 90,
+            "healer_levels": 90
         },
         "description": "+20% MATK, +20% Heal, +15 MATK",
         "stats": {
@@ -20627,8 +20627,8 @@ const talent_data: Record<string, Talent> = {
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
-            "healer_levels": 0
+            "caster_levels": 110,
+            "healer_levels": 110
         },
         "description": "+20% MATK, +20% Heal, +15 MATK",
         "stats": {
@@ -20649,8 +20649,8 @@ const talent_data: Record<string, Talent> = {
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
-            "healer_levels": 0
+            "caster_levels": 110,
+            "healer_levels": 110
         },
         "description": "+20% MATK, +20% Heal, +15 MATK",
         "stats": {
@@ -20671,8 +20671,8 @@ const talent_data: Record<string, Talent> = {
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
-            "healer_levels": 0
+            "caster_levels": 125,
+            "healer_levels": 125
         },
         "description": "+25% MATK, +25% Heal, +20 MATK",
         "stats": {
@@ -20693,8 +20693,8 @@ const talent_data: Record<string, Talent> = {
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
-            "healer_levels": 0
+            "caster_levels": 125,
+            "healer_levels": 125
         },
         "description": "+25% MATK, +25% Heal, +20 MATK",
         "stats": {
@@ -20715,8 +20715,8 @@ const talent_data: Record<string, Talent> = {
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
-            "healer_levels": 0
+            "caster_levels": 140,
+            "healer_levels": 140
         },
         "description": "+25% MATK, +25% Heal, +20 MATK",
         "stats": {
@@ -20735,7 +20735,7 @@ const talent_data: Record<string, Talent> = {
         "tp_spent": 20,
         "total_level": 0,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 60,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -20759,7 +20759,7 @@ const talent_data: Record<string, Talent> = {
         "total_level": 0,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 60,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -20783,7 +20783,7 @@ const talent_data: Record<string, Talent> = {
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 60,
             "healer_levels": 0
         },
         "description": "+40% MATK, +20% Void DMG, +15% Global MATK, -20% Max MP",
@@ -20806,7 +20806,7 @@ const talent_data: Record<string, Talent> = {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 60
         },
         "description": "+20% Heal, +20% Def, +10% Void DMG",
         "stats": {
@@ -20826,8 +20826,8 @@ const talent_data: Record<string, Talent> = {
         "tp_spent": 20,
         "total_level": 0,
         "class_levels": {
-            "tank_levels": 0,
-            "warrior_levels": 0,
+            "tank_levels": 30,
+            "warrior_levels": 30,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -20849,9 +20849,9 @@ const talent_data: Record<string, Talent> = {
         "tp_spent": 20,
         "total_level": 0,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 30,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 30,
             "healer_levels": 0
         },
         "description": "+30% MATK, +30% DEF, +10% Void Resist",
@@ -20872,10 +20872,10 @@ const talent_data: Record<string, Talent> = {
         "tp_spent": 20,
         "total_level": 0,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 30,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 30
         },
         "description": "+30% Heal, +30% DEF, +10% Void Resist",
         "stats": {
@@ -20896,8 +20896,8 @@ const talent_data: Record<string, Talent> = {
         "total_level": 0,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
-            "caster_levels": 0,
+            "warrior_levels": 30,
+            "caster_levels": 30,
             "healer_levels": 0
         },
         "description": "+45% ATK, +45% MATK, +30 MP",
@@ -20918,9 +20918,9 @@ const talent_data: Record<string, Talent> = {
         "total_level": 0,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 30,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 30
         },
         "description": "+30% ATK, +30% Heal, +10% Void Resist",
         "stats": {
@@ -20942,8 +20942,8 @@ const talent_data: Record<string, Talent> = {
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
-            "healer_levels": 0
+            "caster_levels": 30,
+            "healer_levels": 30
         },
         "description": "+30% MATK, +30% Heal, +10% Void DMG",
         "stats": {
@@ -20963,7 +20963,7 @@ const talent_data: Record<string, Talent> = {
         "tp_spent": 20,
         "total_level": 0,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 60,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -20987,7 +20987,7 @@ const talent_data: Record<string, Talent> = {
         "total_level": 0,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 60,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -21010,7 +21010,7 @@ const talent_data: Record<string, Talent> = {
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 60,
             "healer_levels": 0
         },
         "description": "+25% MATK, +25 MP, +5% Crit Chance",
@@ -21033,7 +21033,7 @@ const talent_data: Record<string, Talent> = {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 60
         },
         "description": "+30% Heal, +10% Void Resist",
         "stats": {
@@ -21052,8 +21052,8 @@ const talent_data: Record<string, Talent> = {
         "tp_spent": 20,
         "total_level": 0,
         "class_levels": {
-            "tank_levels": 0,
-            "warrior_levels": 0,
+            "tank_levels": 30,
+            "warrior_levels": 30,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -21075,9 +21075,9 @@ const talent_data: Record<string, Talent> = {
         "tp_spent": 20,
         "total_level": 0,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 30,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 30,
             "healer_levels": 0
         },
         "description": "+35% MATK, +15% DEF, +10% Void Damage",
@@ -21098,10 +21098,10 @@ const talent_data: Record<string, Talent> = {
         "tp_spent": 20,
         "total_level": 0,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 30,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 30
         },
         "description": "+35% Heal, +25% DEF, +10% Void Damage",
         "stats": {
@@ -21122,8 +21122,8 @@ const talent_data: Record<string, Talent> = {
         "total_level": 0,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
-            "caster_levels": 0,
+            "warrior_levels": 30,
+            "caster_levels": 30,
             "healer_levels": 0
         },
         "description": "+30% ATK, +30% MATK, +20 MP",
@@ -21144,9 +21144,9 @@ const talent_data: Record<string, Talent> = {
         "total_level": 0,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 30,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 30
         },
         "description": "+30% ATK, +30% Heal, +10% Void Damage",
         "stats": {
@@ -21168,8 +21168,8 @@ const talent_data: Record<string, Talent> = {
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
-            "healer_levels": 0
+            "caster_levels": 30,
+            "healer_levels": 30
         },
         "description": "+30% MATK, +30% Heal, +10% Void Resist",
         "stats": {
@@ -21189,7 +21189,7 @@ const talent_data: Record<string, Talent> = {
         "tp_spent": 20,
         "total_level": 0,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 60,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -21212,7 +21212,7 @@ const talent_data: Record<string, Talent> = {
         "total_level": 0,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 60,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -21236,7 +21236,7 @@ const talent_data: Record<string, Talent> = {
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 60,
             "healer_levels": 0
         },
         "description": "+30% MATK, +10% Divine Damage",
@@ -21260,7 +21260,7 @@ const talent_data: Record<string, Talent> = {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 60
         },
         "description": "+10% Heal, +5% Max MP, +10% Void Resist",
         "stats": {
@@ -21279,8 +21279,8 @@ const talent_data: Record<string, Talent> = {
         "tp_spent": 20,
         "total_level": 0,
         "class_levels": {
-            "tank_levels": 0,
-            "warrior_levels": 0,
+            "tank_levels": 30,
+            "warrior_levels": 30,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -21302,9 +21302,9 @@ const talent_data: Record<string, Talent> = {
         "tp_spent": 20,
         "total_level": 0,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 30,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 30,
             "healer_levels": 0
         },
         "description": "+30% MATK, +10% DEF, +10% Void Resist",
@@ -21325,10 +21325,10 @@ const talent_data: Record<string, Talent> = {
         "tp_spent": 20,
         "total_level": 0,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 30,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 30
         },
         "description": "+40% Heal, +10% DEF, +10% Void Resist",
         "stats": {
@@ -21349,8 +21349,8 @@ const talent_data: Record<string, Talent> = {
         "total_level": 0,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
-            "caster_levels": 0,
+            "warrior_levels": 30,
+            "caster_levels": 30,
             "healer_levels": 0
         },
         "description": "+20% ATK, +20% MATK, +10% Max MP",
@@ -21371,9 +21371,9 @@ const talent_data: Record<string, Talent> = {
         "total_level": 0,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 30,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 30
         },
         "description": "+20% ATK, +40% Heal, +10% Void Resist",
         "stats": {
@@ -21395,8 +21395,8 @@ const talent_data: Record<string, Talent> = {
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
-            "healer_levels": 0
+            "caster_levels": 30,
+            "healer_levels": 30
         },
         "description": "+20% MATK, +35% Heal, +10% Void Damage",
         "stats": {
@@ -21414,9 +21414,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 1250,
         "exp": 10000,
         "tp_spent": 49,
-        "total_level": 0,
+        "total_level": 100,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 100,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -21438,10 +21438,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 1250,
         "exp": 10000,
         "tp_spent": 49,
-        "total_level": 0,
+        "total_level": 100,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 100,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -21461,11 +21461,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 1250,
         "exp": 10000,
         "tp_spent": 49,
-        "total_level": 0,
+        "total_level": 100,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 100,
             "healer_levels": 0
         },
         "description": "+50% MATK, +40% Void DMG, -15 MP, +20% Crit Damage",
@@ -21484,12 +21484,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 1250,
         "exp": 10000,
         "tp_spent": 49,
-        "total_level": 0,
+        "total_level": 100,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 100
         },
         "description": "+45% Heal, +20% DEF, +5% Crit Chance, -10% Threat Bonus",
         "stats": {
@@ -21508,10 +21508,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 1250,
         "exp": 10000,
         "tp_spent": 49,
-        "total_level": 0,
+        "total_level": 100,
         "class_levels": {
-            "tank_levels": 0,
-            "warrior_levels": 0,
+            "tank_levels": 50,
+            "warrior_levels": 50,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -21533,11 +21533,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 1250,
         "exp": 10000,
         "tp_spent": 49,
-        "total_level": 0,
+        "total_level": 100,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 50,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 50,
             "healer_levels": 0
         },
         "description": "+50% MATK, +50% DEF, +15% Void Resist, +20% Crit Damage",
@@ -21557,12 +21557,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 1250,
         "exp": 10000,
         "tp_spent": 49,
-        "total_level": 0,
+        "total_level": 100,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 50,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 50
         },
         "description": "+50% Heal, +75% DEF, +15% Threat Bonus, +5% Crit Chance",
         "stats": {
@@ -21581,11 +21581,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 1250,
         "exp": 10000,
         "tp_spent": 49,
-        "total_level": 0,
+        "total_level": 100,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
-            "caster_levels": 0,
+            "warrior_levels": 50,
+            "caster_levels": 50,
             "healer_levels": 0
         },
         "description": "+60% ATK, +60% MATK, +5% Crit Chance, +20% Crit Damage",
@@ -21605,12 +21605,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 1250,
         "exp": 10000,
         "tp_spent": 49,
-        "total_level": 0,
+        "total_level": 100,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 50,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 50
         },
         "description": "+60% Heal, +40% ATK, -10% Threat Bonus, +30 MP",
         "stats": {
@@ -21628,12 +21628,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 1250,
         "exp": 10000,
         "tp_spent": 49,
-        "total_level": 0,
+        "total_level": 100,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
-            "healer_levels": 0
+            "caster_levels": 50,
+            "healer_levels": 50
         },
         "description": "+50% Heal, +50% MATK, +20% Void Damage, +5% Void Penetration",
         "stats": {
@@ -21652,9 +21652,9 @@ const talent_data: Record<string, Talent> = {
         "gold": 1250,
         "exp": 10000,
         "tp_spent": 49,
-        "total_level": 0,
+        "total_level": 100,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 100,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -21674,10 +21674,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 1250,
         "exp": 10000,
         "tp_spent": 49,
-        "total_level": 0,
+        "total_level": 100,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 100,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -21696,11 +21696,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 1250,
         "exp": 10000,
         "tp_spent": 49,
-        "total_level": 0,
+        "total_level": 100,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 100,
             "healer_levels": 0
         },
         "description": "+40% MATK, +60 MP, +20% Crit Chance",
@@ -21718,12 +21718,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 1250,
         "exp": 10000,
         "tp_spent": 49,
-        "total_level": 0,
+        "total_level": 100,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 100
         },
         "description": "+25% Heal, +50% Holy/Negative Damage, +10% Holy/Negative Penetration",
         "stats": {
@@ -21743,10 +21743,10 @@ const talent_data: Record<string, Talent> = {
         "gold": 1250,
         "exp": 10000,
         "tp_spent": 49,
-        "total_level": 0,
+        "total_level": 100,
         "class_levels": {
-            "tank_levels": 0,
-            "warrior_levels": 0,
+            "tank_levels": 50,
+            "warrior_levels": 50,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -21766,11 +21766,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 1250,
         "exp": 10000,
         "tp_spent": 49,
-        "total_level": 0,
+        "total_level": 100,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 50,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 50,
             "healer_levels": 0
         },
         "description": "+40% MATK, +40% DEF, +30% Void Damage, +5% Void Penetration",
@@ -21790,12 +21790,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 1250,
         "exp": 10000,
         "tp_spent": 49,
-        "total_level": 0,
+        "total_level": 100,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 50,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 50
         },
         "description": "+50% Heal, +30% DEF, +15% Holy/Negative/Void Penetration",
         "stats": {
@@ -21815,11 +21815,11 @@ const talent_data: Record<string, Talent> = {
         "gold": 1250,
         "exp": 10000,
         "tp_spent": 49,
-        "total_level": 0,
+        "total_level": 100,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
-            "caster_levels": 0,
+            "warrior_levels": 50,
+            "caster_levels": 50,
             "healer_levels": 0
         },
         "description": "+75% ATK, +75% MATK, -10% Crit Chance, +75% Crit Damage",
@@ -21839,12 +21839,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 1250,
         "exp": 10000,
         "tp_spent": 49,
-        "total_level": 0,
+        "total_level": 100,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 50,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 50
         },
         "description": "+60% ATK, +30% Heal, +15% Threat Bonus, +30 MP",
         "stats": {
@@ -21862,12 +21862,12 @@ const talent_data: Record<string, Talent> = {
         "gold": 1250,
         "exp": 10000,
         "tp_spent": 49,
-        "total_level": 0,
+        "total_level": 100,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
-            "healer_levels": 0
+            "caster_levels": 50,
+            "healer_levels": 50
         },
         "description": "+60% Heal, 60% MATK, +10% Void/Holy/Negative Penetration",
         "stats": {
@@ -21891,7 +21891,7 @@ const talent_data: Record<string, Talent> = {
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 125,
             "healer_levels": 0
         },
         "description": "+50% MATK, +30 MP, Conversion 20% MP to Crit DMG, 50% Crit Chance to MP",
@@ -21918,7 +21918,7 @@ const talent_data: Record<string, Talent> = {
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 125,
             "healer_levels": 0
         },
         "description": "+50% MATK, +15% Penfire, +15% Global Elefire, +15% Global Fire Damage, Conversion 150% Resfire to MP",
@@ -21947,7 +21947,7 @@ const talent_data: Record<string, Talent> = {
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 125,
             "healer_levels": 0
         },
         "description": "+50% MATK, +10% Penelement, Conversion 60% Elefire to Elemental Damage, 80% Penfire to Crit Damage, -50% Reduction to Elefire",
@@ -21989,7 +21989,7 @@ const talent_data: Record<string, Talent> = {
         "total_level": 125,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 125,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -22016,7 +22016,7 @@ const talent_data: Record<string, Talent> = {
         "total_level": 125,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 125,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -22044,7 +22044,7 @@ const talent_data: Record<string, Talent> = {
         "total_level": 125,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 125,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -22075,7 +22075,7 @@ const talent_data: Record<string, Talent> = {
         "tp_spent": 62,
         "total_level": 125,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 125,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -22102,7 +22102,7 @@ const talent_data: Record<string, Talent> = {
         "tp_spent": 62,
         "total_level": 125,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 125,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -22130,7 +22130,7 @@ const talent_data: Record<string, Talent> = {
         "tp_spent": 62,
         "total_level": 125,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 125,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -22166,7 +22166,7 @@ const talent_data: Record<string, Talent> = {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 125
         },
         "description": "+45% Heal, -15% Global Heal Effect, Conversion 15% Healpower Multiplier to MP",
         "stats": {
@@ -22193,7 +22193,7 @@ const talent_data: Record<string, Talent> = {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 125
         },
         "description": "+35% Heal, Conversion 200% Resfire to Crit Damage, 25% Resfire to Divine Resist. -25% Reduction to Resfire",
         "stats": {
@@ -22210,7 +22210,7 @@ const talent_data: Record<string, Talent> = {
                 "ratio": -0.25,
                 "resulting_stat": "Fire Res%"
             }
-        
+
         ]
     },
     "Saint's Essence of the Flame": {
@@ -22226,7 +22226,7 @@ const talent_data: Record<string, Talent> = {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 125
         },
         "description": "+30% Heal, Conversion 100% Elefire to Eledivine, 100% Penfire to Pendivine",
         "stats": {
@@ -22243,7 +22243,7 @@ const talent_data: Record<string, Talent> = {
                 "ratio": 1.0,
                 "resulting_stat": "pendivine"
             }
-        
+
         ]
     },
     "Mystic Flow of the Seas": {
@@ -22258,7 +22258,7 @@ const talent_data: Record<string, Talent> = {
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 125,
             "healer_levels": 0
         },
         "description": "+50% MATK, +1 MP Regen",
@@ -22279,7 +22279,7 @@ const talent_data: Record<string, Talent> = {
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 125,
             "healer_levels": 0
         },
         "description": "+40% MATK, +10% Penwater, Conversion 70% Elewater to Crit Damage",
@@ -22307,7 +22307,7 @@ const talent_data: Record<string, Talent> = {
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 125,
             "healer_levels": 0
         },
         "description": "+35% MATK, Conversion 200% Reswater to Elemental Damage, -75% Reduction to Reswater",
@@ -22325,7 +22325,7 @@ const talent_data: Record<string, Talent> = {
                 "ratio": -0.75,
                 "resulting_stat": "Water Res%"
             }
-        
+
         ]
     },
     "Warlord's Flow of the Seas": {
@@ -22339,7 +22339,7 @@ const talent_data: Record<string, Talent> = {
         "total_level": 125,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 125,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -22358,7 +22358,7 @@ const talent_data: Record<string, Talent> = {
                 "ratio": -1.0,
                 "resulting_stat": "Water%"
             }
-        
+
         ]
     },
     "Warlord's Wrath of the Seas": {
@@ -22372,7 +22372,7 @@ const talent_data: Record<string, Talent> = {
         "total_level": 125,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 125,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -22399,7 +22399,7 @@ const talent_data: Record<string, Talent> = {
         "total_level": 125,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 125,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -22418,7 +22418,7 @@ const talent_data: Record<string, Talent> = {
                 "ratio": -0.75,
                 "resulting_stat": "Water Res%"
             }
-        
+
         ]
     },
     "Paragon's Flow of the Seas": {
@@ -22431,7 +22431,7 @@ const talent_data: Record<string, Talent> = {
         "tp_spent": 62,
         "total_level": 125,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 125,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -22459,7 +22459,7 @@ const talent_data: Record<string, Talent> = {
         "tp_spent": 62,
         "total_level": 125,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 125,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -22486,7 +22486,7 @@ const talent_data: Record<string, Talent> = {
         "tp_spent": 62,
         "total_level": 125,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 125,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -22506,7 +22506,7 @@ const talent_data: Record<string, Talent> = {
                 "ratio": -0.5,
                 "resulting_stat": "Water Res%"
             }
-        
+
         ]
     },
     "Saint's Flow of the Seas": {
@@ -22522,7 +22522,7 @@ const talent_data: Record<string, Talent> = {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 125
         },
         "description": "+30% Heal, -5% Threat Gained, Conversion 450% MP to HP Regen",
         "stats": {
@@ -22550,7 +22550,7 @@ const talent_data: Record<string, Talent> = {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 125
         },
         "description": "+25% Heal, Conversion 100% Elewater to Crit Damage, -100% Reduction to Elewater",
         "stats": {
@@ -22567,7 +22567,7 @@ const talent_data: Record<string, Talent> = {
                 "ratio": 1.0,
                 "resulting_stat": "Water%"
             }
-        
+
         ]
     },
     "Saint's Embrace of the Seas": {
@@ -22583,7 +22583,7 @@ const talent_data: Record<string, Talent> = {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 125
         },
         "description": "+30% Heal, Conversion 150% Reswater to MP, -50% Reduction to Reswater",
         "stats": {
@@ -22600,7 +22600,7 @@ const talent_data: Record<string, Talent> = {
                 "ratio": -0.5,
                 "resulting_stat": "Water Res%"
             }
-        
+
         ]
     },
     "Mystic Touch of the Storm": {
@@ -22615,7 +22615,7 @@ const talent_data: Record<string, Talent> = {
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 125,
             "healer_levels": 0
         },
         "description": "+30% MATK, +10% Lightning Penetration, Conversion 10% MP to Elelightning, 30% Penlightning to MP",
@@ -22634,7 +22634,7 @@ const talent_data: Record<string, Talent> = {
                 "ratio": 0.3,
                 "resulting_stat": "mp"
             }
-        
+
         ]
     },
     "Mystic Breath of the Wind": {
@@ -22649,7 +22649,7 @@ const talent_data: Record<string, Talent> = {
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 125,
             "healer_levels": 0
         },
         "description": "+25% MATK, +10% Wind Penetration, Conversion 50% Penwind to Elewind, 15% Reswind to Penwind, -50% Reduction to Reswind",
@@ -22673,7 +22673,7 @@ const talent_data: Record<string, Talent> = {
                 "ratio": -0.5,
                 "resulting_stat": "Wind Res%"
             }
-        
+
         ]
     },
     "Mystic Power of the Tempest": {
@@ -22688,7 +22688,7 @@ const talent_data: Record<string, Talent> = {
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 125,
             "healer_levels": 0
         },
         "description": "+35% MATK, +5% Crit Chance, +30% Crit Damage, Conversion 110% Reswind and Reslightning to Crit Damage, -75% Reduction to Reswind and Reslightning",
@@ -22718,7 +22718,7 @@ const talent_data: Record<string, Talent> = {
                 "ratio": -0.75,
                 "resulting_stat": "Wind Res%"
             }
-        
+
         ]
     },
     "Warlord's Touch of the Storm": {
@@ -22732,7 +22732,7 @@ const talent_data: Record<string, Talent> = {
         "total_level": 125,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 125,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -22764,7 +22764,7 @@ const talent_data: Record<string, Talent> = {
         "total_level": 125,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 125,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -22791,7 +22791,7 @@ const talent_data: Record<string, Talent> = {
         "total_level": 125,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 125,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -22817,7 +22817,7 @@ const talent_data: Record<string, Talent> = {
         "tp_spent": 62,
         "total_level": 125,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 125,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -22844,7 +22844,7 @@ const talent_data: Record<string, Talent> = {
         "tp_spent": 62,
         "total_level": 125,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 125,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -22877,7 +22877,7 @@ const talent_data: Record<string, Talent> = {
         "tp_spent": 62,
         "total_level": 125,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 125,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -22913,7 +22913,7 @@ const talent_data: Record<string, Talent> = {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 125
         },
         "description": "+35% Heal, Conversion 50% Elelightning to MP and Crit Damage, -100% Reduction to Elelightning",
         "stats": {
@@ -22945,7 +22945,7 @@ const talent_data: Record<string, Talent> = {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 125
         },
         "description": "+10% Heal, -30% Threat Bonus, Conversion 50% Elewind to Crit Chance, 75% Elewind to Crit Damage, -100% Reduction to Crit Chance/Damage and Elewind",
         "stats": {
@@ -22978,7 +22978,7 @@ const talent_data: Record<string, Talent> = {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 125
         },
         "description": "+15% Heal, +100% Threat Bonus, +20% Global Heal Effect",
         "stats": {
@@ -22999,7 +22999,7 @@ const talent_data: Record<string, Talent> = {
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 125,
             "healer_levels": 0
         },
         "description": "+30% MATK, +5% Void Penetration, Conversion 110% Void Penetration to Elevoid",
@@ -23027,7 +23027,7 @@ const talent_data: Record<string, Talent> = {
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 125,
             "healer_levels": 0
         },
         "description": "+30% MATK, +10% Pentoxic, Conversion 200% Restoxic to Eletoxic, 1500% Eletoxic to MATK, -75% Reduction to Restoxic",
@@ -23065,7 +23065,7 @@ const talent_data: Record<string, Talent> = {
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 125,
             "healer_levels": 0
         },
         "description": "+35% MATK, +10% Earth Penetration, Conversion 2000% Eleearth to DEF, 150% Researth to Eleearth, -75% Reduction to Researth",
@@ -23102,7 +23102,7 @@ const talent_data: Record<string, Talent> = {
         "total_level": 125,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 125,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -23136,7 +23136,7 @@ const talent_data: Record<string, Talent> = {
         "total_level": 125,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 125,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -23163,7 +23163,7 @@ const talent_data: Record<string, Talent> = {
         "total_level": 125,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 125,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -23194,7 +23194,7 @@ const talent_data: Record<string, Talent> = {
         "tp_spent": 62,
         "total_level": 125,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 125,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -23233,7 +23233,7 @@ const talent_data: Record<string, Talent> = {
         "tp_spent": 62,
         "total_level": 125,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 125,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -23262,7 +23262,7 @@ const talent_data: Record<string, Talent> = {
         "tp_spent": 62,
         "total_level": 125,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 125,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -23303,7 +23303,7 @@ const talent_data: Record<string, Talent> = {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 125
         },
         "description": "+35% Heal, +20% Threat Bonus, Conversion 50% Elevoid to MP, 90% Elevoid to Eledivine",
         "stats": {
@@ -23331,7 +23331,7 @@ const talent_data: Record<string, Talent> = {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 125
         },
         "description": "+20% Heal, -85% Global Damage Reduction, +20% Global Healpower, +10% Global Healing Modifier",
         "stats": {
@@ -23352,7 +23352,7 @@ const talent_data: Record<string, Talent> = {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 125
         },
         "description": "+15% Heal, Conversion 20% Researth to Physical and Elemental Resists, 3000% Researth to Max HP, Conversion 5% Healpower to DEF, -75% Reduction to Researth",
         "stats": {
@@ -23388,7 +23388,7 @@ const talent_data: Record<string, Talent> = {
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 125,
             "healer_levels": 0
         },
         "description": "+25% MATK, +5% Elemental and Void Penetration, +10% Global Elevoid, Conversion 100% Elevoid to Elemental Damage",
@@ -23422,7 +23422,7 @@ const talent_data: Record<string, Talent> = {
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 125,
             "healer_levels": 0
         },
         "description": "+25% MATK, +10% Pennegative, Conversion 20% Elenegative to Crit Damage, 15% Crit Damage to Elenegative",
@@ -23450,7 +23450,7 @@ const talent_data: Record<string, Talent> = {
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
-            "caster_levels": 0,
+            "caster_levels": 125,
             "healer_levels": 0
         },
         "description": "+35% MATK, +5% Penholy, +10% Eleholy, Conversion 35% ATK Multiplier to Eleholy",
@@ -23478,7 +23478,7 @@ const talent_data: Record<string, Talent> = {
         "total_level": 125,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 125,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -23506,7 +23506,7 @@ const talent_data: Record<string, Talent> = {
         "total_level": 125,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 125,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -23541,7 +23541,7 @@ const talent_data: Record<string, Talent> = {
         "total_level": 125,
         "class_levels": {
             "tank_levels": 0,
-            "warrior_levels": 0,
+            "warrior_levels": 125,
             "caster_levels": 0,
             "healer_levels": 0
         },
@@ -23575,7 +23575,7 @@ const talent_data: Record<string, Talent> = {
         "tp_spent": 62,
         "total_level": 125,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 125,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -23602,7 +23602,7 @@ const talent_data: Record<string, Talent> = {
         "tp_spent": 62,
         "total_level": 125,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 125,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -23631,7 +23631,7 @@ const talent_data: Record<string, Talent> = {
         "tp_spent": 62,
         "total_level": 125,
         "class_levels": {
-            "tank_levels": 0,
+            "tank_levels": 125,
             "warrior_levels": 0,
             "caster_levels": 0,
             "healer_levels": 0
@@ -23662,7 +23662,7 @@ const talent_data: Record<string, Talent> = {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 125
         },
         "description": "+35% Heal, +5% Crit Chance, +20% MP, Conversion 40% MP to Elevoid, 3% MP to Penvoid",
         "stats": {
@@ -23690,7 +23690,7 @@ const talent_data: Record<string, Talent> = {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 125
         },
         "description": "+10% Heal, +10% Pennegative, Conversion 15% Elenegative to Crit Damage",
         "stats": {
@@ -23718,7 +23718,7 @@ const talent_data: Record<string, Talent> = {
             "tank_levels": 0,
             "warrior_levels": 0,
             "caster_levels": 0,
-            "healer_levels": 0
+            "healer_levels": 125
         },
         "description": "+15% Heal,  -10% Global Heal Effect, +20% Eleholy, Conversion 15% Max HP to Heal, 1000% Eleholy to Heal",
         "stats": {
@@ -35244,11 +35244,11 @@ const statSet = new Set<string>()
 const convSet = new Set<string>()
 
 for (const entry of Object.values(talent_data)) {
-  Object.keys(entry.stats).forEach(stat => statSet.add(stat))
-  entry.conversions.forEach(conv => {
-    convSet.add(conv.source)
-    convSet.add(conv.resulting_stat)
-  })
+    Object.keys(entry.stats).forEach(stat => statSet.add(stat))
+    entry.conversions.forEach(conv => {
+        convSet.add(conv.source)
+        convSet.add(conv.resulting_stat)
+    })
 }
 
 // inject precomputed widths
