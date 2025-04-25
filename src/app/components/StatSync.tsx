@@ -4,6 +4,9 @@
 import { useEffect } from "react"
 import { talent_data } from "@/app/data/talent_data"
 
+
+// Stage 1 of Stat Pipeline
+
 export function computeTalentStats() {
   console.log("Updating Talent Stats")
   const raw = localStorage.getItem("selectedTalents")
@@ -59,8 +62,66 @@ export function computeEquipmentStats() {
     console.error("Failed to compute equipment stats", e)
   }
 }
+// Combine all of stage 1
+export function computeBaseStats() {
+  console.log("Updating Base Stats")
+  const rawStatsTalents = localStorage.getItem("StatsTalents")
+  const rawStatsEquipment = localStorage.getItem("StatsEquipment")
+  if (!rawStatsTalents || !rawStatsEquipment) return
 
+  const StatsTalents: Record<string, number> = JSON.parse(rawStatsTalents)
+  const StatsEquipment: Record<string, number> = JSON.parse(rawStatsEquipment)
+  const StatsBase: Record<string, number> = {}
+  
+  for (const [stat, value] of Object.entries(StatsTalents)) {
+    StatsBase[stat] = (StatsBase[stat] || 0) + value
+  }
+  for (const [stat, value] of Object.entries(StatsEquipment)) {
+    StatsBase[stat] = (StatsBase[stat] || 0) + value
+  }
 
+  localStorage.setItem("StatsBase", JSON.stringify(StatsBase))
+  console.log(StatsBase)
+}
+
+// Stage 2 of stat pipeline
+
+export function computexPenStats() {
+  console.log("Updating xPen Stats")
+  const rawStatsBase = localStorage.getItem("StatsBase")
+  if (!rawStatsBase) return
+
+  const StatsBase: Record<string, number> = JSON.parse(rawStatsBase)
+  const StatsXPen: Record<string, number> = {}
+  
+  const xPenMapping: Record<string, string[]> = {
+    "Phys xPen%": ["Blunt Pen%", "Pierce Pen%", "Slash Pen%"],
+    "Divine xPen%": ["Neg Pen%", "Holy Pen%"],
+    "Void xPen%": ["Void Pen%"],
+    "Elemental xPen%": ["Fire Pen%", "Water Pen%", "Lightning Pen%", "Wind Pen%", "Earth Pen%", "Toxic Pen%"]
+  }
+
+  for (const [xPenStat, affectedStats] of Object.entries(xPenMapping)) {
+    const multiplier = (StatsBase[xPenStat] ?? 0)
+    for (const stat of affectedStats) {
+      StatsXPen[stat] = (StatsBase[stat] ?? 0) * multiplier
+    }
+  }
+
+  localStorage.setItem("StatsXPen", JSON.stringify(StatsXPen))
+  console.log(StatsXPen)
+}
+
+// Combine all of stage 2
+export function computeConversionReadyStats() {
+  console.log("Updating Conversion Ready Stats")
+  const rawStatsXPen = localStorage.getItem("StatsXPen")
+  if (!rawStatsXPen) return
+  localStorage.setItem("StatsConversionReady", rawStatsXPen)
+  console.log(rawStatsXPen)
+}
+
+// Stage 3 of stat pipeline
 export function computeConversionStats() {
   console.log("Updating Conversion Stats")
 
@@ -89,7 +150,7 @@ export function computeConversionStats() {
   } catch {}
 }
 
-
+// Tie all stats together
 export function computeDmgReadyStats() {
   console.log("Updating Dmg Ready Stats")
   const raw = localStorage.getItem("StatsTalents")
@@ -123,19 +184,29 @@ export function computeDmgReadyStats() {
 export default function StatSync() {
   useEffect(() => {   //Run once on mount
     // Add custom event listeners for stat updates
+    //Stage 1
     window.addEventListener("talentsUpdated", computeTalentStats)
-    window.addEventListener("talentsUpdated", computeConversionStats)
-    window.addEventListener("talentsUpdated", computeDmgReadyStats)
-
     window.addEventListener("equipmentUpdated", computeEquipmentStats)
+    window.addEventListener("computeBaseStats", computeBaseStats)
+    //Stage 2
+    window.addEventListener("computexPenStats", computexPenStats)
+    window.addEventListener("computexPenStats", computeConversionReadyStats)
+    //Stage 3
+    window.addEventListener("talentsUpdated", computeConversionStats)
+    //Stage 4
+    
+    //Final Stats
+    window.addEventListener("talentsUpdated", computeDmgReadyStats)
 
     // Clean up listeners for when unmounted (to prevent multiple updates)
     return () => {
       window.removeEventListener("talentsUpdated", computeTalentStats)
+      window.removeEventListener("equipmentUpdated", computeEquipmentStats)
+      window.removeEventListener("computeBaseStats", computeBaseStats)
+      window.removeEventListener("computexPenStats", computexPenStats)
+      window.removeEventListener("computexPenStats", computeConversionReadyStats)
       window.removeEventListener("talentsUpdated", computeConversionStats)
       window.removeEventListener("talentsUpdated", computeDmgReadyStats)
-
-      window.addEventListener("equipmentUpdated", computeEquipmentStats)
     }
   }, [])
   return null

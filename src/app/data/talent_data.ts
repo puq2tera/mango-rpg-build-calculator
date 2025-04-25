@@ -9667,7 +9667,10 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+1% Global ATK, +5% xPhys Pen",
-        "stats": {},
+        "stats": {
+            "Global ATK%": 0.01,
+            "Phys xPen%": 0.05
+        },
         "conversions": []
     },
     "Abyssal Light of Spirit": {

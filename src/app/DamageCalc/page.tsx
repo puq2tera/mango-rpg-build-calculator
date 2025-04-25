@@ -11,6 +11,10 @@ export default function DamageCalc() {
 
   useEffect(() => {
     window.dispatchEvent(new Event("talentsUpdated"))
+    window.dispatchEvent(new Event("equipmentUpdated"))
+    window.dispatchEvent(new Event("computeBaseStats"))
+    window.dispatchEvent(new Event("computexPenStats"))
+    
     const raw = localStorage.getItem("StatsDmgReady")
     if (raw) {
       try {
