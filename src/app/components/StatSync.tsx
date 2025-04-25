@@ -64,6 +64,8 @@ export function computeEquipmentStats() {
 }
 // Combine all of stage 1
 export function computeBaseStats() {
+  computeTalentStats()
+  computeEquipmentStats()
   console.log("Updating Base Stats")
   const rawStatsTalents = localStorage.getItem("StatsTalents")
   const rawStatsEquipment = localStorage.getItem("StatsEquipment")
@@ -114,15 +116,31 @@ export function computexPenStats() {
 
 // Combine all of stage 2
 export function computeConversionReadyStats() {
+  computeBaseStats()
+  computexPenStats()
   console.log("Updating Conversion Ready Stats")
   const rawStatsXPen = localStorage.getItem("StatsXPen")
-  if (!rawStatsXPen) return
-  localStorage.setItem("StatsConversionReady", rawStatsXPen)
-  console.log(rawStatsXPen)
+  const rawStatsBase = localStorage.getItem("StatsTalents")
+  if (!rawStatsXPen || !rawStatsBase) return
+
+  const StatsXPen: Record<string, number> = JSON.parse(rawStatsXPen)
+  const StatsTalents: Record<string, number> = JSON.parse(rawStatsBase)
+  const StatsConversionReady: Record<string, number> = {}
+
+  for (const [stat, value] of Object.entries(StatsXPen)) {
+    StatsConversionReady[stat] = (StatsConversionReady[stat] || 0) + value
+  }
+  for (const [stat, value] of Object.entries(StatsTalents)) {
+    StatsConversionReady[stat] = (StatsConversionReady[stat] || 0) + value
+  }
+
+  localStorage.setItem("StatsConversionReady", JSON.stringify(StatsConversionReady))
+  console.log(StatsConversionReady)
 }
 
 // Stage 3 of stat pipeline
 export function computeConversionStats() {
+  computeConversionReadyStats()
   console.log("Updating Conversion Stats")
 
   const rawSelected = localStorage.getItem("selectedTalents")
@@ -152,6 +170,7 @@ export function computeConversionStats() {
 
 // Tie all stats together
 export function computeDmgReadyStats() {
+  computeConversionStats()
   console.log("Updating Dmg Ready Stats")
   const raw = localStorage.getItem("StatsTalents")
   if (!raw) return
@@ -196,7 +215,7 @@ export default function StatSync() {
     //Stage 4
     
     //Final Stats
-    window.addEventListener("talentsUpdated", computeDmgReadyStats)
+    window.addEventListener("computeDmgReadyStats", computeDmgReadyStats)
 
     // Clean up listeners for when unmounted (to prevent multiple updates)
     return () => {
@@ -206,7 +225,7 @@ export default function StatSync() {
       window.removeEventListener("computexPenStats", computexPenStats)
       window.removeEventListener("computexPenStats", computeConversionReadyStats)
       window.removeEventListener("talentsUpdated", computeConversionStats)
-      window.removeEventListener("talentsUpdated", computeDmgReadyStats)
+      window.removeEventListener("computeDmgReadyStats", computeDmgReadyStats)
     }
   }, [])
   return null

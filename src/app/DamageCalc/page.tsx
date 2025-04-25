@@ -10,11 +10,7 @@ export default function DamageCalc() {
   const [stats, setStats] = useState<Record<string, number>>({})
 
   useEffect(() => {
-    window.dispatchEvent(new Event("talentsUpdated"))
-    window.dispatchEvent(new Event("equipmentUpdated"))
-    window.dispatchEvent(new Event("computeBaseStats"))
-    window.dispatchEvent(new Event("computexPenStats"))
-    
+    window.dispatchEvent(new Event("computeDmgReadyStats"))
     const raw = localStorage.getItem("StatsDmgReady")
     if (raw) {
       try {
