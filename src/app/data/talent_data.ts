@@ -6271,7 +6271,8 @@ const talent_data: Record<string, Talent> = {
         "description": "+25% Blunt Damage, +15% ATK, +5% Blunt Penetration",
         "stats": {
             "ATK%": 0.15,
-            "Blunt%": 0.25
+            "Blunt%": 0.25,
+            "Blunt Pen%": 0.05
         },
         "conversions": []
     },
@@ -6996,7 +6997,8 @@ const talent_data: Record<string, Talent> = {
         "description": "+30% Blunt Damage, +15% ATK, +5% Blunt Penetration",
         "stats": {
             "ATK%": 0.15,
-            "Blunt%": 0.3
+            "Blunt%": 0.3,
+            "Blunt Pen%": 0.05
         },
         "conversions": []
     },
@@ -7739,7 +7741,8 @@ const talent_data: Record<string, Talent> = {
         "description": "+35% Blunt Damage, +15% ATK, +5% Blunt Penetration",
         "stats": {
             "ATK%": 0.15,
-            "Blunt%": 0.35
+            "Blunt%": 0.35,
+            "Blunt Pen%": 0.05
         },
         "conversions": []
     },
@@ -8483,7 +8486,8 @@ const talent_data: Record<string, Talent> = {
         "description": "+35% Blunt Damage, +15% ATK, +5% Blunt Penetration",
         "stats": {
             "ATK%": 0.15,
-            "Blunt%": 0.35
+            "Blunt%": 0.35,
+            "Blunt Pen%": 0.05
         },
         "conversions": []
     },
@@ -9022,7 +9026,8 @@ const talent_data: Record<string, Talent> = {
         "description": "+35% Blunt Damage, +15% ATK, +5% Blunt Penetration",
         "stats": {
             "ATK%": 0.15,
-            "Blunt%": 0.35
+            "Blunt%": 0.35,
+            "Blunt Pen%": 0.05
         },
         "conversions": []
     },
@@ -9087,7 +9092,8 @@ const talent_data: Record<string, Talent> = {
         "description": "+15% Blunt Damage, +15% ATK, +5% Blunt Penetration",
         "stats": {
             "ATK%": 0.15,
-            "Blunt%": 0.15
+            "Blunt%": 0.15,
+            "Blunt Pen%": 0.05
         },
         "conversions": []
     },
@@ -22026,7 +22032,9 @@ const talent_data: Record<string, Talent> = {
         "description": "+30% ATK, +5% Crit Chance, +15% Global Fist Damage, +5% Global Blunt Penetration. Conversion 50% Penslash to Penblunt.",
         "stats": {
             "Crit Chance%": 0.05,
-            "ATK%": 0.55
+            "ATK%": 0.30,
+            "Global Fist%": 0.15,
+            "Global Blunt Pen%": 0.05
         },
         "conversions": [
             {
@@ -23145,7 +23153,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+30% ATK, +15% Global Hammer Damage, +10% Global Blunt Penetration, Conversion 120% Penearth to Penblunt",
         "stats": {
-            "ATK%": 0.3
+            "ATK%": 0.3,
+            "Global Hammer%": 0.15,
+            "Global Blunt Pen%": 0.1
         },
         "conversions": [
             {
@@ -23338,7 +23348,10 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% Heal, -85% Global Damage Reduction, +20% Global Healpower, +10% Global Healing Modifier",
         "stats": {
-            "HEAL%": 0.1
+            "HEAL%": 0.2,
+            "Global Healpower%": 0.2,
+            "Global Healing Modifier%": 0.1,
+            "Global Damage Reduction%": -0.85
         },
         "conversions": []
     },
@@ -23403,7 +23416,8 @@ const talent_data: Record<string, Talent> = {
             "Wind Pen%": 0.05,
             "Earth Pen%": 0.05,
             "Toxic Pen%": 0.05,
-            "Void Pen%": 0.05
+            "Void Pen%": 0.05,
+            "Global Void%": 0.1
         },
         "conversions": [
             {
@@ -23726,7 +23740,8 @@ const talent_data: Record<string, Talent> = {
         "description": "+15% Heal,  -10% Global Heal Effect, +20% Eleholy, Conversion 15% Max HP to Heal, 1000% Eleholy to Heal",
         "stats": {
             "HEAL%": 0.15,
-            "Holy%": 0.2
+            "Holy%": 0.2,
+            "Global Heal Effect%": -0.1
         },
         "conversions": [
             {
@@ -24118,7 +24133,10 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+5 MP, '+20 MATK, +5% MATK, +1% Global Damage",
         "stats": {
-            "MATK%": 0.05
+            "MATK%": 0.05,
+            "MP": 5,
+            "MATK": 20,
+            "Global Damage%": 0.01,
         },
         "conversions": []
     },
@@ -29159,7 +29177,9 @@ const talent_data: Record<string, Talent> = {
         "description": "+15 ATK, +8% Slash/Blunt Damage, +4% Slash/Blunt Penetration",
         "stats": {
             "Slash%": 0.08,
-            "Blunt%": 0.08
+            "Blunt%": 0.08,
+            "Slash Pen%": 0.04,
+            "Blunt Pen%": 0.04
         },
         "conversions": []
     },
@@ -29293,7 +29313,9 @@ const talent_data: Record<string, Talent> = {
         "description": "+35% ATK, +10% DEF, +6% Slash/Blunt Penetration",
         "stats": {
             "DEF%": 0.1,
-            "ATK%": 0.35
+            "ATK%": 0.35,
+            "Slash Pen%": 0.06,
+            "Blunt Pen%": 0.06
         },
         "conversions": []
     },
@@ -29358,7 +29380,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+30% ATK, +12% Slash/Blunt Penetration",
         "stats": {
-            "ATK%": 0.3
+            "ATK%": 0.3,
+            "Slash Pen%": 0.12,
+            "Blunt Pen%": 0.12
         },
         "conversions": []
     },
@@ -34447,7 +34471,8 @@ const talent_data: Record<string, Talent> = {
         "description": "+25% ATK, +40% DEF, +12% Blunt Penetration",
         "stats": {
             "DEF%": 0.4,
-            "ATK%": 0.25
+            "ATK%": 0.25,
+            "Blunt Pen%": 0.12
         },
         "conversions": []
     },
