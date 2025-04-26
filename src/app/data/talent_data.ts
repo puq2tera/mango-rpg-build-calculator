@@ -18262,7 +18262,9 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 175
         },
         "description": "+5% Global Heal & HP Regen Rate, +3 MP Regen, -33% Global Damage",
-        "stats": {},
+        "stats": {
+            "Global Healpower%": 0.05,
+        },
         "conversions": []
     },
     "Soul Core of Azago'toth": {
@@ -18282,7 +18284,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+5% Global Heal, +15% Global Max Health, +300% Threat Generated",
         "stats": {
-            "Threat%": 3.0
+            "Threat%": 3.0,
+            "Global Healpower%": 0.05,
+            "Global HP%": 0.15
         },
         "conversions": []
     },
@@ -18302,7 +18306,11 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 175
         },
         "description": "+50% Global Heal, -75% Buff Multiplier, -75% Global Heal Effect",
-        "stats": {},
+        "stats": {
+            "Global Healpower%": 0.5,
+            "Buff Multiplier%": -0.75,
+            "Global Healing%": -0.75
+        },
         "conversions": []
     },
     "Sealed Core of Azago'toth": {
@@ -18322,7 +18330,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+3% Global Heal, +3% Buff Multiplier, +33% Crit Damage",
         "stats": {
-            "Crit DMG%": 0.33
+            "Crit DMG%": 0.33,
+            "Global Healpower%": 0.03,
+            "Buff Multiplier%": 0.03
         },
         "conversions": []
     },
@@ -20798,7 +20808,9 @@ const talent_data: Record<string, Talent> = {
         "description": "+40% MATK, +20% Void DMG, +15% Global MATK, -20% Max MP",
         "stats": {
             "MATK%": 0.4,
-            "Void%": 0.2
+            "Void%": 0.2,
+            "Global MATK%": 0.15,
+            "MP%": -0.2
         },
         "conversions": []
     },
@@ -21934,7 +21946,8 @@ const talent_data: Record<string, Talent> = {
         "stats": {
             "MATK%": 0.5,
             "Fire Pen%": 0.15,
-            "Fire Skill%": 0.15
+            "Global Fire%": 0.15,
+            "Global Fire DMG%": 0.15
         },
         "conversions": [
             {
@@ -22061,7 +22074,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+50% ATK, +5% Penslash, +15% Global Sword Damage, Conversion 110% Penfire to Penslash, 50% Elefire to Eleslash.",
         "stats": {
-            "ATK%": 0.5
+            "ATK%": 0.5,
+            "Global Sword%": 0.15,
+            "Pen Slash%": 0.05
         },
         "conversions": [
             {
@@ -22181,13 +22196,14 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+45% Heal, -15% Global Heal Effect, Conversion 15% Healpower Multiplier to MP",
         "stats": {
-            "HEAL%": 0.45
+            "HEAL%": 0.45,
+            "Global Healing%": -0.15
         },
         "conversions": [
             {
                 "source": "Healpower Multiplier",
                 "ratio": 0.15,
-                "resulting_stat": "mp"
+                "resulting_stat": "MP"
             }
         ]
     },
@@ -22749,13 +22765,19 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+25% ATK, +20% Global Dagger Damage, Conversion 90% Elelightning to Eleslash, 90% Elelightning to Crit Damage, -100% Reduction to Elelightning",
         "stats": {
-            "ATK%": 0.25
+            "ATK%": 0.25,
+            "Global Dagger%": 0.2
         },
         "conversions": [
             {
                 "source": "Lightning%",
                 "ratio": 0.9,
                 "resulting_stat": "Slash%"
+            },
+            {
+                "source": "Lightning%",
+                "ratio": 0.9,
+                "resulting_stat": "Crit DMG%"
             },
             {
                 "source": "Lightning%",
@@ -22781,13 +22803,19 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+30% ATK, +25% Global Pierce Penetration, Conversion 120% Penwind to Penpierce, 8% ATK Multiplier to Elepierce",
         "stats": {
-            "ATK%": 0.3
+            "ATK%": 0.3,
+            "Global Pierce Pen%": 0.25
         },
         "conversions": [
             {
                 "source": "Wind Pen%",
                 "ratio": 1.2,
                 "resulting_stat": "Pierce Pen%"
+            },
+            {
+                "source": "ATK Multiplier",
+                "ratio": 0.08,
+                "resulting_stat": "Pierce%"
             }
         ]
     },
@@ -22994,7 +23022,8 @@ const talent_data: Record<string, Talent> = {
         "description": "+15% Heal, +100% Threat Bonus, +20% Global Heal Effect",
         "stats": {
             "HEAL%": 0.15,
-            "Threat%": 1.0
+            "Threat%": 1.0,
+            "Global Healing%": 0.2
         },
         "conversions": []
     },
@@ -23350,8 +23379,8 @@ const talent_data: Record<string, Talent> = {
         "stats": {
             "HEAL%": 0.2,
             "Global Healpower%": 0.2,
-            "Global Healing Modifier%": 0.1,
-            "Global Damage Reduction%": -0.85
+            "Global Healing%": 0.1,
+            "Global DMG Reduction%": -0.85
         },
         "conversions": []
     },
@@ -23741,7 +23770,7 @@ const talent_data: Record<string, Talent> = {
         "stats": {
             "HEAL%": 0.15,
             "Holy%": 0.2,
-            "Global Heal Effect%": -0.1
+            "Global Healing%": -0.1
         },
         "conversions": [
             {
@@ -24136,7 +24165,7 @@ const talent_data: Record<string, Talent> = {
             "MATK%": 0.05,
             "MP": 5,
             "MATK": 20,
-            "Global Damage%": 0.01,
+            "Global DMG%": 0.01,
         },
         "conversions": []
     },
@@ -24200,7 +24229,9 @@ const talent_data: Record<string, Talent> = {
         "description": "+30% MATK, +10 MP, +25% Water Resist, +1% Global Damage",
         "stats": {
             "MATK%": 0.3,
-            "Water Res%": 0.25
+            "Water Res%": 0.25,
+            "MP": 10,
+            "Global DMG%": 0.01
         },
         "conversions": []
     },
@@ -24264,7 +24295,8 @@ const talent_data: Record<string, Talent> = {
         "description": "+35% MATK, +15% Crit Damage, +25% Lightning Resist, +2% Global Damage",
         "stats": {
             "MATK%": 0.35,
-            "Lightning Res%": 0.25
+            "Lightning Res%": 0.25,
+            "Global DMG%": 0.02
         },
         "conversions": []
     },
