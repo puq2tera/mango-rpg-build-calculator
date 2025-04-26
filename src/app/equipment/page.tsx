@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { __allStatNames } from "@/app/data/talent_data"
+import stat_data from "../data/stat_data"
 
 interface Affix {
   stat: string
@@ -98,7 +99,6 @@ export default function EquipmentPage() {
   }
 
   const typeOptions = ["Helm", "Armor", "Amulet", "Ring", "Weapon", "Runeshard", "Tarot"]
-  const statOptions = ["ATK", "DEF", "MATK", "HEAL"]
 
   return (
     <div className="p-4 space-y-4">
@@ -147,7 +147,7 @@ export default function EquipmentPage() {
                     onClick={e => e.stopPropagation()}
                   >
                     <option value="">Main Stat</option>
-                    {statOptions.map(option => (
+                    {stat_data.Mainstats.map(option => (
                       <option key={option} value={option}>{option}</option>
                     ))}
                   </select>

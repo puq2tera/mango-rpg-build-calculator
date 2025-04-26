@@ -3,6 +3,7 @@
 
 import { useEffect } from "react"
 import { talent_data } from "@/app/data/talent_data"
+import stat_data from "../data/stat_data"
 
 
 // Stage 1 of Stat Pipeline
@@ -95,15 +96,8 @@ export function computexPenStats() {
 
   const StatsBase: Record<string, number> = JSON.parse(rawStatsBase)
   const StatsXPen: Record<string, number> = {}
-  
-  const xPenMapping: Record<string, string[]> = {
-    "Phys xPen%": ["Blunt Pen%", "Pierce Pen%", "Slash Pen%"],
-    "Divine xPen%": ["Neg Pen%", "Holy Pen%"],
-    "Void xPen%": ["Void Pen%"],
-    "Elemental xPen%": ["Fire Pen%", "Water Pen%", "Lightning Pen%", "Wind Pen%", "Earth Pen%", "Toxic Pen%"]
-  }
 
-  for (const [xPenStat, affectedStats] of Object.entries(xPenMapping)) {
+  for (const [xPenStat, affectedStats] of Object.entries(stat_data.xPenMapping)) {
     const multiplier = (StatsBase[xPenStat] ?? 0)
     for (const stat of affectedStats) {
       StatsXPen[stat] = (StatsBase[stat] ?? 0) * multiplier
@@ -179,17 +173,15 @@ export function computeDmgReadyStats() {
     const stats: Record<string, number> = JSON.parse(raw)
     const result: Record<string, number> = {}
 
-    const baseStats = ["ATK", "DEF", "MATK", "HEAL"]
-    const elements = ["Slash%", "Pierce%", "Blunt%", "Fire%", "Water%", "Lightning%", "Wind%", "Earth%", "Toxic%", "Neg%", "Holy%", "Void%"]
-
-    for (const stat of baseStats) {
+    // Mainstats
+    for (const stat of stat_data.Mainstats) {
       const base = stats[stat] ?? 0
       const multiplier = stats[`${stat}%`] ?? 0
       result[stat] = base * (1 + multiplier)
     }
 
-    for (const stat of elements) {
-      result[stat] = stats[stat]
+    for (const stat of stat_data.AllElements) {
+      result[stat] = stats[`${stat_data.AllElements}%`]
     }
 
     localStorage.setItem("StatsDmgReady", JSON.stringify(result))

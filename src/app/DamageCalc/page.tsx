@@ -1,10 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
-
-const Mainstats = ["ATK", "DEF", "HEAL", "MATK"]
-const elements = ["Slash", "Pierce", "Blunt", "Fire", "Water", "Lightning", "Wind", "Earth", "Toxic", "Neg", "Holy", "Void"]
-const skills = ["Sword", "Spear", "Void", "Fire", "Shadow Break"]
+import stat_data from "../data/stat_data"
 
 export default function DamageCalc() {
   const [stats, setStats] = useState<Record<string, number>>({})
@@ -72,24 +69,24 @@ export default function DamageCalc() {
         <div className="space-y-2">
           <label className="font-semibold">Primary Stat</label>
           <select value={mainStat} onChange={e => setMainStat(e.target.value)} className="w-full p-1 border rounded">
-            {Mainstats.map(s => <option key={s}>{s}</option>)}
+            {stat_data.Mainstats.map(s => <option key={s}>{s}</option>)}
           </select>
 
           <label className="font-semibold">Element</label>
           <select value={element} onChange={e => setElement(e.target.value)} className="w-full p-1 border rounded">
-            {elements.map(e => <option key={e}>{e}</option>)}
+            {stat_data.AllElements.map(e => <option key={e}>{e}</option>)}
           </select>
 
           <label className="font-semibold">Pen Element</label>
           <select value={penElement} onChange={e => setPenElement(e.target.value)} className="w-full p-1 border rounded">
-            {elements.map(e => <option key={e}>{e}</option>)}
+            {stat_data.AllElements.map(e => <option key={e}>{e}</option>)}
           </select>
         </div>
 
         <div className="space-y-2">
           <label className="font-semibold">Skill Type</label>
           <select value={skillType} onChange={e => setSkillType(e.target.value)} className="w-full p-1 border rounded">
-            {skills.map(s => <option key={s}>{s}</option>)}
+            {stat_data.SkillTypes.map(s => <option key={s}>{s}</option>)}
           </select>
 
           <label className="font-semibold">Skill DMG%</label>
@@ -124,7 +121,7 @@ export default function DamageCalc() {
         <div className="space-y-2">
           <label className="font-semibold">2nd Stat</label>
           <select value={secondStat} onChange={e => setSecondStat(e.target.value)} className="w-full p-1 border rounded">
-            {Mainstats.map(s => <option key={s}>{s}</option>)}
+            {stat_data.Mainstats.map(s => <option key={s}>{s}</option>)}
           </select>
 
           <label className="font-semibold">2nd Skill DMG%</label>
