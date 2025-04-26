@@ -90,7 +90,7 @@ export default function DamageCalc() {
           </select>
 
           <label className="font-semibold">Skill DMG%</label>
-          <input type="number" onChange={e => handleChange("skillDmg", +e.target.value)} className="w-full p-1 border rounded" />
+          <input type="number" defaultValue={0.5} onChange={e => handleChange("skillDmg", +e.target.value)} className="w-full p-1 border rounded" />
 
           <label className="font-semibold">Skill Crit DMG%</label>
           <input type="number" onChange={e => handleChange("skillCritDmg", +e.target.value)} className="w-full p-1 border rounded" />

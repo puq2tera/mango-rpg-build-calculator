@@ -26,6 +26,41 @@ export function computeTalentStats() {
   } catch {}
 }
 
+export function computeLevelStats() {
+  console.log("Updating Level Stats")
+  const rawstoredLevels = localStorage.getItem('SelectedLevels')
+  const rawstoredStatPoints = localStorage.getItem('SelectedStatPoints')
+  const rawstoredTraining = localStorage.getItem('SelectedTraining')
+  const rawstoredHeroPoints = localStorage.getItem('SelectedHeroPoints')
+  if (!rawstoredLevels || !rawstoredStatPoints || !rawstoredTraining || !rawstoredHeroPoints) return
+  const storedLevels: Record<string, number> = JSON.parse(rawstoredLevels)
+  const storedStatPoints: Record<string, number> = JSON.parse(rawstoredStatPoints)
+  const storedTraining: Record<string, number> = JSON.parse(rawstoredTraining)
+  const storedHeroPoints: Record<string, number> = JSON.parse(rawstoredHeroPoints)
+
+  const StatsLevels: Record<string, number> = {}
+
+  // console.log(storedLevels)
+  // console.log(storedStatPoints)
+  // console.log(storedTraining)
+  // console.log(storedHeroPoints)
+
+  // Mainstats
+  for (const stat of stat_data.Mainstats) {
+    StatsLevels[stat] = 5 + storedStatPoints[stat] + (4 * storedTraining[stat])
+    for (const ClassName of stat_data.ClassNames) {
+      StatsLevels[stat] = StatsLevels[stat] + storedLevels[ClassName]*stat_data.ClassMainStatValues[ClassName][stat]
+    }
+  }
+
+  //TODO: HEROPOINT CALULATIONS
+
+
+  localStorage.setItem("StatsLevels", JSON.stringify(StatsLevels))
+  console.log(StatsLevels)
+}
+
+
 export function computeEquipmentStats() {
   console.log("Updating Equipment Stats")
   const rawSlots = localStorage.getItem("EquipmentSlots")
@@ -65,21 +100,28 @@ export function computeEquipmentStats() {
 }
 // Combine all of stage 1
 export function computeBaseStats() {
+  computeLevelStats()
   computeTalentStats()
   computeEquipmentStats()
   console.log("Updating Base Stats")
   const rawStatsTalents = localStorage.getItem("StatsTalents")
   const rawStatsEquipment = localStorage.getItem("StatsEquipment")
-  if (!rawStatsTalents || !rawStatsEquipment) return
+  const rawStatsLevels = localStorage.getItem("StatsLevels")
+  if (!rawStatsTalents || !rawStatsEquipment || !rawStatsLevels) return
 
   const StatsTalents: Record<string, number> = JSON.parse(rawStatsTalents)
   const StatsEquipment: Record<string, number> = JSON.parse(rawStatsEquipment)
+  const StatsLevels: Record<string, number> = JSON.parse(rawStatsLevels)
+
   const StatsBase: Record<string, number> = {}
   
   for (const [stat, value] of Object.entries(StatsTalents)) {
     StatsBase[stat] = (StatsBase[stat] || 0) + value
   }
   for (const [stat, value] of Object.entries(StatsEquipment)) {
+    StatsBase[stat] = (StatsBase[stat] || 0) + value
+  }
+  for (const [stat, value] of Object.entries(StatsLevels)) {
     StatsBase[stat] = (StatsBase[stat] || 0) + value
   }
 

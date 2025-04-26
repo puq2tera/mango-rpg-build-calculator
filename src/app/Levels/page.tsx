@@ -1,19 +1,21 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import stat_data from "../data/stat_data"
 
 const STORAGE_KEYS = {
-  levels: "LevelsPage-levels",
-  statPoints: "LevelsPage-statPoints",
-  training: "LevelsPage-training",
-  heroPoints: "LevelsPage-heroPoints"
+  levels: "SelectedLevels",
+  statPoints: "SelectedStatPoints",
+  training: "SelectedTraining",
+  heroPoints: "SelectedHeroPoints"
 }
 
 export default function LevelsPage() {
   const [levels, setLevels] = useState({ tank: 0, warrior: 0, caster: 0, healer: 0 })
-  const [statPoints, setStatPoints] = useState({ tank: 0, warrior: 0, caster: 0, healer: 0 })
-  const [training, setTraining] = useState({ tank: 0, warrior: 0, caster: 0, healer: 0 })
+  const [statPoints, setStatPoints] = useState({ ATK: 0, DEF: 0, MATK: 0, HEAL: 0 })
+  const [training, setTraining] = useState({ ATK: 0, DEF: 0, MATK: 0, HEAL: 0 })
   const [heroPoints, setHeroPoints] = useState<Record<string, number>>({})
+  const [loaded, setLoaded] = useState(false)
 
   useEffect(() => {
     const storedLevels = localStorage.getItem(STORAGE_KEYS.levels)
@@ -25,19 +27,33 @@ export default function LevelsPage() {
     if (storedStatPoints) setStatPoints(JSON.parse(storedStatPoints))
     if (storedTraining) setTraining(JSON.parse(storedTraining))
     if (storedHeroPoints) setHeroPoints(JSON.parse(storedHeroPoints))
+
+    setLoaded(true)  // <- very important
   }, [])
 
-  useEffect(() => { localStorage.setItem(STORAGE_KEYS.levels, JSON.stringify(levels)) }, [levels])
-  useEffect(() => { localStorage.setItem(STORAGE_KEYS.statPoints, JSON.stringify(statPoints)) }, [statPoints])
-  useEffect(() => { localStorage.setItem(STORAGE_KEYS.training, JSON.stringify(training)) }, [training])
-  useEffect(() => { localStorage.setItem(STORAGE_KEYS.heroPoints, JSON.stringify(heroPoints)) }, [heroPoints])
+  useEffect(() => {
+    if (!loaded) return
+    localStorage.setItem(STORAGE_KEYS.levels, JSON.stringify(levels))
+  }, [levels, loaded])
 
-  const heroStats: [string, number][] = [
-    ["atkmulti", 1], ["defmulti", 1], ["matkmulti", 1], ["healmulti", 1],
-    ["elefire", 1], ["elelightning", 1], ["elewater", 1], ["eleearth", 1], ["elewind", 1], ["eletoxic", 2], ["elevoid", 2], ["elenegative", 1], ["eleholy", 1], ["eleblunt", 1], ["elepierce", 1], ["eleslash", 1],
-    ["resfire", 2], ["reslightning", 2], ["reswater", 2], ["researth", 2], ["reswind", 2], ["restoxic", 3], ["resvoid", 3], ["resnegative", 2], ["resholy", 2], ["resblunt", 2], ["respierce", 2], ["resslash", 2],
-    ["penvoid", 1]
-  ]
+  useEffect(() => {
+    if (!loaded) return
+    localStorage.setItem(STORAGE_KEYS.statPoints, JSON.stringify(statPoints))
+  }, [statPoints, loaded])
+
+  useEffect(() => {
+    if (!loaded) return
+    localStorage.setItem(STORAGE_KEYS.training, JSON.stringify(training))
+  }, [training, loaded])
+
+  useEffect(() => {
+    if (!loaded) return
+    localStorage.setItem(STORAGE_KEYS.heroPoints, JSON.stringify(heroPoints))
+  }, [heroPoints, loaded])
+
+  if (!loaded) {
+    return <div className="p-4">Loading...</div>
+  }
 
   const totalLevels = Object.values(levels).reduce((a, b) => a + b, 0)
   const isekaiLevel = Math.max(0, Math.ceil((totalLevels - 110) / 5))
@@ -47,7 +63,7 @@ export default function LevelsPage() {
   const totalTraining = Object.values(training).reduce((a, b) => a + b, 0)
 
   const totalHeroPoints = Object.entries(heroPoints).reduce((sum, [key, val]) => {
-    const cost = heroStats.find(([k]) => k === key)?.[1] ?? 1
+    const cost = stat_data.heroStats.find(([k]) => k === key)?.[1] ?? 1
     return sum + cost * val
   }, 0)
 
@@ -139,7 +155,7 @@ export default function LevelsPage() {
         </thead>
         <tbody>
           <tr>
-            {(["tank", "warrior", "caster", "healer"] as const).map(k => (
+            {(["ATK", "DEF", "MATK", "HEAL"] as const).map(k => (
               <td key={k} className="border">
                 <input
                   type="number"
@@ -168,7 +184,7 @@ export default function LevelsPage() {
         </thead>
         <tbody>
           <tr>
-            {(["tank", "warrior", "caster", "healer"] as const).map(k => (
+            {(["DEF", "ATK", "MATK", "HEAL"] as const).map(k => (
               <td key={k} className="border">
                 <input
                   type="number"
@@ -202,7 +218,7 @@ export default function LevelsPage() {
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
         <div>
           <h3 className="bg-green-300 text-center font-bold">Main Stats</h3>
-          {heroStats.filter(([k]) => k.endsWith("multi")).map(([stat, cost]) => (
+          {stat_data.heroStats.filter(([k]) => k.endsWith("multi")).map(([stat, cost]) => (
             <div key={stat} className={`border ${costClass(cost)}`}>
               <label className="block font-mono text-xs text-gray-700">{stat}</label>
               <input
@@ -217,7 +233,7 @@ export default function LevelsPage() {
 
         <div>
           <h3 className="bg-blue-200 text-center font-bold">Elemental Damage</h3>
-          {heroStats.filter(([k]) => k.startsWith("ele") && !k.includes("multi")).map(([stat, cost]) => (
+          {stat_data.heroStats.filter(([k]) => k.startsWith("ele") && !k.includes("multi")).map(([stat, cost]) => (
             <div key={stat} className={`border ${costClass(cost)}`}>
               <label className="block font-mono text-xs text-gray-700">{stat}</label>
               <input
@@ -232,7 +248,7 @@ export default function LevelsPage() {
 
         <div>
           <h3 className="bg-green-300 text-center font-bold">Elemental Resists</h3>
-          {heroStats.filter(([k]) => k.startsWith("res")).map(([stat, cost]) => (
+          {stat_data.heroStats.filter(([k]) => k.startsWith("res")).map(([stat, cost]) => (
             <div key={stat} className={`border ${costClass(cost)}`}>
               <label className="block font-mono text-xs text-gray-700">{stat}</label>
               <input
