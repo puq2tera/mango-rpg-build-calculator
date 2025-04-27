@@ -32,7 +32,11 @@ const rune_data: Record<string, Rune> = {
     "Death": { tier: "Middle", description: "+4% Negative Damage", stats: { "Neg%": 0.04 } },
     "Disease": { tier: "Middle", description: "+6% Toxic Damage", stats: { "Toxic%": 0.06 } },
     "Energy": { tier: "Middle", description: "+12 MP", stats: { "MP": 12 } },
-    "Flesh": { tier: "Middle", description: "+1% All Res", stats: { "reselements": 0.01 } }, //Fill in all resists here
+    "Flesh": { tier: "Middle", description: "+1% All Res", stats: {
+        "Earth Res%": 0.01, "Fire Res%": 0.01, "Water Res%": 0.01, "Wind Res%": 0.01,
+        "Lightning Res%": 0.01, "Toxic Res%": 0.01, "Void Res%": 0.01, "Holy Res%": 0.01,
+        "Neg Res%": 0.01, "Blunt Res%": 0.01, "Pierce Res%": 0.01, "Slash Res%": 0.01
+      } },
     "Forest": { tier: "Middle", description: "+5% Earth Resist, -2% Fire Resist", stats: { "Earth Res%": 0.05, "Fire Res%": -0.02 } },
     "Hearth": { tier: "Middle", description: "+5% Fire Resist, -2% Water Resist", stats: { "Fire Res%": 0.05, "Water Res%": -0.02 } },
     "Knowledge": { tier: "Middle", description: "+15% MATK", stats: { "MATK%": 0.15 } },
@@ -40,7 +44,7 @@ const rune_data: Record<string, Rune> = {
     "Learning": { tier: "Middle", description: "+8 EXP Gain", stats: { "EXP Gain": 8 } },
     "Love": { tier: "Middle", description: "+15% Heal", stats: { "Heal%": 0.15 } },
     "Luck": { tier: "Middle", description: "+3% Crit Chance", stats: { "Crit Chance%": 0.03 } },
-    "Metal": { tier: "Middle", description: "+6% Physical Resist, -3% Lightning/Water/Toxic Resist", stats: { "physical": 0.06, "Lightning Res%": -0.03, "Water Res%": -0.03, "Toxic Res%": -0.03 } }, //Fill in physical res here
+    "Metal": { tier: "Middle", description: "+6% Physical Resist, -3% Lightning/Water/Toxic Resist", stats: { "Blunt Res%": 0.06, "Pierce Res%": 0.06, "Slash Res%": 0.06, "Lightning Res%": -0.03, "Water Res%": -0.03, "Toxic Res%": -0.03 } }, 
     "Pain": { tier: "Middle", description: "+4% Crit Damage", stats: { "Crit DMG%": 0.04 } },
     "Protection": { tier: "Middle", description: "+15% DEF", stats: { "DEF%": 0.15 } },
     "Storm": { tier: "Middle", description: "+5% Lightning Resist, -2% Wind Resist", stats: { "Lightning Res%": 0.05, "Wind Res%": -0.02 } },
@@ -51,7 +55,7 @@ const rune_data: Record<string, Rune> = {
     "Destroyer": { tier: "High", description: "+12% Blunt Damage", stats: { "Blunt%": 0.12 } },
     "Destruction": { tier: "High", description: "+18% Crit Damage", stats: { "Crit DMG%": 0.18 } },
     "Earthquake": { tier: "High", description: "+12% Earth Damage", stats: { "Earth%": 0.12 } },
-    "Eternity": { tier: "High", description: "+10 to Base Stats", stats: { "Base Stats": 10 } }, // Replace with atk/def/heal/matk
+    "Eternity": { tier: "High", description: "+10 to Base Stats", stats: { "ATK": 10, "DEF": 10, "MATK": 10, "HEAL": 10 } },
     "Fortune": { tier: "High", description: "+4% Crit Chance", stats: { "Crit Chance%": 0.04 } },
     "Heavens": { tier: "High", description: "+12% Lightning Damage", stats: { "Lightning%": 0.12 } },
     "Hell": { tier: "High", description: "+12% Fire Damage", stats: { "Fire%": 0.12 } },
@@ -87,17 +91,17 @@ const rune_data: Record<string, Rune> = {
     "Death God's Saga": { tier: "Divine", description: "+20% Negative Damage, +10% Crit Chance", stats: { "Neg%": 0.20, "Crit Chance%": 0.10 } },
     "Demon God's Saga": { tier: "Divine", description: "+30% MATK, +5% Crit Chance, +15% Void Damage, -4 MP", stats: { "MATK%": 0.30, "Crit Chance%": 0.05, "Void%": 0.15, "MP": -4 } },
     "Dragon Rider's Saga": { tier: "Divine", description: "+25% ATK, +25% DEF, +30 ATK, +30 DEF, +5% Void Resist", stats: { "ATK%": 0.25, "DEF%": 0.25, "ATK": 30, "DEF": 30, "Void Res%": 0.05 } },
-    "Earth God's Saga": { tier: "Divine", description: "+18% Elemental Penetration", stats: { "elemental": 0.18 } }, // replace with elemental pen stats
+    "Earth God's Saga": { tier: "Divine", description: "+18% Elemental Penetration", stats: { "Fire Pen%": 0.18, "Water Pen%": 0.18, "Earth Pen%": 0.18, "Wind Pen%": 0.18, "Lightning Pen%": 0.18, "Toxic Pen%": 0.18 } },
     "Ebony Wind's Saga": { tier: "Divine", description: "+15% Wind Penetration, +15% Wind Damage, +10% MATK", stats: { "Wind Pen%": 0.15, "Wind%": 0.15, "MATK%": 0.10 } },
     "Eternal Ninja's Saga": { tier: "Divine", description: "+75% Crit Damage", stats: { "Crit DMG%": 0.75 } },
-    "Frozen War God's Saga": { tier: "Divine", description: "+25% ATK, +20% Physical Damage", stats: { "ATK%": 0.25, "physical": 0.20 } }, // replace with physical ele stats
+    "Frozen War God's Saga": { tier: "Divine", description: "+25% ATK, +20% Physical Damage", stats: { "ATK%": 0.25, "blunt%": 0.20, "slash%": 0.20, "pierce%": 0.20 } }, 
     "Gaia's Trap Saga": { tier: "Divine", description: "+15% Earth Penetration, +15% Earth Damage, +10% MATK", stats: { "Earth Pen%": 0.15, "Earth%": 0.15, "MATK%": 0.10 } },
     "Immortal King's Saga": { tier: "Divine", description: "+15% Negative Penetration, +15% Negative Damage, +10% MATK", stats: { "Neg Pen%": 0.15, "Neg%": 0.15, "MATK%": 0.10 } },
     "Insectoid Maiden's Saga": { tier: "Divine", description: "+15% Toxic Penetration, +15% Toxic Damage, +10% MATK", stats: { "Toxic Pen%": 0.15, "Toxic%": 0.15, "MATK%": 0.10 } },
     "Jaldabaoth's Saga": { tier: "Divine", description: "+15% Fire Penetration, +15% Fire Damage, +10% MATK", stats: { "Fire Pen%": 0.15, "Fire%": 0.15, "MATK%": 0.10 } },
     "Loyal Follower's Saga": { tier: "Divine", description: "+20% Heal, +30 Heal, +6 MP", stats: { "Heal%": 0.20, "HEAL": 30, "MP": 6 } },
     "Lucky Actor's Saga": { tier: "Divine", description: "+10% Crit Chance, +40% Crit Damage, -15% DEF", stats: { "Crit Chance%": 0.10, "Crit DMG%": 0.40, "DEF%": -0.15 } },
-    "Midnight Valkyrie's Saga": { tier: "Divine", description: "+50% ATK, +10% Physical Damage, +0.6% HP Regen", stats: { "ATK%": 0.50, "physical": 0.10, "HP Regen%": 0.006 } }, //replace with physical ele stats
+    "Midnight Valkyrie's Saga": { tier: "Divine", description: "+50% ATK, +10% Physical Damage, +0.6% HP Regen", stats: { "ATK%": 0.50, "blunt%": 0.10, "slash%": 0.10, "pierce%": 0.10, "HP Regen%": 0.006 } }, 
     "Mysterious Butler's Saga": { tier: "Divine", description: "+4% Crit Chance, +20% Crit Damage, +25% Blunt Damage, +5% Blunt Penetration", stats: { "Crit Chance%": 0.04, "Crit DMG%": 0.20, "Blunt%": 0.25, "Blunt Pen%": 0.05 } },
     "Old Sage's Saga": { tier: "Divine", description: "+20 EXP Gain", stats: { "EXP Gain": 20 } },
     "Phoenix King's Saga": { tier: "Divine", description: "+4% Crit Chance, +20% Crit Damage, +25% Pierce Damage, +5% Void Penetration", stats: { "Crit Chance%": 0.04, "Crit DMG%": 0.20, "Pierce%": 0.25, "Void Pen%": 0.05 } },
@@ -109,9 +113,9 @@ const rune_data: Record<string, Rune> = {
     "Ranger Queen's Saga": { tier: "Divine", description: "+4% Crit Chance, +20% Crit Damage, +25% Pierce Damage, +5% Pierce Penetration", stats: { "Crit Chance%": 0.04, "Crit DMG%": 0.20, "Pierce%": 0.25, "Pierce Pen%": 0.05 } },
     "Stone Ninja's Saga": { tier: "Divine", description: "+4% Crit Chance, +20% Crit Damage, +25% Slash Damage, +5% Slash Penetration", stats: { "Crit Chance%": 0.04, "Crit DMG%": 0.20, "Slash%": 0.25, "Slash Pen%": 0.05 } },
     "Storm Maid's Saga": { tier: "Divine", description: "+15 Lightning Penetration, +15% Lightning Damage, +10% MATK", stats: { "Lightning Pen%": 0.15, "Lightning%": 0.15, "MATK%": 0.10 } },
-    "Sword Saint Nephilim's Saga": { tier: "Divine", description: "+15% Physical Penetration, +10% ATK", stats: { "Phys xPen%": 0.15, "ATK%": 0.10 } }, // shouldn't be xpen, replace with physical pen stats
+    "Sword Saint Nephilim's Saga": { tier: "Divine", description: "+15% Physical Penetration, +10% ATK", stats: { "Blunt Pen%": 0.15, "Slash Pen%": 0.15, "Pierce Pen%": 0.15, "ATK%": 0.10 } },
     "The Singing Sister's Saga": { tier: "Divine", description: "+15% Water Penetration, +15% Water Damage, +10% MATK", stats: { "Water Pen%": 0.15, "Water%": 0.15, "MATK%": 0.10 } },
-    "War Goddess's Saga": { tier: "Divine", description: "+30% DEF, +25% ATK, +10% Physical Resist", stats: { "DEF%": 0.30, "ATK%": 0.25, "physical": 0.10 } }, //replace with physical resist stats
+    "War Goddess's Saga": { tier: "Divine", description: "+30% DEF, +25% ATK, +10% Physical Resist", stats: { "DEF%": 0.30, "ATK%": 0.25, "Blunt Res%": 0.1, "Pierce Res%": 0.1, "Slash Res%": 0.1 } }, 
     "Wolf Maiden's Saga": { tier: "Divine", description: "+15% Heal, +4% Crit Chance, +25% Crit Damage", stats: { "Heal%": 0.15, "Crit Chance%": 0.04, "Crit DMG%": 0.25 } },
 
     "EX Baphomet's Saga": { tier: "Divine", description: "+35% MATK, +8% Void Penetration, +10% Void Damage, -8 MP", stats: { "MATK%": 0.35, "Void Pen%": 0.08, "Void%": 0.10, "MP": -8 } },
@@ -122,24 +126,24 @@ const rune_data: Record<string, Rune> = {
     "EX Earth God's Saga": { tier: "Divine", description: "+24% Elemental Penetration", stats: { "Elemental xPen%": 0.24 } },
     "EX Ebony Wind's Saga": { tier: "Divine", description: "+20% Wind Penetration, +25% Wind Damage, +25% MATK", stats: { "Wind Pen%": 0.20, "Wind%": 0.25, "MATK%": 0.25 } },
     "EX Eternal Ninja's Saga": { tier: "Divine", description: "+135% Crit Damage", stats: { "Crit DMG%": 1.35 } },
-    "EX Frozen War God's Saga": { tier: "Divine", description: "+40% ATK, +30% Physical Damage, +5% Physical Penetration", stats: { "ATK%": 0.40, "physical": 0.30, "Phys xPen%": 0.05 } }, //replace with physical ele stats and physical pen stast
+    "EX Frozen War God's Saga": { tier: "Divine", description: "+40% ATK, +30% Physical Damage, +5% Physical Penetration", stats: { "ATK%": 0.40, "blunt%": 0.3, "slash%": 0.3, "pierce%": 0.3, "Blunt Pen%": 0.05, "Slash Pen%": 0.05, "Pierce Pen%": 0.05 } }, 
     "EX Gaia's Trap Saga": { tier: "Divine", description: "+20% Earth Penetration, +25% Earth Damage, +25% MATK", stats: { "Earth Pen%": 0.20, "Earth%": 0.25, "MATK%": 0.25 } },
     "EX Immortal King's Saga": { tier: "Divine", description: "+20% Negative Penetration, +25% Negative Damage, +25% MATK", stats: { "Neg Pen%": 0.20, "Neg%": 0.25, "MATK%": 0.25 } },
     "EX Insectoid Maiden's Saga": { tier: "Divine", description: "+20% Toxic Penetration, +25% Toxic Damage, +25% MATK", stats: { "Toxic Pen%": 0.20, "Toxic%": 0.25, "MATK%": 0.25 } },
     "EX Jaldabaoth's Saga": { tier: "Divine", description: "+20% Fire Penetration, +25% Fire Damage, +25% MATK", stats: { "Fire Pen%": 0.20, "Fire%": 0.25, "MATK%": 0.25 } },
     "EX Loyal Follower's Saga": { tier: "Divine", description: "+30% Heal, +40 Heal, +10 MP, +1% Global Heal Effect", stats: { "HEAL%": 0.30, "HEAL": 40, "MP": 10, "Global Heal Effect": 0.01 } }, //double check global heal effect name
     "EX Lucky Actor's Saga": { tier: "Divine", description: "+15% Crit Chance, +75% Crit Damage. -15% DEF", stats: { "Crit Chance%": 0.15, "Crit DMG%": 0.75, "DEF%": -0.15 } },
-    "EX Midnight Valkyrie's Saga": { tier: "Divine", description: "+75% ATK, +20% Physical Damage, +0.8% HP Regen, +1% Global Damage", stats: { "ATK%": 0.75, "physical": 0.20, "HP Regen%": 0.008, "Global DMG%": 0.01 } }, //replace physical dmg with physcal ele stats
+    "EX Midnight Valkyrie's Saga": { tier: "Divine", description: "+75% ATK, +20% Physical Damage, +0.8% HP Regen, +1% Global Damage", stats: { "ATK%": 0.75, "blunt%": 0.20, "slash%": 0.20, "pierce%": 0.20, "HP Regen%": 0.008, "Global DMG%": 0.01 } },
     "EX Mysterious Butler's Saga": { tier: "Divine", description: "+4% Crit Chance, +30% Crit Damage, +35% Blunt Damage, +8% Blunt Penetration", stats: { "Crit Chance%": 0.04, "Crit DMG%": 0.30, "Blunt%": 0.35, "Blunt Pen%": 0.08 } },
     "EX Old Sage's Saga": { tier: "Divine", description: "+40 EXP Gain. Does not require PrimalEssence to slot.", stats: { "EXP Gain": 40 } },
     "EX Phoenix King's Saga": { tier: "Divine", description: "+4% Crit Chance, +35% Crit Damage, +40% Pierce Damage, +6% Void Penetration", stats: { "Crit Chance%": 0.04, "Crit DMG%": 0.35, "Pierce%": 0.40, "Void Pen%": 0.06 } },
     "EX Ranger Queen's Saga": { tier: "Divine", description: "+4% Crit Chance, +30% Crit Damage, +35% Pierce Damage, +8% Pierce Penetration", stats: { "Crit Chance%": 0.04, "Crit DMG%": 0.30, "Pierce%": 0.35, "Pierce Pen%": 0.08 } },
     "EX Stone Ninja's Saga": { tier: "Divine", description: "+4% Crit Chance, +30% Crit Damage, +35% Slash Damage, +8% Slash Penetration", stats: { "Crit Chance%": 0.04, "Crit DMG%": 0.30, "Slash%": 0.35, "Slash Pen%": 0.08 } },
     "EX Storm Maid's Saga": { tier: "Divine", description: "+20% Lightning Penetration, +25% Lightning Damage, +25% MATK", stats: { "Lightning Pen%": 0.20, "Lightning%": 0.25, "MATK%": 0.25 } },
-    "EX Sword Saint Nephilim's Saga": { tier: "Divine", description: "+20% Physical Penetration, +30% ATK", stats: { "Phys xPen%": 0.20, "ATK%": 0.30 } }, // replace with physical pen stats
+    "EX Sword Saint Nephilim's Saga": { tier: "Divine", description: "+20% Physical Penetration, +30% ATK", stats: { "Blunt Pen%": 0.2, "Slash Pen%": 0.2, "Pierce Pen%": 0.2, "ATK%": 0.30 } }, 
     "EX The Singing Sister's Saga": { tier: "Divine", description: "+20% Water Penetration, +25% Water Damage, +25% MATK", stats: { "Water Pen%": 0.20, "Water%": 0.25, "MATK%": 0.25 } },
     "EX War Goddess's Saga": { tier: "Divine", description: "+50% DEF, +40% ATK, +16% Physical Resist, +10% Void Pen, +6% Threat Gain", stats: { "DEF%": 0.50, "ATK%": 0.40, "physical": 0.16, "Void Pen%": 0.10, "Threat%": 0.06 } },
-    "EX Wolf Maiden's Saga": { tier: "Divine", description: "+25% Heal, +5% Crit Chance, +45% Crit Damage, +15% Divine Damage", stats: { "HEAL%": 0.25, "Crit Chance%": 0.05, "Crit DMG%": 0.45, "eledivine": 0.15 } }, //replace with holy/neg
+    "EX Wolf Maiden's Saga": { tier: "Divine", description: "+25% Heal, +5% Crit Chance, +45% Crit Damage, +15% Divine Damage", stats: { "HEAL%": 0.25, "Crit Chance%": 0.05, "Crit DMG%": 0.45, "neg%": 0.15, "holy%": 0.15 } },
     "Celestial Core": { tier: "Divine", description: "Holds the light of a dying star. Can be used as a catalyst.", stats: {} },
 };
 
