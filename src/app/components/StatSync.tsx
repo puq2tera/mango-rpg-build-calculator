@@ -43,7 +43,7 @@ export function computeLevelStats() {
   // console.log(storedLevels)
   // console.log(storedStatPoints)
   // console.log(storedTraining)
-  // console.log(storedHeroPoints)
+  console.log(storedHeroPoints)
 
   // Mainstats
   for (const stat of stat_data.Mainstats) {

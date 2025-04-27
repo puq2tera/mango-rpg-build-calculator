@@ -48,4 +48,17 @@ const ClassMainStatValues: Record<string, Record<string, number>> = {
   }
 }
 
-export default { Mainstats, AllElements, SkillTypes, Elemental, Physical, Divine, xPenMapping, heroStats, ClassMainStatValues, ClassNames }
+const stat_data = {
+  Mainstats,
+  AllElements,
+  SkillTypes,
+  Elemental,
+  Physical,
+  Divine,
+  xPenMapping,
+  heroStats,
+  ClassMainStatValues,
+  ClassNames,
+}
+
+export default stat_data
