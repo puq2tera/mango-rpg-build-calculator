@@ -3,10 +3,16 @@
 import { useState, useEffect } from "react"
 import { __allStatNames } from "@/app/data/talent_data"
 import stat_data from "../data/stat_data"
+import rune_data from "../data/rune_data"
 
 interface Affix {
   stat: string
   value: number
+}
+
+type RuneSelection = {
+  rune: string
+  count: number
 }
 
 interface Slot {
@@ -20,6 +26,9 @@ interface Slot {
 
 const STORAGE_KEY_SLOTS = "EquipmentSlots"
 const STORAGE_KEY_ENABLED = "EnabledEquipment"
+const STORAGE_KEY_RUNES = "SelectedRunes"
+
+const runeTiers = ["Low", "Middle", "High", "Legacy", "Divine"] as const
 
 const initialSlot = (): Slot => ({
   name: "",
@@ -30,14 +39,26 @@ const initialSlot = (): Slot => ({
   enabled: false
 })
 
+const initialRuneSelection = (): RuneSelection => ({
+  rune: "",
+  count: 1
+})
+
 export default function EquipmentPage() {
   const [slots, setSlots] = useState<Slot[]>([])
+  const [selectedRunes, setSelectedRunes] = useState<Record<string, RuneSelection[]>>({
+    Low: [],
+    Middle: [],
+    High: [],
+    Legacy: [],
+    Divine: []
+  })
 
   useEffect(() => {
-    const stored = localStorage.getItem(STORAGE_KEY_SLOTS)
-    if (stored) {
+    const storedSlots = localStorage.getItem(STORAGE_KEY_SLOTS)
+    if (storedSlots) {
       try {
-        setSlots(JSON.parse(stored))
+        setSlots(JSON.parse(storedSlots))
       } catch {
         setSlots(Array.from({ length: 8 }, initialSlot))
       }
@@ -47,11 +68,48 @@ export default function EquipmentPage() {
   }, [])
 
   useEffect(() => {
-    if (slots.length === 0) return
-    localStorage.setItem(STORAGE_KEY_SLOTS, JSON.stringify(slots))
-    const enabledIndices = slots.map((slot, i) => slot.enabled ? i : null).filter(i => i !== null)
-    localStorage.setItem(STORAGE_KEY_ENABLED, JSON.stringify(enabledIndices))
+    const storedRunes = localStorage.getItem(STORAGE_KEY_RUNES)
+    if (storedRunes) {
+      try {
+        setSelectedRunes(JSON.parse(storedRunes))
+      } catch {
+        /* no-op */
+      }
+    }
+  }, [])
+
+  useEffect(() => {
+    if (slots.length > 0) {
+      localStorage.setItem(STORAGE_KEY_SLOTS, JSON.stringify(slots))
+      const enabledIndices = slots.map((slot, i) => slot.enabled ? i : null).filter(i => i !== null)
+      localStorage.setItem(STORAGE_KEY_ENABLED, JSON.stringify(enabledIndices))
+    }
   }, [slots])
+
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEY_RUNES, JSON.stringify(selectedRunes))
+  }, [selectedRunes])
+
+  const addAffixRow = (slotIndex: number) => {
+    setSlots(prev => {
+      const updated = [...prev]
+      updated[slotIndex] = {
+        ...updated[slotIndex],
+        affixes: [...updated[slotIndex].affixes, { stat: "", value: 0 }]
+      }
+      return updated
+    })
+  }
+
+  const addSlot = () => {
+    setSlots(prev => [...prev, initialSlot()])
+  }
+
+  const toggleSlot = (index: number) => {
+    setSlots(prev => 
+      prev.map((slot, i) => i === index ? { ...slot, enabled: !slot.enabled } : slot)
+    )
+  }
 
   const updateSlot = (index: number, field: string, value: string | number) => {
     setSlots(prev => {
@@ -77,33 +135,108 @@ export default function EquipmentPage() {
     })
   }
 
-  const addAffixRow = (slotIndex: number) => {
-    setSlots(prev => {
-      const updated = [...prev]
-      updated[slotIndex] = {
-        ...updated[slotIndex],
-        affixes: [...updated[slotIndex].affixes, { stat: "", value: 0 }]
-      }
-      return updated
+  const addRuneRow = (tier: keyof typeof selectedRunes) => {
+    setSelectedRunes(prev => ({
+      ...prev,
+      [tier]: [...prev[tier], initialRuneSelection()]
+    }))
+  }
+
+  const removeRuneRow = (tier: keyof typeof selectedRunes, index: number) => {
+    setSelectedRunes(prev => {
+      const updatedTier = [...prev[tier]]
+      updatedTier.splice(index, 1)
+      return { ...prev, [tier]: updatedTier }
+    })
+  }  
+
+  const updateRuneSelection = (tier: keyof typeof selectedRunes, index: number, field: keyof RuneSelection, value: string | number) => {
+    setSelectedRunes(prev => {
+      const updatedTier = [...prev[tier]]
+      updatedTier[index] = { ...updatedTier[index], [field]: value }
+      return { ...prev, [tier]: updatedTier }
     })
   }
 
-  const toggleSlot = (index: number) => {
-    setSlots(prev =>
-      prev.map((slot, i) => i === index ? { ...slot, enabled: !slot.enabled } : slot)
-    )
-  }
-
-  const addSlot = () => {
-    setSlots(prev => [...prev, initialSlot()])
-  }
+  const runesByTier = (tier: string) =>
+    Object.entries(rune_data)
+      .filter(([, rune]) => rune.tier === tier)
+      .map(([name]) => name)
 
   const typeOptions = ["Helm", "Armor", "Amulet", "Ring", "Weapon", "Runeshard", "Tarot"]
 
   return (
-    <div className="p-4 space-y-4">
-      <h1 className="text-xl font-bold">Equipment Editor</h1>
+    <div className="p-4 space-y-8">
+      <h1 className="text-2xl font-bold">Equipment Editor</h1>
 
+      {/* Rune Editor */}
+      <div className="space-y-8">
+        {runeTiers.map(tier => (
+          <div key={tier}>
+            <h2 className="text-lg font-semibold">{tier} Tier Runes</h2>
+            <table className="table-fixed border-collapse w-full text-sm">
+              <thead>
+                <tr className="bg-gray-100">
+                  <th className="border px-2 py-1">Rune</th>
+                  <th className="border px-2 py-1">Count</th>
+                  <th className="border px-2 py-1">Description</th>
+                </tr>
+              </thead>
+              <tbody>
+                {selectedRunes[tier].map((selection, idx) => (
+                  <tr key={idx}>
+                    <td className="border px-2 py-1">
+                      <select
+                        value={selection.rune}
+                        onChange={e => updateRuneSelection(tier, idx, "rune", e.target.value)}
+                        className="w-full border px-1"
+                      >
+                        <option value="">Select Rune</option>
+                        {runesByTier(tier).map(runeName => (
+                          <option key={runeName} value={runeName}>
+                            {runeName}
+                          </option>
+                        ))}
+                      </select>
+                    </td>
+                    <td className="border px-2 py-1 flex gap-2 items-center">
+                      <input
+                        type="number"
+                        value={selection.count}
+                        min={1}
+                        onChange={e => updateRuneSelection(tier, idx, "count", +e.target.value)}
+                        className="w-full border px-1"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => removeRuneRow(tier, idx)}
+                        className="px-2 py-0.5 bg-red-400 text-white text-xs rounded"
+                      >
+                        ✕
+                      </button>
+                    </td>
+                    <td className="border px-2 py-1">
+                      {selection.rune && rune_data[selection.rune]
+                        ? rune_data[selection.rune].description
+                        : ""}
+                    </td>
+                  </tr>
+                ))}
+            </tbody>
+            </table>
+            <div className="mt-2">
+              <button
+                onClick={() => addRuneRow(tier)}
+                className="px-3 py-1 bg-blue-400 text-white rounded"
+              >
+                + Add Rune
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Equipment Slots */}
       <div className="grid grid-cols-[repeat(auto-fill,minmax(300px,1fr))] gap-4 mt-4 items-start">
         {slots.map((slot, idx) => (
           <div
