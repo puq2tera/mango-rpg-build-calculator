@@ -44,14 +44,24 @@ const initialRuneSelection = (): RuneSelection => ({
   count: 1
 })
 
+const emptyRuneSet = (): Record<string, RuneSelection[]> => {
+  return Object.fromEntries(runeTiers.map(t => [t, []])) as Record<string, RuneSelection[]>
+}
+
 export default function EquipmentPage() {
   const [slots, setSlots] = useState<Slot[]>([])
-  const [selectedRunes, setSelectedRunes] = useState<Record<string, RuneSelection[]>>({
-    Low: [],
-    Middle: [],
-    High: [],
-    Legacy: [],
-    Divine: []
+  const [selectedRunes, setSelectedRunes] = useState<Record<string, RuneSelection[]>>(() => {
+    try {
+      const storedRunes = localStorage.getItem(STORAGE_KEY_RUNES)
+      const parsed = storedRunes ? JSON.parse(storedRunes) : {}
+      const filled = { ...emptyRuneSet(), ...parsed }
+      for (const tier of runeTiers) {
+        if (!Array.isArray(filled[tier])) filled[tier] = []
+      }
+      return filled
+    } catch {
+      return emptyRuneSet()
+    }
   })
 
   useEffect(() => {
@@ -64,17 +74,6 @@ export default function EquipmentPage() {
       }
     } else {
       setSlots(Array.from({ length: 8 }, initialSlot))
-    }
-  }, [])
-
-  useEffect(() => {
-    const storedRunes = localStorage.getItem(STORAGE_KEY_RUNES)
-    if (storedRunes) {
-      try {
-        setSelectedRunes(JSON.parse(storedRunes))
-      } catch {
-        /* no-op */
-      }
     }
   }, [])
 
