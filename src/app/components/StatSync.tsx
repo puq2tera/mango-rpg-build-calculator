@@ -4,6 +4,7 @@
 import { useEffect } from "react"
 import { talent_data } from "@/app/data/talent_data"
 import stat_data from "../data/stat_data"
+import rune_data from "../data/rune_data"
 
 
 // Stage 1 of Stat Pipeline
@@ -98,20 +99,48 @@ export function computeEquipmentStats() {
     console.error("Failed to compute equipment stats", e)
   }
 }
+
+
+export function computeRuneStats() {
+  console.log("Updating Rune Stats")
+  const rawSelectedRunes = localStorage.getItem('SelectedRunes')
+  if (!rawSelectedRunes) return
+  const selectedRunes: Record<string, { rune: string; count: number }[]> = JSON.parse(rawSelectedRunes)
+
+  const stats: Record<string, number> = {}
+
+  for (const tier in selectedRunes) {
+    for (const { rune, count } of selectedRunes[tier]) {
+      const runeEntry = rune_data[rune]
+      if (!runeEntry) continue
+
+      for (const [stat, value] of Object.entries(runeEntry.stats)) {
+        stats[stat] = (stats[stat] || 0) + value * count
+      }
+    }
+  }
+
+  localStorage.setItem("StatsRunes", JSON.stringify(stats))
+  console.log(stats)
+}
+
 // Combine all of stage 1
 export function computeBaseStats() {
   computeLevelStats()
   computeTalentStats()
+  computeRuneStats()
   computeEquipmentStats()
   console.log("Updating Base Stats")
   const rawStatsTalents = localStorage.getItem("StatsTalents")
   const rawStatsEquipment = localStorage.getItem("StatsEquipment")
   const rawStatsLevels = localStorage.getItem("StatsLevels")
-  if (!rawStatsTalents || !rawStatsEquipment || !rawStatsLevels) return
+  const rawStatsRunes = localStorage.getItem("StatsRunes")
+  if (!rawStatsTalents || !rawStatsEquipment || !rawStatsLevels || !rawStatsRunes) return
 
   const StatsTalents: Record<string, number> = JSON.parse(rawStatsTalents)
   const StatsEquipment: Record<string, number> = JSON.parse(rawStatsEquipment)
   const StatsLevels: Record<string, number> = JSON.parse(rawStatsLevels)
+  const StatsRunes: Record<string, number> = JSON.parse(rawStatsRunes)
 
   const StatsBase: Record<string, number> = {}
   
@@ -122,6 +151,9 @@ export function computeBaseStats() {
     StatsBase[stat] = (StatsBase[stat] || 0) + value
   }
   for (const [stat, value] of Object.entries(StatsLevels)) {
+    StatsBase[stat] = (StatsBase[stat] || 0) + value
+  }
+  for (const [stat, value] of Object.entries(StatsRunes)) {
     StatsBase[stat] = (StatsBase[stat] || 0) + value
   }
 
@@ -240,6 +272,7 @@ export default function StatSync() {
     //Stage 1
     window.addEventListener("talentsUpdated", computeTalentStats)
     window.addEventListener("equipmentUpdated", computeEquipmentStats)
+    window.addEventListener("runesUpdated", computeRuneStats)
     window.addEventListener("computeBaseStats", computeBaseStats)
     //Stage 2
     window.addEventListener("computexPenStats", computexPenStats)
@@ -255,6 +288,7 @@ export default function StatSync() {
     return () => {
       window.removeEventListener("talentsUpdated", computeTalentStats)
       window.removeEventListener("equipmentUpdated", computeEquipmentStats)
+      window.removeEventListener("runesUpdated", computeRuneStats)
       window.removeEventListener("computeBaseStats", computeBaseStats)
       window.removeEventListener("computexPenStats", computexPenStats)
       window.removeEventListener("computexPenStats", computeConversionReadyStats)
