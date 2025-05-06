@@ -30,6 +30,8 @@ const STORAGE_KEY_RUNES = "SelectedRunes"
 
 const runeTiers = ["Low", "Middle", "High", "Legacy", "Divine"] as const
 
+type RuneTier = typeof runeTiers[number]
+
 const initialSlot = (): Slot => ({
   name: "",
   type: "",
@@ -44,117 +46,120 @@ const initialRuneSelection = (): RuneSelection => ({
   count: 1
 })
 
-const emptyRuneSet = (): Record<string, RuneSelection[]> => {
-  return Object.fromEntries(runeTiers.map(t => [t, []])) as Record<string, RuneSelection[]>
+const emptyRuneSet = (): Record<RuneTier, RuneSelection[]> => {
+  const result: Partial<Record<RuneTier, RuneSelection[]>> = {}
+  for (const tier of runeTiers) {
+    result[tier] = []
+  }
+  return result as Record<RuneTier, RuneSelection[]>
 }
 
 export default function EquipmentPage() {
+  const [isHydrated, setIsHydrated] = useState(false)
   const [slots, setSlots] = useState<Slot[]>([])
-  const [selectedRunes, setSelectedRunes] = useState<Record<string, RuneSelection[]>>(() => {
-    try {
-      const storedRunes = localStorage.getItem(STORAGE_KEY_RUNES)
-      const parsed = storedRunes ? JSON.parse(storedRunes) : {}
-      const filled = { ...emptyRuneSet(), ...parsed }
-      for (const tier of runeTiers) {
-        if (!Array.isArray(filled[tier])) filled[tier] = []
-      }
-      return filled
-    } catch {
-      return emptyRuneSet()
-    }
-  })
+  const [selectedRunes, setSelectedRunes] = useState<Record<RuneTier, RuneSelection[]>>(emptyRuneSet())
 
   useEffect(() => {
     const storedSlots = localStorage.getItem(STORAGE_KEY_SLOTS)
-    if (storedSlots) {
-      try {
-        setSlots(JSON.parse(storedSlots))
-      } catch {
-        setSlots(Array.from({ length: 8 }, initialSlot))
-      }
-    } else {
+    try {
+      const parsed = storedSlots ? JSON.parse(storedSlots) : Array.from({ length: 8 }, initialSlot)
+      setSlots(parsed)
+    } catch {
       setSlots(Array.from({ length: 8 }, initialSlot))
     }
+
+    const storedRunes = localStorage.getItem(STORAGE_KEY_RUNES)
+    try {
+      const parsed = storedRunes ? JSON.parse(storedRunes) : {}
+      const filled: Record<RuneTier, RuneSelection[]> = emptyRuneSet()
+      for (const tier of runeTiers) {
+        filled[tier] = Array.isArray(parsed[tier]) ? parsed[tier] : []
+      }
+      setSelectedRunes(filled)
+    } catch {
+      setSelectedRunes(emptyRuneSet())
+    }
+
+    setIsHydrated(true)
   }, [])
 
   useEffect(() => {
-    if (slots.length > 0) {
+    if (isHydrated && slots.length > 0) {
       localStorage.setItem(STORAGE_KEY_SLOTS, JSON.stringify(slots))
       const enabledIndices = slots.map((slot, i) => slot.enabled ? i : null).filter(i => i !== null)
       localStorage.setItem(STORAGE_KEY_ENABLED, JSON.stringify(enabledIndices))
     }
-  }, [slots])
+  }, [slots, isHydrated])
 
   useEffect(() => {
-    localStorage.setItem(STORAGE_KEY_RUNES, JSON.stringify(selectedRunes))
-  }, [selectedRunes])
+    if (isHydrated) {
+      localStorage.setItem(STORAGE_KEY_RUNES, JSON.stringify(selectedRunes))
+    }
+  }, [selectedRunes, isHydrated])
 
   const addAffixRow = (slotIndex: number) => {
-    setSlots(prev => {
-      const updated = [...prev]
-      updated[slotIndex] = {
-        ...updated[slotIndex],
-        affixes: [...updated[slotIndex].affixes, { stat: "", value: 0 }]
-      }
-      return updated
-    })
+    const updated = [...slots]
+    updated[slotIndex] = {
+      ...updated[slotIndex],
+      affixes: [...updated[slotIndex].affixes, { stat: "", value: 0 }]
+    }
+    setSlots(updated)
   }
 
   const addSlot = () => {
-    setSlots(prev => [...prev, initialSlot()])
+    setSlots([...slots, initialSlot()])
   }
 
   const toggleSlot = (index: number) => {
-    setSlots(prev => 
-      prev.map((slot, i) => i === index ? { ...slot, enabled: !slot.enabled } : slot)
-    )
+    setSlots(slots.map((slot, i) => i === index ? { ...slot, enabled: !slot.enabled } : slot))
   }
 
   const updateSlot = (index: number, field: string, value: string | number) => {
-    setSlots(prev => {
-      const updated = prev.map((slot, i) => {
-        if (i !== index) return slot
-        const updatedSlot = { ...slot }
-        if (field.startsWith("affix_")) {
-          const [, affixIndexStr, affixField] = field.split("_")
-          const affixIndex = parseInt(affixIndexStr, 10)
-          updatedSlot.affixes = [...slot.affixes]
-          updatedSlot.affixes[affixIndex] = {
-            ...updatedSlot.affixes[affixIndex],
-            [affixField]: value
-          }
-        } else {
-          if (field in updatedSlot) {
-            (updatedSlot[field as keyof Slot] as typeof value) = value
-          }
+    const updated = slots.map((slot, i) => {
+      if (i !== index) return slot
+      const updatedSlot = { ...slot }
+      if (field.startsWith("affix_")) {
+        const [, affixIndexStr, affixField] = field.split("_")
+        const affixIndex = parseInt(affixIndexStr, 10)
+        updatedSlot.affixes = [...slot.affixes]
+        updatedSlot.affixes[affixIndex] = {
+          ...updatedSlot.affixes[affixIndex],
+          [affixField]: value
         }
-        return updatedSlot
-      })
+      } else {
+        if (field in updatedSlot) {
+          (updatedSlot[field as keyof Slot] as typeof value) = value
+        }
+      }
+      return updatedSlot
+    })
+    setSlots(updated)
+  }
+
+  const addRuneRow = (tier: RuneTier) => {
+    setSelectedRunes(prev => {
+      const updated = { ...prev }
+      updated[tier] = [...updated[tier], initialRuneSelection()]
       return updated
     })
   }
 
-  const addRuneRow = (tier: keyof typeof selectedRunes) => {
-    setSelectedRunes(prev => ({
-      ...prev,
-      [tier]: [...prev[tier], initialRuneSelection()]
-    }))
+  const removeRuneRow = (tier: RuneTier, index: number) => {
+    setSelectedRunes(prev => {
+      const updated = { ...prev }
+      const tierList = [...updated[tier]]
+      tierList.splice(index, 1)
+      updated[tier] = tierList
+      return updated
+    })
   }
 
-  const removeRuneRow = (tier: keyof typeof selectedRunes, index: number) => {
-    setSelectedRunes(prev => {
-      const updatedTier = [...prev[tier]]
-      updatedTier.splice(index, 1)
-      return { ...prev, [tier]: updatedTier }
-    })
-  }  
-
-  const updateRuneSelection = (tier: keyof typeof selectedRunes, index: number, field: keyof RuneSelection, value: string | number) => {
-    setSelectedRunes(prev => {
-      const updatedTier = [...prev[tier]]
-      updatedTier[index] = { ...updatedTier[index], [field]: value }
-      return { ...prev, [tier]: updatedTier }
-    })
+  const updateRuneSelection = (tier: RuneTier, index: number, field: keyof RuneSelection, value: string | number) => {
+    const updated = { ...selectedRunes }
+    const tierList = [...updated[tier]]
+    tierList[index] = { ...tierList[index], [field]: value }
+    updated[tier] = tierList
+    setSelectedRunes(updated)
   }
 
   const runesByTier = (tier: string) =>
@@ -163,6 +168,8 @@ export default function EquipmentPage() {
       .map(([name]) => name)
 
   const typeOptions = ["Helm", "Armor", "Amulet", "Ring", "Weapon", "Runeshard", "Tarot"]
+
+  if (!isHydrated) return <div className="p-4 text-sm text-gray-600">Loading equipment editor...</div>
 
   return (
     <div className="p-4 space-y-8">

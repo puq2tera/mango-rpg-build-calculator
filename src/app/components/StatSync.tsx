@@ -106,7 +106,6 @@ export function computeRuneStats() {
   const rawSelectedRunes = localStorage.getItem('SelectedRunes')
   if (!rawSelectedRunes) return
   const selectedRunes: Record<string, { rune: string; count: number }[]> = JSON.parse(rawSelectedRunes)
-
   const stats: Record<string, number> = {}
 
   for (const tier in selectedRunes) {
@@ -135,26 +134,34 @@ export function computeBaseStats() {
   const rawStatsEquipment = localStorage.getItem("StatsEquipment")
   const rawStatsLevels = localStorage.getItem("StatsLevels")
   const rawStatsRunes = localStorage.getItem("StatsRunes")
-  if (!rawStatsTalents || !rawStatsEquipment || !rawStatsLevels || !rawStatsRunes) return
-
-  const StatsTalents: Record<string, number> = JSON.parse(rawStatsTalents)
-  const StatsEquipment: Record<string, number> = JSON.parse(rawStatsEquipment)
-  const StatsLevels: Record<string, number> = JSON.parse(rawStatsLevels)
-  const StatsRunes: Record<string, number> = JSON.parse(rawStatsRunes)
-
   const StatsBase: Record<string, number> = {}
-  
-  for (const [stat, value] of Object.entries(StatsTalents)) {
-    StatsBase[stat] = (StatsBase[stat] || 0) + value
+
+  if(rawStatsTalents) {
+    const StatsTalents: Record<string, number> = JSON.parse(rawStatsTalents)
+    for (const [stat, value] of Object.entries(StatsTalents)) {
+      StatsBase[stat] = (StatsBase[stat] || 0) + value
+    }
   }
-  for (const [stat, value] of Object.entries(StatsEquipment)) {
-    StatsBase[stat] = (StatsBase[stat] || 0) + value
+
+  if(rawStatsEquipment) {
+    const StatsEquipment: Record<string, number> = JSON.parse(rawStatsEquipment)
+    for (const [stat, value] of Object.entries(StatsEquipment)) {
+      StatsBase[stat] = (StatsBase[stat] || 0) + value
+    }
   }
-  for (const [stat, value] of Object.entries(StatsLevels)) {
-    StatsBase[stat] = (StatsBase[stat] || 0) + value
+
+  if(rawStatsLevels) {
+    const StatsLevels: Record<string, number> = JSON.parse(rawStatsLevels)
+    for (const [stat, value] of Object.entries(StatsLevels)) {
+      StatsBase[stat] = (StatsBase[stat] || 0) + value
+    }
   }
-  for (const [stat, value] of Object.entries(StatsRunes)) {
-    StatsBase[stat] = (StatsBase[stat] || 0) + value
+
+  if(rawStatsRunes) {
+    const StatsRunes: Record<string, number> = JSON.parse(rawStatsRunes)
+    for (const [stat, value] of Object.entries(StatsRunes)) {
+      StatsBase[stat] = (StatsBase[stat] || 0) + value
+    }
   }
 
   localStorage.setItem("StatsBase", JSON.stringify(StatsBase))
@@ -188,18 +195,20 @@ export function computeConversionReadyStats() {
   computexPenStats()
   console.log("Updating Conversion Ready Stats")
   const rawStatsXPen = localStorage.getItem("StatsXPen")
-  const rawStatsBase = localStorage.getItem("StatsTalents")
-  if (!rawStatsXPen || !rawStatsBase) return
-
-  const StatsXPen: Record<string, number> = JSON.parse(rawStatsXPen)
-  const StatsTalents: Record<string, number> = JSON.parse(rawStatsBase)
+  const rawStatsBase = localStorage.getItem("StatsBase")
   const StatsConversionReady: Record<string, number> = {}
 
-  for (const [stat, value] of Object.entries(StatsXPen)) {
-    StatsConversionReady[stat] = (StatsConversionReady[stat] || 0) + value
+  if(rawStatsXPen) {
+    const StatsXPen: Record<string, number> = JSON.parse(rawStatsXPen)
+    for (const [stat, value] of Object.entries(StatsXPen)) {
+      StatsConversionReady[stat] = (StatsConversionReady[stat] || 0) + value
+    }
   }
-  for (const [stat, value] of Object.entries(StatsTalents)) {
-    StatsConversionReady[stat] = (StatsConversionReady[stat] || 0) + value
+  if(rawStatsBase) {
+    const StatsTalents: Record<string, number> = JSON.parse(rawStatsBase)
+    for (const [stat, value] of Object.entries(StatsTalents)) {
+      StatsConversionReady[stat] = (StatsConversionReady[stat] || 0) + value
+    }
   }
 
   localStorage.setItem("StatsConversionReady", JSON.stringify(StatsConversionReady))
@@ -212,35 +221,59 @@ export function computeConversionStats() {
   console.log("Updating Conversion Stats")
 
   const rawSelected = localStorage.getItem("selectedTalents")
-  const rawStats = localStorage.getItem("StatsTalents")
+  const rawStats = localStorage.getItem("StatsConversionReady")
   if (!rawSelected || !rawStats) return
 
-  try {
-    const selected = new Set<string>(JSON.parse(rawSelected))
-    const baseStats: Record<string, number> = JSON.parse(rawStats)
-    const converted: Record<string, number> = {}
 
-    for (const [name, data] of Object.entries(talent_data)) {
-      if (!selected.has(name)) continue
-      if (!Array.isArray(data.conversions)) continue
+  const selected = new Set<string>(JSON.parse(rawSelected))
+  const baseStats: Record<string, number> = JSON.parse(rawStats)
+  const converted: Record<string, number> = {}
 
-      for (const { source, ratio, resulting_stat } of data.conversions) {
-        const base = baseStats[source] ?? 0
-        const amount = base * ratio
-        converted[resulting_stat] = (converted[resulting_stat] || 0) + amount
-      }
+  for (const [name, data] of Object.entries(talent_data)) {
+    if (!selected.has(name)) continue
+    if (!Array.isArray(data.conversions)) continue
+
+    for (const { source, ratio, resulting_stat } of data.conversions) {
+      const base = baseStats[source] ?? 0
+      const amount = base * ratio
+      converted[resulting_stat] = (converted[resulting_stat] || 0) + amount
     }
+  }
 
-    localStorage.setItem("StatsConverted", JSON.stringify(converted))
-    console.log(converted)
-  } catch {}
+  localStorage.setItem("StatsConverted", JSON.stringify(converted))
+  console.log(converted)
+}
+
+// Combine all of stage 3
+export function computeBuffReadyStats() {
+  computeConversionStats()
+  console.log("Updating Buff Ready Stats")
+  const rawStatsBase = localStorage.getItem("StatsConversionReady")
+  const rawStatsConverted = localStorage.getItem("StatsConverted")
+  const StatsBuffReady: Record<string, number> = {}
+
+  if(rawStatsBase) {
+    const StatsBase: Record<string, number> = JSON.parse(rawStatsBase)
+    for (const [stat, value] of Object.entries(StatsBase)) {
+      StatsBuffReady[stat] = (StatsBuffReady[stat] || 0) + value
+    }
+  }
+  if(rawStatsConverted) {
+    const StatsConverted: Record<string, number> = JSON.parse(rawStatsConverted)
+    for (const [stat, value] of Object.entries(StatsConverted)) {
+      StatsBuffReady[stat] = (StatsBuffReady[stat] || 0) + value
+    }
+  }
+
+  localStorage.setItem("StatsBuffReady", JSON.stringify(StatsBuffReady))
+  console.log(StatsBuffReady)
 }
 
 // Tie all stats together
 export function computeDmgReadyStats() {
-  computeConversionStats()
+  computeBuffReadyStats()
   console.log("Updating Dmg Ready Stats")
-  const raw = localStorage.getItem("StatsTalents")
+  const raw = localStorage.getItem("StatsBuffReady")
   if (!raw) return
 
   try {
@@ -255,9 +288,9 @@ export function computeDmgReadyStats() {
     }
 
     for (const stat of stat_data.AllElements) {
-      result[stat] = stats[`${stat_data.AllElements}%`]
+      console.log(`${stat}%`)
+      result[stat] = stats[`${stat}%`] ?? 0
     }
-
     localStorage.setItem("StatsDmgReady", JSON.stringify(result))
     console.log(result)
   } catch {}
