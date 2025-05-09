@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import ToggleButton from "@/app/components/ToggleButton"
+import { ToggleButton } from "@/app/components/ToggleButton"
 import { talent_data, __columnWidths } from "@/app/data/talent_data"
 
 const STORAGE_KEY = "selectedTalents"

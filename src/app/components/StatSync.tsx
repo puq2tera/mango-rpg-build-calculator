@@ -41,9 +41,6 @@ export function computeLevelStats() {
 
   const StatsLevels: Record<string, number> = {}
 
-  // console.log(storedLevels)
-  // console.log(storedStatPoints)
-  // console.log(storedTraining)
   console.log(storedHeroPoints)
 
   // Mainstats
