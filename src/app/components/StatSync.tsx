@@ -265,6 +265,16 @@ export function computeBuffReadyStats() {
   localStorage.setItem("StatsBuffReady", JSON.stringify(StatsBuffReady))
   console.log(StatsBuffReady)
 }
+// Stage 4: Pre buff stats
+
+// LOGIC TO IMPLEMENT BUFF%
+
+
+// Stage 4: Buff stats
+
+// Stage 4: Post buff stats
+
+// LOGIC TO IMPLEMENT REAPER's DICE
 
 // Tie all stats together
 export function computeDmgReadyStats() {
