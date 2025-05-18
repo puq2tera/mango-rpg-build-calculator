@@ -53,6 +53,7 @@ const AllElements = ["Slash", "Pierce", "Blunt", "Fire", "Water", "Lightning", "
 export type Mainstats_type = "ATK" | "DEF" | "MATK" | "HEAL"
 export type AllElements_type = "Slash" | "Pierce" | "Blunt" | "Fire" | "Water" | "Lightning" | "Wind" | "Earth" | "Toxic" | "Neg" | "Holy" | "Void"
 const SkillTypes = ["Sword", "Spear", "Void", "Fire", "Shadow Break"]
+export const PostBuffTypes: StatNames[] = ["Post Crit Chance%" , "Post ATK" , "Post HEAL" , "Post Slash Pen%" , "Post Fire Pen%"]
 
 const Elemental = ["Fire", "Water", "Lightning", "Wind", "Earth", "Toxic"]
 const Physical = ["Slash", "Pierce", "Blunt"]
@@ -110,6 +111,7 @@ const stat_data = {
   heroStats,
   ClassMainStatValues,
   ClassNames,
+  PostBuffTypes
 }
 
 export default stat_data

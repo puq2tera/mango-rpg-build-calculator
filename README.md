@@ -18,11 +18,7 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 ### Step 3: Conversions
 - Conversion Talents
 
-### Step 4a: Buff%
-### Step 4b: Buffs
+### Step 4: Buffs (applied in selected order)
 - Tarots
 - Buffs
 - xDmg
-### Step 4c: Multiplicative Buffs
-- Reaper's Dice
-- MP related

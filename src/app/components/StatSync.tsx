@@ -4,6 +4,7 @@
 import { useEffect } from "react"
 import { talent_data } from "@/app/data/talent_data"
 import stat_data from "../data/stat_data"
+import { PostBuffTypes } from "../data/stat_data"
 import rune_data from "../data/rune_data"
 import { skill_data } from "../data/skill_data"
 
@@ -266,9 +267,8 @@ export function computeBuffReadyStats() {
   localStorage.setItem("StatsBuffReady", JSON.stringify(StatsBuffReady))
   console.log(StatsBuffReady)
 }
-// Stage 4: Pre buff stats
 
-// LOGIC TO IMPLEMENT BUFF%
+// Stage 4 of stat pipeline
 export function computeBuffStats() {
   computeBuffReadyStats()
   console.log("Updating Buff Stats")
@@ -287,12 +287,17 @@ export function computeBuffStats() {
 
     for (const { source, ratio, resulting_stat } of data.conversions) {
       const base = baseStats[source] ?? 0
-      const amount = base * ratio * (1 + baseStats["Buff%"] + buffed["Buff%"])
+      const buff = baseStats["Buff%"] + (buffed["Buff%"] ?? 0)
+      const effectiveBase = source in PostBuffTypes
+        ? base + (buffed[source] ?? 0) // If it is postBuff then use buffed stats
+        : base // Otherwise use pre-buff stats
+      const amount = effectiveBase * ratio * (1 + buff)
       buffed[resulting_stat] = (buffed[resulting_stat] || 0) + amount
     }
     for (const [stat, stat_amount] of Object.entries(data.stats)) {
       const base = baseStats[stat] ?? 0
-      const amount = base + stat_amount * (1 + baseStats["Buff%"] + buffed["Buff%"])
+      const buff = baseStats["Buff%"] + (buffed["Buff%"] ?? 0)
+      const amount = base + stat_amount * (1 + buff)
       buffed[stat] = (buffed[stat] || 0) + amount
     }    
   }
@@ -300,12 +305,6 @@ export function computeBuffStats() {
   localStorage.setItem("StatsBuffs", JSON.stringify(buffed))
   console.log(buffed)
 }
-
-// Stage 4: Buff stats
-
-// Stage 4: Post buff stats
-
-// LOGIC TO IMPLEMENT REAPER's DICE
 
 // Tie all stats together
 export function computeDmgReadyStats() {
