@@ -23,16 +23,16 @@ export type Skill = {
     }
     description: string
     stats: Partial<Record<StatNames, number>>
-    stack_stats: Record<string, number>
+    stack_stats: Partial<Record<StatNames, number>>
     conversions: Array<{
-        source: string
+        source: StatNames
         ratio: number
-        resulting_stat: string
+        resulting_stat: StatNames
     }>
     stack_conversions: Array<{
-        source: string
+        source: StatNames
         ratio: number
-        resulting_stat: string
+        resulting_stat: StatNames
     }>
     dmg_stats:{
         dmg_element: string // This is the actual dmg it deals
@@ -1847,10 +1847,9 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ ⧖ ] Gain flat +100% All Res for 1 Turn, then flat +10% All Res for 24 turns",
-        conversions: [
-    { source: "Allres", ratio: 0.1, resulting_stat: "Allres" },
-    ],
-        
+        stats: {
+            "All Res%": 0.1,
+        }
 },
 "MA Body Defense 1": {...defaultSkill,
         type: {
@@ -4465,7 +4464,7 @@ const skill_data: Record<string, Skill> = {
         },
         description: "[ 1 Charge ] Give party Temporary HP equal to 100% MATK for 3 turns. 45 MP.",
         conversions: [
-    { source: "MARK", ratio: 1, resulting_stat: "Temp HP" },
+    { source: "MATK", ratio: 1, resulting_stat: "Temp HP" },
     ],
         
 },
@@ -4631,7 +4630,7 @@ const skill_data: Record<string, Skill> = {
         },
         description: "[ ⧖ ] Raise self Magic Elemental DMG by 75% for 2 Turns. Costs 4% Current MP. Minimum 36 MP.",
         conversions: [
-    { source: "Crit DMG", ratio: 0.75, resulting_stat: "elemental Crit DMG%" },
+    { source: "Crit DMG%", ratio: 0.75, resulting_stat: "Elemental Crit DMG%" },
     ],
         
 },
@@ -7369,7 +7368,7 @@ const skill_data: Record<string, Skill> = {
         description: "Deal damage equal to 40% of self Max HP to target Ally, but raise their Crit Damage by 100% of Heal Multiplier for 4 Turns. 24 MP",
         conversions: [
     { source: "HP", ratio: -0.4, resulting_stat: "Temp HP" },
-    { source: "Heal%", ratio: 1, resulting_stat: "Crit DMG%" },
+    { source: "HEAL%", ratio: 1, resulting_stat: "Crit DMG%" },
     ],
         
 },
@@ -8010,7 +8009,7 @@ const skill_data: Record<string, Skill> = {
         },
         description: "[ ⧖ ] Apply Reality Curse to enemy. Max 1 Curse per enemy. Curse reduces enemy allres (except Void) by 4% Heal Multiplier. Costs 4% Current MP.",
         conversions: [
-    { source: "Heal%", ratio: 0.04, resulting_stat: "NonVoid Pen%" },
+    { source: "HEAL%", ratio: 0.04, resulting_stat: "NonVoid Pen%" },
     ],
         
 },
@@ -8955,7 +8954,7 @@ const skill_data: Record<string, Skill> = {
         description: "[ ⧖ , 3 Charges ] Raise All Resist by 100% self Negative Res for 2 Turns, and 666% All Element Damage by Negative Res the rest of the battle.",
         conversions: [
     { source: "Neg Res%", ratio: 1, resulting_stat: "All Res%" },
-    { source: "Nes Res%", ratio: 6.66, resulting_stat: "All%" },
+    { source: "Neg Res%", ratio: 6.66, resulting_stat: "All%" },
     ],
         
 },

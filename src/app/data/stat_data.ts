@@ -1,6 +1,6 @@
 export type StatNames = 
     //Mainstats
-    | 'ATK' | 'DEF' | 'MATK' | 'HEAL'
+    | 'ATK' | 'DEF' | 'MATK' | 'HEAL' | 'POWER'
     | 'ATK%' | 'DEF%' | 'MATK%' | 'HEAL%'
     //Elemental
     | "Fire%" | "Water%" | "Lightning%" | "Wind%" | "Earth%" | "Toxic%"
@@ -12,40 +12,45 @@ export type StatNames =
     | "Slash Pen%" | "Pierce Pen%" | "Blunt Pen%"
     | "Slash Res%" | "Pierce Res%" | "Blunt Res%"
     | "Phys%" | "Phys Pen%" | "Phys Res%" | "Phys xPen%"
-    | "Slash DOT%"
     //Divine
     | "Neg%" | "Holy%"
     | "Neg Pen%" | "Holy Pen%"
     | "Neg Res%" | "Holy Res%"
     | "Divine%" | "Divine Pen%" | "Divine Res%"
-    | "Holy DOT%"
     //Void
     | "Void%"
     | "Void Pen%"
     | "Void Res%"
-    | "Void DOT%"
+    //Weird
+    | "NonVoid Pen%" // in game its called "allresnovoid"
+    | "Magic%" // Elemental + Divine + Void
     //All
-    | "All%" | "All Res%"
+    | "All%" | "All Pen%" | "All Res%"
     //Crit
     | "Crit Chance%" | "Crit DMG%"
     //Character Stats
     | "Focus" | "Focus Regen"
     | "MP" | "MP Regen"
-    | "HP" | "HP Regen"
+    | "HP" | "HP Regen" | "Temp HP"
     //Other
     | "Threat%"
     | "Dmg%"
     | "DMG Res%"
     | "Buff%"
     | "Heal Effect%"
-    //Warrior Types
-    | "Bow Crit DMG%" | "Fist Crit DMG%" | "Spear DMG%" | "Sword DMG%" | "Hammer DMG%" | "Dagger Crit DMG%"
-    //Armor Ignore
+    //Skill Specific
     | "Blunt Armor Ignore%" | "Void Armor Ignore%" | "Phys Armor Ignore%" | "Magic Armor Ignore%"
+    | "Spear DMG%" | "Sword DMG%" | "Hammer DMG%" 
+    | "Void DOT%" | "Holy DOT%" | "Slash DOT%"
+    | "Bow Crit DMG%" | "Fist Crit DMG%" | "Dagger Crit DMG%" | "Elemental Crit DMG%" | "Holy Crit DMG%"
+    //Buff specific post stats
+    | "Post Crit Chance%" | "Post ATK" | "Post HEAL" | "Post Slash Pen%" | "Post Fire Pen%"
 
 const ClassNames: string[] = ["tank", "warrior", "caster", "healer"]
 const Mainstats = ["ATK", "DEF", "MATK", "HEAL"]
 const AllElements = ["Slash", "Pierce", "Blunt", "Fire", "Water", "Lightning", "Wind", "Earth", "Toxic", "Neg", "Holy", "Void"]
+export type Mainstats_type = "ATK" | "DEF" | "MATK" | "HEAL"
+export type AllElements_type = "Slash" | "Pierce" | "Blunt" | "Fire" | "Water" | "Lightning" | "Wind" | "Earth" | "Toxic" | "Neg" | "Holy" | "Void"
 const SkillTypes = ["Sword", "Spear", "Void", "Fire", "Shadow Break"]
 
 const Elemental = ["Fire", "Water", "Lightning", "Wind", "Earth", "Toxic"]
