@@ -1,3 +1,48 @@
+export type StatNames = 
+    //Mainstats
+    | 'ATK' | 'DEF' | 'MATK' | 'HEAL'
+    | 'ATK%' | 'DEF%' | 'MATK%' | 'HEAL%'
+    //Elemental
+    | "Fire%" | "Water%" | "Lightning%" | "Wind%" | "Earth%" | "Toxic%"
+    | "Fire Pen%" | "Water Pen%" | "Lightning Pen%" | "Wind Pen%" | "Earth Pen%" | "Toxic Pen%"
+    | "Fire Res%" | "Water Res%" | "Lightning Res%" | "Wind Res%" | "Earth Res%" | "Toxic Res%"
+    | "Elemental%" | "Elemental Pen%" | "Elemental Res%" | "Elemental xDmg%" | "Elemental xPen%"
+    //Phys
+    | "Slash%" | "Pierce%" | "Blunt%"
+    | "Slash Pen%" | "Pierce Pen%" | "Blunt Pen%"
+    | "Slash Res%" | "Pierce Res%" | "Blunt Res%"
+    | "Phys%" | "Phys Pen%" | "Phys Res%" | "Phys xPen%"
+    | "Slash DOT%"
+    //Divine
+    | "Neg%" | "Holy%"
+    | "Neg Pen%" | "Holy Pen%"
+    | "Neg Res%" | "Holy Res%"
+    | "Divine%" | "Divine Pen%" | "Divine Res%"
+    | "Holy DOT%"
+    //Void
+    | "Void%"
+    | "Void Pen%"
+    | "Void Res%"
+    | "Void DOT%"
+    //All
+    | "All%" | "All Res%"
+    //Crit
+    | "Crit Chance%" | "Crit DMG%"
+    //Character Stats
+    | "Focus" | "Focus Regen"
+    | "MP" | "MP Regen"
+    | "HP" | "HP Regen"
+    //Other
+    | "Threat%"
+    | "Dmg%"
+    | "DMG Res%"
+    | "Buff%"
+    | "Heal Effect%"
+    //Warrior Types
+    | "Bow Crit DMG%" | "Fist Crit DMG%" | "Spear DMG%" | "Sword DMG%" | "Hammer DMG%" | "Dagger Crit DMG%"
+    //Armor Ignore
+    | "Blunt Armor Ignore%" | "Void Armor Ignore%" | "Phys Armor Ignore%" | "Magic Armor Ignore%"
+
 const ClassNames: string[] = ["tank", "warrior", "caster", "healer"]
 const Mainstats = ["ATK", "DEF", "MATK", "HEAL"]
 const AllElements = ["Slash", "Pierce", "Blunt", "Fire", "Water", "Lightning", "Wind", "Earth", "Toxic", "Neg", "Holy", "Void"]

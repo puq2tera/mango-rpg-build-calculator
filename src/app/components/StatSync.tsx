@@ -5,6 +5,7 @@ import { useEffect } from "react"
 import { talent_data } from "@/app/data/talent_data"
 import stat_data from "../data/stat_data"
 import rune_data from "../data/rune_data"
+import { skill_data } from "../data/skill_data"
 
 
 // Stage 1 of Stat Pipeline
@@ -43,7 +44,7 @@ export function computeLevelStats() {
 
   console.log(storedHeroPoints)
 
-  // Mainstats
+  //Mainstats
   for (const stat of stat_data.Mainstats) {
     StatsLevels[stat] = 5 + storedStatPoints[stat] + (4 * storedTraining[stat])
     for (const ClassName of stat_data.ClassNames) {
@@ -268,7 +269,37 @@ export function computeBuffReadyStats() {
 // Stage 4: Pre buff stats
 
 // LOGIC TO IMPLEMENT BUFF%
+export function computeBuffStats() {
+  computeBuffReadyStats()
+  console.log("Updating Buff Stats")
 
+  const rawSelected = localStorage.getItem("selectedBuffs")
+  const rawBuffs = localStorage.getItem("StatsBuffReady")
+  if (!rawSelected || !rawBuffs) return
+
+
+  const selected = new Set<string>(JSON.parse(rawSelected))
+  const baseStats: Record<string, number> = JSON.parse(rawBuffs)
+  const buffed: Record<string, number> = {}
+
+  for (const [name, data] of Object.entries(skill_data)) {
+    if (!selected.has(name)) continue
+
+    for (const { source, ratio, resulting_stat } of data.conversions) {
+      const base = baseStats[source] ?? 0
+      const amount = base * ratio * (1 + baseStats["Buff%"] + buffed["Buff%"])
+      buffed[resulting_stat] = (buffed[resulting_stat] || 0) + amount
+    }
+    for (const [stat, stat_amount] of Object.entries(data.stats)) {
+      const base = baseStats[stat] ?? 0
+      const amount = base + stat_amount * (1 + baseStats["Buff%"] + buffed["Buff%"])
+      buffed[stat] = (buffed[stat] || 0) + amount
+    }    
+  }
+
+  localStorage.setItem("StatsBuffs", JSON.stringify(buffed))
+  console.log(buffed)
+}
 
 // Stage 4: Buff stats
 
