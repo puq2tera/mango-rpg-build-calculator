@@ -43,6 +43,9 @@ export default function RootLayout({
           <Link href="/Skills/Buffs" className="hover:underline">
             Buffs
           </Link>
+          <Link href="/Skills/BuffSorter" className="hover:underline">
+            Buff Overview
+          </Link>
           <Link href="/equipment" className="hover:underline">
             Equipment
           </Link>
