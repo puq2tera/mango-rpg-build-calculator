@@ -31,13 +31,14 @@ export type StatNames =
     //Character Stats
     | "Focus" | "Focus Regen"
     | "MP" | "MP Regen"
-    | "HP" | "HP Regen" | "Temp HP"
+    | "HP" | "HP Regen" | "HP Regen%" | "Temp HP"
     //Other
     | "Threat%"
     | "Dmg%"
     | "DMG Res%"
     | "Buff%"
     | "Heal Effect%"
+    | "EXP Gain%"
     //Skill Specific
     | "Blunt Armor Ignore%" | "Void Armor Ignore%" | "Phys Armor Ignore%" | "Magic Armor Ignore%"
     | "Spear DMG%" | "Sword DMG%" | "Hammer DMG%" 
