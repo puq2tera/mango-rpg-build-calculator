@@ -1,8 +1,9 @@
-// --- START OF FILE race_data.ts ---
+import { StatNames } from "../data/stat_data"
+
 export type Race = {
     tag: string;
     description: string;
-    stats: Record<string, number>; // Base racial stats/resists
+    stats: Partial<Record<StatNames, number>>; // Base racial stats/resists
     heroPointStats: Record<string, { cost: number; gain: number }>; // Stats gained per hero point spent
 }
 

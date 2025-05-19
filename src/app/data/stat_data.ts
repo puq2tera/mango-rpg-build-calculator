@@ -2,6 +2,7 @@ export type StatNames =
     //Mainstats
     | 'ATK' | 'DEF' | 'MATK' | 'HEAL' | 'POWER'
     | 'ATK%' | 'DEF%' | 'MATK%' | 'HEAL%'
+    | 'Global ATK%' | 'Global DEF%' | 'Global MATK%' | 'Global HEAL%'
     //Elemental
     | "Fire%" | "Water%" | "Lightning%" | "Wind%" | "Earth%" | "Toxic%"
     | "Fire Pen%" | "Water Pen%" | "Lightning Pen%" | "Wind Pen%" | "Earth Pen%" | "Toxic Pen%"
@@ -11,7 +12,7 @@ export type StatNames =
     | "Slash%" | "Pierce%" | "Blunt%"
     | "Slash Pen%" | "Pierce Pen%" | "Blunt Pen%"
     | "Slash Res%" | "Pierce Res%" | "Blunt Res%"
-    | "Phys%" | "Phys Pen%" | "Phys Res%" | "Phys xPen%"
+    | "Phys%" | "Phys Pen%" | "Phys Res%" | "Phys xDmg%" | "Phys xPen%"
     //Divine
     | "Neg%" | "Holy%"
     | "Neg Pen%" | "Holy Pen%"
@@ -19,10 +20,11 @@ export type StatNames =
     | "Divine%" | "Divine Pen%" | "Divine Res%"
     //Void
     | "Void%"
-    | "Void Pen%"
+    | "Void Pen%" | "Void xPen%"
     | "Void Res%"
     //Weird
     | "NonVoid Pen%" // in game its called "allresnovoid"
+    | "Elemental_Except_Water Res%"
     | "Magic%" // Elemental + Divine + Void
     //All
     | "All%" | "All Pen%" | "All Res%"
@@ -30,20 +32,21 @@ export type StatNames =
     | "Crit Chance%" | "Crit DMG%"
     //Character Stats
     | "Focus" | "Focus Regen"
-    | "MP" | "MP Regen"
-    | "HP" | "HP Regen" | "HP Regen%" | "Temp HP"
+    | "MP" | "MP Regen" | "MP%"
+    | "HP" | "HP Regen" | "HP%" | "HP Regen%" | "Temp HP"
     //Other
     | "Threat%"
     | "Dmg%"
     | "DMG Res%"
     | "Buff%"
     | "Heal Effect%"
-    | "EXP Gain%"
+    | "EXP Bonus"
     //Skill Specific
     | "Blunt Armor Ignore%" | "Void Armor Ignore%" | "Phys Armor Ignore%" | "Magic Armor Ignore%"
-    | "Spear DMG%" | "Sword DMG%" | "Hammer DMG%" 
+    | "Spear DMG%" | "Sword DMG%" | "Hammer DMG%" | "Fire DMG%" | "Fist DMG%" | "Dagger DMG%" | "Shadow Break DMG%" | "Hammer DMG%"
     | "Void DOT%" | "Holy DOT%" | "Slash DOT%"
     | "Bow Crit DMG%" | "Fist Crit DMG%" | "Dagger Crit DMG%" | "Elemental Crit DMG%" | "Holy Crit DMG%"
+    | "Shadow Break Crit Chance%"
     //Buff specific post stats
     | "Post Crit Chance%" | "Post ATK" | "Post HEAL" | "Post Slash Pen%" | "Post Fire Pen%"
 
