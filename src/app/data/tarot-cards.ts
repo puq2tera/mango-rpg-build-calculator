@@ -1,3 +1,20 @@
+import { StatNames } from "../data/stat_data"
+
+export type Tarot = {
+    tier: string
+    is_active: boolean
+    skill_name: string
+    description: string
+    stat: StatNames
+    stat_base: number
+    stat_scaling: number
+    stack_conversions: Array<{
+        source: StatNames
+        ratio: number
+        resulting_stat: StatNames
+    }>
+}
+
 const tarotCards = [
     {
       selected: false,
