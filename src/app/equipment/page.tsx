@@ -27,6 +27,8 @@ interface Slot {
 const STORAGE_KEY_SLOTS = "EquipmentSlots"
 const STORAGE_KEY_ENABLED = "EnabledEquipment"
 const STORAGE_KEY_RUNES = "SelectedRunes"
+const STORAGE_KEY_ARTIFACT = "Artifact"
+
 
 const runeTiers = ["Low", "Middle", "High", "Legacy", "Divine"] as const
 
@@ -58,6 +60,7 @@ export default function EquipmentPage() {
   const [isHydrated, setIsHydrated] = useState(false)
   const [slots, setSlots] = useState<Slot[]>([])
   const [selectedRunes, setSelectedRunes] = useState<Record<RuneTier, RuneSelection[]>>(emptyRuneSet())
+  const [artifact, setArtifact] = useState({ "ATK%": 0, "DEF%": 0, "MATK%": 0, 'HEAL%': 0, 'Level': 0 })
 
   useEffect(() => {
     const storedSlots = localStorage.getItem(STORAGE_KEY_SLOTS)
@@ -80,6 +83,9 @@ export default function EquipmentPage() {
       setSelectedRunes(emptyRuneSet())
     }
 
+    const storedArtifact = localStorage.getItem(STORAGE_KEY_ARTIFACT)
+    if (storedArtifact) setArtifact(JSON.parse(storedArtifact))
+
     setIsHydrated(true)
   }, [])
 
@@ -96,6 +102,12 @@ export default function EquipmentPage() {
       localStorage.setItem(STORAGE_KEY_RUNES, JSON.stringify(selectedRunes))
     }
   }, [selectedRunes, isHydrated])
+
+  useEffect(() => {
+    if (isHydrated) {
+      localStorage.setItem(STORAGE_KEY_ARTIFACT, JSON.stringify(artifact));
+    }
+  }, [artifact, isHydrated]);
 
   const addAffixRow = (slotIndex: number) => {
     const updated = [...slots]
@@ -174,6 +186,34 @@ export default function EquipmentPage() {
   return (
     <div className="p-4 space-y-8">
       <h1 className="text-2xl font-bold">Equipment Editor</h1>
+      {/* Artifact Editor */}
+      <h1 className="text-xl font-bold">Level Summary</h1>
+
+      <table className="table-fixed border text-center text-sm">
+        <thead>
+          <tr>
+            <th className="bg-green-100 border px-2 py-1">ATK%</th>
+            <th className="bg-red-100 border px-2 py-1">DEF%</th>
+            <th className="bg-blue-100 border px-2 py-1">MATK%</th>
+            <th className="bg-pink-100 border px-2 py-1">HEAL%</th>
+            <th className="bg-pink-100 border px-2 py-1">Level</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            {(["ATK%", "DEF%", "MATK%", "HEAL%", "Level"] as const).map(k => (
+              <td key={k} className="border">
+                <input
+                  type="number"
+                  value={artifact[k]}
+                  onChange={e => setArtifact({ ...artifact, [k]: +e.target.value })}
+                  className="w-16 text-center"
+                />
+              </td>
+            ))}
+          </tr>
+        </tbody>
+      </table>
 
       {/* Rune Editor */}
       <div className="space-y-8">

@@ -122,17 +122,35 @@ export function computeRuneStats() {
   console.log(stats)
 }
 
+export function computeArtifactStats() {
+  console.log("Updating Artifact Stats")
+  const rawArtifact = localStorage.getItem('Artifact')
+  if (!rawArtifact) return
+  const Artifact: Record<string, number> = JSON.parse(rawArtifact)
+  const stats: Record<string, number> = {}
+
+  for (const stat of stat_data.Mainstats) {
+    stats[`${stat}%`] = Artifact[`${stat}%`]
+    stats[stat] = Artifact["Level"]
+  }
+  
+  localStorage.setItem("StatsArtifact", JSON.stringify(stats))
+  console.log(stats)
+}
+
 // Combine all of stage 1
 export function computeBaseStats() {
   computeLevelStats()
   computeTalentStats()
   computeRuneStats()
   computeEquipmentStats()
+  computeArtifactStats()
   console.log("Updating Base Stats")
   const rawStatsTalents = localStorage.getItem("StatsTalents")
   const rawStatsEquipment = localStorage.getItem("StatsEquipment")
   const rawStatsLevels = localStorage.getItem("StatsLevels")
   const rawStatsRunes = localStorage.getItem("StatsRunes")
+  const rawStatsArtifact = localStorage.getItem("StatsArtifact")
   const StatsBase: Record<string, number> = {}
 
   if(rawStatsTalents) {
@@ -159,6 +177,13 @@ export function computeBaseStats() {
   if(rawStatsRunes) {
     const StatsRunes: Record<string, number> = JSON.parse(rawStatsRunes)
     for (const [stat, value] of Object.entries(StatsRunes)) {
+      StatsBase[stat] = (StatsBase[stat] || 0) + value
+    }
+  }
+
+  if(rawStatsArtifact) {
+    const StatsArtifact: Record<string, number> = JSON.parse(rawStatsArtifact)
+    for (const [stat, value] of Object.entries(StatsArtifact)) {
       StatsBase[stat] = (StatsBase[stat] || 0) + value
     }
   }
