@@ -35,26 +35,37 @@ export function computeLevelStats() {
   const rawstoredStatPoints = localStorage.getItem('SelectedStatPoints')
   const rawstoredTraining = localStorage.getItem('SelectedTraining')
   const rawstoredHeroPoints = localStorage.getItem('SelectedHeroPoints')
-  if (!rawstoredLevels || !rawstoredStatPoints || !rawstoredTraining || !rawstoredHeroPoints) return
-  const storedLevels: Record<string, number> = JSON.parse(rawstoredLevels)
-  const storedStatPoints: Record<string, number> = JSON.parse(rawstoredStatPoints)
-  const storedTraining: Record<string, number> = JSON.parse(rawstoredTraining)
-  const storedHeroPoints: Record<string, number> = JSON.parse(rawstoredHeroPoints)
 
   const StatsLevels: Record<string, number> = {}
-
-  console.log(storedHeroPoints)
-
-  //Mainstats
-  for (const stat of stat_data.Mainstats) {
-    StatsLevels[stat] = 5 + storedStatPoints[stat] + (4 * storedTraining[stat])
-    for (const ClassName of stat_data.ClassNames) {
-      StatsLevels[stat] = StatsLevels[stat] + storedLevels[ClassName]*stat_data.ClassMainStatValues[ClassName][stat]
+  
+  if (!rawstoredLevels) {
+    for (const stat of stat_data.Mainstats) {
+      StatsLevels[stat] = 5
     }
   }
 
-  //TODO: HEROPOINT CALULATIONS
+  // If not undefined
+  if (!(!rawstoredLevels || !rawstoredStatPoints || !rawstoredTraining || !rawstoredHeroPoints)) {
+    
+    const storedLevels: Record<string, number> = JSON.parse(rawstoredLevels)
+    const storedStatPoints: Record<string, number> = JSON.parse(rawstoredStatPoints)
+    const storedTraining: Record<string, number> = JSON.parse(rawstoredTraining)
+    const storedHeroPoints: Record<string, number> = JSON.parse(rawstoredHeroPoints)
 
+
+
+    console.log(storedHeroPoints)
+
+    //Mainstats
+    for (const stat of stat_data.Mainstats) {
+      StatsLevels[stat] = 5 + storedStatPoints[stat] + (4 * storedTraining[stat])
+      for (const ClassName of stat_data.ClassNames) {
+        StatsLevels[stat] = StatsLevels[stat] + storedLevels[ClassName]*stat_data.ClassMainStatValues[ClassName][stat]
+      }
+    }
+
+    //TODO: HEROPOINT CALULATIONS
+  }
 
   localStorage.setItem("StatsLevels", JSON.stringify(StatsLevels))
   console.log(StatsLevels)
