@@ -45,12 +45,17 @@ export default function DamageCalc() {
     defCap: 0
   })
 
-  const nonCrit = ((stats[mainStat] * inputs["skillDmg"]) - 
-                    Math.max(0, inputs["enemyArmor"] * inputs["armorIgnore"])) *
+  const nonCrit = Math.max(0,
+                    // Stat - armor
+                    Math.max(0, 
+                      (stats[mainStat] * inputs["skillDmg"]) - 
+                      (inputs["enemyArmor"] * inputs["armorIgnore"] - ((stats["ATK"] + stats["DEF"] + stats["MATK"] + stats["HEAL"])/4))
+                    ) *
                     (1 + (stats[`${element}%`] ?? 0)) * 
                     (1 + (stats[`${penElement} Pen%`] ?? 0) - (inputs["enemyRes"] * inputs["resIgnore"])) *
                     (1 + (stats[skillType] ?? 0)) *
-                    (1 + (stats["Global DMG%"] ?? 0));
+                    (1 + (stats["Global DMG%"] ?? 0)));
+
   const crit = nonCrit * inputs['skillCritDmg']
   const average = 0
 

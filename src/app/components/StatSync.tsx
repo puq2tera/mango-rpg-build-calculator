@@ -141,7 +141,7 @@ export function computeArtifactStats() {
   const stats: Record<string, number> = {}
 
   for (const stat of stat_data.Mainstats) {
-    stats[`${stat}%`] = Artifact[`${stat}%`]
+    stats[`Art_${stat}%`] = Artifact[`${stat}%`] / 100
     stats[stat] = Artifact["Level"]
   }
   
@@ -210,7 +210,7 @@ export function computexPenStats() {
   const rawStatsBase = localStorage.getItem("StatsBase")
   if (!rawStatsBase) return
 
-  const StatsBase: Record<string, number> = JSON.parse(rawStatsBase)
+  let StatsBase: Record<string, number> = JSON.parse(rawStatsBase)
   const StatsXPen: Record<string, number> = {}
 
   for (const [xPenStat, affectedStats] of Object.entries(stat_data.xPenMapping)) {
@@ -357,12 +357,13 @@ export function computeDmgReadyStats() {
     for (const stat of stat_data.Mainstats) {
       const base = stats[stat] ?? 0
       const multiplier = stats[`${stat}%`] ?? 0
-      result[stat] = base * (1 + multiplier)
+      const artifact_multiplier = stats[`Art_${stat}%`] ?? 0
+      result[stat] = base * (1 + multiplier) * (1 + artifact_multiplier)
     }
 
     for (const stat of stat_data.AllElements) {
-      console.log(`${stat}%`)
-      result[stat] = stats[`${stat}%`] ?? 0
+      result[`${stat}%`] = stats[`${stat}%`] ?? 0
+      result[`${stat} Pen%`] = stats[`${stat} Pen%`] ?? 0
     }
     localStorage.setItem("StatsDmgReady", JSON.stringify(result))
     console.log(result)

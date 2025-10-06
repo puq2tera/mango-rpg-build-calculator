@@ -2,6 +2,7 @@ export type StatNames =
     //Mainstats
     | 'ATK' | 'DEF' | 'MATK' | 'HEAL' | 'POWER'
     | 'ATK%' | 'DEF%' | 'MATK%' | 'HEAL%'
+    | 'Art_ATK%' | 'Art_DEF%' | 'Art_MATK%' | 'Art_HEAL%'
     | 'Global ATK%' | 'Global DEF%' | 'Global MATK%' | 'Global HEAL%'
     //Elemental
     | "Fire%" | "Water%" | "Lightning%" | "Wind%" | "Earth%" | "Toxic%"
@@ -43,7 +44,7 @@ export type StatNames =
     | "EXP Bonus"
     //Skill Specific
     | "Blunt Armor Ignore%" | "Void Armor Ignore%" | "Phys Armor Ignore%" | "Magic Armor Ignore%"
-    | "Spear DMG%" | "Sword DMG%" | "Hammer DMG%" | "Fire DMG%" | "Fist DMG%" | "Dagger DMG%" | "Shadow Break DMG%" | "Hammer DMG%"
+    | "Spear DMG%" | "Sword DMG%" | "Hammer DMG%" | "Fire DMG%" | "Fist DMG%" | "Dagger DMG%" | "Shadow Break DMG%"
     | "Void DOT%" | "Holy DOT%" | "Slash DOT%"
     | "Bow Crit DMG%" | "Fist Crit DMG%" | "Dagger Crit DMG%" | "Elemental Crit DMG%" | "Holy Crit DMG%"
     | "Shadow Break Crit Chance%"
