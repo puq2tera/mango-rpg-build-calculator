@@ -32,40 +32,40 @@ export function computeTalentStats() {
 export function computeLevelStats() {
   console.log("Updating Level Stats")
   const rawstoredLevels = localStorage.getItem('SelectedLevels')
+  const rawstoredOrder = localStorage.getItem('SelectedLevelOrder')
   const rawstoredStatPoints = localStorage.getItem('SelectedStatPoints')
   const rawstoredTraining = localStorage.getItem('SelectedTraining')
   const rawstoredHeroPoints = localStorage.getItem('SelectedHeroPoints')
 
   const StatsLevels: Record<string, number> = {}
+
+  const storedLevels: Record<string, number> = JSON.parse(rawstoredLevels ?? "{}")
+  const storedLevelOrder: [] = JSON.parse(rawstoredOrder ?? "{}")
+  const storedStatPoints: Record<string, number> = JSON.parse(rawstoredStatPoints ?? "{}") 
+  const storedTraining: Record<string, number> = JSON.parse(rawstoredTraining ?? "{}")
+  const storedHeroPoints: Record<string, number> = JSON.parse(rawstoredHeroPoints ?? "{}")
+
+  //TODO: Remove once heropoints are implemented
+  console.log(storedHeroPoints)
   
-  if (!rawstoredLevels) {
-    for (const stat of stat_data.Mainstats) {
-      StatsLevels[stat] = 5
+  //HP
+  //TODO: replace 999 with current level (50 hp = lvl 0, loop starts at lvl 1)
+  StatsLevels["HP"] = 50
+  console.log(storedLevelOrder)
+  for (const ClassName of storedLevelOrder) {
+    StatsLevels["HP"] = StatsLevels["HP"] + Math.floor(stat_data.ClassMainStatValues[ClassName]["HP"] * (1+(0.1*(999-1)))) + (999 * 4)
+  }
+
+  //Mainstats
+  for (const stat of stat_data.Mainstats) {
+    StatsLevels[stat] = 5 + (storedStatPoints[stat] ?? 0) + (4 * (storedTraining[stat] ?? 0))
+    for (const ClassName of stat_data.ClassNames) {
+      StatsLevels[stat] = StatsLevels[stat] + (storedLevels[ClassName] ?? 0)*stat_data.ClassMainStatValues[ClassName][stat]
     }
   }
 
-  // If not undefined
-  if (!(!rawstoredLevels || !rawstoredStatPoints || !rawstoredTraining || !rawstoredHeroPoints)) {
-    
-    const storedLevels: Record<string, number> = JSON.parse(rawstoredLevels)
-    const storedStatPoints: Record<string, number> = JSON.parse(rawstoredStatPoints)
-    const storedTraining: Record<string, number> = JSON.parse(rawstoredTraining)
-    const storedHeroPoints: Record<string, number> = JSON.parse(rawstoredHeroPoints)
+  //TODO: HEROPOINT CALULATIONS
 
-
-
-    console.log(storedHeroPoints)
-
-    //Mainstats
-    for (const stat of stat_data.Mainstats) {
-      StatsLevels[stat] = 5 + storedStatPoints[stat] + (4 * storedTraining[stat])
-      for (const ClassName of stat_data.ClassNames) {
-        StatsLevels[stat] = StatsLevels[stat] + storedLevels[ClassName]*stat_data.ClassMainStatValues[ClassName][stat]
-      }
-    }
-
-    //TODO: HEROPOINT CALULATIONS
-  }
 
   localStorage.setItem("StatsLevels", JSON.stringify(StatsLevels))
   console.log(StatsLevels)

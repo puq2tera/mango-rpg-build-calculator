@@ -8,8 +8,7 @@ const STORAGE_KEYS = {
   statPoints: "SelectedStatPoints",
   training: "SelectedTraining",
   heroPoints: "SelectedHeroPoints",
-  order: "SelectedLevelOrder",
-  blockOrder: "SelectedLevelBlockOrder",
+  savedLevelOrder: "SelectedLevelOrder",
 }
 
 export default function LevelsPage() {
@@ -19,7 +18,6 @@ export default function LevelsPage() {
   const [statPoints, setStatPoints] = useState({ ATK: 0, DEF: 0, MATK: 0, HEAL: 0 })
   const [training, setTraining] = useState({ ATK: 0, DEF: 0, MATK: 0, HEAL: 0 })
   const [heroPoints, setHeroPoints] = useState<Record<string, number>>({})
-  const [levelOrder, setLevelOrder] = useState<Cls[]>([])
   const [classOrder, setClassOrder] = useState<Cls[]>(["tank", "warrior", "caster", "healer"])
   const [loaded, setLoaded] = useState(false)
 
@@ -28,15 +26,13 @@ export default function LevelsPage() {
     const storedStatPoints = localStorage.getItem(STORAGE_KEYS.statPoints)
     const storedTraining = localStorage.getItem(STORAGE_KEYS.training)
     const storedHeroPoints = localStorage.getItem(STORAGE_KEYS.heroPoints)
-    const storedOrder = localStorage.getItem(STORAGE_KEYS.order)
-    const storedBlockOrder = localStorage.getItem(STORAGE_KEYS.blockOrder)
+    const storedlevelOrder = localStorage.getItem(STORAGE_KEYS.savedLevelOrder)
 
     if (storedLevels) setLevels(JSON.parse(storedLevels))
     if (storedStatPoints) setStatPoints(JSON.parse(storedStatPoints))
     if (storedTraining) setTraining(JSON.parse(storedTraining))
     if (storedHeroPoints) setHeroPoints(JSON.parse(storedHeroPoints))
-    if (storedOrder) setLevelOrder(JSON.parse(storedOrder))
-    if (storedBlockOrder) setClassOrder(JSON.parse(storedBlockOrder))
+    if (storedlevelOrder) setClassOrder(JSON.parse(storedlevelOrder))
 
     setLoaded(true)  // <- very important
   }, [])
@@ -44,19 +40,6 @@ export default function LevelsPage() {
   useEffect(() => {
     if (!loaded) return
     localStorage.setItem(STORAGE_KEYS.levels, JSON.stringify(levels))
-    // If class counts changed, trim any excess from the order
-    setLevelOrder(prev => {
-      const counts: LevelsByClass = { tank: 0, warrior: 0, caster: 0, healer: 0 }
-      const max: LevelsByClass = { ...levels }
-      const next: typeof prev = []
-      for (const c of prev) {
-        if (counts[c] < max[c]) {
-          counts[c]++
-          next.push(c)
-        }
-      }
-      return next
-    })
   }, [levels, loaded])
 
   useEffect(() => {
@@ -74,24 +57,15 @@ export default function LevelsPage() {
     localStorage.setItem(STORAGE_KEYS.heroPoints, JSON.stringify(heroPoints))
   }, [heroPoints, loaded])
 
-  // Persist level order
   useEffect(() => {
     if (!loaded) return
-    localStorage.setItem(STORAGE_KEYS.order, JSON.stringify(levelOrder))
-  }, [levelOrder, loaded])
-
-  // Persist class (block) order and derive full SelectedLevelOrder from it
-  useEffect(() => {
-    if (!loaded) return
-    localStorage.setItem(STORAGE_KEYS.blockOrder, JSON.stringify(classOrder))
+    localStorage.setItem(STORAGE_KEYS.savedLevelOrder, JSON.stringify(classOrder))
     // Expand to full sequence: all levels for each class, in chosen order
     const seq: Cls[] = []
     for (const c of classOrder) {
       const count = levels[c]
       for (let i = 0; i < Math.max(0, count); i++) seq.push(c)
     }
-    setLevelOrder(seq)
-    localStorage.setItem(STORAGE_KEYS.order, JSON.stringify(seq))
   }, [classOrder, levels, loaded])
 
   if (!loaded) {

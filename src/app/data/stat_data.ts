@@ -82,25 +82,29 @@ const ClassMainStatValues: Record<string, Record<string, number>> = {
     "ATK": 7,
     "DEF": 2,
     "MATK": 1,
-    "HEAL": 1
+    "HEAL": 1,
+    "HP": 22.5
   },
   "warrior": {
     "ATK": 2,
     "DEF": 7,
     "MATK": 1,
-    "HEAL": 1
+    "HEAL": 1,
+    "HP": 20.5
   },
   "caster": {
     "ATK": 1,
     "DEF": 1,
     "MATK": 7,
-    "HEAL": 1.5
+    "HEAL": 1.5,
+    "HP": 19.5
   },
   "healer": {
     "ATK": 1,
     "DEF": 1,
     "MATK": 1.5,
-    "HEAL": 7
+    "HEAL": 7,
+    "HP": 15
   }
 }
 
