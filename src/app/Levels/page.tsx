@@ -105,8 +105,6 @@ export default function LevelsPage() {
   const remainingStatPoints = totalStatPoints - usedStatPoints
   const totalTraining = Object.values(training).reduce((a, b) => a + b, 0)
 
-  // (Manual per-level order UI removed; block order drives full sequence.)
-
   const totalHeroPoints = Object.entries(heroPoints).reduce((sum, [key, val]) => {
     const cost = stat_data.heroStats.find(([k]) => k === key)?.[1] ?? 1
     return sum + cost * val
