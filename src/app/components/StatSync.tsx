@@ -40,7 +40,7 @@ export function computeLevelStats() {
   const StatsLevels: Record<string, number> = {}
 
   const storedLevels: Record<string, number> = JSON.parse(rawstoredLevels ?? "{}")
-  const storedLevelOrder: [] = JSON.parse(rawstoredOrder ?? "{}")
+  const storedLevelOrder: string[] = JSON.parse(rawstoredOrder ?? "{}")
   const storedStatPoints: Record<string, number> = JSON.parse(rawstoredStatPoints ?? "{}") 
   const storedTraining: Record<string, number> = JSON.parse(rawstoredTraining ?? "{}")
   const storedHeroPoints: Record<string, number> = JSON.parse(rawstoredHeroPoints ?? "{}")
@@ -48,13 +48,17 @@ export function computeLevelStats() {
   //TODO: Remove once heropoints are implemented
   console.log(storedHeroPoints)
   
-  //HP
-  //TODO: replace 999 with current level (50 hp = lvl 0, loop starts at lvl 1)
-  StatsLevels["HP"] = 50
-  console.log(storedLevelOrder)
-  for (const ClassName of storedLevelOrder) {
-    StatsLevels["HP"] = StatsLevels["HP"] + Math.floor(stat_data.ClassMainStatValues[ClassName]["HP"] * (1+(0.1*(999-1)))) + (999 * 4)
+  // HP
+  let hp = 50
+  let lvl = 0
+  for (const ClassName of storedLevelOrder){
+    const hp_multiplier = stat_data.ClassMainStatValues[ClassName]['HP']
+    for (let i = 0; i < storedLevels[ClassName]; i++) {
+      lvl++
+      hp += Math.floor(hp_multiplier * (1 + 0.1 * (lvl - 1))) + 4 * lvl
+    }
   }
+  StatsLevels['HP'] = hp
 
   //Mainstats
   for (const stat of stat_data.Mainstats) {
