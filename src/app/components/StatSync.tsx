@@ -53,10 +53,19 @@ export function computeLevelStats() {
   let lvl = 0
   for (const ClassName of storedLevelOrder){
     const hp_multiplier = stat_data.ClassMainStatValues[ClassName]['HP']
+    let scaling_stat = stat_data.ClassScalingStats[ClassName]
+    let scaling_value = 0
     for (let i = 0; i < storedLevels[ClassName]; i++) {
       lvl++
       hp += Math.floor(hp_multiplier * (1 + 0.1 * (lvl - 1))) + 4 * lvl
+      switch (ClassName) {
+        case "tank":    scaling_value += stat_data.ClassMainStatValues[ClassName][scaling_stat] + Math.floor(stat_data.ClassMainStatValues[ClassName][`${scaling_stat} Scaling`] * lvl)
+        case "warrior": scaling_value += stat_data.ClassMainStatValues[ClassName][scaling_stat] + Math.min(0.08, stat_data.ClassMainStatValues[ClassName][`${scaling_stat} Scaling`] * lvl)
+        case "caster":  scaling_value += stat_data.ClassMainStatValues[ClassName][scaling_stat] + Math.floor(stat_data.ClassMainStatValues[ClassName][`${scaling_stat} Scaling`] * lvl)
+        case "healer":  scaling_value += stat_data.ClassMainStatValues[ClassName][scaling_stat] + (stat_data.ClassMainStatValues[ClassName][`${scaling_stat} Scaling`] * lvl)
+      }
     }
+    StatsLevels[scaling_stat] = scaling_value
   }
   StatsLevels['HP'] = hp
 

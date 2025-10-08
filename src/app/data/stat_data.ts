@@ -42,6 +42,8 @@ export type StatNames =
     | "Buff%"
     | "Heal Effect%"
     | "EXP Bonus"
+    //Class level bonuses
+    | "Overdrive%" | "Armor Save" | "Armor Strike"
     //Skill Specific
     | "Blunt Armor Ignore%" | "Void Armor Ignore%" | "Phys Armor Ignore%" | "Magic Armor Ignore%"
     | "Spear DMG%" | "Sword DMG%" | "Hammer DMG%" | "Fire DMG%" | "Fist DMG%" | "Dagger DMG%" | "Shadow Break DMG%"
@@ -76,6 +78,12 @@ const heroStats: [string, number][] = [
   ["resfire", 2], ["reslightning", 2], ["reswater", 2], ["researth", 2], ["reswind", 2], ["restoxic", 3], ["resvoid", 3], ["resnegative", 2], ["resholy", 2], ["resblunt", 2], ["respierce", 2], ["resslash", 2],
   ["penvoid", 1]
 ]
+const ClassScalingStats: Record<string, string> = {
+  "tank": "Armor Save",
+  "warrior": "Overdrive%",
+  "caster": "Crit DMG%",
+  "healer": "Armor Strike"
+}
 
 const ClassMainStatValues: Record<string, Record<string, number>> = {
   "tank": {
@@ -83,28 +91,36 @@ const ClassMainStatValues: Record<string, Record<string, number>> = {
     "DEF": 2,
     "MATK": 1,
     "HEAL": 1,
-    "HP": 22.5
+    "HP": 22.5,
+    "Armor Save": 1,
+    "Armor Save Scaling": 0.03 //round down
   },
   "warrior": {
     "ATK": 2,
     "DEF": 7,
     "MATK": 1,
     "HEAL": 1,
-    "HP": 20.5
+    "HP": 20.5,
+    "Overdrive%": 0.075,
+    "Overdrive% Scaling": 0.0002 //cap at 0.08 scaling
   },
   "caster": {
     "ATK": 1,
     "DEF": 1,
     "MATK": 7,
     "HEAL": 1.5,
-    "HP": 19.5
+    "HP": 19.5,
+    "Crit DMG%": 3,
+    "Crit DMG% Scaling" : 0.03 //round down
   },
   "healer": {
     "ATK": 1,
     "DEF": 1,
     "MATK": 1.5,
     "HEAL": 7,
-    "HP": 15
+    "HP": 15,
+    "Armor Strike": 25,
+    "Armor Strike Scaling": 60
   }
 }
 
@@ -119,7 +135,8 @@ const stat_data = {
   heroStats,
   ClassMainStatValues,
   ClassNames,
-  PostBuffTypes
+  PostBuffTypes,
+  ClassScalingStats
 }
 
 export default stat_data
