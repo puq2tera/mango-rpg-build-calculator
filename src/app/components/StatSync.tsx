@@ -364,11 +364,13 @@ export function computeDmgReadyStats() {
       const artifact_multiplier = stats[`Art_${stat}%`] ?? 0
       result[stat] = base * (1 + multiplier) * (1 + artifact_multiplier)
     }
-
+    // Elements
     for (const stat of stat_data.AllElements) {
       result[`${stat}%`] = stats[`${stat}%`] ?? 0
       result[`${stat} Pen%`] = stats[`${stat} Pen%`] ?? 0
     }
+    // HP
+    result["HP"] = stats["HP"] * (1 + (stats["HP%"] ?? 0)) 
     localStorage.setItem("StatsDmgReady", JSON.stringify(result))
     console.log(result)
   } catch {}
