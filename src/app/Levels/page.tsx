@@ -14,11 +14,12 @@ const STORAGE_KEYS = {
 
 export default function LevelsPage() {
   type Cls = "tank" | "warrior" | "caster" | "healer"
-  const [levels, setLevels] = useState({ tank: 0, warrior: 0, caster: 0, healer: 0 })
+  type LevelsByClass = Record<Cls, number>
+  const [levels, setLevels] = useState<LevelsByClass>({ tank: 0, warrior: 0, caster: 0, healer: 0 })
   const [statPoints, setStatPoints] = useState({ ATK: 0, DEF: 0, MATK: 0, HEAL: 0 })
   const [training, setTraining] = useState({ ATK: 0, DEF: 0, MATK: 0, HEAL: 0 })
   const [heroPoints, setHeroPoints] = useState<Record<string, number>>({})
-  const [levelOrder, setLevelOrder] = useState<Array<"tank" | "warrior" | "caster" | "healer">>([])
+  const [levelOrder, setLevelOrder] = useState<Cls[]>([])
   const [classOrder, setClassOrder] = useState<Cls[]>(["tank", "warrior", "caster", "healer"])
   const [loaded, setLoaded] = useState(false)
 
@@ -45,11 +46,11 @@ export default function LevelsPage() {
     localStorage.setItem(STORAGE_KEYS.levels, JSON.stringify(levels))
     // If class counts changed, trim any excess from the order
     setLevelOrder(prev => {
-      const counts = { tank: 0, warrior: 0, caster: 0, healer: 0 }
-      const max = { ...levels }
+      const counts: LevelsByClass = { tank: 0, warrior: 0, caster: 0, healer: 0 }
+      const max: LevelsByClass = { ...levels }
       const next: typeof prev = []
       for (const c of prev) {
-        if (counts[c] < (max as any)[c]) {
+        if (counts[c] < max[c]) {
           counts[c]++
           next.push(c)
         }
@@ -86,7 +87,7 @@ export default function LevelsPage() {
     // Expand to full sequence: all levels for each class, in chosen order
     const seq: Cls[] = []
     for (const c of classOrder) {
-      const count = (levels as any)[c] as number
+      const count = levels[c]
       for (let i = 0; i < Math.max(0, count); i++) seq.push(c)
     }
     setLevelOrder(seq)
@@ -104,15 +105,7 @@ export default function LevelsPage() {
   const remainingStatPoints = totalStatPoints - usedStatPoints
   const totalTraining = Object.values(training).reduce((a, b) => a + b, 0)
 
-  // Level order helpers
-  const remainingByClass = {
-    tank: Math.max(0, levels.tank - levelOrder.filter(c => c === "tank").length),
-    warrior: Math.max(0, levels.warrior - levelOrder.filter(c => c === "warrior").length),
-    caster: Math.max(0, levels.caster - levelOrder.filter(c => c === "caster").length),
-    healer: Math.max(0, levels.healer - levelOrder.filter(c => c === "healer").length),
-  }
-  const assigned = levelOrder.length
-  const remainingToAssign = Math.max(0, totalLevels - assigned)
+  // (Manual per-level order UI removed; block order drives full sequence.)
 
   const totalHeroPoints = Object.entries(heroPoints).reduce((sum, [key, val]) => {
     const cost = stat_data.heroStats.find(([k]) => k === key)?.[1] ?? 1
@@ -153,9 +146,9 @@ export default function LevelsPage() {
             {classOrder.map((c, idx) => (
               <th key={c} className={`${headerBg[c]} border px-2 py-1`}> 
                 <div className="flex items-center justify-between gap-1">
-                  <button className="px-1 py-0.5 border rounded text-xs" onClick={() => moveClass(idx, -1)} title="Move left" disabled={idx===0}>←</button>
+                  <button className="px-1 py-0.5 border rounded text-xs" onClick={() => moveClass(idx, -1)} title="Move left" disabled={idx===0}>{"<"}</button>
                   <span className="font-semibold">{classLabel[c]}</span>
-                  <button className="px-1 py-0.5 border rounded text-xs" onClick={() => moveClass(idx, 1)} title="Move right" disabled={idx===classOrder.length-1}>→</button>
+                  <button className="px-1 py-0.5 border rounded text-xs" onClick={() => moveClass(idx, 1)} title="Move right" disabled={idx===classOrder.length-1}>{">"}</button>
                 </div>
               </th>
             ))}
