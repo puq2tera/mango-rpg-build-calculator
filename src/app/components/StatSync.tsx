@@ -210,7 +210,7 @@ export function computexPenStats() {
   const rawStatsBase = localStorage.getItem("StatsBase")
   if (!rawStatsBase) return
 
-  let StatsBase: Record<string, number> = JSON.parse(rawStatsBase)
+  const StatsBase: Record<string, number> = JSON.parse(rawStatsBase)
   const StatsXPen: Record<string, number> = {}
 
   for (const [xPenStat, affectedStats] of Object.entries(stat_data.xPenMapping)) {

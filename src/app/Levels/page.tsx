@@ -7,14 +7,19 @@ const STORAGE_KEYS = {
   levels: "SelectedLevels",
   statPoints: "SelectedStatPoints",
   training: "SelectedTraining",
-  heroPoints: "SelectedHeroPoints"
+  heroPoints: "SelectedHeroPoints",
+  order: "SelectedLevelOrder",
+  blockOrder: "SelectedLevelBlockOrder",
 }
 
 export default function LevelsPage() {
+  type Cls = "tank" | "warrior" | "caster" | "healer"
   const [levels, setLevels] = useState({ tank: 0, warrior: 0, caster: 0, healer: 0 })
   const [statPoints, setStatPoints] = useState({ ATK: 0, DEF: 0, MATK: 0, HEAL: 0 })
   const [training, setTraining] = useState({ ATK: 0, DEF: 0, MATK: 0, HEAL: 0 })
   const [heroPoints, setHeroPoints] = useState<Record<string, number>>({})
+  const [levelOrder, setLevelOrder] = useState<Array<"tank" | "warrior" | "caster" | "healer">>([])
+  const [classOrder, setClassOrder] = useState<Cls[]>(["tank", "warrior", "caster", "healer"])
   const [loaded, setLoaded] = useState(false)
 
   useEffect(() => {
@@ -22,11 +27,15 @@ export default function LevelsPage() {
     const storedStatPoints = localStorage.getItem(STORAGE_KEYS.statPoints)
     const storedTraining = localStorage.getItem(STORAGE_KEYS.training)
     const storedHeroPoints = localStorage.getItem(STORAGE_KEYS.heroPoints)
+    const storedOrder = localStorage.getItem(STORAGE_KEYS.order)
+    const storedBlockOrder = localStorage.getItem(STORAGE_KEYS.blockOrder)
 
     if (storedLevels) setLevels(JSON.parse(storedLevels))
     if (storedStatPoints) setStatPoints(JSON.parse(storedStatPoints))
     if (storedTraining) setTraining(JSON.parse(storedTraining))
     if (storedHeroPoints) setHeroPoints(JSON.parse(storedHeroPoints))
+    if (storedOrder) setLevelOrder(JSON.parse(storedOrder))
+    if (storedBlockOrder) setClassOrder(JSON.parse(storedBlockOrder))
 
     setLoaded(true)  // <- very important
   }, [])
@@ -34,6 +43,19 @@ export default function LevelsPage() {
   useEffect(() => {
     if (!loaded) return
     localStorage.setItem(STORAGE_KEYS.levels, JSON.stringify(levels))
+    // If class counts changed, trim any excess from the order
+    setLevelOrder(prev => {
+      const counts = { tank: 0, warrior: 0, caster: 0, healer: 0 }
+      const max = { ...levels }
+      const next: typeof prev = []
+      for (const c of prev) {
+        if (counts[c] < (max as any)[c]) {
+          counts[c]++
+          next.push(c)
+        }
+      }
+      return next
+    })
   }, [levels, loaded])
 
   useEffect(() => {
@@ -51,6 +73,26 @@ export default function LevelsPage() {
     localStorage.setItem(STORAGE_KEYS.heroPoints, JSON.stringify(heroPoints))
   }, [heroPoints, loaded])
 
+  // Persist level order
+  useEffect(() => {
+    if (!loaded) return
+    localStorage.setItem(STORAGE_KEYS.order, JSON.stringify(levelOrder))
+  }, [levelOrder, loaded])
+
+  // Persist class (block) order and derive full SelectedLevelOrder from it
+  useEffect(() => {
+    if (!loaded) return
+    localStorage.setItem(STORAGE_KEYS.blockOrder, JSON.stringify(classOrder))
+    // Expand to full sequence: all levels for each class, in chosen order
+    const seq: Cls[] = []
+    for (const c of classOrder) {
+      const count = (levels as any)[c] as number
+      for (let i = 0; i < Math.max(0, count); i++) seq.push(c)
+    }
+    setLevelOrder(seq)
+    localStorage.setItem(STORAGE_KEYS.order, JSON.stringify(seq))
+  }, [classOrder, levels, loaded])
+
   if (!loaded) {
     return <div className="p-4">Loading...</div>
   }
@@ -61,6 +103,16 @@ export default function LevelsPage() {
   const usedStatPoints = Object.values(statPoints).reduce((a, b) => a + b, 0)
   const remainingStatPoints = totalStatPoints - usedStatPoints
   const totalTraining = Object.values(training).reduce((a, b) => a + b, 0)
+
+  // Level order helpers
+  const remainingByClass = {
+    tank: Math.max(0, levels.tank - levelOrder.filter(c => c === "tank").length),
+    warrior: Math.max(0, levels.warrior - levelOrder.filter(c => c === "warrior").length),
+    caster: Math.max(0, levels.caster - levelOrder.filter(c => c === "caster").length),
+    healer: Math.max(0, levels.healer - levelOrder.filter(c => c === "healer").length),
+  }
+  const assigned = levelOrder.length
+  const remainingToAssign = Math.max(0, totalLevels - assigned)
 
   const totalHeroPoints = Object.entries(heroPoints).reduce((sum, [key, val]) => {
     const cost = stat_data.heroStats.find(([k]) => k === key)?.[1] ?? 1
@@ -74,6 +126,23 @@ export default function LevelsPage() {
     cost === 2 ? "bg-orange-200" :
     cost === 3 ? "bg-red-300" : ""
 
+  // Column reorder helpers
+  const moveClass = (idx: number, dir: -1 | 1) => {
+    setClassOrder(prev => {
+      const i = idx
+      const j = i + dir
+      if (j < 0 || j >= prev.length) return prev
+      const next = [...prev]
+      const tmp = next[i]
+      next[i] = next[j]
+      next[j] = tmp
+      return next
+    })
+  }
+
+  const classLabel: Record<Cls, string> = { tank: "Tank", warrior: "Warrior", caster: "Caster", healer: "Healer" }
+  const headerBg: Record<Cls, string> = { tank: "bg-green-100", warrior: "bg-red-100", caster: "bg-blue-100", healer: "bg-pink-100" }
+
   return (
     <div className="p-4 space-y-6">
       <h1 className="text-xl font-bold">Level Summary</h1>
@@ -81,15 +150,20 @@ export default function LevelsPage() {
       <table className="table-fixed border text-center text-sm">
         <thead>
           <tr>
-            <th className="bg-green-100 border px-2 py-1">Tank</th>
-            <th className="bg-red-100 border px-2 py-1">Warrior</th>
-            <th className="bg-blue-100 border px-2 py-1">Caster</th>
-            <th className="bg-pink-100 border px-2 py-1">Healer</th>
+            {classOrder.map((c, idx) => (
+              <th key={c} className={`${headerBg[c]} border px-2 py-1`}> 
+                <div className="flex items-center justify-between gap-1">
+                  <button className="px-1 py-0.5 border rounded text-xs" onClick={() => moveClass(idx, -1)} title="Move left" disabled={idx===0}>←</button>
+                  <span className="font-semibold">{classLabel[c]}</span>
+                  <button className="px-1 py-0.5 border rounded text-xs" onClick={() => moveClass(idx, 1)} title="Move right" disabled={idx===classOrder.length-1}>→</button>
+                </div>
+              </th>
+            ))}
           </tr>
         </thead>
         <tbody>
           <tr>
-            {(["tank", "warrior", "caster", "healer"] as const).map(k => (
+            {classOrder.map(k => (
               <td key={k} className="border">
                 <input
                   type="number"
