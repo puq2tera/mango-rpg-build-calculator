@@ -87,36 +87,36 @@ const ClassScalingStats: Record<string, string> = {
 
 const ClassMainStatValues: Record<string, Record<string, number>> = {
   "tank": {
-    "ATK": 7,
-    "DEF": 2,
-    "MATK": 1,
-    "HEAL": 1,
+    "ATK": 2.5,
+    "DEF": 7,
+    "MATK": 1.5,
+    "HEAL": 1.5,
     "HP": 22.5,
     "Armor Save": 1,
     "Armor Save Scaling": 0.03 //round down
   },
   "warrior": {
-    "ATK": 2,
-    "DEF": 7,
-    "MATK": 1,
-    "HEAL": 1,
+    "ATK": 7,
+    "DEF": 2.5,
+    "MATK": 1.5,
+    "HEAL": 1.5,
     "HP": 20.5,
-    "Overdrive%": 0.075,
-    "Overdrive% Scaling": 0.0002 //cap at 0.08 scaling
+    "Overdrive%": 0.00075,
+    "Overdrive% Scaling": 0.000002 //cap at 0.08 scaling
   },
   "caster": {
-    "ATK": 1,
-    "DEF": 1,
+    "ATK": 1.5,
+    "DEF": 1.5,
     "MATK": 7,
-    "HEAL": 1.5,
+    "HEAL": 3.5,
     "HP": 19.5,
     "Crit DMG%": 3,
     "Crit DMG% Scaling" : 0.03 //round down
   },
   "healer": {
-    "ATK": 1,
-    "DEF": 1,
-    "MATK": 1.5,
+    "ATK": 1.5,
+    "DEF": 1.5,
+    "MATK": 2.5,
     "HEAL": 7,
     "HP": 15,
     "Armor Strike": 25,

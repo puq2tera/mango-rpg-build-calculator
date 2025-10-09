@@ -54,7 +54,7 @@ export default function CharacterSummary() {
           </tr>
           <tr className="text-center">
             {["ATK%", "DEF%", "MATK%", "HEAL%"].map(stat => (
-              <td key={stat} className={statStyle(stats[stat] ?? 0)}>{get(stats, stat, 100)}%</td>
+              <td key={stat} className={statStyle(stats[stat] ?? 0)}>{get(stats, stat)}%</td>
             ))}
           </tr>
           <tr className="text-center font-bold">
@@ -63,7 +63,7 @@ export default function CharacterSummary() {
             ))}</tr>
           <tr className="text-center">
             {["Global ATK%", "Global DEF%", "Global MATK%", "Global HEAL%"].map(stat => (
-              <td key={stat} className={statStyle(stats[stat] ?? 0)}>{get(stats, stat, 100)}%</td>
+              <td key={stat} className={statStyle(stats[stat] ?? 0)}>{get(stats, stat)}%</td>
             ))}
           </tr>
         </tbody>
@@ -79,6 +79,34 @@ export default function CharacterSummary() {
         <tbody>
           <tr className="text-center">
             {["Crit Chance%", "Crit DMG%", "Global DMG%", "Global HealEffect", "Damage Res", "Global HP%", "Extra Threat%", "Threat%"].map(stat => (
+              <td key={stat} className={statStyle(stats[stat] ?? 0)}>{get(stats, stat)}%</td>
+            ))}
+          </tr>
+        </tbody>
+        <thead>
+          <tr className="font-bold text-center">
+            {["Armor Save", "Armor Strike"].map((stat, i) => (
+              <th key={i} className="px-2 py-1 bg-gray-200">{stat}</th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          <tr className="text-center">
+            {["Armor Save", "Armor Strike"].map(stat => (
+              <td key={stat} className={statStyle(stats[stat] ?? 0)}>{get(stats, stat)}</td>
+            ))}
+          </tr>
+        </tbody>
+        <thead>
+          <tr className="font-bold text-center">
+            {["Overdrive%"].map((stat, i) => (
+              <th key={i} className="px-2 py-1 bg-gray-200">{stat}</th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          <tr className="text-center">
+            {["Overdrive%"].map(stat => (
               <td key={stat} className={statStyle(stats[stat] ?? 0)}>{get(stats, stat, 100)}%</td>
             ))}
           </tr>

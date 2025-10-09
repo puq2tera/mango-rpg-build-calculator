@@ -59,10 +59,10 @@ export function computeLevelStats() {
       lvl++
       hp += Math.floor(hp_multiplier * (1 + 0.1 * (lvl - 1))) + 4 * lvl
       switch (ClassName) {
-        case "tank":    scaling_value += stat_data.ClassMainStatValues[ClassName][scaling_stat] + Math.floor(stat_data.ClassMainStatValues[ClassName][`${scaling_stat} Scaling`] * lvl)
-        case "warrior": scaling_value += stat_data.ClassMainStatValues[ClassName][scaling_stat] + Math.min(0.08, stat_data.ClassMainStatValues[ClassName][`${scaling_stat} Scaling`] * lvl)
-        case "caster":  scaling_value += stat_data.ClassMainStatValues[ClassName][scaling_stat] + Math.floor(stat_data.ClassMainStatValues[ClassName][`${scaling_stat} Scaling`] * lvl)
-        case "healer":  scaling_value += stat_data.ClassMainStatValues[ClassName][scaling_stat] + (stat_data.ClassMainStatValues[ClassName][`${scaling_stat} Scaling`] * lvl)
+        case "tank":    scaling_value += stat_data.ClassMainStatValues[ClassName][scaling_stat] + Math.floor(stat_data.ClassMainStatValues[ClassName][`${scaling_stat} Scaling`] * lvl); break;
+        case "warrior": scaling_value += Math.min(0.00155, stat_data.ClassMainStatValues[ClassName][scaling_stat] + stat_data.ClassMainStatValues[ClassName][`${scaling_stat} Scaling`] * lvl); break;
+        case "caster":  scaling_value += stat_data.ClassMainStatValues[ClassName][scaling_stat] + Math.floor(stat_data.ClassMainStatValues[ClassName][`${scaling_stat} Scaling`] * lvl); break;
+        case "healer":  scaling_value += stat_data.ClassMainStatValues[ClassName][scaling_stat] + (stat_data.ClassMainStatValues[ClassName][`${scaling_stat} Scaling`] * lvl); break;
       }
     }
     StatsLevels[scaling_stat] = scaling_value
@@ -380,6 +380,12 @@ export function computeDmgReadyStats() {
     }
     // HP
     result["HP"] = stats["HP"] * (1 + (stats["HP%"] ?? 0)) 
+
+    //Basic
+    for (const stat of ["Crit DMG%", "Crit Chance%", "Armor Save", "Armor Strike", "Overdrive%"]) {
+      result[stat] = stats[stat] ?? 0
+    }
+
     localStorage.setItem("StatsDmgReady", JSON.stringify(result))
     console.log(result)
   } catch {}
