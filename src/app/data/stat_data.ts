@@ -92,6 +92,7 @@ const ClassMainStatValues: Record<string, Record<string, number>> = {
     "MATK": 1.5,
     "HEAL": 1.5,
     "HP": 22.5,
+    "MP": 1,
     "Armor Save": 1,
     "Armor Save Scaling": 0.03 //round down
   },
@@ -101,6 +102,8 @@ const ClassMainStatValues: Record<string, Record<string, number>> = {
     "MATK": 1.5,
     "HEAL": 1.5,
     "HP": 20.5,
+    "MP": 1,
+    "Focus": 2,
     "Overdrive%": 0.00075,
     "Overdrive% Scaling": 0.000002 //cap at 0.08 scaling
   },
@@ -110,6 +113,7 @@ const ClassMainStatValues: Record<string, Record<string, number>> = {
     "MATK": 7,
     "HEAL": 3.5,
     "HP": 19.5,
+    "MP": 3,
     "Crit DMG%": 3,
     "Crit DMG% Scaling" : 0.03 //round down
   },
@@ -119,6 +123,7 @@ const ClassMainStatValues: Record<string, Record<string, number>> = {
     "MATK": 2.5,
     "HEAL": 7,
     "HP": 15,
+    "MP": 3,
     "Armor Strike": 25,
     "Armor Strike Scaling": 60
   }

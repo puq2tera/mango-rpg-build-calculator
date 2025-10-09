@@ -48,7 +48,13 @@ export function computeLevelStats() {
   //TODO: Remove once heropoints are implemented
   console.log(storedHeroPoints)
   
-  // HP
+  // Starting stats
+  StatsLevels['Crit DMG%'] = 1.2
+  StatsLevels['Crit Chance%'] = 0.1
+  StatsLevels['Overdrive%'] = 1.1
+  StatsLevels['Focus Regen'] = 5
+
+  // HP and Scaling Stats
   let hp = 50
   let lvl = 0
   for (const ClassName of storedLevelOrder){
@@ -65,9 +71,18 @@ export function computeLevelStats() {
         case "healer":  scaling_value += stat_data.ClassMainStatValues[ClassName][scaling_stat] + (stat_data.ClassMainStatValues[ClassName][`${scaling_stat} Scaling`] * lvl); break;
       }
     }
-    StatsLevels[scaling_stat] = scaling_value
+    StatsLevels[scaling_stat] += scaling_value
   }
   StatsLevels['HP'] = hp
+
+  //MP
+  StatsLevels['MP'] = 8 + (storedLevels["tank"] * stat_data.ClassMainStatValues["tank"]["MP"]) + (storedLevels["warrior"] * stat_data.ClassMainStatValues["warrior"]["MP"]) + (storedLevels["caster"] * stat_data.ClassMainStatValues["caster"]["MP"]) + (storedLevels["healer"] * stat_data.ClassMainStatValues["healer"]["MP"])
+  StatsLevels['Focus'] = 100 + (storedLevels["warrior"] * stat_data.ClassMainStatValues["warrior"]["Focus"])
+  if (storedLevels["tank"] >= Math.max(...Object.values(storedLevels))) {
+    StatsLevels['Threat%'] = 1 + storedLevels["tank"] * 0.1
+  } else {
+    StatsLevels['Threat%'] = 1 + storedLevels["tank"] * 0.02
+  }
 
   //Mainstats
   for (const stat of stat_data.Mainstats) {
@@ -382,7 +397,7 @@ export function computeDmgReadyStats() {
     result["HP"] = stats["HP"] * (1 + (stats["HP%"] ?? 0)) 
 
     //Basic
-    for (const stat of ["Crit DMG%", "Crit Chance%", "Armor Save", "Armor Strike", "Overdrive%"]) {
+    for (const stat of ["Crit DMG%", "Crit Chance%", "Armor Save", "Armor Strike", "Overdrive%", "MP", "Focus", "Focus Regen", "Threat%"]) {
       result[stat] = stats[stat] ?? 0
     }
 
