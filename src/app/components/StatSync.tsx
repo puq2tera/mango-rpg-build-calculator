@@ -53,7 +53,7 @@ export function computeLevelStats() {
   let lvl = 0
   for (const ClassName of storedLevelOrder){
     const hp_multiplier = stat_data.ClassMainStatValues[ClassName]['HP']
-    let scaling_stat = stat_data.ClassScalingStats[ClassName]
+    const scaling_stat = stat_data.ClassScalingStats[ClassName]
     let scaling_value = 0
     for (let i = 0; i < storedLevels[ClassName]; i++) {
       lvl++
