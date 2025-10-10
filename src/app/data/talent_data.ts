@@ -35113,19 +35113,10 @@ const talent_data: Record<string, Talent> = {
         "description": "+60% MATK, +3500 HP, +10% AllRes, +10% Void Penetration, +1.1% HP Regen",
         "stats": {
             "MATK%": 0.6,
+            "HP": 3500,
+            "All Res%": 0.1,
             "Void Pen%": 0.1,
-            "Slash Res%": 0.1,
-            "Pierce Res%": 0.1,
-            "Blunt Res%": 0.1,
-            "Fire Res%": 0.1,
-            "Water Res%": 0.1,
-            "Lightning Res%": 0.1,
-            "Wind Res%": 0.1,
-            "Earth Res%": 0.1,
-            "Toxic Res%": 0.1,
-            "Neg Res%": 0.1,
-            "Holy Res%": 0.1,
-            "Void Res%": 0.1
+            "HP Regen%": 0.011
         },
         "conversions": []
     },

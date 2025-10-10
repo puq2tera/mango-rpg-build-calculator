@@ -24,6 +24,7 @@ export type StatNames =
     | "Void Pen%" | "Void xPen%"
     | "Void Res%"
     //Weird
+    | "All Res%"
     | "NonVoid Pen%" // in game its called "allresnovoid"
     | "Elemental_Except_Water Res%"
     | "Magic%" // Elemental + Divine + Void
