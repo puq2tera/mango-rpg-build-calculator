@@ -127,7 +127,7 @@ export function computeEquipmentStats() {
       // Affixes
       for (const affix of slot.affixes) {
         if (!affix.stat) continue
-        stats[affix.stat] = (stats[affix.stat] || 0) + affix.value
+        stats[affix.stat] = (stats[affix.stat] || 0) + (affix.value * stat_data.StatsInfo[affix.stat]['multi'])
       }
     }
 

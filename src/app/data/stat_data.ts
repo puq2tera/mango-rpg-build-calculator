@@ -1,59 +1,171 @@
-export type StatNames = 
-    //Mainstats
-    | 'ATK' | 'DEF' | 'MATK' | 'HEAL' | 'POWER'
-    | 'ATK%' | 'DEF%' | 'MATK%' | 'HEAL%'
-    | 'Art_ATK%' | 'Art_DEF%' | 'Art_MATK%' | 'Art_HEAL%'
-    | 'Global ATK%' | 'Global DEF%' | 'Global MATK%' | 'Global HEAL%'
-    //Elemental
-    | "Fire%" | "Water%" | "Lightning%" | "Wind%" | "Earth%" | "Toxic%"
-    | "Fire Pen%" | "Water Pen%" | "Lightning Pen%" | "Wind Pen%" | "Earth Pen%" | "Toxic Pen%"
-    | "Fire Res%" | "Water Res%" | "Lightning Res%" | "Wind Res%" | "Earth Res%" | "Toxic Res%"
-    | "Elemental%" | "Elemental Pen%" | "Elemental Res%" | "Elemental xDmg%" | "Elemental xPen%"
-    //Phys
-    | "Slash%" | "Pierce%" | "Blunt%"
-    | "Slash Pen%" | "Pierce Pen%" | "Blunt Pen%"
-    | "Slash Res%" | "Pierce Res%" | "Blunt Res%"
-    | "Phys%" | "Phys Pen%" | "Phys Res%" | "Phys xDmg%" | "Phys xPen%"
-    //Divine
-    | "Neg%" | "Holy%"
-    | "Neg Pen%" | "Holy Pen%"
-    | "Neg Res%" | "Holy Res%"
-    | "Divine%" | "Divine Pen%" | "Divine Res%"
-    //Void
-    | "Void%"
-    | "Void Pen%" | "Void xPen%"
-    | "Void Res%"
-    //Weird
-    | "All Res%"
-    | "NonVoid Pen%" // in game its called "allresnovoid"
-    | "Elemental_Except_Water Res%"
-    | "Magic%" // Elemental + Divine + Void
-    //All
-    | "All%" | "All Pen%" | "All Res%"
-    //Crit
-    | "Crit Chance%" | "Crit DMG%"
-    //Character Stats
-    | "Focus" | "Focus Regen"
-    | "MP" | "MP Regen" | "MP%"
-    | "HP" | "HP Regen" | "HP%" | "HP Regen%" | "Temp HP"
-    //Other
-    | "Threat%"
-    | "Dmg%"
-    | "DMG Res%"
-    | "Buff%"
-    | "Heal Effect%"
-    | "EXP Bonus"
-    //Class level bonuses
-    | "Overdrive%" | "Armor Save" | "Armor Strike"
-    //Skill Specific
-    | "Blunt Armor Ignore%" | "Void Armor Ignore%" | "Phys Armor Ignore%" | "Magic Armor Ignore%"
-    | "Spear DMG%" | "Sword DMG%" | "Hammer DMG%" | "Fire DMG%" | "Fist DMG%" | "Dagger DMG%" | "Shadow Break DMG%"
-    | "Void DOT%" | "Holy DOT%" | "Slash DOT%"
-    | "Bow Crit DMG%" | "Fist Crit DMG%" | "Dagger Crit DMG%" | "Elemental Crit DMG%" | "Holy Crit DMG%"
-    | "Shadow Break Crit Chance%"
-    //Buff specific post stats
-    | "Post Crit Chance%" | "Post ATK" | "Post HEAL" | "Post Slash Pen%" | "Post Fire Pen%"
+export type StatInfoData = { multi: number };
 
+export const StatsInfo: Record<string, StatInfoData> = {
+  // Mainstats
+  "ATK":   { multi: 1 },
+  "DEF":   { multi: 1 },
+  "MATK":  { multi: 1 },
+  "HEAL":  { multi: 1 },
+  "POWER": { multi: 1 },
+
+  "ATK%":  { multi: 0.01 },
+  "DEF%":  { multi: 0.01 },
+  "MATK%": { multi: 0.01 },
+  "HEAL%": { multi: 0.01 },
+
+  "Art_ATK%":  { multi: 0.01 },
+  "Art_DEF%":  { multi: 0.01 },
+  "Art_MATK%": { multi: 0.01 },
+  "Art_HEAL%": { multi: 0.01 },
+
+  "Global ATK%":  { multi: 0.01 },
+  "Global DEF%":  { multi: 0.01 },
+  "Global MATK%": { multi: 0.01 },
+  "Global HEAL%": { multi: 0.01 },
+
+  // Elemental
+  "Fire%":      { multi: 0.01 },
+  "Water%":     { multi: 0.01 },
+  "Lightning%": { multi: 0.01 },
+  "Wind%":      { multi: 0.01 },
+  "Earth%":     { multi: 0.01 },
+  "Toxic%":     { multi: 0.01 },
+
+  "Fire Pen%":      { multi: 0.01 },
+  "Water Pen%":     { multi: 0.01 },
+  "Lightning Pen%": { multi: 0.01 },
+  "Wind Pen%":      { multi: 0.01 },
+  "Earth Pen%":     { multi: 0.01 },
+  "Toxic Pen%":     { multi: 0.01 },
+
+  "Fire Res%":      { multi: 0.01 },
+  "Water Res%":     { multi: 0.01 },
+  "Lightning Res%": { multi: 0.01 },
+  "Wind Res%":      { multi: 0.01 },
+  "Earth Res%":     { multi: 0.01 },
+  "Toxic Res%":     { multi: 0.01 },
+
+  "Elemental%":      { multi: 0.01 },
+  "Elemental Pen%":  { multi: 0.01 },
+  "Elemental Res%":  { multi: 0.01 },
+  "Elemental xDmg%": { multi: 0.01 },
+  "Elemental xPen%": { multi: 0.01 },
+
+  // Phys
+  "Slash%":  { multi: 0.01 },
+  "Pierce%": { multi: 0.01 },
+  "Blunt%":  { multi: 0.01 },
+
+  "Slash Pen%":  { multi: 0.01 },
+  "Pierce Pen%": { multi: 0.01 },
+  "Blunt Pen%":  { multi: 0.01 },
+
+  "Slash Res%":  { multi: 0.01 },
+  "Pierce Res%": { multi: 0.01 },
+  "Blunt Res%":  { multi: 0.01 },
+
+  "Phys%":      { multi: 0.01 },
+  "Phys Pen%":  { multi: 0.01 },
+  "Phys Res%":  { multi: 0.01 },
+  "Phys xDmg%": { multi: 0.01 },
+  "Phys xPen%": { multi: 0.01 },
+
+  // Divine
+  "Neg%":  { multi: 0.01 },
+  "Holy%": { multi: 0.01 },
+
+  "Neg Pen%":  { multi: 0.01 },
+  "Holy Pen%": { multi: 0.01 },
+
+  "Neg Res%":  { multi: 0.01 },
+  "Holy Res%": { multi: 0.01 },
+
+  "Divine%":     { multi: 0.01 },
+  "Divine Pen%": { multi: 0.01 },
+  "Divine Res%": { multi: 0.01 },
+
+  // Void
+  "Void%":      { multi: 0.01 },
+  "Void Pen%":  { multi: 0.01 },
+  "Void xPen%": { multi: 0.01 },
+  "Void Res%":  { multi: 0.01 },
+
+  // Weird
+  "NonVoid Pen%":                { multi: 0.01 },
+  "Elemental_Except_Water Res%": { multi: 0.01 },
+  "Magic%":                      { multi: 0.01 },
+
+  // All
+  "All%":     { multi: 0.01 },
+  "All Pen%": { multi: 0.01 },
+  "All Res%": { multi: 0.01 },
+
+  // Crit
+  "Crit Chance%": { multi: 0.01 },
+  "Crit DMG%":    { multi: 0.01 },
+
+  // Character Stats
+  "Focus":       { multi: 1 },
+  "Focus Regen": { multi: 1 },
+
+  "MP":       { multi: 1 },
+  "MP Regen": { multi: 1 },
+  "MP%":      { multi: 0.01 },
+
+  "HP":        { multi: 1 },
+  "HP Regen":  { multi: 1 },
+  "HP%":       { multi: 0.01 },
+  "HP Regen%": { multi: 0.01 },
+  "Temp HP":   { multi: 1 },
+
+  // Other
+  "Threat%":      { multi: 0.01 },
+  "Dmg%":         { multi: 0.01 },
+  "DMG Res%":     { multi: 0.01 },
+  "Buff%":        { multi: 0.01 },
+  "Heal Effect%": { multi: 0.01 },
+  "EXP Bonus":    { multi: 1 },
+
+  // Class level bonuses
+  "Overdrive%":   { multi: 0.01 },
+  "Armor Save":   { multi: 1 },
+  "Armor Strike": { multi: 1 },
+
+  // Skill Specific
+  "Blunt Armor Ignore%": { multi: 0.01 },
+  "Void Armor Ignore%":  { multi: 0.01 },
+  "Phys Armor Ignore%":  { multi: 0.01 },
+  "Magic Armor Ignore%": { multi: 0.01 },
+
+  "Spear DMG%":        { multi: 0.01 },
+  "Sword DMG%":        { multi: 0.01 },
+  "Hammer DMG%":       { multi: 0.01 },
+  "Fire DMG%":         { multi: 0.01 },
+  "Fist DMG%":         { multi: 0.01 },
+  "Dagger DMG%":       { multi: 0.01 },
+  "Shadow Break DMG%": { multi: 0.01 },
+
+  "Void DOT%":  { multi: 0.01 },
+  "Holy DOT%":  { multi: 0.01 },
+  "Slash DOT%": { multi: 0.01 },
+
+  "Bow Crit DMG%":       { multi: 0.01 },
+  "Fist Crit DMG%":      { multi: 0.01 },
+  "Dagger Crit DMG%":    { multi: 0.01 },
+  "Elemental Crit DMG%": { multi: 0.01 },
+  "Holy Crit DMG%":      { multi: 0.01 },
+
+  "Shadow Break Crit Chance%": { multi: 0.01 },
+
+  // Buff specific post stats
+  "Post Crit Chance%": { multi: 0.01 },
+  "Post ATK":          { multi: 1 },
+  "Post HEAL":         { multi: 1 },
+  "Post Slash Pen%":   { multi: 0.01 },
+  "Post Fire Pen%":    { multi: 0.01 },
+};
+
+export type StatNames = keyof typeof StatsInfo;
 const ClassNames: string[] = ["tank", "warrior", "caster", "healer"]
 const Mainstats = ["ATK", "DEF", "MATK", "HEAL"]
 const AllElements = ["Slash", "Pierce", "Blunt", "Fire", "Water", "Lightning", "Wind", "Earth", "Toxic", "Neg", "Holy", "Void"]
@@ -142,7 +254,8 @@ const stat_data = {
   ClassMainStatValues,
   ClassNames,
   PostBuffTypes,
-  ClassScalingStats
+  ClassScalingStats,
+  StatsInfo
 }
 
 export default stat_data
