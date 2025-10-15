@@ -27,7 +27,7 @@ interface TalentRow {
 export default function Skills() {
   const [selected, setSelected] = useState<string | null>(null)
   const [stats, setStats] = useState<string | null>(null)
-  const [filtered, setFiltered] = useState<TalentRow[]>([])
+  //const [filtered, setFiltered] = useState<TalentRow[]>([])
   const [allTalents, setAllTalents] = useState<TalentRow[]>([])
 
   useEffect(() => {
@@ -36,25 +36,25 @@ export default function Skills() {
     try {
       const parsed: string[] = JSON.parse(raw)
 
-      const output = parsed.map(id => {
-        const data = talent_data[id]
-        return {
-          name: id,
-          category: data.category,
-          PreReq: Array.isArray(data.PreReq) ? data.PreReq.join(", ") : data.PreReq,
-          Tag: data.Tag,
-          BlockedTag: data.BlockedTag,
-          gold: data.gold,
-          exp: data.exp,
-          tp_spent: data.tp_spent,
-          total_level: data.total_level,
-          class_levels: data.class_levels,
-          description: data.description,
-          stats: data.stats,
-          conversions: data.conversions
-        }
-      })
-      setFiltered(output)
+      // const output = parsed.map(id => {
+      //   const data = talent_data[id]
+      //   return {
+      //     name: id,
+      //     category: data.category,
+      //     PreReq: Array.isArray(data.PreReq) ? data.PreReq.join(", ") : data.PreReq,
+      //     Tag: data.Tag,
+      //     BlockedTag: data.BlockedTag,
+      //     gold: data.gold,
+      //     exp: data.exp,
+      //     tp_spent: data.tp_spent,
+      //     total_level: data.total_level,
+      //     class_levels: data.class_levels,
+      //     description: data.description,
+      //     stats: data.stats,
+      //     conversions: data.conversions
+      //   }
+      // })
+      //setFiltered(output)
     } catch (e) {
       console.error("Failed to parse selectedTalents", e)
     }

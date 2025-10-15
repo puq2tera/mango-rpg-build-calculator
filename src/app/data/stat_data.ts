@@ -1,4 +1,7 @@
-export type StatInfoData = { multi: number };
+export type StatInfoData = { 
+    multi: number,
+    sub_stats?: StatNames[] 
+ };
 
 export const StatsInfo: Record<string, StatInfoData> = {
   // Mainstats
@@ -6,7 +9,7 @@ export const StatsInfo: Record<string, StatInfoData> = {
   "DEF":   { multi: 1 },
   "MATK":  { multi: 1 },
   "HEAL":  { multi: 1 },
-  "POWER": { multi: 1 },
+  "POWER": { multi: 1, sub_stats: ["ATK", "DEF", "MATK", "HEAL"] },
 
   "ATK%":  { multi: 0.01 },
   "DEF%":  { multi: 0.01 },
@@ -45,11 +48,25 @@ export const StatsInfo: Record<string, StatInfoData> = {
   "Earth Res%":     { multi: 0.01 },
   "Toxic Res%":     { multi: 0.01 },
 
-  "Elemental%":      { multi: 0.01 },
-  "Elemental Pen%":  { multi: 0.01 },
-  "Elemental Res%":  { multi: 0.01 },
-  "Elemental xDmg%": { multi: 0.01 },
-  "Elemental xPen%": { multi: 0.01 },
+  "Fire xDmg%":      { multi: 0.01 },
+  "Water xDmg%":     { multi: 0.01 },
+  "Lightning xDmg%": { multi: 0.01 },
+  "Wind xDmg%":      { multi: 0.01 },
+  "Earth xDmg%":     { multi: 0.01 },
+  "Toxic xDmg%":     { multi: 0.01 },
+
+  "Fire xPen%":      { multi: 0.01 },
+  "Water xPen%":     { multi: 0.01 },
+  "Lightning xPen%": { multi: 0.01 },
+  "Wind xPen%":      { multi: 0.01 },
+  "Earth xPen%":     { multi: 0.01 },
+  "Toxic xPen%":     { multi: 0.01 },
+
+  "Elemental%":      { multi: 0.01, sub_stats: ["Fire%", "Water%", "Lightning%", "Wind%", "Earth%", "Toxic%"] },
+  "Elemental Pen%":  { multi: 0.01, sub_stats: ["Fire Pen%", "Water Pen%", "Lightning Pen%", "Wind Pen%", "Earth Pen%", "Toxic Pen%"] },
+  "Elemental Res%":  { multi: 0.01, sub_stats: ["Fire Res%", "Water Res%", "Lightning Res%", "Wind Res%", "Earth Res%", "Toxic Res%"] },
+  "Elemental xDmg%": { multi: 0.01, sub_stats: ["Fire xDmg%", "Water xDmg%", "Lightning xDmg%", "Wind xDmg%", "Earth xDmg%", "Toxic xDmg%"] },
+  "Elemental xPen%": { multi: 0.01, sub_stats: ["Fire xPen%", "Water xPen%", "Lightning xPen%", "Wind xPen%", "Earth xPen%", "Toxic xPen%"] },
 
   // Phys
   "Slash%":  { multi: 0.01 },
@@ -64,11 +81,19 @@ export const StatsInfo: Record<string, StatInfoData> = {
   "Pierce Res%": { multi: 0.01 },
   "Blunt Res%":  { multi: 0.01 },
 
-  "Phys%":      { multi: 0.01 },
-  "Phys Pen%":  { multi: 0.01 },
-  "Phys Res%":  { multi: 0.01 },
-  "Phys xDmg%": { multi: 0.01 },
-  "Phys xPen%": { multi: 0.01 },
+  "Slash xDmg%":  { multi: 0.01 },
+  "Pierce xDmg%": { multi: 0.01 },
+  "Blunt xDmg%":  { multi: 0.01 },
+
+  "Slash xPen%":  { multi: 0.01 },
+  "Pierce xPen%": { multi: 0.01 },
+  "Blunt xPen%":  { multi: 0.01 },
+
+  "Phys%":      { multi: 0.01, sub_stats: ["Slash%", "Pierce%", "Blunt%"] },
+  "Phys Pen%":  { multi: 0.01, sub_stats: ["Slash Pen%", "Pierce Pen%", "Blunt Pen%"] },
+  "Phys Res%":  { multi: 0.01, sub_stats: ["Slash Res%", "Pierce Res%", "Blunt Res%"] },
+  "Phys xDmg%": { multi: 0.01, sub_stats: ["Slash xDmg%", "Pierce xDmg%", "Blunt xDmg%"] },
+  "Phys xPen%": { multi: 0.01, sub_stats: ["Slash xPen%", "Pierce xPen%", "Blunt xPen%"] },
 
   // Divine
   "Neg%":  { multi: 0.01 },
@@ -80,9 +105,9 @@ export const StatsInfo: Record<string, StatInfoData> = {
   "Neg Res%":  { multi: 0.01 },
   "Holy Res%": { multi: 0.01 },
 
-  "Divine%":     { multi: 0.01 },
-  "Divine Pen%": { multi: 0.01 },
-  "Divine Res%": { multi: 0.01 },
+  "Divine%":     { multi: 0.01, sub_stats: ["Neg%", "Holy%"] },
+  "Divine Pen%": { multi: 0.01, sub_stats: ["Neg Pen%", "Holy Pen%"] },
+  "Divine Res%": { multi: 0.01, sub_stats: ["Neg Res%", "Holy Res%"] },
 
   // Void
   "Void%":      { multi: 0.01 },
@@ -91,14 +116,14 @@ export const StatsInfo: Record<string, StatInfoData> = {
   "Void Res%":  { multi: 0.01 },
 
   // Weird
-  "NonVoid Pen%":                { multi: 0.01 },
-  "Elemental_Except_Water Res%": { multi: 0.01 },
-  "Magic%":                      { multi: 0.01 },
+  "NonVoid Pen%":                { multi: 0.01, sub_stats: ["Fire Pen%", "Water Pen%", "Lightning Pen%", "Wind Pen%", "Earth Pen%", "Toxic Pen%", "Slash Pen%", "Pierce Pen%", "Blunt Pen%", "Neg Pen%", "Holy Pen%"] },
+  "Elemental_Except_Water Res%": { multi: 0.01, sub_stats: ["Fire Res%", "Lightning Res%", "Wind Res%", "Earth Res%", "Toxic Res%"] },
+  "Magic%":                      { multi: 0.01, sub_stats: ["Fire%", "Water%", "Lightning%", "Wind%", "Earth%", "Toxic%", "Neg%", "Holy%", "Void%"] },
 
   // All
-  "All%":     { multi: 0.01 },
-  "All Pen%": { multi: 0.01 },
-  "All Res%": { multi: 0.01 },
+  "All%":     { multi: 0.01, sub_stats: ["Fire%", "Water%", "Lightning%", "Wind%", "Earth%", "Toxic%", "Slash%", "Pierce%", "Blunt%", "Neg%", "Holy%", "Void%"] },
+  "All Pen%": { multi: 0.01, sub_stats: ["Fire Pen%", "Water Pen%", "Lightning Pen%", "Wind Pen%", "Earth Pen%", "Toxic Pen%", "Slash Pen%", "Pierce Pen%", "Blunt Pen%", "Neg Pen%", "Holy Pen%", "Void Pen%"] },
+  "All Res%": { multi: 0.01, sub_stats: ["Fire Res%", "Water Res%", "Lightning Res%", "Wind Res%", "Earth Res%", "Toxic Res%", "Slash Res%", "Pierce Res%", "Blunt Res%", "Neg Res%", "Holy Res%", "Void Res%"] },
 
   // Crit
   "Crit Chance%": { multi: 0.01 },
