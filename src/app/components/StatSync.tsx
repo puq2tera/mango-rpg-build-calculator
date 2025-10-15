@@ -21,7 +21,7 @@ export function computeTalentStats() {
     for (const [name, data] of Object.entries(talent_data)) {
       if (!selected.has(name)) continue
       for (const [stat, value] of Object.entries(data.stats)) {
-        stats[stat] = (stats[stat] || 0) + value
+        stats[stat] = (stats[stat] || 0) + (value ?? 0)
       }
     }
     localStorage.setItem("StatsTalents", JSON.stringify(stats)) // Save totals to StatsTalents
@@ -127,12 +127,17 @@ export function computeEquipmentStats() {
       // Affixes
       for (const affix of slot.affixes) {
         if (!affix.stat) continue
-        if (stat_data.StatsInfo[affix.stat]['sub_stats']) {
-          for (const substat of stat_data.StatsInfo[affix.stat]['sub_stats']) {
-            stats[substat] = (stats[affix.stat] || 0) + (affix.value * stat_data.StatsInfo[substat]['multi'])
+        const affixInfo = stat_data.StatsInfo[affix.stat as keyof typeof stat_data.StatsInfo]
+        const substats = affixInfo?.sub_stats
+        if (substats) {
+          for (const substat of substats) {
+            const subInfo = stat_data.StatsInfo[substat]
+            const multi = subInfo?.multi ?? 1
+            stats[substat] = (stats[substat] ?? 0) + (affix.value * multi)
           }
-        } else {
-          stats[affix.stat] = (stats[affix.stat] || 0) + (affix.value * stat_data.StatsInfo[affix.stat]['multi'])
+        } else if (affixInfo) {
+          const multi = affixInfo.multi
+          stats[affix.stat] = (stats[affix.stat] ?? 0) + (affix.value * multi)
         }
       }
     }
@@ -158,7 +163,7 @@ export function computeRuneStats() {
       if (!runeEntry) continue
 
       for (const [stat, value] of Object.entries(runeEntry.stats)) {
-        stats[stat] = (stats[stat] || 0) + value * count
+        stats[stat] = (stats[stat] || 0) + (value ?? 0) * count
       }
     }
   }
@@ -367,7 +372,7 @@ export function computeBuffStats() {
     for (const [stat, stat_amount] of Object.entries(data.stats)) {
       const base = baseStats[stat] ?? 0
       const buff = baseStats["Buff%"] + (buffed["Buff%"] ?? 0)
-      const amount = base + stat_amount * (1 + buff)
+      const amount = base + (stat_amount ?? 0) * (1 + buff)
       buffed[stat] = (buffed[stat] || 0) + amount
     }    
   }

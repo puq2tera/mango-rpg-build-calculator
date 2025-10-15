@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { __allStatNames } from "@/app/data/talent_data"
+import type { StatNames as StatNameType } from "../data/stat_data"
 import stat_data from "../data/stat_data"
 import rune_data from "../data/rune_data"
 
@@ -61,6 +61,8 @@ export default function EquipmentPage() {
   const [slots, setSlots] = useState<Slot[]>([])
   const [selectedRunes, setSelectedRunes] = useState<Record<RuneTier, RuneSelection[]>>(emptyRuneSet())
   const [artifact, setArtifact] = useState({ "ATK%": 0, "DEF%": 0, "MATK%": 0, 'HEAL%': 0, 'Level': 0 })
+
+  const allStatNames = Object.keys(stat_data.StatsInfo) as StatNameType[]
 
   useEffect(() => {
     const storedSlots = localStorage.getItem(STORAGE_KEY_SLOTS)
@@ -358,7 +360,7 @@ export default function EquipmentPage() {
                         onClick={e => e.stopPropagation()}
                       >
                         <option value="">Select</option>
-                        {__allStatNames.map(option => (
+                        {allStatNames.map(option => (
                           <option key={option} value={option}>{option}</option>
                         ))}
                       </select>
