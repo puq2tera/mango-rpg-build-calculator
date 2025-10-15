@@ -130,54 +130,54 @@ export default function Skills() {
   )
 }
 
-function TalentTable({ data }: { data: TalentRow[] }) {
-  return (
-    <div className="overflow-x-auto">
-      <table className="min-w-full border border-collapse text-sm">
-        <thead>
-          <tr className="bg-gray-100">
-            <th className="border px-2 py-1">Name</th>
-            <th className="border px-2 py-1">Category</th>
-            <th className="border px-2 py-1">PreReq</th>
-            <th className="border px-2 py-1">Tag</th>
-            <th className="border px-2 py-1">BlockedTag</th>
-            <th className="border px-2 py-1">Gold</th>
-            <th className="border px-2 py-1">EXP</th>
-            <th className="border px-2 py-1">TP</th>
-            <th className="border px-2 py-1">Level</th>
-            <th className="border px-2 py-1">Class Levels</th>
-            <th className="border px-2 py-1">Description</th>
-            <th className="border px-2 py-1">Stats</th>
-            <th className="border px-2 py-1">Conversions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {data.map((t, i) => (
-            <tr key={i} className="odd:bg-white even:bg-gray-50">
-              <td className="border px-2 py-1 whitespace-nowrap font-mono">{t.name}</td>
-              <td className="border px-2 py-1">{t.category}</td>
-              <td className="border px-2 py-1">{t.PreReq}</td>
-              <td className="border px-2 py-1">{t.Tag}</td>
-              <td className="border px-2 py-1">{t.BlockedTag}</td>
-              <td className="border px-2 py-1 text-right">{t.gold}</td>
-              <td className="border px-2 py-1 text-right">{t.exp}</td>
-              <td className="border px-2 py-1 text-right">{t.tp_spent}</td>
-              <td className="border px-2 py-1 text-right">{t.total_level}</td>
-              <td className="border px-2 py-1 text-xs">
-                t:{t.class_levels.tank_levels}, w:{t.class_levels.warrior_levels},<br />
-                c:{t.class_levels.caster_levels}, h:{t.class_levels.healer_levels}
-              </td>
-              <td className="border px-2 py-1 max-w-[20rem] whitespace-pre-wrap">{t.description}</td>
-              <td className="border px-2 py-1 font-mono text-xs">
-                {Object.entries(t.stats).map(([k, v]) => `${k}: ${v}`).join(", ")}
-              </td>
-              <td className="border px-2 py-1 font-mono text-xs whitespace-pre-wrap">
-                {t.conversions?.map(c => `${c.source} ⇒ ${c.ratio * 100}% ⇒ ${c.resulting_stat}`).join("\n")}
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-  )
-}
+// function TalentTable({ data }: { data: TalentRow[] }) {
+//   return (
+//     <div className="overflow-x-auto">
+//       <table className="min-w-full border border-collapse text-sm">
+//         <thead>
+//           <tr className="bg-gray-100">
+//             <th className="border px-2 py-1">Name</th>
+//             <th className="border px-2 py-1">Category</th>
+//             <th className="border px-2 py-1">PreReq</th>
+//             <th className="border px-2 py-1">Tag</th>
+//             <th className="border px-2 py-1">BlockedTag</th>
+//             <th className="border px-2 py-1">Gold</th>
+//             <th className="border px-2 py-1">EXP</th>
+//             <th className="border px-2 py-1">TP</th>
+//             <th className="border px-2 py-1">Level</th>
+//             <th className="border px-2 py-1">Class Levels</th>
+//             <th className="border px-2 py-1">Description</th>
+//             <th className="border px-2 py-1">Stats</th>
+//             <th className="border px-2 py-1">Conversions</th>
+//           </tr>
+//         </thead>
+//         <tbody>
+//           {data.map((t, i) => (
+//             <tr key={i} className="odd:bg-white even:bg-gray-50">
+//               <td className="border px-2 py-1 whitespace-nowrap font-mono">{t.name}</td>
+//               <td className="border px-2 py-1">{t.category}</td>
+//               <td className="border px-2 py-1">{t.PreReq}</td>
+//               <td className="border px-2 py-1">{t.Tag}</td>
+//               <td className="border px-2 py-1">{t.BlockedTag}</td>
+//               <td className="border px-2 py-1 text-right">{t.gold}</td>
+//               <td className="border px-2 py-1 text-right">{t.exp}</td>
+//               <td className="border px-2 py-1 text-right">{t.tp_spent}</td>
+//               <td className="border px-2 py-1 text-right">{t.total_level}</td>
+//               <td className="border px-2 py-1 text-xs">
+//                 t:{t.class_levels.tank_levels}, w:{t.class_levels.warrior_levels},<br />
+//                 c:{t.class_levels.caster_levels}, h:{t.class_levels.healer_levels}
+//               </td>
+//               <td className="border px-2 py-1 max-w-[20rem] whitespace-pre-wrap">{t.description}</td>
+//               <td className="border px-2 py-1 font-mono text-xs">
+//                 {Object.entries(t.stats).map(([k, v]) => `${k}: ${v}`).join(", ")}
+//               </td>
+//               <td className="border px-2 py-1 font-mono text-xs whitespace-pre-wrap">
+//                 {t.conversions?.map(c => `${c.source} ⇒ ${c.ratio * 100}% ⇒ ${c.resulting_stat}`).join("\n")}
+//               </td>
+//             </tr>
+//           ))}
+//         </tbody>
+//       </table>
+//     </div>
+//   )
+// }
