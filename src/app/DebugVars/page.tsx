@@ -82,7 +82,7 @@ export default function Skills() {
       stats: data.stats,
       conversions: data.conversions
     }))
-    setAllTalents(output)
+    // setAllTalents(output)
   }, [])
 
   const statOnly = Array.from(__allStatNames).sort()
@@ -100,7 +100,7 @@ export default function Skills() {
         </div>
 
         <h1 className="font-bold text-xl mt-4">Selected Talents Data</h1>
-        <TalentTable data={filtered} />
+        {/* <TalentTable data={filtered} /> */}
 
         <h1 className="font-bold text-xl mt-8">All Talent Stat and Conversion Names</h1>
         <div className="overflow-x-auto">
