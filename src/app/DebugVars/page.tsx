@@ -28,7 +28,7 @@ export default function Skills() {
   const [selected, setSelected] = useState<string | null>(null)
   const [stats, setStats] = useState<string | null>(null)
   //const [filtered, setFiltered] = useState<TalentRow[]>([])
-  const [allTalents, setAllTalents] = useState<TalentRow[]>([])
+  // const [allTalents, setAllTalents] = useState<TalentRow[]>([])
 
   useEffect(() => {
     const raw = localStorage.getItem("selectedTalents")
@@ -82,6 +82,7 @@ export default function Skills() {
       stats: data.stats,
       conversions: data.conversions
     }))
+    console.log(output)
     // setAllTalents(output)
   }, [])
 
@@ -123,7 +124,7 @@ export default function Skills() {
         </div>
 
         <h1 className="font-bold text-xl mt-8">All Talents Data</h1>
-        <TalentTable data={allTalents} />
+        {/* <TalentTable data={allTalents} /> */}
       </div>
     </div>
   )
