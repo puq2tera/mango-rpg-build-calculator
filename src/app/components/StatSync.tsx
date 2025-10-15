@@ -127,7 +127,13 @@ export function computeEquipmentStats() {
       // Affixes
       for (const affix of slot.affixes) {
         if (!affix.stat) continue
-        stats[affix.stat] = (stats[affix.stat] || 0) + (affix.value * stat_data.StatsInfo[affix.stat]['multi'])
+        if (stat_data.StatsInfo[affix.stat]['sub_stats']) {
+          for (const substat of stat_data.StatsInfo[affix.stat]['sub_stats']) {
+            stats[substat] = (stats[affix.stat] || 0) + (affix.value * stat_data.StatsInfo[substat]['multi'])
+          }
+        } else {
+          stats[affix.stat] = (stats[affix.stat] || 0) + (affix.value * stat_data.StatsInfo[affix.stat]['multi'])
+        }
       }
     }
 
@@ -379,8 +385,10 @@ export function computeDmgReadyStats() {
 
   try {
     const stats: Record<string, number> = JSON.parse(raw)
-    const result: Record<string, number> = {}
+    // Copy stats to result
+    const result: Record<string, number> = stats
 
+    // Handle stats that need additional math
     // Mainstats
     for (const stat of stat_data.Mainstats) {
       const base = stats[stat] ?? 0
@@ -390,16 +398,11 @@ export function computeDmgReadyStats() {
     }
     // Elements
     for (const stat of stat_data.AllElements) {
-      result[`${stat}%`] = stats[`${stat}%`] ?? 0
-      result[`${stat} Pen%`] = stats[`${stat} Pen%`] ?? 0
+      result[`${stat}%`] = stats[`${stat}%`] ?? 0 // xDmg applied in dmg formula
+      result[`${stat} Pen%`] = (stats[`${stat} Pen%`] ?? 0) * (1 + (stats[`${stat} xPen%`] ?? 0))
     }
     // HP
     result["HP"] = stats["HP"] * (1 + (stats["HP%"] ?? 0)) 
-
-    //Basic
-    for (const stat of ["Crit DMG%", "Crit Chance%", "Armor Save", "Armor Strike", "Overdrive%", "MP", "Focus", "Focus Regen", "Threat%"]) {
-      result[stat] = stats[stat] ?? 0
-    }
 
     localStorage.setItem("StatsDmgReady", JSON.stringify(result))
     console.log(result)

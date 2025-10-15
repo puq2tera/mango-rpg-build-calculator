@@ -47,14 +47,20 @@ export default function DamageCalc() {
 
   const nonCrit = Math.max(0,
                     // Stat - armor
-                    Math.max(0, 
-                      (stats[mainStat] * inputs["skillDmg"]) - 
-                      (inputs["enemyArmor"] * inputs["armorIgnore"] - ((stats["ATK"] + stats["DEF"] + stats["MATK"] + stats["HEAL"])/4))
+                    Math.max(0,
+                      (stats[mainStat] * inputs["skillDmg"]) -
+                      (inputs["enemyArmor"] * inputs["armorIgnore"] - ((stats["ATK"] + stats["DEF"] + stats["MATK"] + stats["HEAL"]) / 4))
                     ) *
-                    (1 + (stats[`${element}%`] ?? 0)) * 
+                    // Base element/type bonuses
+                    (1 + (stats[`${element}%`] ?? 0)) *
+                    (1 + (stats[`${element} xDmg%`] ?? 0)) *
+                    // Penetration vs enemy resistance
                     (1 + (stats[`${penElement} Pen%`] ?? 0) - (inputs["enemyRes"] * inputs["resIgnore"])) *
-                    (1 + (stats[skillType] ?? 0)) *
-                    (1 + (stats["Global DMG%"] ?? 0)));
+                    // Skill-specific damage bonus (e.g., "Sword DMG%")
+                    (1 + (stats[`${skillType} DMG%`] ?? 0)) *
+                    // Global damage
+                    (1 + (stats["Dmg%"] ?? 0))
+                  );
 
   const crit = nonCrit * inputs['skillCritDmg']
   const average = 0
