@@ -3,26 +3,26 @@
 import { useEffect, useState } from "react"
 import { talent_data, __allStatNames, __allConversionNames } from "../data/talent_data"
 
-interface TalentRow {
-  name: string
-  category: string
-  PreReq: string
-  Tag: string
-  BlockedTag: string
-  gold: number
-  exp: number
-  tp_spent: number
-  total_level: number
-  class_levels: {
-    tank_levels: number
-    warrior_levels: number
-    caster_levels: number
-    healer_levels: number
-  }
-  description: string
-  stats: Record<string, number>
-  conversions?: Array<{ source: string; ratio: number; resulting_stat: string }>
-}
+// interface TalentRow {
+//   name: string
+//   category: string
+//   PreReq: string
+//   Tag: string
+//   BlockedTag: string
+//   gold: number
+//   exp: number
+//   tp_spent: number
+//   total_level: number
+//   class_levels: {
+//     tank_levels: number
+//     warrior_levels: number
+//     caster_levels: number
+//     healer_levels: number
+//   }
+//   description: string
+//   stats: Record<string, number>
+//   conversions?: Array<{ source: string; ratio: number; resulting_stat: string }>
+// }
 
 export default function Skills() {
   const [selected, setSelected] = useState<string | null>(null)
