@@ -35,7 +35,7 @@ export default function Skills() {
     if (!raw) return
     try {
       const parsed: string[] = JSON.parse(raw)
-
+      console.log(parsed)
       // const output = parsed.map(id => {
       //   const data = talent_data[id]
       //   return {
