@@ -80,9 +80,9 @@ export default function EquipmentPage() {
     const labelPart = parts.slice(1).join(" ")
 
     const token = sanitizeToken(labelPart)
-    //console.log(token)
+    console.log(token)
     const mapped = stat_data.inGameNames[token]
-    //console.log(stat_data.inGameNames[token])
+    console.log(stat_data.inGameNames[token])
     if (!mapped) return null
 
     return { stat: mapped, value: parseInt(numPart) }
@@ -375,6 +375,7 @@ export default function EquipmentPage() {
             onClick={() => toggleSlot(idx)}
             className={`border rounded p-2 text-left cursor-pointer transition flex-shrink-0 ${
               slot.enabled ? "bg-green-100" : "bg-gray-100 opacity-50"
+              // TODO: Make the slot change color if the name contains +10
             }`}
           >
             <div className="grid grid-cols-2 gap-2 mb-2">

@@ -77,6 +77,7 @@ export const inGameNames: Record<string, StatNames> = {
   "Penvoid": "Void Pen%",
   "resvoid": "Void Res%",
 
+  "eleglobal": "All%",
   "allres": "All Res%",
 
   "critchance": "Crit Chance%",

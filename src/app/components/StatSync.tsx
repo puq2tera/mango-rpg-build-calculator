@@ -108,6 +108,7 @@ export function computeEquipmentStats() {
 
   try {
     const slots: {
+      name: string
       affixes: { stat: string; value: number }[]
       mainstat: string
       mainstat_value: number
@@ -140,6 +141,11 @@ export function computeEquipmentStats() {
           stats[affix.stat] = (stats[affix.stat] ?? 0) + (affix.value * multi)
         }
       }
+      // Full level bonus
+      if (slot.name.includes("+10")) {
+        stats["Dmg%"] = (stats["Dmg%"]) + 0.01
+      }
+
     }
 
     localStorage.setItem("StatsEquipment", JSON.stringify(stats))

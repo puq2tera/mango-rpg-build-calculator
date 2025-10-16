@@ -25,7 +25,7 @@ export default function DamageCalc() {
   const [skillType, setSkillType] = useState("Sword")
   const [inputs, setInputs] = useState({
     skillDmg: 0,
-    skillCritDmg: 0,
+    skillCritDmg: 1,
     skillPen: 0,
     skillCritChance: 0,
     threatDef: 0,
@@ -62,7 +62,8 @@ export default function DamageCalc() {
                     (1 + (stats["Dmg%"] ?? 0))
                   );
 
-  const crit = nonCrit * inputs['skillCritDmg']
+  const crit = nonCrit * inputs['skillCritDmg'] * stats['Crit DMG%']
+  const maxcrit = crit * stats['Overdrive%'] 
   const average = 0
 
   const handleChange = (field: string, value: number) => {
@@ -184,6 +185,7 @@ export default function DamageCalc() {
           <h2 className="font-semibold text-lg">Average Damage</h2>
           <div><strong>Non-Crit:</strong> { nonCrit }</div>
           <div><strong>Crit:</strong> { crit }</div>
+          <div><strong>Maximized Crit:</strong> { maxcrit }</div>
           <div><strong>Overall:</strong> {average}</div>
         </div>
         <div className="space-y-2">

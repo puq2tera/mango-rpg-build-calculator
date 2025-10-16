@@ -78,7 +78,7 @@ export default function CharacterSummary() {
         </thead>
         <tbody>
           <tr className="text-center">
-            {["Crit Chance%", "Crit DMG%", "Global DMG%", "Global HealEffect", "Damage Res", "Global HP%", "Extra Threat%", "Threat%"].map(stat => (
+            {["Crit Chance%", "Crit DMG%", "Dmg%", "Global HealEffect", "Damage Res", "Global HP%", "Extra Threat%", "Threat%"].map(stat => (
               <td key={stat} className={statStyle(stats[stat] ?? 0)}>{get(stats, stat, 100)}%</td>
             ))}
           </tr>
@@ -131,7 +131,7 @@ export default function CharacterSummary() {
               <td className={statStyle(stats[`${type}%`] ?? 0)}>{get(stats, `${type}%`, 100)}%</td>
               <td className={statStyle(stats[`${type} Pen%`] ?? 0)}>{get(stats, `${type} Pen%`, 100)}%</td>
               <td className={statStyle(stats[`${type} Res%`] ?? 0)}>{get(stats, `${type} Res%`, 100)}%</td>
-              <td className={statStyle(stats[`x${type}%`] ?? 0)}>{get(stats, `x${type}%`, 100)}%</td>
+              <td className={statStyle(stats[`${type} xDmg%`] ?? 0)}>{get(stats, `${type} xDmg%`, 100)}%</td>
               <td className={statStyle(stats[`${type} xPen%`] ?? 0)}>{get(stats, `${type} xPen%`, 100)}%</td>
               <td className={statStyle(stats[`${type} Skill%`] ?? 0)}>{get(stats, `${type} Skill%`, 100)}%</td>
             </tr>
