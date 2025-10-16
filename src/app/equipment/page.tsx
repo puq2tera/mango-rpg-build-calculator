@@ -64,50 +64,6 @@ export default function EquipmentPage() {
 
   const allStatNames = Object.keys(stat_data.StatsInfo) as StatNameType[]
 
-  const pastedTokenToStat: Record<string, keyof typeof stat_data.StatsInfo> = {
-    // main stats (percent)
-    atkmulti: "ATK%",
-    defmulti: "DEF%",
-    matkmulti: "MATK%",
-    healmulti: "HEAL%",
-    // main stats (flat)
-    atk: "ATK",
-    def: "DEF",
-    matk: "MATK",
-    heal: "HEAL",
-    // crit
-    critchance: "Crit Chance%",
-    critdamage: "Crit DMG%",
-    // global damage
-    dmgmultiadd: "Dmg%",
-    // elemental damage (aggregate and specific)
-    eleglobal: "Elemental%",
-    elefire: "Fire%",
-    elewater: "Water%",
-    eleearth: "Earth%",
-    elewind: "Wind%",
-    eletoxic: "Toxic%",
-    // physical types encoded as "ele"
-    eleblunt: "Blunt%",
-    elepierce: "Pierce%",
-    eleslash: "Slash%",
-    // void
-    elevoid: "Void%",
-    // resists
-    resvoid: "Void Res%",
-    reswater: "Water Res%",
-    resfire: "Fire Res%",
-    reswind: "Wind Res%",
-    researth: "Earth Res%",
-    restoxic: "Toxic Res%",
-    // aggregates
-    allres: "All Res%",
-    all: "All%",
-    // x modifiers
-    xphysicaldmg: "Phys xDmg%",
-    xphysicalpen: "Phys xPen%",
-  }
-
   function sanitizeToken(label: string): string {
     return label.toLowerCase().replace(/[^a-z]/g, "")
   }
@@ -117,16 +73,16 @@ export default function EquipmentPage() {
       .replace(/^\u25D8\s*/, "") // remove leading bullet ◘
       .replace(/🖊️/g, "")
       .trim()
-    console.log(cleaned)
+    //console.log(cleaned)
     const parts = cleaned.split(/\s+/)
     if (parts.length < 2) return null
     const numPart = parts[0]
     const labelPart = parts.slice(1).join(" ")
 
     const token = sanitizeToken(labelPart)
-    console.log(token)
+    //console.log(token)
     const mapped = stat_data.inGameNames[token]
-    console.log(stat_data.inGameNames[token])
+    //console.log(stat_data.inGameNames[token])
     if (!mapped) return null
 
     return { stat: mapped, value: parseInt(numPart) }
