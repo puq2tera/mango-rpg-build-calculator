@@ -64,6 +64,133 @@ export default function EquipmentPage() {
 
   const allStatNames = Object.keys(stat_data.StatsInfo) as StatNameType[]
 
+  const pastedTokenToStat: Record<string, keyof typeof stat_data.StatsInfo> = {
+    // main stats (percent)
+    atkmulti: "ATK%",
+    defmulti: "DEF%",
+    matkmulti: "MATK%",
+    healmulti: "HEAL%",
+    // main stats (flat)
+    atk: "ATK",
+    def: "DEF",
+    matk: "MATK",
+    heal: "HEAL",
+    // crit
+    critchance: "Crit Chance%",
+    critdamage: "Crit DMG%",
+    // global damage
+    dmgmultiadd: "Dmg%",
+    // elemental damage (aggregate and specific)
+    eleglobal: "Elemental%",
+    elefire: "Fire%",
+    elewater: "Water%",
+    eleearth: "Earth%",
+    elewind: "Wind%",
+    eletoxic: "Toxic%",
+    // physical types encoded as "ele"
+    eleblunt: "Blunt%",
+    elepierce: "Pierce%",
+    eleslash: "Slash%",
+    // void
+    elevoid: "Void%",
+    // resists
+    resvoid: "Void Res%",
+    reswater: "Water Res%",
+    resfire: "Fire Res%",
+    reswind: "Wind Res%",
+    researth: "Earth Res%",
+    restoxic: "Toxic Res%",
+    // aggregates
+    allres: "All Res%",
+    all: "All%",
+    // x modifiers
+    xphysicaldmg: "Phys xDmg%",
+    xphysicalpen: "Phys xPen%",
+  }
+
+  function sanitizeToken(label: string): string {
+    return label.toLowerCase().replace(/[^a-z]/g, "")
+  }
+
+  function parseAffixLine(line: string): Affix | null {
+    const cleaned = line
+      .replace(/^\u25D8\s*/, "") // remove leading bullet ◘
+      .replace(/🖊️/g, "")
+      .trim()
+    console.log(cleaned)
+    const parts = cleaned.split(/\s+/)
+    if (parts.length < 2) return null
+    const numPart = parts[0]
+    const labelPart = parts.slice(1).join(" ")
+
+    const token = sanitizeToken(labelPart)
+    console.log(token)
+    const mapped = stat_data.inGameNames[token]
+    console.log(stat_data.inGameNames[token])
+    if (!mapped) return null
+
+    return { stat: mapped, value: parseInt(numPart) }
+  }
+
+  function parsePastedItem(text: string): Partial<Slot> | null {
+    const lines = text.split(/\r?\n/).map(l => l.trim())
+    if (!lines.some(l => l.length)) return null
+
+    const result: Partial<Slot> = { affixes: [] }
+
+    // Name — [ i### ]
+    const nameRegex = /\[\s*i\d{3}\s*\]/i;
+    const nameLine = lines.find(l => nameRegex.test(l))
+    if (nameLine) result.name = nameLine
+
+    // Equip Type — locate marker then take next non-empty line
+    const equipIdx = lines.findIndex(l => /^equip type$/i.test(l))
+    const typeLine = lines.slice(equipIdx + 1).find(l => l.length > 0)
+    if (typeLine) result.type = typeLine
+
+    // Main stat: line that contains +ATK/+DEF/+MATK/+HEAL, next non-empty line is value
+    const mainLabelIdx = lines.findIndex(l => /\+[ADMH]?(?:ATK|DEF|MATK|HEAL)/i.test(l))
+    if (mainLabelIdx >= 0) {
+      const label = lines[mainLabelIdx].replace(/.*\+/, "").toUpperCase().replace(/[^A-Z]/g, "")
+      const statMap: Record<string, Slot["mainstat"]> = { ATK: "ATK", DEF: "DEF", MATK: "MATK", HEAL: "HEAL" }
+      if (statMap[label]) result.mainstat = statMap[label]
+      const valueLine = lines.slice(mainLabelIdx + 1).find(l => /\d/.test(l))
+      if (valueLine) {
+        const val = parseInt(valueLine.replace(/[^0-9\-]/g, ""), 10)
+        if (!Number.isNaN(val)) result.mainstat_value = val
+      }
+    }
+
+    // Affixes — lines starting with the bullet (◘)
+    for (const ln of lines) {
+      if (!ln.startsWith("◘")) continue
+      const affix = parseAffixLine(ln)
+      if (affix) (result.affixes as Affix[]).push(affix)
+    }
+
+    // Enable the slot by default when importing
+    result.enabled = true
+    return result
+  }
+
+  // Per-slot paste handler
+  function pasteEquipmentIntoSlot(slotIndex: number, rawText: string) {
+    const parsed = parsePastedItem(rawText)
+    if (!parsed) return
+    setSlots(prev => prev.map((slot, idx) => {
+      if (idx !== slotIndex) return slot
+      return {
+        ...slot,
+        ...(parsed.name ? { name: parsed.name } : {}),
+        ...(parsed.type ? { type: parsed.type } : {}),
+        ...(parsed.mainstat ? { mainstat: parsed.mainstat } : {}),
+        ...(parsed.mainstat_value !== undefined ? { mainstat_value: parsed.mainstat_value! } : {}),
+        ...(parsed.affixes && (parsed.affixes as Affix[]).length > 0 ? { affixes: parsed.affixes as Affix[] } : {}),
+        ...(parsed.enabled ? { enabled: true } : {})
+      }
+    }))
+  }
+
   useEffect(() => {
     const storedSlots = localStorage.getItem(STORAGE_KEY_SLOTS)
     try {
@@ -294,7 +421,23 @@ export default function EquipmentPage() {
               slot.enabled ? "bg-green-100" : "bg-gray-100 opacity-50"
             }`}
           >
-            <h2 className="font-semibold mb-2">Slot {idx + 1}</h2>
+            <div className="grid grid-cols-2 gap-2 mb-2">
+              <h2 className="font-semibold mb-2">Slot {idx + 1}</h2>
+              {/* Paste item text directly into this box to import */}
+              <input
+                type="text"
+                placeholder="Paste equipment here"
+                onPaste={e => {
+                  e.preventDefault()
+                  const text = (e.clipboardData && e.clipboardData.getData('text')) || ''
+                  pasteEquipmentIntoSlot(idx, text)
+                  // clear the input box after import
+                  ;(e.currentTarget as HTMLInputElement).value = ''
+                }}
+                className="w-full border px-1"
+                onClick={e => e.stopPropagation()}
+              />
+            </div>
             <div className="grid grid-cols-2 gap-2 mb-2">
               <div>
                 <label className="block text-sm font-medium">Name</label>

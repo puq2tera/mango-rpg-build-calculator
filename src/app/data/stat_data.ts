@@ -3,6 +3,92 @@ export type StatInfoData = {
     sub_stats?: StatNames[] 
  };
 
+export const inGameNames: Record<string, StatNames> = {
+  "atk": "ATK",
+  "def": "DEF",
+  "matk": "MATK",
+  "heal": "Heal", //fix
+
+  "atkmulti": "ATK%",
+  "defmulti": "DEF%",
+  "matkmulti": "MATK%",
+  "healmulti": "HEAL%",
+
+  "elefire": "Fire%",
+  "elewater": "Water%", 
+  "elelightning": "Lightning%",
+  "elewind": "Wind%",
+  "eleearth": "Earth%",
+  "eletoxic": "Toxic%",
+
+  "penfire": "Fire Pen%",
+  "penwater": "Water Pen%",
+  "penlightning": "Lightning Pen%",
+  "penwind": "Wind Pen%",
+  "penearth": "Earth Pen%",
+  "pentoxic": "Toxic Pen%",
+
+  "resfire": "Fire Res%",
+  "reswater": "Water Res%",
+  "reslightning": "Lightning Res%",
+  "reswind": "Wind Res%",
+  "researth": "Earth Res%",
+  "restoxic": "Toxic Res%",
+
+  "elementaldmg": "Elemental%",
+  "elementalpen": "Elemental Pen%",
+
+  "xelementaldmg": "Elemental xDmg%",
+  "xelementalpen": "Elemental xPen%",
+
+  "eleslash": "Slash%",
+  "elepierce": "Pierce%",
+  "eleblunt": "Blunt%",
+
+  "penslash": "Slash Pen%",
+  "penpierce": "Pierce Pen%",
+  "penblunt": "Blunt Pen%",
+
+  "resslash": "Slash Res%",
+  "respierce": "Pierce Res%",
+  "resblunt": "Blunt Res%",
+
+  "physicaldmg": "Phys%", //check
+  "physicalpen": "Phys Pen%",
+
+  "xphysicaldmg": "Phys xDmg%",
+  "xphysicalpen": "Phys xPen%",
+
+  "elenegative": "Neg%",
+  "eleholy": "Holy%",
+
+  "pennegative": "Neg Pen%",
+  "penholy": "Holy Pen%",
+
+  "resnegative": "Neg Res%",
+  "resholy": "Holy Res%",
+
+  "divinedmg": "Divine%", //check
+
+  "xdivinedmg": "Divine xDmg%",
+  "xdivinepen": "Phys xPen%",
+
+  "elevoid": "Void%",
+  "Penvoid": "Void Pen%",
+  "resvoid": "Void Res%",
+
+  "allres": "All Res%",
+
+  "critchance": "Crit Chance%",
+  "critdamage":"Crit DMG%",
+
+  "dmgmultiadd": "Dmg%",
+
+  "expscale": "EXP Bonus",
+  "mp": "MP",
+  "hpregenrate": "HP Regen%" // check
+}
+
 export const StatsInfo: Record<string, StatInfoData> = {
   // Mainstats
   "ATK":   { multi: 1 },
@@ -105,15 +191,20 @@ export const StatsInfo: Record<string, StatInfoData> = {
   "Neg Res%":  { multi: 0.01 },
   "Holy Res%": { multi: 0.01 },
 
+  "Neg xDmg%":  { multi: 0.01 },
+  "Holy xDmg%": { multi: 0.01 },
+
   "Divine%":     { multi: 0.01, sub_stats: ["Neg%", "Holy%"] },
   "Divine Pen%": { multi: 0.01, sub_stats: ["Neg Pen%", "Holy Pen%"] },
   "Divine Res%": { multi: 0.01, sub_stats: ["Neg Res%", "Holy Res%"] },
+  "Divine xDmg%": { multi: 0.01, sub_stats: ["Neg xDmg%", "Holy xDmg%"] },
 
   // Void
   "Void%":      { multi: 0.01 },
   "Void Pen%":  { multi: 0.01 },
-  "Void xPen%": { multi: 0.01 },
   "Void Res%":  { multi: 0.01 },
+  "Void xDmg%": { multi: 0.01 },
+  "Void xPen%": { multi: 0.01 },
 
   // Weird
   "NonVoid Pen%":                { multi: 0.01, sub_stats: ["Fire Pen%", "Water Pen%", "Lightning Pen%", "Wind Pen%", "Earth Pen%", "Toxic Pen%", "Slash Pen%", "Pierce Pen%", "Blunt Pen%", "Neg Pen%", "Holy Pen%"] },
@@ -280,7 +371,8 @@ const stat_data = {
   ClassNames,
   PostBuffTypes,
   ClassScalingStats,
-  StatsInfo
+  StatsInfo,
+  inGameNames
 }
 
 export default stat_data
