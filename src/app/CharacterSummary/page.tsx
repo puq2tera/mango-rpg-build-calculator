@@ -36,34 +36,15 @@ export default function CharacterSummary() {
       <table className="table-fixed border-separate border-spacing-1 text-sm">
         <thead>
           <tr className="font-bold text-center">
-            {["ATK", "DEF", "MATK", "HEAL", "HP", "MP", "Focus", "MP Regen", "Focus Regen"].map((stat, i) => (
+            {["ATK", "MATK", "DEF", "HEAL", "HP", "MP", "Focus", "MP Regen", "Focus Regen"].map((stat, i) => (
               <th key={i} className={`px-2 py-1 ${["bg-red-200", "bg-green-200", "bg-blue-200", "bg-pink-200", "bg-green-200", "bg-blue-200", "bg-red-200", "bg-blue-200", "bg-red-200"][i]}`}>{stat}</th>
             ))}
           </tr>
         </thead>
         <tbody>
           <tr className="text-center">
-            {["ATK", "DEF", "MATK", "HEAL", "HP", "MP", "Focus", "MP Regen", "Focus Regen"].map(stat => (
+            {["ATK", "MATK", "DEF", "HEAL", "HP", "MP", "Focus", "MP Regen", "Focus Regen"].map(stat => (
               <td key={stat} className={statStyle(stats[stat] ?? 0)}>{get(stats, stat)}</td>
-            ))}
-          </tr>
-          <tr className="font-bold text-center">
-            {["ATK%", "DEF%", "MATK%", "HEAL%"].map((stat, i) => (
-              <th key={i} className={`px-2 py-1 ${["bg-red-200", "bg-green-200", "bg-blue-200", "bg-pink-200"][i]}`}>{stat}</th>
-            ))}
-          </tr>
-          <tr className="text-center">
-            {["ATK%", "DEF%", "MATK%", "HEAL%"].map(stat => (
-              <td key={stat} className={statStyle(stats[stat] ?? 0)}>{get(stats, stat)}%</td>
-            ))}
-          </tr>
-          <tr className="text-center font-bold">
-            {["Global ATK%", "Global DEF%", "Global MATK%", "Global HEAL%"].map((stat, i) => (
-              <th key={i} className={`px-2 py-1 ${["bg-red-200", "bg-green-200", "bg-blue-200", "bg-pink-200"][i]}`}>{stat}</th>
-            ))}</tr>
-          <tr className="text-center">
-            {["Global ATK%", "Global DEF%", "Global MATK%", "Global HEAL%"].map(stat => (
-              <td key={stat} className={statStyle(stats[stat] ?? 0)}>{get(stats, stat)}%</td>
             ))}
           </tr>
         </tbody>
@@ -120,7 +101,6 @@ export default function CharacterSummary() {
             <th>Pen%</th>
             <th>Res%</th>
             <th>xDmg%</th>
-            <th>xPen%</th>
             <th>Skill%</th>
           </tr>
         </thead>
@@ -132,7 +112,6 @@ export default function CharacterSummary() {
               <td className={statStyle(stats[`${type} Pen%`] ?? 0)}>{get(stats, `${type} Pen%`)}%</td>
               <td className={statStyle(stats[`${type} Res%`] ?? 0)}>{get(stats, `${type} Res%`)}%</td>
               <td className={statStyle(stats[`${type} xDmg%`] ?? 0)}>{get(stats, `${type} xDmg%`)}%</td>
-              <td className={statStyle(stats[`${type} xPen%`] ?? 0)}>{get(stats, `${type} xPen%`)}%</td>
               <td className={statStyle(stats[`${type} Skill%`] ?? 0)}>{get(stats, `${type} Skill%`)}%</td>
             </tr>
           ))}
