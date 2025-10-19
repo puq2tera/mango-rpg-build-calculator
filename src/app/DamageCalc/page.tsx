@@ -24,7 +24,7 @@ export default function DamageCalc() {
   const [penElement, setPenElement] = useState("Blunt")
   const [skillType, setSkillType] = useState("Sword")
   const [inputs, setInputs] = useState({
-    skillDmg: 0,
+    skillDmg: 25,
     skillCritDmg: 1,
     skillPen: 0,
     skillCritChance: 0,
@@ -48,8 +48,8 @@ export default function DamageCalc() {
   const nonCrit = Math.max(0,
                     // Stat - armor
                     Math.max(0,
-                      (stats[mainStat] * inputs["skillDmg"]) -
-                      (inputs["enemyArmor"] * inputs["armorIgnore"] - ((stats["ATK"] + stats["DEF"] + stats["MATK"] + stats["HEAL"]) / 4))
+                      (stats[mainStat] * (inputs["skillDmg"]/100) ) -
+                      (inputs["enemyArmor"] * inputs["armorIgnore"] - ((stats["ATK"] + stats["DEF"] + stats["MATK"] + stats["HEAL"]) / 4)) // TODO: fix armor ignore
                     ) *
                     // Base element/type bonuses
                     (1 + (stats[`${element}%`] ?? 0)) *
@@ -63,8 +63,8 @@ export default function DamageCalc() {
                   );
 
   const crit = nonCrit * inputs['skillCritDmg'] * stats['Crit DMG%']
-  const maxcrit = crit * stats['Overdrive%'] 
-  const average = 0
+  const maxcrit = crit * stats['Overdrive%']
+  const average = maxcrit - 25778417
 
   const handleChange = (field: string, value: number) => {
     setInputs(prev => ({ ...prev, [field]: value }))
@@ -101,7 +101,7 @@ export default function DamageCalc() {
           </select>
 
           <label className="font-semibold">Skill DMG%</label>
-          <input type="number" defaultValue={0.5} onChange={e => handleChange("skillDmg", +e.target.value)} className="w-full p-1 border rounded" />
+          <input type="number" defaultValue={25} onChange={e => handleChange("skillDmg", +e.target.value)} className="w-full p-1 border rounded" />
 
           <label className="font-semibold">Skill Crit DMG%</label>
           <input type="number" onChange={e => handleChange("skillCritDmg", +e.target.value)} className="w-full p-1 border rounded" />
