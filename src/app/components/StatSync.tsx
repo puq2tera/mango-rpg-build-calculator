@@ -49,9 +49,9 @@ export function computeLevelStats() {
   console.log(storedHeroPoints)
   
   // Starting stats
-  StatsLevels['Crit DMG%'] = 1.2
-  StatsLevels['Crit Chance%'] = 0.1
-  StatsLevels['Overdrive%'] = 1.1
+  StatsLevels['Crit DMG%'] = 120
+  StatsLevels['Crit Chance%'] = 10
+  StatsLevels['Overdrive%'] = 110
   StatsLevels['Focus Regen'] = 5
 
   // HP and Scaling Stats
@@ -79,9 +79,9 @@ export function computeLevelStats() {
   StatsLevels['MP'] = 8 + (storedLevels["tank"] * stat_data.ClassMainStatValues["tank"]["MP"]) + (storedLevels["warrior"] * stat_data.ClassMainStatValues["warrior"]["MP"]) + (storedLevels["caster"] * stat_data.ClassMainStatValues["caster"]["MP"]) + (storedLevels["healer"] * stat_data.ClassMainStatValues["healer"]["MP"])
   StatsLevels['Focus'] = 100 + (storedLevels["warrior"] * stat_data.ClassMainStatValues["warrior"]["Focus"])
   if (storedLevels["tank"] >= Math.max(...Object.values(storedLevels))) {
-    StatsLevels['Threat%'] = 1 + storedLevels["tank"] * 0.1
+    StatsLevels['Threat%'] = 100 + storedLevels["tank"] * 10
   } else {
-    StatsLevels['Threat%'] = 1 + storedLevels["tank"] * 0.02
+    StatsLevels['Threat%'] = 100 + storedLevels["tank"] * 2
   }
 
   //Mainstats
@@ -130,20 +130,17 @@ export function computeEquipmentStats() {
         if (!affix.stat) continue
         const affixInfo = stat_data.StatsInfo[affix.stat as keyof typeof stat_data.StatsInfo]
         const substats = affixInfo?.sub_stats
-        if (substats) {
+        if (substats) { // handles allres, elemental, physical, etc
           for (const substat of substats) {
-            const subInfo = stat_data.StatsInfo[substat]
-            const multi = subInfo?.multi ?? 1
-            stats[substat] = (stats[substat] ?? 0) + (affix.value * multi)
+            stats[substat] = (stats[substat] ?? 0) + affix.value
           }
         } else if (affixInfo) {
-          const multi = affixInfo.multi
-          stats[affix.stat] = (stats[affix.stat] ?? 0) + (affix.value * multi)
+          stats[affix.stat] = (stats[affix.stat] ?? 0) + affix.value
         }
       }
       // Full level bonus
       if (slot.name.includes("+10")) {
-        stats["Dmg%"] = (stats["Dmg%"]) + 0.01
+        stats["Dmg%"] = (stats["Dmg%"]) + 1
       }
 
     }
@@ -186,7 +183,7 @@ export function computeArtifactStats() {
   const stats: Record<string, number> = {}
 
   for (const stat of stat_data.Mainstats) {
-    stats[`Art_${stat}%`] = Artifact[`${stat}%`] / 100
+    stats[`Art_${stat}%`] = Artifact[`${stat}%`]
     stats[stat] = Artifact["Level"]
   }
   
@@ -261,7 +258,7 @@ export function computexPenStats() {
   for (const [xPenStat, affectedStats] of Object.entries(stat_data.xPenMapping)) {
     const multiplier = (StatsBase[xPenStat] ?? 0)
     for (const stat of affectedStats) {
-      StatsXPen[stat] = (StatsBase[stat] ?? 0) * multiplier
+      StatsXPen[stat] = Math.floor((StatsBase[stat] ?? 0) * (multiplier / 100))
     }
   }
 
@@ -315,8 +312,7 @@ export function computeConversionStats() {
 
     for (const { source, ratio, resulting_stat } of data.conversions) {
       const base = baseStats[source] ?? 0
-      const amount = base * ratio
-      converted[resulting_stat] = (converted[resulting_stat] || 0) + amount
+      converted[resulting_stat] = Math.floor((converted[resulting_stat] || 0) + (base * ratio))
     }
   }
 
@@ -365,21 +361,19 @@ export function computeBuffStats() {
 
   for (const [name, data] of Object.entries(skill_data)) {
     if (!selected.has(name)) continue
-
+    // TODO: Remove post buff since formulas got fixed
     for (const { source, ratio, resulting_stat } of data.conversions) {
       const base = baseStats[source] ?? 0
       const buff = baseStats["Buff%"] + (buffed["Buff%"] ?? 0)
       const effectiveBase = source in PostBuffTypes
         ? base + (buffed[source] ?? 0) // If it is postBuff then use buffed stats
         : base // Otherwise use pre-buff stats
-      const amount = effectiveBase * ratio * (1 + buff)
-      buffed[resulting_stat] = (buffed[resulting_stat] || 0) + amount
+      buffed[resulting_stat] = Math.floor((buffed[resulting_stat] || 0) + (effectiveBase * ratio * (1 + buff)))
     }
     for (const [stat, stat_amount] of Object.entries(data.stats)) {
       const base = baseStats[stat] ?? 0
       const buff = baseStats["Buff%"] + (buffed["Buff%"] ?? 0)
-      const amount = base + (stat_amount ?? 0) * (1 + buff)
-      buffed[stat] = (buffed[stat] || 0) + amount
+      buffed[stat] = Math.floor((buffed[stat] || 0) + (base + (stat_amount ?? 0) * (1 + buff)))
     }    
   }
 
@@ -405,15 +399,15 @@ export function computeDmgReadyStats() {
       const base = stats[stat] ?? 0
       const multiplier = stats[`${stat}%`] ?? 0
       const artifact_multiplier = stats[`Art_${stat}%`] ?? 0
-      result[stat] = base * (1 + multiplier) * (1 + artifact_multiplier)
+      result[stat] = Math.floor(base * (1 + multiplier/100) * (1 + artifact_multiplier/100))
     }
     // Elements
     for (const stat of stat_data.AllElements) {
       result[`${stat}%`] = stats[`${stat}%`] ?? 0 // xDmg applied in dmg formula
-      result[`${stat} Pen%`] = (stats[`${stat} Pen%`] ?? 0) * (1 + (stats[`${stat} xPen%`] ?? 0))
+      result[`${stat} Pen%`] = Math.floor((stats[`${stat} Pen%`] ?? 0) * (1 + (stats[`${stat} xPen%`] ?? 0)/100))
     }
     // HP
-    result["HP"] = stats["HP"] * (1 + (stats["HP%"] ?? 0)) 
+    result["HP"] = Math.floor(stats["HP"] * (1 + (stats["HP%"] ?? 0)))
 
     localStorage.setItem("StatsDmgReady", JSON.stringify(result))
     console.log(result)

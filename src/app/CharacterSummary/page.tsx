@@ -79,7 +79,7 @@ export default function CharacterSummary() {
         <tbody>
           <tr className="text-center">
             {["Crit Chance%", "Crit DMG%", "Dmg%", "Global HealEffect", "Damage Res", "Global HP%", "Extra Threat%", "Threat%"].map(stat => (
-              <td key={stat} className={statStyle(stats[stat] ?? 0)}>{get(stats, stat, 100)}%</td>
+              <td key={stat} className={statStyle(stats[stat] ?? 0)}>{get(stats, stat)}%</td>
             ))}
           </tr>
         </tbody>
@@ -107,7 +107,7 @@ export default function CharacterSummary() {
         <tbody>
           <tr className="text-center">
             {["Overdrive%"].map(stat => (
-              <td key={stat} className={statStyle(stats[stat] ?? 0)}>{get(stats, stat, 100)}%</td>
+              <td key={stat} className={statStyle(stats[stat] ?? 0)}>{get(stats, stat)}%</td>
             ))}
           </tr>
         </tbody>
@@ -128,12 +128,12 @@ export default function CharacterSummary() {
           {["Blunt", "Pierce", "Slash", "Fire", "Water", "Lightning", "Wind", "Earth", "Toxic", "Neg", "Holy", "Void"].map(type => (
             <tr key={type} className="text-center">
               <td className="border px-2 py-1 text-left">{type}</td>
-              <td className={statStyle(stats[`${type}%`] ?? 0)}>{get(stats, `${type}%`, 100)}%</td>
-              <td className={statStyle(stats[`${type} Pen%`] ?? 0)}>{get(stats, `${type} Pen%`, 100)}%</td>
-              <td className={statStyle(stats[`${type} Res%`] ?? 0)}>{get(stats, `${type} Res%`, 100)}%</td>
-              <td className={statStyle(stats[`${type} xDmg%`] ?? 0)}>{get(stats, `${type} xDmg%`, 100)}%</td>
-              <td className={statStyle(stats[`${type} xPen%`] ?? 0)}>{get(stats, `${type} xPen%`, 100)}%</td>
-              <td className={statStyle(stats[`${type} Skill%`] ?? 0)}>{get(stats, `${type} Skill%`, 100)}%</td>
+              <td className={statStyle(stats[`${type}%`] ?? 0)}>{get(stats, `${type}%`)}%</td>
+              <td className={statStyle(stats[`${type} Pen%`] ?? 0)}>{get(stats, `${type} Pen%`)}%</td>
+              <td className={statStyle(stats[`${type} Res%`] ?? 0)}>{get(stats, `${type} Res%`)}%</td>
+              <td className={statStyle(stats[`${type} xDmg%`] ?? 0)}>{get(stats, `${type} xDmg%`)}%</td>
+              <td className={statStyle(stats[`${type} xPen%`] ?? 0)}>{get(stats, `${type} xPen%`)}%</td>
+              <td className={statStyle(stats[`${type} Skill%`] ?? 0)}>{get(stats, `${type} Skill%`)}%</td>
             </tr>
           ))}
         </tbody>
