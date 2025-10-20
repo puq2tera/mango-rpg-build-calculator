@@ -274,13 +274,6 @@ export const StatsInfo: Record<string, StatInfoData> = {
   "Holy Crit DMG%":      { multi: 0.01 },
 
   "Shadow Break Crit Chance%": { multi: 0.01 },
-
-  // Buff specific post stats
-  "Post Crit Chance%": { multi: 0.01 },
-  "Post ATK":          { multi: 1 },
-  "Post HEAL":         { multi: 1 },
-  "Post Slash Pen%":   { multi: 0.01 },
-  "Post Fire Pen%":    { multi: 0.01 },
 };
 
 export type StatNames = keyof typeof StatsInfo;
@@ -290,7 +283,6 @@ const AllElements = ["Slash", "Pierce", "Blunt", "Fire", "Water", "Lightning", "
 export type Mainstats_type = "ATK" | "DEF" | "MATK" | "HEAL"
 export type AllElements_type = "Slash" | "Pierce" | "Blunt" | "Fire" | "Water" | "Lightning" | "Wind" | "Earth" | "Toxic" | "Neg" | "Holy" | "Void"
 const SkillTypes = ["Sword", "Spear", "Void", "Fire", "Shadow Break"]
-export const PostBuffTypes: StatNames[] = ["Post Crit Chance%" , "Post ATK" , "Post HEAL" , "Post Slash Pen%" , "Post Fire Pen%"]
 
 const Elemental = ["Fire", "Water", "Lightning", "Wind", "Earth", "Toxic"]
 const Physical = ["Slash", "Pierce", "Blunt"]
@@ -371,7 +363,6 @@ const stat_data = {
   heroStats,
   ClassMainStatValues,
   ClassNames,
-  PostBuffTypes,
   ClassScalingStats,
   StatsInfo,
   inGameNames
