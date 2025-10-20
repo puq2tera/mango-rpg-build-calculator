@@ -262,6 +262,7 @@ export const StatsInfo: Record<string, StatInfoData> = {
   "Dagger DMG%":       { multi: 0.01 },
   "Shadow Break DMG%": { multi: 0.01 },
 
+  "Neg DOT%":  { multi: 0.01 },
   "Void DOT%":  { multi: 0.01 },
   "Holy DOT%":  { multi: 0.01 },
   "Slash DOT%": { multi: 0.01 },
