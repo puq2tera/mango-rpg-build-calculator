@@ -1,19 +1,4 @@
-import { StatNames } from "../data/stat_data"
-
-// export type Tarot = {
-//     tier: string
-//     is_active: boolean
-//     skill_name: string
-//     description: string
-//     stat: StatNames
-//     stat_base: number
-//     stat_scaling: number
-//     stack_conversions: Array<{
-//         source: StatNames
-//         ratio: number
-//         resulting_stat: StatNames
-//     }>
-// }
+import { StatNames } from "./stat_data"
 
 export type Tarot = {
     tier: number
@@ -82,7 +67,54 @@ const tarot_data: Record<string, Tarot> = {
             { source: "Neg Pen%", ratio: 1, resulting_stat: "Neg Pen%" },
             { source: "Neg%", ratio: -0.9, resulting_stat: "Neg%" },
         ],  
-    }    
+    },
+    "Arbiter of Eternity (Death)": {
+        tier: 5,
+        skill_name: "Circle of Death",
+        description: "Increase self Elenegative by 10% and 5% of Negative DMG inflicted as DOT for next hit. Activates (Circle of Life) after. Gain HP Regen equal to 4% Max HP for 5 Turns. Loop",
+        stat_bonus: "Neg Pen%",
+        stat_base: 5,
+        stat_scale: 1,
+        stats: {
+            "Neg DOT%": 5
+        },
+        conversions: [
+            { source: "Neg%", ratio: 0.1, resulting_stat: "Neg%"}
+        ]
+    },
+    "Arbiter of Eternity (Life)": {
+        tier: 5,
+        skill_name: "Circle of Life",
+        description: "Gain HP Regen equal to 4% Max HP for 5 Turns. Loop. Activates (Circle of Death) after",
+        stat_bonus: "Neg Pen%",
+        stat_base: 5,
+        stat_scale: 1,
+        conversions: [
+            { source: "HP", ratio: 0.04, resulting_stat: "HP Regen"}
+        ]
+    },
+    "Cyclone Flail Princess": {
+        tier: 5,
+        skill_name: "Cyclone Momentum",
+        description: "Increase self Elehammer by 10% per turn up to a cap of 150%.",
+        stat_bonus: "Blunt Pen%",
+        stat_base: 5,
+        stat_scale: 1,
+        stack_stats: {
+            "Hammer%": 10
+        }
+    },
+    "Fortress Casters": {
+        tier: 3,
+        skill_name: "Prepared Caster",
+        description: "Start with extra HP equal to 8% MATK",
+        stat_bonus: "MATK%",
+        stat_base: 8,
+        stat_scale: 1,
+        conversions: [
+            { source: "MATK", ratio: 0.08, resulting_stat: "HP"}
+        ]
+    }
 }
 
 export default tarot_data;
