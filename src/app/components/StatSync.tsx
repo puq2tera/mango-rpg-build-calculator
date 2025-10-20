@@ -362,19 +362,23 @@ export function computeBuffStats() {
   for (const [name, data] of Object.entries(skill_data)) {
     if (!selected.has(name)) continue
     // TODO: Remove post buff since formulas got fixed
-    for (const { source, ratio, resulting_stat } of data.conversions) {
-      const base = baseStats[source] ?? 0
-      const buff = baseStats["Buff%"] + (buffed["Buff%"] ?? 0)
-      const effectiveBase = source in PostBuffTypes
-        ? base + (buffed[source] ?? 0) // If it is postBuff then use buffed stats
-        : base // Otherwise use pre-buff stats
-      buffed[resulting_stat] = Math.floor((buffed[resulting_stat] || 0) + (effectiveBase * ratio * (1 + buff)))
+    if (data.conversions) {
+      for (const { source, ratio, resulting_stat } of data.conversions) {
+        const base = baseStats[source] ?? 0
+        const buff = baseStats["Buff%"] + (buffed["Buff%"] ?? 0)
+        const effectiveBase = source in PostBuffTypes
+          ? base + (buffed[source] ?? 0) // If it is postBuff then use buffed stats
+          : base // Otherwise use pre-buff stats
+        buffed[resulting_stat] = Math.floor((buffed[resulting_stat] || 0) + (effectiveBase * ratio * (1 + buff)))
+      }
     }
-    for (const [stat, stat_amount] of Object.entries(data.stats)) {
-      const base = baseStats[stat] ?? 0
-      const buff = baseStats["Buff%"] + (buffed["Buff%"] ?? 0)
-      buffed[stat] = Math.floor((buffed[stat] || 0) + (base + (stat_amount ?? 0) * (1 + buff)))
-    }    
+    if (data.stats) {
+      for (const [stat, stat_amount] of Object.entries(data.stats)) {
+        const base = baseStats[stat] ?? 0
+        const buff = baseStats["Buff%"] + (buffed["Buff%"] ?? 0)
+        buffed[stat] = Math.floor((buffed[stat] || 0) + (base + (stat_amount ?? 0) * (1 + buff)))
+      }    
+    }
   }
 
   localStorage.setItem("StatsBuffs", JSON.stringify(buffed))

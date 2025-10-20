@@ -22,18 +22,18 @@ export type Skill = {
         healer_levels?: number | 0
     }
     description: string 
-    stats?: Partial<Record<StatNames, number>> | {}
+    stats?: Partial<Record<StatNames, number>>
     stack_stats?: Partial<Record<StatNames, number>>
     conversions?: Array<{
         source: StatNames
         ratio: number
         resulting_stat: StatNames
-    }> | {}
+    }>
     stack_conversions?: Array<{
         source: StatNames
         ratio: number
         resulting_stat: StatNames
-    }> | {}
+    }>
     dmg_stats?:{
         dmg_element?: string
         element?: string // Scales on this
@@ -50,7 +50,7 @@ export type Skill = {
         threat?: number | 0
         dot?: number | 0
         armor_break?: number | 0
-    } | {}
+    }
 }
 
 const defaultSkill = {
