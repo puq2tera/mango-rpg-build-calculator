@@ -1,74 +1,56 @@
 import { StatNames } from "../data/stat_data"
 
 export type Skill = {
-    category: string
-    type: {
+    category?: string | ""
+    type?: {
         is_buff: boolean
         is_attack: boolean
         self_cast: boolean
         free_turn: boolean
     }
-    PreReq: Array<string>
-    Tag: string
-    BlockedTag: string
+    PreReq?: Array<string> | ""
+    Tag?: string | ""
+    BlockedTag?: string | ""
     sp: number
     gold: number
     exp: number
-    sp_spent: number
+    sp_spent?: number | 0
     class_levels: {
-        tank_levels: number
-        warrior_levels: number
-        caster_levels: number
-        healer_levels: number
+        tank_levels?: number | 0
+        warrior_levels?: number | 0
+        caster_levels?: number | 0
+        healer_levels?: number | 0
     }
-    description: string
-    stats: Partial<Record<StatNames, number>>
-    stack_stats: Partial<Record<StatNames, number>>
-    conversions: Array<{
+    description: string 
+    stats?: Partial<Record<StatNames, number>>
+    stack_stats?: Partial<Record<StatNames, number>>
+    conversions?: Array<{
         source: StatNames
         ratio: number
         resulting_stat: StatNames
     }>
-    stack_conversions: Array<{
+    stack_conversions?: Array<{
         source: StatNames
         ratio: number
         resulting_stat: StatNames
     }>
-    dmg_stats:{
-        dmg_element: string // This is the actual dmg it deals
-        element: string // Scales on this
-        pen_element: string // Scales on this
-        stat: string
-        ratio: number
-        stat2: string
-        ratio2: number 
-        skill_type: string
-        skill_pen: number
-        armor_ignore: number
-        crit_chance: number
-        crit_dmg: number
-        threat: number
-        dot: number
-        armor_break: number
+    dmg_stats?:{
+        dmg_element?: string
+        element?: string // Scales on this
+        pen_element?: string // Scales on this
+        stat?: string
+        ratio?: number | 0
+        stat2?: string | 0
+        ratio2?: number | 0
+        skill_type?: string | ""
+        skill_pen?: number | 0
+        armor_ignore?: number | 0
+        crit_chance?: number | 0
+        crit_dmg?: number |0
+        threat?: number | 0
+        dot?: number | 0
+        armor_break?: number | 0
     }
-}
-
-const defaultDmgStats = {
-    dmg_element: "",
-    element: "",
-    pen_element: "",
-    stat: "",
-    ratio: 0,
-    stat2: "",
-    ratio2: 0,
-    skill_type: "",
-    skill_pen: 0,
-    armor_ignore: 0,
-    crit_chance: 0,
-    crit_dmg: 0,
-    threat: 0,
-    dot: 0,
-    armor_break: 0
 }
 
 const defaultSkill = {
@@ -96,8 +78,7 @@ const defaultSkill = {
     stats: {},
     stack_stats: {},
     conversions: [],
-    stack_conversions: [],
-    dmg_stats:{...defaultDmgStats}
+    stack_conversions: []
 }
   
 
@@ -127,7 +108,7 @@ function computeColumnWidths(data: Record<string, Skill>): string[] {
             t.description
         ]
         values.forEach((v, i) => {
-            longest[i] = Math.max(longest[i], v.length)
+            longest[i] = Math.max(longest[i], (v || "").length)
         })
     }
 
@@ -170,7 +151,7 @@ const skill_data: Record<string, Skill> = {
         stats: {
     "Threat%": 0.5,
     },
-        dmg_stats: {...defaultDmgStats,    stat: "DEF",     ratio: 3.6, }
+        dmg_stats: {stat: "DEF", ratio: 3.6, element: "Void%", pen_element: "Void Pen%"}
 },
 "Taunt": {...defaultSkill,
         type: {
@@ -193,7 +174,7 @@ const skill_data: Record<string, Skill> = {
         stats: {
     "Threat%": 0.5,
     },
-        dmg_stats: {...defaultDmgStats,    stat: "DEF",     ratio: 1.5, }
+        dmg_stats: {stat: "DEF", ratio: 1.5, element: "Void%", pen_element: "Void Pen%"}
 },
 "Insult": {...defaultSkill,
         type: {
@@ -216,7 +197,7 @@ const skill_data: Record<string, Skill> = {
         stats: {
     "Threat%": 0.5,
     },
-        dmg_stats: {...defaultDmgStats,    stat: "DEF",     ratio: 4, }
+        dmg_stats: {stat: "DEF", ratio: 4, element: "Void%", pen_element: "Void Pen%"}
 },
 "Challenge": {...defaultSkill,
         type: {
@@ -239,7 +220,7 @@ const skill_data: Record<string, Skill> = {
         conversions: [
     { source: "DEF", ratio: 0.4, resulting_stat: "DEF" },
     ],
-        dmg_stats: {...defaultDmgStats,    stat: "DEF",     ratio: 12, }
+        dmg_stats: {stat: "DEF", ratio: 12, element: "Void%", pen_element: "Void Pen%"}
 },
 "MA Lesser Fortress": {...defaultSkill,
         type: {
@@ -463,7 +444,7 @@ const skill_data: Record<string, Skill> = {
         stats: {
     "Threat%": 0.5,
     },
-        dmg_stats: {...defaultDmgStats,    stat: "DEF",     ratio: 14.5, }
+        dmg_stats: {stat: "DEF", ratio: 14.5, element: "Void%", pen_element: "Void Pen%"}
 },
 "Cry of Mockery": {...defaultSkill,
         type: {
@@ -486,7 +467,7 @@ const skill_data: Record<string, Skill> = {
         stats: {
     "Threat%": 0.5,
     },
-        dmg_stats: {...defaultDmgStats,    stat: "DEF",     ratio: 3, }
+        dmg_stats: {stat: "DEF", ratio: 3, element: "Void%", pen_element: "Void Pen%"}
 },
 "Martyr Block": {...defaultSkill,
         type: {
@@ -578,7 +559,7 @@ const skill_data: Record<string, Skill> = {
         conversions: [
     { source: "DEF", ratio: -0.25, resulting_stat: "DEF" },
     ],
-        dmg_stats: {...defaultDmgStats,    dmg_element: "Blunt",     element: "Blunt",     pen_element: "Blunt",     stat: "DEF",     ratio: 1.5, }
+        dmg_stats: {dmg_element: "Blunt",     element: "Blunt",     pen_element: "Blunt",     stat: "DEF", ratio: 1.5, }
 },
 "MA Counter": {...defaultSkill,
         type: {
@@ -621,7 +602,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ ⧖ ] Inflicts 350% DEF Threat, +100% Crit Chance",
-        dmg_stats: {...defaultDmgStats,    stat: "DEF",     ratio: 3.5, }
+        dmg_stats: {stat: "DEF", ratio: 3.5, element: "Void%", pen_element: "Void Pen%"}
 },
 "Focus Break": {...defaultSkill,
         type: {
@@ -736,7 +717,7 @@ const skill_data: Record<string, Skill> = {
         stats: {
     "Threat%": 0.5,
     },
-        dmg_stats: {...defaultDmgStats,    stat: "DEF",     ratio: 10, }
+        dmg_stats: {stat: "DEF", ratio: 10, element: "Void%", pen_element: "Void Pen%"}
 },
 "MA Invulnerable": {...defaultSkill,
         type: {
@@ -1065,7 +1046,7 @@ const skill_data: Record<string, Skill> = {
         stats: {
     "Threat%": 0.5,
     },
-        dmg_stats: {...defaultDmgStats,    stat: "DEF",     ratio: 11, }
+        dmg_stats: {stat: "DEF", ratio: 11, element: "Void%", pen_element: "Void Pen%"}
 },
 "Curse of Hatred": {...defaultSkill,
         type: {
@@ -1088,7 +1069,7 @@ const skill_data: Record<string, Skill> = {
         stats: {
     "Threat%": 0.5,
     },
-        dmg_stats: {...defaultDmgStats,    stat: "DEF",     ratio: 4.25, }
+        dmg_stats: {stat: "DEF", ratio: 4.25, element: "Void%", pen_element: "Void Pen%"}
 },
 "Intimidation": {...defaultSkill,
         type: {
@@ -1391,7 +1372,7 @@ const skill_data: Record<string, Skill> = {
         stats: {
     "Threat%": 0.5,
     },
-        dmg_stats: {...defaultDmgStats,    stat: "DEF",     ratio: 20, }
+        dmg_stats: {stat: "DEF", ratio: 20, element: "Void%", pen_element: "Void Pen%"}
 },
 "Murderous Aura": {...defaultSkill,
         type: {
@@ -1415,7 +1396,7 @@ const skill_data: Record<string, Skill> = {
         stats: {
     "Threat%": 0.5,
     },
-        dmg_stats: {...defaultDmgStats,    stat: "DEF",     ratio: 8, }
+        dmg_stats: {stat: "DEF", ratio: 8, element: "Void%", pen_element: "Void Pen%"}
 },
 "Terror Strike": {...defaultSkill,
         type: {
@@ -1439,7 +1420,7 @@ const skill_data: Record<string, Skill> = {
         conversions: [
     { source: "DEF", ratio: -0.3, resulting_stat: "DEF" },
     ],
-        dmg_stats: {...defaultDmgStats,    dmg_element: "Void",     element: "Void",     pen_element: "Void",     stat: "DEF",     ratio: 7.5, }
+        dmg_stats: {dmg_element: "Void",     element: "Void",     pen_element: "Void",     stat: "DEF", ratio: 7.5, }
 },
 "Wall of Jericho": {...defaultSkill,
         type: {
@@ -1653,7 +1634,7 @@ const skill_data: Record<string, Skill> = {
         conversions: [
     { source: "DEF", ratio: -0.35, resulting_stat: "DEF" },
     ],
-        dmg_stats: {...defaultDmgStats,    dmg_element: "Void",     element: "Void",     pen_element: "Void",     stat: "DEF",     ratio: 3.5, }
+        dmg_stats: {dmg_element: "Void",     element: "Void",     pen_element: "Void",     stat: "DEF", ratio: 3.5, }
 },
 "Martyr's Revenge": {...defaultSkill,
         type: {
@@ -1728,7 +1709,7 @@ const skill_data: Record<string, Skill> = {
         conversions: [
     { source: "HP", ratio: 0.5, resulting_stat: "Temp HP" },
     ],
-        dmg_stats: {...defaultDmgStats,    stat: "DEF",     ratio: 50, }
+        dmg_stats: {stat: "DEF", ratio: 50, element: "Void%", pen_element: "Void Pen%"}
 },
 "Immortal Hero": {...defaultSkill,
         type: {
@@ -1778,7 +1759,7 @@ const skill_data: Record<string, Skill> = {
         stats: {
     "Threat%": 0.5,
     },
-        dmg_stats: {...defaultDmgStats,    stat: "DEF",     ratio: 24, }
+        dmg_stats: {stat: "DEF", ratio: 24, element: "Void%", pen_element: "Void Pen%"}
 },
 "World Quaker": {...defaultSkill,
         type: {
@@ -1802,7 +1783,7 @@ const skill_data: Record<string, Skill> = {
         stats: {
     "Threat%": 0.5,
     },
-        dmg_stats: {...defaultDmgStats,    dmg_element: "Void",     element: "Void",     pen_element: "Void",     stat: "DEF",     ratio: 5.5, }
+        dmg_stats: {dmg_element: "Void",     element: "Void",     pen_element: "Void",     stat: "DEF", ratio: 5.5, }
 },
 "Atlas Domination": {...defaultSkill,
         type: {
@@ -1826,7 +1807,7 @@ const skill_data: Record<string, Skill> = {
         stats: {
     "Threat%": 0.5,
     },
-        dmg_stats: {...defaultDmgStats,    dmg_element: "Void",     element: "Void",     pen_element: "Void",     stat: "DEF",     ratio: 12.5, }
+        dmg_stats: {dmg_element: "Void",     element: "Void",     pen_element: "Void",     stat: "DEF", ratio: 12.5, }
 },
 "World Guard": {...defaultSkill,
         type: {
@@ -1894,7 +1875,7 @@ const skill_data: Record<string, Skill> = {
         stats: {
     "Bow Crit DMG%": 0.15,
     },
-        dmg_stats: {...defaultDmgStats,    dmg_element: "Pierce",     element: "Pierce",     pen_element: "Pierce",     stat: "ATK",     ratio: 1, }
+        dmg_stats: {dmg_element: "Pierce",     element: "Pierce",     pen_element: "Pierce",     stat: "ATK", ratio: 1, }
 },
 "Iron Fist": {...defaultSkill,
         type: {
@@ -1917,7 +1898,7 @@ const skill_data: Record<string, Skill> = {
         stats: {
     "Fist Crit DMG%": 0.15,
     },
-        dmg_stats: {...defaultDmgStats,    dmg_element: "Blunt",     element: "Blunt",     pen_element: "Blunt",     stat: "ATK",     ratio: 1, }
+        dmg_stats: {dmg_element: "Blunt",     element: "Blunt",     pen_element: "Blunt",     stat: "ATK", ratio: 1, }
 },
 "Impaling Strike": {...defaultSkill,
         type: {
@@ -1940,7 +1921,7 @@ const skill_data: Record<string, Skill> = {
         stats: {
     "Spear DMG%": 0.15,
     },
-        dmg_stats: {...defaultDmgStats,    dmg_element: "Pierce",     element: "Pierce",     pen_element: "Pierce",     stat: "ATK",     ratio: 1.1, }
+        dmg_stats: {dmg_element: "Pierce",     element: "Pierce",     pen_element: "Pierce",     stat: "ATK", ratio: 1.1, }
 },
 "Mortal Slash": {...defaultSkill,
         type: {
@@ -1963,7 +1944,7 @@ const skill_data: Record<string, Skill> = {
         stats: {
     "Sword DMG%": 0.15,
     },
-        dmg_stats: {...defaultDmgStats,    dmg_element: "Slash",     element: "Slash",     pen_element: "Slash",     stat: "ATK",     ratio: 1.1, }
+        dmg_stats: {dmg_element: "Slash",     element: "Slash",     pen_element: "Slash",     stat: "ATK", ratio: 1.1, }
 },
 "Tremor Strike": {...defaultSkill,
         type: {
@@ -1986,7 +1967,7 @@ const skill_data: Record<string, Skill> = {
         stats: {
     "Hammer DMG%": 0.15,
     },
-        dmg_stats: {...defaultDmgStats,    dmg_element: "Blunt",     element: "Blunt",     pen_element: "Blunt",     stat: "ATK",     ratio: 1.1, }
+        dmg_stats: {dmg_element: "Blunt",     element: "Blunt",     pen_element: "Blunt",     stat: "ATK", ratio: 1.1, }
 },
 "Backside Sever": {...defaultSkill,
         type: {
@@ -2009,7 +1990,7 @@ const skill_data: Record<string, Skill> = {
         stats: {
     "Dagger Crit DMG%": 0.15,
     },
-        dmg_stats: {...defaultDmgStats,    dmg_element: "Slash",     element: "Slash",     pen_element: "Slash",     stat: "ATK",     ratio: 1, }
+        dmg_stats: {dmg_element: "Slash",     element: "Slash",     pen_element: "Slash",     stat: "ATK", ratio: 1, }
 },
 "Limit Release": {...defaultSkill,
         type: {
@@ -2145,7 +2126,7 @@ const skill_data: Record<string, Skill> = {
         stats: {
     "Bow Crit DMG%": 0.15,
     },
-        dmg_stats: {...defaultDmgStats,    dmg_element: "Pierce",     element: "Pierce",     pen_element: "Pierce",     stat: "ATK",     ratio: 1.4, }
+        dmg_stats: {dmg_element: "Pierce",     element: "Pierce",     pen_element: "Pierce",     stat: "ATK", ratio: 1.4, }
 },
 "Impact Blows": {...defaultSkill,
         type: {
@@ -2168,7 +2149,7 @@ const skill_data: Record<string, Skill> = {
         stats: {
     "Fist Crit DMG%": 0.15,
     },
-        dmg_stats: {...defaultDmgStats,    dmg_element: "Blunt",     element: "Blunt",     pen_element: "Blunt",     stat: "ATK",     ratio: 1.4, }
+        dmg_stats: {dmg_element: "Blunt",     element: "Blunt",     pen_element: "Blunt",     stat: "ATK", ratio: 1.4, }
 },
 "Fatal Puncture": {...defaultSkill,
         type: {
@@ -2191,7 +2172,7 @@ const skill_data: Record<string, Skill> = {
         stats: {
     "Spear DMG%": 0.15,
     },
-        dmg_stats: {...defaultDmgStats,    dmg_element: "Pierce",     element: "Pierce",     pen_element: "Pierce",     stat: "ATK",     ratio: 1.55, }
+        dmg_stats: {dmg_element: "Pierce",     element: "Pierce",     pen_element: "Pierce",     stat: "ATK", ratio: 1.55, }
 },
 "Deadly Edge": {...defaultSkill,
         type: {
@@ -2214,7 +2195,7 @@ const skill_data: Record<string, Skill> = {
         stats: {
     "Sword DMG%": 0.15,
     },
-        dmg_stats: {...defaultDmgStats,    dmg_element: "Slash",     element: "Slash",     pen_element: "Slash",     stat: "ATK",     ratio: 1.55, }
+        dmg_stats: {dmg_element: "Slash",     element: "Slash",     pen_element: "Slash",     stat: "ATK", ratio: 1.55, }
 },
 "Assassinate": {...defaultSkill,
         type: {
@@ -2237,7 +2218,7 @@ const skill_data: Record<string, Skill> = {
         stats: {
     "Hammer DMG%": 0.15,
     },
-        dmg_stats: {...defaultDmgStats,    dmg_element: "Slash",     element: "Slash",     pen_element: "Slash",     stat: "ATK",     ratio: 1.4, }
+        dmg_stats: {dmg_element: "Slash",     element: "Slash",     pen_element: "Slash",     stat: "ATK", ratio: 1.4, }
 },
 "Quake Smash": {...defaultSkill,
         type: {
@@ -2260,7 +2241,7 @@ const skill_data: Record<string, Skill> = {
         stats: {
     "Dagger Crit DMG%": 0.15,
     },
-        dmg_stats: {...defaultDmgStats,    dmg_element: "Blunt",     element: "Blunt",     pen_element: "Blunt",     stat: "ATK",     ratio: 1.55, }
+        dmg_stats: {dmg_element: "Blunt",     element: "Blunt",     pen_element: "Blunt",     stat: "ATK", ratio: 1.55, }
 },
 "MA Lesser Field": {...defaultSkill,
         type: {
@@ -2355,7 +2336,7 @@ const skill_data: Record<string, Skill> = {
         stats: {
     "Bow Crit DMG%": 0.15,
     },
-        dmg_stats: {...defaultDmgStats,    dmg_element: "Pierce",     element: "Pierce",     pen_element: "Pierce",     stat: "ATK",     ratio: 1.8, }
+        dmg_stats: {dmg_element: "Pierce",     element: "Pierce",     pen_element: "Pierce",     stat: "ATK", ratio: 1.8, }
 },
 "Fierce Strikes": {...defaultSkill,
         type: {
@@ -2378,7 +2359,7 @@ const skill_data: Record<string, Skill> = {
         stats: {
     "Fist Crit DMG%": 0.15,
     },
-        dmg_stats: {...defaultDmgStats,    dmg_element: "Blunt",     element: "Blunt",     pen_element: "Blunt",     stat: "ATK",     ratio: 1.8, }
+        dmg_stats: {dmg_element: "Blunt",     element: "Blunt",     pen_element: "Blunt",     stat: "ATK", ratio: 1.8, }
 },
 "Doom Spike": {...defaultSkill,
         type: {
@@ -2401,7 +2382,7 @@ const skill_data: Record<string, Skill> = {
         stats: {
     "Spear DMG%": 0.15,
     },
-        dmg_stats: {...defaultDmgStats,    dmg_element: "Pierce",     element: "Pierce",     pen_element: "Pierce",     stat: "ATK",     ratio: 2, }
+        dmg_stats: {dmg_element: "Pierce",     element: "Pierce",     pen_element: "Pierce",     stat: "ATK", ratio: 2, }
 },
 "Dragon's Slice": {...defaultSkill,
         type: {
@@ -2424,7 +2405,7 @@ const skill_data: Record<string, Skill> = {
         stats: {
     "Sword DMG%": 0.15,
     },
-        dmg_stats: {...defaultDmgStats,    dmg_element: "Slash",     element: "Slash",     pen_element: "Slash",     stat: "ATK",     ratio: 2, }
+        dmg_stats: {dmg_element: "Slash",     element: "Slash",     pen_element: "Slash",     stat: "ATK", ratio: 2, }
 },
 "Quicksilver Backstab": {...defaultSkill,
         type: {
@@ -2447,7 +2428,7 @@ const skill_data: Record<string, Skill> = {
         stats: {
     "Hammer DMG%": 0.15,
     },
-        dmg_stats: {...defaultDmgStats,    dmg_element: "Slash",     element: "Slash",     pen_element: "Slash",     stat: "ATK",     ratio: 1.8, }
+        dmg_stats: {dmg_element: "Slash",     element: "Slash",     pen_element: "Slash",     stat: "ATK", ratio: 1.8, }
 },
 "Earthbreaker": {...defaultSkill,
         type: {
@@ -2470,7 +2451,7 @@ const skill_data: Record<string, Skill> = {
         stats: {
     "Dagger Crit DMG%": 0.15,
     },
-        dmg_stats: {...defaultDmgStats,    dmg_element: "Blunt",     element: "Blunt",     pen_element: "Blunt",     stat: "ATK",     ratio: 2, }
+        dmg_stats: {dmg_element: "Blunt",     element: "Blunt",     pen_element: "Blunt",     stat: "ATK", ratio: 2, }
 },
 "MA Field": {...defaultSkill,
         type: {
@@ -2700,7 +2681,7 @@ const skill_data: Record<string, Skill> = {
         stats: {
     "Bow Crit DMG%": 0.2,
     },
-        dmg_stats: {...defaultDmgStats,    dmg_element: "Pierce",     element: "Pierce",     pen_element: "Pierce",     stat: "ATK",     ratio: 2.25, }
+        dmg_stats: {dmg_element: "Pierce",     element: "Pierce",     pen_element: "Pierce",     stat: "ATK", ratio: 2.25, }
 },
 "Seven Sided Strike": {...defaultSkill,
         type: {
@@ -2723,7 +2704,7 @@ const skill_data: Record<string, Skill> = {
         stats: {
     "Fist Crit DMG%": 0.2,
     },
-        dmg_stats: {...defaultDmgStats,    dmg_element: "Blunt",     element: "Blunt",     pen_element: "Blunt",     stat: "ATK",     ratio: 2.25, }
+        dmg_stats: {dmg_element: "Blunt",     element: "Blunt",     pen_element: "Blunt",     stat: "ATK", ratio: 2.25, }
 },
 "Serpent's Fang": {...defaultSkill,
         type: {
@@ -2746,7 +2727,7 @@ const skill_data: Record<string, Skill> = {
         stats: {
     "Spear DMG%": 0.2,
     },
-        dmg_stats: {...defaultDmgStats,    dmg_element: "Pierce",     element: "Pierce",     pen_element: "Pierce",     stat: "ATK",     ratio: 2.5, }
+        dmg_stats: {dmg_element: "Pierce",     element: "Pierce",     pen_element: "Pierce",     stat: "ATK", ratio: 2.5, }
 },
 "Kensai Stroke": {...defaultSkill,
         type: {
@@ -2769,7 +2750,7 @@ const skill_data: Record<string, Skill> = {
         stats: {
     "Sword DMG%": 0.2,
     },
-        dmg_stats: {...defaultDmgStats,    dmg_element: "Slash",     element: "Slash",     pen_element: "Slash",     stat: "ATK",     ratio: 2.5, }
+        dmg_stats: {dmg_element: "Slash",     element: "Slash",     pen_element: "Slash",     stat: "ATK", ratio: 2.5, }
 },
 "Phantom Strikes": {...defaultSkill,
         type: {
@@ -2792,7 +2773,7 @@ const skill_data: Record<string, Skill> = {
         stats: {
     "Dagger Crit DMG%": 0.2,
     },
-        dmg_stats: {...defaultDmgStats,    dmg_element: "Slash",     element: "Slash",     pen_element: "Slash",     stat: "ATK",     ratio: 2.25, }
+        dmg_stats: {dmg_element: "Slash",     element: "Slash",     pen_element: "Slash",     stat: "ATK", ratio: 2.25, }
 },
 "Silver Assault": {...defaultSkill,
         type: {
@@ -2815,7 +2796,7 @@ const skill_data: Record<string, Skill> = {
         stats: {
     "Hammer DMG%": 0.2,
     },
-        dmg_stats: {...defaultDmgStats,    dmg_element: "Blunt",     element: "Blunt",     pen_element: "Blunt",     stat: "ATK",     ratio: 2.5, }
+        dmg_stats: {dmg_element: "Blunt",     element: "Blunt",     pen_element: "Blunt",     stat: "ATK", ratio: 2.5, }
 },
 "Silent Movements": {...defaultSkill,
         type: {
@@ -2959,7 +2940,7 @@ const skill_data: Record<string, Skill> = {
         conversions: [
     { source: "Crit DMG%", ratio: 0.2, resulting_stat: "Crit DMG%" },
     ],
-        dmg_stats: {...defaultDmgStats,    dmg_element: "Void",     element: "Pierce",     pen_element: "Void",     stat: "ATK",     ratio: 4, }
+        dmg_stats: {dmg_element: "Void",     element: "Pierce",     pen_element: "Void",     stat: "ATK", ratio: 4, }
 },
 "Valkyrie's Fury": {...defaultSkill,
         type: {
@@ -2983,7 +2964,7 @@ const skill_data: Record<string, Skill> = {
         conversions: [
     { source: "Crit DMG%", ratio: 0.25, resulting_stat: "Crit DMG%" },
     ],
-        dmg_stats: {...defaultDmgStats,    dmg_element: "Pierce",     element: "Pierce",     pen_element: "Pierce",     stat: "ATK",     ratio: 4.2, }
+        dmg_stats: {dmg_element: "Pierce",     element: "Pierce",     pen_element: "Pierce",     stat: "ATK", ratio: 4.2, }
 },
 "Astral Shot": {...defaultSkill,
         type: {
@@ -3006,7 +2987,7 @@ const skill_data: Record<string, Skill> = {
         stats: {
     "Bow Crit DMG%": 0.2,
     },
-        dmg_stats: {...defaultDmgStats,    dmg_element: "Pierce",     element: "Pierce",     pen_element: "Pierce",     stat: "ATK",     ratio: 2.9, }
+        dmg_stats: {dmg_element: "Pierce",     element: "Pierce",     pen_element: "Pierce",     stat: "ATK", ratio: 2.9, }
 },
 "Roaring Dragon Fist": {...defaultSkill,
         type: {
@@ -3029,7 +3010,7 @@ const skill_data: Record<string, Skill> = {
         stats: {
     "Fist Crit DMG%": 0.2,
     },
-        dmg_stats: {...defaultDmgStats,    dmg_element: "Blunt",     element: "Blunt",     pen_element: "Blunt",     stat: "ATK",     ratio: 2.9, }
+        dmg_stats: {dmg_element: "Blunt",     element: "Blunt",     pen_element: "Blunt",     stat: "ATK", ratio: 2.9, }
 },
 "Meteor Spiral Thrust": {...defaultSkill,
         type: {
@@ -3052,7 +3033,7 @@ const skill_data: Record<string, Skill> = {
         stats: {
     "Spear DMG%": 0.2,
     },
-        dmg_stats: {...defaultDmgStats,    dmg_element: "Pierce",     element: "Pierce",     pen_element: "Pierce",     stat: "ATK",     ratio: 3.2, }
+        dmg_stats: {dmg_element: "Pierce",     element: "Pierce",     pen_element: "Pierce",     stat: "ATK", ratio: 3.2, }
 },
 "Wisdom King Strike": {...defaultSkill,
         type: {
@@ -3075,7 +3056,7 @@ const skill_data: Record<string, Skill> = {
         stats: {
     "Sword DMG%": 0.2,
     },
-        dmg_stats: {...defaultDmgStats,    dmg_element: "Slash",     element: "Slash",     pen_element: "Slash",     stat: "ATK",     ratio: 3.2, }
+        dmg_stats: {dmg_element: "Slash",     element: "Slash",     pen_element: "Slash",     stat: "ATK", ratio: 3.2, }
 },
 "Twilight Strikes": {...defaultSkill,
         type: {
@@ -3098,7 +3079,7 @@ const skill_data: Record<string, Skill> = {
         stats: {
     "Dagger Crit DMG%": 0.2,
     },
-        dmg_stats: {...defaultDmgStats,    dmg_element: "Slash",     element: "Slash",     pen_element: "Slash",     stat: "ATK",     ratio: 2.9, }
+        dmg_stats: {dmg_element: "Slash",     element: "Slash",     pen_element: "Slash",     stat: "ATK", ratio: 2.9, }
 },
 "Damnation Blow": {...defaultSkill,
         type: {
@@ -3121,7 +3102,7 @@ const skill_data: Record<string, Skill> = {
         stats: {
     "Hammer DMG%": 0.2,
     },
-        dmg_stats: {...defaultDmgStats,    dmg_element: "Blunt",     element: "Blunt",     pen_element: "Blunt",     stat: "ATK",     ratio: 3.2, }
+        dmg_stats: {dmg_element: "Blunt",     element: "Blunt",     pen_element: "Blunt",     stat: "ATK", ratio: 3.2, }
 },
 "Calm Focus Stance": {...defaultSkill,
         type: {
@@ -3318,7 +3299,7 @@ const skill_data: Record<string, Skill> = {
         stats: {
     "Sword DMG%": 0.15,
     },
-        dmg_stats: {...defaultDmgStats,    dmg_element: "Slash",     element: "Slash",     pen_element: "Slash",     stat: "ATK",     ratio: 2.9, }
+        dmg_stats: {dmg_element: "Slash",     element: "Slash",     pen_element: "Slash",     stat: "ATK", ratio: 2.9, }
 },
 "Guarding Flourish": {...defaultSkill,
         type: {
@@ -3369,7 +3350,7 @@ const skill_data: Record<string, Skill> = {
         stack_conversions: [
     { source: "Pierce Pen%", ratio: 0.1, resulting_stat: "Pierce Pen%" },
     ],
-        dmg_stats: {...defaultDmgStats,    dmg_element: "Pierce",     element: "Pierce",     pen_element: "Pierce",     stat: "ATK",     ratio: 3.2, }
+        dmg_stats: {dmg_element: "Pierce",     element: "Pierce",     pen_element: "Pierce",     stat: "ATK", ratio: 3.2, }
 },
 "Leaping Rampage": {...defaultSkill,
         type: {
@@ -3442,7 +3423,7 @@ const skill_data: Record<string, Skill> = {
         conversions: [
     { source: "ATK", ratio: 0.4, resulting_stat: "ATK" },
     ],
-        dmg_stats: {...defaultDmgStats,    dmg_element: "Blunt",     element: "Blunt",     pen_element: "Blunt",     stat: "ATK",     ratio: 3, }
+        dmg_stats: {dmg_element: "Blunt",     element: "Blunt",     pen_element: "Blunt",     stat: "ATK", ratio: 3, }
 },
 "Razored Edges": {...defaultSkill,
         type: {
@@ -3636,7 +3617,7 @@ const skill_data: Record<string, Skill> = {
         conversions: [
     { source: "Crit DMG%", ratio: 0.25, resulting_stat: "Crit DMG%" },
     ],
-        dmg_stats: {...defaultDmgStats,    dmg_element: "Void",     element: "Pierce",     pen_element: "Void",     stat: "ATK",     ratio: 6, }
+        dmg_stats: {dmg_element: "Void",     element: "Pierce",     pen_element: "Void",     stat: "ATK", ratio: 6, }
 },
 "Piercer of Heaven": {...defaultSkill,
         type: {
@@ -3660,7 +3641,7 @@ const skill_data: Record<string, Skill> = {
         conversions: [
     { source: "Crit DMG%", ratio: 0.25, resulting_stat: "Crit DMG%" },
     ],
-        dmg_stats: {...defaultDmgStats,    dmg_element: "Pierce",     element: "Pierce",     pen_element: "Pierce",     stat: "ATK",     ratio: 5.05, }
+        dmg_stats: {dmg_element: "Pierce",     element: "Pierce",     pen_element: "Pierce",     stat: "ATK", ratio: 5.05, }
 },
 "Enchant Weapon": {...defaultSkill,
         type: {
@@ -3775,7 +3756,7 @@ const skill_data: Record<string, Skill> = {
         stack_conversions: [
     { source: "Wind%", ratio: 0.05, resulting_stat: "Wind%" },
     ],
-        dmg_stats: {...defaultDmgStats,    dmg_element: "Wind",     element: "Wind",     pen_element: "Wind",     stat: "MATK",     ratio: 2, }
+        dmg_stats: {dmg_element: "Wind",     element: "Wind",     pen_element: "Wind",     stat: "MATK", ratio: 2, }
 },
 "Mana Barrier": {...defaultSkill,
         type: {
@@ -3990,7 +3971,7 @@ const skill_data: Record<string, Skill> = {
         stack_conversions: [
     { source: "Wind%", ratio: 0.05, resulting_stat: "Wind%" },
     ],
-        dmg_stats: {...defaultDmgStats,    dmg_element: "Wind",     element: "Wind",     pen_element: "Wind",     stat: "MATK",     ratio: 3.2, }
+        dmg_stats: {dmg_element: "Wind",     element: "Wind",     pen_element: "Wind",     stat: "MATK", ratio: 3.2, }
 },
 "Hurricane": {...defaultSkill,
         type: {
@@ -4013,7 +3994,7 @@ const skill_data: Record<string, Skill> = {
         stack_conversions: [
     { source: "Wind%", ratio: 0.05, resulting_stat: "Wind%" },
     ],
-        dmg_stats: {...defaultDmgStats,    dmg_element: "Wind",     element: "Wind",     pen_element: "Wind",     stat: "MATK",     ratio: 3.4, }
+        dmg_stats: {dmg_element: "Wind",     element: "Wind",     pen_element: "Wind",     stat: "MATK", ratio: 3.4, }
 },
 "Mana Armor": {...defaultSkill,
         type: {
@@ -4279,7 +4260,7 @@ const skill_data: Record<string, Skill> = {
         stack_conversions: [
     { source: "Wind%", ratio: 0.05, resulting_stat: "Wind%" },
     ],
-        dmg_stats: {...defaultDmgStats,    dmg_element: "Wind",     element: "Wind",     pen_element: "Wind",     stat: "MATK",     ratio: 4.5, }
+        dmg_stats: {dmg_element: "Wind",     element: "Wind",     pen_element: "Wind",     stat: "MATK", ratio: 4.5, }
 },
 "Mach Hurricane": {...defaultSkill,
         type: {
@@ -4302,7 +4283,7 @@ const skill_data: Record<string, Skill> = {
         stack_conversions: [
     { source: "Wind%", ratio: 0.05, resulting_stat: "Wind%" },
     ],
-        dmg_stats: {...defaultDmgStats,    dmg_element: "Wind",     element: "Wind",     pen_element: "Wind",     stat: "MATK",     ratio: 7.75, }
+        dmg_stats: {dmg_element: "Wind",     element: "Wind",     pen_element: "Wind",     stat: "MATK", ratio: 7.75, }
 },
 "Metamagic Penetrate": {...defaultSkill,
         type: {
@@ -4561,7 +4542,7 @@ const skill_data: Record<string, Skill> = {
         stack_conversions: [
     { source: "Wind%", ratio: 0.05, resulting_stat: "Wind%" },
     ],
-        dmg_stats: {...defaultDmgStats,    dmg_element: "Wind",     element: "Wind",     pen_element: "Wind",     stat: "MATK",     ratio: 7, }
+        dmg_stats: {dmg_element: "Wind",     element: "Wind",     pen_element: "Wind",     stat: "MATK", ratio: 7, }
 },
 "Bhi'mola's Wings": {...defaultSkill,
         type: {
@@ -4585,7 +4566,7 @@ const skill_data: Record<string, Skill> = {
         stack_conversions: [
     { source: "Wind%", ratio: 0.05, resulting_stat: "Wind%" },
     ],
-        dmg_stats: {...defaultDmgStats,    dmg_element: "Wind",     element: "Wind",     pen_element: "Wind",     stat: "MATK",     ratio: 6.5, }
+        dmg_stats: {dmg_element: "Wind",     element: "Wind",     pen_element: "Wind",     stat: "MATK", ratio: 6.5, }
 },
 "Metamagic Multi Penetrate": {...defaultSkill,
         type: {
@@ -6306,7 +6287,7 @@ const skill_data: Record<string, Skill> = {
         conversions: [
     { source: "HEAL", ratio: -0.9, resulting_stat: "HEAL" },
     ],
-        dmg_stats: {...defaultDmgStats,    dmg_element: "Holy",     element: "Holy",     pen_element: "Holy",     stat: "HEAL",     ratio: 9, }
+        dmg_stats: {dmg_element: "Holy",     element: "Holy",     pen_element: "Holy",     stat: "HEAL", ratio: 9, }
 },
 "True Soul Blight": {...defaultSkill,
         type: {
@@ -6330,7 +6311,7 @@ const skill_data: Record<string, Skill> = {
         conversions: [
     { source: "HEAL", ratio: -0.9, resulting_stat: "HEAL" },
     ],
-        dmg_stats: {...defaultDmgStats,    dmg_element: "Neg",     element: "Neg",     pen_element: "Neg",     stat: "HEAL",     ratio: 9, }
+        dmg_stats: {dmg_element: "Neg",     element: "Neg",     pen_element: "Neg",     stat: "HEAL", ratio: 9, }
 },
 "Nirvana Wind": {...defaultSkill,
         type: {
@@ -6354,7 +6335,7 @@ const skill_data: Record<string, Skill> = {
         conversions: [
     { source: "HEAL", ratio: -0.9, resulting_stat: "HEAL" },
     ],
-        dmg_stats: {...defaultDmgStats,    dmg_element: "Holy",     element: "Holy",     pen_element: "Holy",     stat: "HEAL",     ratio: 7.75, }
+        dmg_stats: {dmg_element: "Holy",     element: "Holy",     pen_element: "Holy",     stat: "HEAL", ratio: 7.75, }
 },
 "Soul Devour": {...defaultSkill,
         type: {
@@ -6378,7 +6359,7 @@ const skill_data: Record<string, Skill> = {
         conversions: [
     { source: "HEAL", ratio: -0.9, resulting_stat: "HEAL" },
     ],
-        dmg_stats: {...defaultDmgStats,    dmg_element: "Neg",     element: "Neg",     pen_element: "Neg",     stat: "HEAL",     ratio: 7.75, }
+        dmg_stats: {dmg_element: "Neg",     element: "Neg",     pen_element: "Neg",     stat: "HEAL", ratio: 7.75, }
 },
 "Shadow Orb": {...defaultSkill,
         type: {
@@ -6402,7 +6383,7 @@ const skill_data: Record<string, Skill> = {
         conversions: [
     { source: "HEAL", ratio: -0.9, resulting_stat: "HEAL" },
     ],
-        dmg_stats: {...defaultDmgStats,    dmg_element: "Void",     element: "Void",     pen_element: "Void",     stat: "HEAL",     ratio: 1100, }
+        dmg_stats: {dmg_element: "Void",     element: "Void",     pen_element: "Void",     stat: "HEAL", ratio: 1100, }
 },
 "Shadow Horizon": {...defaultSkill,
         type: {
@@ -6426,7 +6407,7 @@ const skill_data: Record<string, Skill> = {
         conversions: [
     { source: "HEAL", ratio: -0.9, resulting_stat: "HEAL" },
     ],
-        dmg_stats: {...defaultDmgStats,    dmg_element: "Void",     element: "Void",     pen_element: "Void",     stat: "HEAL",     ratio: 8.25, }
+        dmg_stats: {dmg_element: "Void",     element: "Void",     pen_element: "Void",     stat: "HEAL", ratio: 8.25, }
 },
 "Abyssal Curse": {...defaultSkill,
         type: {
@@ -6450,7 +6431,7 @@ const skill_data: Record<string, Skill> = {
         conversions: [
     { source: "HEAL", ratio: -0.9, resulting_stat: "HEAL" },
     ],
-        dmg_stats: {...defaultDmgStats,    dmg_element: "Toxic",     element: "Toxic",     pen_element: "Toxic",     stat: "HEAL",     ratio: 8.5, }
+        dmg_stats: {dmg_element: "Toxic",     element: "Toxic",     pen_element: "Toxic",     stat: "HEAL", ratio: 8.5, }
 },
 "Realm of the Damned": {...defaultSkill,
         type: {
@@ -6474,7 +6455,7 @@ const skill_data: Record<string, Skill> = {
         conversions: [
     { source: "HEAL", ratio: -0.9, resulting_stat: "HEAL" },
     ],
-        dmg_stats: {...defaultDmgStats,    dmg_element: "Toxic",     element: "Toxic",     pen_element: "Toxic",     stat: "HEAL",     ratio: 7.25, }
+        dmg_stats: {dmg_element: "Toxic",     element: "Toxic",     pen_element: "Toxic",     stat: "HEAL", ratio: 7.25, }
 },
 "Shadow Guard": {...defaultSkill,
         type: {
@@ -6627,7 +6608,7 @@ const skill_data: Record<string, Skill> = {
         stats: {
     "DMG Res%": 0.1,
     },
-        dmg_stats: {...defaultDmgStats,    dmg_element: "Void",     element: "Highest Phys",     pen_element: "Void", }
+        dmg_stats: {dmg_element: "Void",     element: "Highest Phys",     pen_element: "Void",}
 },
 "Shadow Energy": {...defaultSkill,
         type: {
@@ -6773,7 +6754,7 @@ const skill_data: Record<string, Skill> = {
         conversions: [
     { source: "Crit Chance%", ratio: -1, resulting_stat: "Crit Chance%" },
     ],
-        dmg_stats: {...defaultDmgStats,}
+        dmg_stats: {armor_break: 0.8}
 },
 "Shadow Cloak": {...defaultSkill,
         type: {
@@ -7444,7 +7425,7 @@ const skill_data: Record<string, Skill> = {
     { source: "ATK", ratio: 0.5, resulting_stat: "ATK" },
     { source: "HP", ratio: 0.25, resulting_stat: "HP Regen" },
     ],
-        dmg_stats: {...defaultDmgStats,    dmg_element: "Void",     element: "Highest Phys",     pen_element: "Highest Phys",     stat: "ATK",     ratio: 3.5, }
+        dmg_stats: {dmg_element: "Void",     element: "Highest Phys",     pen_element: "Highest Phys",     stat: "ATK", ratio: 3.5, }
 },
 "Speech of Sin": {...defaultSkill,
         type: {
@@ -7594,7 +7575,7 @@ const skill_data: Record<string, Skill> = {
         stats: {
     "Dmg%": 0.33,
     },
-        dmg_stats: {...defaultDmgStats,    dmg_element: "Void",     element: "Void",     pen_element: "Void",     stat: "ATK",     ratio: 400,     stat2: "MATK",     ratio2: 400, }
+        dmg_stats: {dmg_element: "Void",     element: "Void",     pen_element: "Void",     stat: "ATK", ratio: 400,     stat2: "MATK",     ratio2: 400, }
 },
 "Gaia's Embrace": {...defaultSkill,
         type: {
@@ -9596,21 +9577,8 @@ const skill_data: Record<string, Skill> = {
     ],     
 }};
 
-const statSet = new Set<string>()
-const convSet = new Set<string>()
-
-for (const entry of Object.values(skill_data)) {
-    Object.keys(entry.stats).forEach(stat => statSet.add(stat))
-    entry.conversions.forEach(conv => {
-        convSet.add(conv.source)
-        convSet.add(conv.resulting_stat)
-    })
-}
-
 // inject precomputed widths
 const __columnWidths = computeColumnWidths(skill_data)
-const __allStatNames = Array.from(statSet).sort()
-const __allConversionNames = Array.from(convSet).sort()
 
 // export both
-export { skill_data, __columnWidths, __allStatNames, __allConversionNames }
+export { skill_data, __columnWidths }
