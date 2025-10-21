@@ -57,20 +57,15 @@ export default function DamageCalc() {
  
   // Apply multipliers with floors after each stage
   let dmg = mitigated
-  // Group element and xDmg before flooring to reduce rounding loss
   const elemMult = toMult(stats[`${element}%`]) * toMult(stats[`${element} xDmg%`])
-  dmg = Math.floor(dmg * elemMult)
   const penResMult = 1 + ((stats[`${penElement} Pen%`] ?? 0) / 100) - ((inputs["enemyRes"] ?? 0) * ((inputs["resIgnore"] ?? 0) / 100))
-  dmg = Math.floor(dmg * penResMult)
-  dmg = Math.floor(dmg * toMult(stats[`${skillType} DMG%`]))
-  dmg = Math.floor(dmg * toMult(stats["Dmg%"]))
+  dmg = Math.floor(dmg * elemMult * penResMult)
+  const dmgFloat = (dmg * toMult(stats[`${skillType} DMG%`])) * toMult(stats["Dmg%"])
+  const nonCrit = Math.max(0, Math.floor(dmgFloat))
 
-  const nonCrit = Math.max(0, dmg)
-
-  // Crit and overdrive with step floors
-  const critStage = Math.floor(nonCrit * ((inputs['skillCritDmg'] ?? 0) / 100))
-  const crit = Math.floor(critStage * ((stats['Crit DMG%'] ?? 0) / 100))
-  const maxcrit = Math.floor(crit * ((stats['Overdrive%'] ?? 0) / 100))
+  const critBaseFloat = dmgFloat * ((inputs['skillCritDmg'] ?? 0) / 100) * ((stats['Crit DMG%'] ?? 0) / 100)
+  const crit = Math.floor(critBaseFloat)
+  const maxcrit = Math.floor(critBaseFloat * ((stats['Overdrive%'] ?? 0) / 100))
   const average = "Todo"
 
   const handleChange = (field: string, value: number) => {
