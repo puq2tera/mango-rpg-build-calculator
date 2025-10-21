@@ -458,14 +458,12 @@ export function computeDmgReadyStats() {
   const tarotstats: Record<string, number> = JSON.parse(rawtarot ?? "{}")
 
   // Copy stats to result
-  const result: Record<string, number> = basestats
+  const result: Record<string, number> = { ...basestats }
 
-  // add buff stats to result
   for (const [stat, value] of Object.entries(buffstats)) {
     result[stat] = (result[stat] || 0) + (value ?? 0)
   }
 
-  // add tarot stats to result
   for (const [stat, value] of Object.entries(tarotstats)) {
     result[stat] = (result[stat] || 0) + (value ?? 0)
   }
