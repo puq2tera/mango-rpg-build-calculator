@@ -17,6 +17,7 @@ const columns = [
 ] as const
 
 export default function TarotCardsPage() {
+  const [isHydrated, setIsHydrated] = useState(false)
   const [selected, setSelected] = useState<Set<string>>(new Set())
   const [stacks, setStacks] = useState<StacksRecord>({})
 
@@ -30,14 +31,21 @@ export default function TarotCardsPage() {
       const rawStacks = localStorage.getItem(STORAGE_STACKS)
       if (rawStacks) setStacks(JSON.parse(rawStacks))
     } catch {}
+    setIsHydrated(true)
   }, [])
 
+  console.log(stacks)
+  console.log(selected)
   // Persist on change
   useEffect(() => {
-    localStorage.setItem(STORAGE_SELECTED, JSON.stringify(Array.from(selected)))
+    if (isHydrated) {
+      localStorage.setItem(STORAGE_SELECTED, JSON.stringify(Array.from(selected)))
+    }
   }, [selected])
   useEffect(() => {
-    localStorage.setItem(STORAGE_STACKS, JSON.stringify(stacks))
+    if (isHydrated) {
+      localStorage.setItem(STORAGE_STACKS, JSON.stringify(stacks))
+    }
   }, [stacks])
 
   // Tier counts among selected to flag constraints
