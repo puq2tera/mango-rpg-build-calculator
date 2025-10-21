@@ -6,6 +6,7 @@ import { talent_data } from "@/app/data/talent_data"
 import stat_data from "../data/stat_data"
 import rune_data from "../data/rune_data"
 import { skill_data } from "../data/skill_data"
+import tarot_data from "../data/tarot_data"
 
 
 // Stage 1 of Stat Pipeline
@@ -346,16 +347,15 @@ export function computeBuffReadyStats() {
 
 // Stage 4 of stat pipeline
 export function computeBuffStats() {
-  computeBuffReadyStats()
   console.log("Updating Buff Stats")
 
   const rawSelected = localStorage.getItem("selectedBuffs")
-  const rawBuffs = localStorage.getItem("StatsBuffReady")
-  if (!rawSelected || !rawBuffs) return
+  const rawBase = localStorage.getItem("StatsBuffReady")
+  if (!rawSelected || !rawBase) return
 
 
   const selected = new Set<string>(JSON.parse(rawSelected))
-  const baseStats: Record<string, number> = JSON.parse(rawBuffs)
+  const baseStats: Record<string, number> = JSON.parse(rawBase)
   const buffed: Record<string, number> = {}
 
   for (const [name, data] of Object.entries(skill_data)) {
@@ -381,37 +381,105 @@ export function computeBuffStats() {
   console.log(buffed)
 }
 
+export function computeTarotStats() {
+  console.log("Updating Tarot Stats")
+
+  const rawSelected = localStorage.getItem("selectedTarots")
+  const rawStacks = localStorage.getItem("tarotStacks")
+  const rawBase = localStorage.getItem("StatsBuffReady")
+  if (!rawSelected || !rawBase) return
+
+
+  const baseStats: Record<string, number> = JSON.parse(rawBase)
+  const tarot_buff: Record<string, number> = {}
+
+  if (rawStacks || rawSelected) {
+    const selected: Set<string> = (JSON.parse(rawSelected))
+    const stacks: Record<string, number> = JSON.parse(rawSelected)
+
+    for (const [name, data] of Object.entries(tarot_data)) {
+      if (!selected.has(name)) {console.log(`${name} missing in data`); continue}
+      if (data.conversions) {
+        for (const { source, ratio, resulting_stat } of data.conversions) {
+          const base = baseStats[source] ?? 0
+          const buff = baseStats["Buff%"] + (tarot_buff["Buff%"] ?? 0)
+          tarot_buff[resulting_stat] = Math.floor((tarot_buff[resulting_stat] || 0) + (base * ratio * (1 + buff)))
+        }
+      }
+      if (data.stack_conversions) {
+        for (const { source, ratio, resulting_stat } of data.stack_conversions) {
+          const base = baseStats[source] ?? 0
+          const buff = baseStats["Buff%"] + (tarot_buff["Buff%"] ?? 0)
+          tarot_buff[resulting_stat] = Math.floor((tarot_buff[resulting_stat] || 0) + (base * (ratio * stacks[name]) * (1 + buff)))
+        }   
+      }
+      if (data.stats) {
+        for (const [stat, stat_amount] of Object.entries(data.stats)) {
+          const base = baseStats[stat] ?? 0
+          const buff = baseStats["Buff%"] + (tarot_buff["Buff%"] ?? 0)
+          tarot_buff[stat] = Math.floor((tarot_buff[stat] || 0) + (base + (stat_amount ?? 0) * (1 + buff)))
+        }    
+      }
+      if (data.stack_stats) {
+        for (const [stat, stat_amount] of Object.entries(data.stack_stats)) {
+          const base = baseStats[stat] ?? 0
+          const buff = baseStats["Buff%"] + (tarot_buff["Buff%"] ?? 0)
+          tarot_buff[stat] = Math.floor((tarot_buff[stat] || 0) + (base + ((stat_amount ?? 0) * stacks[name]) * (1 + buff)))
+        }    
+      }
+    }
+  }
+
+  localStorage.setItem("StatsTarots", JSON.stringify(tarot_buff))
+  console.log(tarot_buff)
+}
+
 // Tie all stats together
 export function computeDmgReadyStats() {
   computeBuffReadyStats()
+  computeBuffStats()
+  computeTarotStats()
   console.log("Updating Dmg Ready Stats")
-  const raw = localStorage.getItem("StatsBuffReady")
-  if (!raw) return
+  const rawbase = localStorage.getItem("StatsBuffReady")
+  const rawbuff = localStorage.getItem("StatsBuffs")
+  const rawtarot = localStorage.getItem("StatsTarots")
 
-  try {
-    const stats: Record<string, number> = JSON.parse(raw)
-    // Copy stats to result
-    const result: Record<string, number> = stats
+  const basestats: Record<string, number> = JSON.parse(rawbase ?? "{}")
+  const buffstats: Record<string, number> = JSON.parse(rawbuff ?? "{}")
+  const tarotstats: Record<string, number> = JSON.parse(rawtarot ?? "{}")
 
-    // Handle stats that need additional math
-    // Mainstats
-    for (const stat of stat_data.Mainstats) {
-      const base = stats[stat] ?? 0
-      const multiplier = stats[`${stat}%`] ?? 0
-      const artifact_multiplier = stats[`Art_${stat}%`] ?? 0
-      result[stat] = Math.floor(base * (1 + multiplier/100) * (1 + artifact_multiplier/100))
-    }
-    // Elements
-    for (const stat of stat_data.AllElements) {
-      result[`${stat}%`] = stats[`${stat}%`] ?? 0 // xDmg applied in dmg formula
-      result[`${stat} Pen%`] = Math.floor((stats[`${stat} Pen%`] ?? 0) * (1 + (stats[`${stat} xPen%`] ?? 0)/100))
-    }
-    // HP
-    result["HP"] = Math.floor(stats["HP"] * (1 + (stats["HP%"] ?? 0)))
+  // Copy stats to result
+  const result: Record<string, number> = basestats
 
-    localStorage.setItem("StatsDmgReady", JSON.stringify(result))
-    console.log(result)
-  } catch {}
+  // Handle stats that need additional math
+  // Mainstats
+  for (const stat of stat_data.Mainstats) {
+    const base = basestats[stat] ?? 0
+    const multiplier = basestats[`${stat}%`] ?? 0
+    const artifact_multiplier = basestats[`Art_${stat}%`] ?? 0
+    result[stat] = Math.floor(base * (1 + multiplier/100) * (1 + artifact_multiplier/100))
+  }
+  // Elements
+  for (const stat of stat_data.AllElements) {
+    result[`${stat}%`] = basestats[`${stat}%`] ?? 0 // xDmg applied in dmg formula
+    result[`${stat} Pen%`] = Math.floor((basestats[`${stat} Pen%`] ?? 0) * (1 + (basestats[`${stat} xPen%`] ?? 0)/100))
+  }
+  // HP
+  result["HP"] = Math.floor(basestats["HP"] * (1 + (basestats["HP%"] ?? 0)))
+
+  // add buff stats to result
+  for (const [stat, value] of Object.entries(buffstats)) {
+    result[stat] = (result[stat] || 0) + (value ?? 0)
+  }
+
+  // add tarot stats to result
+  for (const [stat, value] of Object.entries(tarotstats)) {
+    result[stat] = (result[stat] || 0) + (value ?? 0)
+  }
+
+  localStorage.setItem("StatsDmgReady", JSON.stringify(result))
+  console.log(result)
+
 }
 
 

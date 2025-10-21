@@ -6,8 +6,6 @@ import tarot_data from "@/app/data/tarot_data"
 const STORAGE_SELECTED = "selectedTarots"
 const STORAGE_STACKS = "tarotStacks"
 
-type StacksRecord = Record<string, number>
-
 const columns = [
   "Name",
   "Tier",
@@ -19,7 +17,7 @@ const columns = [
 export default function TarotCardsPage() {
   const [isHydrated, setIsHydrated] = useState(false)
   const [selected, setSelected] = useState<Set<string>>(new Set())
-  const [stacks, setStacks] = useState<StacksRecord>({})
+  const [stacks, setStacks] = useState<Record<string, number>>({})
 
   // Load persisted selection and stacks
   useEffect(() => {
@@ -34,8 +32,7 @@ export default function TarotCardsPage() {
     setIsHydrated(true)
   }, [])
 
-  console.log(stacks)
-  console.log(selected)
+
   // Persist on change
   useEffect(() => {
     if (isHydrated) {
