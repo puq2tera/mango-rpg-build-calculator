@@ -104,6 +104,29 @@ const tarot_data: Record<string, Tarot> = {
             "Hammer%": 10
         }
     },
+    "Prophetic Archer": {
+        tier: 4,
+        skill_name: "Fervant Arrows",
+        description: "Increase self Bow DMG by 100% of Holy DMG. Increase self ATK by 100% Healpower.",
+        stat_bonus: "Pierce%",
+        stat_base: 5,
+        stat_scale: 1,
+        conversions: [
+            { source: "Holy%", ratio: 1, resulting_stat: "Bow DMG%"},
+            { source: "HEAL", ratio: 1, resulting_stat: "ATK"},
+        ]
+    },
+    "Mountain Tribunal": {
+        tier: 4,
+        skill_name: "King's Tribunal",
+        description: "Increase self Hammer DMG by 20% DEF Multiplier.",
+        stat_bonus: "Blunt%",
+        stat_base: 5,
+        stat_scale: 1,
+        conversions: [
+            { source: "DEF%", ratio: 0.20, resulting_stat: "Hammer DMG%"}
+        ]
+    },
     "Undead Mind": {
         tier: 3,
         skill_name: "Hate of the Living",
@@ -112,7 +135,7 @@ const tarot_data: Record<string, Tarot> = {
         stat_base: 8,
         stat_scale: 1,
         stats: {
-            "Threat": 100
+            "Threat%": 100
         },
         conversions: [
             { source: "DEF", ratio: 0.10, resulting_stat: "DEF"}

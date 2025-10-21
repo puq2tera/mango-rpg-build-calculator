@@ -13,8 +13,8 @@ import tarot_data from "../data/tarot_data"
 
 // Helper functions
 
-function updateConversionSubStats(targetDict: Record<string, number>, sourceDict: Record<string, number>, sourceStat: string, ratio: number, targetStat: string, stackCount: number = 0 ): void {
-  const buff = sourceDict["Buff%"] + (targetDict["Buff%"] ?? 0)
+function updateConversionSubStats(targetDict: Record<string, number>, sourceDict: Record<string, number>, sourceStat: string, ratio: number, targetStat: string, stackCount: number = 1 ): void {
+  const buff = (sourceDict["Buff%"] ?? 0) + (targetDict["Buff%"] ?? 0)
   const sourceValue = sourceDict[sourceStat] ?? 0
 
   const affixInfo = stat_data.StatsInfo[targetStat as keyof typeof stat_data.StatsInfo]
@@ -23,15 +23,15 @@ function updateConversionSubStats(targetDict: Record<string, number>, sourceDict
 
   if (substats) { // handles allres, elemental, physical, etc
     for (const substat of substats) {
-      targetDict[substat] = (targetDict[substat] || 0) + resultValue
+      targetDict[substat] = (targetDict[substat] ?? 0) + resultValue
     }
   } else if (affixInfo) {
-    targetDict[targetStat] = targetDict[targetStat] + resultValue
+    targetDict[targetStat] = (targetDict[targetStat] ?? 0) + resultValue
   }
 }
 
-function updateFlatSubStats(targetDict: Record<string, number>, sourceDict: Record<string, number>, targetStat: string, targetValue: number, stackCount: number = 0 ): void {
-  const buff = sourceDict["Buff%"] + (targetDict["Buff%"] ?? 0)
+function updateFlatSubStats(targetDict: Record<string, number>, sourceDict: Record<string, number>, targetStat: string, targetValue: number, stackCount: number = 1 ): void {
+  const buff = (sourceDict["Buff%"] ?? 0) + (targetDict["Buff%"] ?? 0)
 
   const affixInfo = stat_data.StatsInfo[targetStat as keyof typeof stat_data.StatsInfo]
   const substats = affixInfo?.sub_stats
@@ -39,10 +39,10 @@ function updateFlatSubStats(targetDict: Record<string, number>, sourceDict: Reco
 
   if (substats) { // handles allres, elemental, physical, etc
     for (const substat of substats) {
-      targetDict[substat] = (targetDict[substat] || 0) + resultValue
+      targetDict[substat] = (targetDict[substat] ?? 0) + resultValue
     }
   } else if (affixInfo) {
-    targetDict[targetStat] = (targetDict[targetStat] || 0) + resultValue
+    targetDict[targetStat] = (targetDict[targetStat] ?? 0) + resultValue
   }
 }
 
@@ -81,7 +81,7 @@ export function computeTalentStats() {
     for (const [name, data] of Object.entries(talent_data)) {
       if (!selected.has(name)) continue
       for (const [stat, value] of Object.entries(data.stats)) {
-        stats[stat] = (stats[stat] || 0) + (value ?? 0)
+        stats[stat] = (stats[stat] ?? 0) + (value ?? 0)
       }
     }
     localStorage.setItem("StatsTalents", JSON.stringify(stats)) // Save totals to StatsTalents
@@ -331,22 +331,31 @@ export function computeConversionReadyStats() {
   computeBaseStats()
   computexPenStats()
   console.log("Updating Conversion Ready Stats")
-  const rawStatsXPen = localStorage.getItem("StatsXPen")
-  const rawStatsBase = localStorage.getItem("StatsBase")
-  const StatsConversionReady: Record<string, number> = {}
+  const StatsXPen: Record<string, number> = JSON.parse(localStorage.getItem("StatsXPen") ?? "{}")
+  const StatsTalents: Record<string, number> = JSON.parse(localStorage.getItem("StatsBase") ?? "{}")
 
-  if(rawStatsXPen) {
-    const StatsXPen: Record<string, number> = JSON.parse(rawStatsXPen)
-    for (const [stat, value] of Object.entries(StatsXPen)) {
-      StatsConversionReady[stat] = (StatsConversionReady[stat] || 0) + value
-    }
+  // Add up combined stats
+  const StatsCombined: Record<string, number> = StatsXPen
+
+  for (const [stat, value] of Object.entries(StatsTalents)) {
+    StatsCombined[stat] = (StatsCombined[stat] ?? 0) + value
   }
-  if(rawStatsBase) {
-    const StatsTalents: Record<string, number> = JSON.parse(rawStatsBase)
-    for (const [stat, value] of Object.entries(StatsTalents)) {
-      StatsConversionReady[stat] = (StatsConversionReady[stat] || 0) + value
-    }
+
+  const StatsConversionReady: Record<string, number> = StatsCombined
+  // Compute mainstats
+  for (const stat of stat_data.Mainstats) {
+    const base = StatsCombined[stat] ?? 0
+    const multiplier = StatsCombined[`${stat}%`] ?? 0
+    const artifact_multiplier = StatsCombined[`Art_${stat}%`] ?? 0
+    StatsConversionReady[stat] = Math.floor(base * (1 + multiplier/100) * (1 + artifact_multiplier/100))
   }
+  // Elements
+  for (const stat of stat_data.AllElements) {
+    StatsConversionReady[`${stat}%`] = StatsCombined[`${stat}%`] ?? 0 // xDmg applied in dmg formula
+    StatsConversionReady[`${stat} Pen%`] = Math.floor((StatsCombined[`${stat} Pen%`] ?? 0) * (1 + (StatsCombined[`${stat} xPen%`] ?? 0)/100))
+  }
+  // HP
+  StatsConversionReady["HP"] = Math.floor(StatsCombined["HP"] * (1 + (StatsCombined["HP%"] ?? 0)))
 
   localStorage.setItem("StatsConversionReady", JSON.stringify(StatsConversionReady))
   console.log(StatsConversionReady)
@@ -384,21 +393,17 @@ export function computeConversionStats() {
 export function computeBuffReadyStats() {
   computeConversionStats()
   console.log("Updating Buff Ready Stats")
-  const rawStatsBase = localStorage.getItem("StatsConversionReady")
-  const rawStatsConverted = localStorage.getItem("StatsConverted")
+  const StatsBase: Record<string, number> = JSON.parse(localStorage.getItem("StatsConversionReady") ?? "{}")
+  const StatsConverted: Record<string, number> = JSON.parse(localStorage.getItem("StatsConverted") ?? "{}")
   const StatsBuffReady: Record<string, number> = {}
 
-  if(rawStatsBase) {
-    const StatsBase: Record<string, number> = JSON.parse(rawStatsBase)
-    for (const [stat, value] of Object.entries(StatsBase)) {
-      StatsBuffReady[stat] = (StatsBuffReady[stat] || 0) + value
-    }
+  // Add up stats 
+  for (const [stat, value] of Object.entries(StatsBase)) {
+    StatsBuffReady[stat] = (StatsBuffReady[stat] || 0) + value
   }
-  if(rawStatsConverted) {
-    const StatsConverted: Record<string, number> = JSON.parse(rawStatsConverted)
-    for (const [stat, value] of Object.entries(StatsConverted)) {
-      StatsBuffReady[stat] = (StatsBuffReady[stat] || 0) + value
-    }
+
+  for (const [stat, value] of Object.entries(StatsConverted)) {
+    StatsBuffReady[stat] = (StatsBuffReady[stat] || 0) + value
   }
 
   localStorage.setItem("StatsBuffReady", JSON.stringify(StatsBuffReady))
@@ -409,13 +414,13 @@ export function computeBuffReadyStats() {
 export function computeBuffStats() {
   console.log("Updating Buff Stats")
 
-  const selected: Set<string> = (JSON.parse(localStorage.getItem("selectedBuffs") ?? "{}"))
+  const selected: Set<string> = (JSON.parse(localStorage.getItem("selectedBuffs") ?? "[]"))
   const baseStats: Record<string, number> = JSON.parse(localStorage.getItem("StatsBuffReady") ?? "{}")
   const buffed: Record<string, number> = {}
 
-  for (const [name, data] of Object.entries(skill_data)) {
-    if (!selected.has(name)) {console.log(`${name} missing in data`); continue}
-    updateStats(buffed, baseStats, {}, name, data)
+  console.log(selected)
+  for (const skill of selected) {
+    updateStats(buffed, baseStats, {}, skill, skill_data[skill])
   }
 
   localStorage.setItem("StatsBuffs", JSON.stringify(buffed))
@@ -426,13 +431,14 @@ export function computeTarotStats() {
   console.log("Updating Tarot Stats")
 
   const baseStats: Record<string, number> = JSON.parse(localStorage.getItem("StatsBuffReady") ?? "{}") 
-  const selected: Set<string> = (JSON.parse(localStorage.getItem("selectedTarots") ?? "{}"))
+  const selected: Set<string> = (JSON.parse(localStorage.getItem("selectedTarots") ?? "[]]"))
   const stacks: Record<string, number> = JSON.parse(localStorage.getItem("tarotStacks") ?? "{}")
   const tarot_buff: Record<string, number> = {}
+  console.log(selected)
+  console.log(stacks)
 
-  for (const [name, data] of Object.entries(tarot_data)) {
-    if (!selected.has(name)) {console.log(`${name} missing in data`); continue}
-    updateStats(tarot_buff, baseStats, stacks, name, data)
+  for (const tarot of selected) {
+    updateStats(tarot_buff, baseStats, stacks, tarot, tarot_data[tarot])
   }
 
   localStorage.setItem("StatsTarots", JSON.stringify(tarot_buff))
@@ -455,22 +461,6 @@ export function computeDmgReadyStats() {
 
   // Copy stats to result
   const result: Record<string, number> = basestats
-
-  // Handle stats that need additional math
-  // Mainstats
-  for (const stat of stat_data.Mainstats) {
-    const base = basestats[stat] ?? 0
-    const multiplier = basestats[`${stat}%`] ?? 0
-    const artifact_multiplier = basestats[`Art_${stat}%`] ?? 0
-    result[stat] = Math.floor(base * (1 + multiplier/100) * (1 + artifact_multiplier/100))
-  }
-  // Elements
-  for (const stat of stat_data.AllElements) {
-    result[`${stat}%`] = basestats[`${stat}%`] ?? 0 // xDmg applied in dmg formula
-    result[`${stat} Pen%`] = Math.floor((basestats[`${stat} Pen%`] ?? 0) * (1 + (basestats[`${stat} xPen%`] ?? 0)/100))
-  }
-  // HP
-  result["HP"] = Math.floor(basestats["HP"] * (1 + (basestats["HP%"] ?? 0)))
 
   // add buff stats to result
   for (const [stat, value] of Object.entries(buffstats)) {

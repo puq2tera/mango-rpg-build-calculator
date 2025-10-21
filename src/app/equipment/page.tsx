@@ -4,6 +4,7 @@ import { useState, useEffect } from "react"
 import type { StatNames as StatNameType } from "../data/stat_data"
 import stat_data from "../data/stat_data"
 import rune_data from "../data/rune_data"
+import tarot_data from "../data/tarot_data"
 
 interface Affix {
   stat: string
@@ -97,32 +98,49 @@ export default function EquipmentPage() {
     // Name — [ i### ]
     const nameRegex = /\[\s*i\d{3}\s*\]/i;
     const nameLine = lines.find(l => nameRegex.test(l))
-    if (nameLine) result.name = nameLine
+    if (nameLine) {
+      // Equipment :ogic
+      result.name = nameLine
 
-    // Equip Type — locate marker then take next non-empty line
-    const equipIdx = lines.findIndex(l => /^equip type$/i.test(l))
-    const typeLine = lines.slice(equipIdx + 1).find(l => l.length > 0)
-    if (typeLine) result.type = typeLine
+      // Equip Type — locate marker then take next non-empty line
+      const equipIdx = lines.findIndex(l => /^equip type$/i.test(l))
+      const typeLine = lines.slice(equipIdx + 1).find(l => l.length > 0)
+      if (typeLine) result.type = typeLine
 
-    // Main stat: line that contains +ATK/+DEF/+MATK/+HEAL, next non-empty line is value
-    const mainLabelIdx = lines.findIndex(l => /\+[ADMH]?(?:ATK|DEF|MATK|HEAL)/i.test(l))
-    if (mainLabelIdx >= 0) {
-      const label = lines[mainLabelIdx].replace(/.*\+/, "").toUpperCase().replace(/[^A-Z]/g, "")
-      const statMap: Record<string, Slot["mainstat"]> = { ATK: "ATK", DEF: "DEF", MATK: "MATK", HEAL: "HEAL" }
-      if (statMap[label]) result.mainstat = statMap[label]
-      const valueLine = lines.slice(mainLabelIdx + 1).find(l => /\d/.test(l))
-      if (valueLine) {
-        const val = parseInt(valueLine.replace(/[^0-9\-]/g, ""), 10)
-        if (!Number.isNaN(val)) result.mainstat_value = val
+      // Main stat: line that contains +ATK/+DEF/+MATK/+HEAL, next non-empty line is value
+      const mainLabelIdx = lines.findIndex(l => /\+[ADMH]?(?:ATK|DEF|MATK|HEAL)/i.test(l))
+      if (mainLabelIdx >= 0) {
+        const label = lines[mainLabelIdx].replace(/.*\+/, "").toUpperCase().replace(/[^A-Z]/g, "")
+        const statMap: Record<string, Slot["mainstat"]> = { ATK: "ATK", DEF: "DEF", MATK: "MATK", HEAL: "HEAL" }
+        if (statMap[label]) result.mainstat = statMap[label]
+        const valueLine = lines.slice(mainLabelIdx + 1).find(l => /\d/.test(l))
+        if (valueLine) {
+          const val = parseInt(valueLine.replace(/[^0-9\-]/g, ""), 10)
+          if (!Number.isNaN(val)) result.mainstat_value = val
+        }
       }
+    }
+    else {
+      // Tarot Logic
+      const nameRegex = /⭐/i;
+      result.name = lines[lines.findIndex(l => nameRegex.test(l)) - 1].replace(/^(\s*\[[^\]]+\]\s*)+/, "").trim()
+      result.type = "Tarot"
+
+      const level: number = parseInt(((lines.find(l => /level\s*:/i.test(l)) ?? "").match(/level\s*:\s*(\d+)\s*\/\s*(\d+)/i) ?? [,"0"])[1])
+
+      const tarot_affix: string = tarot_data[result.name].stat_bonus
+      const tarot_affix_value = tarot_data[result.name].stat_base + tarot_data[result.name].stat_scale * level
+      const tarot_result: Affix = {stat: tarot_affix, value: tarot_affix_value}
+      if (tarot_result) (result.affixes ?? []).push({stat: tarot_affix, value: tarot_affix_value})
     }
 
     // Affixes — lines starting with the bullet (◘)
-    for (const ln of lines) {
-      if (!ln.startsWith("◘")) continue
-      const affix = parseAffixLine(ln)
-      if (affix) (result.affixes as Affix[]).push(affix)
-    }
+      for (const ln of lines) {
+        if (!ln.startsWith("◘")) continue
+        const affix = parseAffixLine(ln)
+        if (affix) (result.affixes as Affix[]).push(affix)
+      }
+    
 
     // Enable the slot by default when importing
     result.enabled = true
