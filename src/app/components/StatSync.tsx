@@ -381,6 +381,41 @@ export function computeBuffStats() {
   console.log(buffed)
 }
 
+function updateConversionSubStats(targetDict: Record<string, number>, sourceDict: Record<string, number>, sourceStat: string, ratio: number, targetStat: string, stackCount: number = 0 ): void {
+  const buff = sourceDict["Buff%"] + (targetDict["Buff%"] ?? 0)
+  const sourceValue = sourceDict[sourceStat] ?? 0
+
+  const affixInfo = stat_data.StatsInfo[targetStat as keyof typeof stat_data.StatsInfo]
+  const substats = affixInfo?.sub_stats
+
+  const resultValue = Math.floor(sourceValue * (ratio * stackCount) * (1 + buff))
+
+  if (substats) { // handles allres, elemental, physical, etc
+    for (const substat of substats) {
+      targetDict[substat] += resultValue
+    }
+  } else if (affixInfo) {
+    targetDict[targetStat] += resultValue
+  }
+}
+
+function updateFlatSubStats(targetDict: Record<string, number>, sourceDict: Record<string, number>, targetStat: string, targetValue: number, stackCount: number = 0 ): void {
+  const buff = sourceDict["Buff%"] + (targetDict["Buff%"] ?? 0)
+
+  const affixInfo = stat_data.StatsInfo[targetStat as keyof typeof stat_data.StatsInfo]
+  const substats = affixInfo?.sub_stats
+
+  const resultValue = Math.floor(targetValue * stackCount * (1 + buff))
+
+  if (substats) { // handles allres, elemental, physical, etc
+    for (const substat of substats) {
+      targetDict[substat] += resultValue
+    }
+  } else if (affixInfo) {
+    targetDict[targetStat] += resultValue
+  }
+}
+
 export function computeTarotStats() {
   console.log("Updating Tarot Stats")
 
@@ -401,30 +436,22 @@ export function computeTarotStats() {
       if (!selected.has(name)) {console.log(`${name} missing in data`); continue}
       if (data.conversions) {
         for (const { source, ratio, resulting_stat } of data.conversions) {
-          const base = baseStats[source] ?? 0
-          const buff = baseStats["Buff%"] + (tarot_buff["Buff%"] ?? 0)
-          tarot_buff[resulting_stat] = Math.floor((tarot_buff[resulting_stat] || 0) + (base * ratio * (1 + buff)))
+          updateConversionSubStats(tarot_buff, baseStats, source, ratio, resulting_stat)
         }
       }
       if (data.stack_conversions) {
         for (const { source, ratio, resulting_stat } of data.stack_conversions) {
-          const base = baseStats[source] ?? 0
-          const buff = baseStats["Buff%"] + (tarot_buff["Buff%"] ?? 0)
-          tarot_buff[resulting_stat] = Math.floor((tarot_buff[resulting_stat] || 0) + (base * (ratio * stacks[name]) * (1 + buff)))
+          updateConversionSubStats(tarot_buff, baseStats, source, ratio, resulting_stat, stacks[name])
         }   
       }
       if (data.stats) {
         for (const [stat, stat_amount] of Object.entries(data.stats)) {
-          const base = baseStats[stat] ?? 0
-          const buff = baseStats["Buff%"] + (tarot_buff["Buff%"] ?? 0)
-          tarot_buff[stat] = Math.floor((tarot_buff[stat] || 0) + (base + (stat_amount ?? 0) * (1 + buff)))
+          updateFlatSubStats(tarot_buff, baseStats, stat, (stat_amount ?? 0))
         }    
       }
       if (data.stack_stats) {
         for (const [stat, stat_amount] of Object.entries(data.stack_stats)) {
-          const base = baseStats[stat] ?? 0
-          const buff = baseStats["Buff%"] + (tarot_buff["Buff%"] ?? 0)
-          tarot_buff[stat] = Math.floor((tarot_buff[stat] || 0) + (base + ((stat_amount ?? 0) * stacks[name]) * (1 + buff)))
+          updateFlatSubStats(tarot_buff, baseStats, stat, (stat_amount ?? 0), stacks[name])
         }    
       }
     }

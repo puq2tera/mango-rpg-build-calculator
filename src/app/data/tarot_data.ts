@@ -104,6 +104,33 @@ const tarot_data: Record<string, Tarot> = {
             "Hammer%": 10
         }
     },
+    "Undead Mind": {
+        tier: 3,
+        skill_name: "Hate of the Living",
+        description: "Gain +100% Threat Multiplier. Increase DEF by 10%.",
+        stat_bonus: "DEF%",
+        stat_base: 8,
+        stat_scale: 1,
+        stats: {
+            "Threat": 100
+        },
+        conversions: [
+            { source: "DEF", ratio: 0.10, resulting_stat: "DEF"}
+        ]
+    },
+    "Unrelenting Horde": {
+        tier: 3,
+        skill_name: "Pain Nullification",
+        description: "Increase self Max HP and DEF by 5%. Reduce self Power by 10% DEF.",
+        stat_bonus: "DEF%",
+        stat_base: 8,
+        stat_scale: 1,
+        conversions: [
+            { source: "HP", ratio: 0.05, resulting_stat: "HP"},
+            { source: "DEF", ratio: 0.05, resulting_stat: "DEF"},
+            { source: "DEF", ratio: 0.05, resulting_stat: "POWER"}
+        ]
+    },
     "Fortress Casters": {
         tier: 3,
         skill_name: "Prepared Caster",
