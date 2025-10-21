@@ -4,10 +4,70 @@
 import { useEffect } from "react"
 import { talent_data } from "@/app/data/talent_data"
 import stat_data from "../data/stat_data"
+import type { Skill } from "../data/skill_data"
+import type { Tarot } from "../data/tarot_data"
 import rune_data from "../data/rune_data"
 import { skill_data } from "../data/skill_data"
 import tarot_data from "../data/tarot_data"
 
+
+// Helper functions
+
+function updateConversionSubStats(targetDict: Record<string, number>, sourceDict: Record<string, number>, sourceStat: string, ratio: number, targetStat: string, stackCount: number = 0 ): void {
+  const buff = sourceDict["Buff%"] + (targetDict["Buff%"] ?? 0)
+  const sourceValue = sourceDict[sourceStat] ?? 0
+
+  const affixInfo = stat_data.StatsInfo[targetStat as keyof typeof stat_data.StatsInfo]
+  const substats = affixInfo?.sub_stats
+  const resultValue = Math.floor(sourceValue * (ratio * stackCount) * (1 + buff))
+
+  if (substats) { // handles allres, elemental, physical, etc
+    for (const substat of substats) {
+      targetDict[substat] = (targetDict[substat] || 0) + resultValue
+    }
+  } else if (affixInfo) {
+    targetDict[targetStat] = targetDict[targetStat] + resultValue
+  }
+}
+
+function updateFlatSubStats(targetDict: Record<string, number>, sourceDict: Record<string, number>, targetStat: string, targetValue: number, stackCount: number = 0 ): void {
+  const buff = sourceDict["Buff%"] + (targetDict["Buff%"] ?? 0)
+
+  const affixInfo = stat_data.StatsInfo[targetStat as keyof typeof stat_data.StatsInfo]
+  const substats = affixInfo?.sub_stats
+  const resultValue = Math.floor(targetValue * stackCount * (1 + buff))
+
+  if (substats) { // handles allres, elemental, physical, etc
+    for (const substat of substats) {
+      targetDict[substat] = (targetDict[substat] || 0) + resultValue
+    }
+  } else if (affixInfo) {
+    targetDict[targetStat] = (targetDict[targetStat] || 0) + resultValue
+  }
+}
+
+function updateStats(targetDict: Record<string, number>, sourceDict: Record<string, number>, stackDict: Record<string, number>, sourceSkillName: string, sourceSkillData: Skill | Tarot): void {
+  if (sourceSkillData.conversions) {
+    for (const { source, ratio, resulting_stat } of sourceSkillData.conversions) {
+      updateConversionSubStats(targetDict, sourceDict, source, ratio, resulting_stat)
+    }
+  }
+  if (sourceSkillData.stack_conversions) {
+    for (const { source, ratio, resulting_stat } of sourceSkillData.stack_conversions) {
+      updateConversionSubStats(targetDict, sourceDict, source, ratio, resulting_stat, stackDict[sourceSkillName])
+    }   
+  }
+  if (sourceSkillData.stats) {
+    for (const [stat, stat_amount] of Object.entries(sourceSkillData.stats)) {
+      updateFlatSubStats(targetDict, sourceDict, stat, (stat_amount ?? 0))
+    }    
+  }
+  if (sourceSkillData.stack_stats) {
+    for (const [stat, stat_amount] of Object.entries(sourceSkillData.stack_stats)) {
+      updateFlatSubStats(targetDict, sourceDict, stat, (stat_amount ?? 0), stackDict[sourceSkillName])
+    }    
+  }
+}
 
 // Stage 1 of Stat Pipeline
 
@@ -349,112 +409,30 @@ export function computeBuffReadyStats() {
 export function computeBuffStats() {
   console.log("Updating Buff Stats")
 
-  const rawSelected = localStorage.getItem("selectedBuffs")
-  const rawBase = localStorage.getItem("StatsBuffReady")
-  if (!rawSelected || !rawBase) return
-
-
-  const selected = new Set<string>(JSON.parse(rawSelected))
-  const baseStats: Record<string, number> = JSON.parse(rawBase)
+  const selected: Set<string> = (JSON.parse(localStorage.getItem("selectedBuffs") ?? "{}"))
+  const baseStats: Record<string, number> = JSON.parse(localStorage.getItem("StatsBuffReady") ?? "{}")
   const buffed: Record<string, number> = {}
 
   for (const [name, data] of Object.entries(skill_data)) {
-    if (!selected.has(name)) continue
-    // TODO: Remove post buff since formulas got fixed
-    if (data.conversions) {
-      for (const { source, ratio, resulting_stat } of data.conversions) {
-        const base = baseStats[source] ?? 0
-        const buff = baseStats["Buff%"] + (buffed["Buff%"] ?? 0)
-        buffed[resulting_stat] = Math.floor((buffed[resulting_stat] || 0) + (base * ratio * (1 + buff)))
-      }
-    }
-    if (data.stats) {
-      for (const [stat, stat_amount] of Object.entries(data.stats)) {
-        const base = baseStats[stat] ?? 0
-        const buff = baseStats["Buff%"] + (buffed["Buff%"] ?? 0)
-        buffed[stat] = Math.floor((buffed[stat] || 0) + (base + (stat_amount ?? 0) * (1 + buff)))
-      }    
-    }
+    if (!selected.has(name)) {console.log(`${name} missing in data`); continue}
+    updateStats(buffed, baseStats, {}, name, data)
   }
 
   localStorage.setItem("StatsBuffs", JSON.stringify(buffed))
   console.log(buffed)
 }
 
-function updateConversionSubStats(targetDict: Record<string, number>, sourceDict: Record<string, number>, sourceStat: string, ratio: number, targetStat: string, stackCount: number = 0 ): void {
-  const buff = sourceDict["Buff%"] + (targetDict["Buff%"] ?? 0)
-  const sourceValue = sourceDict[sourceStat] ?? 0
-
-  const affixInfo = stat_data.StatsInfo[targetStat as keyof typeof stat_data.StatsInfo]
-  const substats = affixInfo?.sub_stats
-
-  const resultValue = Math.floor(sourceValue * (ratio * stackCount) * (1 + buff))
-
-  if (substats) { // handles allres, elemental, physical, etc
-    for (const substat of substats) {
-      targetDict[substat] += resultValue
-    }
-  } else if (affixInfo) {
-    targetDict[targetStat] += resultValue
-  }
-}
-
-function updateFlatSubStats(targetDict: Record<string, number>, sourceDict: Record<string, number>, targetStat: string, targetValue: number, stackCount: number = 0 ): void {
-  const buff = sourceDict["Buff%"] + (targetDict["Buff%"] ?? 0)
-
-  const affixInfo = stat_data.StatsInfo[targetStat as keyof typeof stat_data.StatsInfo]
-  const substats = affixInfo?.sub_stats
-
-  const resultValue = Math.floor(targetValue * stackCount * (1 + buff))
-
-  if (substats) { // handles allres, elemental, physical, etc
-    for (const substat of substats) {
-      targetDict[substat] += resultValue
-    }
-  } else if (affixInfo) {
-    targetDict[targetStat] += resultValue
-  }
-}
-
 export function computeTarotStats() {
   console.log("Updating Tarot Stats")
 
-  const rawSelected = localStorage.getItem("selectedTarots")
-  const rawStacks = localStorage.getItem("tarotStacks")
-  const rawBase = localStorage.getItem("StatsBuffReady")
-  if (!rawSelected || !rawBase) return
-
-
-  const baseStats: Record<string, number> = JSON.parse(rawBase)
+  const baseStats: Record<string, number> = JSON.parse(localStorage.getItem("StatsBuffReady") ?? "{}") 
+  const selected: Set<string> = (JSON.parse(localStorage.getItem("selectedTarots") ?? "{}"))
+  const stacks: Record<string, number> = JSON.parse(localStorage.getItem("tarotStacks") ?? "{}")
   const tarot_buff: Record<string, number> = {}
 
-  if (rawStacks || rawSelected) {
-    const selected: Set<string> = (JSON.parse(rawSelected))
-    const stacks: Record<string, number> = JSON.parse(rawSelected)
-
-    for (const [name, data] of Object.entries(tarot_data)) {
-      if (!selected.has(name)) {console.log(`${name} missing in data`); continue}
-      if (data.conversions) {
-        for (const { source, ratio, resulting_stat } of data.conversions) {
-          updateConversionSubStats(tarot_buff, baseStats, source, ratio, resulting_stat)
-        }
-      }
-      if (data.stack_conversions) {
-        for (const { source, ratio, resulting_stat } of data.stack_conversions) {
-          updateConversionSubStats(tarot_buff, baseStats, source, ratio, resulting_stat, stacks[name])
-        }   
-      }
-      if (data.stats) {
-        for (const [stat, stat_amount] of Object.entries(data.stats)) {
-          updateFlatSubStats(tarot_buff, baseStats, stat, (stat_amount ?? 0))
-        }    
-      }
-      if (data.stack_stats) {
-        for (const [stat, stat_amount] of Object.entries(data.stack_stats)) {
-          updateFlatSubStats(tarot_buff, baseStats, stat, (stat_amount ?? 0), stacks[name])
-        }    
-      }
-    }
+  for (const [name, data] of Object.entries(tarot_data)) {
+    if (!selected.has(name)) {console.log(`${name} missing in data`); continue}
+    updateStats(tarot_buff, baseStats, stacks, name, data)
   }
 
   localStorage.setItem("StatsTarots", JSON.stringify(tarot_buff))
