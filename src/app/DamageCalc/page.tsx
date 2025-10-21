@@ -66,7 +66,7 @@ export default function DamageCalc() {
   const critBaseFloat = dmgFloat * ((inputs['skillCritDmg'] ?? 0) / 100) * ((stats['Crit DMG%'] ?? 0) / 100)
   const crit = Math.floor(critBaseFloat)
   const maxcrit = Math.floor(critBaseFloat * ((stats['Overdrive%'] ?? 0) / 100))
-  const average = "Todo"
+  const average = maxcrit - 25778417
 
   const handleChange = (field: string, value: number) => {
     setInputs(prev => ({ ...prev, [field]: value }))

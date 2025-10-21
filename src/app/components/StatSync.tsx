@@ -431,11 +431,9 @@ export function computeTarotStats() {
   console.log("Updating Tarot Stats")
 
   const baseStats: Record<string, number> = JSON.parse(localStorage.getItem("StatsBuffReady") ?? "{}") 
-  const selected: Set<string> = (JSON.parse(localStorage.getItem("selectedTarots") ?? "[]]"))
+  const selected: Set<string> = (JSON.parse(localStorage.getItem("selectedTarots") ?? "[]"))
   const stacks: Record<string, number> = JSON.parse(localStorage.getItem("tarotStacks") ?? "{}")
   const tarot_buff: Record<string, number> = {}
-  console.log(selected)
-  console.log(stacks)
 
   for (const tarot of selected) {
     updateStats(tarot_buff, baseStats, stacks, tarot, tarot_data[tarot])
