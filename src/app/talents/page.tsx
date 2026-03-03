@@ -9,12 +9,29 @@ const STORAGE_KEY = "selectedTalents"
 const headerLabels = [
   "Name", "PreReq", "Tag", "BlockedTag",
   "Gold", "Exp", "TP", "Lvl",
-  "Tank", "Warrior", "Caster", "Healer",
+  "T", "W", "C", "H",
   "Description"
 ]
+const classHeaderTitles: Record<number, string> = {
+  8: "Tank",
+  9: "Warrior",
+  10: "Caster",
+  11: "Healer"
+}
 
 export default function TalentsPage() {
-  const [colWidths] = useState<string[]>(__columnWidths)
+  const [colWidths] = useState<string[]>(() => {
+    const widths = [...__columnWidths]
+    widths[4] = "45px" // Gold
+    widths[5] = "55px"
+    widths[6] = "40px"
+    widths[7] = "40px"
+    widths[8] = "40px"
+    widths[9] = "40px"
+    widths[10] = "40px"
+    widths[11] = "40px" // Healer
+    return widths
+  })
   const [selected, setSelected] = useState<Set<string> | null>(null)
 
   // Load selectedTalents on mount
@@ -41,6 +58,7 @@ export default function TalentsPage() {
           <div
             key={i}
             className="px-2 font-bold whitespace-nowrap border-r border-black last:border-r-0 box-border"
+            title={classHeaderTitles[i]}
           >
             {label}
           </div>
