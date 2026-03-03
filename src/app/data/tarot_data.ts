@@ -75,7 +75,14 @@ const tarot_data: Record<string, Tarot> = {
         description: "[ ⧖, Holy ] Deals MATK DMG with % equal to 88% Max MP. Increases self Eleholy by 88% for 3 hits. Costs 40 Focus and 4% of Max MP.",
         stat_bonus: "Holy Pen%",
         stat_base: 5,
-        stat_scale: 1
+        stat_scale: 1,
+        stats: {
+            "Focus": -40
+        },
+        conversions: [
+            { source: "Holy%", ratio: 0.88, resulting_stat: "Holy%" },
+            { source: "MP", ratio: -0.04, resulting_stat: "MP" }
+        ]
     },
     "Lord of the Blazing Inferno": {
         tier: 5,
@@ -84,7 +91,12 @@ const tarot_data: Record<string, Tarot> = {
         description: "[ ⧖ ] Debuff enemy Fire Resist by 35% of Fire Pen, Increase self Fire Pen by 50% and Elefire by 15% for 7 Turns. Costs 3% of Max MP",
         stat_bonus: "Fire Pen%",
         stat_base: 5,
-        stat_scale: 1
+        stat_scale: 1,
+        conversions: [
+            { source: "Fire Pen%", ratio: 0.5, resulting_stat: "Fire Pen%" },
+            { source: "Fire%", ratio: 0.15, resulting_stat: "Fire%" },
+            { source: "MP", ratio: -0.03, resulting_stat: "MP" }
+        ]
     },
     "Arrogant Queen of Storms": {
         tier: 5,
@@ -93,7 +105,11 @@ const tarot_data: Record<string, Tarot> = {
         description: "[ ⧖, Lightning ] Deals MATK DMG with % equal to 30% Elelightning. Increases self Elelightning by 80% for 1 Hit. 3 Turn Cooldown. Costs 3% of Max MP.",
         stat_bonus: "Lightning Pen%",
         stat_base: 5,
-        stat_scale: 1
+        stat_scale: 1,
+        conversions: [
+            { source: "Lightning%", ratio: 0.8, resulting_stat: "Lightning%" },
+            { source: "MP", ratio: -0.03, resulting_stat: "MP" }
+        ]
     },
     "Disciple of Nature": {
         tier: 5,
@@ -102,7 +118,13 @@ const tarot_data: Record<string, Tarot> = {
         description: "[ ⧖, Earth ] Deals MATK DMG with % equal to 25% Eleearth. Increases self Eleearth by 35% stacking up to 4x for 5 Turns. 3 Turn Cooldown. Costs 3% of Max MP.",
         stat_bonus: "Earth Pen%",
         stat_base: 5,
-        stat_scale: 1
+        stat_scale: 1,
+        conversions: [
+            { source: "MP", ratio: -0.03, resulting_stat: "MP" }
+        ],
+        stack_conversions: [
+            { source: "Earth%", ratio: 0.35, resulting_stat: "Earth%" }
+        ]
     },
     "Appointed Ruler of Sky": {
         tier: 5,
@@ -111,7 +133,10 @@ const tarot_data: Record<string, Tarot> = {
         description: "[ 1 Charge ] Debuff all enemy Wind Resist by 40% of Wind Pen, and increase self Elewind by 50% for the rest of the battle after 10 Turns.",
         stat_bonus: "Wind Pen%",
         stat_base: 5,
-        stat_scale: 1
+        stat_scale: 1,
+        conversions: [
+            { source: "Wind%", ratio: 0.5, resulting_stat: "Wind%" }
+        ]
     },
     "Frozen God of War": {
         tier: 5,
@@ -123,7 +148,8 @@ const tarot_data: Record<string, Tarot> = {
         stat_scale: 1,
         conversions: [
             { source: "Water%", ratio: 0.35, resulting_stat: "Water%" },
-            { source: "Water%", ratio: 0.35, resulting_stat: "Crit DMG%" }
+            { source: "Water%", ratio: 0.35, resulting_stat: "Crit DMG%" },
+            { source: "MP", ratio: -0.03, resulting_stat: "MP" }
         ]
     },
     "Ancient Shadow Slime": {
@@ -133,7 +159,11 @@ const tarot_data: Record<string, Tarot> = {
         description: "[ Poison ] Deals MATK DMG with % equal to 15% Eletoxic, apply 50% Damage as DOT. Gain +8% Toxic DOT and +50% Eletoxic for 12 Turns. 8 Turn Cooldown. Costs 3% of Max MP.",
         stat_bonus: "Toxic Pen%",
         stat_base: 5,
-        stat_scale: 1
+        stat_scale: 1,
+        conversions: [
+            { source: "Toxic%", ratio: 0.5, resulting_stat: "Toxic%" },
+            { source: "MP", ratio: -0.03, resulting_stat: "MP" }
+        ]
     },
     "Great Demon of Disaster": {
         tier: 5,
@@ -142,7 +172,14 @@ const tarot_data: Record<string, Tarot> = {
         description: "Increase self Void Pen by 20% stacking 2x times, and Elevoid by 30% for 10 Turns. 5 Turn Cooldown. Costs 3% of Max MP.",
         stat_bonus: "Void Pen%",
         stat_base: 2,
-        stat_scale: 1
+        stat_scale: 1,
+        conversions: [
+            { source: "Void%", ratio: 0.3, resulting_stat: "Void%" },
+            { source: "MP", ratio: -0.03, resulting_stat: "MP" }
+        ],
+        stack_conversions: [
+            { source: "Void Pen%", ratio: 0.2, resulting_stat: "Void Pen%" }
+        ]
     },
     "First Strike Kill Samurai": {
         tier: 5,
@@ -160,7 +197,14 @@ const tarot_data: Record<string, Tarot> = {
         description: "[ ⧖ ] Increases self Elebow and Bow Crit DMG by 66% for 3 Hits. Costs 33% of Max HP.",
         stat_bonus: "Void Pen%",
         stat_base: 2,
-        stat_scale: 1
+        stat_scale: 1,
+        stats: {
+            "Bow Crit DMG%": 66
+        },
+        conversions: [
+            { source: "Pierce%", ratio: 0.66, resulting_stat: "Pierce%" },
+            { source: "HP", ratio: -0.33, resulting_stat: "HP" }
+        ]
     },
     "Golden Hammer Smith": {
         tier: 5,
@@ -169,7 +213,12 @@ const tarot_data: Record<string, Tarot> = {
         description: "[ ⧖ ] Increases self Elehammer and Penblunt by 33% for 2 Hits. Decrease Eleblunt by 100% for 1 Turn.",
         stat_bonus: "Blunt Pen%",
         stat_base: 5,
-        stat_scale: 1
+        stat_scale: 1,
+        conversions: [
+            { source: "Blunt%", ratio: 0.33, resulting_stat: "Blunt%" },
+            { source: "Blunt Pen%", ratio: 0.33, resulting_stat: "Blunt Pen%" },
+            { source: "Blunt%", ratio: -1, resulting_stat: "Blunt%" }
+        ]
     },
     "Blades of Sun and Moon": {
         tier: 5,
@@ -178,7 +227,13 @@ const tarot_data: Record<string, Tarot> = {
         description: "[ ⧖ ] Increases self Eledagger by 20% and Dagger Crit Damage by 60% for your next 2 Hits.",
         stat_bonus: "Slash Pen%",
         stat_base: 5,
-        stat_scale: 1
+        stat_scale: 1,
+        stats: {
+            "Dagger Crit DMG%": 60
+        },
+        conversions: [
+            { source: "Dagger DMG%", ratio: 0.2, resulting_stat: "Dagger DMG%" }
+        ]
     },
     "Lady of the Einherjar": {
         tier: 5,
@@ -187,7 +242,14 @@ const tarot_data: Record<string, Tarot> = {
         description: "[ ⧖ ] Increases self Elespear by 125% and ignore +100% Armor with Pierce Hits for your next Hit. Decease Elepierce by 100% for 1 Turn.",
         stat_bonus: "Pierce Pen%",
         stat_base: 5,
-        stat_scale: 1
+        stat_scale: 1,
+        stats: {
+            "Phys Armor Ignore%": 100
+        },
+        conversions: [
+            { source: "Pierce%", ratio: 1.25, resulting_stat: "Pierce%" },
+            { source: "Pierce%", ratio: -1, resulting_stat: "Pierce%" }
+        ]
     },
     "Iron Butler Sensei": {
         tier: 5,
@@ -196,7 +258,13 @@ const tarot_data: Record<string, Tarot> = {
         description: "[ ⧖, 12 Charges ] Increases self Elefist by 50% and ignore +50% Armor with Blunt Attacks for your next attack.",
         stat_bonus: "Blunt Pen%",
         stat_base: 5,
-        stat_scale: 1
+        stat_scale: 1,
+        stats: {
+            "Blunt Armor Ignore%": 50
+        },
+        conversions: [
+            { source: "Fist DMG%", ratio: 0.5, resulting_stat: "Fist DMG%" }
+        ]
     },
     "Master of Dark Wisdom": {
         tier: 5,
@@ -205,7 +273,11 @@ const tarot_data: Record<string, Tarot> = {
         description: "[ ⧖ ] Increase random Elementat Pen stat by the average of your Elemental Pen for your next Hit. Costs 2% of your Max MP.",
         stat_bonus: "MATK%",
         stat_base: 12,
-        stat_scale: 3
+        stat_scale: 3,
+        conversions: [
+            { source: "Elemental Pen%", ratio: 1, resulting_stat: "Elemental Pen%" },
+            { source: "MP", ratio: -0.02, resulting_stat: "MP" }
+        ]
     },
     "Great Fists Teacher": {
         tier: 5,
@@ -230,8 +302,8 @@ const tarot_data: Record<string, Tarot> = {
         stat_scale: 1,
         conversions: [
             { source: "HEAL", ratio: 0.08, resulting_stat: "DEF" },
-            { source: "Void%", ratio: -0.75, resulting_stat: "Void%" },
-            { source: "MATK%", ratio: -0.90, resulting_stat: "MATK%" },
+            { source: "Void%", ratio: 0.75, resulting_stat: "Void%" },
+            { source: "MATK", ratio: -0.90, resulting_stat: "MATK" },
             { source: "HP", ratio: -0.75, resulting_stat: "HP" },
         ]
     },
@@ -242,7 +314,14 @@ const tarot_data: Record<string, Tarot> = {
         description: "[ ⧖ ] Raise self threat bonus by 100% for the next 3 Hits. Reduce self Damage Taken by 33% and give party DEF equal to 50% Self DEF for 1 Turn. 4 Turn Cooldown.",
         stat_bonus: "Void Pen%",
         stat_base: 2,
-        stat_scale: 1
+        stat_scale: 1,
+        stats: {
+            "Threat%": 100,
+            "DMG Res%": 33
+        },
+        conversions: [
+            { source: "DEF", ratio: 0.5, resulting_stat: "DEF" }
+        ]
     },
     "Naturebound Zhuge Liang": {
         tier: 5,
@@ -253,7 +332,8 @@ const tarot_data: Record<string, Tarot> = {
         stat_base: 12,
         stat_scale: 3,
         conversions: [
-            { source: "HEAL", ratio: 0.33, resulting_stat: "POWER" }
+            { source: "HEAL", ratio: 0.33, resulting_stat: "POWER" },
+            { source: "MP", ratio: -0.05, resulting_stat: "MP" }
         ]
     },
     "The World's Justice": {
@@ -264,11 +344,9 @@ const tarot_data: Record<string, Tarot> = {
         stat_bonus: "ATK%",
         stat_base: 12,
         stat_scale: 3,
-        stats: {
-            "ATK%": 45
-        },
         conversions: [
-            { source: "ATK", ratio: 0.25, resulting_stat: "DEF" }
+            { source: "ATK", ratio: 0.25, resulting_stat: "DEF" },
+            { source: "ATK", ratio: 0.45, resulting_stat: "ATK" }
         ]
     },
     "Unsinkable Slime Shield": {
@@ -278,7 +356,14 @@ const tarot_data: Record<string, Tarot> = {
         description: "[ ⧖, 3 Charges ] Reduce DMG Taken by 100% for 1 Turn. Global DMG Penalty of 100% for the next 3 hits. Heal self by 100% of Max HP.",
         stat_bonus: "DEF%",
         stat_base: 12,
-        stat_scale: 3
+        stat_scale: 3,
+        stats: {
+            "DMG Res%": 100,
+            "Dmg%": -100
+        },
+        conversions: [
+            { source: "HP", ratio: 1, resulting_stat: "HP" }
+        ]
     },
     "The Emerald Tablet": {
         tier: 5,
@@ -288,11 +373,9 @@ const tarot_data: Record<string, Tarot> = {
         stat_bonus: "MATK%",
         stat_base: 12,
         stat_scale: 3,
-        stats: {
-            "MATK%": 60
-        },
         conversions: [
-            { source: "MATK", ratio: 0.15, resulting_stat: "POWER" }
+            { source: "MATK", ratio: 0.15, resulting_stat: "POWER" },
+            { source: "MATK", ratio: 0.60, resulting_stat: "MATK" }
         ]
     },
     "Arbiter of Eternity (Death)": {
@@ -327,11 +410,12 @@ const tarot_data: Record<string, Tarot> = {
         stat_bonus: "Holy Pen%",
         stat_base: 5,
         stat_scale: 1,
-        stats: {
-            "DEF%": 33,
-            "Holy Pen%": 33,
-            "Holy%": 33
-        }
+        conversions: [
+            { source: "DEF", ratio: 0.33, resulting_stat: "DEF" },
+            { source: "Holy Pen%", ratio: 0.33, resulting_stat: "Holy Pen%" },
+            { source: "Holy%", ratio: 0.33, resulting_stat: "Holy%" },
+            { source: "Holy%", ratio: -0.5, resulting_stat: "Holy%" }
+        ]
     },
     "Infernal Sin Emperor": {
         tier: 5,
@@ -340,10 +424,10 @@ const tarot_data: Record<string, Tarot> = {
         stat_bonus: "Fire Pen%",
         stat_base: 5,
         stat_scale: 1,
-        stats: {
-            "Fire%": 50,
-            "Fire Pen%": 100
-        }
+        conversions: [
+            { source: "Fire%", ratio: 0.5, resulting_stat: "Fire%" },
+            { source: "Fire Pen%", ratio: 1, resulting_stat: "Fire Pen%" }
+        ]
     },
     "Stormfury Maid": {
         tier: 5,
@@ -351,7 +435,11 @@ const tarot_data: Record<string, Tarot> = {
         description: "Decrease self Elelightning by 30% for next 2 hits. Activate (Charged Thunder Aura) after. Increase self Elelightning by 100% for 1 hit. Loop.",
         stat_bonus: "Lightning Pen%",
         stat_base: 5,
-        stat_scale: 1
+        stat_scale: 1,
+        conversions: [
+            { source: "Lightning%", ratio: -0.30, resulting_stat: "Lightning%" },
+            { source: "Lightning%", ratio: 1, resulting_stat: "Lightning%" }
+        ]
     },
     "Highborn Druid Queen": {
         tier: 5,
@@ -361,7 +449,9 @@ const tarot_data: Record<string, Tarot> = {
         stat_base: 5,
         stat_scale: 1,
         conversions: [
-            { source: "DEF", ratio: 0.8, resulting_stat: "MATK" }
+            { source: "DEF", ratio: 0.8, resulting_stat: "MATK" },
+            { source: "Earth%", ratio: 0.25, resulting_stat: "Earth%" },
+            { source: "Earth%", ratio: 0.80, resulting_stat: "Earth%" }
         ]
     },
     "Mischievous Lady of Wind": {
@@ -370,7 +460,11 @@ const tarot_data: Record<string, Tarot> = {
         description: "Increase Elewind by 90% for 3 turns. Activates (Tackled Gust) after. Decrease Elewind by 20% for 3 turns. Loop.",
         stat_bonus: "Wind Pen%",
         stat_base: 5,
-        stat_scale: 1
+        stat_scale: 1,
+        conversions: [
+            { source: "Wind%", ratio: 0.90, resulting_stat: "Wind%" },
+            { source: "Wind%", ratio: -0.20, resulting_stat: "Wind%" }
+        ]
     },
     "Ocean Shrine Goddess": {
         tier: 5,
@@ -384,7 +478,8 @@ const tarot_data: Record<string, Tarot> = {
             "Crit Chance%": 25
         },
         conversions: [
-            { source: "MATK", ratio: 0.75, resulting_stat: "DEF" }
+            { source: "MATK", ratio: 0.75, resulting_stat: "DEF" },
+            { source: "Water%", ratio: 0.30, resulting_stat: "Water%" }
         ]
     },
     "Raging Vermin Queen": {
@@ -393,7 +488,11 @@ const tarot_data: Record<string, Tarot> = {
         description: "Increase Eletoxic by 25% for 6 Turns. Activates (Venomous Curse) after. Increase Eletoxic by 55% and gain +20% Toxic DOT for next hit. Loop.",
         stat_bonus: "Toxic Pen%",
         stat_base: 5,
-        stat_scale: 1
+        stat_scale: 1,
+        conversions: [
+            { source: "Toxic%", ratio: 0.25, resulting_stat: "Toxic%" },
+            { source: "Toxic%", ratio: 0.55, resulting_stat: "Toxic%" }
+        ]
     },
     "Mad Void Queen": {
         tier: 5,
@@ -402,10 +501,10 @@ const tarot_data: Record<string, Tarot> = {
         stat_bonus: "Void Pen%",
         stat_base: 2,
         stat_scale: 1,
-        stats: {
-            "Void Pen%": 15,
-            "Void%": 10
-        }
+        conversions: [
+            { source: "Void Pen%", ratio: 0.15, resulting_stat: "Void Pen%" },
+            { source: "Void%", ratio: 0.10, resulting_stat: "Void%" }
+        ]
     },
     "Winter Sword Saint": {
         tier: 5,
@@ -415,11 +514,11 @@ const tarot_data: Record<string, Tarot> = {
         stat_base: 5,
         stat_scale: 1,
         stats: {
-            "ATK%": -50,
             "Sword DMG%": 120
         },
         conversions: [
-            { source: "ATK", ratio: 0.5, resulting_stat: "DEF" }
+            { source: "ATK", ratio: 0.5, resulting_stat: "DEF" },
+            { source: "ATK", ratio: -0.5, resulting_stat: "ATK" }
         ]
     },
     "Goddess of the Hunt": {
@@ -428,7 +527,16 @@ const tarot_data: Record<string, Tarot> = {
         description: "Increase Elebow by 50% for rest of battle. Increase Bow Crit DMG by 13% for 3 Turns. Activates (Tailwind Blessing) after. Increase Bow Crit DMG by 133% for 1 Hit. Loop.",
         stat_bonus: "Void Pen%",
         stat_base: 2,
-        stat_scale: 1
+        stat_scale: 1,
+        stats: {
+            "Bow Crit DMG%": 13
+        },
+        conversions: [
+            { source: "Pierce%", ratio: 0.5, resulting_stat: "Pierce%" }
+        ],
+        stack_conversions: [
+            { source: "Bow Crit DMG%", ratio: 1.33, resulting_stat: "Bow Crit DMG%" }
+        ]
     },
     "Cyclone Flail Princess": {
         tier: 5,
@@ -447,7 +555,14 @@ const tarot_data: Record<string, Tarot> = {
         description: "Increase Eledagger by 50% for your next 6 hits. Activate (Omnistrike Assassin) after. Increase Eledagger and Dagger Crit DMG by 60% for 1 hit. Loop.",
         stat_bonus: "Slash Pen%",
         stat_base: 5,
-        stat_scale: 1
+        stat_scale: 1,
+        stats: {
+            "Dagger Crit DMG%": 60
+        },
+        conversions: [
+            { source: "Dagger DMG%", ratio: 0.5, resulting_stat: "Dagger DMG%" },
+            { source: "Dagger DMG%", ratio: 0.6, resulting_stat: "Dagger DMG%" }
+        ]
     },
     "Crimson Worldfall": {
         tier: 5,
@@ -455,7 +570,12 @@ const tarot_data: Record<string, Tarot> = {
         description: "Increase Elespear by 35% and gain +10% Pierce DOT for 5 hits. Activate (Bloodlust Rampage) after. Increase Elespear and Penpierce by 40% for rest of battle.",
         stat_bonus: "Pierce Pen%",
         stat_base: 5,
-        stat_scale: 1
+        stat_scale: 1,
+        conversions: [
+            { source: "Spear DMG%", ratio: 0.35, resulting_stat: "Spear DMG%" },
+            { source: "Spear DMG%", ratio: 0.4, resulting_stat: "Spear DMG%" },
+            { source: "Pierce Pen%", ratio: 0.4, resulting_stat: "Pierce Pen%" }
+        ]
     },
     "Dragon King of Fists": {
         tier: 5,
@@ -463,7 +583,10 @@ const tarot_data: Record<string, Tarot> = {
         description: "Increase Elefist by 6% for rest of battle, increases by 6% every attack up to a cap of 60%.",
         stat_bonus: "Blunt Pen%",
         stat_base: 5,
-        stat_scale: 1
+        stat_scale: 1,
+        stack_stats: {
+            "Fist DMG%": 6
+        }
     },
     "Lord of the Arcane Abyss": {
         tier: 5,
@@ -471,7 +594,10 @@ const tarot_data: Record<string, Tarot> = {
         description: "Increase random Elementat Pen stat by 90% of your average Elemental Pen for 1 Turn. Loop.",
         stat_bonus: "MATK%",
         stat_base: 12,
-        stat_scale: 3
+        stat_scale: 3,
+        conversions: [
+            { source: "Elemental Pen%", ratio: 0.9, resulting_stat: "Elemental Pen%" }
+        ]
     },
     "Bloody Guardian Angel": {
         tier: 5,
@@ -514,7 +640,13 @@ const tarot_data: Record<string, Tarot> = {
         description: "Increase self Void Pen by 42%, and gain +69% Armor Pen with Void DMG.",
         stat_bonus: "Void Pen%",
         stat_base: 2,
-        stat_scale: 1
+        stat_scale: 1,
+        stats: {
+            "Void Armor Ignore%": 69
+        },
+        conversions: [
+            { source: "Void Pen%", ratio: 0.42, resulting_stat: "Void Pen%" }
+        ]
     },
     "Life and Death": {
         tier: 4,
@@ -524,9 +656,11 @@ const tarot_data: Record<string, Tarot> = {
         stat_base: 5,
         stat_scale: 1,
         stats: {
-            "Crit Chance%": -33,
-            "Neg Pen%": 10
-        }
+            "Crit Chance%": -33
+        },
+        conversions: [
+            { source: "Neg Pen%", ratio: 0.10, resulting_stat: "Neg Pen%" }
+        ]
     },
     "Death Apprentice": {
         tier: 4,
@@ -535,11 +669,9 @@ const tarot_data: Record<string, Tarot> = {
         stat_bonus: "Neg%",
         stat_base: 5,
         stat_scale: 1,
-        stats: {
-            "Void%": -80
-        },
         conversions: [
-            { source: "Neg Pen%", ratio: 0.8, resulting_stat: "Void Pen%" }
+            { source: "Neg Pen%", ratio: 0.8, resulting_stat: "Void Pen%" },
+            { source: "Void%", ratio: -0.8, resulting_stat: "Void%" }
         ]
     },
     "Alternate Life": {
@@ -549,11 +681,9 @@ const tarot_data: Record<string, Tarot> = {
         stat_bonus: "Holy%",
         stat_base: 5,
         stat_scale: 1,
-        stats: {
-            "Holy%": -50
-        },
         conversions: [
-            { source: "Holy%", ratio: 0.15, resulting_stat: "Elemental%" }
+            { source: "Holy%", ratio: 0.15, resulting_stat: "Elemental%" },
+            { source: "Holy%", ratio: -0.5, resulting_stat: "Holy%" }
         ]
     },
     "Solar Genocide": {
@@ -562,7 +692,13 @@ const tarot_data: Record<string, Tarot> = {
         description: "Gain 5% Holy DMG as DOT for the first 3 Hits, then increase self Holy DMG by 12% for the next 3 Hits.",
         stat_bonus: "Holy%",
         stat_base: 5,
-        stat_scale: 1
+        stat_scale: 1,
+        stats: {
+            "Holy DOT%": 5
+        },
+        conversions: [
+            { source: "Holy%", ratio: 0.12, resulting_stat: "Holy%" }
+        ]
     },
     "Evil Lord of Flame": {
         tier: 4,
@@ -570,7 +706,10 @@ const tarot_data: Record<string, Tarot> = {
         description: "Gain 4% Fire DMG as DOT. Increase self Fire DMG by 25% for the first 9 Hits.",
         stat_bonus: "Fire%",
         stat_base: 5,
-        stat_scale: 1
+        stat_scale: 1,
+        conversions: [
+            { source: "Fire%", ratio: 0.25, resulting_stat: "Fire%" }
+        ]
     },
     "The Gazing Fire": {
         tier: 4,
@@ -578,7 +717,11 @@ const tarot_data: Record<string, Tarot> = {
         description: "Increase self Fire DMG by 40% for the first 3 Hits, then decrease it by 15% for the next 3 Hits. Loop.",
         stat_bonus: "Fire%",
         stat_base: 5,
-        stat_scale: 1
+        stat_scale: 1,
+        conversions: [
+            { source: "Fire%", ratio: 0.4, resulting_stat: "Fire%" },
+            { source: "Fire%", ratio: -0.15, resulting_stat: "Fire%" }
+        ]
     },
     "Red Lightning": {
         tier: 4,
@@ -586,7 +729,10 @@ const tarot_data: Record<string, Tarot> = {
         description: "25% of Lightning Single Target DMG applied as AOE DMG. Increase self Lightning DMG by 15%.",
         stat_bonus: "Lightning%",
         stat_base: 5,
-        stat_scale: 1
+        stat_scale: 1,
+        conversions: [
+            { source: "Lightning%", ratio: 0.15, resulting_stat: "Lightning%" }
+        ]
     },
     "Bringer of Light": {
         tier: 4,
@@ -594,7 +740,12 @@ const tarot_data: Record<string, Tarot> = {
         description: "Increase self Lightning DMG by 40% for the first Hit, by 15% for the 2nd Hit, 5% for the 3rd Hit. Loop.",
         stat_bonus: "Lightning%",
         stat_base: 5,
-        stat_scale: 1
+        stat_scale: 1,
+        conversions: [
+            { source: "Lightning%", ratio: 0.4, resulting_stat: "Lightning%" },
+            { source: "Lightning%", ratio: 0.15, resulting_stat: "Lightning%" },
+            { source: "Lightning%", ratio: 0.05, resulting_stat: "Lightning%" }
+        ]
     },
     "Evil Druid King": {
         tier: 4,
@@ -602,7 +753,12 @@ const tarot_data: Record<string, Tarot> = {
         description: "Increase self Earth DMG by 10% for the first 2 Hits, by 15% for the next 3 Hits, and by 30% for the rest of the battle.",
         stat_bonus: "Earth%",
         stat_base: 5,
-        stat_scale: 1
+        stat_scale: 1,
+        conversions: [
+            { source: "Earth%", ratio: 0.10, resulting_stat: "Earth%" },
+            { source: "Earth%", ratio: 0.15, resulting_stat: "Earth%" },
+            { source: "Earth%", ratio: 0.30, resulting_stat: "Earth%" }
+        ]
     },
     "Black Capsule Lord": {
         tier: 4,
@@ -610,7 +766,11 @@ const tarot_data: Record<string, Tarot> = {
         description: "Increase party DEF by 2000% Earth DMG until their first hit. Increase self Earth DMG by 18% for the rest of battle.",
         stat_bonus: "Earth%",
         stat_base: 5,
-        stat_scale: 1
+        stat_scale: 1,
+        conversions: [
+            { source: "Earth%", ratio: 20, resulting_stat: "DEF" },
+            { source: "Earth%", ratio: 0.18, resulting_stat: "Earth%" }
+        ]
     },
     "Tri Arts Sage": {
         tier: 4,
@@ -619,12 +779,10 @@ const tarot_data: Record<string, Tarot> = {
         stat_bonus: "Wind%",
         stat_base: 5,
         stat_scale: 1,
-        stats: {
-            "Wind%": 15,
-            "Wind Pen%": 25
-        },
         conversions: [
-            { source: "Wind%", ratio: 1, resulting_stat: "MP" }
+            { source: "Wind%", ratio: 1, resulting_stat: "MP" },
+            { source: "Wind%", ratio: 0.15, resulting_stat: "Wind%" },
+            { source: "Wind Pen%", ratio: 0.25, resulting_stat: "Wind Pen%" }
         ]
     },
     "Nature's Queen": {
@@ -633,7 +791,11 @@ const tarot_data: Record<string, Tarot> = {
         description: "Increase self Wind Pen by 40% for 1 hit. Activate (Calm Wind) after. Decrease Wind DMG by 20% for 2 turns. Loop.",
         stat_bonus: "Wind%",
         stat_base: 5,
-        stat_scale: 1
+        stat_scale: 1,
+        conversions: [
+            { source: "Wind Pen%", ratio: 0.4, resulting_stat: "Wind Pen%" },
+            { source: "Wind%", ratio: -0.2, resulting_stat: "Wind%" }
+        ]
     },
     "Hero of Ice": {
         tier: 4,
@@ -681,7 +843,11 @@ const tarot_data: Record<string, Tarot> = {
         description: "Give party Temp HP equal to 30,000% Void DMG and decrease self Void DMG by 80% for the first 5 Turns.",
         stat_bonus: "Void%",
         stat_base: 5,
-        stat_scale: 1
+        stat_scale: 1,
+        conversions: [
+            { source: "Void%", ratio: 300, resulting_stat: "Temp HP" },
+            { source: "Void%", ratio: -0.8, resulting_stat: "Void%" }
+        ]
     },
     "Lady Landfall": {
         tier: 4,
@@ -689,7 +855,11 @@ const tarot_data: Record<string, Tarot> = {
         description: "Start with 15% less MP, but increase self Void DMG by 15%.",
         stat_bonus: "Void%",
         stat_base: 5,
-        stat_scale: 1
+        stat_scale: 1,
+        conversions: [
+            { source: "MP", ratio: -0.15, resulting_stat: "MP" },
+            { source: "Void%", ratio: 0.15, resulting_stat: "Void%" }
+        ]
     },
     "Champion of the Kingdom": {
         tier: 4,
@@ -711,7 +881,13 @@ const tarot_data: Record<string, Tarot> = {
         description: "Gain +200% Crit Chance and increase self Crit DMG by 33% for the first hit, then +20% Crit Chance permanently.",
         stat_bonus: "Slash%",
         stat_base: 5,
-        stat_scale: 1
+        stat_scale: 1,
+        stats: {
+            "Crit Chance%": 220
+        },
+        conversions: [
+            { source: "Crit DMG%", ratio: 0.33, resulting_stat: "Crit DMG%" }
+        ]
     },
     "Prophetic Archer": {
         tier: 4,
@@ -731,7 +907,13 @@ const tarot_data: Record<string, Tarot> = {
         description: "Gain +33% Bow Crit Chance. Increase Bow DMG by 12%.",
         stat_bonus: "Pierce%",
         stat_base: 5,
-        stat_scale: 1
+        stat_scale: 1,
+        stats: {
+            "Crit Chance%": 33
+        },
+        conversions: [
+            { source: "Pierce%", ratio: 0.12, resulting_stat: "Pierce%" }
+        ]
     },
     "Muscle Mystery Warrior": {
         tier: 4,
@@ -739,7 +921,13 @@ const tarot_data: Record<string, Tarot> = {
         description: "Gain +200% Hammer Crit Chance for the first 3 Hits, then +10% Hammer Crit DMG afterwards.",
         stat_bonus: "Blunt%",
         stat_base: 5,
-        stat_scale: 1
+        stat_scale: 1,
+        stats: {
+            "Crit Chance%": 200
+        },
+        conversions: [
+            { source: "Crit DMG%", ratio: 0.10, resulting_stat: "Crit DMG%" }
+        ]
     },
     "Mountain Tribunal": {
         tier: 4,
@@ -758,7 +946,10 @@ const tarot_data: Record<string, Tarot> = {
         description: "Increase self Dagger DMG by 100% for the first hit.",
         stat_bonus: "Slash%",
         stat_base: 5,
-        stat_scale: 1
+        stat_scale: 1,
+        conversions: [
+            { source: "Dagger DMG%", ratio: 1, resulting_stat: "Dagger DMG%" }
+        ]
     },
     "Ijayniya": {
         tier: 4,
@@ -766,7 +957,14 @@ const tarot_data: Record<string, Tarot> = {
         description: "10% Slash DMG applied as DOT for the first hit. Dagger DMG increase by 15% for the first 3 hits. Sword DMG reduced by 50%.",
         stat_bonus: "Slash%",
         stat_base: 5,
-        stat_scale: 1
+        stat_scale: 1,
+        stats: {
+            "Slash DOT%": 10,
+            "Dagger DMG%": 15
+        },
+        conversions: [
+            { source: "Sword DMG%", ratio: -0.5, resulting_stat: "Sword DMG%" }
+        ]
     },
     "Demigod Champion": {
         tier: 4,
@@ -774,7 +972,12 @@ const tarot_data: Record<string, Tarot> = {
         description: "Decrease Spear DMG by 10% on the first hit, increase by 5% on the second, and increase by 15% permanently on the third.",
         stat_bonus: "Pierce%",
         stat_base: 5,
-        stat_scale: 1
+        stat_scale: 1,
+        conversions: [
+            { source: "Spear DMG%", ratio: -0.10, resulting_stat: "Spear DMG%" },
+            { source: "Spear DMG%", ratio: 0.05, resulting_stat: "Spear DMG%" },
+            { source: "Spear DMG%", ratio: 0.15, resulting_stat: "Spear DMG%" }
+        ]
     },
     "Elderly Lancer": {
         tier: 4,
@@ -782,7 +985,11 @@ const tarot_data: Record<string, Tarot> = {
         description: "Increase Spear DMG by 20% for the first 8 hits, then reduced by 10% permanently.",
         stat_bonus: "Pierce%",
         stat_base: 5,
-        stat_scale: 1
+        stat_scale: 1,
+        conversions: [
+            { source: "Spear DMG%", ratio: 0.2, resulting_stat: "Spear DMG%" },
+            { source: "Spear DMG%", ratio: -0.1, resulting_stat: "Spear DMG%" }
+        ]
     },
     "Underworld Enforcer": {
         tier: 4,
@@ -790,7 +997,11 @@ const tarot_data: Record<string, Tarot> = {
         description: "Increase Fist DMG by 16% for the 5th to 8th hits, then 10% permanently.",
         stat_bonus: "Blunt%",
         stat_base: 5,
-        stat_scale: 1
+        stat_scale: 1,
+        conversions: [
+            { source: "Fist DMG%", ratio: 0.16, resulting_stat: "Fist DMG%" },
+            { source: "Fist DMG%", ratio: 0.10, resulting_stat: "Fist DMG%" }
+        ]
     },
     "The Great Khan": {
         tier: 4,
@@ -810,7 +1021,10 @@ const tarot_data: Record<string, Tarot> = {
         description: "Increase Elemental Pen by 40% of the highest Elemental PEN (highest gains a 10% increase instead)",
         stat_bonus: "MATK%",
         stat_base: 10,
-        stat_scale: 2
+        stat_scale: 2,
+        conversions: [
+            { source: "Elemental Pen%", ratio: 0.4, resulting_stat: "Elemental Pen%" }
+        ]
     },
     "Myriad Barriers": {
         tier: 4,
@@ -819,10 +1033,8 @@ const tarot_data: Record<string, Tarot> = {
         stat_bonus: "DEF%",
         stat_base: 10,
         stat_scale: 2,
-        stats: {
-            "DEF%": 25
-        },
         conversions: [
+            { source: "DEF", ratio: 0.25, resulting_stat: "DEF" },
             { source: "DEF", ratio: -0.25, resulting_stat: "POWER" }
         ]
     },
@@ -833,11 +1045,9 @@ const tarot_data: Record<string, Tarot> = {
         stat_bonus: "DEF%",
         stat_base: 10,
         stat_scale: 2,
-        stats: {
-            "DEF%": -15
-        },
         conversions: [
-            { source: "DEF", ratio: 0.10, resulting_stat: "DEF" }
+            { source: "DEF", ratio: 0.10, resulting_stat: "DEF" },
+            { source: "DEF", ratio: -0.15, resulting_stat: "DEF" }
         ]
     },
     "Foolish Samurai": {
@@ -847,11 +1057,9 @@ const tarot_data: Record<string, Tarot> = {
         stat_bonus: "ATK%",
         stat_base: 10,
         stat_scale: 2,
-        stats: {
-            "ATK%": 20
-        },
         conversions: [
-            { source: "DEF", ratio: -0.50, resulting_stat: "DEF" }
+            { source: "DEF", ratio: -0.50, resulting_stat: "DEF" },
+            { source: "ATK", ratio: 0.20, resulting_stat: "ATK" }
         ]
     },
     "The Last King": {
@@ -861,11 +1069,9 @@ const tarot_data: Record<string, Tarot> = {
         stat_bonus: "ATK%",
         stat_base: 10,
         stat_scale: 2,
-        stats: {
-            "ATK%": -10
-        },
         conversions: [
-            { source: "ATK", ratio: 0.10, resulting_stat: "POWER" }
+            { source: "ATK", ratio: 0.10, resulting_stat: "POWER" },
+            { source: "ATK", ratio: -0.10, resulting_stat: "ATK" }
         ]
     },
     "Cursed Destiny Caster": {
@@ -912,7 +1118,7 @@ const tarot_data: Record<string, Tarot> = {
         stat_base: 10,
         stat_scale: 2,
         conversions: [
-            { source: "HEAL%", ratio: 0.10, resulting_stat: "All%" },
+            { source: "HEAL", ratio: 0.10, resulting_stat: "All%" },
             { source: "DEF", ratio: -0.50, resulting_stat: "DEF" }
         ]
     },
@@ -932,7 +1138,13 @@ const tarot_data: Record<string, Tarot> = {
         description: "[ Void ] Deals MATK DMG with % equal to 16% Elevoid, 6% Damage Done applied as DOT. 2% of Void DMG inflicted as DOT for 2 Turns. Costs 4% of Max MP.",
         stat_bonus: "Void%",
         stat_base: 5,
-        stat_scale: 1
+        stat_scale: 1,
+        stats: {
+            "Void DOT%": 2
+        },
+        conversions: [
+            { source: "MP", ratio: -0.04, resulting_stat: "MP" }
+        ]
     },
     "Conscript Army": {
         tier: 3,
@@ -952,10 +1164,8 @@ const tarot_data: Record<string, Tarot> = {
         stat_bonus: "ATK%",
         stat_base: 8,
         stat_scale: 1,
-        stats: {
-            "ATK%": 10
-        },
         conversions: [
+            { source: "ATK", ratio: 0.10, resulting_stat: "ATK" },
             { source: "DEF", ratio: -0.40, resulting_stat: "DEF" }
         ]
     },
@@ -977,10 +1187,10 @@ const tarot_data: Record<string, Tarot> = {
         stat_bonus: "MATK%",
         stat_base: 8,
         stat_scale: 1,
-        stats: {
-            "MP%": 15,
-            "MATK%": -10
-        }
+        conversions: [
+            { source: "MP", ratio: 0.15, resulting_stat: "MP" },
+            { source: "MATK", ratio: -0.10, resulting_stat: "MATK" }
+        ]
     },
     "Sunlight Guard": {
         tier: 3,
@@ -989,11 +1199,9 @@ const tarot_data: Record<string, Tarot> = {
         stat_bonus: "MATK%",
         stat_base: 8,
         stat_scale: 1,
-        stats: {
-            "MATK%": -5
-        },
         conversions: [
-            { source: "MATK", ratio: 0.15, resulting_stat: "DEF" }
+            { source: "MATK", ratio: 0.15, resulting_stat: "DEF" },
+            { source: "MATK", ratio: -0.05, resulting_stat: "MATK" }
         ]
     },
     "Four Gods Devotee": {
@@ -1003,11 +1211,9 @@ const tarot_data: Record<string, Tarot> = {
         stat_bonus: "HEAL%",
         stat_base: 8,
         stat_scale: 1,
-        stats: {
-            "HP%": -20
-        },
         conversions: [
-            { source: "HEAL", ratio: 0.20, resulting_stat: "DEF" }
+            { source: "HEAL", ratio: 0.20, resulting_stat: "DEF" },
+            { source: "HP", ratio: -0.20, resulting_stat: "HP" }
         ]
     },
     "Mercenary Cleric": {
@@ -1027,8 +1233,10 @@ const tarot_data: Record<string, Tarot> = {
         stat_scale: 1,
         stats: {
             "Crit Chance%": 20,
-            "HEAL%": 5,
             "Dmg%": -33
+        },
+        conversions: [
+            { source: "HEAL", ratio: 0.05, resulting_stat: "HEAL" }
         }
     },
     "Quagoa Warrior": {
@@ -1038,10 +1246,10 @@ const tarot_data: Record<string, Tarot> = {
         stat_bonus: "DEF%",
         stat_base: 8,
         stat_scale: 1,
-        stats: {
-            "DEF%": -10,
-            "HP%": 10
-        }
+        conversions: [
+            { source: "DEF", ratio: -0.10, resulting_stat: "DEF" },
+            { source: "HP", ratio: 0.10, resulting_stat: "HP" }
+        ]
     },
     "Undead Mind": {
         tier: 3,
@@ -1076,7 +1284,10 @@ const tarot_data: Record<string, Tarot> = {
         description: "Ignore 80% of armor with Physical DMG for your first 4 hits.",
         stat_bonus: "ATK%",
         stat_base: 8,
-        stat_scale: 1
+        stat_scale: 1,
+        stats: {
+            "Phys Armor Ignore%": 80
+        }
     },
     "Academy Apprentice": {
         tier: 3,
@@ -1084,7 +1295,10 @@ const tarot_data: Record<string, Tarot> = {
         description: "Ignore 80% of armor with Magic DMG for your first 4 hits.",
         stat_bonus: "MATK%",
         stat_base: 8,
-        stat_scale: 1
+        stat_scale: 1,
+        stats: {
+            "Magic Armor Ignore%": 80
+        }
     },
     "Destroyer of the Kingdom": {
         tier: 3,
@@ -1093,10 +1307,10 @@ const tarot_data: Record<string, Tarot> = {
         stat_bonus: "HP%",
         stat_base: 100,
         stat_scale: 50,
-        stats: {
-            "DEF%": -95,
-            "HP%": 33
-        }
+        conversions: [
+            { source: "DEF", ratio: -0.95, resulting_stat: "DEF" },
+            { source: "HP", ratio: 0.33, resulting_stat: "HP" }
+        ]
     },
     "Poorly Named Lich": {
         tier: 3,
@@ -1105,10 +1319,10 @@ const tarot_data: Record<string, Tarot> = {
         stat_bonus: "MATK%",
         stat_base: 8,
         stat_scale: 1,
-        stats: {
-            "MATK%": 5,
-            "HP%": -8
-        }
+        conversions: [
+            { source: "MATK", ratio: 0.05, resulting_stat: "MATK" },
+            { source: "HP", ratio: -0.08, resulting_stat: "HP" }
+        ]
     },
     "Lizardmen Warriors": {
         tier: 3,
@@ -1117,10 +1331,8 @@ const tarot_data: Record<string, Tarot> = {
         stat_bonus: "ATK%",
         stat_base: 8,
         stat_scale: 1,
-        stats: {
-            "ATK%": 6
-        },
         conversions: [
+            { source: "ATK", ratio: 0.06, resulting_stat: "ATK" },
             { source: "ATK", ratio: -0.04, resulting_stat: "DEF" }
         ]
     },
@@ -1141,7 +1353,13 @@ const tarot_data: Record<string, Tarot> = {
         description: "[ ⧖, Void ] Deals 160%/350% ATK/DEF Damage, scales with Total Phys DMG, -10% Damage Taken for 1 Turn, 3 Turn Cooldown, Costs 10% of Max HP",
         stat_bonus: "ATK%",
         stat_base: 8,
-        stat_scale: 1
+        stat_scale: 1,
+        stats: {
+            "DMG Res%": 10
+        },
+        conversions: [
+            { source: "HP", ratio: -0.10, resulting_stat: "HP" }
+        ]
     },
     "Path of Violence": {
         tier: 3,
