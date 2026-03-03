@@ -102,7 +102,7 @@ export const StatsInfo: Record<string, StatInfoData> = {
   "DEF%":  { multi: 0.01 },
   "MATK%": { multi: 0.01 },
   "HEAL%": { multi: 0.01 },
-  "MAIN%": { multi: 0.01 },
+  "MAIN%": { multi: 0.01, sub_stats: ["ATK%", "DEF%", "MATK%", "HEAL%"] },
 
   "Art_ATK%":  { multi: 0.01 },
   "Art_DEF%":  { multi: 0.01 },

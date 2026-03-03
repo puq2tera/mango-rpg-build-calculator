@@ -265,39 +265,47 @@ export function computeBaseStats() {
   const rawStatsRunes = localStorage.getItem("StatsRunes")
   const rawStatsArtifact = localStorage.getItem("StatsArtifact")
   const StatsBase: Record<string, number> = {}
+  const addStat = (stat: string, value: number) => {
+    StatsBase[stat] = (StatsBase[stat] ?? 0) + value
+    const info = stat_data.StatsInfo[stat as keyof typeof stat_data.StatsInfo]
+    if (!info?.sub_stats) return
+    for (const subStat of info.sub_stats) {
+      StatsBase[subStat] = (StatsBase[subStat] ?? 0) + value
+    }
+  }
 
   if(rawStatsTalents) {
     const StatsTalents: Record<string, number> = JSON.parse(rawStatsTalents)
     for (const [stat, value] of Object.entries(StatsTalents)) {
-      StatsBase[stat] = (StatsBase[stat] || 0) + value
+      addStat(stat, value)
     }
   }
 
   if(rawStatsEquipment) {
     const StatsEquipment: Record<string, number> = JSON.parse(rawStatsEquipment)
     for (const [stat, value] of Object.entries(StatsEquipment)) {
-      StatsBase[stat] = (StatsBase[stat] || 0) + value
+      addStat(stat, value)
     }
   }
 
   if(rawStatsLevels) {
     const StatsLevels: Record<string, number> = JSON.parse(rawStatsLevels)
     for (const [stat, value] of Object.entries(StatsLevels)) {
-      StatsBase[stat] = (StatsBase[stat] || 0) + value
+      addStat(stat, value)
     }
   }
 
   if(rawStatsRunes) {
     const StatsRunes: Record<string, number> = JSON.parse(rawStatsRunes)
     for (const [stat, value] of Object.entries(StatsRunes)) {
-      StatsBase[stat] = (StatsBase[stat] || 0) + value
+      addStat(stat, value)
     }
   }
 
   if(rawStatsArtifact) {
     const StatsArtifact: Record<string, number> = JSON.parse(rawStatsArtifact)
     for (const [stat, value] of Object.entries(StatsArtifact)) {
-      StatsBase[stat] = (StatsBase[stat] || 0) + value
+      addStat(stat, value)
     }
   }
 
