@@ -1363,7 +1363,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+5% DEF, +50 HP",
         "stats": {
-            "DEF%": 0.05
+            "DEF%": 5
         },
         "conversions": []
     },
@@ -1384,7 +1384,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10% DEF, +100 HP",
         "stats": {
-            "DEF%": 0.1
+            "DEF%": 10
         },
         "conversions": []
     },
@@ -1405,7 +1405,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+5% Crit Chance",
         "stats": {
-            "Crit Chance%": 0.05
+            "Crit Chance%": 5
         },
         "conversions": []
     },
@@ -1426,7 +1426,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+5% Crit Chance",
         "stats": {
-            "Crit Chance%": 0.05
+            "Crit Chance%": 5
         },
         "conversions": []
     },

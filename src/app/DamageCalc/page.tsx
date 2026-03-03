@@ -70,8 +70,18 @@ export default function DamageCalc() {
   const critStage = Math.floor(nonCrit * ((inputs['skillCritDmg'] ?? 0) / 100))
   const crit = Math.floor(critStage * ((stats['Crit DMG%'] ?? 0) / 100))
   const maxcrit = Math.floor(crit * ((stats['Overdrive%'] ?? 0) / 100))
-  const average = maxcrit - 25778417
-  // 32378884
+
+  const clamp = (x: number, lo = 0, hi = 1): number => Math.min(hi, Math.max(lo, x))
+
+  const totalCritChance = ((stats["Crit Chance%"] ?? 0) + (inputs.skillCritChance ?? 0)) * stat_data.StatsInfo["Crit Chance%"].multi
+  const c = clamp(totalCritChance, 0, 2)
+
+  const nonCritWeight = 1 - clamp(c, 0, 1)
+  const maxCritWeight = clamp(c - 1, 0, 1)
+  const critWeight = clamp(c, 0, 1) - maxCritWeight
+  
+  const average = Math.floor(nonCrit * nonCritWeight + crit * critWeight + maxcrit * maxCritWeight)
+  const formatNumber = (value: number): string => value.toLocaleString("en-US")
 
   const handleChange = (field: string, value: number) => {
     setInputs(prev => ({ ...prev, [field]: value }))
@@ -190,10 +200,16 @@ export default function DamageCalc() {
       <div className="grid grid-cols-2 gap-6 text-center border rounded-lg p-4 bg-white">
         <div className="space-y-2">
           <h2 className="font-semibold text-lg">Average Damage</h2>
-          <div><strong>Non-Crit:</strong> { nonCrit }</div>
-          <div><strong>Crit:</strong> { crit }</div>
-          <div><strong>Maximized Crit:</strong> { maxcrit }</div>
-          <div><strong>Overall:</strong> {average}</div>
+          <div className="mx-auto inline-grid w-fit grid-cols-[max-content_max-content] gap-x-3 gap-y-1">
+            <strong className="text-right">Non-Crit:</strong>
+            <span className="text-right font-mono tabular-nums">{formatNumber(nonCrit)}</span>
+            <strong className="text-right">Crit:</strong>
+            <span className="text-right font-mono tabular-nums">{formatNumber(crit)}</span>
+            <strong className="text-right">Maximized Crit:</strong>
+            <span className="text-right font-mono tabular-nums">{formatNumber(maxcrit)}</span>
+            <strong className="text-right">Overall:</strong>
+            <span className="text-right font-mono tabular-nums">{formatNumber(average)}</span>
+          </div>
         </div>
         <div className="space-y-2">
           <h2 className="font-semibold text-lg">Damage Over Time</h2>
