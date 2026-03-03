@@ -76,7 +76,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+5% Increased Slash Damage",
         "stats": {
-            "Slash%": 0.05
+            "Slash%": 5
         },
         "conversions": []
     },
@@ -97,7 +97,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+5% Increased Slash Damage",
         "stats": {
-            "Slash%": 0.05
+            "Slash%": 5
         },
         "conversions": []
     },
@@ -118,7 +118,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10% Increased Slash Damage",
         "stats": {
-            "Slash%": 0.1
+            "Slash%": 10
         },
         "conversions": []
     },
@@ -651,9 +651,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10% Resist to Blunt/Slash/Pierce",
         "stats": {
-            "Slash Res%": 0.1,
-            "Pierce Res%": 0.1,
-            "Blunt Res%": 0.1
+            "Slash Res%": 10,
+            "Pierce Res%": 10,
+            "Blunt Res%": 10
         },
         "conversions": []
     },
@@ -737,9 +737,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10% Resist to Fire/Earth/Water",
         "stats": {
-            "Fire Res%": 0.1,
-            "Water Res%": 0.1,
-            "Earth Res%": 0.1
+            "Fire Res%": 10,
+            "Water Res%": 10,
+            "Earth Res%": 10
         },
         "conversions": []
     },
@@ -823,8 +823,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10% Resist to Negative/Holy",
         "stats": {
-            "Neg Res%": 0.1,
-            "Holy Res%": 0.1
+            "Neg Res%": 10,
+            "Holy Res%": 10
         },
         "conversions": []
     },
@@ -2230,9 +2230,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10% Physical Resist",
         "stats": {
-            "Slash Res%": 0.1,
-            "Pierce Res%": 0.1,
-            "Blunt Res%": 0.1
+            "Slash Res%": 10,
+            "Pierce Res%": 10,
+            "Blunt Res%": 10
         },
         "conversions": []
     },
@@ -3145,9 +3145,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10% Fire, Lightning, and Wind Resist",
         "stats": {
-            "Fire Res%": 0.1,
-            "Lightning Res%": 0.1,
-            "Wind Res%": 0.1
+            "Fire Res%": 10,
+            "Lightning Res%": 10,
+            "Wind Res%": 10
         },
         "conversions": []
     },
@@ -3168,9 +3168,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10% Earth, Water, and Holy Resist",
         "stats": {
-            "Water Res%": 0.1,
-            "Earth Res%": 0.1,
-            "Holy Res%": 0.1
+            "Water Res%": 10,
+            "Earth Res%": 10,
+            "Holy Res%": 10
         },
         "conversions": []
     },
@@ -3191,9 +3191,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10% Physical Resist",
         "stats": {
-            "Slash Res%": 0.1,
-            "Pierce Res%": 0.1,
-            "Blunt Res%": 0.1
+            "Slash Res%": 10,
+            "Pierce Res%": 10,
+            "Blunt Res%": 10
         },
         "conversions": []
     },
@@ -3637,7 +3637,9 @@ const talent_data: Record<string, Talent> = {
     },
     "Knight Archon 3": {
         "category": "tank",
-        "PreReq": ["Knight Archon 2"],
+        "PreReq": [
+            "Knight Archon 2"
+        ],
         "Tag": "",
         "BlockedTag": "",
         "gold": 200,
@@ -3652,7 +3654,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% DEF, +2% Global Damage, Conversion 10% DEF to ATK and MATK",
         "stats": {
-            "DEF%": 30,
+            "DEF%": 20,
             "Dmg%": 2
         },
         "conversions": [
@@ -3910,7 +3912,9 @@ const talent_data: Record<string, Talent> = {
     },
     "Morrigan's Guardianship": {
         "category": "tank",
-        "PreReq": ["Tank125"],
+        "PreReq": [
+            "Tank125"
+        ],
         "Tag": "Tank125Cap",
         "BlockedTag": "Tank125Cap",
         "gold": 500,
@@ -3927,7 +3931,13 @@ const talent_data: Record<string, Talent> = {
         "stats": {
             "Dmg%": 2
         },
-        "conversions": []
+        "conversions": [
+            {
+                "source": "DEF",
+                "ratio": 0.35,
+                "resulting_stat": "HEAL"
+            }
+        ]
     },
     "Star Sands of Dawn": {
         "category": "tank",
@@ -4289,7 +4299,9 @@ const talent_data: Record<string, Talent> = {
     },
     "Soul Core of Mogdrolo'toth": {
         "category": "tank",
-        "PreReq": ["T175 Shard"],
+        "PreReq": [
+            "T175 Shard"
+        ],
         "Tag": "T175 Core",
         "BlockedTag": "T175 Core",
         "gold": 1500,
@@ -4309,6 +4321,11 @@ const talent_data: Record<string, Talent> = {
                 "source": "Void Res%",
                 "ratio": 0.5,
                 "resulting_stat": "Void%"
+            },
+            {
+                "source": "Void Res%",
+                "ratio": -0.12,
+                "resulting_stat": "All Res%"
             }
         ]
     },
@@ -7398,9 +7415,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10% Physical Damage",
         "stats": {
-            "Slash%": 0.1,
-            "Pierce%": 0.1,
-            "Blunt%": 0.1
+            "Slash%": 10,
+            "Pierce%": 10,
+            "Blunt%": 10
         },
         "conversions": []
     },
@@ -7421,9 +7438,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10% Physical Damage",
         "stats": {
-            "Slash%": 0.1,
-            "Pierce%": 0.1,
-            "Blunt%": 0.1
+            "Slash%": 10,
+            "Pierce%": 10,
+            "Blunt%": 10
         },
         "conversions": []
     },
@@ -8149,9 +8166,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15% Physical Damage",
         "stats": {
-            "Slash%": 0.15,
-            "Pierce%": 0.15,
-            "Blunt%": 0.15
+            "Slash%": 15,
+            "Pierce%": 15,
+            "Blunt%": 15
         },
         "conversions": []
     },
@@ -8172,9 +8189,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15% Physical Damage",
         "stats": {
-            "Slash%": 0.15,
-            "Pierce%": 0.15,
-            "Blunt%": 0.15
+            "Slash%": 15,
+            "Pierce%": 15,
+            "Blunt%": 15
         },
         "conversions": []
     },
@@ -9616,7 +9633,9 @@ const talent_data: Record<string, Talent> = {
     },
     "Scion of Ulster": {
         "category": "warrior",
-        "PreReq": [""],
+        "PreReq": [
+            ""
+        ],
         "Tag": "",
         "BlockedTag": "War125Cap",
         "gold": 500,
@@ -9631,11 +9650,17 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% Physical Damage, 33% of Physical Pen converted into Void Pen",
         "stats": {
-            "Slash%": 0.2,
-            "Pierce%": 0.2,
-            "Blunt%": 0.2
+            "Slash%": 20,
+            "Pierce%": 20,
+            "Blunt%": 20
         },
-        "conversions": []
+        "conversions": [
+            {
+                "source": "Phys Pen%",
+                "ratio": 0.33,
+                "resulting_stat": "Void Pen%"
+            }
+        ]
     },
     "Astrapste Argo": {
         "category": "warrior",
@@ -9660,7 +9685,9 @@ const talent_data: Record<string, Talent> = {
     },
     "Dragonslayer's Twilight": {
         "category": "warrior",
-        "PreReq": [""],
+        "PreReq": [
+            ""
+        ],
         "Tag": "",
         "BlockedTag": "War125Cap",
         "gold": 500,
@@ -9675,13 +9702,21 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+25% Threat Generated, +1.5% of ATKMulti converted to Physical Pen",
         "stats": {
-            "Threat%": 0.25
+            "Threat%": 25
         },
-        "conversions": []
+        "conversions": [
+            {
+                "source": "ATK%",
+                "ratio": 0.015,
+                "resulting_stat": "Phys Pen%"
+            }
+        ]
     },
     "Abyssal Sands of Dawn": {
         "category": "warrior",
-        "PreReq": ["PrimalEssence"],
+        "PreReq": [
+            "PrimalEssence"
+        ],
         "Tag": "W_AeonShard",
         "BlockedTag": "",
         "gold": 400,
@@ -9696,11 +9731,10 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+1% Global ATK, +10% Physical DMG, Conversion 5% ATK to DEF",
         "stats": {
-            "Slash%": 0.1,
-            "Pierce%": 0.1,
-            "Blunt%": 0.1,
-            "Global ATK%": 1,
-            "ATK%": 5
+            "Slash%": 10,
+            "Pierce%": 10,
+            "Blunt%": 10,
+            "Global ATK%": 1
         },
         "conversions": [
             {
@@ -9712,7 +9746,9 @@ const talent_data: Record<string, Talent> = {
     },
     "Abyssal Sands of Horizon": {
         "category": "warrior",
-        "PreReq": ["PrimalEssence"],
+        "PreReq": [
+            "PrimalEssence"
+        ],
         "Tag": "W_AeonShard",
         "BlockedTag": "",
         "gold": 400,
@@ -9727,11 +9763,10 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "-3% Global ATK, +20% Physical DMG, Conversion 5% ATK to DEF",
         "stats": {
-            "Slash%": 0.2,
-            "Pierce%": 0.2,
-            "Blunt%": 0.2,
-            "Global ATK%": -3,
-            "ATK%": 5
+            "Slash%": 20,
+            "Pierce%": 20,
+            "Blunt%": 20,
+            "Global ATK%": -3
         },
         "conversions": [
             {
@@ -9743,7 +9778,9 @@ const talent_data: Record<string, Talent> = {
     },
     "Abyssal Sands of Twilight": {
         "category": "warrior",
-        "PreReq": ["PrimalEssence"],
+        "PreReq": [
+            "PrimalEssence"
+        ],
         "Tag": "W_AeonShard",
         "BlockedTag": "",
         "gold": 400,
@@ -9758,7 +9795,6 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+1% Global ATK, -6% xPhys DMG, Conversion 5% ATK to DEF",
         "stats": {
-            "ATK%": 5,
             "Global ATK%": 1,
             "Phys xDmg%": -6
         },
@@ -9772,7 +9808,9 @@ const talent_data: Record<string, Talent> = {
     },
     "Time Shard of Hapnatra": {
         "category": "warrior",
-        "PreReq": ["W_AeonShard"],
+        "PreReq": [
+            "W_AeonShard"
+        ],
         "Tag": "W_AeonCore",
         "BlockedTag": "",
         "gold": 500,
@@ -9787,7 +9825,6 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+1% Global ATK, '+4% xPhys DMG, Conversion 5% ATK to DEF",
         "stats": {
-            "ATK%": 5,
             "Global ATK%": 1,
             "Phys xDmg%": 4
         },
@@ -9891,7 +9928,9 @@ const talent_data: Record<string, Talent> = {
     },
     "Abyssal Gem of Protons": {
         "category": "warrior",
-        "PreReq": ["PrimalEssence"],
+        "PreReq": [
+            "PrimalEssence"
+        ],
         "Tag": "W_CosmicShard",
         "BlockedTag": "",
         "gold": 400,
@@ -9907,7 +9946,6 @@ const talent_data: Record<string, Talent> = {
         "description": "+1% Global ATK, +25% ATK Multi, Conversion 8% DEF to ATK",
         "stats": {
             "ATK%": 25,
-            "DEF%": 8,
             "Global ATK%": 1
         },
         "conversions": [
@@ -9920,7 +9958,9 @@ const talent_data: Record<string, Talent> = {
     },
     "Abyssal Gem of Electrons": {
         "category": "warrior",
-        "PreReq": ["PrimalEssence"],
+        "PreReq": [
+            "PrimalEssence"
+        ],
         "Tag": "W_CosmicShard",
         "BlockedTag": "",
         "gold": 400,
@@ -9936,8 +9976,7 @@ const talent_data: Record<string, Talent> = {
         "description": "+1% Global ATK, +25% ATK Multi, Conversion 8% MATK to ATK",
         "stats": {
             "ATK%": 25,
-            "Global ATK%": 1,
-            "MATK%": 8
+            "Global ATK%": 1
         },
         "conversions": [
             {
@@ -11195,7 +11234,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+4% Eath Damage",
         "stats": {
-            "Earth%": 0.04
+            "Earth%": 4
         },
         "conversions": []
     },
@@ -11216,7 +11255,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+8% Eath Damage",
         "stats": {
-            "Earth%": 0.08
+            "Earth%": 8
         },
         "conversions": []
     },
@@ -13254,18 +13293,18 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+5% Elemental Penetration, +15% Elemental Damage",
         "stats": {
-            "Fire%": 0.15,
-            "Water%": 0.15,
-            "Lightning%": 0.15,
-            "Wind%": 0.15,
-            "Earth%": 0.15,
-            "Toxic%": 0.15,
-            "Fire Pen%": 0.05,
-            "Water Pen%": 0.05,
-            "Lightning Pen%": 0.05,
-            "Wind Pen%": 0.05,
-            "Earth Pen%": 0.05,
-            "Toxic Pen%": 0.05
+            "Fire%": 15,
+            "Water%": 15,
+            "Lightning%": 15,
+            "Wind%": 15,
+            "Earth%": 15,
+            "Toxic%": 15,
+            "Fire Pen%": 5,
+            "Water Pen%": 5,
+            "Lightning Pen%": 5,
+            "Wind Pen%": 5,
+            "Earth Pen%": 5,
+            "Toxic Pen%": 5
         },
         "conversions": []
     },
@@ -13664,10 +13703,10 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+5% Divine Penetration, +25% Divine Damage",
         "stats": {
-            "Neg%": 0.25,
-            "Holy%": 0.25,
-            "Neg Pen%": 0.05,
-            "Holy Pen%": 0.05
+            "Neg%": 25,
+            "Holy%": 25,
+            "Neg Pen%": 5,
+            "Holy Pen%": 5
         },
         "conversions": []
     },
@@ -14089,7 +14128,9 @@ const talent_data: Record<string, Talent> = {
     },
     "Ideals of the Saoshyant": {
         "category": "caster",
-        "PreReq": [""],
+        "PreReq": [
+            ""
+        ],
         "Tag": "",
         "BlockedTag": "Cast125Cap",
         "gold": 500,
@@ -14104,10 +14145,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+40% Divine DMG, +5% Divine Pen, Conversion 10% Holy DMG to MP, Conversion 10% Negative DMG to Crit DMG",
         "stats": {
-            "Neg%": 10,
-            "Holy%": 10,
-            "Neg Pen%": 0.05,
-            "Holy Pen%": 0.05
+            "Divine%": 40,
+            "Divine Pen%": 5
         },
         "conversions": [
             {
@@ -14146,7 +14185,9 @@ const talent_data: Record<string, Talent> = {
     },
     "Avatar's Rebirth": {
         "category": "caster",
-        "PreReq": [""],
+        "PreReq": [
+            ""
+        ],
         "Tag": "",
         "BlockedTag": "Cast125Cap",
         "gold": 500,
@@ -14163,11 +14204,19 @@ const talent_data: Record<string, Talent> = {
         "stats": {
             "MATK%": 40
         },
-        "conversions": []
+        "conversions": [
+            {
+                "source": "MATK%",
+                "ratio": 0.06,
+                "resulting_stat": "Elemental%"
+            }
+        ]
     },
     "Warping Sands of Dawn": {
         "category": "caster",
-        "PreReq": ["PrimalEssence"],
+        "PreReq": [
+            "PrimalEssence"
+        ],
         "Tag": "C_AeonShard",
         "BlockedTag": "",
         "gold": 400,
@@ -14182,17 +14231,16 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+1% Global MATK, +8% Magic DMG, Conversion 4% MATK to DEF",
         "stats": {
-            "Fire%": 0.08,
-            "Water%": 0.08,
-            "Lightning%": 0.08,
-            "Wind%": 0.08,
-            "Earth%": 0.08,
-            "Toxic%": 0.08,
-            "Neg%": 0.08,
-            "Holy%": 0.08,
-            "Void%": 0.08,
-            "Global MATK%": 1,
-            "MATK%": 4
+            "Fire%": 8,
+            "Water%": 8,
+            "Lightning%": 8,
+            "Wind%": 8,
+            "Earth%": 8,
+            "Toxic%": 8,
+            "Neg%": 8,
+            "Holy%": 8,
+            "Void%": 8,
+            "Global MATK%": 1
         },
         "conversions": [
             {
@@ -14204,7 +14252,9 @@ const talent_data: Record<string, Talent> = {
     },
     "Warping Sands of Horizon": {
         "category": "caster",
-        "PreReq": ["PrimalEssence"],
+        "PreReq": [
+            "PrimalEssence"
+        ],
         "Tag": "C_AeonShard",
         "BlockedTag": "",
         "gold": 400,
@@ -14219,17 +14269,16 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "-3% Global MATK, +16% Magic DMG, Conversion 4% MATK to DEF",
         "stats": {
-            "Fire%": 0.16,
-            "Water%": 0.16,
-            "Lightning%": 0.16,
-            "Wind%": 0.16,
-            "Earth%": 0.16,
-            "Toxic%": 0.16,
-            "Neg%": 0.16,
-            "Holy%": 0.16,
-            "Void%": 0.16,
-            "Global MATK%": -3,
-            "MATK%": 4
+            "Fire%": 16,
+            "Water%": 16,
+            "Lightning%": 16,
+            "Wind%": 16,
+            "Earth%": 16,
+            "Toxic%": 16,
+            "Neg%": 16,
+            "Holy%": 16,
+            "Void%": 16,
+            "Global MATK%": -3
         },
         "conversions": [
             {
@@ -14241,7 +14290,9 @@ const talent_data: Record<string, Talent> = {
     },
     "Warping Sands of Twilight": {
         "category": "caster",
-        "PreReq": ["PrimalEssence"],
+        "PreReq": [
+            "PrimalEssence"
+        ],
         "Tag": "C_AeonShard",
         "BlockedTag": "",
         "gold": 400,
@@ -14256,8 +14307,16 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+1% Global MATK, -6% xMagic DMG, Conversion 4% MATK to DEF",
         "stats": {
-            "MATK%": 4,
-            "Global MATK%": 1
+            "Global MATK%": 1,
+            "Fire xDmg%": -6,
+            "Water xDmg%": -6,
+            "Lightning xDmg%": -6,
+            "Wind xDmg%": -6,
+            "Earth xDmg%": -6,
+            "Toxic xDmg%": -6,
+            "Neg xDmg%": -6,
+            "Holy xDmg%": -6,
+            "Void xDmg%": -6
         },
         "conversions": [
             {
@@ -14269,7 +14328,9 @@ const talent_data: Record<string, Talent> = {
     },
     "Time Shard of Onirakan": {
         "category": "caster",
-        "PreReq": ["C_AeonShard"],
+        "PreReq": [
+            "C_AeonShard"
+        ],
         "Tag": "C_AeonCore",
         "BlockedTag": "",
         "gold": 500,
@@ -14284,8 +14345,16 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+1% Global MATK, +3% xMagic DMG, Conversion 4% MATK to DEF",
         "stats": {
-            "MATK%": 4,
-            "Global MATK%": 1
+            "Global MATK%": 1,
+            "Fire xDmg%": 3,
+            "Water xDmg%": 3,
+            "Lightning xDmg%": 3,
+            "Wind xDmg%": 3,
+            "Earth xDmg%": 3,
+            "Toxic xDmg%": 3,
+            "Neg xDmg%": 3,
+            "Holy xDmg%": 3,
+            "Void xDmg%": 3
         },
         "conversions": [
             {
@@ -14318,7 +14387,9 @@ const talent_data: Record<string, Talent> = {
     },
     "Warping Light of Desire": {
         "category": "caster",
-        "PreReq": ["PrimalEssence"],
+        "PreReq": [
+            "PrimalEssence"
+        ],
         "Tag": "C_InfinityShard",
         "BlockedTag": "",
         "gold": 400,
@@ -14333,7 +14404,6 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+1% Global MATK,  Transfer 20% DEF to MATK",
         "stats": {
-            "DEF%": 20,
             "Global MATK%": 1
         },
         "conversions": [
@@ -14389,7 +14459,9 @@ const talent_data: Record<string, Talent> = {
     },
     "Warping Gem of Protons": {
         "category": "caster",
-        "PreReq": ["PrimalEssence"],
+        "PreReq": [
+            "PrimalEssence"
+        ],
         "Tag": "C_CosmicShard",
         "BlockedTag": "",
         "gold": 400,
@@ -14404,16 +14476,15 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+1% Global MATK, +8% Magic DMG, Conversion 8% DEF to MATK",
         "stats": {
-            "Fire%": 0.08,
-            "Water%": 0.08,
-            "Lightning%": 0.08,
-            "Wind%": 0.08,
-            "Earth%": 0.08,
-            "Toxic%": 0.08,
-            "Neg%": 0.08,
-            "Holy%": 0.08,
-            "Void%": 0.08,
-            "DEF%": 8,
+            "Fire%": 8,
+            "Water%": 8,
+            "Lightning%": 8,
+            "Wind%": 8,
+            "Earth%": 8,
+            "Toxic%": 8,
+            "Neg%": 8,
+            "Holy%": 8,
+            "Void%": 8,
             "Global MATK%": 1
         },
         "conversions": [
@@ -14426,7 +14497,9 @@ const talent_data: Record<string, Talent> = {
     },
     "Warping Gem of Electrons": {
         "category": "caster",
-        "PreReq": ["PrimalEssence"],
+        "PreReq": [
+            "PrimalEssence"
+        ],
         "Tag": "C_CosmicShard",
         "BlockedTag": "",
         "gold": 400,
@@ -14441,16 +14514,15 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+1% Global MATK, +8% Magic DMG, Conversion 8% ATK to MATK",
         "stats": {
-            "Fire%": 0.08,
-            "Water%": 0.08,
-            "Lightning%": 0.08,
-            "Wind%": 0.08,
-            "Earth%": 0.08,
-            "Toxic%": 0.08,
-            "Neg%": 0.08,
-            "Holy%": 0.08,
-            "Void%": 0.08,
-            "ATK%": 8,
+            "Fire%": 8,
+            "Water%": 8,
+            "Lightning%": 8,
+            "Wind%": 8,
+            "Earth%": 8,
+            "Toxic%": 8,
+            "Neg%": 8,
+            "Holy%": 8,
+            "Void%": 8,
             "Global MATK%": 1
         },
         "conversions": [
@@ -14478,15 +14550,15 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+1% Global MATK, +8% Magic DMG, Conversion 8% Healpower to MATK",
         "stats": {
-            "Fire%": 0.08,
-            "Water%": 0.08,
-            "Lightning%": 0.08,
-            "Wind%": 0.08,
-            "Earth%": 0.08,
-            "Toxic%": 0.08,
-            "Neg%": 0.08,
-            "Holy%": 0.08,
-            "Void%": 0.08,
+            "Fire%": 8,
+            "Water%": 8,
+            "Lightning%": 8,
+            "Wind%": 8,
+            "Earth%": 8,
+            "Toxic%": 8,
+            "Neg%": 8,
+            "Holy%": 8,
+            "Void%": 8,
             "Global MATK%": 1
         },
         "conversions": [
@@ -14634,7 +14706,9 @@ const talent_data: Record<string, Talent> = {
     },
     "Space Core of Mephis'ronan": {
         "category": "caster",
-        "PreReq": ["C175 Shard"],
+        "PreReq": [
+            "C175 Shard"
+        ],
         "Tag": "C175 Core",
         "BlockedTag": "C175 Core",
         "gold": 1500,
@@ -14650,14 +14724,28 @@ const talent_data: Record<string, Talent> = {
         "description": "+200% Threat Generated, +10% Crit Chance, Conversion 10% MATK to MATK/Heal/ATK/DEF",
         "stats": {
             "Crit Chance%": 10,
-            "Threat%": 2,
-            "MATK%": 10
+            "Threat%": 200
         },
         "conversions": [
             {
                 "source": "MATK",
                 "ratio": 0.1,
                 "resulting_stat": "MATK"
+            },
+            {
+                "source": "MATK",
+                "ratio": 0.1,
+                "resulting_stat": "HEAL"
+            },
+            {
+                "source": "MATK",
+                "ratio": 0.1,
+                "resulting_stat": "ATK"
+            },
+            {
+                "source": "MATK",
+                "ratio": 0.1,
+                "resulting_stat": "DEF"
             }
         ]
     },
@@ -17672,8 +17760,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+8% Divine Penetration",
         "stats": {
-            "Neg Pen%": 0.08,
-            "Holy Pen%": 0.08
+            "Neg Pen%": 8,
+            "Holy Pen%": 8
         },
         "conversions": []
     },
@@ -17740,8 +17828,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+3% Divine Penetration Multiplier, +10% Divine Damage",
         "stats": {
-            "Neg%": 0.1,
-            "Holy%": 0.1
+            "Neg%": 10,
+            "Holy%": 10
         },
         "conversions": []
     },
@@ -17764,8 +17852,8 @@ const talent_data: Record<string, Talent> = {
         "stats": {
             "Global HEAL%": 1,
             "Toxic%": 15,
-            "Neg%": 0.1,
-            "Holy%": 0.1
+            "Neg%": 10,
+            "Holy%": 10
         },
         "conversions": []
     },
@@ -17787,8 +17875,8 @@ const talent_data: Record<string, Talent> = {
         "description": "+1% Global Healpower, +10% Divine Damage and +15% Toxic Damage",
         "stats": {
             "Toxic%": 15,
-            "Neg%": 0.1,
-            "Holy%": 0.1,
+            "Neg%": 10,
+            "Holy%": 10,
             "Global HEAL%": 1
         },
         "conversions": []
@@ -17811,8 +17899,8 @@ const talent_data: Record<string, Talent> = {
         "description": "+1% Global Healpower, +10% Divine Penetration and +15% Toxic Penetration",
         "stats": {
             "Toxic Pen%": 15,
-            "Neg Pen%": 0.1,
-            "Holy Pen%": 0.1,
+            "Neg Pen%": 10,
+            "Holy Pen%": 10,
             "Global HEAL%": 1
         },
         "conversions": []
@@ -17834,7 +17922,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+1% Global Healpower, -6% Threat Generated",
         "stats": {
-            "Threat%": -0.06,
+            "Threat%": -6,
             "Global HEAL%": 1
         },
         "conversions": []
@@ -17856,7 +17944,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+1% Global Healpower, -6% Threat Generated",
         "stats": {
-            "Threat%": -0.06,
+            "Threat%": -6,
             "Global HEAL%": 1
         },
         "conversions": []
@@ -18022,7 +18110,9 @@ const talent_data: Record<string, Talent> = {
     },
     "Undying Sands of Dawn": {
         "category": "healer",
-        "PreReq": ["PrimalEssence"],
+        "PreReq": [
+            "PrimalEssence"
+        ],
         "Tag": "H_AeonShard",
         "BlockedTag": "",
         "gold": 400,
@@ -18037,7 +18127,6 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+1% Global Heal, +2% Max HP Multi, Conversion 3% Heal to DEF",
         "stats": {
-            "HEAL%": 3,
             "HP%": 2,
             "Global HEAL%": 1
         },
@@ -18051,7 +18140,9 @@ const talent_data: Record<string, Talent> = {
     },
     "Undying Sands of Horizon": {
         "category": "healer",
-        "PreReq": ["PrimalEssence"],
+        "PreReq": [
+            "PrimalEssence"
+        ],
         "Tag": "H_AeonShard",
         "BlockedTag": "",
         "gold": 400,
@@ -18066,7 +18157,6 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "-2% Global Heal, +4% Max HP Multi, Conversion 3% Heal to DEF",
         "stats": {
-            "HEAL%": 3,
             "HP%": 4,
             "Global HEAL%": -2
         },
@@ -18080,7 +18170,9 @@ const talent_data: Record<string, Talent> = {
     },
     "Undying Sands of Twilight": {
         "category": "healer",
-        "PreReq": ["PrimalEssence"],
+        "PreReq": [
+            "PrimalEssence"
+        ],
         "Tag": "H_AeonShard",
         "BlockedTag": "",
         "gold": 400,
@@ -18095,7 +18187,6 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+2% Global Heal, -5% Max HP Multi, Conversion 3% Heal to DEF",
         "stats": {
-            "HEAL%": 3,
             "HP%": -5,
             "Global HEAL%": 2
         },
@@ -18109,7 +18200,9 @@ const talent_data: Record<string, Talent> = {
     },
     "Time Shard of Mesofet": {
         "category": "healer",
-        "PreReq": ["H_AeonShard"],
+        "PreReq": [
+            "H_AeonShard"
+        ],
         "Tag": "H_AeonCore",
         "BlockedTag": "",
         "gold": 500,
@@ -18124,7 +18217,6 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+2% Global Heal, +2% Max HP Multi, Conversion 3% Heal to DEF",
         "stats": {
-            "HEAL%": 3,
             "HP%": 2,
             "Global HEAL%": 2
         },
@@ -18232,7 +18324,9 @@ const talent_data: Record<string, Talent> = {
     },
     "Undying Gem of Protons": {
         "category": "healer",
-        "PreReq": ["PrimalEssence"],
+        "PreReq": [
+            "PrimalEssence"
+        ],
         "Tag": "H_CosmicShard",
         "BlockedTag": "",
         "gold": 400,
@@ -18247,16 +18341,15 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+1% Global Heal, +8% Magic DMG, Conversion 8% DEF to Heal",
         "stats": {
-            "Fire%": 0.08,
-            "Water%": 0.08,
-            "Lightning%": 0.08,
-            "Wind%": 0.08,
-            "Earth%": 0.08,
-            "Toxic%": 0.08,
-            "Neg%": 0.08,
-            "Holy%": 0.08,
-            "Void%": 0.08,
-            "DEF%": 8,
+            "Fire%": 8,
+            "Water%": 8,
+            "Lightning%": 8,
+            "Wind%": 8,
+            "Earth%": 8,
+            "Toxic%": 8,
+            "Neg%": 8,
+            "Holy%": 8,
+            "Void%": 8,
             "Global HEAL%": 1
         },
         "conversions": [
@@ -18269,7 +18362,9 @@ const talent_data: Record<string, Talent> = {
     },
     "Undying Gem of Electrons": {
         "category": "healer",
-        "PreReq": ["PrimalEssence"],
+        "PreReq": [
+            "PrimalEssence"
+        ],
         "Tag": "H_CosmicShard",
         "BlockedTag": "",
         "gold": 400,
@@ -18284,16 +18379,15 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+1% Global Heal, +8% Magic DMG, Conversion 8% ATK to Heal",
         "stats": {
-            "Fire%": 0.08,
-            "Water%": 0.08,
-            "Lightning%": 0.08,
-            "Wind%": 0.08,
-            "Earth%": 0.08,
-            "Toxic%": 0.08,
-            "Neg%": 0.08,
-            "Holy%": 0.08,
-            "Void%": 0.08,
-            "ATK%": 8,
+            "Fire%": 8,
+            "Water%": 8,
+            "Lightning%": 8,
+            "Wind%": 8,
+            "Earth%": 8,
+            "Toxic%": 8,
+            "Neg%": 8,
+            "Holy%": 8,
+            "Void%": 8,
             "Global HEAL%": 1
         },
         "conversions": [
@@ -18306,7 +18400,9 @@ const talent_data: Record<string, Talent> = {
     },
     "Undying Gem of Neutrons": {
         "category": "healer",
-        "PreReq": ["PrimalEssence"],
+        "PreReq": [
+            "PrimalEssence"
+        ],
         "Tag": "H_CosmicShard",
         "BlockedTag": "",
         "gold": 400,
@@ -18321,17 +18417,16 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+1% Global Heal, +8% Magic DMG, Conversion 8% MATK to Heal",
         "stats": {
-            "Fire%": 0.08,
-            "Water%": 0.08,
-            "Lightning%": 0.08,
-            "Wind%": 0.08,
-            "Earth%": 0.08,
-            "Toxic%": 0.08,
-            "Neg%": 0.08,
-            "Holy%": 0.08,
-            "Void%": 0.08,
-            "Global HEAL%": 1,
-            "MATK%": 8
+            "Fire%": 8,
+            "Water%": 8,
+            "Lightning%": 8,
+            "Wind%": 8,
+            "Earth%": 8,
+            "Toxic%": 8,
+            "Neg%": 8,
+            "Holy%": 8,
+            "Void%": 8,
+            "Global HEAL%": 1
         },
         "conversions": [
             {
@@ -22159,7 +22254,9 @@ const talent_data: Record<string, Talent> = {
     },
     "Mystic Heart of the Flame": {
         "category": "hybrid",
-        "PreReq": ["IgnisKey"],
+        "PreReq": [
+            "IgnisKey"
+        ],
         "Tag": "PrimalFire",
         "BlockedTag": "PrimalFire",
         "gold": 1250,
@@ -22175,7 +22272,6 @@ const talent_data: Record<string, Talent> = {
         "description": "+50% MATK, +30 MP, Conversion 20% MP to Crit DMG, 50% Crit Chance to MP",
         "stats": {
             "MATK%": 50,
-            "Crit Chance%": 50,
             "MP": 30
         },
         "conversions": [
@@ -22183,12 +22279,19 @@ const talent_data: Record<string, Talent> = {
                 "source": "MP",
                 "ratio": 0.2,
                 "resulting_stat": "Crit DMG%"
+            },
+            {
+                "source": "Crit Chance%",
+                "ratio": 0.5,
+                "resulting_stat": "MP"
             }
         ]
     },
     "Mystic Legacy of the Flame": {
         "category": "hybrid",
-        "PreReq": ["IgnisKey"],
+        "PreReq": [
+            "IgnisKey"
+        ],
         "Tag": "PrimalFire",
         "BlockedTag": "PrimalFire",
         "gold": 1250,
@@ -22204,19 +22307,15 @@ const talent_data: Record<string, Talent> = {
         "description": "+50% MATK, +15% Penfire, +15% Global Elefire, +15% Global Fire Damage, Conversion 150% Resfire to MP",
         "stats": {
             "MATK%": 50,
-            "Fire Pen%": 0.15,
-            "Fire DMG%": 0.15
+            "Fire Pen%": 15,
+            "Fire%": 15,
+            "Fire DMG%": 15
         },
         "conversions": [
             {
                 "source": "Fire Res%",
                 "ratio": 1.5,
                 "resulting_stat": "MP"
-            },
-            {
-                "source": "Fire%",
-                "ratio": 0.15,
-                "resulting_stat": "Fire%"
             }
         ]
     },
@@ -22238,12 +22337,12 @@ const talent_data: Record<string, Talent> = {
         "description": "+50% MATK, +10% Penelement, Conversion 60% Elefire to Elemental Damage, 80% Penfire to Crit Damage, -50% Reduction to Elefire",
         "stats": {
             "MATK%": 50,
-            "Fire Pen%": 0.1,
-            "Water Pen%": 0.1,
-            "Lightning Pen%": 0.1,
-            "Wind Pen%": 0.1,
-            "Earth Pen%": 0.1,
-            "Toxic Pen%": 0.1
+            "Fire Pen%": 10,
+            "Water Pen%": 10,
+            "Lightning Pen%": 10,
+            "Wind Pen%": 10,
+            "Earth Pen%": 10,
+            "Toxic Pen%": 10
         },
         "conversions": [
             {
@@ -22265,7 +22364,9 @@ const talent_data: Record<string, Talent> = {
     },
     "Warlord's Heart of the Flame": {
         "category": "hybrid",
-        "PreReq": ["IgnisKey"],
+        "PreReq": [
+            "IgnisKey"
+        ],
         "Tag": "PrimalFire",
         "BlockedTag": "PrimalFire",
         "gold": 1250,
@@ -22280,8 +22381,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+50% ATK, Conversion 8% DEF Multiplier to Crit Damage",
         "stats": {
-            "ATK%": 50,
-            "DEF%": 8
+            "ATK%": 50
         },
         "conversions": [
             {
@@ -22293,7 +22393,9 @@ const talent_data: Record<string, Talent> = {
     },
     "Warlord's Legacy of the Flame": {
         "category": "hybrid",
-        "PreReq": ["IgnisKey"],
+        "PreReq": [
+            "IgnisKey"
+        ],
         "Tag": "PrimalFire",
         "BlockedTag": "PrimalFire",
         "gold": 1250,
@@ -22310,17 +22412,13 @@ const talent_data: Record<string, Talent> = {
         "stats": {
             "Crit Chance%": 5,
             "ATK%": 30,
-            "Fist DMG%": 0.15
+            "Fist DMG%": 15,
+            "Blunt Pen%": 5
         },
         "conversions": [
             {
                 "source": "Slash Pen%",
                 "ratio": 0.5,
-                "resulting_stat": "Blunt Pen%"
-            },
-            {
-                "source": "Blunt Pen%",
-                "ratio": 0.05,
                 "resulting_stat": "Blunt Pen%"
             }
         ]
@@ -22343,8 +22441,8 @@ const talent_data: Record<string, Talent> = {
         "description": "+50% ATK, +5% Penslash, +15% Global Sword Damage, Conversion 110% Penfire to Penslash, 50% Elefire to Eleslash.",
         "stats": {
             "ATK%": 50,
-            "Sword DMG%": 0.15,
-            "Slash Pen%": 0.05
+            "Sword DMG%": 15,
+            "Slash Pen%": 5
         },
         "conversions": [
             {
@@ -22361,7 +22459,9 @@ const talent_data: Record<string, Talent> = {
     },
     "Paragon's Heart of the Flame": {
         "category": "hybrid",
-        "PreReq": ["IgnisKey"],
+        "PreReq": [
+            "IgnisKey"
+        ],
         "Tag": "PrimalFire",
         "BlockedTag": "PrimalFire",
         "gold": 1250,
@@ -22376,20 +22476,28 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+35% DEF, +1250 Max HP, +0.5% HP Regen, Conversion 100% Resfire to MP, 135% DEF Multi to HP Regen",
         "stats": {
-            "DEF%": 170,
+            "DEF%": 35,
+            "HP": 1250,
             "HP Regen%": 0.5
         },
         "conversions": [
             {
                 "source": "Fire Res%",
-                "ratio": 1.0,
+                "ratio": 1,
                 "resulting_stat": "MP"
+            },
+            {
+                "source": "DEF%",
+                "ratio": 1.35,
+                "resulting_stat": "HP Regen"
             }
         ]
     },
     "Paragon's Legacy of the Flame": {
         "category": "hybrid",
-        "PreReq": ["IgnisKey"],
+        "PreReq": [
+            "IgnisKey"
+        ],
         "Tag": "PrimalFire",
         "BlockedTag": "PrimalFire",
         "gold": 1250,
@@ -22405,7 +22513,7 @@ const talent_data: Record<string, Talent> = {
         "description": "+20% DEF, +1200 Max HP, -25% Reswater, Conversion 25% Resfire to ResElements (except Water), 100% Resfire to Elephysical, Reduction 50% Resfire",
         "stats": {
             "DEF%": 20,
-            "Water Res%": -0.25,
+            "Water Res%": -25,
             "HP": 1200
         },
         "conversions": [
@@ -22413,6 +22521,16 @@ const talent_data: Record<string, Talent> = {
                 "source": "Fire Res%",
                 "ratio": 0.25,
                 "resulting_stat": "Elemental_Except_Water Res%"
+            },
+            {
+                "source": "Fire Res%",
+                "ratio": 1,
+                "resulting_stat": "Phys%"
+            },
+            {
+                "source": "Fire Res%",
+                "ratio": -0.5,
+                "resulting_stat": "Fire Res%"
             }
         ]
     },
@@ -22451,7 +22569,9 @@ const talent_data: Record<string, Talent> = {
     },
     "Saint's Heart of the Flame": {
         "category": "hybrid",
-        "PreReq": ["IgnisKey"],
+        "PreReq": [
+            "IgnisKey"
+        ],
         "Tag": "PrimalFire",
         "BlockedTag": "PrimalFire",
         "gold": 1250,
@@ -22467,8 +22587,7 @@ const talent_data: Record<string, Talent> = {
         "description": "+45% Heal, -15% Global Heal Effect, Conversion 15% Healpower Multiplier to MP",
         "stats": {
             "HEAL%": 45,
-            "Heal Effect%": -15,
-            "Global HEAL%": -15
+            "Heal Effect%": -15
         },
         "conversions": [
             {
@@ -22480,7 +22599,9 @@ const talent_data: Record<string, Talent> = {
     },
     "Saint's Legacy of the Flame": {
         "category": "hybrid",
-        "PreReq": ["IgnisKey"],
+        "PreReq": [
+            "IgnisKey"
+        ],
         "Tag": "PrimalFire",
         "BlockedTag": "PrimalFire",
         "gold": 1250,
@@ -22500,15 +22621,19 @@ const talent_data: Record<string, Talent> = {
         "conversions": [
             {
                 "source": "Fire Res%",
-                "ratio": 2.0,
+                "ratio": 2,
                 "resulting_stat": "Crit DMG%"
+            },
+            {
+                "source": "Fire Res%",
+                "ratio": 0.25,
+                "resulting_stat": "Divine Res%"
             },
             {
                 "source": "Fire Res%",
                 "ratio": -0.25,
                 "resulting_stat": "Fire Res%"
             }
-
         ]
     },
     "Saint's Essence of the Flame": {
@@ -22583,7 +22708,7 @@ const talent_data: Record<string, Talent> = {
         "description": "+40% MATK, +10% Penwater, Conversion 70% Elewater to Crit Damage",
         "stats": {
             "MATK%": 40,
-            "Water Pen%": 0.1
+            "Water Pen%": 10
         },
         "conversions": [
             {
@@ -22628,7 +22753,9 @@ const talent_data: Record<string, Talent> = {
     },
     "Warlord's Flow of the Seas": {
         "category": "hybrid",
-        "PreReq": ["AquaKey"],
+        "PreReq": [
+            "AquaKey"
+        ],
         "Tag": "PrimalSea",
         "BlockedTag": "PrimalSea",
         "gold": 1250,
@@ -22643,20 +22770,20 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+40% ATK, +10% Physical Pen, Conversion 25% Elewater to Crit Chance, -100% Reudction to Elewater",
         "stats": {
-            "ATK%": 40
+            "ATK%": 40,
+            "Phys Pen%": 10
         },
         "conversions": [
             {
                 "source": "Water%",
                 "ratio": 0.25,
-                "resulting_stat": "Crit DMG%"
+                "resulting_stat": "Crit Chance%"
             },
             {
                 "source": "Water%",
-                "ratio": -1.0,
+                "ratio": -1,
                 "resulting_stat": "Water%"
             }
-
         ]
     },
     "Warlord's Wrath of the Seas": {
@@ -22754,7 +22881,9 @@ const talent_data: Record<string, Talent> = {
     },
     "Paragon's Wrath of the Seas": {
         "category": "hybrid",
-        "PreReq": ["AquaKey"],
+        "PreReq": [
+            "AquaKey"
+        ],
         "Tag": "PrimalSea",
         "BlockedTag": "PrimalSea",
         "gold": 1250,
@@ -22769,7 +22898,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% DEF, Conversion 70% Elewater to Elevoid, -50% Physical Damage",
         "stats": {
-            "DEF%": 20
+            "DEF%": 20,
+            "Phys%": -50
         },
         "conversions": [
             {
@@ -22781,7 +22911,9 @@ const talent_data: Record<string, Talent> = {
     },
     "Paragon's Embrace of the Seas": {
         "category": "hybrid",
-        "PreReq": ["AquaKey"],
+        "PreReq": [
+            "AquaKey"
+        ],
         "Tag": "PrimalSea",
         "BlockedTag": "PrimalSea",
         "gold": 1250,
@@ -22802,19 +22934,20 @@ const talent_data: Record<string, Talent> = {
             {
                 "source": "Water Res%",
                 "ratio": 0.02,
-                "resulting_stat": "MP"
+                "resulting_stat": "MP Regen"
             },
             {
                 "source": "Water Res%",
                 "ratio": -0.5,
                 "resulting_stat": "Water Res%"
             }
-
         ]
     },
     "Saint's Flow of the Seas": {
         "category": "hybrid",
-        "PreReq": ["AquaKey"],
+        "PreReq": [
+            "AquaKey"
+        ],
         "Tag": "PrimalSea",
         "BlockedTag": "PrimalSea",
         "gold": 1250,
@@ -22836,13 +22969,15 @@ const talent_data: Record<string, Talent> = {
             {
                 "source": "MP",
                 "ratio": 4.5,
-                "resulting_stat": "HP"
+                "resulting_stat": "HP Regen"
             }
         ]
     },
     "Saint's Wrath of the Seas": {
         "category": "hybrid",
-        "PreReq": ["AquaKey"],
+        "PreReq": [
+            "AquaKey"
+        ],
         "Tag": "PrimalSea",
         "BlockedTag": "PrimalSea",
         "gold": 1250,
@@ -22862,15 +22997,14 @@ const talent_data: Record<string, Talent> = {
         "conversions": [
             {
                 "source": "Water%",
-                "ratio": 1.0,
+                "ratio": 1,
                 "resulting_stat": "Crit DMG%"
             },
             {
                 "source": "Water%",
-                "ratio": 1.0,
+                "ratio": -1,
                 "resulting_stat": "Water%"
             }
-
         ]
     },
     "Saint's Embrace of the Seas": {
@@ -23042,7 +23176,7 @@ const talent_data: Record<string, Talent> = {
         "description": "+25% ATK, +20% Global Dagger Damage, Conversion 90% Elelightning to Eleslash, 90% Elelightning to Crit Damage, -100% Reduction to Elelightning",
         "stats": {
             "ATK%": 25,
-            "Dagger DMG%": 0.2
+            "Dagger DMG%": 20
         },
         "conversions": [
             {
@@ -23064,7 +23198,9 @@ const talent_data: Record<string, Talent> = {
     },
     "Warlord's Breath of the Wind": {
         "category": "hybrid",
-        "PreReq": ["TempestKey"],
+        "PreReq": [
+            "TempestKey"
+        ],
         "Tag": "PrimalTempest",
         "BlockedTag": "PrimalTempest",
         "gold": 1250,
@@ -23079,17 +23215,13 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+30% ATK, +25% Global Pierce Penetration, Conversion 120% Penwind to Penpierce, 8% ATK Multiplier to Elepierce",
         "stats": {
-            "ATK%": 38
+            "ATK%": 30,
+            "Pierce Pen%": 25
         },
         "conversions": [
             {
                 "source": "Wind Pen%",
                 "ratio": 1.2,
-                "resulting_stat": "Pierce Pen%"
-            },
-            {
-                "source": "Pierce Pen%",
-                "ratio": 0.25,
                 "resulting_stat": "Pierce Pen%"
             },
             {
@@ -23101,7 +23233,9 @@ const talent_data: Record<string, Talent> = {
     },
     "Warlord's Power of the Tempest": {
         "category": "hybrid",
-        "PreReq": ["TempestKey"],
+        "PreReq": [
+            "TempestKey"
+        ],
         "Tag": "PrimalTempest",
         "BlockedTag": "PrimalTempest",
         "gold": 1250,
@@ -23123,12 +23257,19 @@ const talent_data: Record<string, Talent> = {
                 "source": "Wind%",
                 "ratio": 0.5,
                 "resulting_stat": "MP"
+            },
+            {
+                "source": "Wind%",
+                "ratio": 0.5,
+                "resulting_stat": "Crit DMG%"
             }
         ]
     },
     "Paragon's Touch of the Storm": {
         "category": "hybrid",
-        "PreReq": ["TempestKey"],
+        "PreReq": [
+            "TempestKey"
+        ],
         "Tag": "PrimalTempest",
         "BlockedTag": "PrimalTempest",
         "gold": 1250,
@@ -23148,8 +23289,13 @@ const talent_data: Record<string, Talent> = {
         "conversions": [
             {
                 "source": "Lightning%",
-                "ratio": 1.0,
+                "ratio": 1,
                 "resulting_stat": "Phys%"
+            },
+            {
+                "source": "Lightning%",
+                "ratio": 0.5,
+                "resulting_stat": "MP"
             }
         ]
     },
@@ -23221,7 +23367,9 @@ const talent_data: Record<string, Talent> = {
     },
     "Saint's Touch of the Storm": {
         "category": "hybrid",
-        "PreReq": ["TempestKey"],
+        "PreReq": [
+            "TempestKey"
+        ],
         "Tag": "PrimalTempest",
         "BlockedTag": "PrimalTempest",
         "gold": 1250,
@@ -23246,7 +23394,12 @@ const talent_data: Record<string, Talent> = {
             },
             {
                 "source": "Lightning%",
-                "ratio": -1.0,
+                "ratio": 0.5,
+                "resulting_stat": "Crit DMG%"
+            },
+            {
+                "source": "Lightning%",
+                "ratio": -1,
                 "resulting_stat": "Lightning%"
             }
         ]
@@ -23325,7 +23478,9 @@ const talent_data: Record<string, Talent> = {
     },
     "Mystic Will of the Champion": {
         "category": "hybrid",
-        "PreReq": ["TerraKey"],
+        "PreReq": [
+            "TerraKey"
+        ],
         "Tag": "PrimalTerra",
         "BlockedTag": "PrimalTerra",
         "gold": 1250,
@@ -23341,7 +23496,7 @@ const talent_data: Record<string, Talent> = {
         "description": "+30% MATK, +5% Void Penetration, Conversion 110% Void Penetration to Elevoid",
         "stats": {
             "MATK%": 30,
-            "Void Pen%": 115
+            "Void Pen%": 5
         },
         "conversions": [
             {
@@ -23369,7 +23524,7 @@ const talent_data: Record<string, Talent> = {
         "description": "+30% MATK, +10% Pentoxic, Conversion 200% Restoxic to Eletoxic, 1500% Eletoxic to MATK, -75% Reduction to Restoxic",
         "stats": {
             "MATK%": 30,
-            "Toxic Pen%": 0.1
+            "Toxic Pen%": 10
         },
         "conversions": [
             {
@@ -23445,9 +23600,9 @@ const talent_data: Record<string, Talent> = {
         "description": "+25% ATK, +5% Penvoid, +50% Crit Chance and +20% DMG to Shadow Break Skills, Conversion 20% Elevoid to MP, Conversion 4% Elevoid to Penvoid, 2% Elepierce to Penvoid",
         "stats": {
             "ATK%": 25,
-            "Void Pen%": 0.05,
-            "Shadow Break DMG%": 0.2,
-            "Shadow Break Crit Chance%": 0.5,
+            "Void Pen%": 5,
+            "Shadow Break DMG%": 20,
+            "Shadow Break Crit Chance%": 50,
             "Crit Chance%": 50
         },
         "conversions": [
@@ -23470,7 +23625,9 @@ const talent_data: Record<string, Talent> = {
     },
     "Warlord's Aspect of Reality": {
         "category": "hybrid",
-        "PreReq": ["TerraKey"],
+        "PreReq": [
+            "TerraKey"
+        ],
         "Tag": "PrimalTerra",
         "BlockedTag": "PrimalTerra",
         "gold": 1250,
@@ -23486,14 +23643,10 @@ const talent_data: Record<string, Talent> = {
         "description": "+30% ATK, +15% Global Hammer Damage, +10% Global Blunt Penetration, Conversion 120% Penearth to Penblunt",
         "stats": {
             "ATK%": 30,
-            "Hammer DMG%": 0.15
+            "Hammer DMG%": 15,
+            "Blunt Pen%": 10
         },
         "conversions": [
-            {
-                "source": "Blunt Pen%",
-                "ratio": 0.1,
-                "resulting_stat": "Blunt Pen%"
-            },
             {
                 "source": "Earth Pen%",
                 "ratio": 1.2,
@@ -23503,7 +23656,9 @@ const talent_data: Record<string, Talent> = {
     },
     "Warlord's Fortitude of the Earth": {
         "category": "hybrid",
-        "PreReq": ["TerraKey"],
+        "PreReq": [
+            "TerraKey"
+        ],
         "Tag": "PrimalTerra",
         "BlockedTag": "PrimalTerra",
         "gold": 1250,
@@ -23523,19 +23678,31 @@ const talent_data: Record<string, Talent> = {
         "conversions": [
             {
                 "source": "Earth%",
-                "ratio": 8.0,
+                "ratio": 8,
                 "resulting_stat": "DEF"
             },
             {
-                "source": "Earth Pen%",
-                "ratio": 40.0,
+                "source": "Earth Res%",
+                "ratio": 40,
                 "resulting_stat": "DEF"
+            },
+            {
+                "source": "Earth%",
+                "ratio": 0.75,
+                "resulting_stat": "Phys%"
+            },
+            {
+                "source": "Earth Res%",
+                "ratio": -0.6,
+                "resulting_stat": "Earth Res%"
             }
         ]
     },
     "Paragon's Will of the Champion": {
         "category": "hybrid",
-        "PreReq": ["TerraKey"],
+        "PreReq": [
+            "TerraKey"
+        ],
         "Tag": "PrimalTerra",
         "BlockedTag": "PrimalTerra",
         "gold": 1250,
@@ -23550,10 +23717,10 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% DEF, +5% Penvoid, +50% Crit Chance and +20% DMG to Shadow Break Skills, Conversion 20% DEF to ATK, 20% Elevoid to MP, 3% Elephysical to Penvoid",
         "stats": {
-            "DEF%": 40,
-            "Void Pen%": 0.05,
-            "Shadow Break DMG%": 0.2,
-            "Shadow Break Crit Chance%": 0.5,
+            "DEF%": 20,
+            "Void Pen%": 5,
+            "Shadow Break DMG%": 20,
+            "Shadow Break Crit Chance%": 50,
             "Crit Chance%": 50
         },
         "conversions": [
@@ -23592,7 +23759,7 @@ const talent_data: Record<string, Talent> = {
         "description": "+20% DEF, +15% Threat Bonus, +20% Elevoid, Conversion 20% Elephysical to Elevoid, Reduction -50% Elephys",
         "stats": {
             "DEF%": 20,
-            "Void%": 0.2,
+            "Void%": 20,
             "Threat%": 15
         },
         "conversions": [
@@ -23610,7 +23777,9 @@ const talent_data: Record<string, Talent> = {
     },
     "Paragon's Fortitude of the Earth": {
         "category": "hybrid",
-        "PreReq": ["TerraKey"],
+        "PreReq": [
+            "TerraKey"
+        ],
         "Tag": "PrimalTerra",
         "BlockedTag": "PrimalTerra",
         "gold": 1250,
@@ -23630,13 +23799,13 @@ const talent_data: Record<string, Talent> = {
         },
         "conversions": [
             {
-                "source": "Earth Pen%",
-                "ratio": 75.0,
+                "source": "Earth Res%",
+                "ratio": 75,
                 "resulting_stat": "HP"
             },
             {
                 "source": "Earth%",
-                "ratio": 4.0,
+                "ratio": 4,
                 "resulting_stat": "HP Regen"
             },
             {
@@ -23658,7 +23827,9 @@ const talent_data: Record<string, Talent> = {
     },
     "Saint's Will of the Champion": {
         "category": "hybrid",
-        "PreReq": ["TerraKey"],
+        "PreReq": [
+            "TerraKey"
+        ],
         "Tag": "PrimalTerra",
         "BlockedTag": "PrimalTerra",
         "gold": 1250,
@@ -23681,12 +23852,19 @@ const talent_data: Record<string, Talent> = {
                 "source": "Void%",
                 "ratio": 0.5,
                 "resulting_stat": "MP"
+            },
+            {
+                "source": "Void%",
+                "ratio": 0.9,
+                "resulting_stat": "Divine%"
             }
         ]
     },
     "Saint's Aspect of Reality": {
         "category": "hybrid",
-        "PreReq": ["TerraKey"],
+        "PreReq": [
+            "TerraKey"
+        ],
         "Tag": "PrimalTerra",
         "BlockedTag": "PrimalTerra",
         "gold": 1250,
@@ -23703,9 +23881,8 @@ const talent_data: Record<string, Talent> = {
         "stats": {
             "HEAL%": 20,
             "Global HEAL%": 20,
-            "Heal Effect%": 0.1,
-            "DMG Res%": -0.85,
-            "Dmg%": -85
+            "Heal Effect%": 10,
+            "DMG Res%": -85
         },
         "conversions": []
     },
@@ -23758,7 +23935,9 @@ const talent_data: Record<string, Talent> = {
     },
     "Mystic Primal Soul": {
         "category": "hybrid",
-        "PreReq": ["PrimalEssence"],
+        "PreReq": [
+            "PrimalEssence"
+        ],
         "Tag": "PrimalSoul",
         "BlockedTag": "PrimalSoul",
         "gold": 1250,
@@ -23774,26 +23953,23 @@ const talent_data: Record<string, Talent> = {
         "description": "+25% MATK, +5% Elemental and Void Penetration, +10% Global Elevoid, Conversion 100% Elevoid to Elemental Damage",
         "stats": {
             "MATK%": 25,
-            "Elemental Pen%": 0.05,
-            "Void Pen%": 0.05,
+            "Elemental Pen%": 5,
+            "Void Pen%": 5,
             "Void%": 10
         },
         "conversions": [
             {
                 "source": "Void%",
-                "ratio": 0.1,
-                "resulting_stat": "Void%"
-            },
-            {
-                "source": "Void%",
-                "ratio": 1.0,
+                "ratio": 1,
                 "resulting_stat": "Elemental%"
             }
         ]
     },
     "Mystic Flow of Yinshan": {
         "category": "hybrid",
-        "PreReq": ["PrimalEssence"],
+        "PreReq": [
+            "PrimalEssence"
+        ],
         "Tag": "PrimalSoul",
         "BlockedTag": "PrimalSoul",
         "gold": 1250,
@@ -23809,7 +23985,7 @@ const talent_data: Record<string, Talent> = {
         "description": "+25% MATK, +10% Pennegative, Conversion 20% Elenegative to Crit Damage, 15% Crit Damage to Elenegative",
         "stats": {
             "MATK%": 25,
-            "Neg Pen%": 0.1,
+            "Neg Pen%": 10,
             "Crit DMG%": 15
         },
         "conversions": [
@@ -23817,12 +23993,19 @@ const talent_data: Record<string, Talent> = {
                 "source": "Neg%",
                 "ratio": 0.2,
                 "resulting_stat": "Crit DMG%"
+            },
+            {
+                "source": "Crit DMG%",
+                "ratio": 0.15,
+                "resulting_stat": "Neg%"
             }
         ]
     },
     "Mystic Touch of the Yangson": {
         "category": "hybrid",
-        "PreReq": ["PrimalEssence"],
+        "PreReq": [
+            "PrimalEssence"
+        ],
         "Tag": "PrimalSoul",
         "BlockedTag": "PrimalSoul",
         "gold": 1250,
@@ -23838,9 +24021,8 @@ const talent_data: Record<string, Talent> = {
         "description": "+35% MATK, +5% Penholy, +10% Eleholy, Conversion 35% ATK Multiplier to Eleholy",
         "stats": {
             "MATK%": 35,
-            "Holy%": 0.1,
-            "Holy Pen%": 0.05,
-            "ATK%": 35
+            "Holy%": 10,
+            "Holy Pen%": 5
         },
         "conversions": [
             {
@@ -23852,7 +24034,9 @@ const talent_data: Record<string, Talent> = {
     },
     "Warlord's Primal Soul": {
         "category": "hybrid",
-        "PreReq": ["PrimalEssence"],
+        "PreReq": [
+            "PrimalEssence"
+        ],
         "Tag": "PrimalSoul",
         "BlockedTag": "PrimalSoul",
         "gold": 1250,
@@ -23868,7 +24052,8 @@ const talent_data: Record<string, Talent> = {
         "description": "+25% ATK, +5% Physical and Void Penetration, Conversion 20% Elevoid to Physical Damage",
         "stats": {
             "ATK%": 25,
-            "Void Pen%": 0.05
+            "Phys Pen%": 5,
+            "Void Pen%": 5
         },
         "conversions": [
             {
@@ -23896,7 +24081,7 @@ const talent_data: Record<string, Talent> = {
         "description": "+30% ATK, +15% Physical Damage, Conversion 120% Pennegative to Penphysical, 100% Elenegative to Crit Damage",
         "stats": {
             "ATK%": 30,
-            "Phys%": 0.15
+            "Phys%": 15
         },
         "conversions": [
             {
@@ -23929,7 +24114,7 @@ const talent_data: Record<string, Talent> = {
         "description": "+40% ATK, +15% Physical Damage, Conversion 140% Penholy to Penphysical, 15% Eleholy to MP, 4500% Eleholy to ATK",
         "stats": {
             "ATK%": 40,
-            "Phys%": 0.15
+            "Phys%": 15
         },
         "conversions": [
             {
@@ -23951,7 +24136,9 @@ const talent_data: Record<string, Talent> = {
     },
     "Paragon's Primal Soul": {
         "category": "hybrid",
-        "PreReq": ["PrimalEssence"],
+        "PreReq": [
+            "PrimalEssence"
+        ],
         "Tag": "PrimalSoul",
         "BlockedTag": "PrimalSoul",
         "gold": 1250,
@@ -23973,12 +24160,24 @@ const talent_data: Record<string, Talent> = {
                 "source": "Void Res%",
                 "ratio": 1.75,
                 "resulting_stat": "Crit DMG%"
+            },
+            {
+                "source": "Void Res%",
+                "ratio": 100,
+                "resulting_stat": "HP"
+            },
+            {
+                "source": "Void Res%",
+                "ratio": -0.75,
+                "resulting_stat": "Void Res%"
             }
         ]
     },
     "Paragon's Flow of Yinshan": {
         "category": "hybrid",
-        "PreReq": ["PrimalEssence"],
+        "PreReq": [
+            "PrimalEssence"
+        ],
         "Tag": "PrimalSoul",
         "BlockedTag": "PrimalSoul",
         "gold": 1250,
@@ -23994,7 +24193,7 @@ const talent_data: Record<string, Talent> = {
         "description": "+20% DEF, +20% Threat Bonus, +20% Elevoid, Conversion 50% Resnegative to Elevoid, Reduction -25% to Resnegative and Elephys",
         "stats": {
             "DEF%": 20,
-            "Void%": 0.2,
+            "Void%": 20,
             "Threat%": 20
         },
         "conversions": [
@@ -24002,12 +24201,24 @@ const talent_data: Record<string, Talent> = {
                 "source": "Neg Res%",
                 "ratio": 0.5,
                 "resulting_stat": "Void%"
+            },
+            {
+                "source": "Neg Res%",
+                "ratio": -0.25,
+                "resulting_stat": "Neg Res%"
+            },
+            {
+                "source": "Phys%",
+                "ratio": -0.25,
+                "resulting_stat": "Phys%"
             }
         ]
     },
     "Paragon's Touch of the Yangson": {
         "category": "hybrid",
-        "PreReq": ["PrimalEssence"],
+        "PreReq": [
+            "PrimalEssence"
+        ],
         "Tag": "PrimalSoul",
         "BlockedTag": "PrimalSoul",
         "gold": 1250,
@@ -24028,14 +24239,26 @@ const talent_data: Record<string, Talent> = {
         "conversions": [
             {
                 "source": "Holy Res%",
-                "ratio": 15.0,
-                "resulting_stat": "HP"
+                "ratio": 15,
+                "resulting_stat": "HP Regen"
+            },
+            {
+                "source": "Holy Res%",
+                "ratio": 100,
+                "resulting_stat": "HEAL"
+            },
+            {
+                "source": "Holy Res%",
+                "ratio": -0.5,
+                "resulting_stat": "Holy Res%"
             }
         ]
     },
     "Saint's Primal Soul": {
         "category": "hybrid",
-        "PreReq": ["PrimalEssence"],
+        "PreReq": [
+            "PrimalEssence"
+        ],
         "Tag": "PrimalSoul",
         "BlockedTag": "PrimalSoul",
         "gold": 1250,
@@ -24058,6 +24281,16 @@ const talent_data: Record<string, Talent> = {
                 "source": "MP",
                 "ratio": 0.4,
                 "resulting_stat": "Void%"
+            },
+            {
+                "source": "MP",
+                "ratio": 0.03,
+                "resulting_stat": "Void Pen%"
+            },
+            {
+                "source": "MP",
+                "ratio": 0.2,
+                "resulting_stat": "MP"
             }
         ]
     },
@@ -24079,7 +24312,7 @@ const talent_data: Record<string, Talent> = {
         "description": "+10% Heal, +10% Pennegative, Conversion 15% Elenegative to Crit Damage",
         "stats": {
             "HEAL%": 10,
-            "Neg Pen%": 0.1
+            "Neg Pen%": 10
         },
         "conversions": [
             {
@@ -24091,7 +24324,9 @@ const talent_data: Record<string, Talent> = {
     },
     "Saint's Touch of the Yangson": {
         "category": "hybrid",
-        "PreReq": ["PrimalEssence"],
+        "PreReq": [
+            "PrimalEssence"
+        ],
         "Tag": "PrimalSoul",
         "BlockedTag": "PrimalSoul",
         "gold": 1250,
@@ -24107,10 +24342,9 @@ const talent_data: Record<string, Talent> = {
         "description": "+15% Heal,  -10% Global Heal Effect, +20% Eleholy, Conversion 15% Max HP to Heal, 1000% Eleholy to Heal",
         "stats": {
             "HEAL%": 15,
-            "Holy%": 0.2,
+            "Holy%": 20,
             "Heal Effect%": -10,
-            "Global HEAL%": -10,
-            "HP%": 15
+            "Global HEAL%": -10
         },
         "conversions": [
             {
@@ -24120,7 +24354,7 @@ const talent_data: Record<string, Talent> = {
             },
             {
                 "source": "Holy%",
-                "ratio": 10.0,
+                "ratio": 10,
                 "resulting_stat": "HEAL"
             }
         ]
