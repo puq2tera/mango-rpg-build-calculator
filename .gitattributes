@@ -1,0 +1,2 @@
+# default: store LF in repo
+* text=auto eol=lf
