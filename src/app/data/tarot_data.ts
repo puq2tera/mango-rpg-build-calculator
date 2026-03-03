@@ -160,6 +160,9 @@ const tarot_data: Record<string, Tarot> = {
         stat_bonus: "Toxic Pen%",
         stat_base: 5,
         stat_scale: 1,
+        stats: {
+            "Toxic DOT%": 58
+        },
         conversions: [
             { source: "Toxic%", ratio: 0.5, resulting_stat: "Toxic%" },
             { source: "MP", ratio: -0.03, resulting_stat: "MP" }
@@ -181,14 +184,41 @@ const tarot_data: Record<string, Tarot> = {
             { source: "Void Pen%", ratio: 0.2, resulting_stat: "Void Pen%" }
         ]
     },
-    "First Strike Kill Samurai": {
+    "First Strike Kill Samurai (75%)": {
         tier: 5,
         is_active: true,
         skill_name: "Bright King Council",
         description: "[ ⧖ ] Increase self Elesword by 75% for 2 hits, by 100% for the next 2, and 150% for the last 1.",
         stat_bonus: "Slash Pen%",
         stat_base: 5,
-        stat_scale: 1
+        stat_scale: 1,
+        conversions: [
+            { source: "Sword DMG%", ratio: 0.75, resulting_stat: "Sword DMG%" }
+        ]
+    },
+    "First Strike Kill Samurai (100%)": {
+        tier: 5,
+        is_active: true,
+        skill_name: "Bright King Council",
+        description: "[ ⧖ ] Increase self Elesword by 75% for 2 hits, by 100% for the next 2, and 150% for the last 1.",
+        stat_bonus: "Slash Pen%",
+        stat_base: 5,
+        stat_scale: 1,
+        conversions: [
+            { source: "Sword DMG%", ratio: 1, resulting_stat: "Sword DMG%" },
+        ]
+    },
+    "First Strike Kill Samurai (150%)": {
+        tier: 5,
+        is_active: true,
+        skill_name: "Bright King Council",
+        description: "[ ⧖ ] Increase self Elesword by 75% for 2 hits, by 100% for the next 2, and 150% for the last 1.",
+        stat_bonus: "Slash Pen%",
+        stat_base: 5,
+        stat_scale: 1,
+        conversions: [
+            { source: "Sword DMG%", ratio: 1.5, resulting_stat: "Sword DMG%" }
+        ]
     },
     "Winged King of Annihilation": {
         tier: 5,
@@ -424,6 +454,9 @@ const tarot_data: Record<string, Tarot> = {
         stat_bonus: "Fire Pen%",
         stat_base: 5,
         stat_scale: 1,
+        stats: {
+            "Fire DOT%": 15
+        },
         conversions: [
             { source: "Fire%", ratio: 0.5, resulting_stat: "Fire%" },
             { source: "Fire Pen%", ratio: 1, resulting_stat: "Fire Pen%" }
@@ -489,6 +522,9 @@ const tarot_data: Record<string, Tarot> = {
         stat_bonus: "Toxic Pen%",
         stat_base: 5,
         stat_scale: 1,
+        stats: {
+            "Toxic DOT%": 20
+        },
         conversions: [
             { source: "Toxic%", ratio: 0.25, resulting_stat: "Toxic%" },
             { source: "Toxic%", ratio: 0.55, resulting_stat: "Toxic%" }
@@ -571,6 +607,9 @@ const tarot_data: Record<string, Tarot> = {
         stat_bonus: "Pierce Pen%",
         stat_base: 5,
         stat_scale: 1,
+        stats: {
+            "Pierce DOT%": 10
+        },
         conversions: [
             { source: "Spear DMG%", ratio: 0.35, resulting_stat: "Spear DMG%" },
             { source: "Spear DMG%", ratio: 0.4, resulting_stat: "Spear DMG%" },
@@ -632,7 +671,29 @@ const tarot_data: Record<string, Tarot> = {
         description: "Increase self Power by 115% of your AVG MATK+ATK and gain +15 PHYS+ELE xPen for 2 Hits. Activate (Martial Ward Stance) after. Increase self All Res by 2% of your AVG ATK+MATK Multipliers and decrease self power by 25% of your AVG MATK+ATK for 2 hits. Loop.",
         stat_bonus: "Crit DMG%",
         stat_base: 10,
-        stat_scale: 2
+        stat_scale: 2,
+        stats: {
+            "Phys xPen%": 15,
+            "Elemental xPen%": 15
+        },
+        conversions: [
+            { source: "ATK", ratio: 0.575, resulting_stat: "POWER" },
+            { source: "MATK", ratio: 0.575, resulting_stat: "POWER" },
+        ]
+    },
+    "The Ill Mannered Spirit (Martial Ward Stance)": {
+        tier: 5,
+        skill_name: "Arcane Assault Stance",
+        description: "Increase self Power by 115% of your AVG MATK+ATK and gain +15 PHYS+ELE xPen for 2 Hits. Activate (Martial Ward Stance) after. Increase self All Res by 2% of your AVG ATK+MATK Multipliers and decrease self power by 25% of your AVG MATK+ATK for 2 hits. Loop.",
+        stat_bonus: "Crit DMG%",
+        stat_base: 10,
+        stat_scale: 2,
+        conversions: [
+            { source: "ATK%", ratio: 0.01, resulting_stat: "All Res%" },
+            { source: "MATK%", ratio: 0.01, resulting_stat: "All Res%" },
+            { source: "ATK", ratio: -0.125, resulting_stat: "POWER" },
+            { source: "MATK", ratio: -0.125, resulting_stat: "POWER" }
+        ]
     },
     "Imaginary Nemesis": {
         tier: 5,
@@ -707,6 +768,9 @@ const tarot_data: Record<string, Tarot> = {
         stat_bonus: "Fire%",
         stat_base: 5,
         stat_scale: 1,
+        stats: {
+            "Fire DOT%": 4
+        },
         conversions: [
             { source: "Fire%", ratio: 0.25, resulting_stat: "Fire%" }
         ]
@@ -827,7 +891,13 @@ const tarot_data: Record<string, Tarot> = {
         description: "Gain +4% Toxic DMG done as DOT. After 12 hits, increase Toxic DMG by 33%.",
         stat_bonus: "Toxic%",
         stat_base: 5,
-        stat_scale: 1
+        stat_scale: 1,
+        stats: {
+            "Toxic DOT%": 4
+        },
+        conversions: [
+            { source: "Toxic%", ratio: 0.33, resulting_stat: "Toxic%" }
+        ]
     },
     "Insectoid Mistress": {
         tier: 4,
@@ -835,7 +905,10 @@ const tarot_data: Record<string, Tarot> = {
         description: "Increase self Toxic Pen by 125% for the first hit.",
         stat_bonus: "Toxic%",
         stat_base: 5,
-        stat_scale: 1
+        stat_scale: 1,
+        conversions: [
+            { source: "Toxic Pen%", ratio: 1.25, resulting_stat: "Toxic Pen%" }
+        ]
     },
     "Infinite Magic": {
         tier: 4,
@@ -1222,7 +1295,11 @@ const tarot_data: Record<string, Tarot> = {
         description: "Increase self Healpower by 20% for the first 10 hits, then decrease by 10% for the rest of the battle.",
         stat_bonus: "HEAL%",
         stat_base: 8,
-        stat_scale: 1
+        stat_scale: 1,
+        conversions: [
+            { source: "HEAL", ratio: 0.2, resulting_stat: "HEAL" },
+            { source: "HEAL", ratio: -0.1, resulting_stat: "HEAL" }
+        ]
     },
     "Perverted Healer": {
         tier: 3,
@@ -1237,7 +1314,7 @@ const tarot_data: Record<string, Tarot> = {
         },
         conversions: [
             { source: "HEAL", ratio: 0.05, resulting_stat: "HEAL" }
-        }
+        ]
     },
     "Quagoa Warrior": {
         tier: 3,
