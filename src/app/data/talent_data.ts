@@ -139,7 +139,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+5% Pierce Damage",
         "stats": {
-            "Pierce%": 0.05
+            "Pierce%": 5
         },
         "conversions": []
     },
@@ -160,7 +160,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+5% Pierce Damage",
         "stats": {
-            "Pierce%": 0.05
+            "Pierce%": 5
         },
         "conversions": []
     },
@@ -181,7 +181,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10% Pierce Damage",
         "stats": {
-            "Pierce%": 0.1
+            "Pierce%": 10
         },
         "conversions": []
     },
@@ -202,7 +202,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+5% Blunt Damage",
         "stats": {
-            "Blunt%": 0.05
+            "Blunt%": 5
         },
         "conversions": []
     },
@@ -223,7 +223,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+5% Blunt Damage",
         "stats": {
-            "Blunt%": 0.05
+            "Blunt%": 5
         },
         "conversions": []
     },
@@ -244,7 +244,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10% Blunt Damage",
         "stats": {
-            "Blunt%": 0.1
+            "Blunt%": 10
         },
         "conversions": []
     },
@@ -265,7 +265,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+4% ATK",
         "stats": {
-            "ATK%": 0.04
+            "ATK%": 4
         },
         "conversions": []
     },
@@ -286,7 +286,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+4% ATK",
         "stats": {
-            "ATK%": 0.04
+            "ATK%": 4
         },
         "conversions": []
     },
@@ -307,7 +307,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+4% ATK, +20 ATK",
         "stats": {
-            "ATK%": 0.04,
+            "ATK%": 4,
             "ATK": 20
         },
         "conversions": []
@@ -329,7 +329,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+4% DEF",
         "stats": {
-            "DEF%": 0.04
+            "DEF%": 4
         },
         "conversions": []
     },
@@ -350,7 +350,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+4% DEF",
         "stats": {
-            "DEF%": 0.04
+            "DEF%": 4
         },
         "conversions": []
     },
@@ -371,7 +371,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+8% DEF",
         "stats": {
-            "DEF%": 0.08
+            "DEF%": 8
         },
         "conversions": []
     },
@@ -433,7 +433,9 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+12 DEF",
-        "stats": {},
+        "stats": {
+            "DEF": 12
+        },
         "conversions": []
     },
     "Frontliner 1": {
@@ -453,8 +455,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+4% DEF, +1% ATK",
         "stats": {
-            "DEF%": 0.04,
-            "ATK%": 0.01
+            "DEF%": 4,
+            "ATK%": 1
         },
         "conversions": []
     },
@@ -475,8 +477,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+4% DEF, +1% ATK",
         "stats": {
-            "DEF%": 0.04,
-            "ATK%": 0.01
+            "DEF%": 4,
+            "ATK%": 1
         },
         "conversions": []
     },
@@ -497,8 +499,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+8% DEF, +4% ATK",
         "stats": {
-            "DEF%": 0.08,
-            "ATK%": 0.04
+            "DEF%": 8,
+            "ATK%": 4
         },
         "conversions": []
     },
@@ -519,7 +521,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+5% DEF",
         "stats": {
-            "DEF%": 0.05
+            "DEF%": 5
         },
         "conversions": []
     },
@@ -540,7 +542,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+5% DEF",
         "stats": {
-            "DEF%": 0.05
+            "DEF%": 5
         },
         "conversions": []
     },
@@ -561,7 +563,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+8% DEF, +8 DEF",
         "stats": {
-            "DEF%": 0.08
+            "DEF%": 8,
+            "DEF": 8
         },
         "conversions": []
     },
@@ -581,7 +584,10 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+5 DEF, +3 ATK",
-        "stats": {},
+        "stats": {
+            "ATK": 3,
+            "DEF": 5
+        },
         "conversions": []
     },
     "Tank Body Augment 2": {
@@ -600,7 +606,10 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+8 DEF, +5 ATK",
-        "stats": {},
+        "stats": {
+            "ATK": 5,
+            "DEF": 8
+        },
         "conversions": []
     },
     "Tank Body Training": {
@@ -619,7 +628,10 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+12 DEF, +8 ATK",
-        "stats": {},
+        "stats": {
+            "ATK": 8,
+            "DEF": 12
+        },
         "conversions": []
     },
     "Protector of War": {
@@ -662,7 +674,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+8% DEF",
         "stats": {
-            "DEF%": 0.08
+            "DEF%": 8
         },
         "conversions": []
     },
@@ -683,7 +695,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+6% DEF",
         "stats": {
-            "DEF%": 0.06
+            "DEF%": 6
         },
         "conversions": []
     },
@@ -704,7 +716,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+6% DEF",
         "stats": {
-            "DEF%": 0.06
+            "DEF%": 6
         },
         "conversions": []
     },
@@ -748,9 +760,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10% Resist to Lightning/Wind, +6% DEF",
         "stats": {
-            "DEF%": 0.06,
-            "Lightning Res%": 0.1,
-            "Wind Res%": 0.1
+            "DEF%": 6
         },
         "conversions": []
     },
@@ -771,7 +781,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+6% DEF",
         "stats": {
-            "DEF%": 0.06
+            "DEF%": 6
         },
         "conversions": []
     },
@@ -792,7 +802,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+6% DEF",
         "stats": {
-            "DEF%": 0.06
+            "DEF%": 6
         },
         "conversions": []
     },
@@ -835,8 +845,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10% Resist to Toxic, +6% DEF",
         "stats": {
-            "DEF%": 0.06,
-            "Toxic Res%": 0.1
+            "DEF%": 6
         },
         "conversions": []
     },
@@ -857,7 +866,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+6% DEF",
         "stats": {
-            "DEF%": 0.06
+            "DEF%": 6
         },
         "conversions": []
     },
@@ -878,7 +887,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+6% DEF",
         "stats": {
-            "DEF%": 0.06
+            "DEF%": 6
         },
         "conversions": []
     },
@@ -899,7 +908,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+5% Threat Gained",
         "stats": {
-            "Threat%": 0.05
+            "Threat%": 5
         },
         "conversions": []
     },
@@ -920,7 +929,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+5% Threat Gained",
         "stats": {
-            "Threat%": 0.05
+            "Threat%": 5
         },
         "conversions": []
     },
@@ -941,7 +950,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10% Threat Gained",
         "stats": {
-            "Threat%": 0.1
+            "Threat%": 10
         },
         "conversions": []
     },
@@ -961,7 +970,10 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+8 DEF, +6 ATK",
-        "stats": {},
+        "stats": {
+            "ATK": 6,
+            "DEF": 8
+        },
         "conversions": []
     },
     "Tank Adv Training 2": {
@@ -980,7 +992,10 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+12 DEF, +9 ATK",
-        "stats": {},
+        "stats": {
+            "ATK": 9,
+            "DEF": 12
+        },
         "conversions": []
     },
     "Tank Adv Body": {
@@ -999,7 +1014,10 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+16 DEF, +12 ATK",
-        "stats": {},
+        "stats": {
+            "ATK": 12,
+            "DEF": 16
+        },
         "conversions": []
     },
     "Shield Lord": {
@@ -1019,7 +1037,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+18% DEF",
         "stats": {
-            "DEF%": 0.18
+            "DEF%": 18
         },
         "conversions": []
     },
@@ -1040,7 +1058,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+6% DEF",
         "stats": {
-            "DEF%": 0.06
+            "DEF%": 6
         },
         "conversions": []
     },
@@ -1061,7 +1079,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+6% DEF",
         "stats": {
-            "DEF%": 0.06
+            "DEF%": 6
         },
         "conversions": []
     },
@@ -1082,7 +1100,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+6% DEF",
         "stats": {
-            "DEF%": 0.06
+            "DEF%": 6
         },
         "conversions": []
     },
@@ -1103,8 +1121,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10% DEF, +10% Heal",
         "stats": {
-            "DEF%": 0.1,
-            "HEAL%": 0.1
+            "DEF%": 10,
+            "HEAL%": 10
         },
         "conversions": []
     },
@@ -1125,8 +1143,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+4% DEF, +4% Heal",
         "stats": {
-            "DEF%": 0.04,
-            "HEAL%": 0.04
+            "DEF%": 4,
+            "HEAL%": 4
         },
         "conversions": []
     },
@@ -1147,8 +1165,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+4% DEF, +4% Heal",
         "stats": {
-            "DEF%": 0.04,
-            "HEAL%": 0.04
+            "DEF%": 4,
+            "HEAL%": 4
         },
         "conversions": []
     },
@@ -1169,8 +1187,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+4% DEF, +4% Heal",
         "stats": {
-            "DEF%": 0.04,
-            "HEAL%": 0.04
+            "DEF%": 4,
+            "HEAL%": 4
         },
         "conversions": []
     },
@@ -1191,9 +1209,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10% DEF, +10% ATK, +10% MATK",
         "stats": {
-            "DEF%": 0.1,
-            "ATK%": 0.1,
-            "MATK%": 0.1
+            "DEF%": 10,
+            "ATK%": 10,
+            "MATK%": 10
         },
         "conversions": []
     },
@@ -1214,9 +1232,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+4% Def, +4% ATK, +4% MATK",
         "stats": {
-            "DEF%": 0.04,
-            "ATK%": 0.04,
-            "MATK%": 0.04
+            "DEF%": 4,
+            "ATK%": 4,
+            "MATK%": 4
         },
         "conversions": []
     },
@@ -1237,9 +1255,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+4% Def, +4% ATK, +4% MATK",
         "stats": {
-            "DEF%": 0.04,
-            "ATK%": 0.04,
-            "MATK%": 0.04
+            "DEF%": 4,
+            "ATK%": 4,
+            "MATK%": 4
         },
         "conversions": []
     },
@@ -1260,9 +1278,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+4% Def, +4% ATK, +4% MATK",
         "stats": {
-            "DEF%": 0.04,
-            "ATK%": 0.04,
-            "MATK%": 0.04
+            "DEF%": 4,
+            "ATK%": 4,
+            "MATK%": 4
         },
         "conversions": []
     },
@@ -1303,7 +1321,9 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+10 MP",
-        "stats": {},
+        "stats": {
+            "MP": 10
+        },
         "conversions": []
     },
     "Inner Will 3": {
@@ -1322,7 +1342,9 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+10 MP",
-        "stats": {},
+        "stats": {
+            "MP": 10
+        },
         "conversions": []
     },
     "Hero's Will 1": {
@@ -1342,7 +1364,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+5% DEF, +50 HP",
         "stats": {
-            "DEF%": 0.05
+            "DEF%": 5,
+            "HP": 50
         },
         "conversions": []
     },
@@ -1363,7 +1386,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+5% DEF, +50 HP",
         "stats": {
-            "DEF%": 5
+            "DEF%": 5,
+            "HP": 50
         },
         "conversions": []
     },
@@ -1384,7 +1408,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10% DEF, +100 HP",
         "stats": {
-            "DEF%": 10
+            "DEF%": 10,
+            "HP": 100
         },
         "conversions": []
     },
@@ -1447,8 +1472,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+5% Crit Chance, +20% Crit Damage",
         "stats": {
-            "Crit Chance%": 0.05,
-            "Crit DMG%": 0.2
+            "Crit Chance%": 5,
+            "Crit DMG%": 20
         },
         "conversions": []
     },
@@ -1469,7 +1494,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+5% Threat Gained",
         "stats": {
-            "Threat%": 0.05
+            "Threat%": 5
         },
         "conversions": []
     },
@@ -1490,7 +1515,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+5% Threat Gained",
         "stats": {
-            "Threat%": 0.05
+            "Threat%": 5
         },
         "conversions": []
     },
@@ -1511,7 +1536,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10% Threat Gained",
         "stats": {
-            "Threat%": 0.1
+            "Threat%": 10
         },
         "conversions": []
     },
@@ -1531,7 +1556,10 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+12 DEF, +9 ATK",
-        "stats": {},
+        "stats": {
+            "ATK": 9,
+            "DEF": 12
+        },
         "conversions": []
     },
     "Tank Hero Training 2": {
@@ -1550,7 +1578,10 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+15 DEF, +12 ATK",
-        "stats": {},
+        "stats": {
+            "ATK": 12,
+            "DEF": 15
+        },
         "conversions": []
     },
     "Tank Hero Body": {
@@ -1570,7 +1601,10 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20 DEF, +15 ATK, +1.5% HP Regen, +25% Crit Damage",
         "stats": {
-            "Crit DMG%": 0.25
+            "Crit DMG%": 25,
+            "ATK": 15,
+            "DEF": 20,
+            "HP Regen%": 1.5
         },
         "conversions": []
     },
@@ -1591,7 +1625,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+25% DEF",
         "stats": {
-            "DEF%": 0.25
+            "DEF%": 25
         },
         "conversions": []
     },
@@ -1612,7 +1646,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% Slash Resist",
         "stats": {
-            "Slash Res%": 0.2
+            "Slash Res%": 20
         },
         "conversions": []
     },
@@ -1633,7 +1667,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% Pierce Resist",
         "stats": {
-            "Pierce Res%": 0.2
+            "Pierce Res%": 20
         },
         "conversions": []
     },
@@ -1654,7 +1688,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% Blunt Resist",
         "stats": {
-            "Blunt Res%": 0.2
+            "Blunt Res%": 20
         },
         "conversions": []
     },
@@ -1675,8 +1709,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15% DEF, +10% Heal",
         "stats": {
-            "DEF%": 0.15,
-            "HEAL%": 0.1
+            "DEF%": 15,
+            "HEAL%": 10
         },
         "conversions": []
     },
@@ -1697,7 +1731,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% Fire Resist",
         "stats": {
-            "Fire Res%": 0.2
+            "Fire Res%": 20
         },
         "conversions": []
     },
@@ -1718,7 +1752,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% Water Resist",
         "stats": {
-            "Water Res%": 0.2
+            "Water Res%": 20
         },
         "conversions": []
     },
@@ -1739,7 +1773,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% Earth Resist",
         "stats": {
-            "Earth Res%": 0.2
+            "Earth Res%": 20
         },
         "conversions": []
     },
@@ -1760,7 +1794,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% Lightning Resist",
         "stats": {
-            "Lightning Res%": 0.2
+            "Lightning Res%": 20
         },
         "conversions": []
     },
@@ -1781,7 +1815,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% Wind Resist",
         "stats": {
-            "Wind Res%": 0.2
+            "Wind Res%": 20
         },
         "conversions": []
     },
@@ -1802,9 +1836,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15% DEF, +10% ATK, +10% MATK",
         "stats": {
-            "DEF%": 0.15,
-            "ATK%": 0.1,
-            "MATK%": 0.1
+            "DEF%": 15,
+            "ATK%": 10,
+            "MATK%": 10
         },
         "conversions": []
     },
@@ -1825,8 +1859,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+8% DEF, +20% ATK",
         "stats": {
-            "DEF%": 0.08,
-            "ATK%": 0.2
+            "DEF%": 8,
+            "ATK%": 20
         },
         "conversions": []
     },
@@ -1847,8 +1881,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+8% DEF, +20% MATK",
         "stats": {
-            "DEF%": 0.08,
-            "MATK%": 0.2
+            "DEF%": 8,
+            "MATK%": 20
         },
         "conversions": []
     },
@@ -1869,9 +1903,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+8% DEF, +15% ATK, +15% MATK",
         "stats": {
-            "DEF%": 0.08,
-            "ATK%": 0.15,
-            "MATK%": 0.15
+            "DEF%": 8,
+            "ATK%": 15,
+            "MATK%": 15
         },
         "conversions": []
     },
@@ -1892,7 +1926,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10 MP, +3% DEF",
         "stats": {
-            "DEF%": 0.03
+            "DEF%": 3,
+            "MP": 10
         },
         "conversions": []
     },
@@ -1913,7 +1948,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10 MP, +3% DEF",
         "stats": {
-            "DEF%": 0.03
+            "DEF%": 3,
+            "MP": 10
         },
         "conversions": []
     },
@@ -1934,7 +1970,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10 MP, +6% DEF, +750 HP",
         "stats": {
-            "DEF%": 0.06
+            "DEF%": 6,
+            "HP": 750,
+            "MP": 10
         },
         "conversions": []
     },
@@ -1955,7 +1993,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+5% DEF, +200 HP",
         "stats": {
-            "DEF%": 0.05
+            "DEF%": 5,
+            "HP": 200
         },
         "conversions": []
     },
@@ -1976,7 +2015,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+5% DEF, +200 HP",
         "stats": {
-            "DEF%": 0.05
+            "DEF%": 5,
+            "HP": 200
         },
         "conversions": []
     },
@@ -1997,7 +2037,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10% DEF, +500 HP",
         "stats": {
-            "DEF%": 0.1
+            "DEF%": 10,
+            "HP": 500
         },
         "conversions": []
     },
@@ -2018,7 +2059,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+6% Crit Chance",
         "stats": {
-            "Crit Chance%": 0.06
+            "Crit Chance%": 6
         },
         "conversions": []
     },
@@ -2039,7 +2080,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+6% Crit Chance",
         "stats": {
-            "Crit Chance%": 0.06
+            "Crit Chance%": 6
         },
         "conversions": []
     },
@@ -2060,8 +2101,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+6% Crit Chance, +40% Crit Damage",
         "stats": {
-            "Crit Chance%": 0.06,
-            "Crit DMG%": 0.4
+            "Crit Chance%": 6,
+            "Crit DMG%": 40
         },
         "conversions": []
     },
@@ -2082,7 +2123,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+5% Threat Gained",
         "stats": {
-            "Threat%": 0.05
+            "Threat%": 5
         },
         "conversions": []
     },
@@ -2103,7 +2144,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+5% Threat Gained",
         "stats": {
-            "Threat%": 0.05
+            "Threat%": 5
         },
         "conversions": []
     },
@@ -2124,7 +2165,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10% Threat Gained",
         "stats": {
-            "Threat%": 0.1
+            "Threat%": 10
         },
         "conversions": []
     },
@@ -2145,7 +2186,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+25% DEF, +500 HP",
         "stats": {
-            "DEF%": 0.25
+            "DEF%": 25,
+            "HP": 500
         },
         "conversions": []
     },
@@ -2166,7 +2208,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+12% DEF, +500 HP",
         "stats": {
-            "DEF%": 0.12
+            "DEF%": 12,
+            "HP": 500
         },
         "conversions": []
     },
@@ -2210,7 +2253,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% DEF",
         "stats": {
-            "DEF%": 0.2
+            "DEF%": 20
         },
         "conversions": []
     },
@@ -2231,9 +2274,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15% DEF, +15% ATK, +15% MATK",
         "stats": {
-            "DEF%": 0.15,
-            "ATK%": 0.15,
-            "MATK%": 0.15
+            "DEF%": 15,
+            "ATK%": 15,
+            "MATK%": 15
         },
         "conversions": []
     },
@@ -2254,8 +2297,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+12% DEF, +20% ATK",
         "stats": {
-            "DEF%": 0.12,
-            "ATK%": 0.2
+            "DEF%": 12,
+            "ATK%": 20
         },
         "conversions": []
     },
@@ -2276,8 +2319,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+12% DEF, +20% MATK",
         "stats": {
-            "DEF%": 0.12,
-            "MATK%": 0.2
+            "DEF%": 12,
+            "MATK%": 20
         },
         "conversions": []
     },
@@ -2298,9 +2341,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+12% DEF, +4% Crit Chance, +20% Crit Damage",
         "stats": {
-            "Crit Chance%": 0.04,
-            "Crit DMG%": 0.2,
-            "DEF%": 0.12
+            "Crit Chance%": 4,
+            "Crit DMG%": 20,
+            "DEF%": 12
         },
         "conversions": []
     },
@@ -2321,7 +2364,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% DEF, +10 MP, +15% Heal",
         "stats": {
-            "DEF%": 0.2
+            "DEF%": 20,
+            "HEAL%": 15,
+            "MP": 10
         },
         "conversions": []
     },
@@ -2342,7 +2387,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+12% DEF, +400 HP",
         "stats": {
-            "DEF%": 0.12
+            "DEF%": 12,
+            "HP": 400
         },
         "conversions": []
     },
@@ -2363,7 +2409,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+12% DEF, +10 MP",
         "stats": {
-            "DEF%": 0.12
+            "DEF%": 12,
+            "MP": 10
         },
         "conversions": []
     },
@@ -2384,8 +2431,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+12% DEF, +30% Heal",
         "stats": {
-            "DEF%": 0.12,
-            "HEAL%": 0.3
+            "DEF%": 12,
+            "HEAL%": 30
         },
         "conversions": []
     },
@@ -2406,7 +2453,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10 MP, +5% DEF, +300 HP",
         "stats": {
-            "DEF%": 0.05
+            "DEF%": 5,
+            "HP": 300,
+            "MP": 10
         },
         "conversions": []
     },
@@ -2427,7 +2476,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10 MP, +5% DEF, +300 HP",
         "stats": {
-            "DEF%": 0.05
+            "DEF%": 5,
+            "HP": 300,
+            "MP": 10
         },
         "conversions": []
     },
@@ -2448,7 +2499,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10 MP, +10% DEF, +750 HP",
         "stats": {
-            "DEF%": 0.1
+            "DEF%": 10,
+            "HP": 750,
+            "MP": 10
         },
         "conversions": []
     },
@@ -2469,8 +2522,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+5% DEF, +15% ATK, +30 ATK",
         "stats": {
-            "DEF%": 0.05,
-            "ATK%": 0.15
+            "DEF%": 5,
+            "ATK%": 15,
+            "ATK": 30
         },
         "conversions": []
     },
@@ -2491,8 +2545,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+5% DEF, +15% ATK, +30 ATK",
         "stats": {
-            "DEF%": 0.05,
-            "ATK%": 0.15
+            "DEF%": 5,
+            "ATK%": 15,
+            "ATK": 30
         },
         "conversions": []
     },
@@ -2513,8 +2568,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10% DEF, +20% ATK, +40 ATK",
         "stats": {
-            "DEF%": 0.1,
-            "ATK%": 0.2
+            "DEF%": 10,
+            "ATK%": 20,
+            "ATK": 40
         },
         "conversions": []
     },
@@ -2535,7 +2591,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+6% Crit Chance",
         "stats": {
-            "Crit Chance%": 0.06
+            "Crit Chance%": 6
         },
         "conversions": []
     },
@@ -2556,7 +2612,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+6% Crit Chance",
         "stats": {
-            "Crit Chance%": 0.06
+            "Crit Chance%": 6
         },
         "conversions": []
     },
@@ -2577,8 +2633,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+6% Crit Chance, +60% Crit Damage",
         "stats": {
-            "Crit Chance%": 0.06,
-            "Crit DMG%": 0.6
+            "Crit Chance%": 6,
+            "Crit DMG%": 60
         },
         "conversions": []
     },
@@ -2599,7 +2655,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+25% DEF, +300 HP",
         "stats": {
-            "DEF%": 0.25
+            "DEF%": 25,
+            "HP": 300
         },
         "conversions": []
     },
@@ -2620,7 +2677,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10% DEF, +450 HP",
         "stats": {
-            "DEF%": 0.1
+            "DEF%": 10,
+            "HP": 450
         },
         "conversions": []
     },
@@ -2641,7 +2699,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+25% DEF",
         "stats": {
-            "DEF%": 0.25
+            "DEF%": 25
         },
         "conversions": []
     },
@@ -2662,7 +2720,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10 MP, +10% DEF",
         "stats": {
-            "DEF%": 0.1
+            "DEF%": 10,
+            "MP": 10
         },
         "conversions": []
     },
@@ -2683,9 +2742,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% DEF, +20% ATK, +20% MATK",
         "stats": {
-            "DEF%": 0.2,
-            "ATK%": 0.2,
-            "MATK%": 0.2
+            "DEF%": 20,
+            "ATK%": 20,
+            "MATK%": 20
         },
         "conversions": []
     },
@@ -2706,8 +2765,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+12% DEF, +20% ATK",
         "stats": {
-            "DEF%": 0.12,
-            "ATK%": 0.2
+            "DEF%": 12,
+            "ATK%": 20
         },
         "conversions": []
     },
@@ -2728,8 +2787,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+12% DEF, +20% MATK",
         "stats": {
-            "DEF%": 0.12,
-            "MATK%": 0.2
+            "DEF%": 12,
+            "MATK%": 20
         },
         "conversions": []
     },
@@ -2750,9 +2809,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+12% DEF, +4% Crit Chance, +40% Crit Damage",
         "stats": {
-            "Crit Chance%": 0.04,
-            "Crit DMG%": 0.4,
-            "DEF%": 0.12
+            "Crit Chance%": 4,
+            "Crit DMG%": 40,
+            "DEF%": 12
         },
         "conversions": []
     },
@@ -2773,8 +2832,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% DEF, +20% Heal",
         "stats": {
-            "DEF%": 0.2,
-            "HEAL%": 0.2
+            "DEF%": 20,
+            "HEAL%": 20
         },
         "conversions": []
     },
@@ -2795,7 +2854,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10% DEF, +450 HP, +6 MP",
         "stats": {
-            "DEF%": 0.1
+            "DEF%": 10,
+            "HP": 450,
+            "MP": 6
         },
         "conversions": []
     },
@@ -2816,7 +2877,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10% DEF, +16 MP",
         "stats": {
-            "DEF%": 0.1
+            "DEF%": 10,
+            "MP": 16
         },
         "conversions": []
     },
@@ -2837,8 +2899,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10% DEF, +40% Heal",
         "stats": {
-            "DEF%": 0.1,
-            "HEAL%": 0.4
+            "DEF%": 10,
+            "HEAL%": 40
         },
         "conversions": []
     },
@@ -2859,7 +2921,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10% DEF, +500 HP",
         "stats": {
-            "DEF%": 0.1
+            "DEF%": 10,
+            "HP": 500
         },
         "conversions": []
     },
@@ -2880,7 +2943,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10% DEF, +500 HP",
         "stats": {
-            "DEF%": 0.1
+            "DEF%": 10,
+            "HP": 500
         },
         "conversions": []
     },
@@ -2901,7 +2965,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+16% DEF, +900 HP",
         "stats": {
-            "DEF%": 0.16
+            "DEF%": 16,
+            "HP": 900
         },
         "conversions": []
     },
@@ -2922,8 +2987,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+5% DEF, +20% ATK, +25 ATK",
         "stats": {
-            "DEF%": 0.05,
-            "ATK%": 0.2
+            "DEF%": 5,
+            "ATK%": 20,
+            "ATK": 25
         },
         "conversions": []
     },
@@ -2944,8 +3010,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+5% DEF, +20% ATK, +25 ATK",
         "stats": {
-            "DEF%": 0.05,
-            "ATK%": 0.2
+            "DEF%": 5,
+            "ATK%": 20,
+            "ATK": 25
         },
         "conversions": []
     },
@@ -2966,8 +3033,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10% DEF, +35% ATK, +50 ATK",
         "stats": {
-            "DEF%": 0.1,
-            "ATK%": 0.35
+            "DEF%": 10,
+            "ATK%": 35,
+            "ATK": 50
         },
         "conversions": []
     },
@@ -2988,8 +3056,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10% DEF, +4% Crit Chance",
         "stats": {
-            "Crit Chance%": 0.04,
-            "DEF%": 0.1
+            "Crit Chance%": 4,
+            "DEF%": 10
         },
         "conversions": []
     },
@@ -3010,8 +3078,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10% DEF, +4% Crit Chance",
         "stats": {
-            "Crit Chance%": 0.04,
-            "DEF%": 0.1
+            "Crit Chance%": 4,
+            "DEF%": 10
         },
         "conversions": []
     },
@@ -3032,9 +3100,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10% DEF, +4% Crit Chance, +50% Crit Damage",
         "stats": {
-            "Crit Chance%": 0.04,
-            "Crit DMG%": 0.5,
-            "DEF%": 0.1
+            "Crit Chance%": 4,
+            "Crit DMG%": 50,
+            "DEF%": 10
         },
         "conversions": []
     },
@@ -3055,7 +3123,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+30% DEF, +450 HP",
         "stats": {
-            "DEF%": 0.3
+            "DEF%": 30,
+            "HP": 450
         },
         "conversions": []
     },
@@ -3145,9 +3214,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+25% DEF, +25% ATK, +25% MATK",
         "stats": {
-            "DEF%": 0.25,
-            "ATK%": 0.25,
-            "MATK%": 0.25
+            "DEF%": 25,
+            "ATK%": 25,
+            "MATK%": 25
         },
         "conversions": []
     },
@@ -3168,8 +3237,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15% DEF, +50% ATK",
         "stats": {
-            "DEF%": 0.15,
-            "ATK%": 0.5
+            "DEF%": 15,
+            "ATK%": 50
         },
         "conversions": []
     },
@@ -3190,9 +3259,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15% DEF, +50% MATK, +15% Void Damage",
         "stats": {
-            "DEF%": 0.15,
-            "MATK%": 0.5,
-            "Void%": 0.15
+            "DEF%": 15,
+            "MATK%": 50,
+            "Void%": 15
         },
         "conversions": []
     },
@@ -3213,9 +3282,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15% DEF, +4% Crit Chance, +60% Crit Damage",
         "stats": {
-            "Crit Chance%": 0.04,
-            "Crit DMG%": 0.6,
-            "DEF%": 0.15
+            "Crit Chance%": 4,
+            "Crit DMG%": 60,
+            "DEF%": 15
         },
         "conversions": []
     },
@@ -3236,8 +3305,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+25% DEF, +25% Heal",
         "stats": {
-            "DEF%": 0.25,
-            "HEAL%": 0.25
+            "DEF%": 25,
+            "HEAL%": 25
         },
         "conversions": []
     },
@@ -3258,8 +3327,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15% DEF, +60% Heal",
         "stats": {
-            "DEF%": 0.15,
-            "HEAL%": 0.6
+            "DEF%": 15,
+            "HEAL%": 60
         },
         "conversions": []
     },
@@ -3280,7 +3349,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15% DEF, +16 MP, +1200 HP",
         "stats": {
-            "DEF%": 0.15
+            "DEF%": 15,
+            "HP": 1200,
+            "MP": 16
         },
         "conversions": []
     },
@@ -3301,9 +3372,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+25% DEF, +10% Negative Resist, +10% Void Resist",
         "stats": {
-            "DEF%": 0.25,
-            "Neg Res%": 0.1,
-            "Void Res%": 0.1
+            "DEF%": 25,
+            "Neg Res%": 10,
+            "Void Res%": 10
         },
         "conversions": []
     },
@@ -3324,8 +3395,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15% DEF, +10% Void Damage, +5% Max HP Multiplier",
         "stats": {
-            "DEF%": 0.15,
-            "Void%": 0.1
+            "DEF%": 15,
+            "Void%": 10,
+            "HP%": 5
         },
         "conversions": []
     },
@@ -3346,8 +3418,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15% DEF, +5% Void Penetration, -3% Global Damage",
         "stats": {
-            "DEF%": 0.15,
-            "Void Pen%": 0.05
+            "DEF%": 15,
+            "Void Pen%": 5,
+            "Dmg%": -3
         },
         "conversions": []
     },
@@ -3368,8 +3441,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15% DEF, +5% Void Penetration, -3% Global Damage",
         "stats": {
-            "DEF%": 0.15,
-            "Void Pen%": 0.05
+            "DEF%": 15,
+            "Void Pen%": 5,
+            "Dmg%": -3
         },
         "conversions": []
     },
@@ -3390,8 +3464,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+25% DEF, +20% Threat Bonus, +5% Max HP Multiplier",
         "stats": {
-            "DEF%": 0.25,
-            "Threat%": 0.2
+            "DEF%": 25,
+            "HP%": 5,
+            "Threat%": 20
         },
         "conversions": []
     },
@@ -3412,8 +3487,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+5% DEF, +15% Heal, +0.5% HP Regen Rate",
         "stats": {
-            "DEF%": 0.05,
-            "HEAL%": 0.15
+            "DEF%": 5,
+            "HEAL%": 15,
+            "HP Regen%": 0.5
         },
         "conversions": []
     },
@@ -3434,8 +3510,10 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10% DEF, +10% Heal, +2% Global Heal Effect",
         "stats": {
-            "DEF%": 0.1,
-            "HEAL%": 0.1
+            "DEF%": 10,
+            "HEAL%": 10,
+            "Global HEAL%": 2,
+            "Heal Effect%": 2
         },
         "conversions": []
     },
@@ -3456,8 +3534,10 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10% DEF, +10% Heal, +2% Global Heal Effect",
         "stats": {
-            "DEF%": 0.1,
-            "HEAL%": 0.1
+            "DEF%": 10,
+            "HEAL%": 10,
+            "Global HEAL%": 2,
+            "Heal Effect%": 2
         },
         "conversions": []
     },
@@ -3478,7 +3558,10 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15% DEF, +2% Global Heal Effect, +1% HP Regen Rate",
         "stats": {
-            "DEF%": 0.15
+            "DEF%": 15,
+            "Global HEAL%": 2,
+            "HP Regen%": 1,
+            "Heal Effect%": 2
         },
         "conversions": []
     },
@@ -3499,9 +3582,10 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10% DEF, +30% ATK, +30% MATK, +30% Crit Damage",
         "stats": {
-            "DEF%": 0.1,
-            "ATK%": 0.3,
-            "MATK%": 0.3
+            "DEF%": 10,
+            "ATK%": 30,
+            "MATK%": 30,
+            "Crit DMG%": 30
         },
         "conversions": []
     },
@@ -3522,9 +3606,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10% DEF, +15% ATK, +15% MATK",
         "stats": {
-            "DEF%": 0.1,
-            "ATK%": 0.15,
-            "MATK%": 0.15
+            "DEF%": 10,
+            "ATK%": 15,
+            "MATK%": 15
         },
         "conversions": []
     },
@@ -3545,9 +3629,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10% DEF, +15% ATK, +15% MATK",
         "stats": {
-            "DEF%": 0.1,
-            "ATK%": 0.15,
-            "MATK%": 0.15
+            "DEF%": 10,
+            "ATK%": 15,
+            "MATK%": 15
         },
         "conversions": []
     },
@@ -3568,7 +3652,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% DEF, +2% Global Damage, Conversion 10% DEF to ATK and MATK",
         "stats": {
-            "DEF%": 0.2
+            "DEF%": 30,
+            "Dmg%": 2
         },
         "conversions": [
             {
@@ -3600,10 +3685,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+1% Global DEF, +10% Physical Resist",
         "stats": {
-            "Global DEF%": 0.01,
-            "Slash Res%": 0.1,
-            "Pierce Res%": 0.1,
-            "Blunt Res%": 0.1
+            "Global DEF%": 1
         },
         "conversions": []
     },
@@ -3624,12 +3706,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+1% Global DEF, +10% Elemental Resist",
         "stats": {
-            "Fire Res%": 0.1,
-            "Water Res%": 0.1,
-            "Lightning Res%": 0.1,
-            "Wind Res%": 0.1,
-            "Earth Res%": 0.1,
-            "Toxic Res%": 0.1
+            "Global DEF%": 1
         },
         "conversions": []
     },
@@ -3650,8 +3727,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+1% Global DEF, +10% Divine Resist",
         "stats": {
-            "Neg Res%": 0.1,
-            "Holy Res%": 0.1
+            "Global DEF%": 1
         },
         "conversions": []
     },
@@ -3672,7 +3748,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+1% Global DEF, +6% Threat Gained",
         "stats": {
-            "Threat%": 0.06
+            "Threat%": 6,
+            "Global DEF%": 1
         },
         "conversions": []
     },
@@ -3693,7 +3770,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+1% Global DEF, +6% Threat Gained",
         "stats": {
-            "Threat%": 0.06
+            "Threat%": 6,
+            "Global DEF%": 1
         },
         "conversions": []
     },
@@ -3714,7 +3792,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+1% Global DEF, +18% Threat Gained",
         "stats": {
-            "Threat%": 0.18
+            "Threat%": 18,
+            "Global DEF%": 1
         },
         "conversions": []
     },
@@ -3735,7 +3814,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+1% Global DEF, +8% Void Damage",
         "stats": {
-            "Void%": 0.08
+            "Void%": 8,
+            "Global DEF%": 1
         },
         "conversions": []
     },
@@ -3756,7 +3836,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+1% Global DEF, +8% Void Damage",
         "stats": {
-            "Void%": 0.08
+            "Void%": 8,
+            "Global DEF%": 1
         },
         "conversions": []
     },
@@ -3777,7 +3858,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+1% Global DEF, +8% Void Penetration",
         "stats": {
-            "Void Pen%": 0.08
+            "Void Pen%": 8,
+            "Global DEF%": 1
         },
         "conversions": []
     },
@@ -3798,9 +3880,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+40% Threat Gained, +10% Void Penetration, +20% Void Damage",
         "stats": {
-            "Void%": 0.2,
-            "Void Pen%": 0.1,
-            "Threat%": 0.4
+            "Void%": 20,
+            "Void Pen%": 10,
+            "Threat%": 40
         },
         "conversions": []
     },
@@ -3820,7 +3902,10 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+2.5% HP Regen, +10% Max HP Multiplier",
-        "stats": {},
+        "stats": {
+            "HP Regen%": 2.5,
+            "HP%": 10
+        },
         "conversions": []
     },
     "Morrigan's Guardianship": {
@@ -3839,7 +3924,9 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+2% Global Damage, 35% of DEF converted to Healpower",
-        "stats": {},
+        "stats": {
+            "Dmg%": 2
+        },
         "conversions": []
     },
     "Star Sands of Dawn": {
@@ -3858,7 +3945,11 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+1% Global DEF, +3% Max HP Multi, -2% xVoid DMG",
-        "stats": {},
+        "stats": {
+            "HP%": 3,
+            "Global DEF%": 1,
+            "Void xDmg%": -2
+        },
         "conversions": []
     },
     "Star Sands of Horizon": {
@@ -3877,7 +3968,11 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+1% Global DEF, +3% Max HP Multi, -5% Global ATK",
-        "stats": {},
+        "stats": {
+            "HP%": 3,
+            "Global ATK%": -5,
+            "Global DEF%": 1
+        },
         "conversions": []
     },
     "Star Sands of Twilight": {
@@ -3896,7 +3991,11 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+1% Global DEF, +3% Max HP Multi, -5% Global MATK",
-        "stats": {},
+        "stats": {
+            "HP%": 3,
+            "Global DEF%": 1,
+            "Global MATK%": -5
+        },
         "conversions": []
     },
     "Time Shard of Akonoteth": {
@@ -3915,7 +4014,10 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+2% Global DEF, +6% Max HP Multi",
-        "stats": {},
+        "stats": {
+            "HP%": 6,
+            "Global DEF%": 2
+        },
         "conversions": []
     },
     "Star Light of Ego": {
@@ -3935,7 +4037,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+1% Global DEF, +6% xVoid DMG, +6% Threat Gain",
         "stats": {
-            "Threat%": 0.06
+            "Global DEF%": 1,
+            "Void xDmg%": 6
         },
         "conversions": []
     },
@@ -3956,7 +4059,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+1% Global DEF, +8% xVoid DMG, -9% Max HP Multi, +12% Threat Gain",
         "stats": {
-            "Threat%": 0.12
+            "Global DEF%": 1,
+            "HP%": -9,
+            "Void xDmg%": 8
         },
         "conversions": []
     },
@@ -3977,7 +4082,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+1% Global DEF, +4% xVoid Pen, -9% Max HP Multi, +12% Threat Gain",
         "stats": {
-            "Threat%": 0.12
+            "Global DEF%": 1,
+            "HP%": -9,
+            "Void xPen%": 4
         },
         "conversions": []
     },
@@ -3997,7 +4104,10 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+2% Global DEF, +3% xVoid DMG",
-        "stats": {},
+        "stats": {
+            "Global DEF%": 2,
+            "Void xDmg%": 3
+        },
         "conversions": []
     },
     "Star Gem of Protons": {
@@ -4017,9 +4127,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+1% Global DEF, +10% Physical Resist",
         "stats": {
-            "Slash Res%": 0.1,
-            "Pierce Res%": 0.1,
-            "Blunt Res%": 0.1
+            "Global DEF%": 1
         },
         "conversions": []
     },
@@ -4040,12 +4148,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+1% Global DEF, +10% Elemental Resist",
         "stats": {
-            "Fire Res%": 0.1,
-            "Water Res%": 0.1,
-            "Lightning Res%": 0.1,
-            "Wind Res%": 0.1,
-            "Earth Res%": 0.1,
-            "Toxic Res%": 0.1
+            "Global DEF%": 1
         },
         "conversions": []
     },
@@ -4066,8 +4169,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+1% Global DEF, +10% Divine Resist",
         "stats": {
-            "Neg Res%": 0.1,
-            "Holy Res%": 0.1
+            "Global DEF%": 1
         },
         "conversions": []
     },
@@ -4088,18 +4190,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+2% Global DEF, +5% All Resist",
         "stats": {
-            "Slash Res%": 0.05,
-            "Pierce Res%": 0.05,
-            "Blunt Res%": 0.05,
-            "Fire Res%": 0.05,
-            "Water Res%": 0.05,
-            "Lightning Res%": 0.05,
-            "Wind Res%": 0.05,
-            "Earth Res%": 0.05,
-            "Toxic Res%": 0.05,
-            "Neg Res%": 0.05,
-            "Holy Res%": 0.05,
-            "Void Res%": 0.05
+            "Global DEF%": 2,
+            "All Res%": 5
         },
         "conversions": []
     },
@@ -4119,7 +4211,10 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+1.5% HP Regen, +5% Max HP Multi, Temp HP Start of 15% Max HP",
-        "stats": {},
+        "stats": {
+            "HP Regen%": 1.5,
+            "HP%": 20
+        },
         "conversions": []
     },
     "Soul Shard of Mogdrolo'toth": {
@@ -4138,7 +4233,9 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+2% xVoid Pen, Conversion 50% Resvoid to Elevoid",
-        "stats": {},
+        "stats": {
+            "Void xPen%": 2
+        },
         "conversions": [
             {
                 "source": "Void Res%",
@@ -4164,18 +4261,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+2% Global DEF, +5% All Resist",
         "stats": {
-            "Slash Res%": 0.05,
-            "Pierce Res%": 0.05,
-            "Blunt Res%": 0.05,
-            "Fire Res%": 0.05,
-            "Water Res%": 0.05,
-            "Lightning Res%": 0.05,
-            "Wind Res%": 0.05,
-            "Earth Res%": 0.05,
-            "Toxic Res%": 0.05,
-            "Neg Res%": 0.05,
-            "Holy Res%": 0.05,
-            "Void Res%": 0.05
+            "Global DEF%": 2,
+            "All Res%": 5
         },
         "conversions": []
     },
@@ -4195,7 +4282,9 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "-25% Max HP Multi, Temp HP Start of 100% Max HP.",
-        "stats": {},
+        "stats": {
+            "HP%": 75
+        },
         "conversions": []
     },
     "Soul Core of Mogdrolo'toth": {
@@ -4240,18 +4329,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "-40% Global DEF, +75% All Resist",
         "stats": {
-            "Slash Res%": 0.75,
-            "Pierce Res%": 0.75,
-            "Blunt Res%": 0.75,
-            "Fire Res%": 0.75,
-            "Water Res%": 0.75,
-            "Lightning Res%": 0.75,
-            "Wind Res%": 0.75,
-            "Earth Res%": 0.75,
-            "Toxic Res%": 0.75,
-            "Neg Res%": 0.75,
-            "Holy Res%": 0.75,
-            "Void Res%": 0.75
+            "Global DEF%": -40,
+            "All Res%": 75
         },
         "conversions": []
     },
@@ -4271,7 +4350,11 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+2% Global DEF, +4% xVoid DMG, +5% Max HP Multi",
-        "stats": {},
+        "stats": {
+            "HP%": 5,
+            "Global DEF%": 2,
+            "Void xDmg%": 4
+        },
         "conversions": []
     },
     "Resolve 1": {
@@ -4291,7 +4374,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+5% DEF",
         "stats": {
-            "DEF%": 0.05
+            "DEF%": 5
         },
         "conversions": []
     },
@@ -4312,7 +4395,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+5% DEF",
         "stats": {
-            "DEF%": 0.05
+            "DEF%": 5
         },
         "conversions": []
     },
@@ -4333,7 +4416,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+5% DEF, +20 DEF",
         "stats": {
-            "DEF%": 0.05
+            "DEF%": 5,
+            "DEF": 20
         },
         "conversions": []
     },
@@ -4354,7 +4438,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+4% ATK",
         "stats": {
-            "ATK%": 0.04
+            "ATK%": 4
         },
         "conversions": []
     },
@@ -4375,7 +4459,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+4% ATK",
         "stats": {
-            "ATK%": 0.04
+            "ATK%": 4
         },
         "conversions": []
     },
@@ -4396,7 +4480,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+8% ATK",
         "stats": {
-            "ATK%": 0.08
+            "ATK%": 8
         },
         "conversions": []
     },
@@ -4416,7 +4500,9 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+4 ATK",
-        "stats": {},
+        "stats": {
+            "ATK": 4
+        },
         "conversions": []
     },
     "Strength Training 2": {
@@ -4435,7 +4521,9 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+6 ATK",
-        "stats": {},
+        "stats": {
+            "ATK": 6
+        },
         "conversions": []
     },
     "Strength Exercises": {
@@ -4454,7 +4542,9 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+8 ATK",
-        "stats": {},
+        "stats": {
+            "ATK": 8
+        },
         "conversions": []
     },
     "Warrior Spirit 1": {
@@ -4474,8 +4564,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+4% ATK, +1% DEF",
         "stats": {
-            "DEF%": 0.01,
-            "ATK%": 0.04
+            "DEF%": 1,
+            "ATK%": 4
         },
         "conversions": []
     },
@@ -4496,8 +4586,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+4% ATK, +1% DEF",
         "stats": {
-            "DEF%": 0.01,
-            "ATK%": 0.04
+            "DEF%": 1,
+            "ATK%": 4
         },
         "conversions": []
     },
@@ -4518,8 +4608,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+8% ATK, +4% DEF",
         "stats": {
-            "DEF%": 0.04,
-            "ATK%": 0.08
+            "DEF%": 4,
+            "ATK%": 8
         },
         "conversions": []
     },
@@ -4540,7 +4630,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+5% ATK",
         "stats": {
-            "ATK%": 0.05
+            "ATK%": 5
         },
         "conversions": []
     },
@@ -4561,7 +4651,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+5% ATK",
         "stats": {
-            "ATK%": 0.05
+            "ATK%": 5
         },
         "conversions": []
     },
@@ -4582,7 +4672,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+8% ATK, +8 ATK",
         "stats": {
-            "ATK%": 0.08
+            "ATK%": 8,
+            "ATK": 8
         },
         "conversions": []
     },
@@ -4602,7 +4693,9 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+8 ATK",
-        "stats": {},
+        "stats": {
+            "ATK": 8
+        },
         "conversions": []
     },
     "Adv Strength Training 2": {
@@ -4621,7 +4714,9 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+10 ATK",
-        "stats": {},
+        "stats": {
+            "ATK": 10
+        },
         "conversions": []
     },
     "Body Building": {
@@ -4640,7 +4735,10 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+10 ATK, +10 DEF",
-        "stats": {},
+        "stats": {
+            "ATK": 10,
+            "DEF": 10
+        },
         "conversions": []
     },
     "Path of the Archer": {
@@ -4660,8 +4758,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15% Pierce Damage, +5% Crit Chance",
         "stats": {
-            "Crit Chance%": 0.05,
-            "Pierce%": 0.15
+            "Crit Chance%": 5,
+            "Pierce%": 15
         },
         "conversions": []
     },
@@ -4682,8 +4780,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+4% Pierce Damage, +2% Crit Chance",
         "stats": {
-            "Crit Chance%": 0.02,
-            "Pierce%": 0.04
+            "Crit Chance%": 2,
+            "Pierce%": 4
         },
         "conversions": []
     },
@@ -4704,8 +4802,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+4% Pierce Damage, +2% Crit Chance",
         "stats": {
-            "Crit Chance%": 0.02,
-            "Pierce%": 0.04
+            "Crit Chance%": 2,
+            "Pierce%": 4
         },
         "conversions": []
     },
@@ -4726,8 +4824,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+4% Pierce Damage, +2% Crit Chance",
         "stats": {
-            "Crit Chance%": 0.02,
-            "Pierce%": 0.04
+            "Crit Chance%": 2,
+            "Pierce%": 4
         },
         "conversions": []
     },
@@ -4748,7 +4846,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+25% Slash Damage",
         "stats": {
-            "Slash%": 0.25
+            "Slash%": 25
         },
         "conversions": []
     },
@@ -4769,7 +4867,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+8% Slash Damage",
         "stats": {
-            "Slash%": 0.08
+            "Slash%": 8
         },
         "conversions": []
     },
@@ -4790,7 +4888,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+8% Slash Damage",
         "stats": {
-            "Slash%": 0.08
+            "Slash%": 8
         },
         "conversions": []
     },
@@ -4811,7 +4909,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+8% Slash Damage",
         "stats": {
-            "Slash%": 0.08
+            "Slash%": 8
         },
         "conversions": []
     },
@@ -4832,7 +4930,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+25% Pierce Damage",
         "stats": {
-            "Pierce%": 0.25
+            "Pierce%": 25
         },
         "conversions": []
     },
@@ -4853,7 +4951,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+8% Pierce Damage",
         "stats": {
-            "Pierce%": 0.08
+            "Pierce%": 8
         },
         "conversions": []
     },
@@ -4874,7 +4972,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+8% Pierce Damage",
         "stats": {
-            "Pierce%": 0.08
+            "Pierce%": 8
         },
         "conversions": []
     },
@@ -4895,7 +4993,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+8% Pierce Damage",
         "stats": {
-            "Pierce%": 0.08
+            "Pierce%": 8
         },
         "conversions": []
     },
@@ -4916,7 +5014,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+25% Blunt Damage",
         "stats": {
-            "Blunt%": 0.25
+            "Blunt%": 25
         },
         "conversions": []
     },
@@ -4937,7 +5035,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+8% Blunt Damage",
         "stats": {
-            "Blunt%": 0.08
+            "Blunt%": 8
         },
         "conversions": []
     },
@@ -4958,7 +5056,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+8% Blunt Damage",
         "stats": {
-            "Blunt%": 0.08
+            "Blunt%": 8
         },
         "conversions": []
     },
@@ -4979,7 +5077,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+8% Blunt Damage",
         "stats": {
-            "Blunt%": 0.08
+            "Blunt%": 8
         },
         "conversions": []
     },
@@ -5000,8 +5098,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15% Blunt Damage, +5% Crit Chance",
         "stats": {
-            "Crit Chance%": 0.05,
-            "Blunt%": 0.15
+            "Crit Chance%": 5,
+            "Blunt%": 15
         },
         "conversions": []
     },
@@ -5022,8 +5120,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+4% Blunt Damage, +2% Crit Chance",
         "stats": {
-            "Crit Chance%": 0.02,
-            "Blunt%": 0.04
+            "Crit Chance%": 2,
+            "Blunt%": 4
         },
         "conversions": []
     },
@@ -5044,8 +5142,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+4% Blunt Damage, +2% Crit Chance",
         "stats": {
-            "Crit Chance%": 0.02,
-            "Blunt%": 0.04
+            "Crit Chance%": 2,
+            "Blunt%": 4
         },
         "conversions": []
     },
@@ -5066,8 +5164,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+4% Blunt Damage, +2% Crit Chance",
         "stats": {
-            "Crit Chance%": 0.02,
-            "Blunt%": 0.04
+            "Crit Chance%": 2,
+            "Blunt%": 4
         },
         "conversions": []
     },
@@ -5088,8 +5186,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+8% Slash Damage, +6% Crit Chance",
         "stats": {
-            "Crit Chance%": 0.06,
-            "Slash%": 0.08
+            "Crit Chance%": 6,
+            "Slash%": 8
         },
         "conversions": []
     },
@@ -5110,8 +5208,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+2% Slash Damage, +2% Crit Chance",
         "stats": {
-            "Crit Chance%": 0.02,
-            "Slash%": 0.02
+            "Crit Chance%": 2,
+            "Slash%": 2
         },
         "conversions": []
     },
@@ -5132,8 +5230,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+2% Slash Damage, +2% Crit Chance",
         "stats": {
-            "Crit Chance%": 0.02,
-            "Slash%": 0.02
+            "Crit Chance%": 2,
+            "Slash%": 2
         },
         "conversions": []
     },
@@ -5154,8 +5252,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+2% Slash Damage, +2% Crit Chance",
         "stats": {
-            "Crit Chance%": 0.02,
-            "Slash%": 0.02
+            "Crit Chance%": 2,
+            "Slash%": 2
         },
         "conversions": []
     },
@@ -5175,7 +5273,10 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+10 ATK, +10 DEF",
-        "stats": {},
+        "stats": {
+            "ATK": 10,
+            "DEF": 10
+        },
         "conversions": []
     },
     "Hero Conditioning 2": {
@@ -5194,7 +5295,10 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+12 ATK, +10 DEF",
-        "stats": {},
+        "stats": {
+            "ATK": 12,
+            "DEF": 10
+        },
         "conversions": []
     },
     "Hero's Training": {
@@ -5214,8 +5318,10 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15 ATK, +12 DEF, +4% Crit Chance, +15% Crit DMG",
         "stats": {
-            "Crit Chance%": 0.04,
-            "Crit DMG%": 0.15
+            "Crit Chance%": 4,
+            "Crit DMG%": 15,
+            "ATK": 15,
+            "DEF": 12
         },
         "conversions": []
     },
@@ -5236,9 +5342,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15% Pierce Damage, +5% Crit Chance, +15% Crit DMG",
         "stats": {
-            "Crit Chance%": 0.05,
-            "Crit DMG%": 0.15,
-            "Pierce%": 0.15
+            "Crit Chance%": 5,
+            "Crit DMG%": 15,
+            "Pierce%": 15
         },
         "conversions": []
     },
@@ -5259,8 +5365,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+4% Pierce Damage, +5% Crit Damage",
         "stats": {
-            "Crit DMG%": 0.05,
-            "Pierce%": 0.04
+            "Crit DMG%": 5,
+            "Pierce%": 4
         },
         "conversions": []
     },
@@ -5281,8 +5387,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+4% Pierce Damage, +5% Crit Damage",
         "stats": {
-            "Crit DMG%": 0.05,
-            "Pierce%": 0.04
+            "Crit DMG%": 5,
+            "Pierce%": 4
         },
         "conversions": []
     },
@@ -5303,8 +5409,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+4% Pierce Damage, +5% Crit Damage",
         "stats": {
-            "Crit DMG%": 0.05,
-            "Pierce%": 0.04
+            "Crit DMG%": 5,
+            "Pierce%": 4
         },
         "conversions": []
     },
@@ -5325,8 +5431,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+25% Slash Damage, +15% ATK",
         "stats": {
-            "ATK%": 0.15,
-            "Slash%": 0.25
+            "ATK%": 15,
+            "Slash%": 25
         },
         "conversions": []
     },
@@ -5347,7 +5453,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+8% Slash Damage",
         "stats": {
-            "Slash%": 0.08
+            "Slash%": 8
         },
         "conversions": []
     },
@@ -5368,7 +5474,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+8% Slash Damage",
         "stats": {
-            "Slash%": 0.08
+            "Slash%": 8
         },
         "conversions": []
     },
@@ -5389,7 +5495,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+8% Slash Damage",
         "stats": {
-            "Slash%": 0.08
+            "Slash%": 8
         },
         "conversions": []
     },
@@ -5410,8 +5516,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+25% Pierce Damage, +15% ATK",
         "stats": {
-            "ATK%": 0.15,
-            "Pierce%": 0.25
+            "ATK%": 15,
+            "Pierce%": 25
         },
         "conversions": []
     },
@@ -5432,7 +5538,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+8% Pierce Damage",
         "stats": {
-            "Pierce%": 0.08
+            "Pierce%": 8
         },
         "conversions": []
     },
@@ -5453,7 +5559,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+8% Pierce Damage",
         "stats": {
-            "Pierce%": 0.08
+            "Pierce%": 8
         },
         "conversions": []
     },
@@ -5474,7 +5580,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+8% Pierce Damage",
         "stats": {
-            "Pierce%": 0.08
+            "Pierce%": 8
         },
         "conversions": []
     },
@@ -5495,8 +5601,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+25% Blunt Damage, +15% ATK",
         "stats": {
-            "ATK%": 0.15,
-            "Blunt%": 0.25
+            "ATK%": 15,
+            "Blunt%": 25
         },
         "conversions": []
     },
@@ -5517,7 +5623,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+8% Blunt Damage",
         "stats": {
-            "Blunt%": 0.08
+            "Blunt%": 8
         },
         "conversions": []
     },
@@ -5538,7 +5644,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+8% Blunt Damage",
         "stats": {
-            "Blunt%": 0.08
+            "Blunt%": 8
         },
         "conversions": []
     },
@@ -5559,7 +5665,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+8% Blunt Damage",
         "stats": {
-            "Blunt%": 0.08
+            "Blunt%": 8
         },
         "conversions": []
     },
@@ -5580,9 +5686,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15% Blunt Damage, +5% Crit Chance, +15% Crit DMG",
         "stats": {
-            "Crit Chance%": 0.05,
-            "Crit DMG%": 0.15,
-            "Blunt%": 0.15
+            "Crit Chance%": 5,
+            "Crit DMG%": 15,
+            "Blunt%": 15
         },
         "conversions": []
     },
@@ -5603,8 +5709,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+4% Blunt Damage, +5% Crit Damage",
         "stats": {
-            "Crit DMG%": 0.05,
-            "Blunt%": 0.04
+            "Crit DMG%": 5,
+            "Blunt%": 4
         },
         "conversions": []
     },
@@ -5625,8 +5731,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+4% Blunt Damage, +5% Crit Damage",
         "stats": {
-            "Crit DMG%": 0.05,
-            "Blunt%": 0.04
+            "Crit DMG%": 5,
+            "Blunt%": 4
         },
         "conversions": []
     },
@@ -5647,8 +5753,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+4% Blunt Damage, +5% Crit Damage",
         "stats": {
-            "Crit DMG%": 0.05,
-            "Blunt%": 0.04
+            "Crit DMG%": 5,
+            "Blunt%": 4
         },
         "conversions": []
     },
@@ -5669,9 +5775,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+6% Crit Chance, +25% Crit Damage",
         "stats": {
-            "Crit Chance%": 0.06,
-            "Crit DMG%": 0.25,
-            "Slash%": 0.08
+            "Crit Chance%": 6,
+            "Crit DMG%": 25
         },
         "conversions": []
     },
@@ -5692,8 +5797,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+8% Slash Damage, +2% Crit Chance",
         "stats": {
-            "Crit Chance%": 0.02,
-            "Slash%": 0.08
+            "Crit Chance%": 2,
+            "Slash%": 8
         },
         "conversions": []
     },
@@ -5714,8 +5819,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+8% Slash Damage, +2% Crit Chance",
         "stats": {
-            "Crit Chance%": 0.02,
-            "Slash%": 0.08
+            "Crit Chance%": 2,
+            "Slash%": 8
         },
         "conversions": []
     },
@@ -5736,8 +5841,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+8% Slash Damage, +2% Crit Chance",
         "stats": {
-            "Crit Chance%": 0.02,
-            "Slash%": 0.08
+            "Crit Chance%": 2,
+            "Slash%": 8
         },
         "conversions": []
     },
@@ -5758,7 +5863,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+8% Crit Damage",
         "stats": {
-            "Crit DMG%": 0.08
+            "Crit DMG%": 8
         },
         "conversions": []
     },
@@ -5779,7 +5884,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+8% Crit Damage",
         "stats": {
-            "Crit DMG%": 0.08
+            "Crit DMG%": 8
         },
         "conversions": []
     },
@@ -5800,7 +5905,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+18% Crit Damage",
         "stats": {
-            "Crit DMG%": 0.18
+            "Crit DMG%": 18
         },
         "conversions": []
     },
@@ -5821,7 +5926,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+7% ATK",
         "stats": {
-            "ATK%": 0.07
+            "ATK%": 7
         },
         "conversions": []
     },
@@ -5842,7 +5947,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+7% ATK",
         "stats": {
-            "ATK%": 0.07
+            "ATK%": 7
         },
         "conversions": []
     },
@@ -5863,7 +5968,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15% ATK",
         "stats": {
-            "ATK%": 0.15
+            "ATK%": 15
         },
         "conversions": []
     },
@@ -5883,7 +5988,9 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+10 MP",
-        "stats": {},
+        "stats": {
+            "MP": 10
+        },
         "conversions": []
     },
     "Inner Spirit 2": {
@@ -5902,7 +6009,9 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+10 MP",
-        "stats": {},
+        "stats": {
+            "MP": 10
+        },
         "conversions": []
     },
     "Inner Spirit 3": {
@@ -5921,7 +6030,9 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+10 MP",
-        "stats": {},
+        "stats": {
+            "MP": 10
+        },
         "conversions": []
     },
     "Critical Exploit 1": {
@@ -5941,8 +6052,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "-1% Crit Chance, +12% Crit Damage",
         "stats": {
-            "Crit Chance%": -0.01,
-            "Crit DMG%": 0.12
+            "Crit Chance%": -1,
+            "Crit DMG%": 12
         },
         "conversions": []
     },
@@ -5963,8 +6074,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "-1% Crit Chance, +12% Crit Damage",
         "stats": {
-            "Crit Chance%": -0.01,
-            "Crit DMG%": 0.12
+            "Crit Chance%": -1,
+            "Crit DMG%": 12
         },
         "conversions": []
     },
@@ -5985,8 +6096,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "-2% Crit Chance, +25% Crit Damage",
         "stats": {
-            "Crit Chance%": -0.02,
-            "Crit DMG%": 0.25
+            "Crit Chance%": -2,
+            "Crit DMG%": 25
         },
         "conversions": []
     },
@@ -6007,9 +6118,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15% Pierce Damage, +25% Crit DMG, +5% ATK",
         "stats": {
-            "Crit DMG%": 0.25,
-            "ATK%": 0.05,
-            "Pierce%": 0.15
+            "Crit DMG%": 25,
+            "ATK%": 5,
+            "Pierce%": 15
         },
         "conversions": []
     },
@@ -6030,8 +6141,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15% Pierce Damage, +10% Crit DMG",
         "stats": {
-            "Crit DMG%": 0.1,
-            "Pierce%": 0.15
+            "Crit DMG%": 10,
+            "Pierce%": 15
         },
         "conversions": []
     },
@@ -6052,8 +6163,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15% Pierce Damage, +10% Crit DMG",
         "stats": {
-            "Crit DMG%": 0.1,
-            "Pierce%": 0.15
+            "Crit DMG%": 10,
+            "Pierce%": 15
         },
         "conversions": []
     },
@@ -6074,8 +6185,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15% Pierce Damage, +10% Crit DMG",
         "stats": {
-            "Crit DMG%": 0.1,
-            "Pierce%": 0.15
+            "Crit DMG%": 10,
+            "Pierce%": 15
         },
         "conversions": []
     },
@@ -6096,8 +6207,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+25% Slash Damage, +15% ATK, +5% Slash Penetration",
         "stats": {
-            "ATK%": 0.15,
-            "Slash%": 0.25
+            "ATK%": 15,
+            "Slash%": 25,
+            "Slash Pen%": 5
         },
         "conversions": []
     },
@@ -6118,8 +6230,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+18% Slash Damage, +15% ATK",
         "stats": {
-            "ATK%": 0.15,
-            "Slash%": 0.18
+            "ATK%": 15,
+            "Slash%": 18
         },
         "conversions": []
     },
@@ -6140,8 +6252,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+18% Slash Damage, +15% ATK",
         "stats": {
-            "ATK%": 0.15,
-            "Slash%": 0.18
+            "ATK%": 15,
+            "Slash%": 18
         },
         "conversions": []
     },
@@ -6162,8 +6274,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+18% Slash Damage, +15% ATK",
         "stats": {
-            "ATK%": 0.15,
-            "Slash%": 0.18
+            "ATK%": 15,
+            "Slash%": 18
         },
         "conversions": []
     },
@@ -6184,8 +6296,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+25% Pierce Damage, +15% ATK, +5% Pierce Penetration",
         "stats": {
-            "ATK%": 0.15,
-            "Pierce%": 0.25
+            "ATK%": 15,
+            "Pierce%": 25,
+            "Pierce Pen%": 5
         },
         "conversions": []
     },
@@ -6206,8 +6319,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+18% Pierce Damage, +15% ATK",
         "stats": {
-            "ATK%": 0.15,
-            "Pierce%": 0.18
+            "ATK%": 15,
+            "Pierce%": 18
         },
         "conversions": []
     },
@@ -6228,8 +6341,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+18% Pierce Damage, +15% ATK",
         "stats": {
-            "ATK%": 0.15,
-            "Pierce%": 0.18
+            "ATK%": 15,
+            "Pierce%": 18
         },
         "conversions": []
     },
@@ -6250,8 +6363,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+18% Pierce Damage, +15% ATK",
         "stats": {
-            "ATK%": 0.15,
-            "Pierce%": 0.18
+            "ATK%": 15,
+            "Pierce%": 18
         },
         "conversions": []
     },
@@ -6272,9 +6385,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+25% Blunt Damage, +15% ATK, +5% Blunt Penetration",
         "stats": {
-            "ATK%": 0.15,
-            "Blunt%": 0.25,
-            "Blunt Pen%": 0.05
+            "ATK%": 15,
+            "Blunt%": 25,
+            "Blunt Pen%": 5
         },
         "conversions": []
     },
@@ -6295,8 +6408,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+18% Blunt Damage, +15% ATK",
         "stats": {
-            "ATK%": 0.15,
-            "Blunt%": 0.18
+            "ATK%": 15,
+            "Blunt%": 18
         },
         "conversions": []
     },
@@ -6317,8 +6430,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+18% Blunt Damage, +15% ATK",
         "stats": {
-            "ATK%": 0.15,
-            "Blunt%": 0.18
+            "ATK%": 15,
+            "Blunt%": 18
         },
         "conversions": []
     },
@@ -6339,8 +6452,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+18% Blunt Damage, +15% ATK",
         "stats": {
-            "ATK%": 0.15,
-            "Blunt%": 0.18
+            "ATK%": 15,
+            "Blunt%": 18
         },
         "conversions": []
     },
@@ -6361,9 +6474,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15% Blunt Damage, +25% Crit DMG, +15% ATK",
         "stats": {
-            "Crit DMG%": 0.25,
-            "ATK%": 0.15,
-            "Blunt%": 0.15
+            "Crit DMG%": 25,
+            "ATK%": 15,
+            "Blunt%": 15
         },
         "conversions": []
     },
@@ -6384,8 +6497,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15% Blunt Damage, +10% Crit DMG",
         "stats": {
-            "Crit DMG%": 0.1,
-            "Blunt%": 0.15
+            "Crit DMG%": 10,
+            "Blunt%": 15
         },
         "conversions": []
     },
@@ -6406,8 +6519,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15% Blunt Damage, +10% Crit DMG",
         "stats": {
-            "Crit DMG%": 0.1,
-            "Blunt%": 0.15
+            "Crit DMG%": 10,
+            "Blunt%": 15
         },
         "conversions": []
     },
@@ -6428,8 +6541,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15% Blunt Damage, +10% Crit DMG",
         "stats": {
-            "Crit DMG%": 0.1,
-            "Blunt%": 0.15
+            "Crit DMG%": 10,
+            "Blunt%": 15
         },
         "conversions": []
     },
@@ -6450,8 +6563,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10% Slash Damage, +30% Crit DMG",
         "stats": {
-            "Crit DMG%": 0.3,
-            "Slash%": 0.1
+            "Crit DMG%": 30,
+            "Slash%": 10
         },
         "conversions": []
     },
@@ -6472,8 +6585,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10% Slash Damage, +15% Crit DMG",
         "stats": {
-            "Crit DMG%": 0.15,
-            "Slash%": 0.1
+            "Crit DMG%": 15,
+            "Slash%": 10
         },
         "conversions": []
     },
@@ -6494,8 +6607,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10% Slash Damage, +15% Crit DMG",
         "stats": {
-            "Crit DMG%": 0.15,
-            "Slash%": 0.1
+            "Crit DMG%": 15,
+            "Slash%": 10
         },
         "conversions": []
     },
@@ -6516,8 +6629,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10% Slash Damage, +15% Crit DMG",
         "stats": {
-            "Crit DMG%": 0.15,
-            "Slash%": 0.1
+            "Crit DMG%": 15,
+            "Slash%": 10
         },
         "conversions": []
     },
@@ -6537,7 +6650,9 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+5% Physical Penetration",
-        "stats": {},
+        "stats": {
+            "Phys Pen%": 5
+        },
         "conversions": []
     },
     "Penetration 2": {
@@ -6556,7 +6671,9 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+5% Physical Penetration",
-        "stats": {},
+        "stats": {
+            "Phys Pen%": 5
+        },
         "conversions": []
     },
     "Reality Breaker": {
@@ -6575,7 +6692,9 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+10% Physical Penetration",
-        "stats": {},
+        "stats": {
+            "Phys Pen%": 10
+        },
         "conversions": []
     },
     "Demigod's Strength 1": {
@@ -6595,7 +6714,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15% ATK",
         "stats": {
-            "ATK%": 0.15
+            "ATK%": 15
         },
         "conversions": []
     },
@@ -6616,7 +6735,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15% ATK",
         "stats": {
-            "ATK%": 0.15
+            "ATK%": 15
         },
         "conversions": []
     },
@@ -6637,7 +6756,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+25% ATK",
         "stats": {
-            "ATK%": 0.25
+            "ATK%": 25
         },
         "conversions": []
     },
@@ -6658,8 +6777,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10 MP, +5% ATK, +5% Crit Damage",
         "stats": {
-            "Crit DMG%": 0.05,
-            "ATK%": 0.05
+            "Crit DMG%": 5,
+            "ATK%": 5,
+            "MP": 10
         },
         "conversions": []
     },
@@ -6680,8 +6800,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10 MP, +5% ATK, +5% Crit Damage",
         "stats": {
-            "Crit DMG%": 0.05,
-            "ATK%": 0.05
+            "Crit DMG%": 5,
+            "ATK%": 5,
+            "MP": 10
         },
         "conversions": []
     },
@@ -6702,8 +6823,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10 MP, +10% ATK, +10% Crit Damage",
         "stats": {
-            "Crit DMG%": 0.1,
-            "ATK%": 0.1
+            "Crit DMG%": 10,
+            "ATK%": 10,
+            "MP": 10
         },
         "conversions": []
     },
@@ -6724,9 +6846,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% Pierce Damage, +30% Crit DMG, +8% ATK",
         "stats": {
-            "Crit DMG%": 0.3,
-            "ATK%": 0.08,
-            "Pierce%": 0.2
+            "Crit DMG%": 30,
+            "ATK%": 8,
+            "Pierce%": 20
         },
         "conversions": []
     },
@@ -6747,9 +6869,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15% Pierce Damage, +10% Crit DMG, +5% ATK",
         "stats": {
-            "Crit DMG%": 0.1,
-            "ATK%": 0.05,
-            "Pierce%": 0.15
+            "Crit DMG%": 10,
+            "ATK%": 5,
+            "Pierce%": 15
         },
         "conversions": []
     },
@@ -6770,9 +6892,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15% Pierce Damage, +10% Crit DMG, +5% ATK",
         "stats": {
-            "Crit DMG%": 0.1,
-            "ATK%": 0.05,
-            "Pierce%": 0.15
+            "Crit DMG%": 10,
+            "ATK%": 5,
+            "Pierce%": 15
         },
         "conversions": []
     },
@@ -6793,9 +6915,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15% Pierce Damage, +10% Crit DMG, +5% ATK",
         "stats": {
-            "Crit DMG%": 0.1,
-            "ATK%": 0.05,
-            "Pierce%": 0.15
+            "Crit DMG%": 10,
+            "ATK%": 5,
+            "Pierce%": 15
         },
         "conversions": []
     },
@@ -6816,8 +6938,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+30% Slash Damage, +15% ATK, +5% Slash Penetration",
         "stats": {
-            "ATK%": 0.15,
-            "Slash%": 0.3
+            "ATK%": 15,
+            "Slash%": 30,
+            "Slash Pen%": 5
         },
         "conversions": []
     },
@@ -6838,9 +6961,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% Slash Damage, +15% ATK, +1% Crit Chance",
         "stats": {
-            "Crit Chance%": 0.01,
-            "ATK%": 0.15,
-            "Slash%": 0.2
+            "Crit Chance%": 1,
+            "ATK%": 15,
+            "Slash%": 20
         },
         "conversions": []
     },
@@ -6861,9 +6984,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% Slash Damage, +15% ATK, +1% Crit Chance",
         "stats": {
-            "Crit Chance%": 0.01,
-            "ATK%": 0.15,
-            "Slash%": 0.2
+            "Crit Chance%": 1,
+            "ATK%": 15,
+            "Slash%": 20
         },
         "conversions": []
     },
@@ -6884,9 +7007,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% Slash Damage, +15% ATK, +1% Crit Chance",
         "stats": {
-            "Crit Chance%": 0.01,
-            "ATK%": 0.15,
-            "Slash%": 0.2
+            "Crit Chance%": 1,
+            "ATK%": 15,
+            "Slash%": 20
         },
         "conversions": []
     },
@@ -6907,8 +7030,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+30% Pierce Damage, +15% ATK, +5% Pierce Penetration",
         "stats": {
-            "ATK%": 0.15,
-            "Pierce%": 0.3
+            "ATK%": 15,
+            "Pierce%": 30,
+            "Pierce Pen%": 5
         },
         "conversions": []
     },
@@ -6929,9 +7053,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% Pierce Damage, +15% ATK, +1% Crit Chance",
         "stats": {
-            "Crit Chance%": 0.01,
-            "ATK%": 0.15,
-            "Pierce%": 0.2
+            "Crit Chance%": 1,
+            "ATK%": 15,
+            "Pierce%": 20
         },
         "conversions": []
     },
@@ -6952,9 +7076,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% Pierce Damage, +15% ATK, +1% Crit Chance",
         "stats": {
-            "Crit Chance%": 0.01,
-            "ATK%": 0.15,
-            "Pierce%": 0.2
+            "Crit Chance%": 1,
+            "ATK%": 15,
+            "Pierce%": 20
         },
         "conversions": []
     },
@@ -6975,9 +7099,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% Pierce Damage, +15% ATK, +1% Crit Chance",
         "stats": {
-            "Crit Chance%": 0.01,
-            "ATK%": 0.15,
-            "Pierce%": 0.2
+            "Crit Chance%": 1,
+            "ATK%": 15,
+            "Pierce%": 20
         },
         "conversions": []
     },
@@ -6998,9 +7122,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+30% Blunt Damage, +15% ATK, +5% Blunt Penetration",
         "stats": {
-            "ATK%": 0.15,
-            "Blunt%": 0.3,
-            "Blunt Pen%": 0.05
+            "ATK%": 15,
+            "Blunt%": 30,
+            "Blunt Pen%": 5
         },
         "conversions": []
     },
@@ -7021,9 +7145,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% Blunt Damage, +15% ATK, +1% Crit Chance",
         "stats": {
-            "Crit Chance%": 0.01,
-            "ATK%": 0.15,
-            "Blunt%": 0.2
+            "Crit Chance%": 1,
+            "ATK%": 15,
+            "Blunt%": 20
         },
         "conversions": []
     },
@@ -7044,9 +7168,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% Blunt Damage, +15% ATK, +1% Crit Chance",
         "stats": {
-            "Crit Chance%": 0.01,
-            "ATK%": 0.15,
-            "Blunt%": 0.2
+            "Crit Chance%": 1,
+            "ATK%": 15,
+            "Blunt%": 20
         },
         "conversions": []
     },
@@ -7067,9 +7191,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% Blunt Damage, +15% ATK, +1% Crit Chance",
         "stats": {
-            "Crit Chance%": 0.01,
-            "ATK%": 0.15,
-            "Blunt%": 0.2
+            "Crit Chance%": 1,
+            "ATK%": 15,
+            "Blunt%": 20
         },
         "conversions": []
     },
@@ -7090,9 +7214,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% Blunt Damage, +30% Crit DMG, +8% ATK",
         "stats": {
-            "Crit DMG%": 0.3,
-            "ATK%": 0.08,
-            "Blunt%": 0.2
+            "Crit DMG%": 30,
+            "ATK%": 8,
+            "Blunt%": 20
         },
         "conversions": []
     },
@@ -7113,9 +7237,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15% Blunt Damage, +10% Crit DMG, +5% ATK",
         "stats": {
-            "Crit DMG%": 0.1,
-            "ATK%": 0.05,
-            "Blunt%": 0.15
+            "Crit DMG%": 10,
+            "ATK%": 5,
+            "Blunt%": 15
         },
         "conversions": []
     },
@@ -7136,9 +7260,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15% Blunt Damage, +10% Crit DMG, +5% ATK",
         "stats": {
-            "Crit DMG%": 0.1,
-            "ATK%": 0.05,
-            "Blunt%": 0.15
+            "Crit DMG%": 10,
+            "ATK%": 5,
+            "Blunt%": 15
         },
         "conversions": []
     },
@@ -7159,9 +7283,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15% Blunt Damage, +10% Crit DMG, +5% ATK",
         "stats": {
-            "Crit DMG%": 0.1,
-            "ATK%": 0.05,
-            "Blunt%": 0.15
+            "Crit DMG%": 10,
+            "ATK%": 5,
+            "Blunt%": 15
         },
         "conversions": []
     },
@@ -7182,9 +7306,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10% ATK, +20% Slash Damage, +30% Crit DMG",
         "stats": {
-            "Crit DMG%": 0.3,
-            "ATK%": 0.1,
-            "Slash%": 0.2
+            "Crit DMG%": 30,
+            "ATK%": 10,
+            "Slash%": 20
         },
         "conversions": []
     },
@@ -7205,9 +7329,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15% Slash Damage, +6% ATK, +15% Crit DMG",
         "stats": {
-            "Crit DMG%": 0.15,
-            "ATK%": 0.06,
-            "Slash%": 0.15
+            "Crit DMG%": 15,
+            "ATK%": 6,
+            "Slash%": 15
         },
         "conversions": []
     },
@@ -7228,9 +7352,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15% Slash Damage, +6% ATK, +15% Crit DMG",
         "stats": {
-            "Crit DMG%": 0.15,
-            "ATK%": 0.06,
-            "Slash%": 0.15
+            "Crit DMG%": 15,
+            "ATK%": 6,
+            "Slash%": 15
         },
         "conversions": []
     },
@@ -7251,9 +7375,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15% Slash Damage, +6% ATK, +15% Crit DMG",
         "stats": {
-            "Crit DMG%": 0.15,
-            "ATK%": 0.06,
-            "Slash%": 0.15
+            "Crit DMG%": 15,
+            "ATK%": 6,
+            "Slash%": 15
         },
         "conversions": []
     },
@@ -7319,7 +7443,9 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+10% Physical Penetration",
-        "stats": {},
+        "stats": {
+            "Phys Pen%": 10
+        },
         "conversions": []
     },
     "Magni's Blessing 1": {
@@ -7339,7 +7465,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% ATK",
         "stats": {
-            "ATK%": 0.2
+            "ATK%": 20
         },
         "conversions": []
     },
@@ -7360,7 +7486,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% ATK",
         "stats": {
-            "ATK%": 0.2
+            "ATK%": 20
         },
         "conversions": []
     },
@@ -7381,7 +7507,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+30% ATK",
         "stats": {
-            "ATK%": 0.3
+            "ATK%": 30
         },
         "conversions": []
     },
@@ -7402,8 +7528,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10 MP, +10% ATK, +10% Crit Damage",
         "stats": {
-            "Crit DMG%": 0.1,
-            "ATK%": 0.1
+            "Crit DMG%": 10,
+            "ATK%": 10,
+            "MP": 10
         },
         "conversions": []
     },
@@ -7424,8 +7551,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10 MP, +10% ATK, +10% Crit Damage",
         "stats": {
-            "Crit DMG%": 0.1,
-            "ATK%": 0.1
+            "Crit DMG%": 10,
+            "ATK%": 10,
+            "MP": 10
         },
         "conversions": []
     },
@@ -7446,8 +7574,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10 MP, +15% ATK, +15% Crit Damage",
         "stats": {
-            "Crit DMG%": 0.15,
-            "ATK%": 0.15
+            "Crit DMG%": 15,
+            "ATK%": 15,
+            "MP": 10
         },
         "conversions": []
     },
@@ -7468,9 +7597,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% Pierce Damage, +30% Crit DMG, +8% ATK",
         "stats": {
-            "Crit DMG%": 0.3,
-            "ATK%": 0.08,
-            "Pierce%": 0.2
+            "Crit DMG%": 30,
+            "ATK%": 8,
+            "Pierce%": 20
         },
         "conversions": []
     },
@@ -7491,9 +7620,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15% Pierce Damage, +10% Crit DMG, +5% ATK",
         "stats": {
-            "Crit DMG%": 0.1,
-            "ATK%": 0.05,
-            "Pierce%": 0.15
+            "Crit DMG%": 10,
+            "ATK%": 5,
+            "Pierce%": 15
         },
         "conversions": []
     },
@@ -7514,9 +7643,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15% Pierce Damage, +10% Crit DMG, +5% ATK",
         "stats": {
-            "Crit DMG%": 0.1,
-            "ATK%": 0.05,
-            "Pierce%": 0.15
+            "Crit DMG%": 10,
+            "ATK%": 5,
+            "Pierce%": 15
         },
         "conversions": []
     },
@@ -7537,9 +7666,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15% Pierce Damage, +10% Crit DMG, +5% ATK",
         "stats": {
-            "Crit DMG%": 0.1,
-            "ATK%": 0.05,
-            "Pierce%": 0.15
+            "Crit DMG%": 10,
+            "ATK%": 5,
+            "Pierce%": 15
         },
         "conversions": []
     },
@@ -7560,8 +7689,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+35% Slash Damage, +15% ATK, +5% Slash Penetration",
         "stats": {
-            "ATK%": 0.15,
-            "Slash%": 0.35
+            "ATK%": 15,
+            "Slash%": 35,
+            "Slash Pen%": 5
         },
         "conversions": []
     },
@@ -7582,9 +7712,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% Slash Damage, +15% ATK, +1% Crit Chance",
         "stats": {
-            "Crit Chance%": 0.01,
-            "ATK%": 0.15,
-            "Slash%": 0.2
+            "Crit Chance%": 1,
+            "ATK%": 15,
+            "Slash%": 20
         },
         "conversions": []
     },
@@ -7605,9 +7735,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% Slash Damage, +15% ATK, +1% Crit Chance",
         "stats": {
-            "Crit Chance%": 0.01,
-            "ATK%": 0.15,
-            "Slash%": 0.2
+            "Crit Chance%": 1,
+            "ATK%": 15,
+            "Slash%": 20
         },
         "conversions": []
     },
@@ -7628,9 +7758,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% Slash Damage, +15% ATK, +1% Crit Chance",
         "stats": {
-            "Crit Chance%": 0.01,
-            "ATK%": 0.15,
-            "Slash%": 0.2
+            "Crit Chance%": 1,
+            "ATK%": 15,
+            "Slash%": 20
         },
         "conversions": []
     },
@@ -7651,8 +7781,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+35% Pierce Damage, +15% ATK, +5% Pierce Penetration",
         "stats": {
-            "ATK%": 0.15,
-            "Pierce%": 0.35
+            "ATK%": 15,
+            "Pierce%": 35,
+            "Pierce Pen%": 5
         },
         "conversions": []
     },
@@ -7673,9 +7804,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% Pierce Damage, +15% ATK, +1% Crit Chance",
         "stats": {
-            "Crit Chance%": 0.01,
-            "ATK%": 0.15,
-            "Pierce%": 0.2
+            "Crit Chance%": 1,
+            "ATK%": 15,
+            "Pierce%": 20
         },
         "conversions": []
     },
@@ -7696,9 +7827,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% Pierce Damage, +15% ATK, +1% Crit Chance",
         "stats": {
-            "Crit Chance%": 0.01,
-            "ATK%": 0.15,
-            "Pierce%": 0.2
+            "Crit Chance%": 1,
+            "ATK%": 15,
+            "Pierce%": 20
         },
         "conversions": []
     },
@@ -7719,9 +7850,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% Pierce Damage, +15% ATK, +1% Crit Chance",
         "stats": {
-            "Crit Chance%": 0.01,
-            "ATK%": 0.15,
-            "Pierce%": 0.2
+            "Crit Chance%": 1,
+            "ATK%": 15,
+            "Pierce%": 20
         },
         "conversions": []
     },
@@ -7742,9 +7873,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+35% Blunt Damage, +15% ATK, +5% Blunt Penetration",
         "stats": {
-            "ATK%": 0.15,
-            "Blunt%": 0.35,
-            "Blunt Pen%": 0.05
+            "ATK%": 15,
+            "Blunt%": 35,
+            "Blunt Pen%": 5
         },
         "conversions": []
     },
@@ -7765,9 +7896,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% Blunt Damage, +15% ATK, +1% Crit Chance",
         "stats": {
-            "Crit Chance%": 0.01,
-            "ATK%": 0.15,
-            "Blunt%": 0.2
+            "Crit Chance%": 1,
+            "ATK%": 15,
+            "Blunt%": 20
         },
         "conversions": []
     },
@@ -7788,9 +7919,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% Blunt Damage, +15% ATK, +1% Crit Chance",
         "stats": {
-            "Crit Chance%": 0.01,
-            "ATK%": 0.15,
-            "Blunt%": 0.2
+            "Crit Chance%": 1,
+            "ATK%": 15,
+            "Blunt%": 20
         },
         "conversions": []
     },
@@ -7811,9 +7942,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% Blunt Damage, +15% ATK, +1% Crit Chance",
         "stats": {
-            "Crit Chance%": 0.01,
-            "ATK%": 0.15,
-            "Blunt%": 0.2
+            "Crit Chance%": 1,
+            "ATK%": 15,
+            "Blunt%": 20
         },
         "conversions": []
     },
@@ -7834,9 +7965,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% Blunt Damage, +30% Crit DMG, +8% ATK",
         "stats": {
-            "Crit DMG%": 0.3,
-            "ATK%": 0.08,
-            "Blunt%": 0.2
+            "Crit DMG%": 30,
+            "ATK%": 8,
+            "Blunt%": 20
         },
         "conversions": []
     },
@@ -7857,9 +7988,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15% Blunt Damage, +10% Crit DMG, +5% ATK",
         "stats": {
-            "Crit DMG%": 0.1,
-            "ATK%": 0.05,
-            "Blunt%": 0.15
+            "Crit DMG%": 10,
+            "ATK%": 5,
+            "Blunt%": 15
         },
         "conversions": []
     },
@@ -7880,9 +8011,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15% Blunt Damage, +10% Crit DMG, +5% ATK",
         "stats": {
-            "Crit DMG%": 0.1,
-            "ATK%": 0.05,
-            "Blunt%": 0.15
+            "Crit DMG%": 10,
+            "ATK%": 5,
+            "Blunt%": 15
         },
         "conversions": []
     },
@@ -7903,9 +8034,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15% Blunt Damage, +10% Crit DMG, +5% ATK",
         "stats": {
-            "Crit DMG%": 0.1,
-            "ATK%": 0.05,
-            "Blunt%": 0.15
+            "Crit DMG%": 10,
+            "ATK%": 5,
+            "Blunt%": 15
         },
         "conversions": []
     },
@@ -7926,9 +8057,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10% ATK, +20% Slash Damage, +30% Crit DMG",
         "stats": {
-            "Crit DMG%": 0.3,
-            "ATK%": 0.1,
-            "Slash%": 0.2
+            "Crit DMG%": 30,
+            "ATK%": 10,
+            "Slash%": 20
         },
         "conversions": []
     },
@@ -7949,9 +8080,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15% Slash Damage, +6% ATK, +15% Crit DMG",
         "stats": {
-            "Crit DMG%": 0.15,
-            "ATK%": 0.06,
-            "Slash%": 0.15
+            "Crit DMG%": 15,
+            "ATK%": 6,
+            "Slash%": 15
         },
         "conversions": []
     },
@@ -7972,9 +8103,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15% Slash Damage, +6% ATK, +15% Crit DMG",
         "stats": {
-            "Crit DMG%": 0.15,
-            "ATK%": 0.06,
-            "Slash%": 0.15
+            "Crit DMG%": 15,
+            "ATK%": 6,
+            "Slash%": 15
         },
         "conversions": []
     },
@@ -7995,9 +8126,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15% Slash Damage, +6% ATK, +15% Crit DMG",
         "stats": {
-            "Crit DMG%": 0.15,
-            "ATK%": 0.06,
-            "Slash%": 0.15
+            "Crit DMG%": 15,
+            "ATK%": 6,
+            "Slash%": 15
         },
         "conversions": []
     },
@@ -8063,7 +8194,9 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+10% Physical Penetration",
-        "stats": {},
+        "stats": {
+            "Phys Pen%": 10
+        },
         "conversions": []
     },
     "Saga of Achilles 1": {
@@ -8083,7 +8216,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+25% ATK",
         "stats": {
-            "ATK%": 0.25
+            "ATK%": 25
         },
         "conversions": []
     },
@@ -8104,7 +8237,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+25% ATK",
         "stats": {
-            "ATK%": 0.25
+            "ATK%": 25
         },
         "conversions": []
     },
@@ -8125,7 +8258,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+40% ATK",
         "stats": {
-            "ATK%": 0.4
+            "ATK%": 40
         },
         "conversions": []
     },
@@ -8146,8 +8279,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+12% ATK, +12% Crit Damage",
         "stats": {
-            "Crit DMG%": 0.12,
-            "ATK%": 0.12
+            "Crit DMG%": 12,
+            "ATK%": 12
         },
         "conversions": []
     },
@@ -8168,8 +8301,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+12% ATK, +12% Crit Damage",
         "stats": {
-            "Crit DMG%": 0.12,
-            "ATK%": 0.12
+            "Crit DMG%": 12,
+            "ATK%": 12
         },
         "conversions": []
     },
@@ -8190,9 +8323,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15% ATK, +15% Crit Damage, +4% Crit Chance",
         "stats": {
-            "Crit Chance%": 0.04,
-            "Crit DMG%": 0.15,
-            "ATK%": 0.15
+            "Crit Chance%": 4,
+            "Crit DMG%": 15,
+            "ATK%": 15
         },
         "conversions": []
     },
@@ -8213,9 +8346,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% Pierce Damage, +30% Crit DMG, +8% ATK",
         "stats": {
-            "Crit DMG%": 0.3,
-            "ATK%": 0.08,
-            "Pierce%": 0.2
+            "Crit DMG%": 30,
+            "ATK%": 8,
+            "Pierce%": 20
         },
         "conversions": []
     },
@@ -8236,9 +8369,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15% Pierce Damage, +10% Crit DMG, +5% ATK",
         "stats": {
-            "Crit DMG%": 0.1,
-            "ATK%": 0.05,
-            "Pierce%": 0.15
+            "Crit DMG%": 10,
+            "ATK%": 5,
+            "Pierce%": 15
         },
         "conversions": []
     },
@@ -8259,9 +8392,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15% Pierce Damage, +10% Crit DMG, +5% ATK",
         "stats": {
-            "Crit DMG%": 0.1,
-            "ATK%": 0.05,
-            "Pierce%": 0.15
+            "Crit DMG%": 10,
+            "ATK%": 5,
+            "Pierce%": 15
         },
         "conversions": []
     },
@@ -8282,9 +8415,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15% Pierce Damage, +10% Crit DMG, +5% ATK",
         "stats": {
-            "Crit DMG%": 0.1,
-            "ATK%": 0.05,
-            "Pierce%": 0.15
+            "Crit DMG%": 10,
+            "ATK%": 5,
+            "Pierce%": 15
         },
         "conversions": []
     },
@@ -8305,8 +8438,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+35% Slash Damage, +15% ATK, +5% Slash Penetration",
         "stats": {
-            "ATK%": 0.15,
-            "Slash%": 0.35
+            "ATK%": 15,
+            "Slash%": 35,
+            "Slash Pen%": 5
         },
         "conversions": []
     },
@@ -8327,9 +8461,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% Slash Damage, +15% ATK, +2% Crit Chance",
         "stats": {
-            "Crit Chance%": 0.02,
-            "ATK%": 0.15,
-            "Slash%": 0.2
+            "Crit Chance%": 2,
+            "ATK%": 15,
+            "Slash%": 20
         },
         "conversions": []
     },
@@ -8350,9 +8484,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% Slash Damage, +15% ATK, +2% Crit Chance",
         "stats": {
-            "Crit Chance%": 0.02,
-            "ATK%": 0.15,
-            "Slash%": 0.2
+            "Crit Chance%": 2,
+            "ATK%": 15,
+            "Slash%": 20
         },
         "conversions": []
     },
@@ -8373,9 +8507,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% Slash Damage, +15% ATK, +2% Crit Chance",
         "stats": {
-            "Crit Chance%": 0.02,
-            "ATK%": 0.15,
-            "Slash%": 0.2
+            "Crit Chance%": 2,
+            "ATK%": 15,
+            "Slash%": 20
         },
         "conversions": []
     },
@@ -8396,8 +8530,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+35% Pierce Damage, +15% ATK, +5% Pierce Penetration",
         "stats": {
-            "ATK%": 0.15,
-            "Pierce%": 0.35
+            "ATK%": 15,
+            "Pierce%": 35,
+            "Pierce Pen%": 5
         },
         "conversions": []
     },
@@ -8418,9 +8553,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% Pierce Damage, +15% ATK, +2% Crit Chance",
         "stats": {
-            "Crit Chance%": 0.02,
-            "ATK%": 0.15,
-            "Pierce%": 0.2
+            "Crit Chance%": 2,
+            "ATK%": 15,
+            "Pierce%": 20
         },
         "conversions": []
     },
@@ -8441,9 +8576,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% Pierce Damage, +15% ATK, +2% Crit Chance",
         "stats": {
-            "Crit Chance%": 0.02,
-            "ATK%": 0.15,
-            "Pierce%": 0.2
+            "Crit Chance%": 2,
+            "ATK%": 15,
+            "Pierce%": 20
         },
         "conversions": []
     },
@@ -8464,9 +8599,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% Pierce Damage, +15% ATK, +2% Crit Chance",
         "stats": {
-            "Crit Chance%": 0.02,
-            "ATK%": 0.15,
-            "Pierce%": 0.2
+            "Crit Chance%": 2,
+            "ATK%": 15,
+            "Pierce%": 20
         },
         "conversions": []
     },
@@ -8487,9 +8622,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+35% Blunt Damage, +15% ATK, +5% Blunt Penetration",
         "stats": {
-            "ATK%": 0.15,
-            "Blunt%": 0.35,
-            "Blunt Pen%": 0.05
+            "ATK%": 15,
+            "Blunt%": 35,
+            "Blunt Pen%": 5
         },
         "conversions": []
     },
@@ -8510,9 +8645,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% Blunt Damage, +15% ATK, +2% Crit Chance",
         "stats": {
-            "Crit Chance%": 0.02,
-            "ATK%": 0.15,
-            "Blunt%": 0.2
+            "Crit Chance%": 2,
+            "ATK%": 15,
+            "Blunt%": 20
         },
         "conversions": []
     },
@@ -8533,9 +8668,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% Blunt Damage, +15% ATK, +2% Crit Chance",
         "stats": {
-            "Crit Chance%": 0.02,
-            "ATK%": 0.15,
-            "Blunt%": 0.2
+            "Crit Chance%": 2,
+            "ATK%": 15,
+            "Blunt%": 20
         },
         "conversions": []
     },
@@ -8556,9 +8691,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% Blunt Damage, +15% ATK, +2% Crit Chance",
         "stats": {
-            "Crit Chance%": 0.02,
-            "ATK%": 0.15,
-            "Blunt%": 0.2
+            "Crit Chance%": 2,
+            "ATK%": 15,
+            "Blunt%": 20
         },
         "conversions": []
     },
@@ -8579,9 +8714,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% Blunt Damage, +30% Crit DMG, +8% ATK",
         "stats": {
-            "Crit DMG%": 0.3,
-            "ATK%": 0.08,
-            "Blunt%": 0.2
+            "Crit DMG%": 30,
+            "ATK%": 8,
+            "Blunt%": 20
         },
         "conversions": []
     },
@@ -8602,9 +8737,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15% Blunt Damage, +10% Crit DMG, +5% ATK",
         "stats": {
-            "Crit DMG%": 0.1,
-            "ATK%": 0.05,
-            "Blunt%": 0.15
+            "Crit DMG%": 10,
+            "ATK%": 5,
+            "Blunt%": 15
         },
         "conversions": []
     },
@@ -8625,9 +8760,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15% Blunt Damage, +10% Crit DMG, +5% ATK",
         "stats": {
-            "Crit DMG%": 0.1,
-            "ATK%": 0.05,
-            "Blunt%": 0.15
+            "Crit DMG%": 10,
+            "ATK%": 5,
+            "Blunt%": 15
         },
         "conversions": []
     },
@@ -8648,9 +8783,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15% Blunt Damage, +10% Crit DMG, +5% ATK",
         "stats": {
-            "Crit DMG%": 0.1,
-            "ATK%": 0.05,
-            "Blunt%": 0.15
+            "Crit DMG%": 10,
+            "ATK%": 5,
+            "Blunt%": 15
         },
         "conversions": []
     },
@@ -8671,9 +8806,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10% ATK, +20% Slash Damage, +30% Crit DMG",
         "stats": {
-            "Crit DMG%": 0.3,
-            "ATK%": 0.1,
-            "Slash%": 0.2
+            "Crit DMG%": 30,
+            "ATK%": 10,
+            "Slash%": 20
         },
         "conversions": []
     },
@@ -8694,9 +8829,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15% Slash Damage, +6% ATK, +15% Crit DMG",
         "stats": {
-            "Crit DMG%": 0.15,
-            "ATK%": 0.06,
-            "Slash%": 0.15
+            "Crit DMG%": 15,
+            "ATK%": 6,
+            "Slash%": 15
         },
         "conversions": []
     },
@@ -8717,9 +8852,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15% Slash Damage, +6% ATK, +15% Crit DMG",
         "stats": {
-            "Crit DMG%": 0.15,
-            "ATK%": 0.06,
-            "Slash%": 0.15
+            "Crit DMG%": 15,
+            "ATK%": 6,
+            "Slash%": 15
         },
         "conversions": []
     },
@@ -8740,9 +8875,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15% Slash Damage, +6% ATK, +15% Crit DMG",
         "stats": {
-            "Crit DMG%": 0.15,
-            "ATK%": 0.06,
-            "Slash%": 0.15
+            "Crit DMG%": 15,
+            "ATK%": 6,
+            "Slash%": 15
         },
         "conversions": []
     },
@@ -8763,9 +8898,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% Pierce Damage, +30% Crit DMG, +8% ATK",
         "stats": {
-            "Crit DMG%": 0.3,
-            "ATK%": 0.08,
-            "Pierce%": 0.2
+            "Crit DMG%": 30,
+            "ATK%": 8,
+            "Pierce%": 20
         },
         "conversions": []
     },
@@ -8786,7 +8921,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+45% Pierce Damage",
         "stats": {
-            "Pierce%": 0.45
+            "Pierce%": 45
         },
         "conversions": []
     },
@@ -8807,8 +8942,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+30% ATK, +20% Crit Damage",
         "stats": {
-            "Crit DMG%": 0.2,
-            "ATK%": 0.3
+            "Crit DMG%": 20,
+            "ATK%": 30
         },
         "conversions": []
     },
@@ -8829,7 +8964,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10% Void Penetration, +15% Global MP, -50% Penalty to Void Damage",
         "stats": {
-            "Void Pen%": 0.1
+            "Void Pen%": 10,
+            "MP%": 15
         },
         "conversions": [
             {
@@ -8856,8 +8992,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+35% Slash Damage, +15% ATK, +5% Slash Penetration",
         "stats": {
-            "ATK%": 0.15,
-            "Slash%": 0.35
+            "ATK%": 15,
+            "Slash%": 35,
+            "Slash Pen%": 5
         },
         "conversions": []
     },
@@ -8878,7 +9015,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+45% Slash Damage",
         "stats": {
-            "Slash%": 0.45
+            "Slash%": 45
         },
         "conversions": []
     },
@@ -8899,8 +9036,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+30% ATK, +3% Crit Chance",
         "stats": {
-            "Crit Chance%": 0.03,
-            "ATK%": 0.3
+            "Crit Chance%": 3,
+            "ATK%": 30
         },
         "conversions": []
     },
@@ -8921,8 +9058,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% Slash Damage, +20% ATK",
         "stats": {
-            "ATK%": 0.2,
-            "Slash%": 0.2
+            "ATK%": 20,
+            "Slash%": 20
         },
         "conversions": []
     },
@@ -8943,8 +9080,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+35% Pierce Damage, +15% ATK, +5% Pierce Penetration",
         "stats": {
-            "ATK%": 0.15,
-            "Pierce%": 0.35
+            "ATK%": 15,
+            "Pierce%": 35,
+            "Pierce Pen%": 5
         },
         "conversions": []
     },
@@ -8965,7 +9103,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+45% Pierce Damage",
         "stats": {
-            "Pierce%": 0.45
+            "Pierce%": 45
         },
         "conversions": []
     },
@@ -8986,8 +9124,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+30% ATK, +3% Crit Chance",
         "stats": {
-            "Crit Chance%": 0.03,
-            "ATK%": 0.3
+            "Crit Chance%": 3,
+            "ATK%": 30
         },
         "conversions": []
     },
@@ -9007,7 +9145,9 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+10% Pierce Penetration",
-        "stats": {},
+        "stats": {
+            "Pierce Pen%": 10
+        },
         "conversions": []
     },
     "Hammer Archon": {
@@ -9027,9 +9167,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+35% Blunt Damage, +15% ATK, +5% Blunt Penetration",
         "stats": {
-            "ATK%": 0.15,
-            "Blunt%": 0.35,
-            "Blunt Pen%": 0.05
+            "ATK%": 15,
+            "Blunt%": 35,
+            "Blunt Pen%": 5
         },
         "conversions": []
     },
@@ -9050,7 +9190,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+45% Blunt Damage",
         "stats": {
-            "Blunt%": 0.45
+            "Blunt%": 45
         },
         "conversions": []
     },
@@ -9071,8 +9211,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+30% ATK, +3% Crit Chance",
         "stats": {
-            "Crit Chance%": 0.03,
-            "ATK%": 0.3
+            "Crit Chance%": 3,
+            "ATK%": 30
         },
         "conversions": []
     },
@@ -9093,9 +9233,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15% Blunt Damage, +15% ATK, +5% Blunt Penetration",
         "stats": {
-            "ATK%": 0.15,
-            "Blunt%": 0.15,
-            "Blunt Pen%": 0.05
+            "ATK%": 15,
+            "Blunt%": 15,
+            "Blunt Pen%": 5
         },
         "conversions": []
     },
@@ -9116,9 +9256,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% Blunt Damage, +30% Crit DMG, +8% ATK",
         "stats": {
-            "Crit DMG%": 0.3,
-            "ATK%": 0.08,
-            "Blunt%": 0.2
+            "Crit DMG%": 30,
+            "ATK%": 8,
+            "Blunt%": 20
         },
         "conversions": []
     },
@@ -9139,7 +9279,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+45% Blunt Damage",
         "stats": {
-            "Blunt%": 0.45
+            "Blunt%": 45
         },
         "conversions": []
     },
@@ -9160,8 +9300,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+30% ATK, +20% Crit Damage",
         "stats": {
-            "Crit DMG%": 0.2,
-            "ATK%": 0.3
+            "Crit DMG%": 20,
+            "ATK%": 30
         },
         "conversions": []
     },
@@ -9182,7 +9322,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+80% ATK, Blunt Damage ignores 10% Armor",
         "stats": {
-            "ATK%": 0.8
+            "ATK%": 80
         },
         "conversions": []
     },
@@ -9203,9 +9343,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10% ATK, +20% Slash Damage, +30% Crit DMG",
         "stats": {
-            "Crit DMG%": 0.3,
-            "ATK%": 0.1,
-            "Slash%": 0.2
+            "Crit DMG%": 30,
+            "ATK%": 10,
+            "Slash%": 20
         },
         "conversions": []
     },
@@ -9226,7 +9366,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+45% Slash Damage, +5% Slash Penetration",
         "stats": {
-            "Slash%": 0.45
+            "Slash%": 45,
+            "Slash Pen%": 5
         },
         "conversions": []
     },
@@ -9247,8 +9388,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+30% ATK, +20% Crit Damage",
         "stats": {
-            "Crit DMG%": 0.2,
-            "ATK%": 0.3
+            "Crit DMG%": 20,
+            "ATK%": 30
         },
         "conversions": []
     },
@@ -9269,8 +9410,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10% Slash Damage, +5% Crit Chance, +5% Crit DMG Multiplier",
         "stats": {
-            "Crit Chance%": 0.05,
-            "Slash%": 0.1
+            "Crit Chance%": 5,
+            "Slash%": 10,
+            "Crit DMG%": 5
         },
         "conversions": []
     },
@@ -9291,7 +9433,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+1% Global ATK, +12% Crit Damage",
         "stats": {
-            "Crit DMG%": 0.12
+            "Crit DMG%": 12,
+            "Global ATK%": 1
         },
         "conversions": []
     },
@@ -9312,7 +9455,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+1% Global ATK, +12% Crit Damage",
         "stats": {
-            "Crit DMG%": 0.12
+            "Crit DMG%": 12,
+            "Global ATK%": 1
         },
         "conversions": []
     },
@@ -9333,7 +9477,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+1% Global ATK, +30% Crit Damage, +1% Global Damage",
         "stats": {
-            "Crit DMG%": 0.3
+            "Crit DMG%": 30,
+            "Dmg%": 1,
+            "Global ATK%": 1
         },
         "conversions": []
     },
@@ -9354,9 +9500,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+1% Global ATK, +12% Physical Damage",
         "stats": {
-            "Slash%": 0.12,
-            "Pierce%": 0.12,
-            "Blunt%": 0.12
+            "Global ATK%": 1
         },
         "conversions": []
     },
@@ -9377,9 +9521,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+1% Global ATK, +12% Physical Damage",
         "stats": {
-            "Slash%": 0.12,
-            "Pierce%": 0.12,
-            "Blunt%": 0.12
+            "Global ATK%": 1
         },
         "conversions": []
     },
@@ -9399,7 +9541,10 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+1% Global ATK, +10% Physical Penetration",
-        "stats": {},
+        "stats": {
+            "Phys Pen%": 10,
+            "Global ATK%": 1
+        },
         "conversions": []
     },
     "Epic of Jason 1": {
@@ -9419,7 +9564,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+1% Global ATK,  +25% ATK Multi",
         "stats": {
-            "ATK%": 0.25
+            "ATK%": 25,
+            "Global ATK%": 1
         },
         "conversions": []
     },
@@ -9440,7 +9586,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+1% Global ATK,  +25% ATK Multi",
         "stats": {
-            "ATK%": 0.25
+            "ATK%": 25,
+            "Global ATK%": 1
         },
         "conversions": []
     },
@@ -9461,7 +9608,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+1% Global ATK,  +40% ATK Multi, +2% Global Damage",
         "stats": {
-            "ATK%": 0.4
+            "ATK%": 40,
+            "Dmg%": 2,
+            "Global ATK%": 1
         },
         "conversions": []
     },
@@ -9505,7 +9654,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "-20% Threat Generated, +20% Global Crit Damage",
         "stats": {
-            "Threat%": -0.2
+            "Crit DMG%": 20
         },
         "conversions": []
     },
@@ -9550,7 +9699,8 @@ const talent_data: Record<string, Talent> = {
             "Slash%": 0.1,
             "Pierce%": 0.1,
             "Blunt%": 0.1,
-            "Global ATK%": 0.01
+            "Global ATK%": 1,
+            "ATK%": 5
         },
         "conversions": [
             {
@@ -9580,7 +9730,8 @@ const talent_data: Record<string, Talent> = {
             "Slash%": 0.2,
             "Pierce%": 0.2,
             "Blunt%": 0.2,
-            "Global ATK%": -0.03
+            "Global ATK%": -3,
+            "ATK%": 5
         },
         "conversions": [
             {
@@ -9606,7 +9757,11 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+1% Global ATK, -6% xPhys DMG, Conversion 5% ATK to DEF",
-        "stats": {},
+        "stats": {
+            "ATK%": 5,
+            "Global ATK%": 1,
+            "Phys xDmg%": -6
+        },
         "conversions": [
             {
                 "source": "ATK",
@@ -9631,7 +9786,11 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+1% Global ATK, '+4% xPhys DMG, Conversion 5% ATK to DEF",
-        "stats": {},
+        "stats": {
+            "ATK%": 5,
+            "Global ATK%": 1,
+            "Phys xDmg%": 4
+        },
         "conversions": [
             {
                 "source": "ATK",
@@ -9656,7 +9815,11 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+3% Global ATK, -75% Global MATK, +8% xVoid Pen",
-        "stats": {},
+        "stats": {
+            "Global ATK%": 3,
+            "Global MATK%": -75,
+            "Void xPen%": 8
+        },
         "conversions": []
     },
     "Abyssal Light of Desire": {
@@ -9676,8 +9839,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+1% Global ATK, +5% xPhys Pen",
         "stats": {
-            "Global ATK%": 0.01,
-            "Phys xPen%": 0.05
+            "Global ATK%": 1
         },
         "conversions": []
     },
@@ -9698,7 +9860,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+1% Global ATK, +5% xPhys Pen, +5% Crit Chance, -10% Max HP Multi",
         "stats": {
-            "Crit Chance%": 0.04
+            "Crit Chance%": 5,
+            "Global ATK%": 1,
+            "HP%": -10
         },
         "conversions": []
     },
@@ -9719,9 +9883,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+2% Global ATK, +8% xPhys DMG, +2% Global DMG",
         "stats": {
-            "Global ATK%": 0.02,
-            "Phys xDmg%": 0.08,
-            "Dmg%": 0.02
+            "Global ATK%": 2,
+            "Phys xDmg%": 8,
+            "Dmg%": 2
         },
         "conversions": []
     },
@@ -9742,7 +9906,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+1% Global ATK, +25% ATK Multi, Conversion 8% DEF to ATK",
         "stats": {
-            "ATK%": 0.25
+            "ATK%": 25,
+            "DEF%": 8,
+            "Global ATK%": 1
         },
         "conversions": [
             {
@@ -9769,7 +9935,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+1% Global ATK, +25% ATK Multi, Conversion 8% MATK to ATK",
         "stats": {
-            "ATK%": 0.25
+            "ATK%": 25,
+            "Global ATK%": 1,
+            "MATK%": 8
         },
         "conversions": [
             {
@@ -9796,7 +9964,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+1% Global ATK, +25% ATK Multi, Conversion 8% Healpower to ATK",
         "stats": {
-            "ATK%": 0.25
+            "ATK%": 25,
+            "Global ATK%": 1
         },
         "conversions": [
             {
@@ -9823,7 +9992,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+2% Global ATK,  +25% ATK Multi, +2% Global DMG",
         "stats": {
-            "ATK%": 0.25
+            "ATK%": 25,
+            "Dmg%": 2,
+            "Global ATK%": 2
         },
         "conversions": []
     },
@@ -9843,7 +10014,11 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+3% Global ATK, Temp HP Start of 25% Max HP, -33% Global MATK/Healpower",
-        "stats": {},
+        "stats": {
+            "Global ATK%": 3,
+            "Global MATK%": -33,
+            "HP%": 25
+        },
         "conversions": []
     },
     "Soul Shard of T'sanogora": {
@@ -9862,7 +10037,11 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+3% Global ATK, +15% xPhys DMG, +5% xVoid Pen",
-        "stats": {},
+        "stats": {
+            "Global ATK%": 3,
+            "Phys xDmg%": 15,
+            "Void xPen%": 5
+        },
         "conversions": []
     },
     "Space Shard of T'sanogora": {
@@ -9881,7 +10060,11 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+3% Global ATK, +10% Buff Multiplier, -80% Global MATK/Healpower/Elevoid",
-        "stats": {},
+        "stats": {
+            "Buff%": 10,
+            "Global ATK%": 3,
+            "Global MATK%": -80
+        },
         "conversions": []
     },
     "Time Core of T'sanogora": {
@@ -9901,18 +10084,10 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "-10% Max HP Multi, +20% All Res, +5% Global ATK, +20% xPhys DMG",
         "stats": {
-            "Slash Res%": 0.2,
-            "Pierce Res%": 0.2,
-            "Blunt Res%": 0.2,
-            "Fire Res%": 0.2,
-            "Water Res%": 0.2,
-            "Lightning Res%": 0.2,
-            "Wind Res%": 0.2,
-            "Earth Res%": 0.2,
-            "Toxic Res%": 0.2,
-            "Neg Res%": 0.2,
-            "Holy Res%": 0.2,
-            "Void Res%": 0.2
+            "Global ATK%": 5,
+            "HP%": -10,
+            "Phys xDmg%": 20,
+            "All Res%": 20
         },
         "conversions": []
     },
@@ -9932,7 +10107,11 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "-10% Global Crit Chance, +12% Global Crit DMG & xPhys DMG, -25% Global MATK",
-        "stats": {},
+        "stats": {
+            "Crit Chance%": -10,
+            "Crit DMG%": 12,
+            "Global MATK%": -25
+        },
         "conversions": []
     },
     "Space Core of T'sanogora": {
@@ -9951,7 +10130,10 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+20% Global ATK, Conversion 10% of MP to Focus, -50% Global Elevoid",
-        "stats": {},
+        "stats": {
+            "Global ATK%": 20,
+            "Void%": -50
+        },
         "conversions": [
             {
                 "source": "MP",
@@ -9976,7 +10158,11 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+2% Global ATK, +10% Global Crit Damage, +5% xPhys DMG",
-        "stats": {},
+        "stats": {
+            "Crit DMG%": 10,
+            "Global ATK%": 2,
+            "Phys xDmg%": 5
+        },
         "conversions": []
     },
     "Arcane Study 1": {
@@ -9996,7 +10182,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+5% MATK",
         "stats": {
-            "MATK%": 0.05
+            "MATK%": 5
         },
         "conversions": []
     },
@@ -10017,7 +10203,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+5% MATK",
         "stats": {
-            "MATK%": 0.05
+            "MATK%": 5
         },
         "conversions": []
     },
@@ -10038,7 +10224,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10% MATK",
         "stats": {
-            "MATK%": 0.1
+            "MATK%": 10
         },
         "conversions": []
     },
@@ -10059,8 +10245,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+2% MATK, +3% Heal",
         "stats": {
-            "MATK%": 0.02,
-            "HEAL%": 0.03
+            "MATK%": 2,
+            "HEAL%": 3
         },
         "conversions": []
     },
@@ -10081,8 +10267,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+2% MATK, +3% Heal",
         "stats": {
-            "MATK%": 0.02,
-            "HEAL%": 0.03
+            "MATK%": 2,
+            "HEAL%": 3
         },
         "conversions": []
     },
@@ -10103,8 +10289,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+5% MATK, +6% Heal, +20 Heal",
         "stats": {
-            "MATK%": 0.05,
-            "HEAL%": 0.06
+            "MATK%": 5,
+            "HEAL%": 6,
+            "HEAL": 20
         },
         "conversions": []
     },
@@ -10124,7 +10311,10 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+2 MATK, +5 MP",
-        "stats": {},
+        "stats": {
+            "MATK": 2,
+            "MP": 5
+        },
         "conversions": []
     },
     "Mage Body Training 2": {
@@ -10143,7 +10333,10 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+3 MATK, +5 MP",
-        "stats": {},
+        "stats": {
+            "MATK": 3,
+            "MP": 5
+        },
         "conversions": []
     },
     "Mage Body Training 3": {
@@ -10162,7 +10355,10 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+4 MATK, +5 MP",
-        "stats": {},
+        "stats": {
+            "MATK": 4,
+            "MP": 5
+        },
         "conversions": []
     },
     "Arcane Mastery 1": {
@@ -10182,7 +10378,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+5% MATK",
         "stats": {
-            "MATK%": 0.05
+            "MATK%": 5
         },
         "conversions": []
     },
@@ -10203,7 +10399,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+5% MATK",
         "stats": {
-            "MATK%": 0.05
+            "MATK%": 5
         },
         "conversions": []
     },
@@ -10224,7 +10420,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10% MATK",
         "stats": {
-            "MATK%": 0.1
+            "MATK%": 10
         },
         "conversions": []
     },
@@ -10245,8 +10441,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+4% MATK, +2% Heal",
         "stats": {
-            "MATK%": 0.04,
-            "HEAL%": 0.02
+            "MATK%": 4,
+            "HEAL%": 2
         },
         "conversions": []
     },
@@ -10267,8 +10463,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+4% MATK, +2% Heal",
         "stats": {
-            "MATK%": 0.04,
-            "HEAL%": 0.02
+            "MATK%": 4,
+            "HEAL%": 2
         },
         "conversions": []
     },
@@ -10289,8 +10485,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+8% MATK, +8% Heal, +20 Heal",
         "stats": {
-            "MATK%": 0.08,
-            "HEAL%": 0.08
+            "MATK%": 8,
+            "HEAL%": 8,
+            "HEAL": 20
         },
         "conversions": []
     },
@@ -10310,7 +10507,10 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+5 MATK, +5 MP",
-        "stats": {},
+        "stats": {
+            "MATK": 5,
+            "MP": 5
+        },
         "conversions": []
     },
     "Mage Body Training 5": {
@@ -10329,7 +10529,10 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+6 MATK, +5 MP",
-        "stats": {},
+        "stats": {
+            "MATK": 6,
+            "MP": 5
+        },
         "conversions": []
     },
     "Mage Body Training 6": {
@@ -10348,7 +10551,10 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+7 MATK, +5 MP",
-        "stats": {},
+        "stats": {
+            "MATK": 7,
+            "MP": 5
+        },
         "conversions": []
     },
     "Path of the Arcane": {
@@ -10368,7 +10574,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+16% MATK",
         "stats": {
-            "MATK%": 0.16
+            "MATK%": 16
         },
         "conversions": []
     },
@@ -10389,7 +10595,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+6% MATK",
         "stats": {
-            "MATK%": 0.06
+            "MATK%": 6
         },
         "conversions": []
     },
@@ -10410,7 +10616,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+6% MATK",
         "stats": {
-            "MATK%": 0.06
+            "MATK%": 6
         },
         "conversions": []
     },
@@ -10431,7 +10637,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+6% MATK",
         "stats": {
-            "MATK%": 0.06
+            "MATK%": 6
         },
         "conversions": []
     },
@@ -10452,8 +10658,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10% MATK, +10% Holy Damage",
         "stats": {
-            "MATK%": 0.1,
-            "Holy%": 0.1
+            "MATK%": 10,
+            "Holy%": 10
         },
         "conversions": []
     },
@@ -10474,8 +10680,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+3% MATK, +4% Holy Damage",
         "stats": {
-            "MATK%": 0.03,
-            "Holy%": 0.04
+            "MATK%": 3,
+            "Holy%": 4
         },
         "conversions": []
     },
@@ -10496,8 +10702,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+3% MATK, +4% Holy Damage",
         "stats": {
-            "MATK%": 0.03,
-            "Holy%": 0.04
+            "MATK%": 3,
+            "Holy%": 4
         },
         "conversions": []
     },
@@ -10518,8 +10724,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+3% MATK, +4% Holy Damage",
         "stats": {
-            "MATK%": 0.03,
-            "Holy%": 0.04
+            "MATK%": 3,
+            "Holy%": 4
         },
         "conversions": []
     },
@@ -10540,8 +10746,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10% MATK, +10% Negative Damage",
         "stats": {
-            "MATK%": 0.1,
-            "Neg%": 0.1
+            "MATK%": 10,
+            "Neg%": 10
         },
         "conversions": []
     },
@@ -10562,8 +10768,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+3% MATK, +4% Negative Damage",
         "stats": {
-            "MATK%": 0.03,
-            "Neg%": 0.04
+            "MATK%": 3,
+            "Neg%": 4
         },
         "conversions": []
     },
@@ -10584,8 +10790,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+3% MATK, +4% Negative Damage",
         "stats": {
-            "MATK%": 0.03,
-            "Neg%": 0.04
+            "MATK%": 3,
+            "Neg%": 4
         },
         "conversions": []
     },
@@ -10606,8 +10812,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+3% MATK, +4% Negative Damage",
         "stats": {
-            "MATK%": 0.03,
-            "Neg%": 0.04
+            "MATK%": 3,
+            "Neg%": 4
         },
         "conversions": []
     },
@@ -10627,7 +10833,10 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+8 MATK, +5 MP",
-        "stats": {},
+        "stats": {
+            "MATK": 8,
+            "MP": 5
+        },
         "conversions": []
     },
     "Mage Body Training 8": {
@@ -10646,7 +10855,10 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+10 MATK, +5 MP",
-        "stats": {},
+        "stats": {
+            "MATK": 10,
+            "MP": 5
+        },
         "conversions": []
     },
     "Sage's Body": {
@@ -10666,7 +10878,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15 MATK, +5 MP, +5% Crit Chance",
         "stats": {
-            "Crit Chance%": 0.05
+            "Crit Chance%": 5,
+            "MATK": 15,
+            "MP": 5
         },
         "conversions": []
     },
@@ -10687,7 +10901,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15% MATK",
         "stats": {
-            "MATK%": 0.15
+            "MATK%": 15
         },
         "conversions": []
     },
@@ -10708,7 +10922,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10% Fire Damage",
         "stats": {
-            "Fire%": 0.1
+            "Fire%": 10
         },
         "conversions": []
     },
@@ -10729,7 +10943,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+4% Fire Damage",
         "stats": {
-            "Fire%": 0.04
+            "Fire%": 4
         },
         "conversions": []
     },
@@ -10750,7 +10964,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+8% Fire Damage",
         "stats": {
-            "Fire%": 0.08
+            "Fire%": 8
         },
         "conversions": []
     },
@@ -10771,7 +10985,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10% Water Damage",
         "stats": {
-            "Water%": 0.1
+            "Water%": 10
         },
         "conversions": []
     },
@@ -10792,7 +11006,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+4% Water Damage",
         "stats": {
-            "Water%": 0.04
+            "Water%": 4
         },
         "conversions": []
     },
@@ -10813,7 +11027,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+8% Water Damage",
         "stats": {
-            "Water%": 0.08
+            "Water%": 8
         },
         "conversions": []
     },
@@ -10834,7 +11048,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10% Lightning Damage",
         "stats": {
-            "Lightning%": 0.1
+            "Lightning%": 10
         },
         "conversions": []
     },
@@ -10855,7 +11069,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+4% Lightning Damage",
         "stats": {
-            "Lightning%": 0.04
+            "Lightning%": 4
         },
         "conversions": []
     },
@@ -10876,7 +11090,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+8% Lightning Damage",
         "stats": {
-            "Lightning%": 0.08
+            "Lightning%": 8
         },
         "conversions": []
     },
@@ -10897,7 +11111,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10% Wind Damage",
         "stats": {
-            "Wind%": 0.1
+            "Wind%": 10
         },
         "conversions": []
     },
@@ -10918,7 +11132,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+4% Wind Damage",
         "stats": {
-            "Wind%": 0.04
+            "Wind%": 4
         },
         "conversions": []
     },
@@ -10939,7 +11153,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+8% Wind Damage",
         "stats": {
-            "Wind%": 0.08
+            "Wind%": 8
         },
         "conversions": []
     },
@@ -10960,7 +11174,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10% Earth Damage",
         "stats": {
-            "Earth%": 0.1
+            "Earth%": 10
         },
         "conversions": []
     },
@@ -11023,7 +11237,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10% Toxic Damage",
         "stats": {
-            "Toxic%": 0.1
+            "Toxic%": 10
         },
         "conversions": []
     },
@@ -11044,7 +11258,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+4% Toxic Damage",
         "stats": {
-            "Toxic%": 0.04
+            "Toxic%": 4
         },
         "conversions": []
     },
@@ -11065,7 +11279,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+8% Toxic Damage",
         "stats": {
-            "Toxic%": 0.08
+            "Toxic%": 8
         },
         "conversions": []
     },
@@ -11086,9 +11300,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10% MATK, +10% Holy Damage, +10% Toxic Damage",
         "stats": {
-            "MATK%": 0.1,
-            "Toxic%": 0.1,
-            "Holy%": 0.1
+            "MATK%": 10,
+            "Toxic%": 10,
+            "Holy%": 10
         },
         "conversions": []
     },
@@ -11109,9 +11323,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+3% MATK, +4% Holy Damage, +4% Toxic Damage",
         "stats": {
-            "MATK%": 0.03,
-            "Toxic%": 0.04,
-            "Holy%": 0.04
+            "MATK%": 3,
+            "Toxic%": 4,
+            "Holy%": 4
         },
         "conversions": []
     },
@@ -11132,9 +11346,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+3% MATK, +4% Holy Damage, +4% Toxic Damage",
         "stats": {
-            "MATK%": 0.03,
-            "Toxic%": 0.04,
-            "Holy%": 0.04
+            "MATK%": 3,
+            "Toxic%": 4,
+            "Holy%": 4
         },
         "conversions": []
     },
@@ -11155,9 +11369,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+3% MATK, +4% Holy Damage, +4% Toxic Damage",
         "stats": {
-            "MATK%": 0.03,
-            "Toxic%": 0.04,
-            "Holy%": 0.04
+            "MATK%": 3,
+            "Toxic%": 4,
+            "Holy%": 4
         },
         "conversions": []
     },
@@ -11178,8 +11392,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10% MATK, +10% Negative Damage",
         "stats": {
-            "MATK%": 0.1,
-            "Neg%": 0.1
+            "MATK%": 10,
+            "Neg%": 10
         },
         "conversions": []
     },
@@ -11200,8 +11414,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+3% MATK, +4% Negative Damage",
         "stats": {
-            "MATK%": 0.03,
-            "Neg%": 0.04
+            "MATK%": 3,
+            "Neg%": 4
         },
         "conversions": []
     },
@@ -11222,8 +11436,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+3% MATK, +4% Negative Damage",
         "stats": {
-            "MATK%": 0.03,
-            "Neg%": 0.04
+            "MATK%": 3,
+            "Neg%": 4
         },
         "conversions": []
     },
@@ -11244,8 +11458,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+3% MATK, +4% Negative Damage",
         "stats": {
-            "MATK%": 0.03,
-            "Neg%": 0.04
+            "MATK%": 3,
+            "Neg%": 4
         },
         "conversions": []
     },
@@ -11266,8 +11480,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+6% MATK, +2 MP +1% Crit Chance",
         "stats": {
-            "Crit Chance%": 0.01,
-            "MATK%": 0.06
+            "Crit Chance%": 1,
+            "MATK%": 6,
+            "MP": 2
         },
         "conversions": []
     },
@@ -11288,8 +11503,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+6% MATK, +2 MP, +1% Crit Chance",
         "stats": {
-            "Crit Chance%": 0.01,
-            "MATK%": 0.06
+            "Crit Chance%": 1,
+            "MATK%": 6,
+            "MP": 2
         },
         "conversions": []
     },
@@ -11310,8 +11526,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+6% MATK, +6 MP, +3% Crit Chance",
         "stats": {
-            "Crit Chance%": 0.03,
-            "MATK%": 0.06
+            "Crit Chance%": 3,
+            "MATK%": 6,
+            "MP": 6
         },
         "conversions": []
     },
@@ -11332,8 +11549,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+6% MATK, +5% DEF",
         "stats": {
-            "DEF%": 0.05,
-            "MATK%": 0.06
+            "DEF%": 5,
+            "MATK%": 6
         },
         "conversions": []
     },
@@ -11354,8 +11571,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+6% MATK, +5% DEF",
         "stats": {
-            "DEF%": 0.05,
-            "MATK%": 0.06
+            "DEF%": 5,
+            "MATK%": 6
         },
         "conversions": []
     },
@@ -11376,8 +11593,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+6% MATK, +10% DEF",
         "stats": {
-            "DEF%": 0.1,
-            "MATK%": 0.06
+            "DEF%": 10,
+            "MATK%": 6
         },
         "conversions": []
     },
@@ -11398,7 +11615,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+2% Crit Chance, -10 MATK, -4 MP",
         "stats": {
-            "Crit Chance%": 0.02
+            "Crit Chance%": 2,
+            "MATK": -10,
+            "MP": -4
         },
         "conversions": []
     },
@@ -11419,7 +11638,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+2% Crit Chance, -10 MATK, -4 MP",
         "stats": {
-            "Crit Chance%": 0.02
+            "Crit Chance%": 2,
+            "MATK": -10,
+            "MP": -4
         },
         "conversions": []
     },
@@ -11440,7 +11661,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+4% Crit Chance, -12 MATK, -5 MP",
         "stats": {
-            "Crit Chance%": 0.04
+            "Crit Chance%": 4,
+            "MATK": -12,
+            "MP": -5
         },
         "conversions": []
     },
@@ -11461,7 +11684,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% MATK",
         "stats": {
-            "MATK%": 0.2
+            "MATK%": 20
         },
         "conversions": []
     },
@@ -11482,9 +11705,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+6% MATK, +10% Water and Wind Damage",
         "stats": {
-            "MATK%": 0.06,
-            "Water%": 0.1,
-            "Wind%": 0.1
+            "MATK%": 6
         },
         "conversions": []
     },
@@ -11505,9 +11726,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+6% MATK, +10% Fire and Lightning Damage",
         "stats": {
-            "MATK%": 0.06,
-            "Fire%": 0.1,
-            "Lightning%": 0.1
+            "MATK%": 6
         },
         "conversions": []
     },
@@ -11528,9 +11747,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+6% MATK, +10% Earth Damage and Toxic Damage",
         "stats": {
-            "MATK%": 0.06,
-            "Earth%": 0.1,
-            "Toxic%": 0.1
+            "MATK%": 6,
+            "Earth%": 10
         },
         "conversions": []
     },
@@ -11551,8 +11769,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+12% MATK, +10% Heal",
         "stats": {
-            "MATK%": 0.12,
-            "HEAL%": 0.1
+            "MATK%": 12,
+            "HEAL%": 10
         },
         "conversions": []
     },
@@ -11573,9 +11791,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+5% MATK, +15% Heal, +5% Holy Damage",
         "stats": {
-            "MATK%": 0.05,
-            "HEAL%": 0.15,
-            "Holy%": 0.05
+            "MATK%": 5,
+            "HEAL%": 15,
+            "Holy%": 5
         },
         "conversions": []
     },
@@ -11596,8 +11814,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+5% MATK, +40 Heal, +5% Holy Damage",
         "stats": {
-            "MATK%": 0.05,
-            "Holy%": 0.05
+            "MATK%": 5,
+            "Holy%": 5,
+            "HEAL": 40
         },
         "conversions": []
     },
@@ -11618,8 +11837,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+5% MATK, +10% Holy Damage",
         "stats": {
-            "MATK%": 0.05,
-            "Holy%": 0.1
+            "MATK%": 5,
+            "Holy%": 10
         },
         "conversions": []
     },
@@ -11640,9 +11859,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+6% MATK, -30% Heal, +20% Negative Damage",
         "stats": {
-            "MATK%": 0.06,
-            "HEAL%": -0.3,
-            "Neg%": 0.2
+            "MATK%": 6,
+            "HEAL%": -30,
+            "Neg%": 20
         },
         "conversions": []
     },
@@ -11663,8 +11882,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+6% Negative Damage, +5% Crit Chance",
         "stats": {
-            "Crit Chance%": 0.05,
-            "Neg%": 0.06
+            "Crit Chance%": 5,
+            "Neg%": 6
         },
         "conversions": []
     },
@@ -11685,8 +11904,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+6% Negative Damage, +20% Crit Damage",
         "stats": {
-            "Crit DMG%": 0.2,
-            "Neg%": 0.06
+            "Crit DMG%": 20,
+            "Neg%": 6
         },
         "conversions": []
     },
@@ -11707,9 +11926,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+6% Negative Damage, +3% Crit Chance, +15% Crit Damage",
         "stats": {
-            "Crit Chance%": 0.03,
-            "Crit DMG%": 0.15,
-            "Neg%": 0.06
+            "Crit Chance%": 3,
+            "Crit DMG%": 15,
+            "Neg%": 6
         },
         "conversions": []
     },
@@ -11730,8 +11949,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+7% MATK, +1% Crit Chance",
         "stats": {
-            "Crit Chance%": 0.01,
-            "MATK%": 0.07
+            "Crit Chance%": 1,
+            "MATK%": 7
         },
         "conversions": []
     },
@@ -11752,8 +11971,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+7% MATK, +1% Crit Chance",
         "stats": {
-            "Crit Chance%": 0.01,
-            "MATK%": 0.07
+            "Crit Chance%": 1,
+            "MATK%": 7
         },
         "conversions": []
     },
@@ -11774,8 +11993,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+12% MATK, +3% Crit Chance",
         "stats": {
-            "Crit Chance%": 0.03,
-            "MATK%": 0.12
+            "Crit Chance%": 3,
+            "MATK%": 12
         },
         "conversions": []
     },
@@ -11796,8 +12015,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+6% MATK, +2 MP, +5% DEF",
         "stats": {
-            "DEF%": 0.05,
-            "MATK%": 0.06
+            "DEF%": 5,
+            "MATK%": 6,
+            "MP": 2
         },
         "conversions": []
     },
@@ -11818,8 +12038,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+6% MATK, +2 MP, +5% DEF",
         "stats": {
-            "DEF%": 0.05,
-            "MATK%": 0.06
+            "DEF%": 5,
+            "MATK%": 6,
+            "MP": 2
         },
         "conversions": []
     },
@@ -11840,8 +12061,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+9% MATK, +5 MP, + 6% DEF",
         "stats": {
-            "DEF%": 0.06,
-            "MATK%": 0.09
+            "DEF%": 6,
+            "MATK%": 9,
+            "MP": 5
         },
         "conversions": []
     },
@@ -11862,7 +12084,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% MATK",
         "stats": {
-            "MATK%": 0.2
+            "MATK%": 20
         },
         "conversions": []
     },
@@ -11883,9 +12105,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+6% MATK, +5% Water and Wind Penetration",
         "stats": {
-            "MATK%": 0.06,
-            "Water Pen%": 0.05,
-            "Wind Pen%": 0.05
+            "MATK%": 6
         },
         "conversions": []
     },
@@ -11906,9 +12126,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+6% MATK, +5% Fire and Lightning Penetration",
         "stats": {
-            "MATK%": 0.06,
-            "Fire Pen%": 0.05,
-            "Lightning Pen%": 0.05
+            "MATK%": 6
         },
         "conversions": []
     },
@@ -11929,9 +12147,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+6% MATK, +5% Earth Penetration and Toxic Penetration",
         "stats": {
-            "MATK%": 0.06,
-            "Earth Pen%": 0.05,
-            "Toxic Pen%": 0.05
+            "MATK%": 6,
+            "Earth Pen%": 5
         },
         "conversions": []
     },
@@ -11952,8 +12169,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+12% MATK, +4% Crit Chance",
         "stats": {
-            "Crit Chance%": 0.04,
-            "MATK%": 0.12
+            "Crit Chance%": 4,
+            "MATK%": 12
         },
         "conversions": []
     },
@@ -11974,9 +12191,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+5% MATK, +5% Holy and Negative Penetration",
         "stats": {
-            "MATK%": 0.05,
-            "Neg Pen%": 0.05,
-            "Holy Pen%": 0.05
+            "MATK%": 5
         },
         "conversions": []
     },
@@ -11997,8 +12212,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+5% MATK, +30% Crit Damage",
         "stats": {
-            "Crit DMG%": 0.3,
-            "MATK%": 0.05
+            "Crit DMG%": 30,
+            "MATK%": 5
         },
         "conversions": []
     },
@@ -12019,9 +12234,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+5% MATK, +10% Holy and Negative Damage",
         "stats": {
-            "MATK%": 0.05,
-            "Neg%": 0.1,
-            "Holy%": 0.1
+            "MATK%": 5
         },
         "conversions": []
     },
@@ -12042,8 +12255,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+12% MATK, +30% Heal",
         "stats": {
-            "MATK%": 0.12,
-            "HEAL%": 0.3
+            "MATK%": 12,
+            "HEAL%": 30
         },
         "conversions": []
     },
@@ -12064,8 +12277,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+5% MATK, +15% DEF, +250 HP",
         "stats": {
-            "DEF%": 0.15,
-            "MATK%": 0.05
+            "DEF%": 15,
+            "MATK%": 5,
+            "HP": 250
         },
         "conversions": []
     },
@@ -12086,7 +12300,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+5% MATK, +10 MP",
         "stats": {
-            "MATK%": 0.05
+            "MATK%": 5,
+            "MP": 10
         },
         "conversions": []
     },
@@ -12107,8 +12322,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+5% MATK, +10% Heal",
         "stats": {
-            "MATK%": 0.05,
-            "HEAL%": 0.1
+            "MATK%": 5,
+            "HEAL%": 10
         },
         "conversions": []
     },
@@ -12129,7 +12344,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+12% MATK",
         "stats": {
-            "MATK%": 0.12
+            "MATK%": 12
         },
         "conversions": []
     },
@@ -12150,7 +12365,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+12% MATK",
         "stats": {
-            "MATK%": 0.12
+            "MATK%": 12
         },
         "conversions": []
     },
@@ -12171,7 +12386,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+18% MATK",
         "stats": {
-            "MATK%": 0.18
+            "MATK%": 18
         },
         "conversions": []
     },
@@ -12192,8 +12407,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+6% MATK, +2% Crit Chance",
         "stats": {
-            "Crit Chance%": 0.02,
-            "MATK%": 0.06
+            "Crit Chance%": 2,
+            "MATK%": 6
         },
         "conversions": []
     },
@@ -12214,8 +12429,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+6% MATK, +2% Crit Chance",
         "stats": {
-            "Crit Chance%": 0.02,
-            "MATK%": 0.06
+            "Crit Chance%": 2,
+            "MATK%": 6
         },
         "conversions": []
     },
@@ -12236,8 +12451,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+12% MATK, +5% Crit Chance",
         "stats": {
-            "Crit Chance%": 0.05,
-            "MATK%": 0.12
+            "Crit Chance%": 5,
+            "MATK%": 12
         },
         "conversions": []
     },
@@ -12258,8 +12473,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+6% MATK, +15% Crit Damage",
         "stats": {
-            "Crit DMG%": 0.15,
-            "MATK%": 0.06
+            "Crit DMG%": 15,
+            "MATK%": 6
         },
         "conversions": []
     },
@@ -12280,8 +12495,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+6% MATK, +15% Crit Damage",
         "stats": {
-            "Crit DMG%": 0.15,
-            "MATK%": 0.06
+            "Crit DMG%": 15,
+            "MATK%": 6
         },
         "conversions": []
     },
@@ -12302,8 +12517,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+12% MATK, +25% Crit Damage",
         "stats": {
-            "Crit DMG%": 0.25,
-            "MATK%": 0.12
+            "Crit DMG%": 25,
+            "MATK%": 12
         },
         "conversions": []
     },
@@ -12324,7 +12539,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% MATK",
         "stats": {
-            "MATK%": 0.2
+            "MATK%": 20
         },
         "conversions": []
     },
@@ -12345,9 +12560,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+6% MATK, +5% Water and Wind Penetration",
         "stats": {
-            "MATK%": 0.06,
-            "Water Pen%": 0.05,
-            "Wind Pen%": 0.05
+            "MATK%": 6
         },
         "conversions": []
     },
@@ -12368,9 +12581,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+6% MATK, +5% Fire and Lightning Penetration",
         "stats": {
-            "MATK%": 0.06,
-            "Fire Pen%": 0.05,
-            "Lightning Pen%": 0.05
+            "MATK%": 6
         },
         "conversions": []
     },
@@ -12391,9 +12602,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+6% MATK, +5% Earth Penetration and Toxic Penetration",
         "stats": {
-            "MATK%": 0.06,
-            "Earth Pen%": 0.05,
-            "Toxic Pen%": 0.05
+            "MATK%": 6,
+            "Earth Pen%": 5
         },
         "conversions": []
     },
@@ -12414,8 +12624,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+14% MATK, +4% Crit Chance",
         "stats": {
-            "Crit Chance%": 0.04,
-            "MATK%": 0.14
+            "Crit Chance%": 4,
+            "MATK%": 14
         },
         "conversions": []
     },
@@ -12436,8 +12646,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+4% MATK, +5% Negative Penetration",
         "stats": {
-            "MATK%": 0.04,
-            "Neg Pen%": 0.05
+            "MATK%": 4,
+            "Neg Pen%": 5
         },
         "conversions": []
     },
@@ -12458,8 +12668,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+4% MATK, +30% Crit Damage",
         "stats": {
-            "Crit DMG%": 0.3,
-            "MATK%": 0.04
+            "Crit DMG%": 30,
+            "MATK%": 4
         },
         "conversions": []
     },
@@ -12480,8 +12690,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+4% MATK, +10% Negative Damage",
         "stats": {
-            "MATK%": 0.04,
-            "Neg%": 0.1
+            "MATK%": 4,
+            "Neg%": 10
         },
         "conversions": []
     },
@@ -12502,8 +12712,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+12% MATK, +30% Heal",
         "stats": {
-            "MATK%": 0.12,
-            "HEAL%": 0.3
+            "MATK%": 12,
+            "HEAL%": 30
         },
         "conversions": []
     },
@@ -12524,9 +12734,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+5% ATK, +10% Holy Damage and Penetration",
         "stats": {
-            "ATK%": 0.05,
-            "Holy%": 0.1,
-            "Holy Pen%": 0.1
+            "ATK%": 5,
+            "Holy%": 10
         },
         "conversions": []
     },
@@ -12547,7 +12756,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+5% MATK, 12 MP",
         "stats": {
-            "MATK%": 0.05
+            "MATK%": 5,
+            "MP": 12
         },
         "conversions": []
     },
@@ -12568,8 +12778,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+5% MATK, +12% Heal",
         "stats": {
-            "MATK%": 0.05,
-            "HEAL%": 0.12
+            "MATK%": 5,
+            "HEAL%": 12
         },
         "conversions": []
     },
@@ -12590,7 +12800,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% MATK",
         "stats": {
-            "MATK%": 0.2
+            "MATK%": 20
         },
         "conversions": []
     },
@@ -12611,7 +12821,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% MATK",
         "stats": {
-            "MATK%": 0.2
+            "MATK%": 20
         },
         "conversions": []
     },
@@ -12632,7 +12842,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+35% MATK",
         "stats": {
-            "MATK%": 0.35
+            "MATK%": 35
         },
         "conversions": []
     },
@@ -12653,8 +12863,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+8% MATK, +2% Crit Chance",
         "stats": {
-            "Crit Chance%": 0.02,
-            "MATK%": 0.08
+            "Crit Chance%": 2,
+            "MATK%": 8
         },
         "conversions": []
     },
@@ -12675,8 +12885,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+8% MATK, +3% Crit Chance",
         "stats": {
-            "Crit Chance%": 0.03,
-            "MATK%": 0.08
+            "Crit Chance%": 3,
+            "MATK%": 8
         },
         "conversions": []
     },
@@ -12697,8 +12907,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15% MATK, +5% Crit Chance",
         "stats": {
-            "Crit Chance%": 0.05,
-            "MATK%": 0.15
+            "Crit Chance%": 5,
+            "MATK%": 15
         },
         "conversions": []
     },
@@ -12719,8 +12929,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+6% MATK, +15% Crit Damage",
         "stats": {
-            "Crit DMG%": 0.15,
-            "MATK%": 0.06
+            "Crit DMG%": 15,
+            "MATK%": 6
         },
         "conversions": []
     },
@@ -12741,8 +12951,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+6% MATK, +20% Crit Damage",
         "stats": {
-            "Crit DMG%": 0.2,
-            "MATK%": 0.06
+            "Crit DMG%": 20,
+            "MATK%": 6
         },
         "conversions": []
     },
@@ -12763,8 +12973,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+12% MATK, +25% Crit Damage",
         "stats": {
-            "Crit DMG%": 0.25,
-            "MATK%": 0.12
+            "Crit DMG%": 25,
+            "MATK%": 12
         },
         "conversions": []
     },
@@ -12785,7 +12995,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% MATK",
         "stats": {
-            "MATK%": 0.2
+            "MATK%": 20
         },
         "conversions": []
     },
@@ -12806,9 +13016,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+6% MATK, +15% Water and Wind Penetration",
         "stats": {
-            "MATK%": 0.06,
-            "Water Pen%": 0.15,
-            "Wind Pen%": 0.15
+            "MATK%": 6
         },
         "conversions": []
     },
@@ -12829,9 +13037,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+6% MATK, +15% Fire and Lightning Penetration",
         "stats": {
-            "MATK%": 0.06,
-            "Fire Pen%": 0.15,
-            "Lightning Pen%": 0.15
+            "MATK%": 6
         },
         "conversions": []
     },
@@ -12852,9 +13058,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+6% MATK, +15% Earth Penetration and Toxic Penetration",
         "stats": {
-            "MATK%": 0.06,
-            "Earth Pen%": 0.15,
-            "Toxic Pen%": 0.15
+            "MATK%": 6,
+            "Earth Pen%": 15
         },
         "conversions": []
     },
@@ -12875,8 +13080,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15% MATK, +5% Crit Chance",
         "stats": {
-            "Crit Chance%": 0.05,
-            "MATK%": 0.15
+            "Crit Chance%": 5,
+            "MATK%": 15
         },
         "conversions": []
     },
@@ -12897,8 +13102,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+6% MATK, +10% Negative Penetration",
         "stats": {
-            "MATK%": 0.06,
-            "Neg Pen%": 0.1
+            "MATK%": 6,
+            "Neg Pen%": 10
         },
         "conversions": []
     },
@@ -12919,8 +13124,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+6% MATK, +30% Crit Damage",
         "stats": {
-            "Crit DMG%": 0.3,
-            "MATK%": 0.06
+            "Crit DMG%": 30,
+            "MATK%": 6
         },
         "conversions": []
     },
@@ -12941,8 +13146,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+6% MATK, +15% Negative Damage",
         "stats": {
-            "MATK%": 0.06,
-            "Neg%": 0.15
+            "MATK%": 6,
+            "Neg%": 15
         },
         "conversions": []
     },
@@ -12963,7 +13168,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+35% MATK",
         "stats": {
-            "MATK%": 0.35
+            "MATK%": 35
         },
         "conversions": []
     },
@@ -12984,7 +13189,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+25% MATK",
         "stats": {
-            "MATK%": 0.25
+            "MATK%": 25
         },
         "conversions": []
     },
@@ -13005,8 +13210,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% MATK, +15% Crit Damage",
         "stats": {
-            "Crit DMG%": 0.15,
-            "MATK%": 0.2
+            "Crit DMG%": 15,
+            "MATK%": 20
         },
         "conversions": []
     },
@@ -13027,8 +13232,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% MATK, +15% Holy Damage",
         "stats": {
-            "MATK%": 0.2,
-            "Holy%": 0.15
+            "MATK%": 20,
+            "Holy%": 15
         },
         "conversions": []
     },
@@ -13081,13 +13286,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+5% Fire Penetration, +10% Elemental Damage",
         "stats": {
-            "Fire%": 0.1,
-            "Water%": 0.1,
-            "Lightning%": 0.1,
-            "Wind%": 0.1,
-            "Earth%": 0.1,
-            "Toxic%": 0.1,
-            "Fire Pen%": 0.05
+            "Fire Pen%": 5
         },
         "conversions": []
     },
@@ -13108,13 +13307,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+5% Fire Penetration, +10% Elemental Damage",
         "stats": {
-            "Fire%": 0.1,
-            "Water%": 0.1,
-            "Lightning%": 0.1,
-            "Wind%": 0.1,
-            "Earth%": 0.1,
-            "Toxic%": 0.1,
-            "Fire Pen%": 0.05
+            "Fire Pen%": 5
         },
         "conversions": []
     },
@@ -13135,12 +13328,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+5% Elemental xPen, +20 MP, +10% Elemental Damage",
         "stats": {
-            "Fire%": 0.1,
-            "Water%": 0.1,
-            "Lightning%": 0.1,
-            "Wind%": 0.1,
-            "Earth%": 0.1,
-            "Toxic%": 0.1
+            "MP": 20
         },
         "conversions": []
     },
@@ -13161,13 +13349,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+5% Water Penetration, +10% Elemental Damage",
         "stats": {
-            "Fire%": 0.1,
-            "Water%": 0.1,
-            "Lightning%": 0.1,
-            "Wind%": 0.1,
-            "Earth%": 0.1,
-            "Toxic%": 0.1,
-            "Water Pen%": 0.05
+            "Water Pen%": 5
         },
         "conversions": []
     },
@@ -13188,13 +13370,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+5% Water Penetration, +10% Elemental Damage",
         "stats": {
-            "Fire%": 0.1,
-            "Water%": 0.1,
-            "Lightning%": 0.1,
-            "Wind%": 0.1,
-            "Earth%": 0.1,
-            "Toxic%": 0.1,
-            "Water Pen%": 0.05
+            "Water Pen%": 5
         },
         "conversions": []
     },
@@ -13215,12 +13391,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+5% Elemental xPen, +20 MP, +10% Elemental Damage",
         "stats": {
-            "Fire%": 0.1,
-            "Water%": 0.1,
-            "Lightning%": 0.1,
-            "Wind%": 0.1,
-            "Earth%": 0.1,
-            "Toxic%": 0.1
+            "MP": 20
         },
         "conversions": []
     },
@@ -13241,13 +13412,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+5% Lightning Penetration, +10% Elemental Damage",
         "stats": {
-            "Fire%": 0.1,
-            "Water%": 0.1,
-            "Lightning%": 0.1,
-            "Wind%": 0.1,
-            "Earth%": 0.1,
-            "Toxic%": 0.1,
-            "Lightning Pen%": 0.05
+            "Lightning Pen%": 5
         },
         "conversions": []
     },
@@ -13268,13 +13433,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+5% Lightning Penetration, +10% Elemental Damage",
         "stats": {
-            "Fire%": 0.1,
-            "Water%": 0.1,
-            "Lightning%": 0.1,
-            "Wind%": 0.1,
-            "Earth%": 0.1,
-            "Toxic%": 0.1,
-            "Lightning Pen%": 0.05
+            "Lightning Pen%": 5
         },
         "conversions": []
     },
@@ -13295,12 +13454,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+5% Elemental xPen, +20 MP, +10% Elemental Damage",
         "stats": {
-            "Fire%": 0.1,
-            "Water%": 0.1,
-            "Lightning%": 0.1,
-            "Wind%": 0.1,
-            "Earth%": 0.1,
-            "Toxic%": 0.1
+            "MP": 20
         },
         "conversions": []
     },
@@ -13321,13 +13475,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+5% Wind Penetration, +10% Elemental Damage",
         "stats": {
-            "Fire%": 0.1,
-            "Water%": 0.1,
-            "Lightning%": 0.1,
-            "Wind%": 0.1,
-            "Earth%": 0.1,
-            "Toxic%": 0.1,
-            "Wind Pen%": 0.05
+            "Wind Pen%": 5
         },
         "conversions": []
     },
@@ -13348,13 +13496,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+5% Wind Penetration, +10% Elemental Damage",
         "stats": {
-            "Fire%": 0.1,
-            "Water%": 0.1,
-            "Lightning%": 0.1,
-            "Wind%": 0.1,
-            "Earth%": 0.1,
-            "Toxic%": 0.1,
-            "Wind Pen%": 0.05
+            "Wind Pen%": 5
         },
         "conversions": []
     },
@@ -13375,12 +13517,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+5% Elemental xPen, +20 MP, +10% Elemental Damage",
         "stats": {
-            "Fire%": 0.1,
-            "Water%": 0.1,
-            "Lightning%": 0.1,
-            "Wind%": 0.1,
-            "Earth%": 0.1,
-            "Toxic%": 0.1
+            "MP": 20
         },
         "conversions": []
     },
@@ -13401,13 +13538,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+5% Earth Penetration, +10% Elemental Damage",
         "stats": {
-            "Fire%": 0.1,
-            "Water%": 0.1,
-            "Lightning%": 0.1,
-            "Wind%": 0.1,
-            "Earth%": 0.1,
-            "Toxic%": 0.1,
-            "Earth Pen%": 0.05
+            "Earth Pen%": 5
         },
         "conversions": []
     },
@@ -13428,13 +13559,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+5% Earth Penetration, +10% Elemental Damage",
         "stats": {
-            "Fire%": 0.1,
-            "Water%": 0.1,
-            "Lightning%": 0.1,
-            "Wind%": 0.1,
-            "Earth%": 0.1,
-            "Toxic%": 0.1,
-            "Earth Pen%": 0.05
+            "Earth Pen%": 5
         },
         "conversions": []
     },
@@ -13455,12 +13580,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+5% Elemental xPen, +20 MP, +10% Elemental Damage",
         "stats": {
-            "Fire%": 0.1,
-            "Water%": 0.1,
-            "Lightning%": 0.1,
-            "Wind%": 0.1,
-            "Earth%": 0.1,
-            "Toxic%": 0.1
+            "MP": 20
         },
         "conversions": []
     },
@@ -13481,13 +13601,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+5% Toxic Penetration, +10% Elemental Damage",
         "stats": {
-            "Fire%": 0.1,
-            "Water%": 0.1,
-            "Lightning%": 0.1,
-            "Wind%": 0.1,
-            "Earth%": 0.1,
-            "Toxic%": 0.1,
-            "Toxic Pen%": 0.05
+            "Toxic Pen%": 5
         },
         "conversions": []
     },
@@ -13508,13 +13622,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+5% Toxic Penetration, +10% Elemental Damage",
         "stats": {
-            "Fire%": 0.1,
-            "Water%": 0.1,
-            "Lightning%": 0.1,
-            "Wind%": 0.1,
-            "Earth%": 0.1,
-            "Toxic%": 0.1,
-            "Toxic Pen%": 0.05
+            "Toxic Pen%": 5
         },
         "conversions": []
     },
@@ -13535,12 +13643,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+5% Elemental xPen, +20 MP, +10% Elemental Damage",
         "stats": {
-            "Fire%": 0.1,
-            "Water%": 0.1,
-            "Lightning%": 0.1,
-            "Wind%": 0.1,
-            "Earth%": 0.1,
-            "Toxic%": 0.1
+            "MP": 20
         },
         "conversions": []
     },
@@ -13585,9 +13688,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+3% Holy Penetration, +10% Divine Damage",
         "stats": {
-            "Neg%": 0.1,
-            "Holy%": 0.1,
-            "Holy Pen%": 0.03
+            "Holy Pen%": 3
         },
         "conversions": []
     },
@@ -13608,9 +13709,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+3% Holy Penetration, +10% Divine Damage",
         "stats": {
-            "Neg%": 0.1,
-            "Holy%": 0.1,
-            "Holy Pen%": 0.03
+            "Holy Pen%": 3
         },
         "conversions": []
     },
@@ -13631,9 +13730,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+6% Holy Penetration, +30% Divine Damage, +10% Divine xPen",
         "stats": {
-            "Neg%": 0.3,
-            "Holy%": 0.3,
-            "Holy Pen%": 0.06
+            "Holy Pen%": 6
         },
         "conversions": []
     },
@@ -13654,10 +13751,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+5% Negative Penetration, +5% Divine Damage, +15% Crit Damage",
         "stats": {
-            "Crit DMG%": 0.15,
-            "Neg%": 0.05,
-            "Holy%": 0.05,
-            "Neg Pen%": 0.05
+            "Crit DMG%": 15,
+            "Neg Pen%": 5
         },
         "conversions": []
     },
@@ -13678,10 +13773,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+5% Negative Penetration, +5% Divine Damage, +15% Crit Damage",
         "stats": {
-            "Crit DMG%": 0.15,
-            "Neg%": 0.05,
-            "Holy%": 0.05,
-            "Neg Pen%": 0.05
+            "Crit DMG%": 15,
+            "Neg Pen%": 5
         },
         "conversions": []
     },
@@ -13702,9 +13795,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+5% Negative Penetration, +10% Divine Damage, +10% Divine xPen",
         "stats": {
-            "Neg%": 0.1,
-            "Holy%": 0.1,
-            "Neg Pen%": 0.05
+            "Neg Pen%": 5
         },
         "conversions": []
     },
@@ -13725,9 +13816,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+2% Void Penetration, +10% Void Damage, +20% MATK",
         "stats": {
-            "MATK%": 0.2,
-            "Void%": 0.1,
-            "Void Pen%": 0.02
+            "MATK%": 20,
+            "Void%": 10,
+            "Void Pen%": 2
         },
         "conversions": []
     },
@@ -13748,9 +13839,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+1% Void Penetration, +10% Void Damage, +10% MATK",
         "stats": {
-            "MATK%": 0.1,
-            "Void%": 0.1,
-            "Void Pen%": 0.01
+            "MATK%": 10,
+            "Void%": 10,
+            "Void Pen%": 1
         },
         "conversions": []
     },
@@ -13771,9 +13862,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+1% Void Penetration, +10% Void Damage, +10% MATK",
         "stats": {
-            "MATK%": 0.1,
-            "Void%": 0.1,
-            "Void Pen%": 0.01
+            "MATK%": 10,
+            "Void%": 10,
+            "Void Pen%": 1
         },
         "conversions": []
     },
@@ -13794,10 +13885,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+4% Void Penetration, +10% Void Damage, +10% Void xPen, +30% MATK",
         "stats": {
-            "MATK%": 0.3,
-            "Void%": 0.1,
-            "Void Pen%": 0.04,
-            "Void xPen%": 0.1
+            "MATK%": 30,
+            "Void%": 10,
+            "Void Pen%": 4
         },
         "conversions": []
     },
@@ -13818,7 +13908,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+1% Global MATK, +12% Crit Damage",
         "stats": {
-            "Crit DMG%": 0.12
+            "Crit DMG%": 12,
+            "Global MATK%": 1
         },
         "conversions": []
     },
@@ -13839,7 +13930,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+1% Global MATK, +12% Crit Damage",
         "stats": {
-            "Crit DMG%": 0.12
+            "Crit DMG%": 12,
+            "Global MATK%": 1
         },
         "conversions": []
     },
@@ -13860,7 +13952,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+1% Global MATK, +30% Crit Damage, +1% Global Damage",
         "stats": {
-            "Crit DMG%": 0.3
+            "Crit DMG%": 30,
+            "Dmg%": 1,
+            "Global MATK%": 1
         },
         "conversions": []
     },
@@ -13881,12 +13975,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+1% Global MATK, +12% Elemental Damage",
         "stats": {
-            "Fire%": 0.12,
-            "Water%": 0.12,
-            "Lightning%": 0.12,
-            "Wind%": 0.12,
-            "Earth%": 0.12,
-            "Toxic%": 0.12
+            "Global MATK%": 1
         },
         "conversions": []
     },
@@ -13907,12 +13996,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+1% Global MATK, +18% Elemental Damage",
         "stats": {
-            "Fire%": 0.18,
-            "Water%": 0.18,
-            "Lightning%": 0.18,
-            "Wind%": 0.18,
-            "Earth%": 0.18,
-            "Toxic%": 0.18
+            "Global MATK%": 1
         },
         "conversions": []
     },
@@ -13933,12 +14017,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+1% Global MATK, +12% Elemental Penetration",
         "stats": {
-            "Fire Pen%": 0.12,
-            "Water Pen%": 0.12,
-            "Lightning Pen%": 0.12,
-            "Wind Pen%": 0.12,
-            "Earth Pen%": 0.12,
-            "Toxic Pen%": 0.12
+            "Global MATK%": 1
         },
         "conversions": []
     },
@@ -13959,9 +14038,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+1% Global MATK, +12% Divine Damage, +2% Crit Chance",
         "stats": {
-            "Crit Chance%": 0.02,
-            "Neg%": 0.12,
-            "Holy%": 0.12
+            "Crit Chance%": 2,
+            "Global MATK%": 1
         },
         "conversions": []
     },
@@ -13982,9 +14060,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+1% Global MATK, +18% Divine Damage, +3% Crit Chance",
         "stats": {
-            "Crit Chance%": 0.03,
-            "Neg%": 0.18,
-            "Holy%": 0.18
+            "Crit Chance%": 3,
+            "Global MATK%": 1
         },
         "conversions": []
     },
@@ -14005,8 +14082,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+1% Global MATK, +12% Divine Pen, +1% Global Damage",
         "stats": {
-            "Neg Pen%": 0.12,
-            "Holy Pen%": 0.12
+            "Dmg%": 1,
+            "Global MATK%": 1
         },
         "conversions": []
     },
@@ -14027,8 +14104,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+40% Divine DMG, +5% Divine Pen, Conversion 10% Holy DMG to MP, Conversion 10% Negative DMG to Crit DMG",
         "stats": {
-            "Neg%": 0.4,
-            "Holy%": 0.4,
+            "Neg%": 10,
+            "Holy%": 10,
             "Neg Pen%": 0.05,
             "Holy Pen%": 0.05
         },
@@ -14062,7 +14139,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10% Void Pen, -40 MP, +35% Global Void DMG",
         "stats": {
-            "Void Pen%": 0.1
+            "Void Pen%": 10,
+            "MP": -40
         },
         "conversions": []
     },
@@ -14083,7 +14161,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+40% MATK Multi, 6% of MATK Multi converted into Elemental DMG",
         "stats": {
-            "MATK%": 0.4
+            "MATK%": 40
         },
         "conversions": []
     },
@@ -14112,7 +14190,9 @@ const talent_data: Record<string, Talent> = {
             "Toxic%": 0.08,
             "Neg%": 0.08,
             "Holy%": 0.08,
-            "Void%": 0.08
+            "Void%": 0.08,
+            "Global MATK%": 1,
+            "MATK%": 4
         },
         "conversions": [
             {
@@ -14147,7 +14227,9 @@ const talent_data: Record<string, Talent> = {
             "Toxic%": 0.16,
             "Neg%": 0.16,
             "Holy%": 0.16,
-            "Void%": 0.16
+            "Void%": 0.16,
+            "Global MATK%": -3,
+            "MATK%": 4
         },
         "conversions": [
             {
@@ -14173,7 +14255,10 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+1% Global MATK, -6% xMagic DMG, Conversion 4% MATK to DEF",
-        "stats": {},
+        "stats": {
+            "MATK%": 4,
+            "Global MATK%": 1
+        },
         "conversions": [
             {
                 "source": "MATK",
@@ -14198,7 +14283,10 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+1% Global MATK, +3% xMagic DMG, Conversion 4% MATK to DEF",
-        "stats": {},
+        "stats": {
+            "MATK%": 4,
+            "Global MATK%": 1
+        },
         "conversions": [
             {
                 "source": "MATK",
@@ -14223,7 +14311,9 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+1% Global MATK, +4% xMagic Pen",
-        "stats": {},
+        "stats": {
+            "Global MATK%": 1
+        },
         "conversions": []
     },
     "Warping Light of Desire": {
@@ -14242,7 +14332,10 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+1% Global MATK,  Transfer 20% DEF to MATK",
-        "stats": {},
+        "stats": {
+            "DEF%": 20,
+            "Global MATK%": 1
+        },
         "conversions": [
             {
                 "source": "DEF",
@@ -14267,7 +14360,10 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+1% Global MATK, +4% xMagic Pen, -10% Max HP Multi",
-        "stats": {},
+        "stats": {
+            "HP%": -10,
+            "Global MATK%": 1
+        },
         "conversions": []
     },
     "Soul Shard of Onirakan": {
@@ -14286,7 +14382,9 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+2% Global MATK, +6% xMagic DMG",
-        "stats": {},
+        "stats": {
+            "Global MATK%": 2
+        },
         "conversions": []
     },
     "Warping Gem of Protons": {
@@ -14314,7 +14412,9 @@ const talent_data: Record<string, Talent> = {
             "Toxic%": 0.08,
             "Neg%": 0.08,
             "Holy%": 0.08,
-            "Void%": 0.08
+            "Void%": 0.08,
+            "DEF%": 8,
+            "Global MATK%": 1
         },
         "conversions": [
             {
@@ -14349,7 +14449,9 @@ const talent_data: Record<string, Talent> = {
             "Toxic%": 0.08,
             "Neg%": 0.08,
             "Holy%": 0.08,
-            "Void%": 0.08
+            "Void%": 0.08,
+            "ATK%": 8,
+            "Global MATK%": 1
         },
         "conversions": [
             {
@@ -14384,7 +14486,8 @@ const talent_data: Record<string, Talent> = {
             "Toxic%": 0.08,
             "Neg%": 0.08,
             "Holy%": 0.08,
-            "Void%": 0.08
+            "Void%": 0.08,
+            "Global MATK%": 1
         },
         "conversions": [
             {
@@ -14411,15 +14514,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+2% Global MATK,  +10% Magic DMG, +2% Global Damage",
         "stats": {
-            "Fire%": 0.1,
-            "Water%": 0.1,
-            "Lightning%": 0.1,
-            "Wind%": 0.1,
-            "Earth%": 0.1,
-            "Toxic%": 0.1,
-            "Neg%": 0.1,
-            "Holy%": 0.1,
-            "Void%": 0.1
+            "Dmg%": 2,
+            "Global MATK%": 2
         },
         "conversions": []
     },
@@ -14439,7 +14535,11 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+1% Global MATK, Temp HP Start of 20% Max HP, -33% Global ATK/Healpower",
-        "stats": {},
+        "stats": {
+            "Global ATK%": -33,
+            "Global MATK%": 1,
+            "HP%": 20
+        },
         "conversions": []
     },
     "Soul Shard of Mephis'ronan": {
@@ -14459,8 +14559,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+2% Global MATK, +3% Crit Chance, +25% Crit DMG",
         "stats": {
-            "Crit Chance%": 0.03,
-            "Crit DMG%": 0.25
+            "Crit Chance%": 3,
+            "Crit DMG%": 25,
+            "Global MATK%": 2
         },
         "conversions": []
     },
@@ -14480,7 +14581,10 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+1% Global MATK, -8% Global MP, +12% xMagic DMG",
-        "stats": {},
+        "stats": {
+            "Global MATK%": 1,
+            "MP%": -8
+        },
         "conversions": []
     },
     "Time Core of Mephis'ronan": {
@@ -14500,7 +14604,10 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15 MP Regen, -85% Global MP, Temp HP Start of 20% Max HP",
         "stats": {
-            "MP Regen": 15
+            "MP Regen": 15,
+            "MP": 15,
+            "MP%": -85,
+            "HP%": 20
         },
         "conversions": []
     },
@@ -14520,7 +14627,9 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "-50% Global Crit Chance, +25% xMagic DMG",
-        "stats": {},
+        "stats": {
+            "Crit Chance%": -50
+        },
         "conversions": []
     },
     "Space Core of Mephis'ronan": {
@@ -14540,8 +14649,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+200% Threat Generated, +10% Crit Chance, Conversion 10% MATK to MATK/Heal/ATK/DEF",
         "stats": {
-            "Crit Chance%": 0.1,
-            "Threat%": 2.0
+            "Crit Chance%": 10,
+            "Threat%": 2,
+            "MATK%": 10
         },
         "conversions": [
             {
@@ -14567,7 +14677,10 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+2% Global MATK, +5% xMagic Pen, +5% Global Crit DMG",
-        "stats": {},
+        "stats": {
+            "Crit DMG%": 5,
+            "Global MATK%": 2
+        },
         "conversions": []
     },
     "Healing Study 1": {
@@ -14587,7 +14700,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+5% Heal ",
         "stats": {
-            "HEAL%": 0.05
+            "HEAL%": 5
         },
         "conversions": []
     },
@@ -14608,7 +14721,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+5% Heal",
         "stats": {
-            "HEAL%": 0.05
+            "HEAL%": 5
         },
         "conversions": []
     },
@@ -14629,7 +14742,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10% Heal",
         "stats": {
-            "HEAL%": 0.1
+            "HEAL%": 10
         },
         "conversions": []
     },
@@ -14650,7 +14763,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+3% Heal, +9 ATK",
         "stats": {
-            "HEAL%": 0.03
+            "HEAL%": 3,
+            "ATK": 9
         },
         "conversions": []
     },
@@ -14671,7 +14785,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+3% Heal, +9 ATK",
         "stats": {
-            "HEAL%": 0.03
+            "HEAL%": 3,
+            "ATK": 9
         },
         "conversions": []
     },
@@ -14692,7 +14807,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+5% Heal, +15 ATK",
         "stats": {
-            "HEAL%": 0.05
+            "HEAL%": 5,
+            "ATK": 15
         },
         "conversions": []
     },
@@ -14713,7 +14829,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+2% Heal, +3 MATK",
         "stats": {
-            "HEAL%": 0.02
+            "HEAL%": 2,
+            "MATK": 3
         },
         "conversions": []
     },
@@ -14734,7 +14851,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+2% Heal, +3 MATK",
         "stats": {
-            "HEAL%": 0.02
+            "HEAL%": 2,
+            "MATK": 3
         },
         "conversions": []
     },
@@ -14755,7 +14873,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+2% Heal, +4 MATK",
         "stats": {
-            "HEAL%": 0.02
+            "HEAL%": 2,
+            "MATK": 4
         },
         "conversions": []
     },
@@ -14776,7 +14895,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+5% Heal ",
         "stats": {
-            "HEAL%": 0.05
+            "HEAL%": 5
         },
         "conversions": []
     },
@@ -14797,7 +14916,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+5% Heal",
         "stats": {
-            "HEAL%": 0.05
+            "HEAL%": 5
         },
         "conversions": []
     },
@@ -14818,7 +14937,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10% Heal",
         "stats": {
-            "HEAL%": 0.1
+            "HEAL%": 10
         },
         "conversions": []
     },
@@ -14839,8 +14958,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+4% Heal, +5% MATK, +10 ATK",
         "stats": {
-            "MATK%": 0.05,
-            "HEAL%": 0.04
+            "MATK%": 5,
+            "HEAL%": 4,
+            "ATK": 10
         },
         "conversions": []
     },
@@ -14861,8 +14981,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+4% Heal, +5% MATK, +10 ATK",
         "stats": {
-            "MATK%": 0.05,
-            "HEAL%": 0.04
+            "MATK%": 5,
+            "HEAL%": 4,
+            "ATK": 10
         },
         "conversions": []
     },
@@ -14883,8 +15004,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+8% Heal, +10% MATK, +15 ATK",
         "stats": {
-            "MATK%": 0.1,
-            "HEAL%": 0.08
+            "MATK%": 10,
+            "HEAL%": 8,
+            "ATK": 15
         },
         "conversions": []
     },
@@ -14905,7 +15027,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+3% Heal, +4 MATK",
         "stats": {
-            "HEAL%": 0.03
+            "HEAL%": 3,
+            "MATK": 4
         },
         "conversions": []
     },
@@ -14926,7 +15049,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+3% Heal, +4 MATK",
         "stats": {
-            "HEAL%": 0.03
+            "HEAL%": 3,
+            "MATK": 4
         },
         "conversions": []
     },
@@ -14947,7 +15071,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+5% Heal, +6 MATK",
         "stats": {
-            "HEAL%": 0.05
+            "HEAL%": 5,
+            "MATK": 6
         },
         "conversions": []
     },
@@ -14968,7 +15093,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% Heal",
         "stats": {
-            "HEAL%": 0.2
+            "HEAL%": 20
         },
         "conversions": []
     },
@@ -14989,7 +15114,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+6% Heal",
         "stats": {
-            "HEAL%": 0.06
+            "HEAL%": 6
         },
         "conversions": []
     },
@@ -15010,7 +15135,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+6% Heal",
         "stats": {
-            "HEAL%": 0.06
+            "HEAL%": 6
         },
         "conversions": []
     },
@@ -15031,7 +15156,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+6% Heal",
         "stats": {
-            "HEAL%": 0.06
+            "HEAL%": 6
         },
         "conversions": []
     },
@@ -15052,7 +15177,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+12% Heal, +80 HP, +25 DEF",
         "stats": {
-            "HEAL%": 0.12
+            "HEAL%": 12,
+            "DEF": 25,
+            "HP": 80
         },
         "conversions": []
     },
@@ -15073,8 +15200,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+4% Heal, +2% DEF, +4 DEF",
         "stats": {
-            "DEF%": 0.02,
-            "HEAL%": 0.04
+            "DEF%": 2,
+            "HEAL%": 4,
+            "DEF": 4
         },
         "conversions": []
     },
@@ -15095,8 +15223,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+4% Heal, +2% DEF, +4 DEF",
         "stats": {
-            "DEF%": 0.02,
-            "HEAL%": 0.04
+            "DEF%": 2,
+            "HEAL%": 4,
+            "DEF": 4
         },
         "conversions": []
     },
@@ -15117,8 +15246,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+4% Heal, +2% DEF, +4 DEF",
         "stats": {
-            "DEF%": 0.02,
-            "HEAL%": 0.04
+            "DEF%": 2,
+            "HEAL%": 4,
+            "DEF": 4
         },
         "conversions": []
     },
@@ -15139,8 +15269,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15% Heal, +8% MATK, +20 MATK",
         "stats": {
-            "MATK%": 0.08,
-            "HEAL%": 0.15
+            "MATK%": 8,
+            "HEAL%": 15,
+            "MATK": 20
         },
         "conversions": []
     },
@@ -15161,8 +15292,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+4% Heal, +2% MATK, +4 MATK",
         "stats": {
-            "MATK%": 0.02,
-            "HEAL%": 0.04
+            "MATK%": 2,
+            "HEAL%": 4,
+            "MATK": 4
         },
         "conversions": []
     },
@@ -15183,8 +15315,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+4% Heal, +2% MATK, +4 MATK",
         "stats": {
-            "MATK%": 0.02,
-            "HEAL%": 0.04
+            "MATK%": 2,
+            "HEAL%": 4,
+            "MATK": 4
         },
         "conversions": []
     },
@@ -15205,8 +15338,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+4% Heal, +2% MATK, +4 MATK",
         "stats": {
-            "MATK%": 0.02,
-            "HEAL%": 0.04
+            "MATK%": 2,
+            "HEAL%": 4,
+            "MATK": 4
         },
         "conversions": []
     },
@@ -15227,7 +15361,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+5% Heal, +6 MATK",
         "stats": {
-            "HEAL%": 0.05
+            "HEAL%": 5,
+            "MATK": 6
         },
         "conversions": []
     },
@@ -15248,7 +15383,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+5% Heal, +6 MATK",
         "stats": {
-            "HEAL%": 0.05
+            "HEAL%": 5,
+            "MATK": 6
         },
         "conversions": []
     },
@@ -15269,8 +15405,10 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% Heal, +25 MP, +20 MATK, +5% Crit Chance",
         "stats": {
-            "Crit Chance%": 0.05,
-            "HEAL%": 0.2
+            "Crit Chance%": 5,
+            "HEAL%": 20,
+            "MATK": 20,
+            "MP": 25
         },
         "conversions": []
     },
@@ -15291,7 +15429,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% Heal",
         "stats": {
-            "HEAL%": 0.2
+            "HEAL%": 20
         },
         "conversions": []
     },
@@ -15312,7 +15450,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+6% Heal",
         "stats": {
-            "HEAL%": 0.06
+            "HEAL%": 6
         },
         "conversions": []
     },
@@ -15333,7 +15471,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+6% Heal",
         "stats": {
-            "HEAL%": 0.06
+            "HEAL%": 6
         },
         "conversions": []
     },
@@ -15354,7 +15492,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+6% Heal",
         "stats": {
-            "HEAL%": 0.06
+            "HEAL%": 6
         },
         "conversions": []
     },
@@ -15375,8 +15513,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+12% Heal, +10% DEF, +20 DEF",
         "stats": {
-            "DEF%": 0.1,
-            "HEAL%": 0.12
+            "DEF%": 10,
+            "HEAL%": 12,
+            "DEF": 20
         },
         "conversions": []
     },
@@ -15397,8 +15536,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+4% Heal, +2% DEF, +4 DEF",
         "stats": {
-            "DEF%": 0.02,
-            "HEAL%": 0.04
+            "DEF%": 2,
+            "HEAL%": 4,
+            "DEF": 4
         },
         "conversions": []
     },
@@ -15419,8 +15559,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+4% Heal, +2% DEF, +4 DEF",
         "stats": {
-            "DEF%": 0.02,
-            "HEAL%": 0.04
+            "DEF%": 2,
+            "HEAL%": 4,
+            "DEF": 4
         },
         "conversions": []
     },
@@ -15441,8 +15582,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+4% Heal, +2% DEF, +4 DEF",
         "stats": {
-            "DEF%": 0.02,
-            "HEAL%": 0.04
+            "DEF%": 2,
+            "HEAL%": 4,
+            "DEF": 4
         },
         "conversions": []
     },
@@ -15463,8 +15605,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15% Heal, +10% MATK, +10 MATK",
         "stats": {
-            "MATK%": 0.1,
-            "HEAL%": 0.15
+            "MATK%": 10,
+            "HEAL%": 15,
+            "MATK": 10
         },
         "conversions": []
     },
@@ -15485,8 +15628,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+4% Heal, +2% MATK, +4 MATK",
         "stats": {
-            "MATK%": 0.02,
-            "HEAL%": 0.04
+            "MATK%": 2,
+            "HEAL%": 4,
+            "MATK": 4
         },
         "conversions": []
     },
@@ -15507,8 +15651,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+4% Heal, +2% MATK, +4 MATK",
         "stats": {
-            "MATK%": 0.02,
-            "HEAL%": 0.04
+            "MATK%": 2,
+            "HEAL%": 4,
+            "MATK": 4
         },
         "conversions": []
     },
@@ -15529,8 +15674,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+4% Heal, +2% MATK, +4 MATK",
         "stats": {
-            "MATK%": 0.02,
-            "HEAL%": 0.04
+            "MATK%": 2,
+            "HEAL%": 4,
+            "MATK": 4
         },
         "conversions": []
     },
@@ -15551,7 +15697,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+5% Heal, +2 MP",
         "stats": {
-            "HEAL%": 0.05
+            "HEAL%": 5,
+            "MP": 2
         },
         "conversions": []
     },
@@ -15572,7 +15719,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+5% Heal, +2 MP",
         "stats": {
-            "HEAL%": 0.05
+            "HEAL%": 5,
+            "MP": 2
         },
         "conversions": []
     },
@@ -15593,7 +15741,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+8% Heal, +2 MP",
         "stats": {
-            "HEAL%": 0.08
+            "HEAL%": 8,
+            "MP": 2
         },
         "conversions": []
     },
@@ -15614,8 +15763,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+5% Heal, +7% DEF",
         "stats": {
-            "DEF%": 0.07,
-            "HEAL%": 0.05
+            "DEF%": 7,
+            "HEAL%": 5
         },
         "conversions": []
     },
@@ -15636,8 +15785,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+5% Heal, +7% DEF",
         "stats": {
-            "DEF%": 0.07,
-            "HEAL%": 0.05
+            "DEF%": 7,
+            "HEAL%": 5
         },
         "conversions": []
     },
@@ -15658,8 +15807,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+8% Heal, +15% DEF",
         "stats": {
-            "DEF%": 0.15,
-            "HEAL%": 0.08
+            "DEF%": 15,
+            "HEAL%": 8
         },
         "conversions": []
     },
@@ -15680,7 +15829,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+4% Heal, +5 MATK",
         "stats": {
-            "HEAL%": 0.04
+            "HEAL%": 4,
+            "MATK": 5
         },
         "conversions": []
     },
@@ -15701,7 +15851,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+4% Heal, +5 MATK",
         "stats": {
-            "HEAL%": 0.04
+            "HEAL%": 4,
+            "MATK": 5
         },
         "conversions": []
     },
@@ -15722,8 +15873,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+6% Heal, +12 MATK, +2% Crit Chance",
         "stats": {
-            "Crit Chance%": 0.02,
-            "HEAL%": 0.06
+            "Crit Chance%": 2,
+            "HEAL%": 6,
+            "MATK": 12
         },
         "conversions": []
     },
@@ -15744,7 +15896,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% Heal",
         "stats": {
-            "HEAL%": 0.2
+            "HEAL%": 20
         },
         "conversions": []
     },
@@ -15765,8 +15917,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10% Heal, +25% Crit Damage",
         "stats": {
-            "Crit DMG%": 0.25,
-            "HEAL%": 0.1
+            "Crit DMG%": 25,
+            "HEAL%": 10
         },
         "conversions": []
     },
@@ -15787,8 +15939,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15% Heal, +15% MATK",
         "stats": {
-            "MATK%": 0.15,
-            "HEAL%": 0.15
+            "MATK%": 15,
+            "HEAL%": 15
         },
         "conversions": []
     },
@@ -15809,7 +15961,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+6% Heal",
         "stats": {
-            "HEAL%": 0.06
+            "HEAL%": 6
         },
         "conversions": []
     },
@@ -15830,7 +15982,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10% Crit Damage",
         "stats": {
-            "Crit DMG%": 0.1
+            "Crit DMG%": 10
         },
         "conversions": []
     },
@@ -15851,8 +16003,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+4% Heal, +4% MATK",
         "stats": {
-            "MATK%": 0.04,
-            "HEAL%": 0.04
+            "MATK%": 4,
+            "HEAL%": 4
         },
         "conversions": []
     },
@@ -15873,7 +16025,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+6% Heal",
         "stats": {
-            "HEAL%": 0.06
+            "HEAL%": 6
         },
         "conversions": []
     },
@@ -15894,7 +16046,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10% Crit Damage",
         "stats": {
-            "Crit DMG%": 0.1
+            "Crit DMG%": 10
         },
         "conversions": []
     },
@@ -15915,8 +16067,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+4% Heal, +4% MATK",
         "stats": {
-            "MATK%": 0.04,
-            "HEAL%": 0.04
+            "MATK%": 4,
+            "HEAL%": 4
         },
         "conversions": []
     },
@@ -15937,7 +16089,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10% Heal",
         "stats": {
-            "HEAL%": 0.1
+            "HEAL%": 10
         },
         "conversions": []
     },
@@ -15958,7 +16110,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% Crit Damage",
         "stats": {
-            "Crit DMG%": 0.2
+            "Crit DMG%": 20
         },
         "conversions": []
     },
@@ -15979,8 +16131,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+8% Heal, +12% MATK",
         "stats": {
-            "MATK%": 0.12,
-            "HEAL%": 0.08
+            "MATK%": 12,
+            "HEAL%": 8
         },
         "conversions": []
     },
@@ -16001,7 +16153,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+6% Heal, +100 HP",
         "stats": {
-            "HEAL%": 0.06
+            "HEAL%": 6,
+            "HP": 100
         },
         "conversions": []
     },
@@ -16022,7 +16175,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+6% Heal, +100 HP",
         "stats": {
-            "HEAL%": 0.06
+            "HEAL%": 6,
+            "HP": 100
         },
         "conversions": []
     },
@@ -16043,7 +16197,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10% Heal, +200 HP",
         "stats": {
-            "HEAL%": 0.1
+            "HEAL%": 10,
+            "HP": 200
         },
         "conversions": []
     },
@@ -16064,8 +16219,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+5% Heal, +7% DEF, +3 MP",
         "stats": {
-            "DEF%": 0.07,
-            "HEAL%": 0.05
+            "DEF%": 7,
+            "HEAL%": 5,
+            "MP": 3
         },
         "conversions": []
     },
@@ -16086,8 +16242,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+5% Heal, +7% DEF, +3 MP",
         "stats": {
-            "DEF%": 0.07,
-            "HEAL%": 0.05
+            "DEF%": 7,
+            "HEAL%": 5,
+            "MP": 3
         },
         "conversions": []
     },
@@ -16108,8 +16265,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+8% Heal, +15% DEF, +6 MP",
         "stats": {
-            "DEF%": 0.15,
-            "HEAL%": 0.08
+            "DEF%": 15,
+            "HEAL%": 8,
+            "MP": 6
         },
         "conversions": []
     },
@@ -16130,7 +16288,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% Heal, +200 HP",
         "stats": {
-            "HEAL%": 0.2
+            "HEAL%": 20,
+            "HP": 200
         },
         "conversions": []
     },
@@ -16151,9 +16310,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+12% Heal, +5% Crit Chance, +25% Crit Damage",
         "stats": {
-            "Crit Chance%": 0.05,
-            "Crit DMG%": 0.25,
-            "HEAL%": 0.12
+            "Crit Chance%": 5,
+            "Crit DMG%": 25,
+            "HEAL%": 12
         },
         "conversions": []
     },
@@ -16174,9 +16333,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15% Heal, +15% MATK, +15% ATK",
         "stats": {
-            "ATK%": 0.15,
-            "MATK%": 0.15,
-            "HEAL%": 0.15
+            "ATK%": 15,
+            "MATK%": 15,
+            "HEAL%": 15
         },
         "conversions": []
     },
@@ -16197,7 +16356,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+8% Heal, +75 HP",
         "stats": {
-            "HEAL%": 0.08
+            "HEAL%": 8,
+            "HP": 75
         },
         "conversions": []
     },
@@ -16218,9 +16378,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+4% Heal, +2% Crit Chance, +15% Crit Damage",
         "stats": {
-            "Crit Chance%": 0.02,
-            "Crit DMG%": 0.15,
-            "HEAL%": 0.04
+            "Crit Chance%": 2,
+            "Crit DMG%": 15,
+            "HEAL%": 4
         },
         "conversions": []
     },
@@ -16241,9 +16401,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+6% Heal, MATK, and ATK",
         "stats": {
-            "ATK%": 0.06,
-            "MATK%": 0.06,
-            "HEAL%": 0.06
+            "HEAL%": 6
         },
         "conversions": []
     },
@@ -16264,7 +16422,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+8% Heal, +75 HP",
         "stats": {
-            "HEAL%": 0.08
+            "HEAL%": 8,
+            "HP": 75
         },
         "conversions": []
     },
@@ -16285,9 +16444,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+4% Heal, +2% Crit Chance, +15% Crit Damage",
         "stats": {
-            "Crit Chance%": 0.02,
-            "Crit DMG%": 0.15,
-            "HEAL%": 0.04
+            "Crit Chance%": 2,
+            "Crit DMG%": 15,
+            "HEAL%": 4
         },
         "conversions": []
     },
@@ -16308,9 +16467,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+6% Heal, MATK, and ATK",
         "stats": {
-            "ATK%": 0.06,
-            "MATK%": 0.06,
-            "HEAL%": 0.06
+            "HEAL%": 6
         },
         "conversions": []
     },
@@ -16331,7 +16488,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+12% Heal, +125 HP",
         "stats": {
-            "HEAL%": 0.12
+            "HEAL%": 12,
+            "HP": 125
         },
         "conversions": []
     },
@@ -16352,9 +16510,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+6% Heal, +2% Crit Chance, +25% Crit Damage",
         "stats": {
-            "Crit Chance%": 0.02,
-            "Crit DMG%": 0.25,
-            "HEAL%": 0.06
+            "Crit Chance%": 2,
+            "Crit DMG%": 25,
+            "HEAL%": 6
         },
         "conversions": []
     },
@@ -16375,9 +16533,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10% Heal, MATK, and ATK",
         "stats": {
-            "ATK%": 0.1,
-            "MATK%": 0.1,
-            "HEAL%": 0.1
+            "HEAL%": 10
         },
         "conversions": []
     },
@@ -16398,8 +16554,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+5% Heal, +10% DEF",
         "stats": {
-            "DEF%": 0.1,
-            "HEAL%": 0.05
+            "DEF%": 10,
+            "HEAL%": 5
         },
         "conversions": []
     },
@@ -16420,8 +16576,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+5% Heal, +10% DEF",
         "stats": {
-            "DEF%": 0.1,
-            "HEAL%": 0.05
+            "DEF%": 10,
+            "HEAL%": 5
         },
         "conversions": []
     },
@@ -16442,8 +16598,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+8% Heal, +16% DEF",
         "stats": {
-            "DEF%": 0.16,
-            "HEAL%": 0.08
+            "DEF%": 16,
+            "HEAL%": 8
         },
         "conversions": []
     },
@@ -16464,7 +16620,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+5% Heal, +4 MP",
         "stats": {
-            "HEAL%": 0.05
+            "HEAL%": 5,
+            "MP": 4
         },
         "conversions": []
     },
@@ -16485,7 +16642,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+5% Heal, +4 MP",
         "stats": {
-            "HEAL%": 0.05
+            "HEAL%": 5,
+            "MP": 4
         },
         "conversions": []
     },
@@ -16506,7 +16664,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+8% Heal, +8 MP",
         "stats": {
-            "HEAL%": 0.08
+            "HEAL%": 8,
+            "MP": 8
         },
         "conversions": []
     },
@@ -16527,9 +16686,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+4% Heal, +3% Crit Chance. +10% Crit Damage",
         "stats": {
-            "Crit Chance%": 0.03,
-            "Crit DMG%": 0.1,
-            "HEAL%": 0.04
+            "Crit Chance%": 3,
+            "Crit DMG%": 10,
+            "HEAL%": 4
         },
         "conversions": []
     },
@@ -16550,9 +16709,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+4% Heal, +3% Crit Chance. +10% Crit Damage",
         "stats": {
-            "Crit Chance%": 0.03,
-            "Crit DMG%": 0.1,
-            "HEAL%": 0.04
+            "Crit Chance%": 3,
+            "Crit DMG%": 10,
+            "HEAL%": 4
         },
         "conversions": []
     },
@@ -16573,9 +16732,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+8% Heal, +6% Crit Chance. +20% Crit Damage",
         "stats": {
-            "Crit Chance%": 0.06,
-            "Crit DMG%": 0.2,
-            "HEAL%": 0.08
+            "Crit Chance%": 6,
+            "Crit DMG%": 20,
+            "HEAL%": 8
         },
         "conversions": []
     },
@@ -16596,7 +16755,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% Heal, +300 HP",
         "stats": {
-            "HEAL%": 0.2
+            "HEAL%": 20,
+            "HP": 300
         },
         "conversions": []
     },
@@ -16617,9 +16777,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+12% Heal, +5% Crit Chance, +25% Crit Damage",
         "stats": {
-            "Crit Chance%": 0.05,
-            "Crit DMG%": 0.25,
-            "HEAL%": 0.12
+            "Crit Chance%": 5,
+            "Crit DMG%": 25,
+            "HEAL%": 12
         },
         "conversions": []
     },
@@ -16640,9 +16800,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15% Heal, +15% MATK, +15% ATK",
         "stats": {
-            "ATK%": 0.15,
-            "MATK%": 0.15,
-            "HEAL%": 0.15
+            "ATK%": 15,
+            "MATK%": 15,
+            "HEAL%": 15
         },
         "conversions": []
     },
@@ -16663,7 +16823,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+8% Heal, +120 HP",
         "stats": {
-            "HEAL%": 0.08
+            "HEAL%": 8,
+            "HP": 120
         },
         "conversions": []
     },
@@ -16684,9 +16845,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+4% Heal, +2% Crit Chance, +15% Crit Damage",
         "stats": {
-            "Crit Chance%": 0.02,
-            "Crit DMG%": 0.15,
-            "HEAL%": 0.04
+            "Crit Chance%": 2,
+            "Crit DMG%": 15,
+            "HEAL%": 4
         },
         "conversions": []
     },
@@ -16707,9 +16868,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+6% Heal, MATK, and ATK",
         "stats": {
-            "ATK%": 0.06,
-            "MATK%": 0.06,
-            "HEAL%": 0.06
+            "HEAL%": 6
         },
         "conversions": []
     },
@@ -16730,7 +16889,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+8% Heal, +120 HP",
         "stats": {
-            "HEAL%": 0.08
+            "HEAL%": 8,
+            "HP": 120
         },
         "conversions": []
     },
@@ -16751,9 +16911,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+4% Heal, +2% Crit Chance, +15% Crit Damage",
         "stats": {
-            "Crit Chance%": 0.02,
-            "Crit DMG%": 0.15,
-            "HEAL%": 0.04
+            "Crit Chance%": 2,
+            "Crit DMG%": 15,
+            "HEAL%": 4
         },
         "conversions": []
     },
@@ -16774,9 +16934,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+6% Heal, MATK, and ATK",
         "stats": {
-            "ATK%": 0.06,
-            "MATK%": 0.06,
-            "HEAL%": 0.06
+            "HEAL%": 6
         },
         "conversions": []
     },
@@ -16797,7 +16955,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+12% Heal, +240 HP",
         "stats": {
-            "HEAL%": 0.12
+            "HEAL%": 12,
+            "HP": 240
         },
         "conversions": []
     },
@@ -16818,9 +16977,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+6% Heal, +2% Crit Chance, +25% Crit Damage",
         "stats": {
-            "Crit Chance%": 0.02,
-            "Crit DMG%": 0.25,
-            "HEAL%": 0.06
+            "Crit Chance%": 2,
+            "Crit DMG%": 25,
+            "HEAL%": 6
         },
         "conversions": []
     },
@@ -16841,9 +17000,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10% Heal, MATK, and ATK",
         "stats": {
-            "ATK%": 0.1,
-            "MATK%": 0.1,
-            "HEAL%": 0.1
+            "HEAL%": 10
         },
         "conversions": []
     },
@@ -16864,9 +17021,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10% Heal, +5% Holy Damage, +5% Negative Damage",
         "stats": {
-            "HEAL%": 0.1,
-            "Neg%": 0.05,
-            "Holy%": 0.05
+            "HEAL%": 10,
+            "Neg%": 5,
+            "Holy%": 5
         },
         "conversions": []
     },
@@ -16887,9 +17044,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10% Heal, +5% Holy Damage, +5% Negative Damage",
         "stats": {
-            "HEAL%": 0.1,
-            "Neg%": 0.05,
-            "Holy%": 0.05
+            "HEAL%": 10,
+            "Neg%": 5,
+            "Holy%": 5
         },
         "conversions": []
     },
@@ -16910,9 +17067,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+12% Heal, +10% Holy Damage, +10% Negative Damage",
         "stats": {
-            "HEAL%": 0.12,
-            "Neg%": 0.1,
-            "Holy%": 0.1
+            "HEAL%": 12,
+            "Neg%": 10,
+            "Holy%": 10
         },
         "conversions": []
     },
@@ -16933,7 +17090,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10% Heal, +300 HP, +4 MP",
         "stats": {
-            "HEAL%": 0.1
+            "HEAL%": 10,
+            "HP": 300,
+            "MP": 4
         },
         "conversions": []
     },
@@ -16954,7 +17113,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10% Heal, +300 HP, +4 MP",
         "stats": {
-            "HEAL%": 0.1
+            "HEAL%": 10,
+            "HP": 300,
+            "MP": 4
         },
         "conversions": []
     },
@@ -16975,7 +17136,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+12% Heal, +500 HP, +6 MP",
         "stats": {
-            "HEAL%": 0.12
+            "HEAL%": 12,
+            "HP": 500,
+            "MP": 6
         },
         "conversions": []
     },
@@ -16996,9 +17159,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10% Heal, +2% Crit Chance. +12% Crit Damage",
         "stats": {
-            "Crit Chance%": 0.02,
-            "Crit DMG%": 0.12,
-            "HEAL%": 0.1
+            "Crit Chance%": 2,
+            "Crit DMG%": 12,
+            "HEAL%": 10
         },
         "conversions": []
     },
@@ -17019,9 +17182,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10% Heal, +2% Crit Chance. +12% Crit Damage",
         "stats": {
-            "Crit Chance%": 0.02,
-            "Crit DMG%": 0.12,
-            "HEAL%": 0.1
+            "Crit Chance%": 2,
+            "Crit DMG%": 12,
+            "HEAL%": 10
         },
         "conversions": []
     },
@@ -17042,9 +17205,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+12% Heal, +2% Crit Chance. +25% Crit Damage",
         "stats": {
-            "Crit Chance%": 0.02,
-            "Crit DMG%": 0.25,
-            "HEAL%": 0.1
+            "Crit Chance%": 2,
+            "Crit DMG%": 25,
+            "HEAL%": 12
         },
         "conversions": []
     },
@@ -17065,8 +17228,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% Heal, +10% Holy Damage",
         "stats": {
-            "HEAL%": 0.2,
-            "Holy%": 0.1
+            "HEAL%": 20,
+            "Holy%": 10
         },
         "conversions": []
     },
@@ -17087,8 +17250,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% Heal, +15% Negative Damage",
         "stats": {
-            "HEAL%": 0.2,
-            "Neg%": 0.15
+            "HEAL%": 20,
+            "Neg%": 15
         },
         "conversions": []
     },
@@ -17109,7 +17272,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+25% Heal, +500 HP",
         "stats": {
-            "HEAL%": 0.25
+            "HEAL%": 25,
+            "HP": 500
         },
         "conversions": []
     },
@@ -17130,8 +17294,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10% Heal, +5% Holy Damage",
         "stats": {
-            "HEAL%": 0.1,
-            "Holy%": 0.05
+            "HEAL%": 10,
+            "Holy%": 5
         },
         "conversions": []
     },
@@ -17152,8 +17316,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10% Heal, +8% Negative Damage",
         "stats": {
-            "HEAL%": 0.1,
-            "Neg%": 0.08
+            "HEAL%": 10,
+            "Neg%": 8
         },
         "conversions": []
     },
@@ -17174,7 +17338,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+12% Heal, +200 HP",
         "stats": {
-            "HEAL%": 0.12
+            "HEAL%": 12,
+            "HP": 200
         },
         "conversions": []
     },
@@ -17195,8 +17360,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10% Heal, +5% Holy Damage",
         "stats": {
-            "HEAL%": 0.1,
-            "Holy%": 0.05
+            "HEAL%": 10,
+            "Holy%": 5
         },
         "conversions": []
     },
@@ -17217,8 +17382,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10% Heal, +8% Negative Damage",
         "stats": {
-            "HEAL%": 0.1,
-            "Neg%": 0.08
+            "HEAL%": 10,
+            "Neg%": 8
         },
         "conversions": []
     },
@@ -17239,7 +17404,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+12% Heal, +200 HP",
         "stats": {
-            "HEAL%": 0.12
+            "HEAL%": 12,
+            "HP": 200
         },
         "conversions": []
     },
@@ -17260,9 +17426,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% Heal, +20% Holy Damage, +5% Holy Penetration",
         "stats": {
-            "HEAL%": 0.2,
-            "Holy%": 0.2,
-            "Holy Pen%": 0.05
+            "HEAL%": 20,
+            "Holy%": 20,
+            "Holy Pen%": 5
         },
         "conversions": []
     },
@@ -17283,9 +17449,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% Heal, +20% Negative Damage +10% Negative Penetration",
         "stats": {
-            "HEAL%": 0.2,
-            "Neg%": 0.2,
-            "Neg Pen%": 0.1
+            "HEAL%": 20,
+            "Neg%": 20,
+            "Neg Pen%": 10
         },
         "conversions": []
     },
@@ -17306,8 +17472,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+25% Heal, +25% DEF, +600 HP",
         "stats": {
-            "DEF%": 0.25,
-            "HEAL%": 0.25
+            "DEF%": 25,
+            "HEAL%": 25,
+            "HP": 600
         },
         "conversions": []
     },
@@ -17328,8 +17495,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15% Heal, +5% Global Heal Effect",
         "stats": {
-            "HEAL%": 0.15,
-            "Heal Effect%": 0.05
+            "HEAL%": 15,
+            "Heal Effect%": 5,
+            "Global HEAL%": 5
         },
         "conversions": []
     },
@@ -17350,20 +17518,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10% Heal, +30% DEF, +2% All Resist",
         "stats": {
-            "DEF%": 0.3,
-            "HEAL%": 0.1,
-            "Slash Res%": 0.02,
-            "Pierce Res%": 0.02,
-            "Blunt Res%": 0.02,
-            "Fire Res%": 0.02,
-            "Water Res%": 0.02,
-            "Lightning Res%": 0.02,
-            "Wind Res%": 0.02,
-            "Earth Res%": 0.02,
-            "Toxic Res%": 0.02,
-            "Neg Res%": 0.02,
-            "Holy Res%": 0.02,
-            "Void Res%": 0.02
+            "DEF%": 30,
+            "HEAL%": 10,
+            "All Res%": 2
         },
         "conversions": []
     },
@@ -17384,9 +17541,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10% Heal, +8% Divine Penetration",
         "stats": {
-            "HEAL%": 0.1,
-            "Neg Pen%": 0.08,
-            "Holy Pen%": 0.08
+            "HEAL%": 10
         },
         "conversions": []
     },
@@ -17407,7 +17562,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+50% Heal",
         "stats": {
-            "HEAL%": 0.5
+            "HEAL%": 50
         },
         "conversions": []
     },
@@ -17428,8 +17583,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10% Heal, +15% DEF, +5% Max HP Multiplier",
         "stats": {
-            "DEF%": 0.15,
-            "HEAL%": 0.1
+            "DEF%": 15,
+            "HEAL%": 10,
+            "HP%": 5
         },
         "conversions": []
     },
@@ -17450,9 +17606,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10% Heal, +20% Divine Damage",
         "stats": {
-            "HEAL%": 0.1,
-            "Neg%": 0.2,
-            "Holy%": 0.2
+            "HEAL%": 10
         },
         "conversions": []
     },
@@ -17473,7 +17627,10 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+5% Global Heal Effect, +75% Crit Damage, -10% Global Damage",
         "stats": {
-            "Crit DMG%": 0.75
+            "Crit DMG%": 75,
+            "Dmg%": -10,
+            "Global HEAL%": 5,
+            "Heal Effect%": 5
         },
         "conversions": []
     },
@@ -17494,7 +17651,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+50% DEF",
         "stats": {
-            "DEF%": 0.5
+            "DEF%": 50
         },
         "conversions": []
     },
@@ -17537,8 +17694,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15% Crit Chance, +25% Heal, -35% Global Damage",
         "stats": {
-            "Crit Chance%": 0.15,
-            "HEAL%": 0.25
+            "Crit Chance%": 15,
+            "HEAL%": 25,
+            "Dmg%": -35
         },
         "conversions": []
     },
@@ -17559,8 +17717,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15% Heal, +45% Threat Bonus, +5% Max HP Multiplier",
         "stats": {
-            "HEAL%": 0.15,
-            "Threat%": 0.45
+            "HEAL%": 15,
+            "HP%": 5,
+            "Threat%": 45
         },
         "conversions": []
     },
@@ -17603,8 +17762,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+1% Global Healpower, +10% Divine Damage and +15% Toxic Damage",
         "stats": {
-            "Global HEAL%": 0.01,
-            "Toxic%": 0.15,
+            "Global HEAL%": 1,
+            "Toxic%": 15,
             "Neg%": 0.1,
             "Holy%": 0.1
         },
@@ -17627,9 +17786,10 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+1% Global Healpower, +10% Divine Damage and +15% Toxic Damage",
         "stats": {
-            "Toxic%": 0.15,
+            "Toxic%": 15,
             "Neg%": 0.1,
-            "Holy%": 0.1
+            "Holy%": 0.1,
+            "Global HEAL%": 1
         },
         "conversions": []
     },
@@ -17650,9 +17810,10 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+1% Global Healpower, +10% Divine Penetration and +15% Toxic Penetration",
         "stats": {
-            "Toxic Pen%": 0.15,
+            "Toxic Pen%": 15,
             "Neg Pen%": 0.1,
-            "Holy Pen%": 0.1
+            "Holy Pen%": 0.1,
+            "Global HEAL%": 1
         },
         "conversions": []
     },
@@ -17673,7 +17834,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+1% Global Healpower, -6% Threat Generated",
         "stats": {
-            "Threat%": -0.06
+            "Threat%": -0.06,
+            "Global HEAL%": 1
         },
         "conversions": []
     },
@@ -17694,7 +17856,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+1% Global Healpower, -6% Threat Generated",
         "stats": {
-            "Threat%": -0.06
+            "Threat%": -0.06,
+            "Global HEAL%": 1
         },
         "conversions": []
     },
@@ -17715,7 +17878,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+4% Global Heal Effect, -8% Threat Generated, +6% Global Max Health",
         "stats": {
-            "Threat%": -0.08
+            "Global HEAL%": 4,
+            "Heal Effect%": 4,
+            "HP%": 6
         },
         "conversions": []
     },
@@ -17736,7 +17901,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+1% Global Healpower, +10% Crit Damage",
         "stats": {
-            "Crit DMG%": 0.1
+            "Crit DMG%": 10,
+            "Global HEAL%": 1
         },
         "conversions": []
     },
@@ -17757,7 +17923,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+1% Global Healpower, +15% Crit Damage",
         "stats": {
-            "Crit DMG%": 0.15
+            "Crit DMG%": 15,
+            "Global HEAL%": 1
         },
         "conversions": []
     },
@@ -17778,7 +17945,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+1% Global Healpower, +25% Crit Damage, +2% Global Heal Effect",
         "stats": {
-            "Crit DMG%": 0.25
+            "Crit DMG%": 25,
+            "Global HEAL%": 3,
+            "Heal Effect%": 2
         },
         "conversions": []
     },
@@ -17799,9 +17968,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+25% Global Damage, -40% Global Heal Effect, +25% Divine and Toxic Damage",
         "stats": {
-            "Toxic%": 0.25,
-            "Neg%": 0.25,
-            "Holy%": 0.25
+            "Dmg%": 25,
+            "Global HEAL%": -40,
+            "Heal Effect%": -40
         },
         "conversions": []
     },
@@ -17822,7 +17991,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10% Global Heal Effect, +10% Global Max Health, +25% Threat Generated",
         "stats": {
-            "Threat%": 0.25
+            "Global HEAL%": 10,
+            "Heal Effect%": 10,
+            "HP%": 10
         },
         "conversions": []
     },
@@ -17843,9 +18014,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "-20% Threat Generated, +75 MP, +40% Crit Damage, +10% Crit Chance",
         "stats": {
-            "Crit Chance%": 0.1,
-            "Crit DMG%": 0.4,
-            "Threat%": -0.25
+            "Crit Chance%": 10,
+            "Crit DMG%": 40,
+            "MP": 75
         },
         "conversions": []
     },
@@ -17865,7 +18036,11 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 175
         },
         "description": "+1% Global Heal, +2% Max HP Multi, Conversion 3% Heal to DEF",
-        "stats": {},
+        "stats": {
+            "HEAL%": 3,
+            "HP%": 2,
+            "Global HEAL%": 1
+        },
         "conversions": [
             {
                 "source": "HEAL",
@@ -17890,7 +18065,11 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 175
         },
         "description": "-2% Global Heal, +4% Max HP Multi, Conversion 3% Heal to DEF",
-        "stats": {},
+        "stats": {
+            "HEAL%": 3,
+            "HP%": 4,
+            "Global HEAL%": -2
+        },
         "conversions": [
             {
                 "source": "HEAL",
@@ -17915,7 +18094,11 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 175
         },
         "description": "+2% Global Heal, -5% Max HP Multi, Conversion 3% Heal to DEF",
-        "stats": {},
+        "stats": {
+            "HEAL%": 3,
+            "HP%": -5,
+            "Global HEAL%": 2
+        },
         "conversions": [
             {
                 "source": "HEAL",
@@ -17940,7 +18123,11 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 175
         },
         "description": "+2% Global Heal, +2% Max HP Multi, Conversion 3% Heal to DEF",
-        "stats": {},
+        "stats": {
+            "HEAL%": 3,
+            "HP%": 2,
+            "Global HEAL%": 2
+        },
         "conversions": [
             {
                 "source": "HEAL",
@@ -17966,18 +18153,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+3% Global Heal, +5% All Res",
         "stats": {
-            "Slash Res%": 0.05,
-            "Pierce Res%": 0.05,
-            "Blunt Res%": 0.05,
-            "Fire Res%": 0.05,
-            "Water Res%": 0.05,
-            "Lightning Res%": 0.05,
-            "Wind Res%": 0.05,
-            "Earth Res%": 0.05,
-            "Toxic Res%": 0.05,
-            "Neg Res%": 0.05,
-            "Holy Res%": 0.05,
-            "Void Res%": 0.05
+            "Global HEAL%": 3,
+            "All Res%": 5
         },
         "conversions": []
     },
@@ -17997,7 +18174,13 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 175
         },
         "description": "+1% Global Heal, +5% Buff Multiplier, -25% Global ATK/MATK/DEF",
-        "stats": {},
+        "stats": {
+            "Buff%": 5,
+            "Global ATK%": -25,
+            "Global DEF%": -25,
+            "Global HEAL%": 1,
+            "Global MATK%": -25
+        },
         "conversions": []
     },
     "Undying Light of Spirit": {
@@ -18016,7 +18199,13 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 175
         },
         "description": "+1% Global Heal, +5% Buff Multiplier, -15% Global ATK/MATK/Max HP",
-        "stats": {},
+        "stats": {
+            "Buff%": 5,
+            "Global ATK%": -15,
+            "Global HEAL%": 1,
+            "Global MATK%": -15,
+            "HP%": -15
+        },
         "conversions": []
     },
     "Soul Shard of Mesofet": {
@@ -18036,18 +18225,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+3% Global Heal, +5% All Res",
         "stats": {
-            "Slash Res%": 0.05,
-            "Pierce Res%": 0.05,
-            "Blunt Res%": 0.05,
-            "Fire Res%": 0.05,
-            "Water Res%": 0.05,
-            "Lightning Res%": 0.05,
-            "Wind Res%": 0.05,
-            "Earth Res%": 0.05,
-            "Toxic Res%": 0.05,
-            "Neg Res%": 0.05,
-            "Holy Res%": 0.05,
-            "Void Res%": 0.05
+            "Global HEAL%": 3,
+            "All Res%": 5
         },
         "conversions": []
     },
@@ -18076,7 +18255,9 @@ const talent_data: Record<string, Talent> = {
             "Toxic%": 0.08,
             "Neg%": 0.08,
             "Holy%": 0.08,
-            "Void%": 0.08
+            "Void%": 0.08,
+            "DEF%": 8,
+            "Global HEAL%": 1
         },
         "conversions": [
             {
@@ -18111,7 +18292,9 @@ const talent_data: Record<string, Talent> = {
             "Toxic%": 0.08,
             "Neg%": 0.08,
             "Holy%": 0.08,
-            "Void%": 0.08
+            "Void%": 0.08,
+            "ATK%": 8,
+            "Global HEAL%": 1
         },
         "conversions": [
             {
@@ -18146,7 +18329,9 @@ const talent_data: Record<string, Talent> = {
             "Toxic%": 0.08,
             "Neg%": 0.08,
             "Holy%": 0.08,
-            "Void%": 0.08
+            "Void%": 0.08,
+            "Global HEAL%": 1,
+            "MATK%": 8
         },
         "conversions": [
             {
@@ -18173,15 +18358,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+2% Global Heal,  +10% Magic DMG, +2% Global Damage",
         "stats": {
-            "Fire%": 0.1,
-            "Water%": 0.1,
-            "Lightning%": 0.1,
-            "Wind%": 0.1,
-            "Earth%": 0.1,
-            "Toxic%": 0.1,
-            "Neg%": 0.1,
-            "Holy%": 0.1,
-            "Void%": 0.1
+            "Dmg%": 2,
+            "Global HEAL%": 2
         },
         "conversions": []
     },
@@ -18202,9 +18380,10 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+1% Global Heal, Temp HP Start of 20% Max HP, -33% Global MATK/ATK",
         "stats": {
-            "Global HEAL%": 0.01,
-            "Global MATK%": -0.33,
-            "Global ATK%": -0.33
+            "Global HEAL%": 1,
+            "Global MATK%": -33,
+            "Global ATK%": -0.33,
+            "HP%": 20
         },
         "conversions": []
     },
@@ -18224,7 +18403,10 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 175
         },
         "description": "+1% Global Heal, +3% Buff Multiplier",
-        "stats": {},
+        "stats": {
+            "Buff%": 3,
+            "Global HEAL%": 1
+        },
         "conversions": []
     },
     "Space Shard of Azago'toth": {
@@ -18243,7 +18425,12 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 175
         },
         "description": "+50% Global DMG, -95% Global MATK/ATK/Void DMG, -40% Global Heal Effect",
-        "stats": {},
+        "stats": {
+            "Dmg%": 50,
+            "Global HEAL%": -40,
+            "Global MATK%": -95,
+            "Heal Effect%": -40
+        },
         "conversions": []
     },
     "Time Core of Azago'toth": {
@@ -18263,7 +18450,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+5% Global Heal & HP Regen Rate, +3 MP Regen, -33% Global Damage",
         "stats": {
-            "Global HEAL%": 0.05,
+            "Global HEAL%": 5,
+            "Dmg%": -33
         },
         "conversions": []
     },
@@ -18284,9 +18472,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+5% Global Heal, +15% Global Max Health, +300% Threat Generated",
         "stats": {
-            "Threat%": 3.0,
-            "Global HEAL%": 0.05,
-            "HP%": 0.15
+            "Global HEAL%": 5,
+            "HP%": 15
         },
         "conversions": []
     },
@@ -18307,9 +18494,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+50% Global Heal, -75% Buff Multiplier, -75% Global Heal Effect",
         "stats": {
-            "Global HEAL%": 0.5,
-            "Buff%": -0.75,
-            "Heal Effect%": -0.75
+            "Global HEAL%": -25,
+            "Buff%": -75,
+            "Heal Effect%": -75
         },
         "conversions": []
     },
@@ -18330,9 +18517,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+3% Global Heal, +3% Buff Multiplier, +33% Crit Damage",
         "stats": {
-            "Crit DMG%": 0.33,
-            "Global HEAL%": 0.03,
-            "Buff%": 0.03
+            "Crit DMG%": 33,
+            "Global HEAL%": 3,
+            "Buff%": 3
         },
         "conversions": []
     },
@@ -18353,8 +18540,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+12% DEF, +12% ATK, +15 ATK",
         "stats": {
-            "DEF%": 0.12,
-            "ATK%": 0.12
+            "DEF%": 12,
+            "ATK%": 12,
+            "ATK": 15
         },
         "conversions": []
     },
@@ -18375,8 +18563,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15% DEF, +15% ATK, +20 ATK",
         "stats": {
-            "DEF%": 0.15,
-            "ATK%": 0.15
+            "DEF%": 15,
+            "ATK%": 15,
+            "ATK": 20
         },
         "conversions": []
     },
@@ -18397,8 +18586,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15% DEF, +15% ATK, +15 ATK",
         "stats": {
-            "DEF%": 0.15,
-            "ATK%": 0.15
+            "DEF%": 15,
+            "ATK%": 15,
+            "ATK": 15
         },
         "conversions": []
     },
@@ -18419,8 +18609,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15% DEF, +15% ATK, +15 ATK",
         "stats": {
-            "DEF%": 0.15,
-            "ATK%": 0.15
+            "DEF%": 15,
+            "ATK%": 15,
+            "ATK": 15
         },
         "conversions": []
     },
@@ -18441,8 +18632,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15% DEF, +15% ATK, +15 ATK",
         "stats": {
-            "DEF%": 0.15,
-            "ATK%": 0.15
+            "DEF%": 15,
+            "ATK%": 15,
+            "ATK": 15
         },
         "conversions": []
     },
@@ -18463,8 +18655,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% DEF, +25% ATK, +20 ATK",
         "stats": {
-            "DEF%": 0.2,
-            "ATK%": 0.25
+            "DEF%": 20,
+            "ATK%": 25,
+            "ATK": 20
         },
         "conversions": []
     },
@@ -18485,8 +18678,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% DEF, +25% ATK, +20 ATK",
         "stats": {
-            "DEF%": 0.2,
-            "ATK%": 0.25
+            "DEF%": 20,
+            "ATK%": 25,
+            "ATK": 20
         },
         "conversions": []
     },
@@ -18507,8 +18701,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% DEF, +25% ATK, +20 ATK",
         "stats": {
-            "DEF%": 0.2,
-            "ATK%": 0.25
+            "DEF%": 20,
+            "ATK%": 25,
+            "ATK": 20
         },
         "conversions": []
     },
@@ -18529,8 +18724,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% DEF, +25% ATK, +20 ATK",
         "stats": {
-            "DEF%": 0.2,
-            "ATK%": 0.25
+            "DEF%": 20,
+            "ATK%": 25,
+            "ATK": 20
         },
         "conversions": []
     },
@@ -18551,8 +18747,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% DEF, +25% ATK, +20 ATK",
         "stats": {
-            "DEF%": 0.2,
-            "ATK%": 0.25
+            "DEF%": 20,
+            "ATK%": 25,
+            "ATK": 20
         },
         "conversions": []
     },
@@ -18573,8 +18770,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% DEF, +25% ATK, +20 ATK",
         "stats": {
-            "DEF%": 0.2,
-            "ATK%": 0.25
+            "DEF%": 20,
+            "ATK%": 25,
+            "ATK": 20
         },
         "conversions": []
     },
@@ -18595,8 +18793,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% DEF, +25% ATK, +20 ATK",
         "stats": {
-            "DEF%": 0.2,
-            "ATK%": 0.25
+            "DEF%": 20,
+            "ATK%": 25,
+            "ATK": 20
         },
         "conversions": []
     },
@@ -18617,8 +18816,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% DEF, +25% ATK, +20 ATK",
         "stats": {
-            "DEF%": 0.2,
-            "ATK%": 0.25
+            "DEF%": 20,
+            "ATK%": 25,
+            "ATK": 20
         },
         "conversions": []
     },
@@ -18639,8 +18839,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% DEF, +25% ATK, +20 ATK",
         "stats": {
-            "DEF%": 0.2,
-            "ATK%": 0.25
+            "DEF%": 20,
+            "ATK%": 25,
+            "ATK": 20
         },
         "conversions": []
     },
@@ -18661,8 +18862,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% DEF, +25% ATK, +20 ATK",
         "stats": {
-            "DEF%": 0.2,
-            "ATK%": 0.25
+            "DEF%": 20,
+            "ATK%": 25,
+            "ATK": 20
         },
         "conversions": []
     },
@@ -18683,8 +18885,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+25% DEF, +30% ATK, +25 ATK",
         "stats": {
-            "DEF%": 0.25,
-            "ATK%": 0.3
+            "DEF%": 25,
+            "ATK%": 30,
+            "ATK": 25
         },
         "conversions": []
     },
@@ -18705,8 +18908,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+25% DEF, +30% ATK, +25 ATK",
         "stats": {
-            "DEF%": 0.25,
-            "ATK%": 0.3
+            "DEF%": 25,
+            "ATK%": 30,
+            "ATK": 25
         },
         "conversions": []
     },
@@ -18727,8 +18931,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+30% DEF, +35% ATK, +25 ATK",
         "stats": {
-            "DEF%": 0.3,
-            "ATK%": 0.35
+            "DEF%": 30,
+            "ATK%": 35,
+            "ATK": 25
         },
         "conversions": []
     },
@@ -18749,8 +18954,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+12% DEF, +12% MATK, +15 MATK",
         "stats": {
-            "DEF%": 0.12,
-            "MATK%": 0.12
+            "DEF%": 12,
+            "MATK%": 12,
+            "MATK": 15
         },
         "conversions": []
     },
@@ -18771,8 +18977,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15% DEF, +15% MATK, +15 MATK",
         "stats": {
-            "DEF%": 0.15,
-            "MATK%": 0.15
+            "DEF%": 15,
+            "MATK%": 15,
+            "MATK": 15
         },
         "conversions": []
     },
@@ -18793,8 +19000,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15% DEF, +15% MATK, +15 MATK",
         "stats": {
-            "DEF%": 0.15,
-            "MATK%": 0.15
+            "DEF%": 15,
+            "MATK%": 15,
+            "MATK": 15
         },
         "conversions": []
     },
@@ -18815,8 +19023,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15% DEF, +15% MATK, +15 MATK",
         "stats": {
-            "DEF%": 0.15,
-            "MATK%": 0.15
+            "DEF%": 15,
+            "MATK%": 15,
+            "MATK": 15
         },
         "conversions": []
     },
@@ -18837,8 +19046,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15% DEF, +15% MATK, +15 MATK",
         "stats": {
-            "DEF%": 0.15,
-            "MATK%": 0.15
+            "DEF%": 15,
+            "MATK%": 15,
+            "MATK": 15
         },
         "conversions": []
     },
@@ -18859,8 +19069,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% DEF, +20% MATK, +15 MATK",
         "stats": {
-            "DEF%": 0.2,
-            "MATK%": 0.2
+            "DEF%": 20,
+            "MATK%": 20,
+            "MATK": 15
         },
         "conversions": []
     },
@@ -18881,8 +19092,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% DEF, +20% MATK, +15 MATK",
         "stats": {
-            "DEF%": 0.2,
-            "MATK%": 0.2
+            "DEF%": 20,
+            "MATK%": 20,
+            "MATK": 15
         },
         "conversions": []
     },
@@ -18903,8 +19115,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% DEF, +20% MATK, +15 MATK",
         "stats": {
-            "DEF%": 0.2,
-            "MATK%": 0.2
+            "DEF%": 20,
+            "MATK%": 20,
+            "MATK": 15
         },
         "conversions": []
     },
@@ -18925,8 +19138,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% DEF, +20% MATK, +15 MATK",
         "stats": {
-            "DEF%": 0.2,
-            "MATK%": 0.2
+            "DEF%": 20,
+            "MATK%": 20,
+            "MATK": 15
         },
         "conversions": []
     },
@@ -18947,8 +19161,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% DEF, +20% MATK, +15 MATK",
         "stats": {
-            "DEF%": 0.2,
-            "MATK%": 0.2
+            "DEF%": 20,
+            "MATK%": 20,
+            "MATK": 15
         },
         "conversions": []
     },
@@ -18969,8 +19184,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% DEF, +20% MATK, +15 MATK",
         "stats": {
-            "DEF%": 0.2,
-            "MATK%": 0.2
+            "DEF%": 20,
+            "MATK%": 20,
+            "MATK": 15
         },
         "conversions": []
     },
@@ -18991,8 +19207,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% DEF, +20% MATK, +15 MATK",
         "stats": {
-            "DEF%": 0.2,
-            "MATK%": 0.2
+            "DEF%": 20,
+            "MATK%": 20,
+            "MATK": 15
         },
         "conversions": []
     },
@@ -19013,8 +19230,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% DEF, +20% MATK, +15 MATK",
         "stats": {
-            "DEF%": 0.2,
-            "MATK%": 0.2
+            "DEF%": 20,
+            "MATK%": 20,
+            "MATK": 15
         },
         "conversions": []
     },
@@ -19035,8 +19253,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% DEF, +20% MATK, +15 MATK",
         "stats": {
-            "DEF%": 0.2,
-            "MATK%": 0.2
+            "DEF%": 20,
+            "MATK%": 20,
+            "MATK": 15
         },
         "conversions": []
     },
@@ -19057,8 +19276,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% DEF, +20% MATK, +15 MATK",
         "stats": {
-            "DEF%": 0.2,
-            "MATK%": 0.2
+            "DEF%": 20,
+            "MATK%": 20,
+            "MATK": 15
         },
         "conversions": []
     },
@@ -19079,8 +19299,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+25% DEF, +25% MATK, +20 MATK",
         "stats": {
-            "DEF%": 0.25,
-            "MATK%": 0.25
+            "DEF%": 25,
+            "MATK%": 25,
+            "MATK": 20
         },
         "conversions": []
     },
@@ -19101,8 +19322,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+25% DEF, +25% MATK, +20 MATK",
         "stats": {
-            "DEF%": 0.25,
-            "MATK%": 0.25
+            "DEF%": 25,
+            "MATK%": 25,
+            "MATK": 20
         },
         "conversions": []
     },
@@ -19123,8 +19345,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+25% DEF, +25% MATK, +20 MATK",
         "stats": {
-            "DEF%": 0.25,
-            "MATK%": 0.25
+            "DEF%": 25,
+            "MATK%": 25,
+            "MATK": 20
         },
         "conversions": []
     },
@@ -19145,8 +19368,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+12% DEF, +12% Heal, +15 Heal",
         "stats": {
-            "DEF%": 0.12,
-            "HEAL%": 0.12
+            "DEF%": 12,
+            "HEAL%": 12,
+            "HEAL": 15
         },
         "conversions": []
     },
@@ -19167,8 +19391,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15% DEF, +15% Heal, +15 Heal",
         "stats": {
-            "DEF%": 0.15,
-            "HEAL%": 0.15
+            "DEF%": 15,
+            "HEAL%": 15,
+            "HEAL": 15
         },
         "conversions": []
     },
@@ -19189,8 +19414,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15% DEF, +15% Heal, +15 Heal",
         "stats": {
-            "DEF%": 0.15,
-            "HEAL%": 0.15
+            "DEF%": 15,
+            "HEAL%": 15,
+            "HEAL": 15
         },
         "conversions": []
     },
@@ -19211,8 +19437,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15% DEF, +15% Heal, +15 Heal",
         "stats": {
-            "DEF%": 0.15,
-            "HEAL%": 0.15
+            "DEF%": 15,
+            "HEAL%": 15,
+            "HEAL": 15
         },
         "conversions": []
     },
@@ -19233,8 +19460,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15% DEF, +15% Heal, +15 Heal",
         "stats": {
-            "DEF%": 0.15,
-            "HEAL%": 0.15
+            "DEF%": 15,
+            "HEAL%": 15,
+            "HEAL": 15
         },
         "conversions": []
     },
@@ -19255,8 +19483,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% DEF, +20% Heal, +15 Heal",
         "stats": {
-            "DEF%": 0.2,
-            "HEAL%": 0.2
+            "DEF%": 20,
+            "HEAL%": 20,
+            "HEAL": 15
         },
         "conversions": []
     },
@@ -19277,8 +19506,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% DEF, +20% Heal, +15 Heal",
         "stats": {
-            "DEF%": 0.2,
-            "HEAL%": 0.2
+            "DEF%": 20,
+            "HEAL%": 20,
+            "HEAL": 15
         },
         "conversions": []
     },
@@ -19299,8 +19529,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% DEF, +20% Heal, +15 Heal",
         "stats": {
-            "DEF%": 0.2,
-            "HEAL%": 0.2
+            "DEF%": 20,
+            "HEAL%": 20,
+            "HEAL": 15
         },
         "conversions": []
     },
@@ -19321,8 +19552,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% DEF, +20% Heal, +15 Heal",
         "stats": {
-            "DEF%": 0.2,
-            "HEAL%": 0.2
+            "DEF%": 20,
+            "HEAL%": 20,
+            "HEAL": 15
         },
         "conversions": []
     },
@@ -19343,8 +19575,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% DEF, +20% Heal, +15 Heal",
         "stats": {
-            "DEF%": 0.2,
-            "HEAL%": 0.2
+            "DEF%": 20,
+            "HEAL%": 20,
+            "HEAL": 15
         },
         "conversions": []
     },
@@ -19365,8 +19598,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% DEF, +20% Heal, +15 Heal",
         "stats": {
-            "DEF%": 0.2,
-            "HEAL%": 0.2
+            "DEF%": 20,
+            "HEAL%": 20,
+            "HEAL": 15
         },
         "conversions": []
     },
@@ -19387,8 +19621,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% DEF, +20% Heal, +15 Heal",
         "stats": {
-            "DEF%": 0.2,
-            "HEAL%": 0.2
+            "DEF%": 20,
+            "HEAL%": 20,
+            "HEAL": 15
         },
         "conversions": []
     },
@@ -19409,8 +19644,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% DEF, +20% Heal, +15 Heal",
         "stats": {
-            "DEF%": 0.2,
-            "HEAL%": 0.2
+            "DEF%": 20,
+            "HEAL%": 20,
+            "HEAL": 15
         },
         "conversions": []
     },
@@ -19431,8 +19667,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% DEF, +20% Heal, +15 Heal",
         "stats": {
-            "DEF%": 0.2,
-            "HEAL%": 0.2
+            "DEF%": 20,
+            "HEAL%": 20,
+            "HEAL": 15
         },
         "conversions": []
     },
@@ -19453,8 +19690,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% DEF, +20% Heal, +15 Heal",
         "stats": {
-            "DEF%": 0.2,
-            "HEAL%": 0.2
+            "DEF%": 20,
+            "HEAL%": 20,
+            "HEAL": 15
         },
         "conversions": []
     },
@@ -19475,8 +19713,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+25% DEF, +25% Heal, +20 Heal",
         "stats": {
-            "DEF%": 0.25,
-            "HEAL%": 0.25
+            "DEF%": 25,
+            "HEAL%": 25,
+            "HEAL": 20
         },
         "conversions": []
     },
@@ -19497,8 +19736,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+25% DEF, +25% Heal, +20 Heal",
         "stats": {
-            "DEF%": 0.25,
-            "HEAL%": 0.25
+            "DEF%": 25,
+            "HEAL%": 25,
+            "HEAL": 20
         },
         "conversions": []
     },
@@ -19519,8 +19759,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+25% DEF, +25% Heal, +20 Heal",
         "stats": {
-            "DEF%": 0.25,
-            "HEAL%": 0.25
+            "DEF%": 25,
+            "HEAL%": 25,
+            "HEAL": 20
         },
         "conversions": []
     },
@@ -19541,8 +19782,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+12% ATK, +12% MATK, +45 HP",
         "stats": {
-            "ATK%": 0.12,
-            "MATK%": 0.12
+            "ATK%": 12,
+            "MATK%": 12,
+            "HP": 45
         },
         "conversions": []
     },
@@ -19563,8 +19805,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15% ATK, +15% MATK, +45 HP",
         "stats": {
-            "ATK%": 0.15,
-            "MATK%": 0.15
+            "ATK%": 15,
+            "MATK%": 15,
+            "HP": 45
         },
         "conversions": []
     },
@@ -19585,9 +19828,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15% ATK, +15% MATK, +5% DEF",
         "stats": {
-            "DEF%": 0.05,
-            "ATK%": 0.15,
-            "MATK%": 0.15
+            "DEF%": 5,
+            "ATK%": 15,
+            "MATK%": 15
         },
         "conversions": []
     },
@@ -19608,9 +19851,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15% ATK, +15% MATK, +5% DEF",
         "stats": {
-            "DEF%": 0.05,
-            "ATK%": 0.15,
-            "MATK%": 0.15
+            "DEF%": 5,
+            "ATK%": 15,
+            "MATK%": 15
         },
         "conversions": []
     },
@@ -19631,9 +19874,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15% ATK, +15% MATK, +5% DEF",
         "stats": {
-            "DEF%": 0.05,
-            "ATK%": 0.15,
-            "MATK%": 0.15
+            "DEF%": 5,
+            "ATK%": 15,
+            "MATK%": 15
         },
         "conversions": []
     },
@@ -19654,9 +19897,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+25% ATK, +20% MATK, +5% DEF",
         "stats": {
-            "DEF%": 0.05,
-            "ATK%": 0.25,
-            "MATK%": 0.2
+            "DEF%": 5,
+            "ATK%": 25,
+            "MATK%": 20
         },
         "conversions": []
     },
@@ -19677,9 +19920,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+25% ATK, +20% MATK, +5% DEF",
         "stats": {
-            "DEF%": 0.05,
-            "ATK%": 0.25,
-            "MATK%": 0.2
+            "DEF%": 5,
+            "ATK%": 25,
+            "MATK%": 20
         },
         "conversions": []
     },
@@ -19700,9 +19943,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+25% ATK, +20% MATK, +5% DEF",
         "stats": {
-            "DEF%": 0.05,
-            "ATK%": 0.25,
-            "MATK%": 0.2
+            "DEF%": 5,
+            "ATK%": 25,
+            "MATK%": 20
         },
         "conversions": []
     },
@@ -19723,9 +19966,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+25% ATK, +20% MATK, +5% DEF",
         "stats": {
-            "DEF%": 0.05,
-            "ATK%": 0.25,
-            "MATK%": 0.2
+            "DEF%": 5,
+            "ATK%": 25,
+            "MATK%": 20
         },
         "conversions": []
     },
@@ -19746,9 +19989,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+25% ATK, +20% MATK, +5% DEF",
         "stats": {
-            "DEF%": 0.05,
-            "ATK%": 0.25,
-            "MATK%": 0.2
+            "DEF%": 5,
+            "ATK%": 25,
+            "MATK%": 20
         },
         "conversions": []
     },
@@ -19769,9 +20012,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+25% ATK, +20% MATK, +5% DEF",
         "stats": {
-            "DEF%": 0.05,
-            "ATK%": 0.25,
-            "MATK%": 0.2
+            "DEF%": 5,
+            "ATK%": 25,
+            "MATK%": 20
         },
         "conversions": []
     },
@@ -19792,9 +20035,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+25% ATK, +20% MATK, +5% DEF",
         "stats": {
-            "DEF%": 0.05,
-            "ATK%": 0.25,
-            "MATK%": 0.2
+            "DEF%": 5,
+            "ATK%": 25,
+            "MATK%": 20
         },
         "conversions": []
     },
@@ -19815,9 +20058,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+25% ATK, +20% MATK, +5% DEF",
         "stats": {
-            "DEF%": 0.05,
-            "ATK%": 0.25,
-            "MATK%": 0.2
+            "DEF%": 5,
+            "ATK%": 25,
+            "MATK%": 20
         },
         "conversions": []
     },
@@ -19838,9 +20081,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+30% ATK, +25% MATK, +5% DEF",
         "stats": {
-            "DEF%": 0.05,
-            "ATK%": 0.3,
-            "MATK%": 0.25
+            "DEF%": 5,
+            "ATK%": 30,
+            "MATK%": 25
         },
         "conversions": []
     },
@@ -19861,9 +20104,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+30% ATK, +25% MATK, +5% DEF",
         "stats": {
-            "DEF%": 0.05,
-            "ATK%": 0.3,
-            "MATK%": 0.25
+            "DEF%": 5,
+            "ATK%": 30,
+            "MATK%": 25
         },
         "conversions": []
     },
@@ -19884,9 +20127,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+40% ATK, +40% MATK, +10% DEF",
         "stats": {
-            "DEF%": 0.1,
-            "ATK%": 0.4,
-            "MATK%": 0.4
+            "DEF%": 10,
+            "ATK%": 40,
+            "MATK%": 40
         },
         "conversions": []
     },
@@ -19907,9 +20150,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+40% ATK, +40% MATK, +15% DEF",
         "stats": {
-            "DEF%": 0.15,
-            "ATK%": 0.4,
-            "MATK%": 0.4
+            "DEF%": 15,
+            "ATK%": 40,
+            "MATK%": 40
         },
         "conversions": []
     },
@@ -19930,9 +20173,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+45% ATK, +45% MATK, +20% DEF",
         "stats": {
-            "DEF%": 0.2,
-            "ATK%": 0.45,
-            "MATK%": 0.45
+            "DEF%": 20,
+            "ATK%": 45,
+            "MATK%": 45
         },
         "conversions": []
     },
@@ -19953,8 +20196,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+12% ATK, +12% Heal, +45 HP",
         "stats": {
-            "ATK%": 0.12,
-            "HEAL%": 0.12
+            "ATK%": 12,
+            "HEAL%": 12,
+            "HP": 45
         },
         "conversions": []
     },
@@ -19975,8 +20219,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15% ATK, +15% Heal, +45 HP",
         "stats": {
-            "ATK%": 0.15,
-            "HEAL%": 0.15
+            "ATK%": 15,
+            "HEAL%": 15,
+            "HP": 45
         },
         "conversions": []
     },
@@ -19997,9 +20242,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15% ATK, +15% Heal, +5% DEF",
         "stats": {
-            "DEF%": 0.05,
-            "ATK%": 0.15,
-            "HEAL%": 0.15
+            "DEF%": 5,
+            "ATK%": 15,
+            "HEAL%": 15
         },
         "conversions": []
     },
@@ -20020,9 +20265,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15% ATK, +15% Heal, +5% DEF",
         "stats": {
-            "DEF%": 0.05,
-            "ATK%": 0.15,
-            "HEAL%": 0.15
+            "DEF%": 5,
+            "ATK%": 15,
+            "HEAL%": 15
         },
         "conversions": []
     },
@@ -20043,9 +20288,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15% ATK, +15% Heal, +5% DEF",
         "stats": {
-            "DEF%": 0.05,
-            "ATK%": 0.15,
-            "HEAL%": 0.15
+            "DEF%": 5,
+            "ATK%": 15,
+            "HEAL%": 15
         },
         "conversions": []
     },
@@ -20066,9 +20311,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+25% ATK, +20% Heal, +5% DEF",
         "stats": {
-            "DEF%": 0.05,
-            "ATK%": 0.25,
-            "HEAL%": 0.2
+            "DEF%": 5,
+            "ATK%": 25,
+            "HEAL%": 20
         },
         "conversions": []
     },
@@ -20089,9 +20334,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+25% ATK, +20% Heal, +5% DEF",
         "stats": {
-            "DEF%": 0.05,
-            "ATK%": 0.25,
-            "HEAL%": 0.2
+            "DEF%": 5,
+            "ATK%": 25,
+            "HEAL%": 20
         },
         "conversions": []
     },
@@ -20112,9 +20357,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+25% ATK, +20% Heal, +5% DEF",
         "stats": {
-            "DEF%": 0.05,
-            "ATK%": 0.25,
-            "HEAL%": 0.2
+            "DEF%": 5,
+            "ATK%": 25,
+            "HEAL%": 20
         },
         "conversions": []
     },
@@ -20135,9 +20380,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+25% ATK, +20% Heal, +5% DEF",
         "stats": {
-            "DEF%": 0.05,
-            "ATK%": 0.25,
-            "HEAL%": 0.2
+            "DEF%": 5,
+            "ATK%": 25,
+            "HEAL%": 20
         },
         "conversions": []
     },
@@ -20158,9 +20403,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+25% ATK, +20% Heal, +5% DEF",
         "stats": {
-            "DEF%": 0.05,
-            "ATK%": 0.25,
-            "HEAL%": 0.2
+            "DEF%": 5,
+            "ATK%": 25,
+            "HEAL%": 20
         },
         "conversions": []
     },
@@ -20181,9 +20426,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+25% ATK, +20% Heal, +5% DEF",
         "stats": {
-            "DEF%": 0.05,
-            "ATK%": 0.25,
-            "HEAL%": 0.2
+            "DEF%": 5,
+            "ATK%": 25,
+            "HEAL%": 20
         },
         "conversions": []
     },
@@ -20204,9 +20449,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+25% ATK, +20% Heal, +5% DEF",
         "stats": {
-            "DEF%": 0.05,
-            "ATK%": 0.25,
-            "HEAL%": 0.2
+            "DEF%": 5,
+            "ATK%": 25,
+            "HEAL%": 20
         },
         "conversions": []
     },
@@ -20227,9 +20472,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+25% ATK, +20% Heal, +5% DEF",
         "stats": {
-            "DEF%": 0.05,
-            "ATK%": 0.25,
-            "HEAL%": 0.2
+            "DEF%": 5,
+            "ATK%": 25,
+            "HEAL%": 20
         },
         "conversions": []
     },
@@ -20250,9 +20495,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+30% ATK, +25% Heal, +5% DEF",
         "stats": {
-            "DEF%": 0.05,
-            "ATK%": 0.3,
-            "HEAL%": 0.25
+            "DEF%": 5,
+            "ATK%": 30,
+            "HEAL%": 25
         },
         "conversions": []
     },
@@ -20273,9 +20518,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+30% ATK, +25% Heal, +5% DEF",
         "stats": {
-            "DEF%": 0.05,
-            "ATK%": 0.3,
-            "HEAL%": 0.25
+            "DEF%": 5,
+            "ATK%": 30,
+            "HEAL%": 25
         },
         "conversions": []
     },
@@ -20296,9 +20541,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+30% ATK, +25% Heal, +5% DEF",
         "stats": {
-            "DEF%": 0.05,
-            "ATK%": 0.3,
-            "HEAL%": 0.25
+            "DEF%": 5,
+            "ATK%": 30,
+            "HEAL%": 25
         },
         "conversions": []
     },
@@ -20319,9 +20564,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+30% ATK, +25% Heal, +10% DEF",
         "stats": {
-            "DEF%": 0.1,
-            "ATK%": 0.3,
-            "HEAL%": 0.25
+            "DEF%": 10,
+            "ATK%": 30,
+            "HEAL%": 25
         },
         "conversions": []
     },
@@ -20342,9 +20587,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+35% ATK, +25% Heal, +15% DEF",
         "stats": {
-            "DEF%": 0.15,
-            "ATK%": 0.35,
-            "HEAL%": 0.25
+            "DEF%": 15,
+            "ATK%": 35,
+            "HEAL%": 25
         },
         "conversions": []
     },
@@ -20365,8 +20610,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+12% MATK, +12% Heal, +15 MATK",
         "stats": {
-            "MATK%": 0.12,
-            "HEAL%": 0.12
+            "MATK%": 12,
+            "HEAL%": 12,
+            "MATK": 15
         },
         "conversions": []
     },
@@ -20387,8 +20633,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15% MATK, +15% Heal, +15 MATK",
         "stats": {
-            "MATK%": 0.15,
-            "HEAL%": 0.15
+            "MATK%": 15,
+            "HEAL%": 15,
+            "MATK": 15
         },
         "conversions": []
     },
@@ -20409,8 +20656,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15% MATK, +15% Heal, +15 MATK",
         "stats": {
-            "MATK%": 0.15,
-            "HEAL%": 0.15
+            "MATK%": 15,
+            "HEAL%": 15,
+            "MATK": 15
         },
         "conversions": []
     },
@@ -20431,8 +20679,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15% MATK, +15% Heal, +15 MATK",
         "stats": {
-            "MATK%": 0.15,
-            "HEAL%": 0.15
+            "MATK%": 15,
+            "HEAL%": 15,
+            "MATK": 15
         },
         "conversions": []
     },
@@ -20453,8 +20702,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15% MATK, +15% Heal, +15 MATK",
         "stats": {
-            "MATK%": 0.15,
-            "HEAL%": 0.15
+            "MATK%": 15,
+            "HEAL%": 15,
+            "MATK": 15
         },
         "conversions": []
     },
@@ -20475,8 +20725,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% MATK, +20% Heal, +15 MATK",
         "stats": {
-            "MATK%": 0.2,
-            "HEAL%": 0.2
+            "MATK%": 20,
+            "HEAL%": 20,
+            "MATK": 15
         },
         "conversions": []
     },
@@ -20497,8 +20748,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% MATK, +20% Heal, +15 MATK",
         "stats": {
-            "MATK%": 0.2,
-            "HEAL%": 0.2
+            "MATK%": 20,
+            "HEAL%": 20,
+            "MATK": 15
         },
         "conversions": []
     },
@@ -20519,8 +20771,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% MATK, +20% Heal, +15 MATK",
         "stats": {
-            "MATK%": 0.2,
-            "HEAL%": 0.2
+            "MATK%": 20,
+            "HEAL%": 20,
+            "MATK": 15
         },
         "conversions": []
     },
@@ -20541,8 +20794,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% MATK, +20% Heal, +15 MATK",
         "stats": {
-            "MATK%": 0.2,
-            "HEAL%": 0.2
+            "MATK%": 20,
+            "HEAL%": 20,
+            "MATK": 15
         },
         "conversions": []
     },
@@ -20563,8 +20817,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% MATK, +20% Heal, +15 MATK",
         "stats": {
-            "MATK%": 0.2,
-            "HEAL%": 0.2
+            "MATK%": 20,
+            "HEAL%": 20,
+            "MATK": 15
         },
         "conversions": []
     },
@@ -20585,8 +20840,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% MATK, +20% Heal, +15 MATK",
         "stats": {
-            "MATK%": 0.2,
-            "HEAL%": 0.2
+            "MATK%": 20,
+            "HEAL%": 20,
+            "MATK": 15
         },
         "conversions": []
     },
@@ -20607,8 +20863,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% MATK, +20% Heal, +15 MATK",
         "stats": {
-            "MATK%": 0.2,
-            "HEAL%": 0.2
+            "MATK%": 20,
+            "HEAL%": 20,
+            "MATK": 15
         },
         "conversions": []
     },
@@ -20629,8 +20886,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% MATK, +20% Heal, +15 MATK",
         "stats": {
-            "MATK%": 0.2,
-            "HEAL%": 0.2
+            "MATK%": 20,
+            "HEAL%": 20,
+            "MATK": 15
         },
         "conversions": []
     },
@@ -20651,8 +20909,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% MATK, +20% Heal, +15 MATK",
         "stats": {
-            "MATK%": 0.2,
-            "HEAL%": 0.2
+            "MATK%": 20,
+            "HEAL%": 20,
+            "MATK": 15
         },
         "conversions": []
     },
@@ -20673,8 +20932,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% MATK, +20% Heal, +15 MATK",
         "stats": {
-            "MATK%": 0.2,
-            "HEAL%": 0.2
+            "MATK%": 20,
+            "HEAL%": 20,
+            "MATK": 15
         },
         "conversions": []
     },
@@ -20695,8 +20955,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+25% MATK, +25% Heal, +20 MATK",
         "stats": {
-            "MATK%": 0.25,
-            "HEAL%": 0.25
+            "MATK%": 25,
+            "HEAL%": 25,
+            "MATK": 20
         },
         "conversions": []
     },
@@ -20717,8 +20978,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+25% MATK, +25% Heal, +20 MATK",
         "stats": {
-            "MATK%": 0.25,
-            "HEAL%": 0.25
+            "MATK%": 25,
+            "HEAL%": 25,
+            "MATK": 20
         },
         "conversions": []
     },
@@ -20739,8 +21001,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+25% MATK, +25% Heal, +20 MATK",
         "stats": {
-            "MATK%": 0.25,
-            "HEAL%": 0.25
+            "MATK%": 25,
+            "HEAL%": 25,
+            "MATK": 20
         },
         "conversions": []
     },
@@ -20761,9 +21024,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+40% ATK, +20% DEF, +10% Void Resist",
         "stats": {
-            "DEF%": 0.2,
-            "ATK%": 0.4,
-            "Void Res%": 0.1
+            "DEF%": 20,
+            "ATK%": 40,
+            "Void Res%": 10
         },
         "conversions": []
     },
@@ -20784,9 +21047,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% ATK, +30% DEF, +10% Void DMG",
         "stats": {
-            "DEF%": 0.3,
-            "ATK%": 0.2,
-            "Void%": 0.1
+            "DEF%": 30,
+            "ATK%": 20,
+            "Void%": 10
         },
         "conversions": []
     },
@@ -20807,10 +21070,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+40% MATK, +20% Void DMG, +15% Global MATK, -20% Max MP",
         "stats": {
-            "MATK%": 0.4,
-            "Void%": 0.2,
-            "Global MATK%": 0.15,
-            "MP%": -0.2
+            "MATK%": 40,
+            "Void%": 20,
+            "Global MATK%": 15
         },
         "conversions": []
     },
@@ -20831,9 +21093,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% Heal, +20% Def, +10% Void DMG",
         "stats": {
-            "DEF%": 0.2,
-            "HEAL%": 0.2,
-            "Void%": 0.1
+            "DEF%": 20,
+            "HEAL%": 20,
+            "Void%": 10
         },
         "conversions": []
     },
@@ -20854,9 +21116,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+30% ATK, +30% DEF, +10% Void Resist",
         "stats": {
-            "DEF%": 0.3,
-            "ATK%": 0.3,
-            "Void Res%": 0.1
+            "DEF%": 30,
+            "ATK%": 30,
+            "Void Res%": 10
         },
         "conversions": []
     },
@@ -20877,9 +21139,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+30% MATK, +30% DEF, +10% Void Resist",
         "stats": {
-            "DEF%": 0.3,
-            "MATK%": 0.3,
-            "Void Res%": 0.1
+            "DEF%": 30,
+            "MATK%": 30,
+            "Void Res%": 10
         },
         "conversions": []
     },
@@ -20900,9 +21162,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+30% Heal, +30% DEF, +10% Void Resist",
         "stats": {
-            "DEF%": 0.3,
-            "HEAL%": 0.3,
-            "Void Res%": 0.1
+            "DEF%": 30,
+            "HEAL%": 30,
+            "Void Res%": 10
         },
         "conversions": []
     },
@@ -20923,8 +21185,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+45% ATK, +45% MATK, +30 MP",
         "stats": {
-            "ATK%": 0.45,
-            "MATK%": 0.45
+            "ATK%": 45,
+            "MATK%": 45,
+            "MP": 30
         },
         "conversions": []
     },
@@ -20945,9 +21208,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+30% ATK, +30% Heal, +10% Void Resist",
         "stats": {
-            "ATK%": 0.3,
-            "HEAL%": 0.3,
-            "Void Res%": 0.1
+            "ATK%": 30,
+            "HEAL%": 30,
+            "Void Res%": 10
         },
         "conversions": []
     },
@@ -20968,9 +21231,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+30% MATK, +30% Heal, +10% Void DMG",
         "stats": {
-            "MATK%": 0.3,
-            "HEAL%": 0.3,
-            "Void%": 0.1
+            "MATK%": 30,
+            "HEAL%": 30,
+            "Void%": 10
         },
         "conversions": []
     },
@@ -20991,9 +21254,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15% Threat Bonus, +30% DEF, +10% Void Resist",
         "stats": {
-            "DEF%": 0.3,
-            "Threat%": 0.15,
-            "Void Res%": 0.1
+            "DEF%": 30,
+            "Void Res%": 10,
+            "Threat%": 15
         },
         "conversions": []
     },
@@ -21014,8 +21277,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+30% ATK, +20% DEF, +10 MP",
         "stats": {
-            "DEF%": 0.2,
-            "ATK%": 0.3
+            "DEF%": 20,
+            "ATK%": 30,
+            "MP": 10
         },
         "conversions": []
     },
@@ -21036,8 +21300,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+25% MATK, +25 MP, +5% Crit Chance",
         "stats": {
-            "Crit Chance%": 0.05,
-            "MATK%": 0.25
+            "Crit Chance%": 5,
+            "MATK%": 25,
+            "MP": 25
         },
         "conversions": []
     },
@@ -21058,8 +21323,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+30% Heal, +10% Void Resist",
         "stats": {
-            "HEAL%": 0.3,
-            "Void Res%": 0.1
+            "HEAL%": 30,
+            "Void Res%": 10
         },
         "conversions": []
     },
@@ -21080,9 +21345,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+35% ATK, +15% DEF, +10% Void Damage",
         "stats": {
-            "DEF%": 0.15,
-            "ATK%": 0.35,
-            "Void%": 0.1
+            "DEF%": 15,
+            "ATK%": 35,
+            "Void%": 10
         },
         "conversions": []
     },
@@ -21103,9 +21368,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+35% MATK, +15% DEF, +10% Void Damage",
         "stats": {
-            "DEF%": 0.15,
-            "MATK%": 0.35,
-            "Void%": 0.1
+            "DEF%": 15,
+            "MATK%": 35,
+            "Void%": 10
         },
         "conversions": []
     },
@@ -21126,9 +21391,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+35% Heal, +25% DEF, +10% Void Damage",
         "stats": {
-            "DEF%": 0.25,
-            "HEAL%": 0.35,
-            "Void%": 0.1
+            "DEF%": 25,
+            "HEAL%": 35,
+            "Void%": 10
         },
         "conversions": []
     },
@@ -21149,8 +21414,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+30% ATK, +30% MATK, +20 MP",
         "stats": {
-            "ATK%": 0.3,
-            "MATK%": 0.3
+            "ATK%": 30,
+            "MATK%": 30,
+            "MP": 20
         },
         "conversions": []
     },
@@ -21171,9 +21437,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+30% ATK, +30% Heal, +10% Void Damage",
         "stats": {
-            "ATK%": 0.3,
-            "HEAL%": 0.3,
-            "Void%": 0.1
+            "ATK%": 30,
+            "HEAL%": 30,
+            "Void%": 10
         },
         "conversions": []
     },
@@ -21194,9 +21460,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+30% MATK, +30% Heal, +10% Void Resist",
         "stats": {
-            "MATK%": 0.3,
-            "HEAL%": 0.3,
-            "Void Res%": 0.1
+            "MATK%": 30,
+            "HEAL%": 30,
+            "Void Res%": 10
         },
         "conversions": []
     },
@@ -21217,8 +21483,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+35% DEF, +5% Max HP, +10% Void Resist",
         "stats": {
-            "DEF%": 0.35,
-            "Void Res%": 0.1
+            "DEF%": 35,
+            "Void Res%": 10,
+            "HP%": 5
         },
         "conversions": []
     },
@@ -21239,9 +21506,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+25% ATK, +20% Divine Resist",
         "stats": {
-            "ATK%": 0.25,
-            "Neg Res%": 0.2,
-            "Holy Res%": 0.2
+            "ATK%": 25
         },
         "conversions": []
     },
@@ -21262,9 +21527,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+30% MATK, +10% Divine Damage",
         "stats": {
-            "MATK%": 0.3,
-            "Neg%": 0.1,
-            "Holy%": 0.1
+            "MATK%": 30
         },
         "conversions": []
     },
@@ -21285,8 +21548,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10% Heal, +5% Max MP, +10% Void Resist",
         "stats": {
-            "HEAL%": 0.1,
-            "Void Res%": 0.1
+            "HEAL%": 10,
+            "Void Res%": 10
         },
         "conversions": []
     },
@@ -21307,9 +21570,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% ATK, +40% DEF, +10% Void Resist",
         "stats": {
-            "DEF%": 0.4,
-            "ATK%": 0.2,
-            "Void Res%": 0.1
+            "DEF%": 40,
+            "ATK%": 20,
+            "Void Res%": 10
         },
         "conversions": []
     },
@@ -21330,9 +21593,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+30% MATK, +10% DEF, +10% Void Resist",
         "stats": {
-            "DEF%": 0.1,
-            "MATK%": 0.3,
-            "Void Res%": 0.1
+            "DEF%": 10,
+            "MATK%": 30,
+            "Void Res%": 10
         },
         "conversions": []
     },
@@ -21353,9 +21616,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+40% Heal, +10% DEF, +10% Void Resist",
         "stats": {
-            "DEF%": 0.1,
-            "HEAL%": 0.4,
-            "Void Res%": 0.1
+            "DEF%": 10,
+            "HEAL%": 40,
+            "Void Res%": 10
         },
         "conversions": []
     },
@@ -21376,8 +21639,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% ATK, +20% MATK, +10% Max MP",
         "stats": {
-            "ATK%": 0.2,
-            "MATK%": 0.2
+            "ATK%": 20,
+            "MATK%": 20
         },
         "conversions": []
     },
@@ -21398,9 +21661,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% ATK, +40% Heal, +10% Void Resist",
         "stats": {
-            "ATK%": 0.2,
-            "HEAL%": 0.4,
-            "Void Res%": 0.1
+            "ATK%": 20,
+            "HEAL%": 40,
+            "Void Res%": 10
         },
         "conversions": []
     },
@@ -21421,9 +21684,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% MATK, +35% Heal, +10% Void Damage",
         "stats": {
-            "MATK%": 0.2,
-            "HEAL%": 0.35,
-            "Void%": 0.1
+            "MATK%": 20,
+            "HEAL%": 35,
+            "Void%": 10
         },
         "conversions": []
     },
@@ -21444,10 +21707,10 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+30% ATK, +40% DEF, +20% Void Resist, +15% Void Penetration",
         "stats": {
-            "DEF%": 0.4,
-            "ATK%": 0.3,
-            "Void Pen%": 0.15,
-            "Void Res%": 0.2
+            "DEF%": 40,
+            "ATK%": 30,
+            "Void Pen%": 15,
+            "Void Res%": 20
         },
         "conversions": []
     },
@@ -21468,9 +21731,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+25% ATK, +30% Void Damage, +20% Crit Damage",
         "stats": {
-            "Crit DMG%": 0.2,
-            "ATK%": 0.25,
-            "Void%": 0.3
+            "Crit DMG%": 20,
+            "ATK%": 25,
+            "Void%": 30
         },
         "conversions": []
     },
@@ -21491,9 +21754,10 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+50% MATK, +40% Void DMG, -15 MP, +20% Crit Damage",
         "stats": {
-            "Crit DMG%": 0.2,
-            "MATK%": 0.5,
-            "Void%": 0.4
+            "Crit DMG%": 20,
+            "MATK%": 50,
+            "Void%": 40,
+            "MP": -15
         },
         "conversions": []
     },
@@ -21514,10 +21778,10 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+45% Heal, +20% DEF, +5% Crit Chance, -10% Threat Bonus",
         "stats": {
-            "Crit Chance%": 0.05,
-            "DEF%": 0.2,
-            "HEAL%": 0.45,
-            "Threat%": -0.1
+            "Crit Chance%": 5,
+            "DEF%": 20,
+            "HEAL%": 45,
+            "Threat%": -10
         },
         "conversions": []
     },
@@ -21538,11 +21802,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+25% Physical Damage, +30% ATK, +30% DEF",
         "stats": {
-            "DEF%": 0.3,
-            "ATK%": 0.3,
-            "Slash%": 0.25,
-            "Pierce%": 0.25,
-            "Blunt%": 0.25
+            "DEF%": 30,
+            "ATK%": 30
         },
         "conversions": []
     },
@@ -21563,10 +21824,10 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+50% MATK, +50% DEF, +15% Void Resist, +20% Crit Damage",
         "stats": {
-            "Crit DMG%": 0.2,
-            "DEF%": 0.5,
-            "MATK%": 0.5,
-            "Void Res%": 0.15
+            "Crit DMG%": 20,
+            "DEF%": 50,
+            "MATK%": 50,
+            "Void Res%": 15
         },
         "conversions": []
     },
@@ -21587,10 +21848,10 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+50% Heal, +75% DEF, +15% Threat Bonus, +5% Crit Chance",
         "stats": {
-            "Crit Chance%": 0.05,
-            "DEF%": 0.75,
-            "HEAL%": 0.5,
-            "Threat%": 0.15
+            "Crit Chance%": 5,
+            "DEF%": 75,
+            "HEAL%": 50,
+            "Threat%": 15
         },
         "conversions": []
     },
@@ -21611,10 +21872,10 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+60% ATK, +60% MATK, +5% Crit Chance, +20% Crit Damage",
         "stats": {
-            "Crit Chance%": 0.05,
-            "Crit DMG%": 0.2,
-            "ATK%": 0.6,
-            "MATK%": 0.6
+            "Crit Chance%": 5,
+            "Crit DMG%": 20,
+            "ATK%": 60,
+            "MATK%": 60
         },
         "conversions": []
     },
@@ -21635,9 +21896,10 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+60% Heal, +40% ATK, -10% Threat Bonus, +30 MP",
         "stats": {
-            "ATK%": 0.4,
-            "HEAL%": 0.6,
-            "Threat%": -0.1
+            "ATK%": 40,
+            "HEAL%": 60,
+            "MP": 30,
+            "Threat%": -10
         },
         "conversions": []
     },
@@ -21658,10 +21920,10 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+50% Heal, +50% MATK, +20% Void Damage, +5% Void Penetration",
         "stats": {
-            "MATK%": 0.5,
-            "HEAL%": 0.5,
-            "Void%": 0.2,
-            "Void Pen%": 0.05
+            "MATK%": 50,
+            "HEAL%": 50,
+            "Void%": 20,
+            "Void Pen%": 5
         },
         "conversions": []
     },
@@ -21682,8 +21944,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+25% Void Damage, +30% DEF, +25% Physical Penetration",
         "stats": {
-            "DEF%": 0.3,
-            "Void%": 0.25
+            "DEF%": 30,
+            "Void%": 25,
+            "Phys Pen%": 25
         },
         "conversions": []
     },
@@ -21704,8 +21967,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% Physical Penetration, -60% Void Damage, +55% ATK",
         "stats": {
-            "ATK%": 0.55,
-            "Void%": -0.6
+            "ATK%": 55,
+            "Void%": -60,
+            "Phys Pen%": 20
         },
         "conversions": []
     },
@@ -21726,8 +21990,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+40% MATK, +60 MP, +20% Crit Chance",
         "stats": {
-            "Crit Chance%": 0.2,
-            "MATK%": 0.4
+            "Crit Chance%": 20,
+            "MATK%": 40,
+            "MP": 60
         },
         "conversions": []
     },
@@ -21748,11 +22013,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+25% Heal, +50% Holy/Negative Damage, +10% Holy/Negative Penetration",
         "stats": {
-            "HEAL%": 0.25,
-            "Neg%": 0.5,
-            "Holy%": 0.5,
-            "Neg Pen%": 0.1,
-            "Holy Pen%": 0.1
+            "HEAL%": 25
         },
         "conversions": []
     },
@@ -21773,9 +22034,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15% Void Penetration, +50% ATK, +50% DEF",
         "stats": {
-            "DEF%": 0.5,
-            "ATK%": 0.5,
-            "Void Pen%": 0.15
+            "DEF%": 50,
+            "ATK%": 50,
+            "Void Pen%": 15
         },
         "conversions": []
     },
@@ -21796,10 +22057,10 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+40% MATK, +40% DEF, +30% Void Damage, +5% Void Penetration",
         "stats": {
-            "DEF%": 0.4,
-            "MATK%": 0.4,
-            "Void%": 0.3,
-            "Void Pen%": 0.05
+            "DEF%": 40,
+            "MATK%": 40,
+            "Void%": 30,
+            "Void Pen%": 5
         },
         "conversions": []
     },
@@ -21820,11 +22081,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+50% Heal, +30% DEF, +15% Holy/Negative/Void Penetration",
         "stats": {
-            "DEF%": 0.3,
-            "HEAL%": 0.5,
-            "Neg Pen%": 0.15,
-            "Holy Pen%": 0.15,
-            "Void Pen%": 0.15
+            "DEF%": 30,
+            "HEAL%": 50
         },
         "conversions": []
     },
@@ -21845,10 +22103,10 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+75% ATK, +75% MATK, -10% Crit Chance, +75% Crit Damage",
         "stats": {
-            "Crit Chance%": -0.1,
-            "Crit DMG%": 0.75,
-            "ATK%": 0.75,
-            "MATK%": 0.75
+            "Crit Chance%": -10,
+            "Crit DMG%": 75,
+            "ATK%": 75,
+            "MATK%": 75
         },
         "conversions": []
     },
@@ -21869,9 +22127,10 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+60% ATK, +30% Heal, +15% Threat Bonus, +30 MP",
         "stats": {
-            "ATK%": 0.6,
-            "HEAL%": 0.3,
-            "Threat%": 0.15
+            "ATK%": 60,
+            "HEAL%": 30,
+            "MP": 30,
+            "Threat%": 15
         },
         "conversions": []
     },
@@ -21892,11 +22151,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+60% Heal, 60% MATK, +10% Void/Holy/Negative Penetration",
         "stats": {
-            "MATK%": 0.6,
-            "HEAL%": 0.6,
-            "Neg Pen%": 0.1,
-            "Holy Pen%": 0.1,
-            "Void Pen%": 0.1
+            "MATK%": 60,
+            "HEAL%": 60
         },
         "conversions": []
     },
@@ -21917,7 +22173,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+50% MATK, +30 MP, Conversion 20% MP to Crit DMG, 50% Crit Chance to MP",
         "stats": {
-            "MATK%": 0.5
+            "MATK%": 50,
+            "Crit Chance%": 50,
+            "MP": 30
         },
         "conversions": [
             {
@@ -21944,7 +22202,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+50% MATK, +15% Penfire, +15% Global Elefire, +15% Global Fire Damage, Conversion 150% Resfire to MP",
         "stats": {
-            "MATK%": 0.5,
+            "MATK%": 50,
             "Fire Pen%": 0.15,
             "Fire DMG%": 0.15
         },
@@ -21978,7 +22236,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+50% MATK, +10% Penelement, Conversion 60% Elefire to Elemental Damage, 80% Penfire to Crit Damage, -50% Reduction to Elefire",
         "stats": {
-            "MATK%": 0.5,
+            "MATK%": 50,
             "Fire Pen%": 0.1,
             "Water Pen%": 0.1,
             "Lightning Pen%": 0.1,
@@ -22021,7 +22279,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+50% ATK, Conversion 8% DEF Multiplier to Crit Damage",
         "stats": {
-            "ATK%": 0.5
+            "ATK%": 50,
+            "DEF%": 8
         },
         "conversions": [
             {
@@ -22048,8 +22307,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+30% ATK, +5% Crit Chance, +15% Global Fist Damage, +5% Global Blunt Penetration. Conversion 50% Penslash to Penblunt.",
         "stats": {
-            "Crit Chance%": 0.05,
-            "ATK%": 0.30,
+            "Crit Chance%": 5,
+            "ATK%": 30,
             "Fist DMG%": 0.15
         },
         "conversions": [
@@ -22082,7 +22341,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+50% ATK, +5% Penslash, +15% Global Sword Damage, Conversion 110% Penfire to Penslash, 50% Elefire to Eleslash.",
         "stats": {
-            "ATK%": 0.5,
+            "ATK%": 50,
             "Sword DMG%": 0.15,
             "Slash Pen%": 0.05
         },
@@ -22116,7 +22375,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+35% DEF, +1250 Max HP, +0.5% HP Regen, Conversion 100% Resfire to MP, 135% DEF Multi to HP Regen",
         "stats": {
-            "DEF%": 0.35
+            "DEF%": 170,
+            "HP Regen%": 0.5
         },
         "conversions": [
             {
@@ -22143,7 +22403,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% DEF, +1200 Max HP, -25% Reswater, Conversion 25% Resfire to ResElements (except Water), 100% Resfire to Elephysical, Reduction 50% Resfire",
         "stats": {
-            "DEF%": 0.2,
+            "DEF%": 20,
             "Water Res%": -0.25,
             "HP": 1200
         },
@@ -22172,8 +22432,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+30% DEF, +25% Threat Gained, Conversion 40% of Penfire to Penvoid, 30% Elefire to Elephysical",
         "stats": {
-            "DEF%": 0.3,
-            "Threat%": 0.25
+            "DEF%": 30,
+            "Threat%": 25
         },
         "conversions": [
             {
@@ -22205,8 +22465,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+45% Heal, -15% Global Heal Effect, Conversion 15% Healpower Multiplier to MP",
         "stats": {
-            "HEAL%": 0.45,
-            "Heal Effect%": -0.15
+            "HEAL%": 45,
+            "Heal Effect%": -15,
+            "Global HEAL%": -15
         },
         "conversions": [
             {
@@ -22233,7 +22494,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+35% Heal, Conversion 200% Resfire to Crit Damage, 25% Resfire to Divine Resist. -25% Reduction to Resfire",
         "stats": {
-            "HEAL%": 0.35
+            "HEAL%": 35
         },
         "conversions": [
             {
@@ -22266,7 +22527,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+30% Heal, Conversion 100% Elefire to Eledivine, 100% Penfire to Pendivine",
         "stats": {
-            "HEAL%": 0.3
+            "HEAL%": 30
         },
         "conversions": [
             {
@@ -22299,7 +22560,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+50% MATK, +1 MP Regen",
         "stats": {
-            "MATK%": 0.5
+            "MATK%": 50
         },
         "conversions": []
     },
@@ -22320,7 +22581,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+40% MATK, +10% Penwater, Conversion 70% Elewater to Crit Damage",
         "stats": {
-            "MATK%": 0.4,
+            "MATK%": 40,
             "Water Pen%": 0.1
         },
         "conversions": [
@@ -22348,7 +22609,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+35% MATK, Conversion 200% Reswater to Elemental Damage, -75% Reduction to Reswater",
         "stats": {
-            "MATK%": 0.35
+            "MATK%": 35
         },
         "conversions": [
             {
@@ -22381,7 +22642,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+40% ATK, +10% Physical Pen, Conversion 25% Elewater to Crit Chance, -100% Reudction to Elewater",
         "stats": {
-            "ATK%": 0.4
+            "ATK%": 40
         },
         "conversions": [
             {
@@ -22414,7 +22675,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+40% ATK, +20% Increase to MP",
         "stats": {
-            "ATK%": 0.4
+            "ATK%": 40
         },
         "conversions": [
             {
@@ -22441,7 +22702,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+35% ATK, Conversion 200% Reswater to Physical Damage, 100% Reswater to Elewater, -75% Reduction to Reswater",
         "stats": {
-            "ATK%": 0.35
+            "ATK%": 35
         },
         "conversions": [
             {
@@ -22479,8 +22740,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+40% DEF, +15% Threat Gained, Conversion 600% of MP to HP Regen",
         "stats": {
-            "DEF%": 0.4,
-            "Threat%": 0.15
+            "DEF%": 40,
+            "Threat%": 15
         },
         "conversions": [
             {
@@ -22507,7 +22768,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% DEF, Conversion 70% Elewater to Elevoid, -50% Physical Damage",
         "stats": {
-            "DEF%": 0.2
+            "DEF%": 20
         },
         "conversions": [
             {
@@ -22534,7 +22795,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+25% DEF, Conversion 2% Reswater to MP Regen, -50% Reduction to Reswater",
         "stats": {
-            "DEF%": 0.25
+            "DEF%": 25
         },
         "conversions": [
             {
@@ -22567,8 +22828,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+30% Heal, -5% Threat Gained, Conversion 450% MP to HP Regen",
         "stats": {
-            "HEAL%": 0.3,
-            "Threat%": -0.05
+            "HEAL%": 30,
+            "Threat%": -5
         },
         "conversions": [
             {
@@ -22595,7 +22856,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+25% Heal, Conversion 100% Elewater to Crit Damage, -100% Reduction to Elewater",
         "stats": {
-            "HEAL%": 0.25
+            "HEAL%": 25
         },
         "conversions": [
             {
@@ -22628,7 +22889,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+30% Heal, Conversion 150% Reswater to MP, -50% Reduction to Reswater",
         "stats": {
-            "HEAL%": 0.3
+            "HEAL%": 30
         },
         "conversions": [
             {
@@ -22661,8 +22922,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+30% MATK, +10% Lightning Penetration, Conversion 10% MP to Elelightning, 30% Penlightning to MP",
         "stats": {
-            "MATK%": 0.3,
-            "Lightning Pen%": 0.1
+            "MATK%": 30,
+            "Lightning Pen%": 10
         },
         "conversions": [
             {
@@ -22695,8 +22956,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+25% MATK, +10% Wind Penetration, Conversion 50% Penwind to Elewind, 15% Reswind to Penwind, -50% Reduction to Reswind",
         "stats": {
-            "MATK%": 0.25,
-            "Wind Pen%": 0.1
+            "MATK%": 25,
+            "Wind Pen%": 10
         },
         "conversions": [
             {
@@ -22734,9 +22995,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+35% MATK, +5% Crit Chance, +30% Crit Damage, Conversion 110% Reswind and Reslightning to Crit Damage, -75% Reduction to Reswind and Reslightning",
         "stats": {
-            "Crit Chance%": 0.05,
-            "Crit DMG%": 0.3,
-            "MATK%": 0.35
+            "Crit Chance%": 5,
+            "Crit DMG%": 30,
+            "MATK%": 35
         },
         "conversions": [
             {
@@ -22779,7 +23040,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+25% ATK, +20% Global Dagger Damage, Conversion 90% Elelightning to Eleslash, 90% Elelightning to Crit Damage, -100% Reduction to Elelightning",
         "stats": {
-            "ATK%": 0.25,
+            "ATK%": 25,
             "Dagger DMG%": 0.2
         },
         "conversions": [
@@ -22817,7 +23078,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+30% ATK, +25% Global Pierce Penetration, Conversion 120% Penwind to Penpierce, 8% ATK Multiplier to Elepierce",
         "stats": {
-            "ATK%": 0.3,
+            "ATK%": 38
         },
         "conversions": [
             {
@@ -22854,7 +23115,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+40% ATK, Conversion 50% Elewind to MP, 50% Elewind to Crit Damage",
         "stats": {
-            "ATK%": 0.4
+            "ATK%": 40
         },
         "conversions": [
             {
@@ -22881,7 +23142,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% DEF, Conversion 100% Elelightning to Elephysical, 50% Elelightning to MP",
         "stats": {
-            "DEF%": 0.2
+            "DEF%": 20
         },
         "conversions": [
             {
@@ -22908,8 +23169,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15% DEF, +15% Threat Bonus, Conversion 60% Elewind to Elevoid, 40% Penwind to Penvoid",
         "stats": {
-            "DEF%": 0.15,
-            "Threat%": 0.15
+            "DEF%": 15,
+            "Threat%": 15
         },
         "conversions": [
             {
@@ -22941,8 +23202,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+25% DEF, +20% Threat Bonus, Conversion 50% Reslightning to Physical Resistance, -75% Reduction to Reslightning",
         "stats": {
-            "DEF%": 0.25,
-            "Threat%": 0.2
+            "DEF%": 25,
+            "Threat%": 20
         },
         "conversions": [
             {
@@ -22974,7 +23235,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+35% Heal, Conversion 50% Elelightning to MP and Crit Damage, -100% Reduction to Elelightning",
         "stats": {
-            "HEAL%": 0.35
+            "HEAL%": 35
         },
         "conversions": [
             {
@@ -23006,8 +23267,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10% Heal, -30% Threat Bonus, Conversion 50% Elewind to Crit Chance, 75% Elewind to Crit Damage, -100% Reduction to Crit Chance/Damage and Elewind",
         "stats": {
-            "HEAL%": 0.1,
-            "Threat%": -0.3
+            "HEAL%": 10,
+            "Threat%": -30
         },
         "conversions": [
             {
@@ -23054,9 +23315,10 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15% Heal, +100% Threat Bonus, +20% Global Heal Effect",
         "stats": {
-            "HEAL%": 0.15,
-            "Threat%": 1.0,
-            "Heal Effect%": 0.2
+            "HEAL%": 15,
+            "Heal Effect%": 20,
+            "Global HEAL%": 20,
+            "Threat%": 100
         },
         "conversions": []
     },
@@ -23077,8 +23339,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+30% MATK, +5% Void Penetration, Conversion 110% Void Penetration to Elevoid",
         "stats": {
-            "MATK%": 0.3,
-            "Void Pen%": 0.05
+            "MATK%": 30,
+            "Void Pen%": 115
         },
         "conversions": [
             {
@@ -23105,7 +23367,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+30% MATK, +10% Pentoxic, Conversion 200% Restoxic to Eletoxic, 1500% Eletoxic to MATK, -75% Reduction to Restoxic",
         "stats": {
-            "MATK%": 0.3,
+            "MATK%": 30,
             "Toxic Pen%": 0.1
         },
         "conversions": [
@@ -23143,8 +23405,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+35% MATK, +10% Earth Penetration, Conversion 2000% Eleearth to DEF, 150% Researth to Eleearth, -75% Reduction to Researth",
         "stats": {
-            "MATK%": 0.35,
-            "Earth Pen%": 0.1
+            "MATK%": 35,
+            "Earth Pen%": 10
         },
         "conversions": [
             {
@@ -23181,11 +23443,11 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+25% ATK, +5% Penvoid, +50% Crit Chance and +20% DMG to Shadow Break Skills, Conversion 20% Elevoid to MP, Conversion 4% Elevoid to Penvoid, 2% Elepierce to Penvoid",
         "stats": {
-            "ATK%": 0.25,
+            "ATK%": 25,
             "Void Pen%": 0.05,
             "Shadow Break DMG%": 0.2,
-            "Shadow Break Crit Chance%": 0.5
-
+            "Shadow Break Crit Chance%": 0.5,
+            "Crit Chance%": 50
         },
         "conversions": [
             {
@@ -23222,7 +23484,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+30% ATK, +15% Global Hammer Damage, +10% Global Blunt Penetration, Conversion 120% Penearth to Penblunt",
         "stats": {
-            "ATK%": 0.3,
+            "ATK%": 30,
             "Hammer DMG%": 0.15
         },
         "conversions": [
@@ -23255,7 +23517,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+40% ATK, Conversion 800% Eleearth to DEF, 4000% Researth to DEF, 75% Eleearth to Elephysical, -60% Reduction Researth",
         "stats": {
-            "ATK%": 0.4
+            "ATK%": 40
         },
         "conversions": [
             {
@@ -23287,10 +23549,11 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% DEF, +5% Penvoid, +50% Crit Chance and +20% DMG to Shadow Break Skills, Conversion 20% DEF to ATK, 20% Elevoid to MP, 3% Elephysical to Penvoid",
         "stats": {
-            "DEF%": 0.2,
+            "DEF%": 40,
             "Void Pen%": 0.05,
             "Shadow Break DMG%": 0.2,
-            "Shadow Break Crit Chance%": 0.5
+            "Shadow Break Crit Chance%": 0.5,
+            "Crit Chance%": 50
         },
         "conversions": [
             {
@@ -23327,9 +23590,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% DEF, +15% Threat Bonus, +20% Elevoid, Conversion 20% Elephysical to Elevoid, Reduction -50% Elephys",
         "stats": {
-            "DEF%": 0.2,
+            "DEF%": 20,
             "Void%": 0.2,
-            "Threat%": 0.15
+            "Threat%": 15
         },
         "conversions": [
             {
@@ -23361,8 +23624,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+25% DEF, +10% Threat Bonus, Conversion 7500% Researth to Max HP, 400% Eleearth to HP Regen, 60% Eleearth to Elevoid, -50% Reduction to Researth and Elephys",
         "stats": {
-            "DEF%": 0.25,
-            "Threat%": 0.1
+            "DEF%": 25,
+            "Threat%": 10
         },
         "conversions": [
             {
@@ -23409,8 +23672,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+35% Heal, +20% Threat Bonus, Conversion 50% Elevoid to MP, 90% Elevoid to Eledivine",
         "stats": {
-            "HEAL%": 0.35,
-            "Threat%": 0.2
+            "HEAL%": 35,
+            "Threat%": 20
         },
         "conversions": [
             {
@@ -23437,10 +23700,11 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% Heal, -85% Global Damage Reduction, +20% Global Healpower, +10% Global Healing Modifier",
         "stats": {
-            "HEAL%": 0.2,
-            "Global HEAL%": 0.2,
+            "HEAL%": 20,
+            "Global HEAL%": 20,
             "Heal Effect%": 0.1,
-            "DMG Res%": -0.85
+            "DMG Res%": -0.85,
+            "Dmg%": -85
         },
         "conversions": []
     },
@@ -23461,7 +23725,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15% Heal, Conversion 20% Researth to Physical and Elemental Resists, 3000% Researth to Max HP, Conversion 5% Healpower to DEF, -75% Reduction to Researth",
         "stats": {
-            "HEAL%": 0.15
+            "HEAL%": 15
         },
         "conversions": [
             {
@@ -23508,9 +23772,10 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+25% MATK, +5% Elemental and Void Penetration, +10% Global Elevoid, Conversion 100% Elevoid to Elemental Damage",
         "stats": {
-            "MATK%": 0.25,
+            "MATK%": 25,
             "Elemental Pen%": 0.05,
-            "Void Pen%": 0.05
+            "Void Pen%": 0.05,
+            "Void%": 10
         },
         "conversions": [
             {
@@ -23542,8 +23807,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+25% MATK, +10% Pennegative, Conversion 20% Elenegative to Crit Damage, 15% Crit Damage to Elenegative",
         "stats": {
-            "MATK%": 0.25,
-            "Neg Pen%": 0.1
+            "MATK%": 25,
+            "Neg Pen%": 0.1,
+            "Crit DMG%": 15
         },
         "conversions": [
             {
@@ -23570,9 +23836,10 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+35% MATK, +5% Penholy, +10% Eleholy, Conversion 35% ATK Multiplier to Eleholy",
         "stats": {
-            "MATK%": 0.35,
+            "MATK%": 35,
             "Holy%": 0.1,
-            "Holy Pen%": 0.05
+            "Holy Pen%": 0.05,
+            "ATK%": 35
         },
         "conversions": [
             {
@@ -23599,7 +23866,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+25% ATK, +5% Physical and Void Penetration, Conversion 20% Elevoid to Physical Damage",
         "stats": {
-            "ATK%": 0.25,
+            "ATK%": 25,
             "Void Pen%": 0.05
         },
         "conversions": [
@@ -23627,7 +23894,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+30% ATK, +15% Physical Damage, Conversion 120% Pennegative to Penphysical, 100% Elenegative to Crit Damage",
         "stats": {
-            "ATK%": 0.3,
+            "ATK%": 30,
             "Phys%": 0.15
         },
         "conversions": [
@@ -23660,7 +23927,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+40% ATK, +15% Physical Damage, Conversion 140% Penholy to Penphysical, 15% Eleholy to MP, 4500% Eleholy to ATK",
         "stats": {
-            "ATK%": 0.4,
+            "ATK%": 40,
             "Phys%": 0.15
         },
         "conversions": [
@@ -23698,7 +23965,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% DEF, Conversion 175% Resvoid to Crit DMG, 10,000% Resvoid to Max HP, Reduction -75% Resvoid",
         "stats": {
-            "DEF%": 0.2
+            "DEF%": 20
         },
         "conversions": [
             {
@@ -23725,9 +23992,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% DEF, +20% Threat Bonus, +20% Elevoid, Conversion 50% Resnegative to Elevoid, Reduction -25% to Resnegative and Elephys",
         "stats": {
-            "DEF%": 0.2,
+            "DEF%": 20,
             "Void%": 0.2,
-            "Threat%": 0.2
+            "Threat%": 20
         },
         "conversions": [
             {
@@ -23754,8 +24021,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+25% DEF, +10% Threat Bonus, Conversion 1500% Resholy to HP Regen, 10,000% Resholy to Heal, Reduction -50% Resholy",
         "stats": {
-            "DEF%": 0.25,
-            "Threat%": 0.1
+            "DEF%": 25,
+            "Threat%": 10
         },
         "conversions": [
             {
@@ -23782,8 +24049,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+35% Heal, +5% Crit Chance, +20% MP, Conversion 40% MP to Elevoid, 3% MP to Penvoid",
         "stats": {
-            "Crit Chance%": 0.05,
-            "HEAL%": 0.35
+            "Crit Chance%": 5,
+            "HEAL%": 35
         },
         "conversions": [
             {
@@ -23810,7 +24077,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10% Heal, +10% Pennegative, Conversion 15% Elenegative to Crit Damage",
         "stats": {
-            "HEAL%": 0.1,
+            "HEAL%": 10,
             "Neg Pen%": 0.1
         },
         "conversions": [
@@ -23838,9 +24105,11 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15% Heal,  -10% Global Heal Effect, +20% Eleholy, Conversion 15% Max HP to Heal, 1000% Eleholy to Heal",
         "stats": {
-            "HEAL%": 0.15,
+            "HEAL%": 15,
             "Holy%": 0.2,
-            "Heal Effect%": -0.1
+            "Heal Effect%": -10,
+            "Global HEAL%": -10,
+            "HP%": 15
         },
         "conversions": [
             {
@@ -23872,14 +24141,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+12 ATK, +10 DEF, +2% Threat Bonus",
         "stats": {
-            "Threat%": 0.02,
-            "Slash Res%": 0.25,
-            "Pierce Res%": 0.25,
-            "Blunt Res%": -0.25,
-            "Fire Res%": -0.25,
-            "Water Res%": 0.25,
-            "Neg Res%": 0.5,
-            "Holy Res%": -0.5
+            "ATK": 12,
+            "DEF": 10,
+            "Threat%": 2
         },
         "conversions": []
     },
@@ -23900,7 +24164,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+12 ATK, +10 DEF, +2% Threat Bonus",
         "stats": {
-            "Threat%": 0.02
+            "ATK": 12,
+            "DEF": 10,
+            "Threat%": 2
         },
         "conversions": []
     },
@@ -23921,7 +24187,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+12 ATK, +10 DEF, +2% Threat Bonus",
         "stats": {
-            "Threat%": 0.02
+            "ATK": 12,
+            "DEF": 10,
+            "Threat%": 2
         },
         "conversions": []
     },
@@ -23942,8 +24210,10 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15 ATK, +5% ATK, +20 DEF, +5% Crit Chance",
         "stats": {
-            "Crit Chance%": 0.05,
-            "ATK%": 0.05
+            "Crit Chance%": 5,
+            "ATK%": 5,
+            "ATK": 15,
+            "DEF": 20
         },
         "conversions": []
     },
@@ -23964,7 +24234,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+12 ATK, +10 DEF, +2% Threat Bonus",
         "stats": {
-            "Threat%": 0.02
+            "ATK": 12,
+            "DEF": 10,
+            "Threat%": 2
         },
         "conversions": []
     },
@@ -23985,7 +24257,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+12 ATK, +10 DEF, +2% Threat Bonus",
         "stats": {
-            "Threat%": 0.02
+            "ATK": 12,
+            "DEF": 10,
+            "Threat%": 2
         },
         "conversions": []
     },
@@ -24006,10 +24280,10 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% ATK, +15% DEF, +25% Water Resist, +5% Crit Chance",
         "stats": {
-            "Crit Chance%": 0.05,
-            "DEF%": 0.15,
-            "ATK%": 0.2,
-            "Water Res%": 0.25
+            "Crit Chance%": 5,
+            "DEF%": 15,
+            "ATK%": 20,
+            "Water Res%": 25
         },
         "conversions": []
     },
@@ -24030,7 +24304,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+12 ATK, +10 DEF, +3% Threat Bonus",
         "stats": {
-            "Threat%": 0.03
+            "ATK": 12,
+            "DEF": 10,
+            "Threat%": 3
         },
         "conversions": []
     },
@@ -24051,7 +24327,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+12 ATK, +10 DEF, +3% Threat Bonus",
         "stats": {
-            "Threat%": 0.03
+            "ATK": 12,
+            "DEF": 10,
+            "Threat%": 3
         },
         "conversions": []
     },
@@ -24072,10 +24350,10 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+25% ATK, +15% DEF, +25% Lightning Resist, +5% Crit Chance",
         "stats": {
-            "Crit Chance%": 0.05,
-            "DEF%": 0.15,
-            "ATK%": 0.2,
-            "Lightning Res%": 0.25
+            "Crit Chance%": 5,
+            "DEF%": 15,
+            "ATK%": 25,
+            "Lightning Res%": 25
         },
         "conversions": []
     },
@@ -24096,7 +24374,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+12 ATK, +10 DEF, +4% Threat Bonus",
         "stats": {
-            "Threat%": 0.04
+            "ATK": 12,
+            "DEF": 10,
+            "Threat%": 4
         },
         "conversions": []
     },
@@ -24117,7 +24397,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+12 ATK, +10 DEF, +4% Threat Bonus",
         "stats": {
-            "Threat%": 0.04
+            "ATK": 12,
+            "DEF": 10,
+            "Threat%": 4
         },
         "conversions": []
     },
@@ -24138,10 +24420,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+45% ATK, +15% Threat Gain, +20% Negative Resist, +5% Crit Chance",
         "stats": {
-            "Crit Chance%": 0.05,
-            "ATK%": 0.45,
-            "Threat%": 0.15,
-            "Neg Res%": 0.2
+            "Crit Chance%": 5,
+            "ATK%": 45,
+            "Neg Res%": 20
         },
         "conversions": []
     },
@@ -24162,14 +24443,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+5 MP, +16 MATK, 2% Crit Damage",
         "stats": {
-            "Crit DMG%": 0.02,
-            "Slash Res%": 0.25,
-            "Pierce Res%": 0.25,
-            "Blunt Res%": -0.25,
-            "Fire Res%": -0.25,
-            "Water Res%": 0.25,
-            "Neg Res%": 0.5,
-            "Holy Res%": -0.5
+            "Crit DMG%": 2,
+            "MATK": 16,
+            "MP": 5
         },
         "conversions": []
     },
@@ -24190,7 +24466,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+5 MP, +16 MATK, 2% Crit Damage",
         "stats": {
-            "Crit DMG%": 0.02
+            "Crit DMG%": 2,
+            "MATK": 16,
+            "MP": 5
         },
         "conversions": []
     },
@@ -24211,7 +24489,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+5 MP, +16 MATK, 2% Crit Damage",
         "stats": {
-            "Crit DMG%": 0.02
+            "Crit DMG%": 2,
+            "MATK": 16,
+            "MP": 5
         },
         "conversions": []
     },
@@ -24232,10 +24512,10 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+5 MP, +20 MATK, +5% MATK, +1% Global Damage",
         "stats": {
-            "MATK%": 0.05,
+            "MATK%": 5,
             "MP": 5,
             "MATK": 20,
-            "Dmg%": 0.01,
+            "Dmg%": 1
         },
         "conversions": []
     },
@@ -24256,7 +24536,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+5 MP, +16 MATK, 3% Crit Damage",
         "stats": {
-            "Crit DMG%": 0.03
+            "Crit DMG%": 3,
+            "MATK": 16,
+            "MP": 5
         },
         "conversions": []
     },
@@ -24277,7 +24559,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+5 MP, +16 MATK, 3% Crit Damage",
         "stats": {
-            "Crit DMG%": 0.03
+            "Crit DMG%": 3,
+            "MATK": 16,
+            "MP": 5
         },
         "conversions": []
     },
@@ -24298,10 +24582,10 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+30% MATK, +10 MP, +25% Water Resist, +1% Global Damage",
         "stats": {
-            "MATK%": 0.3,
-            "Water Res%": 0.25,
+            "MATK%": 30,
+            "Water Res%": 25,
             "MP": 10,
-            "Dmg%": 0.01
+            "Dmg%": 1
         },
         "conversions": []
     },
@@ -24322,7 +24606,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+5 MP, +16 MATK, 5% Crit Damage",
         "stats": {
-            "Crit DMG%": 0.05
+            "Crit DMG%": 5,
+            "MATK": 16,
+            "MP": 5
         },
         "conversions": []
     },
@@ -24343,7 +24629,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+5 MP, +16 MATK, 5% Crit Damage",
         "stats": {
-            "Crit DMG%": 0.05
+            "Crit DMG%": 5,
+            "MATK": 16,
+            "MP": 5
         },
         "conversions": []
     },
@@ -24364,10 +24652,10 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+35% MATK, +15% Crit Damage, +25% Lightning Resist, +2% Global Damage",
         "stats": {
-            "MATK%": 0.35,
-            "Crit DMG%": 0.15,
-            "Lightning Res%": 0.25,
-            "Dmg%": 0.02
+            "MATK%": 35,
+            "Crit DMG%": 15,
+            "Lightning Res%": 25,
+            "Dmg%": 2
         },
         "conversions": []
     },
@@ -24388,7 +24676,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+5 MP, +16 MATK, 8% Crit Damage",
         "stats": {
-            "Crit DMG%": 0.08
+            "Crit DMG%": 8,
+            "MATK": 16,
+            "MP": 5
         },
         "conversions": []
     },
@@ -24409,7 +24699,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+5 MP, +16 MATK, 8% Crit Damage",
         "stats": {
-            "Crit DMG%": 0.08
+            "Crit DMG%": 8,
+            "MATK": 16,
+            "MP": 5
         },
         "conversions": []
     },
@@ -24430,8 +24722,10 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+40% MATK, +35% Crit Damage, +30 MP, +2% Global Damage",
         "stats": {
-            "Crit DMG%": 0.35,
-            "MATK%": 0.4
+            "Crit DMG%": 35,
+            "MATK%": 40,
+            "Dmg%": 2,
+            "MP": 30
         },
         "conversions": []
     },
@@ -24452,10 +24746,10 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10 ATK, +30 HP, +0.2% HP Regen Rate, +10% Negative Resist",
         "stats": {
-            "Fire Res%": -0.25,
-            "Water Res%": 0.25,
-            "Neg Res%": 0.6,
-            "Holy Res%": -0.5
+            "Neg Res%": 10,
+            "ATK": 10,
+            "HP": 30,
+            "HP Regen%": 0.2
         },
         "conversions": []
     },
@@ -24475,7 +24769,11 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+10 ATK, +30 HP, +0.2% HP Regen Rate",
-        "stats": {},
+        "stats": {
+            "ATK": 10,
+            "HP": 30,
+            "HP Regen%": 0.2
+        },
         "conversions": []
     },
     "Zombie 3": {
@@ -24494,7 +24792,11 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+10 ATK, +30 HP, +0.2% HP Regen Rate",
-        "stats": {},
+        "stats": {
+            "ATK": 10,
+            "HP": 30,
+            "HP Regen%": 0.2
+        },
         "conversions": []
     },
     "Dullahan 1": {
@@ -24514,9 +24816,10 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15% ATK, +10% DEF, +110 HP, +4% Crit Chance",
         "stats": {
-            "Crit Chance%": 0.04,
-            "DEF%": 0.1,
-            "ATK%": 0.15
+            "Crit Chance%": 4,
+            "DEF%": 10,
+            "ATK%": 15,
+            "HP": 110
         },
         "conversions": []
     },
@@ -24536,7 +24839,11 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+10 ATK, +80 HP, +0.2% HP Regen Rate",
-        "stats": {},
+        "stats": {
+            "ATK": 10,
+            "HP": 80,
+            "HP Regen%": 0.2
+        },
         "conversions": []
     },
     "Dullahan 3": {
@@ -24555,7 +24862,11 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+10 ATK, +80 HP, +0.2% HP Regen Rate",
-        "stats": {},
+        "stats": {
+            "ATK": 10,
+            "HP": 80,
+            "HP Regen%": 0.2
+        },
         "conversions": []
     },
     "Draugr 1": {
@@ -24575,10 +24886,10 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% ATK, +25% DEF, +25% Water Resist, +4% Crit Chance",
         "stats": {
-            "Crit Chance%": 0.04,
-            "DEF%": 0.25,
-            "ATK%": 0.2,
-            "Water Res%": 0.25
+            "Crit Chance%": 4,
+            "DEF%": 25,
+            "ATK%": 20,
+            "Water Res%": 25
         },
         "conversions": []
     },
@@ -24598,7 +24909,11 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+10 ATK, +200 HP, +0.2% HP Regen Rate",
-        "stats": {},
+        "stats": {
+            "ATK": 10,
+            "HP": 200,
+            "HP Regen%": 0.2
+        },
         "conversions": []
     },
     "Draugr 3": {
@@ -24617,7 +24932,11 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+10 ATK, +200 HP, +0.2% HP Regen Rate",
-        "stats": {},
+        "stats": {
+            "ATK": 10,
+            "HP": 200,
+            "HP Regen%": 0.2
+        },
         "conversions": []
     },
     "Revenant 1": {
@@ -24637,10 +24956,10 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+25% ATK, +25% DEF, +25% Lightning Resist, +4% Crit Chance",
         "stats": {
-            "Crit Chance%": 0.04,
-            "DEF%": 0.25,
-            "ATK%": 0.25,
-            "Lightning Res%": 0.25
+            "Crit Chance%": 4,
+            "DEF%": 25,
+            "ATK%": 25,
+            "Lightning Res%": 25
         },
         "conversions": []
     },
@@ -24660,7 +24979,11 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+10 ATK, +350 HP, +0.2% HP Regen Rate",
-        "stats": {},
+        "stats": {
+            "ATK": 10,
+            "HP": 350,
+            "HP Regen%": 0.2
+        },
         "conversions": []
     },
     "Revenant 3": {
@@ -24679,7 +25002,11 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+10 ATK, +350 HP, +0.2% HP Regen Rate",
-        "stats": {},
+        "stats": {
+            "ATK": 10,
+            "HP": 350,
+            "HP Regen%": 0.2
+        },
         "conversions": []
     },
     "Tomb Emperor": {
@@ -24699,8 +25026,10 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+45% ATK, +4% Global Damage, +6% Crit Chance, +1.2% HP Regen Rate",
         "stats": {
-            "Crit Chance%": 0.06,
-            "ATK%": 0.45
+            "Crit Chance%": 6,
+            "ATK%": 45,
+            "Dmg%": 4,
+            "HP Regen%": 1.2
         },
         "conversions": []
     },
@@ -24721,10 +25050,13 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10 ATK, +8 DEF, +20 HP, +5% ATK, +5% DEF, -5% MATK, -5% Heal",
         "stats": {
-            "DEF%": 0.05,
-            "ATK%": 0.05,
-            "MATK%": -0.05,
-            "HEAL%": -0.05
+            "DEF%": 5,
+            "ATK%": 5,
+            "MATK%": -5,
+            "HEAL%": -5,
+            "ATK": 10,
+            "DEF": 8,
+            "HP": 20
         },
         "conversions": []
     },
@@ -24744,7 +25076,11 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+10 ATK, +8 DEF, +20 HP",
-        "stats": {},
+        "stats": {
+            "ATK": 10,
+            "DEF": 8,
+            "HP": 20
+        },
         "conversions": []
     },
     "Orc 3": {
@@ -24763,7 +25099,11 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+10 ATK, +8 DEF, +20 HP",
-        "stats": {},
+        "stats": {
+            "ATK": 10,
+            "DEF": 8,
+            "HP": 20
+        },
         "conversions": []
     },
     "High Orc 1": {
@@ -24783,7 +25123,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15 ATK, +5% ATK, +50 HP",
         "stats": {
-            "ATK%": 0.05
+            "ATK%": 5,
+            "ATK": 15,
+            "HP": 50
         },
         "conversions": []
     },
@@ -24803,7 +25145,11 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+10 ATK, +8 DEF, +20 HP",
-        "stats": {},
+        "stats": {
+            "ATK": 10,
+            "DEF": 8,
+            "HP": 20
+        },
         "conversions": []
     },
     "High Orc 3": {
@@ -24822,7 +25168,11 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+10 ATK, +8 DEF, +20 HP",
-        "stats": {},
+        "stats": {
+            "ATK": 10,
+            "DEF": 8,
+            "HP": 20
+        },
         "conversions": []
     },
     "Orc Lord 1": {
@@ -24842,8 +25192,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% ATK, +15% DEF, +200 HP",
         "stats": {
-            "DEF%": 0.15,
-            "ATK%": 0.2
+            "DEF%": 15,
+            "ATK%": 20,
+            "HP": 200
         },
         "conversions": []
     },
@@ -24863,7 +25214,11 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+10 ATK, +8 DEF, +20 HP",
-        "stats": {},
+        "stats": {
+            "ATK": 10,
+            "DEF": 8,
+            "HP": 20
+        },
         "conversions": []
     },
     "Orc Lord 3": {
@@ -24882,7 +25237,11 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+10 ATK, +8 DEF, +20 HP",
-        "stats": {},
+        "stats": {
+            "ATK": 10,
+            "DEF": 8,
+            "HP": 20
+        },
         "conversions": []
     },
     "Orc Emperor 1": {
@@ -24902,8 +25261,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% ATK, +15% DEF, +750 HP",
         "stats": {
-            "DEF%": 0.15,
-            "ATK%": 0.2
+            "DEF%": 15,
+            "ATK%": 20,
+            "HP": 750
         },
         "conversions": []
     },
@@ -24923,7 +25283,11 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+10 ATK, +8 DEF, +20 HP",
-        "stats": {},
+        "stats": {
+            "ATK": 10,
+            "DEF": 8,
+            "HP": 20
+        },
         "conversions": []
     },
     "Orc Emperor 3": {
@@ -24942,7 +25306,11 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+10 ATK, +8 DEF, +20 HP",
-        "stats": {},
+        "stats": {
+            "ATK": 10,
+            "DEF": 8,
+            "HP": 20
+        },
         "conversions": []
     },
     "Orc Deity": {
@@ -24962,8 +25330,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+50% ATK, +50% DEF, +2250 HP",
         "stats": {
-            "DEF%": 0.5,
-            "ATK%": 0.5
+            "DEF%": 50,
+            "ATK%": 50,
+            "HP": 2250
         },
         "conversions": []
     },
@@ -24984,9 +25353,10 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+8 ATK, +2% Crit Chance, +5% Crit Chance, -5% ATK, -5% DEF",
         "stats": {
-            "Crit Chance%": 0.07,
-            "DEF%": -0.05,
-            "ATK%": -0.05
+            "Crit Chance%": 7,
+            "DEF%": -5,
+            "ATK%": -5,
+            "ATK": 8
         },
         "conversions": []
     },
@@ -25007,7 +25377,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+8 ATK, +2% Crit Chance",
         "stats": {
-            "Crit Chance%": 0.02
+            "Crit Chance%": 2,
+            "ATK": 8
         },
         "conversions": []
     },
@@ -25028,7 +25399,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+8 ATK, +2% Crit Chance",
         "stats": {
-            "Crit Chance%": 0.02
+            "Crit Chance%": 2,
+            "ATK": 8
         },
         "conversions": []
     },
@@ -25049,8 +25421,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10 ATK, +2% Crit Chance, +10% ATK",
         "stats": {
-            "Crit Chance%": 0.02,
-            "ATK%": 0.1
+            "Crit Chance%": 2,
+            "ATK%": 10,
+            "ATK": 10
         },
         "conversions": []
     },
@@ -25071,7 +25444,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+8 ATK, +2% Crit Chance",
         "stats": {
-            "Crit Chance%": 0.02
+            "Crit Chance%": 2,
+            "ATK": 8
         },
         "conversions": []
     },
@@ -25092,7 +25466,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+8 ATK, +2% Crit Chance",
         "stats": {
-            "Crit Chance%": 0.02
+            "Crit Chance%": 2,
+            "ATK": 8
         },
         "conversions": []
     },
@@ -25113,9 +25488,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10% ATK, +3% Crit Chance, +20% Crit Damage",
         "stats": {
-            "Crit Chance%": 0.03,
-            "Crit DMG%": 0.2,
-            "ATK%": 0.1
+            "Crit Chance%": 3,
+            "Crit DMG%": 20,
+            "ATK%": 10
         },
         "conversions": []
     },
@@ -25136,7 +25511,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+8 ATK, +2% Crit Chance",
         "stats": {
-            "Crit Chance%": 0.02
+            "Crit Chance%": 2,
+            "ATK": 8
         },
         "conversions": []
     },
@@ -25157,7 +25533,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+8 ATK, +2% Crit Chance",
         "stats": {
-            "Crit Chance%": 0.02
+            "Crit Chance%": 2,
+            "ATK": 8
         },
         "conversions": []
     },
@@ -25178,7 +25555,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10% ATK, +35% Crit Damage",
         "stats": {
-            "Crit DMG%": 0.35
+            "Crit DMG%": 35,
+            "ATK%": 10
         },
         "conversions": []
     },
@@ -25199,7 +25577,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+8 ATK, +2% Crit Chance",
         "stats": {
-            "Crit Chance%": 0.02
+            "Crit Chance%": 2,
+            "ATK": 8
         },
         "conversions": []
     },
@@ -25220,7 +25599,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+8 ATK, +2% Crit Chance",
         "stats": {
-            "Crit Chance%": 0.02
+            "Crit Chance%": 2,
+            "ATK": 8
         },
         "conversions": []
     },
@@ -25241,9 +25621,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% ATK, -10% Threat Gain, +50% Crit Damage",
         "stats": {
-            "Crit DMG%": 0.5,
-            "ATK%": 0.2,
-            "Threat%": -0.1
+            "Crit DMG%": 50,
+            "ATK%": 20
         },
         "conversions": []
     },
@@ -25264,9 +25643,11 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10 ATK/MATK, +12 DEF, +4% Water Damage, +25% Water Resist, -25% Lightning Resist",
         "stats": {
-            "Water%": 0.04,
-            "Water Res%": 0.25,
-            "Lightning Res%": -0.25
+            "Water%": 4,
+            "Water Res%": 25,
+            "Lightning Res%": -25,
+            "ATK": 10,
+            "DEF": 12
         },
         "conversions": []
     },
@@ -25287,7 +25668,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10 ATK/MATK, +12 DEF, +4% Water Damage",
         "stats": {
-            "Water%": 0.04
+            "Water%": 4,
+            "ATK": 10,
+            "DEF": 12
         },
         "conversions": []
     },
@@ -25308,7 +25691,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10 ATK/MATK, +12 DEF, +4% Water Damage",
         "stats": {
-            "Water%": 0.04
+            "Water%": 4,
+            "ATK": 10,
+            "DEF": 12
         },
         "conversions": []
     },
@@ -25329,10 +25714,10 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10% ATK/MATK, +5% Water Damage, +10% Crit Damage",
         "stats": {
-            "Crit DMG%": 0.1,
-            "ATK%": 0.1,
-            "MATK%": 0.1,
-            "Water%": 0.05
+            "Crit DMG%": 10,
+            "ATK%": 20,
+            "MATK%": 10,
+            "Water%": 5
         },
         "conversions": []
     },
@@ -25353,7 +25738,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10 ATK/MATK, +12 DEF, +4% Water Damage",
         "stats": {
-            "Water%": 0.04
+            "Water%": 4,
+            "ATK": 10,
+            "DEF": 12
         },
         "conversions": []
     },
@@ -25374,7 +25761,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10 ATK/MATK, +12 DEF, +4% Water Damage",
         "stats": {
-            "Water%": 0.04
+            "Water%": 4,
+            "ATK": 10,
+            "DEF": 12
         },
         "conversions": []
     },
@@ -25395,11 +25784,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% ATK/MATK, +10% Water Damage/Resist/Crit Damage",
         "stats": {
-            "Crit DMG%": 0.1,
-            "ATK%": 0.2,
-            "MATK%": 0.2,
-            "Water%": 0.1,
-            "Water Res%": 0.1
+            "ATK%": 40,
+            "MATK%": 20,
+            "Water%": 10
         },
         "conversions": []
     },
@@ -25420,7 +25807,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10 ATK/MATK, +12 DEF, +4% Water Damage",
         "stats": {
-            "Water%": 0.04
+            "Water%": 4,
+            "ATK": 10,
+            "DEF": 12
         },
         "conversions": []
     },
@@ -25441,7 +25830,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10 ATK/MATK, +12 DEF, +4% Water Damage",
         "stats": {
-            "Water%": 0.04
+            "Water%": 4,
+            "ATK": 10,
+            "DEF": 12
         },
         "conversions": []
     },
@@ -25462,11 +25853,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% ATK/MATK, +15% Water Damage/Resist/Crit Damage",
         "stats": {
-            "Crit DMG%": 0.15,
-            "ATK%": 0.2,
-            "MATK%": 0.2,
-            "Water%": 0.15,
-            "Water Res%": 0.15
+            "ATK%": 40,
+            "MATK%": 20,
+            "Water%": 15
         },
         "conversions": []
     },
@@ -25487,7 +25876,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10 ATK/MATK, +12 DEF, +4% Water Damage",
         "stats": {
-            "Water%": 0.04
+            "Water%": 4,
+            "ATK": 10,
+            "DEF": 12
         },
         "conversions": []
     },
@@ -25508,7 +25899,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10 ATK/MATK, +12 DEF, +4% Water Damage",
         "stats": {
-            "Water%": 0.04
+            "Water%": 4,
+            "ATK": 10,
+            "DEF": 12
         },
         "conversions": []
     },
@@ -25529,11 +25922,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+40% ATK/MATK, +20% Water Damage/Resist/Crit Damage",
         "stats": {
-            "Crit DMG%": 0.2,
-            "ATK%": 0.4,
-            "MATK%": 0.4,
-            "Water%": 0.2,
-            "Water Res%": 0.2
+            "ATK%": 80,
+            "MATK%": 40,
+            "Water%": 20
         },
         "conversions": []
     },
@@ -25554,8 +25945,13 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+5 ATK, +5 DEF, +30 HP, +1% Global ATK, +10% ATK, +10% DEF, -10% Crit Chance",
         "stats": {
-            "Crit Chance%": -0.1,
-            "ATK%": 0.1
+            "Crit Chance%": -10,
+            "ATK%": 10,
+            "ATK": 5,
+            "DEF": 5,
+            "DEF%": 10,
+            "Global ATK%": 1,
+            "HP": 30
         },
         "conversions": []
     },
@@ -25575,7 +25971,12 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+5 ATK, +5 DEF, +30 HP, +1% Global ATK",
-        "stats": {},
+        "stats": {
+            "ATK": 5,
+            "DEF": 5,
+            "HP": 30,
+            "Global ATK%": 1
+        },
         "conversions": []
     },
     "Giant 3": {
@@ -25594,7 +25995,12 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+5 ATK, +5 DEF, +30 HP, +1% Global ATK",
-        "stats": {},
+        "stats": {
+            "ATK": 5,
+            "DEF": 5,
+            "HP": 30,
+            "Global ATK%": 1
+        },
         "conversions": []
     },
     "Frost Giant 1": {
@@ -25614,9 +26020,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+25% Water Resist, -25% Fire Resist, +10% ATK",
         "stats": {
-            "ATK%": 0.1,
-            "Fire Res%": -0.25,
-            "Water Res%": 0.25
+            "ATK%": 10,
+            "Fire Res%": -25,
+            "Water Res%": 25
         },
         "conversions": []
     },
@@ -25636,7 +26042,12 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+5 ATK, +5 DEF, +30 HP, +1% Global ATK",
-        "stats": {},
+        "stats": {
+            "ATK": 5,
+            "DEF": 5,
+            "HP": 30,
+            "Global ATK%": 1
+        },
         "conversions": []
     },
     "Frost Giant 3": {
@@ -25655,7 +26066,12 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+5 ATK, +5 DEF, +30 HP, +1% Global ATK",
-        "stats": {},
+        "stats": {
+            "ATK": 5,
+            "DEF": 5,
+            "HP": 30,
+            "Global ATK%": 1
+        },
         "conversions": []
     },
     "Air Giant 1": {
@@ -25675,8 +26091,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+25% Wind Resist, -25% Lightning Resist, +10% ATK",
         "stats": {
-            "Lightning Res%": -0.25,
-            "Wind Res%": 0.25
+            "Lightning Res%": -25,
+            "Wind Res%": 25,
+            "ATK%": 10
         },
         "conversions": []
     },
@@ -25696,7 +26113,12 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+5 ATK, +5 DEF, +30 HP, +1% Global ATK",
-        "stats": {},
+        "stats": {
+            "ATK": 5,
+            "DEF": 5,
+            "HP": 30,
+            "Global ATK%": 1
+        },
         "conversions": []
     },
     "Air Giant 3": {
@@ -25715,7 +26137,12 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+5 ATK, +5 DEF, +30 HP, +1% Global ATK",
-        "stats": {},
+        "stats": {
+            "ATK": 5,
+            "DEF": 5,
+            "HP": 30,
+            "Global ATK%": 1
+        },
         "conversions": []
     },
     "Hill Giant 1": {
@@ -25735,8 +26162,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+7% ATK, +7% DEF, +60 HP",
         "stats": {
-            "DEF%": 0.07,
-            "ATK%": 0.07
+            "DEF%": 7,
+            "ATK%": 7,
+            "HP": 60
         },
         "conversions": []
     },
@@ -25756,7 +26184,12 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+5 ATK, +5 DEF, +30 HP, +1% Global ATK",
-        "stats": {},
+        "stats": {
+            "ATK": 5,
+            "DEF": 5,
+            "HP": 30,
+            "Global ATK%": 1
+        },
         "conversions": []
     },
     "Hill Giant 3": {
@@ -25775,7 +26208,12 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+5 ATK, +5 DEF, +30 HP, +1% Global ATK",
-        "stats": {},
+        "stats": {
+            "ATK": 5,
+            "DEF": 5,
+            "HP": 30,
+            "Global ATK%": 1
+        },
         "conversions": []
     },
     "Jotun Lord 1": {
@@ -25795,9 +26233,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10% Water Resist, +10% ATK, +20% DEF",
         "stats": {
-            "DEF%": 0.2,
-            "ATK%": 0.1,
-            "Water Res%": 0.1
+            "DEF%": 20,
+            "ATK%": 10,
+            "Water Res%": 10
         },
         "conversions": []
     },
@@ -25817,7 +26255,12 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+5 ATK, +5 DEF, +30 HP, +1% Global ATK",
-        "stats": {},
+        "stats": {
+            "ATK": 5,
+            "DEF": 5,
+            "HP": 30,
+            "Global ATK%": 1
+        },
         "conversions": []
     },
     "Jotun Lord 3": {
@@ -25836,7 +26279,12 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+5 ATK, +5 DEF, +30 HP, +1% Global ATK",
-        "stats": {},
+        "stats": {
+            "ATK": 5,
+            "DEF": 5,
+            "HP": 30,
+            "Global ATK%": 1
+        },
         "conversions": []
     },
     "Jotun Emperor 1": {
@@ -25856,9 +26304,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10% Water Resist, +10% ATK, +20% DEF",
         "stats": {
-            "DEF%": 0.2,
-            "ATK%": 0.1,
-            "Water Res%": 0.1
+            "DEF%": 20,
+            "ATK%": 10,
+            "Water Res%": 10
         },
         "conversions": []
     },
@@ -25878,7 +26326,12 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+5 ATK, +5 DEF, +30 HP, +1% Global ATK",
-        "stats": {},
+        "stats": {
+            "ATK": 5,
+            "DEF": 5,
+            "HP": 30,
+            "Global ATK%": 1
+        },
         "conversions": []
     },
     "Jotun Emperor 3": {
@@ -25897,7 +26350,12 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+5 ATK, +5 DEF, +30 HP, +1% Global ATK",
-        "stats": {},
+        "stats": {
+            "ATK": 5,
+            "DEF": 5,
+            "HP": 30,
+            "Global ATK%": 1
+        },
         "conversions": []
     },
     "Jotun Deity": {
@@ -25917,8 +26375,10 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+35% ATK, +3000 HP, +20% Water Resist, +8% Global Max Health",
         "stats": {
-            "ATK%": 0.35,
-            "Water Res%": 0.2
+            "ATK%": 35,
+            "Water Res%": 20,
+            "HP": 3000,
+            "HP%": 8
         },
         "conversions": []
     },
@@ -25939,9 +26399,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10% Lightning Resist, +10% ATK, +20% DEF",
         "stats": {
-            "DEF%": 0.2,
-            "ATK%": 0.1,
-            "Lightning Res%": 0.1
+            "DEF%": 20,
+            "ATK%": 10,
+            "Lightning Res%": 10
         },
         "conversions": []
     },
@@ -25961,7 +26421,12 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+5 ATK, +5 DEF, +30 HP, +1% Global ATK",
-        "stats": {},
+        "stats": {
+            "ATK": 5,
+            "DEF": 5,
+            "HP": 30,
+            "Global ATK%": 1
+        },
         "conversions": []
     },
     "Storm Giant Lord 3": {
@@ -25980,7 +26445,12 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+5 ATK, +5 DEF, +30 HP, +1% Global ATK",
-        "stats": {},
+        "stats": {
+            "ATK": 5,
+            "DEF": 5,
+            "HP": 30,
+            "Global ATK%": 1
+        },
         "conversions": []
     },
     "Storm Giant Emperor 1": {
@@ -26000,9 +26470,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10% Lightning Resist, +10% ATK, +20% DEF",
         "stats": {
-            "DEF%": 0.2,
-            "ATK%": 0.1,
-            "Lightning Res%": 0.1
+            "DEF%": 20,
+            "ATK%": 10,
+            "Lightning Res%": 10
         },
         "conversions": []
     },
@@ -26022,7 +26492,12 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+5 ATK, +5 DEF, +30 HP, +1% Global ATK",
-        "stats": {},
+        "stats": {
+            "ATK": 5,
+            "DEF": 5,
+            "HP": 30,
+            "Global ATK%": 1
+        },
         "conversions": []
     },
     "Storm Giant Emperor 3": {
@@ -26041,7 +26516,12 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+5 ATK, +5 DEF, +30 HP, +1% Global ATK",
-        "stats": {},
+        "stats": {
+            "ATK": 5,
+            "DEF": 5,
+            "HP": 30,
+            "Global ATK%": 1
+        },
         "conversions": []
     },
     "Storm Deity": {
@@ -26061,8 +26541,10 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+35% ATK, +3000 HP, +20% Lightning Resist, +8% Global Max Health",
         "stats": {
-            "ATK%": 0.35,
-            "Lightning Res%": 0.2
+            "ATK%": 35,
+            "Lightning Res%": 20,
+            "HP": 3000,
+            "HP%": 8
         },
         "conversions": []
     },
@@ -26083,8 +26565,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10% ATK, +25% DEF, +100 HP",
         "stats": {
-            "DEF%": 0.25,
-            "ATK%": 0.1
+            "DEF%": 25,
+            "ATK%": 10,
+            "HP": 100
         },
         "conversions": []
     },
@@ -26104,7 +26587,12 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+5 ATK, +5 DEF, +30 HP, +1% Global ATK",
-        "stats": {},
+        "stats": {
+            "ATK": 5,
+            "DEF": 5,
+            "HP": 30,
+            "Global ATK%": 1
+        },
         "conversions": []
     },
     "Mountain Lord 3": {
@@ -26123,7 +26611,12 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+5 ATK, +5 DEF, +30 HP, +1% Global ATK",
-        "stats": {},
+        "stats": {
+            "ATK": 5,
+            "DEF": 5,
+            "HP": 30,
+            "Global ATK%": 1
+        },
         "conversions": []
     },
     "Mountain Emperor 1": {
@@ -26143,8 +26636,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10% ATK, +25% DEF, +600 HP",
         "stats": {
-            "DEF%": 0.25,
-            "ATK%": 0.1
+            "DEF%": 25,
+            "ATK%": 10,
+            "HP": 600
         },
         "conversions": []
     },
@@ -26164,7 +26658,12 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+5 ATK, +5 DEF, +30 HP, +1% Global ATK",
-        "stats": {},
+        "stats": {
+            "ATK": 5,
+            "DEF": 5,
+            "HP": 30,
+            "Global ATK%": 1
+        },
         "conversions": []
     },
     "Mountain Emperor 3": {
@@ -26183,7 +26682,12 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+5 ATK, +5 DEF, +30 HP, +1% Global ATK",
-        "stats": {},
+        "stats": {
+            "ATK": 5,
+            "DEF": 5,
+            "HP": 30,
+            "Global ATK%": 1
+        },
         "conversions": []
     },
     "Mountain Deity": {
@@ -26203,8 +26707,10 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+35% ATK, +3000 HP, +20% Earth Resist, +8% Global Max Health",
         "stats": {
-            "ATK%": 0.35,
-            "Earth Res%": 0.2
+            "ATK%": 35,
+            "Earth Res%": 20,
+            "HP": 3000,
+            "HP%": 8
         },
         "conversions": []
     },
@@ -26225,13 +26731,13 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+12 ATK, +12 DEF, -2 MP, +3% Crit Damage, +15% DEF, +15% ATK, -15% MATK",
         "stats": {
-            "Crit DMG%": 0.03,
-            "DEF%": 0.15,
-            "ATK%": 0.15,
-            "MATK%": -0.15,
-            "Water Res%": -0.15,
-            "Lightning Res%": -0.15,
-            "Wind Res%": -0.15
+            "Crit DMG%": 3,
+            "DEF%": 15,
+            "ATK%": 15,
+            "MATK%": -15,
+            "ATK": 12,
+            "DEF": 12,
+            "MP": -2
         },
         "conversions": []
     },
@@ -26252,7 +26758,10 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+12 ATK, +12 DEF, -2 MP, +3% Crit Damage",
         "stats": {
-            "Crit DMG%": 0.03
+            "Crit DMG%": 3,
+            "ATK": 12,
+            "DEF": 12,
+            "MP": -2
         },
         "conversions": []
     },
@@ -26273,7 +26782,10 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+12 ATK, +12 DEF, -2 MP, +3% Crit Damage",
         "stats": {
-            "Crit DMG%": 0.03
+            "Crit DMG%": 3,
+            "ATK": 12,
+            "DEF": 12,
+            "MP": -2
         },
         "conversions": []
     },
@@ -26294,8 +26806,10 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10% ATK, +10% DEF, -6 MP, +2% Global Damage",
         "stats": {
-            "DEF%": 0.1,
-            "ATK%": 0.1
+            "DEF%": 10,
+            "ATK%": 10,
+            "Dmg%": 2,
+            "MP": -6
         },
         "conversions": []
     },
@@ -26316,7 +26830,10 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+12 ATK, +12 DEF, -2 MP, +3% Crit Damage",
         "stats": {
-            "Crit DMG%": 0.03
+            "Crit DMG%": 3,
+            "ATK": 12,
+            "DEF": 12,
+            "MP": -2
         },
         "conversions": []
     },
@@ -26337,7 +26854,10 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+12 ATK, +12 DEF, -2 MP, +3% Crit Damage",
         "stats": {
-            "Crit DMG%": 0.03
+            "Crit DMG%": 3,
+            "ATK": 12,
+            "DEF": 12,
+            "MP": -2
         },
         "conversions": []
     },
@@ -26358,9 +26878,10 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% ATK, +20% DEF, +25% Fire Resist, +2% Global Damage",
         "stats": {
-            "DEF%": 0.2,
-            "ATK%": 0.2,
-            "Fire Res%": 0.25
+            "DEF%": 20,
+            "ATK%": 20,
+            "Fire Res%": 25,
+            "Dmg%": 2
         },
         "conversions": []
     },
@@ -26381,7 +26902,10 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+12 ATK, +12 DEF, -2 MP, +3% Crit Damage",
         "stats": {
-            "Crit DMG%": 0.03
+            "Crit DMG%": 3,
+            "ATK": 12,
+            "DEF": 12,
+            "MP": -2
         },
         "conversions": []
     },
@@ -26402,7 +26926,10 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+12 ATK, +12 DEF, -2 MP, +3% Crit Damage",
         "stats": {
-            "Crit DMG%": 0.03
+            "Crit DMG%": 3,
+            "ATK": 12,
+            "DEF": 12,
+            "MP": -2
         },
         "conversions": []
     },
@@ -26423,8 +26950,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% ATK, +20% DEF, +2% Global Damage",
         "stats": {
-            "DEF%": 0.2,
-            "ATK%": 0.2
+            "DEF%": 20,
+            "ATK%": 20,
+            "Dmg%": 2
         },
         "conversions": []
     },
@@ -26445,7 +26973,10 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+12 ATK, +12 DEF, -2 MP, +3% Crit Damage",
         "stats": {
-            "Crit DMG%": 0.03
+            "Crit DMG%": 3,
+            "ATK": 12,
+            "DEF": 12,
+            "MP": -2
         },
         "conversions": []
     },
@@ -26466,7 +26997,10 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+12 ATK, +12 DEF, -2 MP, +3% Crit Damage",
         "stats": {
-            "Crit DMG%": 0.03
+            "Crit DMG%": 3,
+            "ATK": 12,
+            "DEF": 12,
+            "MP": -2
         },
         "conversions": []
     },
@@ -26487,8 +27021,10 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+50% ATK, +75% DEF, +1000 HP, +2% Global Damage",
         "stats": {
-            "DEF%": 0.75,
-            "ATK%": 0.5
+            "DEF%": 75,
+            "ATK%": 50,
+            "Dmg%": 2,
+            "HP": 1000
         },
         "conversions": []
     },
@@ -26509,12 +27045,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+25% MATK, -10% ATK, -10% DEF",
         "stats": {
-            "DEF%": 0.05,
-            "ATK%": 0.05,
-            "MATK%": 0.1,
-            "Water Res%": -0.15,
-            "Lightning Res%": -0.15,
-            "Wind Res%": -0.15
+            "DEF%": -10,
+            "ATK%": -10,
+            "MATK%": 25
         },
         "conversions": []
     },
@@ -26535,7 +27068,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+12 MATK, +8 DEF, +3% Crit Damage",
         "stats": {
-            "Crit DMG%": 0.03
+            "Crit DMG%": 3,
+            "DEF": 8,
+            "MATK": 12
         },
         "conversions": []
     },
@@ -26556,7 +27091,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+12 MATK, +8 DEF, +3% Crit Damage",
         "stats": {
-            "Crit DMG%": 0.03
+            "Crit DMG%": 3,
+            "DEF": 8,
+            "MATK": 12
         },
         "conversions": []
     },
@@ -26577,7 +27114,10 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15 MATK, +5% MATK, +20 DEF, +2% Global Damage",
         "stats": {
-            "MATK%": 0.05
+            "MATK%": 5,
+            "DEF": 20,
+            "Dmg%": 2,
+            "MATK": 15
         },
         "conversions": []
     },
@@ -26598,7 +27138,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+12 MATK, +8 DEF, +3% Crit Damage",
         "stats": {
-            "Crit DMG%": 0.03
+            "Crit DMG%": 3,
+            "DEF": 8,
+            "MATK": 12
         },
         "conversions": []
     },
@@ -26619,7 +27161,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+12 MATK, +8 DEF, +3% Crit Damage",
         "stats": {
-            "Crit DMG%": 0.03
+            "Crit DMG%": 3,
+            "DEF": 8,
+            "MATK": 12
         },
         "conversions": []
     },
@@ -26640,9 +27184,10 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% MATK, +10% DEF, +25% Fire Resist, +2% Global Damage",
         "stats": {
-            "DEF%": 0.1,
-            "MATK%": 0.2,
-            "Fire Res%": 0.25
+            "DEF%": 10,
+            "MATK%": 20,
+            "Fire Res%": 25,
+            "Dmg%": 2
         },
         "conversions": []
     },
@@ -26663,7 +27208,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+12 MATK, +8 DEF, +3% Crit Damage",
         "stats": {
-            "Crit DMG%": 0.03
+            "Crit DMG%": 3,
+            "DEF": 8,
+            "MATK": 12
         },
         "conversions": []
     },
@@ -26684,7 +27231,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+12 MATK, +8 DEF, +3% Crit Damage",
         "stats": {
-            "Crit DMG%": 0.03
+            "Crit DMG%": 3,
+            "DEF": 8,
+            "MATK": 12
         },
         "conversions": []
     },
@@ -26705,8 +27254,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% MATK, +10% DEF, +2% Global Damage",
         "stats": {
-            "DEF%": 0.1,
-            "ATK%": 0.2
+            "DEF%": 10,
+            "Dmg%": 2,
+            "MATK%": 20
         },
         "conversions": []
     },
@@ -26727,7 +27277,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+12 MATK, +8 DEF, +3% Crit Damage",
         "stats": {
-            "Crit DMG%": 0.03
+            "Crit DMG%": 3,
+            "DEF": 8,
+            "MATK": 12
         },
         "conversions": []
     },
@@ -26748,7 +27300,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+12 MATK, +8 DEF, +3% Crit Damage",
         "stats": {
-            "Crit DMG%": 0.03
+            "Crit DMG%": 3,
+            "DEF": 8,
+            "MATK": 12
         },
         "conversions": []
     },
@@ -26769,8 +27323,10 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+50% MATK, +25% DEF, +30 MP, +2% Global Damage",
         "stats": {
-            "DEF%": 0.25,
-            "MATK%": 0.5
+            "DEF%": 25,
+            "MATK%": 50,
+            "Dmg%": 2,
+            "MP": 30
         },
         "conversions": []
     },
@@ -26791,8 +27347,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+12 ATK, +10 DEF",
         "stats": {
-            "Fire Res%": 0.5,
-            "Holy Res%": -0.5
+            "ATK": 12,
+            "DEF": 10
         },
         "conversions": []
     },
@@ -26812,7 +27368,10 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+12 ATK, +10 DEF",
-        "stats": {},
+        "stats": {
+            "ATK": 12,
+            "DEF": 10
+        },
         "conversions": []
     },
     "Devil 3": {
@@ -26831,7 +27390,10 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+12 ATK, +10 DEF",
-        "stats": {},
+        "stats": {
+            "ATK": 12,
+            "DEF": 10
+        },
         "conversions": []
     },
     "Fiend 1": {
@@ -26851,9 +27413,10 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20 ATK, +5% ATK, +10% DEF, +25% Crit Damage",
         "stats": {
-            "Crit DMG%": 0.25,
-            "DEF%": 0.1,
-            "ATK%": 0.05
+            "Crit DMG%": 25,
+            "DEF%": 10,
+            "ATK%": 5,
+            "ATK": 20
         },
         "conversions": []
     },
@@ -26873,7 +27436,10 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+12 ATK, +10 DEF",
-        "stats": {},
+        "stats": {
+            "ATK": 12,
+            "DEF": 10
+        },
         "conversions": []
     },
     "Fiend 3": {
@@ -26892,7 +27458,10 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+12 ATK, +10 DEF",
-        "stats": {},
+        "stats": {
+            "ATK": 12,
+            "DEF": 10
+        },
         "conversions": []
     },
     "Arch Devil 1": {
@@ -26912,11 +27481,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+25% ATK, 10% DEF, +25% Physical Damage",
         "stats": {
-            "DEF%": 0.1,
-            "ATK%": 0.25,
-            "Slash%": 0.25,
-            "Pierce%": 0.25,
-            "Blunt%": 0.25
+            "DEF%": 10,
+            "ATK%": 25
         },
         "conversions": []
     },
@@ -26936,7 +27502,10 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+12 ATK, +10 DEF",
-        "stats": {},
+        "stats": {
+            "ATK": 12,
+            "DEF": 10
+        },
         "conversions": []
     },
     "Arch Devil 3": {
@@ -26955,7 +27524,10 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+12 ATK, +10 DEF",
-        "stats": {},
+        "stats": {
+            "ATK": 12,
+            "DEF": 10
+        },
         "conversions": []
     },
     "Evil Lord 1": {
@@ -26975,9 +27547,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+25% ATK, 10% DEF, +30% Crit Damage",
         "stats": {
-            "Crit DMG%": 0.3,
-            "DEF%": 0.1,
-            "ATK%": 0.25
+            "Crit DMG%": 30,
+            "DEF%": 10,
+            "ATK%": 25
         },
         "conversions": []
     },
@@ -26997,7 +27569,10 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+12 ATK, +10 DEF",
-        "stats": {},
+        "stats": {
+            "ATK": 12,
+            "DEF": 10
+        },
         "conversions": []
     },
     "Evil Lord 3": {
@@ -27016,7 +27591,10 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+12 ATK, +10 DEF",
-        "stats": {},
+        "stats": {
+            "ATK": 12,
+            "DEF": 10
+        },
         "conversions": []
     },
     "Aspect of Evil": {
@@ -27036,8 +27614,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+60% ATK, +40% DEF, +10% Physical Penetration",
         "stats": {
-            "DEF%": 0.4,
-            "ATK%": 0.6
+            "DEF%": 40,
+            "ATK%": 60,
+            "Phys Pen%": 10
         },
         "conversions": []
     },
@@ -27058,8 +27637,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+12 MATK, +10 DEF",
         "stats": {
-            "Fire Res%": 0.5,
-            "Holy Res%": -0.5
+            "DEF": 10,
+            "MATK": 12
         },
         "conversions": []
     },
@@ -27079,7 +27658,10 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+12 MATK, +10 DEF",
-        "stats": {},
+        "stats": {
+            "DEF": 10,
+            "MATK": 12
+        },
         "conversions": []
     },
     "Imp 3": {
@@ -27098,7 +27680,10 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+12 MATK, +10 DEF",
-        "stats": {},
+        "stats": {
+            "DEF": 10,
+            "MATK": 12
+        },
         "conversions": []
     },
     "Daemon 1": {
@@ -27118,8 +27703,11 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20 MATK, +5% MATK, +10 DEF, +10% Fire Damage, +5% Void Damage",
         "stats": {
-            "Fire%": 0.1,
-            "Void%": 0.05
+            "Fire%": 10,
+            "Void%": 5,
+            "DEF": 10,
+            "MATK": 20,
+            "MATK%": 5
         },
         "conversions": []
     },
@@ -27139,7 +27727,10 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+12 MATK, +10 DEF",
-        "stats": {},
+        "stats": {
+            "DEF": 10,
+            "MATK": 12
+        },
         "conversions": []
     },
     "Daemon 3": {
@@ -27158,7 +27749,10 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+12 MATK, +10 DEF",
-        "stats": {},
+        "stats": {
+            "DEF": 10,
+            "MATK": 12
+        },
         "conversions": []
     },
     "Arch Demon 1": {
@@ -27178,7 +27772,10 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+25% MATK, +10% DEF, +10 MP, +20% Crit Damage",
         "stats": {
-            "Crit DMG%": 0.2
+            "Crit DMG%": 20,
+            "DEF%": 10,
+            "MATK%": 25,
+            "MP": 10
         },
         "conversions": []
     },
@@ -27198,7 +27795,10 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+12 MATK, +10 DEF",
-        "stats": {},
+        "stats": {
+            "DEF": 10,
+            "MATK": 12
+        },
         "conversions": []
     },
     "Arch Demon 3": {
@@ -27217,7 +27817,10 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+12 MATK, +10 DEF",
-        "stats": {},
+        "stats": {
+            "DEF": 10,
+            "MATK": 12
+        },
         "conversions": []
     },
     "Demon King 1": {
@@ -27237,8 +27840,11 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+25% MATK, +10% DEF, +10 MP, +15% Fire Damage, +10% Void Damage",
         "stats": {
-            "Fire%": 0.15,
-            "Void%": 0.1
+            "Fire%": 15,
+            "Void%": 10,
+            "DEF%": 10,
+            "MATK%": 25,
+            "MP": 10
         },
         "conversions": []
     },
@@ -27258,7 +27864,10 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+12 MATK, +10 DEF",
-        "stats": {},
+        "stats": {
+            "DEF": 10,
+            "MATK": 12
+        },
         "conversions": []
     },
     "Demon King 3": {
@@ -27277,7 +27886,10 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+12 MATK, +10 DEF",
-        "stats": {},
+        "stats": {
+            "DEF": 10,
+            "MATK": 12
+        },
         "conversions": []
     },
     "Lord of Hell": {
@@ -27297,10 +27909,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+60% MATK, +40% DEF, +30 MP, +5% Fire and Void Penetration",
         "stats": {
-            "DEF%": 0.4,
-            "MATK%": 0.6,
-            "Fire Pen%": 0.05,
-            "Void Pen%": 0.05
+            "DEF%": 40,
+            "MATK%": 60,
+            "MP": 30
         },
         "conversions": []
     },
@@ -27321,8 +27932,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+8 ATK, +8 MATK, +8 HEAL",
         "stats": {
-            "Neg Res%": -0.5,
-            "Holy Res%": 0.5
+            "ATK": 8,
+            "HEAL": 8,
+            "MATK": 8
         },
         "conversions": []
     },
@@ -27342,7 +27954,11 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+8 ATK, +8 MATK, +8 HEAL",
-        "stats": {},
+        "stats": {
+            "ATK": 8,
+            "HEAL": 8,
+            "MATK": 8
+        },
         "conversions": []
     },
     "Angel 3": {
@@ -27361,7 +27977,11 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+8 ATK, +8 MATK, +8 HEAL",
-        "stats": {},
+        "stats": {
+            "ATK": 8,
+            "HEAL": 8,
+            "MATK": 8
+        },
         "conversions": []
     },
     "Archangel 1": {
@@ -27381,8 +28001,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20 Heal, +8% MATK, +8% Heal",
         "stats": {
-            "MATK%": 0.08,
-            "HEAL%": 0.08
+            "MATK%": 8,
+            "HEAL%": 8,
+            "HEAL": 20
         },
         "conversions": []
     },
@@ -27402,7 +28023,11 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+8 ATK, +8 MATK, +8 HEAL",
-        "stats": {},
+        "stats": {
+            "ATK": 8,
+            "HEAL": 8,
+            "MATK": 8
+        },
         "conversions": []
     },
     "Archangel 3": {
@@ -27421,7 +28046,11 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+8 ATK, +8 MATK, +8 HEAL",
-        "stats": {},
+        "stats": {
+            "ATK": 8,
+            "HEAL": 8,
+            "MATK": 8
+        },
         "conversions": []
     },
     "Dominion 1": {
@@ -27441,9 +28070,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% MATK, +35% ATK, +15% Holy Resist",
         "stats": {
-            "ATK%": 0.35,
-            "MATK%": 0.2,
-            "Holy Res%": 0.15
+            "ATK%": 35,
+            "MATK%": 20,
+            "Holy Res%": 15
         },
         "conversions": []
     },
@@ -27463,7 +28092,11 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+8 ATK, +8 MATK, +8 HEAL",
-        "stats": {},
+        "stats": {
+            "ATK": 8,
+            "HEAL": 8,
+            "MATK": 8
+        },
         "conversions": []
     },
     "Dominion 3": {
@@ -27482,7 +28115,11 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+8 ATK, +8 MATK, +8 HEAL",
-        "stats": {},
+        "stats": {
+            "ATK": 8,
+            "HEAL": 8,
+            "MATK": 8
+        },
         "conversions": []
     },
     "Virtues 1": {
@@ -27502,9 +28139,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+25% Heal, +10% Def, +15% Holy Resist",
         "stats": {
-            "DEF%": 0.1,
-            "HEAL%": 0.25,
-            "Holy Res%": 0.15
+            "DEF%": 10,
+            "HEAL%": 25,
+            "Holy Res%": 15
         },
         "conversions": []
     },
@@ -27524,7 +28161,10 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+15 Heal, +8 DEF",
-        "stats": {},
+        "stats": {
+            "DEF": 8,
+            "HEAL": 15
+        },
         "conversions": []
     },
     "Virtues 3": {
@@ -27543,7 +28183,10 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+15 Heal, +8 DEF",
-        "stats": {},
+        "stats": {
+            "DEF": 8,
+            "HEAL": 15
+        },
         "conversions": []
     },
     "Fallen Angel 1": {
@@ -27563,10 +28206,10 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+35% MATK, +55% ATK, +10% Void Damage, -100% Holy Resist",
         "stats": {
-            "ATK%": 0.55,
-            "MATK%": 0.35,
-            "Void%": 0.1,
-            "Holy Res%": -1.0
+            "ATK%": 55,
+            "MATK%": 35,
+            "Void%": 10,
+            "Holy Res%": -100
         },
         "conversions": []
     },
@@ -27586,7 +28229,10 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+10 MATK, +10 ATK",
-        "stats": {},
+        "stats": {
+            "ATK": 10,
+            "MATK": 10
+        },
         "conversions": []
     },
     "Fallen Angel 3": {
@@ -27605,7 +28251,10 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+10 MATK, +10 ATK",
-        "stats": {},
+        "stats": {
+            "ATK": 10,
+            "MATK": 10
+        },
         "conversions": []
     },
     "Thrones 1": {
@@ -27625,9 +28274,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% MATK, +35% ATK, +25% Holy Damage",
         "stats": {
-            "ATK%": 0.35,
-            "MATK%": 0.2,
-            "Holy%": 0.25
+            "ATK%": 35,
+            "MATK%": 20,
+            "Holy%": 25
         },
         "conversions": []
     },
@@ -27647,7 +28296,11 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+8 ATK, +8 MATK, +8 HEAL",
-        "stats": {},
+        "stats": {
+            "ATK": 8,
+            "HEAL": 8,
+            "MATK": 8
+        },
         "conversions": []
     },
     "Thrones 3": {
@@ -27666,7 +28319,11 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+8 ATK, +8 MATK, +8 HEAL",
-        "stats": {},
+        "stats": {
+            "ATK": 8,
+            "HEAL": 8,
+            "MATK": 8
+        },
         "conversions": []
     },
     "Cherubrim": {
@@ -27686,9 +28343,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+50% ATK, +50% MATK, +10% Holy Penetration",
         "stats": {
-            "ATK%": 0.5,
-            "MATK%": 0.5,
-            "Holy Pen%": 0.1
+            "ATK%": 50,
+            "MATK%": 50,
+            "Holy Pen%": 10
         },
         "conversions": []
     },
@@ -27709,9 +28366,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+25% Heal, +10% Def, +25% Holy Damage",
         "stats": {
-            "DEF%": 0.1,
-            "HEAL%": 0.25,
-            "Holy%": 0.25
+            "DEF%": 10,
+            "HEAL%": 25,
+            "Holy%": 25
         },
         "conversions": []
     },
@@ -27731,7 +28388,10 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+15 Heal, +8 DEF",
-        "stats": {},
+        "stats": {
+            "DEF": 8,
+            "HEAL": 15
+        },
         "conversions": []
     },
     "Seraph 3": {
@@ -27750,7 +28410,10 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+15 Heal, +8 DEF",
-        "stats": {},
+        "stats": {
+            "DEF": 8,
+            "HEAL": 15
+        },
         "conversions": []
     },
     "Empyrean": {
@@ -27770,9 +28433,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+50% Heal, + 25% DEF, +5% Holy Penetration",
         "stats": {
-            "DEF%": 0.25,
-            "HEAL%": 0.5,
-            "Holy Pen%": 0.05
+            "DEF%": 25,
+            "HEAL%": 50,
+            "Holy Pen%": 5
         },
         "conversions": []
     },
@@ -27793,10 +28456,10 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+35% MATK, +55% ATK, +15% Void Damage, +100% Negative Resist",
         "stats": {
-            "ATK%": 0.55,
-            "MATK%": 0.35,
-            "Void%": 0.15,
-            "Neg Res%": 1.0
+            "ATK%": 55,
+            "MATK%": 35,
+            "Void%": 15,
+            "Neg Res%": 100
         },
         "conversions": []
     },
@@ -27816,7 +28479,10 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+10 MATK, +10 ATK",
-        "stats": {},
+        "stats": {
+            "ATK": 10,
+            "MATK": 10
+        },
         "conversions": []
     },
     "Sin Lord 3": {
@@ -27835,7 +28501,10 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+10 MATK, +10 ATK",
-        "stats": {},
+        "stats": {
+            "ATK": 10,
+            "MATK": 10
+        },
         "conversions": []
     },
     "Lucifer": {
@@ -27855,10 +28524,10 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+55% MATK, +55% ATK, +20% Void Damage, +5% Void Penetration",
         "stats": {
-            "ATK%": 0.55,
-            "MATK%": 0.55,
-            "Void%": 0.2,
-            "Void Pen%": 0.05
+            "ATK%": 55,
+            "MATK%": 55,
+            "Void%": 20,
+            "Void Pen%": 5
         },
         "conversions": []
     },
@@ -27879,11 +28548,10 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+14 ATK, +25 HP, +5% ATK, +5% DEF",
         "stats": {
-            "DEF%": 0.05,
-            "ATK%": 0.05,
-            "Fire Res%": -0.25,
-            "Neg Res%": 0.5,
-            "Holy Res%": -0.5
+            "DEF%": 5,
+            "ATK%": 5,
+            "ATK": 14,
+            "HP": 25
         },
         "conversions": []
     },
@@ -27903,7 +28571,10 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+14 ATK, +25 HP",
-        "stats": {},
+        "stats": {
+            "ATK": 14,
+            "HP": 25
+        },
         "conversions": []
     },
     "Lesser Vampire 3": {
@@ -27922,7 +28593,10 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+14 ATK, +25 HP",
-        "stats": {},
+        "stats": {
+            "ATK": 14,
+            "HP": 25
+        },
         "conversions": []
     },
     "Vampire 1": {
@@ -27942,9 +28616,10 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10% ATK, +5% DEF, +60 HP, +4% Crit Chance",
         "stats": {
-            "Crit Chance%": 0.04,
-            "DEF%": 0.05,
-            "ATK%": 0.1
+            "Crit Chance%": 4,
+            "DEF%": 5,
+            "ATK%": 10,
+            "HP": 60
         },
         "conversions": []
     },
@@ -27965,7 +28640,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+14 ATK, +50 HP, +4% Crit Damage",
         "stats": {
-            "Crit DMG%": 0.04
+            "Crit DMG%": 4,
+            "ATK": 14,
+            "HP": 50
         },
         "conversions": []
     },
@@ -27986,7 +28663,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+14 ATK, +50 HP, +4% Crit Damage",
         "stats": {
-            "Crit DMG%": 0.04
+            "Crit DMG%": 4,
+            "ATK": 14,
+            "HP": 50
         },
         "conversions": []
     },
@@ -28007,10 +28686,10 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+25% ATK, +15% DEF, +25% Water Resist, +4% Crit Chance",
         "stats": {
-            "Crit Chance%": 0.04,
-            "DEF%": 0.15,
-            "ATK%": 0.25,
-            "Water Res%": 0.25
+            "Crit Chance%": 4,
+            "DEF%": 15,
+            "ATK%": 25,
+            "Water Res%": 25
         },
         "conversions": []
     },
@@ -28031,7 +28710,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+14 ATK, +150 HP, +4% Crit Damage",
         "stats": {
-            "Crit DMG%": 0.04
+            "Crit DMG%": 4,
+            "ATK": 14,
+            "HP": 150
         },
         "conversions": []
     },
@@ -28052,7 +28733,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+14 ATK, +150 HP, +4% Crit Damage",
         "stats": {
-            "Crit DMG%": 0.04
+            "Crit DMG%": 4,
+            "ATK": 14,
+            "HP": 150
         },
         "conversions": []
     },
@@ -28073,10 +28756,10 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+25% ATK, +20% DEF, +4% Negative Resist, +4% Crit Chance",
         "stats": {
-            "Crit Chance%": 0.04,
-            "DEF%": 0.2,
-            "ATK%": 0.25,
-            "Neg Res%": 0.04
+            "Crit Chance%": 4,
+            "DEF%": 20,
+            "ATK%": 25,
+            "Neg Res%": 4
         },
         "conversions": []
     },
@@ -28097,8 +28780,10 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+14 ATK, +300 HP, +3% Negative Resist, +4% Crit Damage",
         "stats": {
-            "Crit DMG%": 0.04,
-            "Neg Res%": 0.03
+            "Crit DMG%": 4,
+            "Neg Res%": 3,
+            "ATK": 14,
+            "HP": 300
         },
         "conversions": []
     },
@@ -28119,8 +28804,10 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+14 ATK, +300 HP, +3% Negative Resist, +4% Crit Damage",
         "stats": {
-            "Crit DMG%": 0.04,
-            "Neg Res%": 0.03
+            "Crit DMG%": 4,
+            "Neg Res%": 3,
+            "ATK": 14,
+            "HP": 300
         },
         "conversions": []
     },
@@ -28141,8 +28828,10 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+60% ATK, +2.5% HP Regen, +1500 HP, +4% Crit Chance",
         "stats": {
-            "Crit Chance%": 0.04,
-            "ATK%": 0.6
+            "Crit Chance%": 4,
+            "ATK%": 60,
+            "HP": 1500,
+            "HP Regen%": 2.5
         },
         "conversions": []
     },
@@ -28163,11 +28852,11 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10 ATK, +10 DEF, +2% Crit Damage, +5% ATK, +5% DEF",
         "stats": {
-            "Crit DMG%": 0.02,
-            "DEF%": 0.05,
-            "ATK%": 0.05,
-            "Fire Res%": -0.1,
-            "Toxic Res%": 0.1
+            "Crit DMG%": 2,
+            "DEF%": 5,
+            "ATK%": 5,
+            "ATK": 10,
+            "DEF": 10
         },
         "conversions": []
     },
@@ -28188,7 +28877,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10 ATK, +10 DEF, +2% Crit Damage",
         "stats": {
-            "Crit DMG%": 0.02
+            "Crit DMG%": 2,
+            "ATK": 10,
+            "DEF": 10
         },
         "conversions": []
     },
@@ -28209,7 +28900,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10 ATK, +10 DEF, +2% Crit Damage",
         "stats": {
-            "Crit DMG%": 0.02
+            "Crit DMG%": 2,
+            "ATK": 10,
+            "DEF": 10
         },
         "conversions": []
     },
@@ -28230,11 +28923,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+5% ATK, +7% DEF, +20 DEF, +10% Physical Damage",
         "stats": {
-            "DEF%": 0.07,
-            "ATK%": 0.05,
-            "Slash%": 0.1,
-            "Pierce%": 0.1,
-            "Blunt%": 0.1
+            "DEF%": 7,
+            "ATK%": 5,
+            "DEF": 20
         },
         "conversions": []
     },
@@ -28255,7 +28946,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10 ATK, +10 DEF, +2% Crit Damage",
         "stats": {
-            "Crit DMG%": 0.02
+            "Crit DMG%": 2,
+            "ATK": 10,
+            "DEF": 10
         },
         "conversions": []
     },
@@ -28276,7 +28969,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10 ATK, +10 DEF, +2% Crit Damage",
         "stats": {
-            "Crit DMG%": 0.02
+            "Crit DMG%": 2,
+            "ATK": 10,
+            "DEF": 10
         },
         "conversions": []
     },
@@ -28297,12 +28992,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15% ATK, +15% DEF, +25% Earth Resist. +15% Physical Damage",
         "stats": {
-            "DEF%": 0.15,
-            "ATK%": 0.15,
-            "Slash%": 0.15,
-            "Pierce%": 0.15,
-            "Blunt%": 0.15,
-            "Earth Res%": 0.25
+            "DEF%": 15,
+            "ATK%": 15,
+            "Earth Res%": 25
         },
         "conversions": []
     },
@@ -28323,7 +29015,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10 ATK, +10 DEF, +2% Crit Damage",
         "stats": {
-            "Crit DMG%": 0.02
+            "Crit DMG%": 2,
+            "ATK": 10,
+            "DEF": 10
         },
         "conversions": []
     },
@@ -28344,7 +29038,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10 ATK, +10 DEF, +2% Crit Damage",
         "stats": {
-            "Crit DMG%": 0.02
+            "Crit DMG%": 2,
+            "ATK": 10,
+            "DEF": 10
         },
         "conversions": []
     },
@@ -28365,11 +29061,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15% ATK, +15% DEF, +15% Physical Damage",
         "stats": {
-            "DEF%": 0.15,
-            "ATK%": 0.15,
-            "Slash%": 0.15,
-            "Pierce%": 0.15,
-            "Blunt%": 0.15
+            "DEF%": 15,
+            "ATK%": 15
         },
         "conversions": []
     },
@@ -28390,7 +29083,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10 ATK, +10 DEF, +2% Crit Damage",
         "stats": {
-            "Crit DMG%": 0.02
+            "Crit DMG%": 2,
+            "ATK": 10,
+            "DEF": 10
         },
         "conversions": []
     },
@@ -28411,7 +29106,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10 ATK, +10 DEF, +2% Crit Damage",
         "stats": {
-            "Crit DMG%": 0.02
+            "Crit DMG%": 2,
+            "ATK": 10,
+            "DEF": 10
         },
         "conversions": []
     },
@@ -28432,12 +29129,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+35% ATK, +45% DEF, +40% Crit Damage, +20% Physical Damage",
         "stats": {
-            "Crit DMG%": 0.4,
-            "DEF%": 0.45,
-            "ATK%": 0.35,
-            "Slash%": 0.2,
-            "Pierce%": 0.2,
-            "Blunt%": 0.2
+            "Crit DMG%": 40,
+            "DEF%": 45,
+            "ATK%": 35
         },
         "conversions": []
     },
@@ -28458,8 +29152,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+40 MATK, +10% Toxic Damage, +5% Crit Damage",
         "stats": {
-            "Crit DMG%": 0.05,
-            "Toxic%": 0.1
+            "Crit DMG%": 5,
+            "Toxic%": 10,
+            "MATK": 40
         },
         "conversions": []
     },
@@ -28480,8 +29175,10 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+12 MATK, +10 DEF, +2% Crit Damage, +5% Toxic Damage",
         "stats": {
-            "Crit DMG%": 0.02,
-            "Toxic%": 0.05
+            "Crit DMG%": 2,
+            "Toxic%": 5,
+            "DEF": 10,
+            "MATK": 12
         },
         "conversions": []
     },
@@ -28502,8 +29199,10 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+12 MATK, +10 DEF, +2% Crit Damage, +5% Toxic Damage",
         "stats": {
-            "Crit DMG%": 0.02,
-            "Toxic%": 0.05
+            "Crit DMG%": 2,
+            "Toxic%": 5,
+            "DEF": 10,
+            "MATK": 12
         },
         "conversions": []
     },
@@ -28524,8 +29223,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% MATK, +15% Toxic Damage, +10% Crit Damage",
         "stats": {
-            "Crit DMG%": 0.1,
-            "Toxic%": 0.15
+            "Crit DMG%": 10,
+            "Toxic%": 15,
+            "MATK%": 20
         },
         "conversions": []
     },
@@ -28546,8 +29246,10 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+12 MATK, +10 DEF, +2% Crit Damage, +5% Toxic Damage",
         "stats": {
-            "Crit DMG%": 0.02,
-            "Toxic%": 0.05
+            "Crit DMG%": 2,
+            "Toxic%": 5,
+            "DEF": 10,
+            "MATK": 12
         },
         "conversions": []
     },
@@ -28568,8 +29270,10 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+12 MATK, +10 DEF, +2% Crit Damage, +5% Toxic Damage",
         "stats": {
-            "Crit DMG%": 0.02,
-            "Toxic%": 0.05
+            "Crit DMG%": 2,
+            "Toxic%": 5,
+            "DEF": 10,
+            "MATK": 12
         },
         "conversions": []
     },
@@ -28590,8 +29294,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% MATK, +15% Toxic Damage, +20% Crit Damage",
         "stats": {
-            "Crit DMG%": 0.2,
-            "Toxic%": 0.15
+            "Crit DMG%": 20,
+            "Toxic%": 15,
+            "MATK%": 20
         },
         "conversions": []
     },
@@ -28612,8 +29317,10 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+12 MATK, +10 DEF, +2% Crit Damage, +5% Toxic Damage",
         "stats": {
-            "Crit DMG%": 0.02,
-            "Toxic%": 0.05
+            "Crit DMG%": 2,
+            "Toxic%": 5,
+            "DEF": 10,
+            "MATK": 12
         },
         "conversions": []
     },
@@ -28634,8 +29341,10 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+12 MATK, +10 DEF, +2% Crit Damage, +5% Toxic Damage",
         "stats": {
-            "Crit DMG%": 0.02,
-            "Toxic%": 0.05
+            "Crit DMG%": 2,
+            "Toxic%": 5,
+            "DEF": 10,
+            "MATK": 12
         },
         "conversions": []
     },
@@ -28656,8 +29365,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+40% MATK, +25% Toxic Damage, +10% Toxic Penetration",
         "stats": {
-            "Toxic%": 0.25,
-            "Toxic Pen%": 0.1
+            "Toxic%": 25,
+            "Toxic Pen%": 10,
+            "MATK%": 40
         },
         "conversions": []
     },
@@ -28678,11 +29388,14 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10 ATK, +40 HP, +1% Global Max Health, +10% ATK, +5% DEF, -5% MATK, -5% Heal, +25 HP, -5% Crit Chance",
         "stats": {
-            "Crit Chance%": -0.05,
-            "DEF%": 0.05,
-            "ATK%": 0.1,
-            "MATK%": -0.05,
-            "HEAL%": -0.05
+            "Crit Chance%": -5,
+            "DEF%": 5,
+            "ATK%": 10,
+            "MATK%": -5,
+            "HEAL%": -5,
+            "ATK": 10,
+            "HP": 65,
+            "HP%": 1
         },
         "conversions": []
     },
@@ -28702,7 +29415,11 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+10 ATK, +40 HP, +1% Global Max Health",
-        "stats": {},
+        "stats": {
+            "ATK": 10,
+            "HP": 40,
+            "HP%": 1
+        },
         "conversions": []
     },
     "Ogre 3": {
@@ -28721,7 +29438,11 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+10 ATK, +40 HP, +1% Global Max Health",
-        "stats": {},
+        "stats": {
+            "ATK": 10,
+            "HP": 40,
+            "HP%": 1
+        },
         "conversions": []
     },
     "High Ogre 1": {
@@ -28741,8 +29462,10 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+5% ATK, +7% DEF, +80 HP, +2% Global Max Health",
         "stats": {
-            "DEF%": 0.07,
-            "ATK%": 0.05
+            "DEF%": 7,
+            "ATK%": 5,
+            "HP": 80,
+            "HP%": 2
         },
         "conversions": []
     },
@@ -28762,7 +29485,11 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+10 ATK, +80 HP, +1% Global Max Health",
-        "stats": {},
+        "stats": {
+            "ATK": 10,
+            "HP": 80,
+            "HP%": 1
+        },
         "conversions": []
     },
     "High Ogre 3": {
@@ -28781,7 +29508,11 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+10 ATK, +80 HP, +1% Global Max Health",
-        "stats": {},
+        "stats": {
+            "ATK": 10,
+            "HP": 80,
+            "HP%": 1
+        },
         "conversions": []
     },
     "Ogre Lord 1": {
@@ -28801,8 +29532,10 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% ATK, +15% DEF, +200 HP, +3% Global Max Health",
         "stats": {
-            "DEF%": 0.15,
-            "ATK%": 0.2
+            "DEF%": 15,
+            "ATK%": 20,
+            "HP": 200,
+            "HP%": 3
         },
         "conversions": []
     },
@@ -28822,7 +29555,11 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+10 ATK, +200 HP, +1% Global Max Health",
-        "stats": {},
+        "stats": {
+            "ATK": 10,
+            "HP": 200,
+            "HP%": 1
+        },
         "conversions": []
     },
     "Ogre Lord 3": {
@@ -28841,7 +29578,11 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+10 ATK, +200 HP, +1% Global Max Health",
-        "stats": {},
+        "stats": {
+            "ATK": 10,
+            "HP": 200,
+            "HP%": 1
+        },
         "conversions": []
     },
     "Ogre Emperor 1": {
@@ -28861,8 +29602,10 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% ATK, +15% DEF, +750 HP, +3% Global Max Health",
         "stats": {
-            "DEF%": 0.15,
-            "ATK%": 0.2
+            "DEF%": 15,
+            "ATK%": 20,
+            "HP": 750,
+            "HP%": 3
         },
         "conversions": []
     },
@@ -28882,7 +29625,11 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+10 ATK, +400 HP, +1% Global Max Health",
-        "stats": {},
+        "stats": {
+            "ATK": 10,
+            "HP": 400,
+            "HP%": 1
+        },
         "conversions": []
     },
     "Ogre Emperor 3": {
@@ -28901,7 +29648,11 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+10 ATK, +400 HP, +1% Global Max Health",
-        "stats": {},
+        "stats": {
+            "ATK": 10,
+            "HP": 400,
+            "HP%": 1
+        },
         "conversions": []
     },
     "Ogre Deity": {
@@ -28921,8 +29672,10 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+40% ATK, +2250 HP, +15% Threat Bonus, +3% Global Max Health",
         "stats": {
-            "ATK%": 0.4,
-            "Threat%": 0.15
+            "ATK%": 40,
+            "HP": 2250,
+            "HP%": 3,
+            "Threat%": 15
         },
         "conversions": []
     },
@@ -28943,12 +29696,12 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+80 HP, +10% ATK, +10% DEF, -5% MATK, -5% Heal, +0.3% HP Regen",
         "stats": {
-            "DEF%": 0.1,
-            "ATK%": 0.1,
-            "MATK%": -0.05,
-            "HEAL%": -0.05,
-            "Fire Res%": -0.25,
-            "Toxic Res%": -0.25
+            "DEF%": 10,
+            "ATK%": 10,
+            "MATK%": -5,
+            "HEAL%": -5,
+            "HP": 80,
+            "HP Regen%": 0.3
         },
         "conversions": []
     },
@@ -28968,7 +29721,10 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+80 HP, +0.3% HP Regen",
-        "stats": {},
+        "stats": {
+            "HP": 80,
+            "HP Regen%": 0.3
+        },
         "conversions": []
     },
     "Troll 3": {
@@ -28987,7 +29743,10 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+80 HP, +0.3% HP Regen",
-        "stats": {},
+        "stats": {
+            "HP": 80,
+            "HP Regen%": 0.3
+        },
         "conversions": []
     },
     "High Troll 1": {
@@ -29007,7 +29766,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15 ATK, +10% DEF, +140 HP",
         "stats": {
-            "DEF%": 0.1
+            "DEF%": 10,
+            "ATK": 15,
+            "HP": 140
         },
         "conversions": []
     },
@@ -29027,7 +29788,10 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+110 HP, +0.3% Regen",
-        "stats": {},
+        "stats": {
+            "HP": 110,
+            "HP Regen%": 0.3
+        },
         "conversions": []
     },
     "High Troll 3": {
@@ -29046,7 +29810,10 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+110 HP, +0.3% Regen",
-        "stats": {},
+        "stats": {
+            "HP": 110,
+            "HP Regen%": 0.3
+        },
         "conversions": []
     },
     "Troll Lord 1": {
@@ -29066,8 +29833,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15% ATK, +15% DEF, +500 HP",
         "stats": {
-            "DEF%": 0.15,
-            "ATK%": 0.15
+            "DEF%": 15,
+            "ATK%": 15,
+            "HP": 500
         },
         "conversions": []
     },
@@ -29087,7 +29855,10 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+300 HP, +0.3% Regen",
-        "stats": {},
+        "stats": {
+            "HP": 300,
+            "HP Regen%": 0.3
+        },
         "conversions": []
     },
     "Troll Lord 3": {
@@ -29106,7 +29877,10 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+300 HP, +0.3% Regen",
-        "stats": {},
+        "stats": {
+            "HP": 300,
+            "HP Regen%": 0.3
+        },
         "conversions": []
     },
     "Troll Emperor 1": {
@@ -29126,8 +29900,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% ATK, +20% DEF, +1500 HP",
         "stats": {
-            "DEF%": 0.2,
-            "ATK%": 0.2
+            "DEF%": 20,
+            "ATK%": 20,
+            "HP": 1500
         },
         "conversions": []
     },
@@ -29147,7 +29922,10 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+500 HP, +0.3% HP Regen",
-        "stats": {},
+        "stats": {
+            "HP": 500,
+            "HP Regen%": 0.3
+        },
         "conversions": []
     },
     "Troll Emperor 3": {
@@ -29166,7 +29944,10 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+500 HP, +0.3% HP Regen",
-        "stats": {},
+        "stats": {
+            "HP": 500,
+            "HP Regen%": 0.3
+        },
         "conversions": []
     },
     "Troll Deity": {
@@ -29186,7 +29967,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+30% ATK, +3500 HP, +2.3% HP Regen",
         "stats": {
-            "ATK%": 0.3
+            "ATK%": 30,
+            "HP": 3500,
+            "HP Regen%": 2.3
         },
         "conversions": []
     },
@@ -29207,14 +29990,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10 ATK, +5% Slash/Blunt Damage, +10% ATK, -20% DEF",
         "stats": {
-            "DEF%": -0.2,
-            "ATK%": 0.1,
-            "Slash%": 0.05,
-            "Blunt%": 0.05,
-            "Slash Res%": 0.05,
-            "Pierce Res%": 0.05,
-            "Blunt Res%": 0.05,
-            "Lightning Res%": -0.25
+            "DEF%": -20,
+            "ATK%": 10,
+            "ATK": 10
         },
         "conversions": []
     },
@@ -29235,8 +30013,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10 ATK, +5% Slash/Blunt Damage",
         "stats": {
-            "Slash%": 0.05,
-            "Blunt%": 0.05
+            "ATK": 10
         },
         "conversions": []
     },
@@ -29257,8 +30034,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10 ATK, +5% Slash/Blunt Damage",
         "stats": {
-            "Slash%": 0.05,
-            "Blunt%": 0.05
+            "ATK": 10
         },
         "conversions": []
     },
@@ -29279,10 +30055,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15 ATK, +8% Slash/Blunt Damage, +4% Slash/Blunt Penetration",
         "stats": {
-            "Slash%": 0.08,
-            "Blunt%": 0.08,
-            "Slash Pen%": 0.04,
-            "Blunt Pen%": 0.04
+            "ATK": 15
         },
         "conversions": []
     },
@@ -29303,8 +30076,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10 ATK, +5% Slash/Blunt Damage",
         "stats": {
-            "Slash%": 0.05,
-            "Blunt%": 0.05
+            "ATK": 10
         },
         "conversions": []
     },
@@ -29325,8 +30097,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10 ATK, +5% Slash/Blunt Damage",
         "stats": {
-            "Slash%": 0.05,
-            "Blunt%": 0.05
+            "ATK": 10
         },
         "conversions": []
     },
@@ -29347,10 +30118,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+35% ATK, +10% DEF, +20% Slash/Blunt Damage",
         "stats": {
-            "DEF%": 0.1,
-            "ATK%": 0.35,
-            "Slash%": 0.2,
-            "Blunt%": 0.2
+            "DEF%": 10,
+            "ATK%": 35
         },
         "conversions": []
     },
@@ -29371,8 +30140,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10 ATK, +5% Slash/Blunt Damage",
         "stats": {
-            "Slash%": 0.05,
-            "Blunt%": 0.05
+            "ATK": 10
         },
         "conversions": []
     },
@@ -29393,8 +30161,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10 ATK, +5% Slash/Blunt Damage",
         "stats": {
-            "Slash%": 0.05,
-            "Blunt%": 0.05
+            "ATK": 10
         },
         "conversions": []
     },
@@ -29415,10 +30182,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+35% ATK, +10% DEF, +6% Slash/Blunt Penetration",
         "stats": {
-            "DEF%": 0.1,
-            "ATK%": 0.35,
-            "Slash Pen%": 0.06,
-            "Blunt Pen%": 0.06
+            "DEF%": 10,
+            "ATK%": 35
         },
         "conversions": []
     },
@@ -29439,8 +30204,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10 ATK, +5% Slash/Blunt Damage",
         "stats": {
-            "Slash%": 0.05,
-            "Blunt%": 0.05
+            "ATK": 10
         },
         "conversions": []
     },
@@ -29461,8 +30225,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10 ATK, +5% Slash/Blunt Damage",
         "stats": {
-            "Slash%": 0.05,
-            "Blunt%": 0.05
+            "ATK": 10
         },
         "conversions": []
     },
@@ -29483,9 +30246,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+30% ATK, +12% Slash/Blunt Penetration",
         "stats": {
-            "ATK%": 0.3,
-            "Slash Pen%": 0.12,
-            "Blunt Pen%": 0.12
+            "ATK%": 30
         },
         "conversions": []
     },
@@ -29506,10 +30267,13 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+8 ATK, +8 DEF, +20 HP, +5% ATK, +5% DEF, -5% MATK, -5% Heal",
         "stats": {
-            "DEF%": 0.05,
-            "ATK%": 0.05,
-            "MATK%": -0.05,
-            "HEAL%": -0.05
+            "DEF%": 5,
+            "ATK%": 5,
+            "MATK%": -5,
+            "HEAL%": -5,
+            "ATK": 8,
+            "DEF": 8,
+            "HP": 20
         },
         "conversions": []
     },
@@ -29529,7 +30293,11 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+8 ATK, +8 DEF, +20 HP",
-        "stats": {},
+        "stats": {
+            "ATK": 8,
+            "DEF": 8,
+            "HP": 20
+        },
         "conversions": []
     },
     "Minotaur 3": {
@@ -29548,7 +30316,11 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+8 ATK, +8 DEF, +20 HP",
-        "stats": {},
+        "stats": {
+            "ATK": 8,
+            "DEF": 8,
+            "HP": 20
+        },
         "conversions": []
     },
     "High Minotaur 1": {
@@ -29568,9 +30340,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10% ATK, +10% DEF, +10% Threat Gain",
         "stats": {
-            "DEF%": 0.1,
-            "ATK%": 0.1,
-            "Threat%": 0.1
+            "DEF%": 10,
+            "ATK%": 10
         },
         "conversions": []
     },
@@ -29590,7 +30361,11 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+8 ATK, +8 DEF, +65 HP",
-        "stats": {},
+        "stats": {
+            "ATK": 8,
+            "DEF": 8,
+            "HP": 65
+        },
         "conversions": []
     },
     "High Minotaur 3": {
@@ -29609,7 +30384,11 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+8 ATK, +8 DEF, +65 HP",
-        "stats": {},
+        "stats": {
+            "ATK": 8,
+            "DEF": 8,
+            "HP": 65
+        },
         "conversions": []
     },
     "Minotaur Lord 1": {
@@ -29629,9 +30408,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% ATK, +20% DEF, +10% Threat Gain",
         "stats": {
-            "DEF%": 0.2,
-            "ATK%": 0.2,
-            "Threat%": 0.1
+            "DEF%": 20,
+            "ATK%": 20
         },
         "conversions": []
     },
@@ -29651,7 +30429,11 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+8 ATK, +8 DEF, +150 HP",
-        "stats": {},
+        "stats": {
+            "ATK": 8,
+            "DEF": 8,
+            "HP": 150
+        },
         "conversions": []
     },
     "Minotaur Lord 3": {
@@ -29670,7 +30452,11 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+8 ATK, +8 DEF, +150 HP",
-        "stats": {},
+        "stats": {
+            "ATK": 8,
+            "DEF": 8,
+            "HP": 150
+        },
         "conversions": []
     },
     "Minotaur Emperor 1": {
@@ -29690,9 +30476,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+25% ATK, +25% DEF, +15% Threat Gain",
         "stats": {
-            "DEF%": 0.25,
-            "ATK%": 0.25,
-            "Threat%": 0.15
+            "DEF%": 25,
+            "ATK%": 25
         },
         "conversions": []
     },
@@ -29712,7 +30497,11 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+8 ATK, +8 DEF, +220 HP",
-        "stats": {},
+        "stats": {
+            "ATK": 8,
+            "DEF": 8,
+            "HP": 220
+        },
         "conversions": []
     },
     "Minotaur Emperor 3": {
@@ -29731,7 +30520,11 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+8 ATK, +8 DEF, +220 HP",
-        "stats": {},
+        "stats": {
+            "ATK": 8,
+            "DEF": 8,
+            "HP": 220
+        },
         "conversions": []
     },
     "Minotaur Deity": {
@@ -29751,9 +30544,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+40% ATK, +60% DEF, +20% Threat Gain",
         "stats": {
-            "DEF%": 0.6,
-            "ATK%": 0.4,
-            "Threat%": 0.2
+            "DEF%": 60,
+            "ATK%": 40
         },
         "conversions": []
     },
@@ -29774,9 +30566,10 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15 ATK, +10% ATK, -10% DEF, +2% Crit Damage",
         "stats": {
-            "Crit DMG%": 0.02,
-            "DEF%": -0.1,
-            "ATK%": 0.1
+            "Crit DMG%": 2,
+            "DEF%": -10,
+            "ATK%": 10,
+            "ATK": 15
         },
         "conversions": []
     },
@@ -29797,7 +30590,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15 ATK, +2% Crit Damage",
         "stats": {
-            "Crit DMG%": 0.02
+            "Crit DMG%": 2,
+            "ATK": 15
         },
         "conversions": []
     },
@@ -29818,7 +30612,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15 ATK, +2% Crit Damage",
         "stats": {
-            "Crit DMG%": 0.02
+            "Crit DMG%": 2,
+            "ATK": 15
         },
         "conversions": []
     },
@@ -29839,8 +30634,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10% ATK, +10 ATK, +15% Crit Damage",
         "stats": {
-            "Crit DMG%": 0.15,
-            "ATK%": 0.1
+            "Crit DMG%": 15,
+            "ATK%": 10,
+            "ATK": 10
         },
         "conversions": []
     },
@@ -29861,7 +30657,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15 ATK, +2% Crit Damage",
         "stats": {
-            "Crit DMG%": 0.02
+            "Crit DMG%": 2,
+            "ATK": 15
         },
         "conversions": []
     },
@@ -29882,7 +30679,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15 ATK, +2% Crit Damage",
         "stats": {
-            "Crit DMG%": 0.02
+            "Crit DMG%": 2,
+            "ATK": 15
         },
         "conversions": []
     },
@@ -29903,8 +30701,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+25% ATK, +25% Crit Damage",
         "stats": {
-            "Crit DMG%": 0.25,
-            "ATK%": 0.25
+            "Crit DMG%": 25,
+            "ATK%": 25
         },
         "conversions": []
     },
@@ -29925,7 +30723,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15 ATK, +2% Crit Damage",
         "stats": {
-            "Crit DMG%": 0.02
+            "Crit DMG%": 2,
+            "ATK": 15
         },
         "conversions": []
     },
@@ -29946,7 +30745,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15 ATK, +2% Crit Damage",
         "stats": {
-            "Crit DMG%": 0.02
+            "Crit DMG%": 2,
+            "ATK": 15
         },
         "conversions": []
     },
@@ -29967,8 +30767,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+30% ATK, +40% Crit Damage",
         "stats": {
-            "Crit DMG%": 0.4,
-            "ATK%": 0.3
+            "Crit DMG%": 40,
+            "ATK%": 30
         },
         "conversions": []
     },
@@ -29989,7 +30789,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15 ATK, +2% Crit Damage",
         "stats": {
-            "Crit DMG%": 0.02
+            "Crit DMG%": 2,
+            "ATK": 15
         },
         "conversions": []
     },
@@ -30010,7 +30811,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15 ATK, +2% Crit Damage",
         "stats": {
-            "Crit DMG%": 0.02
+            "Crit DMG%": 2,
+            "ATK": 15
         },
         "conversions": []
     },
@@ -30031,8 +30833,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+40% ATK, +50% Crit Damage",
         "stats": {
-            "Crit DMG%": 0.5,
-            "ATK%": 0.4
+            "Crit DMG%": 50,
+            "ATK%": 40
         },
         "conversions": []
     },
@@ -30053,8 +30855,11 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10 ATK, +5 DEF, +5% ATK, -5% DEF, +10 HP",
         "stats": {
-            "DEF%": -0.05,
-            "ATK%": 0.05
+            "DEF%": -5,
+            "ATK%": 5,
+            "ATK": 10,
+            "DEF": 5,
+            "HP": 10
         },
         "conversions": []
     },
@@ -30074,7 +30879,11 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+10 ATK, +5 DEF, +10 HP",
-        "stats": {},
+        "stats": {
+            "ATK": 10,
+            "DEF": 5,
+            "HP": 10
+        },
         "conversions": []
     },
     "Goatman 3": {
@@ -30093,7 +30902,11 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+10 ATK, +5 DEF, +10 HP",
-        "stats": {},
+        "stats": {
+            "ATK": 10,
+            "DEF": 5,
+            "HP": 10
+        },
         "conversions": []
     },
     "High Goatman 1": {
@@ -30113,8 +30926,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10 ATK, +5% ATK, +5% DEF",
         "stats": {
-            "DEF%": 0.05,
-            "ATK%": 0.05
+            "DEF%": 5,
+            "ATK%": 5,
+            "ATK": 10
         },
         "conversions": []
     },
@@ -30134,7 +30948,11 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+10 ATK, +5 DEF, +30 HP",
-        "stats": {},
+        "stats": {
+            "ATK": 10,
+            "DEF": 5,
+            "HP": 30
+        },
         "conversions": []
     },
     "High Goatman 3": {
@@ -30153,7 +30971,11 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+10 ATK, +5 DEF, +30 HP",
-        "stats": {},
+        "stats": {
+            "ATK": 10,
+            "DEF": 5,
+            "HP": 30
+        },
         "conversions": []
     },
     "Goatman Lord 1": {
@@ -30173,9 +30995,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15% ATK, +25% DEF, +20% Crit Damage",
         "stats": {
-            "Crit DMG%": 0.2,
-            "DEF%": 0.25,
-            "ATK%": 0.15
+            "Crit DMG%": 20,
+            "DEF%": 25,
+            "ATK%": 15
         },
         "conversions": []
     },
@@ -30195,7 +31017,11 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+10 ATK, +5 DEF, +90 HP",
-        "stats": {},
+        "stats": {
+            "ATK": 10,
+            "DEF": 5,
+            "HP": 90
+        },
         "conversions": []
     },
     "Goatman Lord 3": {
@@ -30214,7 +31040,11 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+10 ATK, +5 DEF, +90 HP",
-        "stats": {},
+        "stats": {
+            "ATK": 10,
+            "DEF": 5,
+            "HP": 90
+        },
         "conversions": []
     },
     "Goatman Emperor 1": {
@@ -30234,9 +31064,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15% ATK, +25% DEF, +25% Crit Damage",
         "stats": {
-            "Crit DMG%": 0.25,
-            "DEF%": 0.25,
-            "ATK%": 0.15
+            "Crit DMG%": 25,
+            "DEF%": 25,
+            "ATK%": 15
         },
         "conversions": []
     },
@@ -30256,7 +31086,11 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+10 ATK, +5 DEF, +150 HP",
-        "stats": {},
+        "stats": {
+            "ATK": 10,
+            "DEF": 5,
+            "HP": 150
+        },
         "conversions": []
     },
     "Goatman Emperor 3": {
@@ -30275,7 +31109,11 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+10 ATK, +5 DEF, +150 HP",
-        "stats": {},
+        "stats": {
+            "ATK": 10,
+            "DEF": 5,
+            "HP": 150
+        },
         "conversions": []
     },
     "Goatman Deity": {
@@ -30295,9 +31133,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+45% ATK, +45% DEF, +30% Crit Damage",
         "stats": {
-            "Crit DMG%": 0.3,
-            "DEF%": 0.45,
-            "ATK%": 0.45
+            "Crit DMG%": 30,
+            "DEF%": 45,
+            "ATK%": 45
         },
         "conversions": []
     },
@@ -30318,11 +31156,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20 DEF, +10% DEF, -20% Crit Chance",
         "stats": {
-            "Crit Chance%": -0.2,
-            "DEF%": 0.1,
-            "Toxic Res%": 0.5,
-            "Neg Res%": 0.5,
-            "Holy Res%": 0.5
+            "Crit Chance%": -20,
+            "DEF%": 10,
+            "DEF": 20
         },
         "conversions": []
     },
@@ -30342,7 +31178,9 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+20 DEF",
-        "stats": {},
+        "stats": {
+            "DEF": 20
+        },
         "conversions": []
     },
     "Half-Golem 3": {
@@ -30361,7 +31199,9 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+20 DEF",
-        "stats": {},
+        "stats": {
+            "DEF": 20
+        },
         "conversions": []
     },
     "Iron Half-Golem 1": {
@@ -30381,8 +31221,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10 ATK, +10% DEF, +5% ATK",
         "stats": {
-            "DEF%": 0.1,
-            "ATK%": 0.05
+            "DEF%": 10,
+            "ATK%": 5,
+            "ATK": 10
         },
         "conversions": []
     },
@@ -30402,7 +31243,9 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+20 DEF",
-        "stats": {},
+        "stats": {
+            "DEF": 20
+        },
         "conversions": []
     },
     "Iron Half-Golem 3": {
@@ -30421,7 +31264,9 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+20 DEF",
-        "stats": {},
+        "stats": {
+            "DEF": 20
+        },
         "conversions": []
     },
     "Mithril Half-Golem 1": {
@@ -30441,10 +31286,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15% DEF, +10% Fire, Wind, and Earth Resist",
         "stats": {
-            "DEF%": 0.15,
-            "Fire Res%": 0.1,
-            "Wind Res%": 0.1,
-            "Earth Res%": 0.1
+            "DEF%": 15
         },
         "conversions": []
     },
@@ -30464,7 +31306,9 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+20 DEF",
-        "stats": {},
+        "stats": {
+            "DEF": 20
+        },
         "conversions": []
     },
     "Mithril Half-Golem 3": {
@@ -30483,7 +31327,9 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+20 DEF",
-        "stats": {},
+        "stats": {
+            "DEF": 20
+        },
         "conversions": []
     },
     "Adamantite Golem 1": {
@@ -30503,10 +31349,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% DEF, +15% Physical Resist",
         "stats": {
-            "DEF%": 0.2,
-            "Slash Res%": 0.15,
-            "Pierce Res%": 0.15,
-            "Blunt Res%": 0.15
+            "DEF%": 20
         },
         "conversions": []
     },
@@ -30526,7 +31369,9 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+20 DEF",
-        "stats": {},
+        "stats": {
+            "DEF": 20
+        },
         "conversions": []
     },
     "Adamantite Golem 3": {
@@ -30545,7 +31390,9 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+20 DEF",
-        "stats": {},
+        "stats": {
+            "DEF": 20
+        },
         "conversions": []
     },
     "Prismatic Golem": {
@@ -30565,9 +31412,10 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+100% DEF, +50 MP, +25% Threat Bonus, +10% Void Res",
         "stats": {
-            "DEF%": 1.0,
-            "Threat%": 0.25,
-            "Void Res%": 0.1
+            "DEF%": 100,
+            "Void Res%": 10,
+            "MP": 50,
+            "Threat%": 25
         },
         "conversions": []
     },
@@ -30588,9 +31436,12 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10 MATK, +20 HP, +1% Crit Chance, +25% Water Resist, -35% Lightning Resist, +5% MATK",
         "stats": {
-            "MATK%": 0.05,
-            "Water Res%": 0.25,
-            "Lightning Res%": -0.35
+            "MATK%": 5,
+            "Water Res%": 25,
+            "Lightning Res%": -35,
+            "Crit Chance%": 1,
+            "HP": 20,
+            "MATK": 10
         },
         "conversions": []
     },
@@ -30611,7 +31462,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10 MATK, +20 HP, +1% Crit Chance",
         "stats": {
-            "Crit Chance%": 0.01
+            "Crit Chance%": 1,
+            "HP": 20,
+            "MATK": 10
         },
         "conversions": []
     },
@@ -30632,7 +31485,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10 MATK, +20 HP, +1% Crit Chance",
         "stats": {
-            "Crit Chance%": 0.01
+            "Crit Chance%": 1,
+            "HP": 20,
+            "MATK": 10
         },
         "conversions": []
     },
@@ -30653,8 +31508,10 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15 MATK, +5% MATK, +50 HP, +10% Water Damage",
         "stats": {
-            "MATK%": 0.05,
-            "Water%": 0.1
+            "MATK%": 5,
+            "Water%": 10,
+            "HP": 50,
+            "MATK": 15
         },
         "conversions": []
     },
@@ -30675,7 +31532,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10 MATK, +20 HP, +1% Crit Chance",
         "stats": {
-            "Crit Chance%": 0.01
+            "Crit Chance%": 1,
+            "HP": 20,
+            "MATK": 10
         },
         "conversions": []
     },
@@ -30696,7 +31555,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10 MATK, +20 HP, +1% Crit Chance",
         "stats": {
-            "Crit Chance%": 0.01
+            "Crit Chance%": 1,
+            "HP": 20,
+            "MATK": 10
         },
         "conversions": []
     },
@@ -30717,9 +31578,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+25% MATK, +10% DEF, +15% Water Damage",
         "stats": {
-            "DEF%": 0.1,
-            "MATK%": 0.25,
-            "Water%": 0.15
+            "DEF%": 10,
+            "MATK%": 25,
+            "Water%": 15
         },
         "conversions": []
     },
@@ -30740,7 +31601,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10 MATK, +20 HP, +1% Crit Chance",
         "stats": {
-            "Crit Chance%": 0.01
+            "Crit Chance%": 1,
+            "HP": 20,
+            "MATK": 10
         },
         "conversions": []
     },
@@ -30761,7 +31624,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10 MATK, +20 HP, +1% Crit Chance",
         "stats": {
-            "Crit Chance%": 0.01
+            "Crit Chance%": 1,
+            "HP": 20,
+            "MATK": 10
         },
         "conversions": []
     },
@@ -30782,9 +31647,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+25% MATK, +10% DEF, +25% Water Damage",
         "stats": {
-            "DEF%": 0.1,
-            "MATK%": 0.25,
-            "Water%": 0.25
+            "DEF%": 10,
+            "MATK%": 25,
+            "Water%": 25
         },
         "conversions": []
     },
@@ -30805,7 +31670,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10 MATK, +20 HP, +1% Crit Chance",
         "stats": {
-            "Crit Chance%": 0.01
+            "Crit Chance%": 1,
+            "HP": 20,
+            "MATK": 10
         },
         "conversions": []
     },
@@ -30826,7 +31693,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10 MATK, +20 HP, +1% Crit Chance",
         "stats": {
-            "Crit Chance%": 0.01
+            "Crit Chance%": 1,
+            "HP": 20,
+            "MATK": 10
         },
         "conversions": []
     },
@@ -30847,10 +31716,10 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+40% MATK, +45% DEF, +6% Crit Chance, +30% Water Damage",
         "stats": {
-            "Crit Chance%": 0.06,
-            "DEF%": 0.45,
-            "MATK%": 0.4,
-            "Water%": 0.3
+            "Crit Chance%": 6,
+            "DEF%": 45,
+            "MATK%": 40,
+            "Water%": 30
         },
         "conversions": []
     },
@@ -30871,10 +31740,11 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+12 MATK, +50% Fire Resist, -50% Water Resist, +5% MATK, -5% ATK",
         "stats": {
-            "ATK%": -0.05,
-            "MATK%": 0.05,
-            "Fire Res%": 0.5,
-            "Water Res%": -0.5
+            "ATK%": -5,
+            "MATK%": 5,
+            "Fire Res%": 50,
+            "Water Res%": -50,
+            "MATK": 12
         },
         "conversions": []
     },
@@ -30895,7 +31765,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+12 MATK, +5% Fire Damage",
         "stats": {
-            "Fire%": 0.05
+            "Fire%": 5,
+            "MATK": 12
         },
         "conversions": []
     },
@@ -30916,7 +31787,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+12 MATK, +5% Fire Damage",
         "stats": {
-            "Fire%": 0.05
+            "Fire%": 5,
+            "MATK": 12
         },
         "conversions": []
     },
@@ -30937,8 +31809,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10 MATK, +10% Fire Damage, +5% Fire Resist",
         "stats": {
-            "Fire%": 0.1,
-            "Fire Res%": 0.05
+            "Fire%": 10,
+            "Fire Res%": 5,
+            "MATK": 10
         },
         "conversions": []
     },
@@ -30959,7 +31832,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+12 MATK, +5% Fire Damage",
         "stats": {
-            "Fire%": 0.05
+            "Fire%": 5,
+            "MATK": 12
         },
         "conversions": []
     },
@@ -30980,7 +31854,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+12 MATK, +5% Fire Damage",
         "stats": {
-            "Fire%": 0.05
+            "Fire%": 5,
+            "MATK": 12
         },
         "conversions": []
     },
@@ -31001,9 +31876,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10% MATK, +40% Fire Damage, +10% Fire Resist",
         "stats": {
-            "MATK%": 0.1,
-            "Fire%": 0.4,
-            "Fire Res%": 0.1
+            "MATK%": 10,
+            "Fire%": 40,
+            "Fire Res%": 10
         },
         "conversions": []
     },
@@ -31024,7 +31899,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+12 MATK, +5% Fire Damage",
         "stats": {
-            "Fire%": 0.05
+            "Fire%": 5,
+            "MATK": 12
         },
         "conversions": []
     },
@@ -31045,7 +31921,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+12 MATK, +5% Fire Damage",
         "stats": {
-            "Fire%": 0.05
+            "Fire%": 5,
+            "MATK": 12
         },
         "conversions": []
     },
@@ -31066,9 +31943,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10% MATK, +25% Fire Damage, +10% Fire Penetration",
         "stats": {
-            "MATK%": 0.1,
-            "Fire%": 0.25,
-            "Fire Pen%": 0.1
+            "MATK%": 10,
+            "Fire%": 25,
+            "Fire Pen%": 10
         },
         "conversions": []
     },
@@ -31089,7 +31966,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+12 MATK, +5% Fire Damage",
         "stats": {
-            "Fire%": 0.05
+            "Fire%": 5,
+            "MATK": 12
         },
         "conversions": []
     },
@@ -31110,7 +31988,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+12 MATK, +5% Fire Damage",
         "stats": {
-            "Fire%": 0.05
+            "Fire%": 5,
+            "MATK": 12
         },
         "conversions": []
     },
@@ -31131,9 +32010,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% MATK, +30% Fire Damage, +10% Fire Penetration",
         "stats": {
-            "MATK%": 0.2,
-            "Fire%": 0.3,
-            "Fire Pen%": 0.1
+            "MATK%": 20,
+            "Fire%": 30,
+            "Fire Pen%": 10
         },
         "conversions": []
     },
@@ -31154,10 +32033,11 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+12 MATK, +50% Water Resist, -50% Earth Resist, +5% MATK, -5% ATK",
         "stats": {
-            "ATK%": -0.05,
-            "MATK%": 0.05,
-            "Water Res%": 0.5,
-            "Earth Res%": -0.5
+            "ATK%": -5,
+            "MATK%": 5,
+            "Water Res%": 50,
+            "Earth Res%": -50,
+            "MATK": 12
         },
         "conversions": []
     },
@@ -31178,7 +32058,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+12 MATK. +5% Water Damage",
         "stats": {
-            "Water%": 0.05
+            "Water%": 5,
+            "MATK": 12
         },
         "conversions": []
     },
@@ -31199,7 +32080,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+12 MATK. +5% Water Damage",
         "stats": {
-            "Water%": 0.05
+            "Water%": 5,
+            "MATK": 12
         },
         "conversions": []
     },
@@ -31220,8 +32102,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10 MATK, +10% Water Damage, 5% Water Resist",
         "stats": {
-            "Water%": 0.1,
-            "Water Res%": 0.05
+            "Water%": 10,
+            "Water Res%": 5,
+            "MATK": 10
         },
         "conversions": []
     },
@@ -31242,7 +32125,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+12 MATK. +5% Water Damage",
         "stats": {
-            "Water%": 0.05
+            "Water%": 5,
+            "MATK": 12
         },
         "conversions": []
     },
@@ -31263,7 +32147,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+12 MATK. +5% Water Damage",
         "stats": {
-            "Water%": 0.05
+            "Water%": 5,
+            "MATK": 12
         },
         "conversions": []
     },
@@ -31284,9 +32169,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10% MATK, +40% Water Damage, +10% Water Resist",
         "stats": {
-            "MATK%": 0.1,
-            "Water%": 0.4,
-            "Water Res%": 0.1
+            "MATK%": 10,
+            "Water%": 40,
+            "Water Res%": 10
         },
         "conversions": []
     },
@@ -31307,7 +32192,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+12 MATK. +5% Water Damage",
         "stats": {
-            "Water%": 0.05
+            "Water%": 5,
+            "MATK": 12
         },
         "conversions": []
     },
@@ -31328,7 +32214,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+12 MATK. +5% Water Damage",
         "stats": {
-            "Water%": 0.05
+            "Water%": 5,
+            "MATK": 12
         },
         "conversions": []
     },
@@ -31349,9 +32236,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10% MATK, +25% Water Damage, +10% Water Penetration",
         "stats": {
-            "MATK%": 0.1,
-            "Water%": 0.25,
-            "Water Pen%": 0.1
+            "MATK%": 10,
+            "Water%": 25,
+            "Water Pen%": 10
         },
         "conversions": []
     },
@@ -31372,7 +32259,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+12 MATK. +5% Water Damage",
         "stats": {
-            "Water%": 0.05
+            "Water%": 5,
+            "MATK": 12
         },
         "conversions": []
     },
@@ -31393,7 +32281,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+12 MATK. +5% Water Damage",
         "stats": {
-            "Water%": 0.05
+            "Water%": 5,
+            "MATK": 12
         },
         "conversions": []
     },
@@ -31414,9 +32303,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% MATK, +30% Water Damage, +10% Water Penetration",
         "stats": {
-            "MATK%": 0.2,
-            "Water%": 0.3,
-            "Water Pen%": 0.1
+            "MATK%": 20,
+            "Water%": 30,
+            "Water Pen%": 10
         },
         "conversions": []
     },
@@ -31437,10 +32326,11 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+12 MATK, +50% Earth Resist, -50% Fire Resist, +5% MATK, -5% ATK",
         "stats": {
-            "ATK%": -0.05,
-            "MATK%": 0.05,
-            "Fire Res%": -0.5,
-            "Earth Res%": 0.5
+            "ATK%": -5,
+            "MATK%": 5,
+            "Fire Res%": -50,
+            "Earth Res%": 50,
+            "MATK": 12
         },
         "conversions": []
     },
@@ -31461,7 +32351,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+12 MATK, +5% Earth Damage",
         "stats": {
-            "Earth%": 0.05
+            "Earth%": 5,
+            "MATK": 12
         },
         "conversions": []
     },
@@ -31482,7 +32373,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+12 MATK, +5% Earth Damage",
         "stats": {
-            "Earth%": 0.05
+            "Earth%": 5,
+            "MATK": 12
         },
         "conversions": []
     },
@@ -31503,8 +32395,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10 MATK, +10% Earth Damage, +5% Earth Resist",
         "stats": {
-            "Earth%": 0.1,
-            "Earth Res%": 0.05
+            "Earth%": 10,
+            "Earth Res%": 5,
+            "MATK": 10
         },
         "conversions": []
     },
@@ -31525,7 +32418,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+12 MATK, +5% Earth Damage",
         "stats": {
-            "Earth%": 0.05
+            "Earth%": 5,
+            "MATK": 12
         },
         "conversions": []
     },
@@ -31546,7 +32440,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+12 MATK, +5% Earth Damage",
         "stats": {
-            "Earth%": 0.05
+            "Earth%": 5,
+            "MATK": 12
         },
         "conversions": []
     },
@@ -31567,9 +32462,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10% MATK, +40% Earth Damage, +10% Earth Resist",
         "stats": {
-            "MATK%": 0.1,
-            "Earth%": 0.4,
-            "Earth Res%": 0.1
+            "MATK%": 10,
+            "Earth%": 40,
+            "Earth Res%": 10
         },
         "conversions": []
     },
@@ -31590,7 +32485,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+12 MATK, +5% Earth Damage",
         "stats": {
-            "Earth%": 0.05
+            "Earth%": 5,
+            "MATK": 12
         },
         "conversions": []
     },
@@ -31611,7 +32507,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+12 MATK, +5% Earth Damage",
         "stats": {
-            "Earth%": 0.05
+            "Earth%": 5,
+            "MATK": 12
         },
         "conversions": []
     },
@@ -31632,9 +32529,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10% MATK, +25% Earth Damage, +10% Earth Penetration",
         "stats": {
-            "MATK%": 0.1,
-            "Earth%": 0.25,
-            "Earth Pen%": 0.1
+            "MATK%": 10,
+            "Earth%": 25,
+            "Earth Pen%": 10
         },
         "conversions": []
     },
@@ -31655,7 +32552,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+12 MATK, +5% Earth Damage",
         "stats": {
-            "Earth%": 0.05
+            "Earth%": 5,
+            "MATK": 12
         },
         "conversions": []
     },
@@ -31676,7 +32574,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+12 MATK, +5% Earth Damage",
         "stats": {
-            "Earth%": 0.05
+            "Earth%": 5,
+            "MATK": 12
         },
         "conversions": []
     },
@@ -31697,9 +32596,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% MATK, +30% Earth Damage, +10% Earth Penetration",
         "stats": {
-            "MATK%": 0.2,
-            "Earth%": 0.3,
-            "Earth Pen%": 0.1
+            "MATK%": 20,
+            "Earth%": 30,
+            "Earth Pen%": 10
         },
         "conversions": []
     },
@@ -31720,10 +32619,11 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+12 MATK, +50% Wind Resist, -50% Lightning Resist, +5% MATK, -5% ATK",
         "stats": {
-            "ATK%": -0.05,
-            "MATK%": 0.05,
-            "Lightning Res%": -0.5,
-            "Wind Res%": 0.5
+            "ATK%": -5,
+            "MATK%": 5,
+            "Lightning Res%": -50,
+            "Wind Res%": 50,
+            "MATK": 12
         },
         "conversions": []
     },
@@ -31744,7 +32644,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+12 MATK, +5% Wind Damage",
         "stats": {
-            "Wind%": 0.05
+            "Wind%": 5,
+            "MATK": 12
         },
         "conversions": []
     },
@@ -31765,7 +32666,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+12 MATK, +5% Wind Damage",
         "stats": {
-            "Wind%": 0.05
+            "Wind%": 5,
+            "MATK": 12
         },
         "conversions": []
     },
@@ -31786,8 +32688,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10 MATK, +10% Wind Damage, +5% Wind Resist",
         "stats": {
-            "Wind%": 0.1,
-            "Wind Res%": 0.05
+            "Wind%": 10,
+            "Wind Res%": 5,
+            "MATK": 10
         },
         "conversions": []
     },
@@ -31808,7 +32711,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+12 MATK, +5% Wind Damage",
         "stats": {
-            "Wind%": 0.05
+            "Wind%": 5,
+            "MATK": 12
         },
         "conversions": []
     },
@@ -31829,7 +32733,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+12 MATK, +5% Wind Damage",
         "stats": {
-            "Wind%": 0.05
+            "Wind%": 5,
+            "MATK": 12
         },
         "conversions": []
     },
@@ -31850,9 +32755,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10% MATK, +40% Wind Damage, +10% Wind Resist",
         "stats": {
-            "MATK%": 0.1,
-            "Wind%": 0.4,
-            "Wind Res%": 0.1
+            "MATK%": 10,
+            "Wind%": 40,
+            "Wind Res%": 10
         },
         "conversions": []
     },
@@ -31873,7 +32778,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+12 MATK, +5% Wind Damage",
         "stats": {
-            "Wind%": 0.05
+            "Wind%": 5,
+            "MATK": 12
         },
         "conversions": []
     },
@@ -31894,7 +32800,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+12 MATK, +5% Wind Damage",
         "stats": {
-            "Wind%": 0.05
+            "Wind%": 5,
+            "MATK": 12
         },
         "conversions": []
     },
@@ -31915,9 +32822,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10% MATK, +25% Wind Damage, +10% Wind Penetration",
         "stats": {
-            "MATK%": 0.1,
-            "Wind%": 0.25,
-            "Wind Pen%": 0.1
+            "MATK%": 10,
+            "Wind%": 25,
+            "Wind Pen%": 10
         },
         "conversions": []
     },
@@ -31938,7 +32845,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+12 MATK, +5% Wind Damage",
         "stats": {
-            "Wind%": 0.05
+            "Wind%": 5,
+            "MATK": 12
         },
         "conversions": []
     },
@@ -31959,7 +32867,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+12 MATK, +5% Wind Damage",
         "stats": {
-            "Wind%": 0.05
+            "Wind%": 5,
+            "MATK": 12
         },
         "conversions": []
     },
@@ -31980,9 +32889,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% MATK, +30% Wind Damage, +10% Wind Penetration",
         "stats": {
-            "MATK%": 0.2,
-            "Wind%": 0.3,
-            "Wind Pen%": 0.1
+            "MATK%": 20,
+            "Wind%": 30,
+            "Wind Pen%": 10
         },
         "conversions": []
     },
@@ -32003,10 +32912,11 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+12 MATK, +50% Lightning Resist, -50% Wind Resist, +5% MATK, -5% ATK",
         "stats": {
-            "ATK%": -0.05,
-            "MATK%": 0.05,
-            "Lightning Res%": 0.5,
-            "Wind Res%": -0.5
+            "ATK%": -5,
+            "MATK%": 5,
+            "Lightning Res%": 50,
+            "Wind Res%": -50,
+            "MATK": 12
         },
         "conversions": []
     },
@@ -32027,7 +32937,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+12 MATK, +5% Lightning Damage",
         "stats": {
-            "Lightning%": 0.05
+            "Lightning%": 5,
+            "MATK": 12
         },
         "conversions": []
     },
@@ -32048,7 +32959,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+12 MATK, +5% Lightning Damage",
         "stats": {
-            "Lightning%": 0.05
+            "Lightning%": 5,
+            "MATK": 12
         },
         "conversions": []
     },
@@ -32069,8 +32981,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10 MATK, '+10% Lightning Damage, +5% Lightning Resist",
         "stats": {
-            "Lightning%": 0.1,
-            "Lightning Res%": 0.05
+            "Lightning%": 10,
+            "Lightning Res%": 5,
+            "MATK": 10
         },
         "conversions": []
     },
@@ -32091,7 +33004,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+12 MATK, +5% Lightning Damage",
         "stats": {
-            "Lightning%": 0.05
+            "Lightning%": 5,
+            "MATK": 12
         },
         "conversions": []
     },
@@ -32112,7 +33026,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+12 MATK, +5% Lightning Damage",
         "stats": {
-            "Lightning%": 0.05
+            "Lightning%": 5,
+            "MATK": 12
         },
         "conversions": []
     },
@@ -32133,9 +33048,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10% MATK, +40% Lightning Damage, +10% Lightning Resist",
         "stats": {
-            "MATK%": 0.1,
-            "Lightning%": 0.4,
-            "Lightning Res%": 0.1
+            "MATK%": 10,
+            "Lightning%": 40,
+            "Lightning Res%": 10
         },
         "conversions": []
     },
@@ -32156,7 +33071,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+12 MATK, +5% Lightning Damage",
         "stats": {
-            "Lightning%": 0.05
+            "Lightning%": 5,
+            "MATK": 12
         },
         "conversions": []
     },
@@ -32177,7 +33093,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+12 MATK, +5% Lightning Damage",
         "stats": {
-            "Lightning%": 0.05
+            "Lightning%": 5,
+            "MATK": 12
         },
         "conversions": []
     },
@@ -32198,9 +33115,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10% MATK, +25% Lightning Damage, +10% Lightning Penetration",
         "stats": {
-            "MATK%": 0.1,
-            "Lightning%": 0.25,
-            "Lightning Pen%": 0.1
+            "MATK%": 10,
+            "Lightning%": 25,
+            "Lightning Pen%": 10
         },
         "conversions": []
     },
@@ -32221,7 +33138,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+12 MATK, +5% Lightning Damage",
         "stats": {
-            "Lightning%": 0.05
+            "Lightning%": 5,
+            "MATK": 12
         },
         "conversions": []
     },
@@ -32242,7 +33160,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+12 MATK, +5% Lightning Damage",
         "stats": {
-            "Lightning%": 0.05
+            "Lightning%": 5,
+            "MATK": 12
         },
         "conversions": []
     },
@@ -32263,9 +33182,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% MATK, +30% Lightning Damage, +10% Lightning Penetration",
         "stats": {
-            "MATK%": 0.2,
-            "Lightning%": 0.3,
-            "Lightning Pen%": 0.1
+            "MATK%": 20,
+            "Lightning%": 30,
+            "Lightning Pen%": 10
         },
         "conversions": []
     },
@@ -32286,9 +33205,10 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15 MATK, +10% MATK, -10% DEF, +1% Crit Chance",
         "stats": {
-            "Crit Chance%": 0.01,
-            "DEF%": -0.1,
-            "MATK%": 0.1
+            "Crit Chance%": 1,
+            "DEF%": -10,
+            "MATK%": 10,
+            "MATK": 15
         },
         "conversions": []
     },
@@ -32309,7 +33229,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15 MATK, +1% Crit Chance",
         "stats": {
-            "Crit Chance%": 0.01
+            "Crit Chance%": 1,
+            "MATK": 15
         },
         "conversions": []
     },
@@ -32330,7 +33251,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15 MATK, +1% Crit Chance",
         "stats": {
-            "Crit Chance%": 0.01
+            "Crit Chance%": 1,
+            "MATK": 15
         },
         "conversions": []
     },
@@ -32351,7 +33273,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10% MATK, +10 MATK",
         "stats": {
-            "MATK%": 0.1
+            "MATK%": 10,
+            "MATK": 10
         },
         "conversions": []
     },
@@ -32372,7 +33295,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15 MATK, +1% Crit Chance",
         "stats": {
-            "Crit Chance%": 0.01
+            "Crit Chance%": 1,
+            "MATK": 15
         },
         "conversions": []
     },
@@ -32393,7 +33317,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15 MATK, +1% Crit Chance",
         "stats": {
-            "Crit Chance%": 0.01
+            "Crit Chance%": 1,
+            "MATK": 15
         },
         "conversions": []
     },
@@ -32414,7 +33339,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+25% MATK",
         "stats": {
-            "MATK%": 0.25
+            "MATK%": 25
         },
         "conversions": []
     },
@@ -32435,7 +33360,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15 MATK, +1% Crit Chance",
         "stats": {
-            "Crit Chance%": 0.01
+            "Crit Chance%": 1,
+            "MATK": 15
         },
         "conversions": []
     },
@@ -32456,7 +33382,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15 MATK, +1% Crit Chance",
         "stats": {
-            "Crit Chance%": 0.01
+            "Crit Chance%": 1,
+            "MATK": 15
         },
         "conversions": []
     },
@@ -32477,8 +33404,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+25% MATK, +5% Void Damage",
         "stats": {
-            "MATK%": 0.25,
-            "Void%": 0.05
+            "MATK%": 25,
+            "Void%": 5
         },
         "conversions": []
     },
@@ -32499,7 +33426,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15 MATK, +1% Crit Chance",
         "stats": {
-            "Crit Chance%": 0.01
+            "Crit Chance%": 1,
+            "MATK": 15
         },
         "conversions": []
     },
@@ -32520,7 +33448,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15 MATK, +1% Crit Chance",
         "stats": {
-            "Crit Chance%": 0.01
+            "Crit Chance%": 1,
+            "MATK": 15
         },
         "conversions": []
     },
@@ -32541,9 +33470,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+50% MATK, +4% Crit Chance, +5% Void Damage",
         "stats": {
-            "Crit Chance%": 0.04,
-            "MATK%": 0.5,
-            "Void%": 0.05
+            "Crit Chance%": 4,
+            "MATK%": 50,
+            "Void%": 5
         },
         "conversions": []
     },
@@ -32564,10 +33493,10 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15 ATK,+5% Crit Chance, +5% ATK, -15% DEF",
         "stats": {
-            "Crit Chance%": 0.05,
-            "DEF%": -0.15,
-            "ATK%": 0.05,
-            "Lightning Res%": -0.25
+            "Crit Chance%": 5,
+            "DEF%": -15,
+            "ATK%": 5,
+            "ATK": 15
         },
         "conversions": []
     },
@@ -32587,7 +33516,9 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+15 ATK",
-        "stats": {},
+        "stats": {
+            "ATK": 15
+        },
         "conversions": []
     },
     "Birdman 3": {
@@ -32606,7 +33537,9 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+15 ATK",
-        "stats": {},
+        "stats": {
+            "ATK": 15
+        },
         "conversions": []
     },
     "Elder Birdman 1": {
@@ -32626,8 +33559,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+4% Crit Chance, +15 ATK, +5% ATK",
         "stats": {
-            "Crit Chance%": 0.04,
-            "ATK%": 0.05
+            "Crit Chance%": 4,
+            "ATK%": 5,
+            "ATK": 15
         },
         "conversions": []
     },
@@ -32647,7 +33581,9 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+15 ATK",
-        "stats": {},
+        "stats": {
+            "ATK": 15
+        },
         "conversions": []
     },
     "Elder Birdman 3": {
@@ -32666,7 +33602,9 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+15 ATK",
-        "stats": {},
+        "stats": {
+            "ATK": 15
+        },
         "conversions": []
     },
     "Birdman Lord 1": {
@@ -32686,9 +33624,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+4% Crit Chance, +20% ATK, +25% Crit Damage",
         "stats": {
-            "Crit Chance%": 0.04,
-            "Crit DMG%": 0.25,
-            "ATK%": 0.2
+            "Crit Chance%": 4,
+            "Crit DMG%": 25,
+            "ATK%": 20
         },
         "conversions": []
     },
@@ -32708,7 +33646,9 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+15 ATK",
-        "stats": {},
+        "stats": {
+            "ATK": 15
+        },
         "conversions": []
     },
     "Birdman Lord 3": {
@@ -32727,7 +33667,9 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+15 ATK",
-        "stats": {},
+        "stats": {
+            "ATK": 15
+        },
         "conversions": []
     },
     "Birdman Emperor 1": {
@@ -32747,8 +33689,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+4% Crit Chance, +20% ATK, +35% Crit Damage",
         "stats": {
-            "Crit Chance%": 0.04,
-            "Crit DMG%": 0.35
+            "Crit Chance%": 4,
+            "Crit DMG%": 35,
+            "ATK%": 20
         },
         "conversions": []
     },
@@ -32768,7 +33711,9 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+15 ATK",
-        "stats": {},
+        "stats": {
+            "ATK": 15
+        },
         "conversions": []
     },
     "Birdman Emperor 3": {
@@ -32787,7 +33732,9 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+15 ATK",
-        "stats": {},
+        "stats": {
+            "ATK": 15
+        },
         "conversions": []
     },
     "Birdman Deity": {
@@ -32807,9 +33754,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+35% ATK, +4% Crit Chance, +40% Crit Damage",
         "stats": {
-            "Crit Chance%": 0.04,
-            "Crit DMG%": 0.4,
-            "ATK%": 0.35
+            "Crit Chance%": 4,
+            "Crit DMG%": 40,
+            "ATK%": 35
         },
         "conversions": []
     },
@@ -32830,11 +33777,10 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+12 MATK, +5% Negative Damage, +5% MATK, -5% ATK",
         "stats": {
-            "ATK%": -0.05,
-            "MATK%": 0.05,
-            "Neg%": 0.05,
-            "Neg Res%": 0.5,
-            "Holy Res%": -0.5
+            "ATK%": -5,
+            "MATK%": 5,
+            "Neg%": 5,
+            "MATK": 12
         },
         "conversions": []
     },
@@ -32855,7 +33801,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+12 MATK, +5% Negative Damage",
         "stats": {
-            "Neg%": 0.05
+            "Neg%": 5,
+            "MATK": 12
         },
         "conversions": []
     },
@@ -32876,7 +33823,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+12 MATK, +5% Negative Damage",
         "stats": {
-            "Neg%": 0.05
+            "Neg%": 5,
+            "MATK": 12
         },
         "conversions": []
     },
@@ -32897,8 +33845,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10 MATK, +10% Negative Damage, +10% Slash Resist",
         "stats": {
-            "Neg%": 0.1,
-            "Slash Res%": 0.1
+            "Neg%": 10,
+            "Slash Res%": 10,
+            "MATK": 10
         },
         "conversions": []
     },
@@ -32919,8 +33868,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+12 MATK, +5% Negative Damage, +10% Blunt Resist",
         "stats": {
-            "Neg%": 0.05,
-            "Blunt Res%": 0.1
+            "Neg%": 5,
+            "Blunt Res%": 10,
+            "MATK": 12
         },
         "conversions": []
     },
@@ -32941,8 +33891,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+12 MATK, +5% Negative Damage, +10% Pierce Resist",
         "stats": {
-            "Neg%": 0.05,
-            "Pierce Res%": 0.1
+            "Neg%": 5,
+            "Pierce Res%": 10,
+            "MATK": 12
         },
         "conversions": []
     },
@@ -32963,9 +33914,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10% MATK, +40% Negative Damage, +10% Negative Resist",
         "stats": {
-            "MATK%": 0.1,
-            "Neg%": 0.4,
-            "Neg Res%": 0.1
+            "MATK%": 10,
+            "Neg%": 40,
+            "Neg Res%": 10
         },
         "conversions": []
     },
@@ -32986,7 +33937,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+12 MATK, +5% Negative Damage",
         "stats": {
-            "Neg%": 0.05
+            "Neg%": 5,
+            "MATK": 12
         },
         "conversions": []
     },
@@ -33007,7 +33959,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+12 MATK, +5% Negative Damage",
         "stats": {
-            "Neg%": 0.05
+            "Neg%": 5,
+            "MATK": 12
         },
         "conversions": []
     },
@@ -33028,8 +33981,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10% MATK, +25% Negative Damage",
         "stats": {
-            "MATK%": 0.1,
-            "Neg%": 0.25
+            "MATK%": 10,
+            "Neg%": 25
         },
         "conversions": []
     },
@@ -33050,7 +34003,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+12 MATK, +5% Negative Damage",
         "stats": {
-            "Neg%": 0.05
+            "Neg%": 5,
+            "MATK": 12
         },
         "conversions": []
     },
@@ -33071,7 +34025,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+12 MATK, +5% Negative Damage",
         "stats": {
-            "Neg%": 0.05
+            "Neg%": 5,
+            "MATK": 12
         },
         "conversions": []
     },
@@ -33092,9 +34047,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% MATK, +30% Negative Damage, +10% Negative Penetration",
         "stats": {
-            "MATK%": 0.2,
-            "Neg%": 0.3,
-            "Neg Pen%": 0.1
+            "MATK%": 20,
+            "Neg%": 30,
+            "Neg Pen%": 10
         },
         "conversions": []
     },
@@ -33115,11 +34070,10 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15 ATK, +10% ATK, -10% DEF, +5% Pierce Damage",
         "stats": {
-            "DEF%": -0.1,
-            "ATK%": 0.1,
-            "Pierce%": 0.05,
-            "Fire Res%": -0.15,
-            "Toxic Res%": 0.1
+            "DEF%": -10,
+            "ATK%": 10,
+            "Pierce%": 5,
+            "ATK": 15
         },
         "conversions": []
     },
@@ -33140,7 +34094,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15 ATK, +5% Pierce Damage",
         "stats": {
-            "Pierce%": 0.05
+            "Pierce%": 5,
+            "ATK": 15
         },
         "conversions": []
     },
@@ -33161,7 +34116,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15 ATK, +5% Pierce Damage",
         "stats": {
-            "Pierce%": 0.05
+            "Pierce%": 5,
+            "ATK": 15
         },
         "conversions": []
     },
@@ -33182,9 +34138,10 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10% ATK, +10 ATK, +10% Pierce Damage, +10% Toxic Resist",
         "stats": {
-            "ATK%": 0.1,
-            "Pierce%": 0.1,
-            "Toxic Res%": 0.1
+            "ATK%": 10,
+            "Pierce%": 10,
+            "Toxic Res%": 10,
+            "ATK": 10
         },
         "conversions": []
     },
@@ -33205,7 +34162,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15 ATK, +5% Pierce Damage",
         "stats": {
-            "Pierce%": 0.05
+            "Pierce%": 5,
+            "ATK": 15
         },
         "conversions": []
     },
@@ -33226,7 +34184,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15 ATK, +5% Pierce Damage",
         "stats": {
-            "Pierce%": 0.05
+            "Pierce%": 5,
+            "ATK": 15
         },
         "conversions": []
     },
@@ -33247,9 +34206,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+25% ATK, +15% Earth Resist, +10% Pierce Damage",
         "stats": {
-            "ATK%": 0.25,
-            "Pierce%": 0.1,
-            "Earth Res%": 0.15
+            "ATK%": 25,
+            "Pierce%": 10,
+            "Earth Res%": 15
         },
         "conversions": []
     },
@@ -33270,7 +34229,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15 ATK, +5% Pierce Damage",
         "stats": {
-            "Pierce%": 0.05
+            "Pierce%": 5,
+            "ATK": 15
         },
         "conversions": []
     },
@@ -33291,7 +34251,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15 ATK, +5% Pierce Damage",
         "stats": {
-            "Pierce%": 0.05
+            "Pierce%": 5,
+            "ATK": 15
         },
         "conversions": []
     },
@@ -33312,9 +34273,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+25% ATK, +15% Toxic Resist, +15% Pierce Damage",
         "stats": {
-            "ATK%": 0.25,
-            "Pierce%": 0.15,
-            "Toxic Res%": 0.15
+            "ATK%": 25,
+            "Pierce%": 15,
+            "Toxic Res%": 15
         },
         "conversions": []
     },
@@ -33335,7 +34296,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15 ATK, +5% Pierce Damage",
         "stats": {
-            "Pierce%": 0.05
+            "Pierce%": 5,
+            "ATK": 15
         },
         "conversions": []
     },
@@ -33356,7 +34318,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15 ATK, +5% Pierce Damage",
         "stats": {
-            "Pierce%": 0.05
+            "Pierce%": 5,
+            "ATK": 15
         },
         "conversions": []
     },
@@ -33377,8 +34340,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+35% ATK, +20% DEF, +12% Pierce Penetration",
         "stats": {
-            "DEF%": 0.2,
-            "ATK%": 0.35
+            "DEF%": 20,
+            "ATK%": 35,
+            "Pierce Pen%": 12
         },
         "conversions": []
     },
@@ -33399,13 +34363,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+8 ATK, +2% Crit Chance, -10% DEF",
         "stats": {
-            "Crit Chance%": 0.02,
-            "DEF%": -0.1,
-            "Slash Res%": 0.1,
-            "Pierce Res%": 0.1,
-            "Water Res%": 0.1,
-            "Lightning Res%": -0.4,
-            "Toxic Res%": 0.1
+            "Crit Chance%": 2,
+            "DEF%": -10,
+            "ATK": 8
         },
         "conversions": []
     },
@@ -33426,7 +34386,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+8 ATK, +2% Crit Chance",
         "stats": {
-            "Crit Chance%": 0.02
+            "Crit Chance%": 2,
+            "ATK": 8
         },
         "conversions": []
     },
@@ -33447,7 +34408,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+8 ATK, +2% Crit Chance",
         "stats": {
-            "Crit Chance%": 0.02
+            "Crit Chance%": 2,
+            "ATK": 8
         },
         "conversions": []
     },
@@ -33468,8 +34430,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10% ATK, +15% Crit Damage",
         "stats": {
-            "Crit DMG%": 0.15,
-            "ATK%": 0.1
+            "Crit DMG%": 15,
+            "ATK%": 10
         },
         "conversions": []
     },
@@ -33490,7 +34452,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+8 ATK, +2% Crit Chance",
         "stats": {
-            "Crit Chance%": 0.02
+            "Crit Chance%": 2,
+            "ATK": 8
         },
         "conversions": []
     },
@@ -33511,7 +34474,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+8 ATK, +2% Crit Chance",
         "stats": {
-            "Crit Chance%": 0.02
+            "Crit Chance%": 2,
+            "ATK": 8
         },
         "conversions": []
     },
@@ -33532,9 +34496,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10% ATK, +3% Crit Chance, +20% Crit Damage",
         "stats": {
-            "Crit Chance%": 0.03,
-            "Crit DMG%": 0.2,
-            "ATK%": 0.1
+            "Crit Chance%": 3,
+            "Crit DMG%": 20,
+            "ATK%": 10
         },
         "conversions": []
     },
@@ -33555,7 +34519,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+8 ATK, +2% Crit Chance",
         "stats": {
-            "Crit Chance%": 0.02
+            "Crit Chance%": 2,
+            "ATK": 8
         },
         "conversions": []
     },
@@ -33576,7 +34541,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+8 ATK, +2% Crit Chance",
         "stats": {
-            "Crit Chance%": 0.02
+            "Crit Chance%": 2,
+            "ATK": 8
         },
         "conversions": []
     },
@@ -33597,9 +34563,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10% ATK, +35% Crit Damage, +10% DEF",
         "stats": {
-            "Crit DMG%": 0.35,
-            "DEF%": 0.1,
-            "ATK%": 0.1
+            "Crit DMG%": 35,
+            "DEF%": 10,
+            "ATK%": 10
         },
         "conversions": []
     },
@@ -33620,7 +34586,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+8 ATK, +2% Crit Chance",
         "stats": {
-            "Crit Chance%": 0.02
+            "Crit Chance%": 2,
+            "ATK": 8
         },
         "conversions": []
     },
@@ -33641,7 +34608,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+8 ATK, +2% Crit Chance",
         "stats": {
-            "Crit Chance%": 0.02
+            "Crit Chance%": 2,
+            "ATK": 8
         },
         "conversions": []
     },
@@ -33662,9 +34630,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+40% ATK, +25% DEF, +45% Crit Damage",
         "stats": {
-            "Crit DMG%": 0.45,
-            "DEF%": 0.25,
-            "ATK%": 0.4
+            "Crit DMG%": 45,
+            "DEF%": 25,
+            "ATK%": 40
         },
         "conversions": []
     },
@@ -33685,8 +34653,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% DEF, +10% Crit Damage, +9 HP Regen",
         "stats": {
-            "Crit DMG%": 0.1,
-            "DEF%": 0.2
+            "Crit DMG%": 10,
+            "DEF%": 20,
+            "HP Regen": 9
         },
         "conversions": []
     },
@@ -33707,7 +34676,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15 DEF, +2% Crit Chance",
         "stats": {
-            "Crit Chance%": 0.02
+            "Crit Chance%": 2,
+            "DEF": 15
         },
         "conversions": []
     },
@@ -33728,7 +34698,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15 DEF, +2% Crit Chance",
         "stats": {
-            "Crit Chance%": 0.02
+            "Crit Chance%": 2,
+            "DEF": 15
         },
         "conversions": []
     },
@@ -33749,8 +34720,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+25% DEF, +15% Crit Damage, +25 HP Regen",
         "stats": {
-            "Crit DMG%": 0.15,
-            "DEF%": 0.25
+            "Crit DMG%": 15,
+            "DEF%": 25,
+            "HP Regen": 25
         },
         "conversions": []
     },
@@ -33771,7 +34743,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15 DEF, +2% Crit Chance",
         "stats": {
-            "Crit Chance%": 0.02
+            "Crit Chance%": 2,
+            "DEF": 15
         },
         "conversions": []
     },
@@ -33792,7 +34765,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15 DEF, +2% Crit Chance",
         "stats": {
-            "Crit Chance%": 0.02
+            "Crit Chance%": 2,
+            "DEF": 15
         },
         "conversions": []
     },
@@ -33813,9 +34787,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15% Slash, Pierce, and Water Resist",
         "stats": {
-            "Slash Res%": 0.15,
-            "Pierce Res%": 0.15,
-            "Water Res%": 0.15
+            "Slash Res%": 15,
+            "Pierce Res%": 15,
+            "Water Res%": 15
         },
         "conversions": []
     },
@@ -33836,7 +34810,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15 DEF, +2% Crit Chance, +30 HP Regen",
         "stats": {
-            "Crit Chance%": 0.02
+            "Crit Chance%": 2,
+            "DEF": 15,
+            "HP Regen": 30
         },
         "conversions": []
     },
@@ -33857,7 +34833,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15 DEF, +2% Crit Chance, +30 HP Regen",
         "stats": {
-            "Crit Chance%": 0.02
+            "Crit Chance%": 2,
+            "DEF": 15,
+            "HP Regen": 30
         },
         "conversions": []
     },
@@ -33878,8 +34856,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+45% DEF, +500 HP Regen, +35% Crit Damage",
         "stats": {
-            "Crit DMG%": 0.35,
-            "DEF%": 0.45
+            "Crit DMG%": 35,
+            "DEF%": 45,
+            "HP Regen": 500
         },
         "conversions": []
     },
@@ -33900,8 +34879,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% MATK, +10% Toxic Damage, +20 MATK",
         "stats": {
-            "MATK%": 0.2,
-            "Toxic%": 0.1
+            "MATK%": 20,
+            "Toxic%": 10,
+            "MATK": 20
         },
         "conversions": []
     },
@@ -33922,9 +34902,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+12 MATK, +2% Crit Chance, +5% Toxic Damage",
         "stats": {
-            "Crit Chance%": 0.02,
-            "MATK%": 0.05,
-            "Toxic%": 0.05
+            "Crit Chance%": 2,
+            "Toxic%": 5,
+            "MATK": 12
         },
         "conversions": []
     },
@@ -33945,9 +34925,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+12 MATK, +2% Crit Chance, +5% Toxic Damage",
         "stats": {
-            "Crit Chance%": 0.02,
-            "MATK%": 0.05,
-            "Toxic%": 0.05
+            "Crit Chance%": 2,
+            "Toxic%": 5,
+            "MATK": 12
         },
         "conversions": []
     },
@@ -33968,8 +34948,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+25% MATK, +10% Toxic Damage",
         "stats": {
-            "MATK%": 0.25,
-            "Toxic%": 0.1
+            "MATK%": 25,
+            "Toxic%": 10
         },
         "conversions": []
     },
@@ -33990,9 +34970,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+12 MATK, +2% Crit Chance, +5% Toxic Damage",
         "stats": {
-            "Crit Chance%": 0.02,
-            "MATK%": 0.05,
-            "Toxic%": 0.05
+            "Crit Chance%": 2,
+            "Toxic%": 5,
+            "MATK": 12
         },
         "conversions": []
     },
@@ -34013,9 +34993,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+12 MATK, +2% Crit Chance, +5% Toxic Damage",
         "stats": {
-            "Crit Chance%": 0.02,
-            "MATK%": 0.05,
-            "Toxic%": 0.05
+            "Crit Chance%": 2,
+            "Toxic%": 5,
+            "MATK": 12
         },
         "conversions": []
     },
@@ -34036,8 +35016,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+30% MATK, +15% Toxic Damage",
         "stats": {
-            "MATK%": 0.3,
-            "Toxic%": 0.15
+            "MATK%": 30,
+            "Toxic%": 15
         },
         "conversions": []
     },
@@ -34058,9 +35038,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+12 MATK, +2% Crit Chance, +5% Toxic Damage",
         "stats": {
-            "Crit Chance%": 0.02,
-            "MATK%": 0.05,
-            "Toxic%": 0.05
+            "Crit Chance%": 2,
+            "Toxic%": 5,
+            "MATK": 12
         },
         "conversions": []
     },
@@ -34081,9 +35061,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+12 MATK, +2% Crit Chance, +5% Toxic Damage",
         "stats": {
-            "Crit Chance%": 0.02,
-            "MATK%": 0.05,
-            "Toxic%": 0.05
+            "Crit Chance%": 2,
+            "Toxic%": 5,
+            "MATK": 12
         },
         "conversions": []
     },
@@ -34104,9 +35084,10 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+45% MATK, +1% HP Regen, +20% Toxic Damage, +10% Toxic Penetration",
         "stats": {
-            "MATK%": 0.45,
-            "Toxic%": 0.2,
-            "Toxic Pen%": 0.1
+            "MATK%": 45,
+            "Toxic%": 20,
+            "Toxic Pen%": 10,
+            "HP Regen%": 1
         },
         "conversions": []
     },
@@ -34127,10 +35108,11 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+8 ATK, +8 DEF, +8 HEAL, +5% HEAL, +5% DEF",
         "stats": {
-            "DEF%": 0.05,
-            "HEAL%": 0.05,
-            "Fire Res%": -0.25,
-            "Earth Res%": 0.25
+            "DEF%": 5,
+            "HEAL%": 5,
+            "ATK": 8,
+            "DEF": 8,
+            "HEAL": 8
         },
         "conversions": []
     },
@@ -34150,7 +35132,11 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+8 ATK, +8 DEF, +8 HEAL",
-        "stats": {},
+        "stats": {
+            "ATK": 8,
+            "DEF": 8,
+            "HEAL": 8
+        },
         "conversions": []
     },
     "Tree Spirit 3": {
@@ -34169,7 +35155,11 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+8 ATK, +8 DEF, +8 HEAL",
-        "stats": {},
+        "stats": {
+            "ATK": 8,
+            "DEF": 8,
+            "HEAL": 8
+        },
         "conversions": []
     },
     "Dryad 1": {
@@ -34189,7 +35179,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% Heal, +10 Heal",
         "stats": {
-            "HEAL%": 0.2
+            "HEAL%": 20,
+            "HEAL": 10
         },
         "conversions": []
     },
@@ -34209,7 +35200,10 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+12 Heal, +5 DEF",
-        "stats": {},
+        "stats": {
+            "DEF": 5,
+            "HEAL": 12
+        },
         "conversions": []
     },
     "Dryad 3": {
@@ -34228,7 +35222,10 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+12 Heal, +5 DEF",
-        "stats": {},
+        "stats": {
+            "DEF": 5,
+            "HEAL": 12
+        },
         "conversions": []
     },
     "High Dryad 1": {
@@ -34248,8 +35245,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% Heal, +10% DEF",
         "stats": {
-            "DEF%": 0.1,
-            "HEAL%": 0.2
+            "DEF%": 10,
+            "HEAL%": 20
         },
         "conversions": []
     },
@@ -34269,7 +35266,10 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+12 Heal, +5 DEF",
-        "stats": {},
+        "stats": {
+            "DEF": 5,
+            "HEAL": 12
+        },
         "conversions": []
     },
     "High Dryad 3": {
@@ -34288,7 +35288,10 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+12 Heal, +5 DEF",
-        "stats": {},
+        "stats": {
+            "DEF": 5,
+            "HEAL": 12
+        },
         "conversions": []
     },
     "Dryad Queen 1": {
@@ -34308,9 +35311,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+25% Heal, +10% DEF, +15% Earth Resist",
         "stats": {
-            "DEF%": 0.1,
-            "HEAL%": 0.25,
-            "Earth Res%": 0.15
+            "DEF%": 10,
+            "HEAL%": 25,
+            "Earth Res%": 15
         },
         "conversions": []
     },
@@ -34330,7 +35333,10 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+12 Heal, +5 DEF",
-        "stats": {},
+        "stats": {
+            "DEF": 5,
+            "HEAL": 12
+        },
         "conversions": []
     },
     "Dryad Queen 3": {
@@ -34349,7 +35355,10 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+12 Heal, +5 DEF",
-        "stats": {},
+        "stats": {
+            "DEF": 5,
+            "HEAL": 12
+        },
         "conversions": []
     },
     "Earth Mother": {
@@ -34369,8 +35378,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+50% Heal, +50% DEF, +30 MP",
         "stats": {
-            "DEF%": 0.5,
-            "HEAL%": 0.5
+            "DEF%": 50,
+            "HEAL%": 50,
+            "MP": 30
         },
         "conversions": []
     },
@@ -34391,9 +35401,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10% DEF, +20% Pierce Resist, -20% Slash Resist",
         "stats": {
-            "DEF%": 0.1,
-            "Slash Res%": -0.2,
-            "Pierce Res%": 0.2
+            "DEF%": 10,
+            "Slash Res%": -20,
+            "Pierce Res%": 20
         },
         "conversions": []
     },
@@ -34413,7 +35423,10 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+10 ATK, +12 DEF",
-        "stats": {},
+        "stats": {
+            "ATK": 10,
+            "DEF": 12
+        },
         "conversions": []
     },
     "Treant 3": {
@@ -34432,7 +35445,10 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+10 ATK, +12 DEF",
-        "stats": {},
+        "stats": {
+            "ATK": 10,
+            "DEF": 12
+        },
         "conversions": []
     },
     "Huorn 1": {
@@ -34452,8 +35468,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15% ATK, +20% DEF",
         "stats": {
-            "DEF%": 0.2,
-            "ATK%": 0.15
+            "DEF%": 20,
+            "ATK%": 15
         },
         "conversions": []
     },
@@ -34473,7 +35489,10 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+10 ATK, +12 DEF",
-        "stats": {},
+        "stats": {
+            "ATK": 10,
+            "DEF": 12
+        },
         "conversions": []
     },
     "Huorn 3": {
@@ -34492,7 +35511,10 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+10 ATK, +12 DEF",
-        "stats": {},
+        "stats": {
+            "ATK": 10,
+            "DEF": 12
+        },
         "conversions": []
     },
     "Demon Tree 1": {
@@ -34512,9 +35534,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% ATK, +25% DEF, +15% Earth Resist",
         "stats": {
-            "DEF%": 0.25,
-            "ATK%": 0.2,
-            "Earth Res%": 0.15
+            "DEF%": 25,
+            "ATK%": 20,
+            "Earth Res%": 15
         },
         "conversions": []
     },
@@ -34534,7 +35556,10 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+10 ATK, +12 DEF",
-        "stats": {},
+        "stats": {
+            "ATK": 10,
+            "DEF": 12
+        },
         "conversions": []
     },
     "Demon Tree 3": {
@@ -34553,7 +35578,10 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+10 ATK, +12 DEF",
-        "stats": {},
+        "stats": {
+            "ATK": 10,
+            "DEF": 12
+        },
         "conversions": []
     },
     "Zy'tl Q'ae": {
@@ -34573,9 +35601,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+25% ATK, +40% DEF, +12% Blunt Penetration",
         "stats": {
-            "DEF%": 0.4,
-            "ATK%": 0.25,
-            "Blunt Pen%": 0.12
+            "DEF%": 40,
+            "ATK%": 25,
+            "Blunt Pen%": 12
         },
         "conversions": []
     },
@@ -34596,10 +35624,12 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+25% Fire Resist, -25% Holy Resist, +5% ATK/MATK, +10 MATK, +10 ATK",
         "stats": {
-            "ATK%": 0.05,
-            "MATK%": 0.05,
-            "Fire Res%": 0.25,
-            "Holy Res%": -0.25
+            "ATK%": 10,
+            "MATK%": 5,
+            "Fire Res%": 25,
+            "Holy Res%": -25,
+            "ATK": 10,
+            "MATK": 10
         },
         "conversions": []
     },
@@ -34619,7 +35649,10 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+10 MATK, +10 ATK",
-        "stats": {},
+        "stats": {
+            "ATK": 10,
+            "MATK": 10
+        },
         "conversions": []
     },
     "Kitsune 3": {
@@ -34638,7 +35671,10 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+10 MATK, +10 ATK",
-        "stats": {},
+        "stats": {
+            "ATK": 10,
+            "MATK": 10
+        },
         "conversions": []
     },
     "Sanbi 1": {
@@ -34658,8 +35694,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10% MATK/ATK, +15% Elefire/Eleslash",
         "stats": {
-            "Slash%": 0.15,
-            "Fire%": 0.15
+            "ATK%": 10,
+            "MATK%": 20
         },
         "conversions": []
     },
@@ -34679,7 +35715,10 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+10 MATK, +10 ATK",
-        "stats": {},
+        "stats": {
+            "ATK": 10,
+            "MATK": 10
+        },
         "conversions": []
     },
     "Sanbi 3": {
@@ -34698,7 +35737,10 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+10 MATK, +10 ATK",
-        "stats": {},
+        "stats": {
+            "ATK": 10,
+            "MATK": 10
+        },
         "conversions": []
     },
     "Gobi 1": {
@@ -34718,9 +35760,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% ATK/MATK, +25% Crit Damage",
         "stats": {
-            "Crit DMG%": 0.25,
-            "ATK%": 0.2,
-            "MATK%": 0.2
+            "Crit DMG%": 25,
+            "ATK%": 40,
+            "MATK%": 20
         },
         "conversions": []
     },
@@ -34740,7 +35782,10 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+10 MATK, +10 ATK",
-        "stats": {},
+        "stats": {
+            "ATK": 10,
+            "MATK": 10
+        },
         "conversions": []
     },
     "Gobi 3": {
@@ -34759,7 +35804,10 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+10 MATK, +10 ATK",
-        "stats": {},
+        "stats": {
+            "ATK": 10,
+            "MATK": 10
+        },
         "conversions": []
     },
     "Nanabi 1": {
@@ -34779,10 +35827,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% ATK/MATK, +25% Elefire/Eleslash",
         "stats": {
-            "ATK%": 0.2,
-            "MATK%": 0.2,
-            "Slash%": 0.25,
-            "Fire%": 0.25
+            "ATK%": 40,
+            "MATK%": 20
         },
         "conversions": []
     },
@@ -34802,7 +35848,10 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+10 MATK, +10 ATK",
-        "stats": {},
+        "stats": {
+            "ATK": 10,
+            "MATK": 10
+        },
         "conversions": []
     },
     "Nanabi 3": {
@@ -34821,7 +35870,10 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+10 MATK, +10 ATK",
-        "stats": {},
+        "stats": {
+            "ATK": 10,
+            "MATK": 10
+        },
         "conversions": []
     },
     "Kyuubi": {
@@ -34841,9 +35893,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+40% ATK/MATK, +15% Penslash/Penfire",
         "stats": {
-            "ATK%": 0.4,
-            "MATK%": 0.4,
-            "Fire Pen%": 0.15
+            "ATK%": 80,
+            "MATK%": 40
         },
         "conversions": []
     },
@@ -34865,8 +35916,8 @@ const talent_data: Record<string, Talent> = {
         "description": "+60 HP, +0.5% Global Max Health, +0.1% HP Regen",
         "stats": {
             "HP": 60,
-            "HP%": 0.005,
-            "HP Regen%": 0.001
+            "HP Regen%": 0.1,
+            "HP%": 0.5
         },
         "conversions": []
     },
@@ -34886,7 +35937,11 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+60 HP, +0.5% Global Max Health, +0.1% HP Regen",
-        "stats": {},
+        "stats": {
+            "HP": 60,
+            "HP Regen%": 0.1,
+            "HP%": 0.5
+        },
         "conversions": []
     },
     "Erinyes 3": {
@@ -34905,7 +35960,11 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+60 HP, +1% Global Max Health, +0.1% HP Regen",
-        "stats": {},
+        "stats": {
+            "HP": 60,
+            "HP Regen%": 0.1,
+            "HP%": 1
+        },
         "conversions": []
     },
     "Brachina 1": {
@@ -34925,7 +35984,10 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+5% MATK, +80 HP, +1% Global Max Health, +0.4% HP Regen",
         "stats": {
-            "MATK%": 0.05
+            "MATK%": 5,
+            "HP": 80,
+            "HP Regen%": 0.4,
+            "HP%": 1
         },
         "conversions": []
     },
@@ -34945,7 +36007,12 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+10 MATK, +80 HP, +0.5% Global Max Health, +0.1% HP Regen",
-        "stats": {},
+        "stats": {
+            "HP": 80,
+            "HP Regen%": 0.1,
+            "MATK": 10,
+            "HP%": 0.5
+        },
         "conversions": []
     },
     "Brachina 3": {
@@ -34964,7 +36031,12 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+10 MATK, +80 HP, +0.5% Global Max Health, +0.1% HP Regen",
-        "stats": {},
+        "stats": {
+            "HP": 80,
+            "HP Regen%": 0.1,
+            "MATK": 10,
+            "HP%": 0.5
+        },
         "conversions": []
     },
     "Succubus 1": {
@@ -34984,12 +36056,12 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+25% MATK, +400 HP, +2% Global Max Health, +10% Physical and Fire Resist, +15% Crit Damage",
         "stats": {
-            "Crit DMG%": 0.15,
-            "MATK%": 0.25,
-            "Slash Res%": 0.1,
-            "Pierce Res%": 0.1,
-            "Blunt Res%": 0.1,
-            "Fire Res%": 0.1
+            "Crit DMG%": 15,
+            "MATK%": 25,
+            "Fire Res%": 10,
+            "HP": 400,
+            "Phys Res%": 10,
+            "HP%": 2
         },
         "conversions": []
     },
@@ -35009,7 +36081,11 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+12 MATK, +200 HP, +1% Global Max Health",
-        "stats": {},
+        "stats": {
+            "HP": 200,
+            "MATK": 12,
+            "HP%": 1
+        },
         "conversions": []
     },
     "Succubus 3": {
@@ -35028,7 +36104,11 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+12 MATK, +200 HP, +1% Global Max Health",
-        "stats": {},
+        "stats": {
+            "HP": 200,
+            "MATK": 12,
+            "HP%": 1
+        },
         "conversions": []
     },
     "Succubus Archdevil 1": {
@@ -35048,12 +36128,10 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+25% MATK, +800 HP, +3% Global Max Health +15% Physical and Void Resist, +25% Void Damage",
         "stats": {
-            "MATK%": 0.25,
-            "Void%": 0.25,
-            "Slash Res%": 0.15,
-            "Pierce Res%": 0.15,
-            "Blunt Res%": 0.15,
-            "Void Res%": 0.15
+            "MATK%": 25,
+            "Void%": 25,
+            "HP": 800,
+            "HP%": 3
         },
         "conversions": []
     },
@@ -35073,7 +36151,11 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+12 MATK, +400 HP, +1.5% Global Max Health",
-        "stats": {},
+        "stats": {
+            "HP": 400,
+            "MATK": 12,
+            "HP%": 1.5
+        },
         "conversions": []
     },
     "Succubus Archdevil 3": {
@@ -35092,7 +36174,11 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+12 MATK, +400 HP, +1.5% Global Max Health",
-        "stats": {},
+        "stats": {
+            "HP": 400,
+            "MATK": 12,
+            "HP%": 1.5
+        },
         "conversions": []
     },
     "Succubus Goddess": {
@@ -35112,11 +36198,11 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+60% MATK, +3500 HP, +10% AllRes, +10% Void Penetration, +1.1% HP Regen",
         "stats": {
-            "MATK%": 0.6,
+            "MATK%": 60,
             "HP": 3500,
-            "All Res%": 0.1,
-            "Void Pen%": 0.1,
-            "HP Regen%": 0.011
+            "All Res%": 10,
+            "Void Pen%": 10,
+            "HP Regen%": 1.1
         },
         "conversions": []
     },
@@ -35161,10 +36247,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+2 Hero Points, +4% Main Stats, +2% Max HP Multiplier",
         "stats": {
-            "DEF%": 0.04,
-            "ATK%": 0.04,
-            "MATK%": 0.04,
-            "HEAL%": 0.04
+            "HP%": 2
         },
         "conversions": []
     },
@@ -35353,10 +36436,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+2 Hero Points, +10% Main Stats, +3% Max HP Multiplier",
         "stats": {
-            "DEF%": 0.1,
-            "ATK%": 0.1,
-            "MATK%": 0.1,
-            "HEAL%": 0.1
+            "HP%": 3
         },
         "conversions": []
     }
