@@ -68,103 +68,6 @@ const tarot_data: Record<string, Tarot> = {
             { source: "Neg%", ratio: -0.9, resulting_stat: "Neg%" },
         ],  
     },
-    "Arbiter of Eternity (Death)": {
-        tier: 5,
-        skill_name: "Circle of Death",
-        description: "Increase self Elenegative by 10% and 5% of Negative DMG inflicted as DOT for next hit. Activates (Circle of Life) after. Gain HP Regen equal to 4% Max HP for 5 Turns. Loop",
-        stat_bonus: "Neg Pen%",
-        stat_base: 5,
-        stat_scale: 1,
-        stats: {
-            "Neg DOT%": 5
-        },
-        conversions: [
-            { source: "Neg%", ratio: 0.1, resulting_stat: "Neg%"}
-        ]
-    },
-    "Arbiter of Eternity (Life)": {
-        tier: 5,
-        skill_name: "Circle of Life",
-        description: "Gain HP Regen equal to 4% Max HP for 5 Turns. Loop. Activates (Circle of Death) after",
-        stat_bonus: "Neg Pen%",
-        stat_base: 5,
-        stat_scale: 1,
-        conversions: [
-            { source: "HP", ratio: 0.04, resulting_stat: "HP Regen"}
-        ]
-    },
-    "Cyclone Flail Princess": {
-        tier: 5,
-        skill_name: "Cyclone Momentum",
-        description: "Increase self Elehammer by 10% per turn up to a cap of 150%.",
-        stat_bonus: "Blunt Pen%",
-        stat_base: 5,
-        stat_scale: 1,
-        stack_stats: {
-            "Hammer%": 10
-        }
-    },
-    "Prophetic Archer": {
-        tier: 4,
-        skill_name: "Fervant Arrows",
-        description: "Increase self Bow DMG by 100% of Holy DMG. Increase self ATK by 100% Healpower.",
-        stat_bonus: "Pierce%",
-        stat_base: 5,
-        stat_scale: 1,
-        conversions: [
-            { source: "Holy%", ratio: 1, resulting_stat: "Bow DMG%"},
-            { source: "HEAL", ratio: 1, resulting_stat: "ATK"},
-        ]
-    },
-    "Mountain Tribunal": {
-        tier: 4,
-        skill_name: "King's Tribunal",
-        description: "Increase self Hammer DMG by 20% DEF Multiplier.",
-        stat_bonus: "Blunt%",
-        stat_base: 5,
-        stat_scale: 1,
-        conversions: [
-            { source: "DEF%", ratio: 0.20, resulting_stat: "Hammer DMG%"}
-        ]
-    },
-    "Undead Mind": {
-        tier: 3,
-        skill_name: "Hate of the Living",
-        description: "Gain +100% Threat Multiplier. Increase DEF by 10%.",
-        stat_bonus: "DEF%",
-        stat_base: 8,
-        stat_scale: 1,
-        stats: {
-            "Threat%": 100
-        },
-        conversions: [
-            { source: "DEF", ratio: 0.10, resulting_stat: "DEF"}
-        ]
-    },
-    "Unrelenting Horde": {
-        tier: 3,
-        skill_name: "Pain Nullification",
-        description: "Increase self Max HP and DEF by 5%. Reduce self Power by 10% DEF.",
-        stat_bonus: "DEF%",
-        stat_base: 8,
-        stat_scale: 1,
-        conversions: [
-            { source: "HP", ratio: 0.05, resulting_stat: "HP"},
-            { source: "DEF", ratio: 0.05, resulting_stat: "DEF"},
-            { source: "DEF", ratio: 0.05, resulting_stat: "POWER"}
-        ]
-    },
-    "Fortress Casters": {
-        tier: 3,
-        skill_name: "Prepared Caster",
-        description: "Start with extra HP equal to 8% MATK",
-        stat_bonus: "MATK%",
-        stat_base: 8,
-        stat_scale: 1,
-        conversions: [
-            { source: "MATK", ratio: 0.08, resulting_stat: "HP"}
-        ]
-    },
     "Valkyrie of Vengeance": {
         tier: 5,
         is_active: true,
@@ -363,13 +266,30 @@ const tarot_data: Record<string, Tarot> = {
         stat_base: 12,
         stat_scale: 3
     },
-    "Arbiter of Eternity": {
+    "Arbiter of Eternity (Death)": {
         tier: 5,
         skill_name: "Circle of Death",
         description: "Increase self Elenegative by 10% and 5% of Negative DMG inflicted as DOT for next hit. Activates (Circle of Life) after. Gain HP Regen equal to 4% Max HP for 5 Turns. Loop",
         stat_bonus: "Neg Pen%",
         stat_base: 5,
-        stat_scale: 1
+        stat_scale: 1,
+        stats: {
+            "Neg DOT%": 5
+        },
+        conversions: [
+            { source: "Neg%", ratio: 0.1, resulting_stat: "Neg%"}
+        ]
+    },
+    "Arbiter of Eternity (Life)": {
+        tier: 5,
+        skill_name: "Circle of Life",
+        description: "Gain HP Regen equal to 4% Max HP for 5 Turns. Loop. Activates (Circle of Death) after",
+        stat_bonus: "Neg Pen%",
+        stat_base: 5,
+        stat_scale: 1,
+        conversions: [
+            { source: "HP", ratio: 0.04, resulting_stat: "HP Regen"}
+        ]
     },
     "Corruptor of Light": {
         tier: 5,
@@ -450,6 +370,17 @@ const tarot_data: Record<string, Tarot> = {
         stat_bonus: "Void Pen%",
         stat_base: 2,
         stat_scale: 1
+    },
+    "Cyclone Flail Princess": {
+        tier: 5,
+        skill_name: "Cyclone Momentum",
+        description: "Increase self Elehammer by 10% per turn up to a cap of 150%.",
+        stat_bonus: "Blunt Pen%",
+        stat_base: 5,
+        stat_scale: 1,
+        stack_stats: {
+            "Hammer%": 10
+        }
     },
     "Android Assassin": {
         tier: 5,
@@ -675,6 +606,18 @@ const tarot_data: Record<string, Tarot> = {
         stat_base: 5,
         stat_scale: 1
     },
+    "Prophetic Archer": {
+        tier: 4,
+        skill_name: "Fervant Arrows",
+        description: "Increase self Bow DMG by 100% of Holy DMG. Increase self ATK by 100% Healpower.",
+        stat_bonus: "Pierce%",
+        stat_base: 5,
+        stat_scale: 1,
+        conversions: [
+            { source: "Holy%", ratio: 1, resulting_stat: "Bow DMG%"},
+            { source: "HEAL", ratio: 1, resulting_stat: "ATK"},
+        ]
+    },
     "Farsight Elf": {
         tier: 4,
         skill_name: "Sharp Sniper",
@@ -690,6 +633,17 @@ const tarot_data: Record<string, Tarot> = {
         stat_bonus: "Blunt%",
         stat_base: 5,
         stat_scale: 1
+    },
+    "Mountain Tribunal": {
+        tier: 4,
+        skill_name: "King's Tribunal",
+        description: "Increase self Hammer DMG by 20% DEF Multiplier.",
+        stat_bonus: "Blunt%",
+        stat_base: 5,
+        stat_scale: 1,
+        conversions: [
+            { source: "DEF%", ratio: 0.20, resulting_stat: "Hammer DMG%"}
+        ]
     },
     "Tenjho Tenge": {
         tier: 4,
@@ -901,6 +855,33 @@ const tarot_data: Record<string, Tarot> = {
         stat_base: 8,
         stat_scale: 1
     },
+    "Undead Mind": {
+        tier: 3,
+        skill_name: "Hate of the Living",
+        description: "Gain +100% Threat Multiplier. Increase DEF by 10%.",
+        stat_bonus: "DEF%",
+        stat_base: 8,
+        stat_scale: 1,
+        stats: {
+            "Threat%": 100
+        },
+        conversions: [
+            { source: "DEF", ratio: 0.10, resulting_stat: "DEF"}
+        ]
+    },
+    "Unrelenting Horde": {
+        tier: 3,
+        skill_name: "Pain Nullification",
+        description: "Increase self Max HP and DEF by 5%. Reduce self Power by 10% DEF.",
+        stat_bonus: "DEF%",
+        stat_base: 8,
+        stat_scale: 1,
+        conversions: [
+            { source: "HP", ratio: 0.05, resulting_stat: "HP"},
+            { source: "DEF", ratio: 0.05, resulting_stat: "DEF"},
+            { source: "DEF", ratio: 0.05, resulting_stat: "POWER"}
+        ]
+    },
     "Royal Guard": {
         tier: 3,
         skill_name: "Vanguard Strike",
@@ -940,6 +921,17 @@ const tarot_data: Record<string, Tarot> = {
         stat_bonus: "ATK%",
         stat_base: 8,
         stat_scale: 1
+    },
+    "Fortress Casters": {
+        tier: 3,
+        skill_name: "Prepared Caster",
+        description: "Start with extra HP equal to 8% MATK",
+        stat_bonus: "MATK%",
+        stat_base: 8,
+        stat_scale: 1,
+        conversions: [
+            { source: "MATK", ratio: 0.08, resulting_stat: "HP"}
+        ]
     },
     "Doppelganger of Justice": {
         tier: 3,
