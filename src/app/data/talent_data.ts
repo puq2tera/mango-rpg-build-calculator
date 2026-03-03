@@ -18382,7 +18382,7 @@ const talent_data: Record<string, Talent> = {
         "stats": {
             "Global HEAL%": 1,
             "Global MATK%": -33,
-            "Global ATK%": -0.33,
+            "Global ATK%": -33,
             "HP%": 20
         },
         "conversions": []
@@ -18427,8 +18427,9 @@ const talent_data: Record<string, Talent> = {
         "description": "+50% Global DMG, -95% Global MATK/ATK/Void DMG, -40% Global Heal Effect",
         "stats": {
             "Dmg%": 50,
-            "Global HEAL%": -40,
+            "Global ATK%": -95,
             "Global MATK%": -95,
+            "Void%": -95,
             "Heal Effect%": -40
         },
         "conversions": []
@@ -25647,6 +25648,7 @@ const talent_data: Record<string, Talent> = {
             "Water Res%": 25,
             "Lightning Res%": -25,
             "ATK": 10,
+            "MATK": 10,
             "DEF": 12
         },
         "conversions": []
@@ -25670,6 +25672,7 @@ const talent_data: Record<string, Talent> = {
         "stats": {
             "Water%": 4,
             "ATK": 10,
+            "MATK": 10,
             "DEF": 12
         },
         "conversions": []
@@ -25693,6 +25696,7 @@ const talent_data: Record<string, Talent> = {
         "stats": {
             "Water%": 4,
             "ATK": 10,
+            "MATK": 10,
             "DEF": 12
         },
         "conversions": []
@@ -25715,7 +25719,7 @@ const talent_data: Record<string, Talent> = {
         "description": "+10% ATK/MATK, +5% Water Damage, +10% Crit Damage",
         "stats": {
             "Crit DMG%": 10,
-            "ATK%": 20,
+            "ATK%": 10,
             "MATK%": 10,
             "Water%": 5
         },
@@ -25740,6 +25744,7 @@ const talent_data: Record<string, Talent> = {
         "stats": {
             "Water%": 4,
             "ATK": 10,
+            "MATK": 10,
             "DEF": 12
         },
         "conversions": []
@@ -25763,6 +25768,7 @@ const talent_data: Record<string, Talent> = {
         "stats": {
             "Water%": 4,
             "ATK": 10,
+            "MATK": 10,
             "DEF": 12
         },
         "conversions": []
@@ -25784,9 +25790,11 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% ATK/MATK, +10% Water Damage/Resist/Crit Damage",
         "stats": {
-            "ATK%": 40,
+            "ATK%": 20,
             "MATK%": 20,
-            "Water%": 10
+            "Water%": 10,
+            "Water Res%": 10,
+            "Crit DMG%": 10
         },
         "conversions": []
     },
@@ -25809,6 +25817,7 @@ const talent_data: Record<string, Talent> = {
         "stats": {
             "Water%": 4,
             "ATK": 10,
+            "MATK": 10,
             "DEF": 12
         },
         "conversions": []
@@ -25832,6 +25841,7 @@ const talent_data: Record<string, Talent> = {
         "stats": {
             "Water%": 4,
             "ATK": 10,
+            "MATK": 10,
             "DEF": 12
         },
         "conversions": []
@@ -25853,9 +25863,11 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% ATK/MATK, +15% Water Damage/Resist/Crit Damage",
         "stats": {
-            "ATK%": 40,
+            "ATK%": 20,
             "MATK%": 20,
-            "Water%": 15
+            "Water%": 15,
+            "Water Res%": 15,
+            "Crit DMG%": 15
         },
         "conversions": []
     },
@@ -25878,6 +25890,7 @@ const talent_data: Record<string, Talent> = {
         "stats": {
             "Water%": 4,
             "ATK": 10,
+            "MATK": 10,
             "DEF": 12
         },
         "conversions": []
@@ -25901,6 +25914,7 @@ const talent_data: Record<string, Talent> = {
         "stats": {
             "Water%": 4,
             "ATK": 10,
+            "MATK": 10,
             "DEF": 12
         },
         "conversions": []
@@ -25922,9 +25936,11 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+40% ATK/MATK, +20% Water Damage/Resist/Crit Damage",
         "stats": {
-            "ATK%": 80,
+            "ATK%": 40,
             "MATK%": 40,
-            "Water%": 20
+            "Water%": 20,
+            "Water Res%": 20,
+            "Crit DMG%": 20
         },
         "conversions": []
     },
@@ -35624,7 +35640,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+25% Fire Resist, -25% Holy Resist, +5% ATK/MATK, +10 MATK, +10 ATK",
         "stats": {
-            "ATK%": 10,
+            "ATK%": 5,
             "MATK%": 5,
             "Fire Res%": 25,
             "Holy Res%": -25,
@@ -35695,7 +35711,9 @@ const talent_data: Record<string, Talent> = {
         "description": "+10% MATK/ATK, +15% Elefire/Eleslash",
         "stats": {
             "ATK%": 10,
-            "MATK%": 20
+            "MATK%": 10,
+            "Fire%": 15,
+            "Slash%": 15
         },
         "conversions": []
     },
@@ -35761,7 +35779,7 @@ const talent_data: Record<string, Talent> = {
         "description": "+20% ATK/MATK, +25% Crit Damage",
         "stats": {
             "Crit DMG%": 25,
-            "ATK%": 40,
+            "ATK%": 20,
             "MATK%": 20
         },
         "conversions": []
@@ -35827,8 +35845,10 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% ATK/MATK, +25% Elefire/Eleslash",
         "stats": {
-            "ATK%": 40,
-            "MATK%": 20
+            "ATK%": 20,
+            "MATK%": 20,
+            "Fire%": 25,
+            "Slash%": 25
         },
         "conversions": []
     },
@@ -35893,8 +35913,10 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+40% ATK/MATK, +15% Penslash/Penfire",
         "stats": {
-            "ATK%": 80,
-            "MATK%": 40
+            "ATK%": 40,
+            "MATK%": 40,
+            "Slash Pen%": 15,
+            "Fire Pen%": 15
         },
         "conversions": []
     },
@@ -36223,10 +36245,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+1 Hero Points, +10% Main Stats",
         "stats": {
-            "DEF%": 0.1,
-            "ATK%": 0.1,
-            "MATK%": 0.1,
-            "HEAL%": 0.1
+            "Hero Points": 1,
+            "MAIN%": 10
         },
         "conversions": []
     },
@@ -36247,7 +36267,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+2 Hero Points, +4% Main Stats, +2% Max HP Multiplier",
         "stats": {
-            "HP%": 2
+            "HP%": 2,
+            "Hero Points": 2,
+            "MAIN%": 4
         },
         "conversions": []
     },
@@ -36268,10 +36290,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+2 Hero Points, +4% Main Stats",
         "stats": {
-            "DEF%": 0.04,
-            "ATK%": 0.04,
-            "MATK%": 0.04,
-            "HEAL%": 0.04
+            "Hero Points": 2,
+            "MAIN%": 4
         },
         "conversions": []
     },
@@ -36292,10 +36312,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+2 Hero Points, +4% Main Stats",
         "stats": {
-            "DEF%": 0.04,
-            "ATK%": 0.04,
-            "MATK%": 0.04,
-            "HEAL%": 0.04
+            "Hero Points": 2,
+            "MAIN%": 4
         },
         "conversions": []
     },
@@ -36316,10 +36334,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+2 Hero Points, +4% Main Stats",
         "stats": {
-            "DEF%": 0.04,
-            "ATK%": 0.04,
-            "MATK%": 0.04,
-            "HEAL%": 0.04
+            "Hero Points": 2,
+            "MAIN%": 4
         },
         "conversions": []
     },
@@ -36340,10 +36356,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+2 Hero Points, +6% Main Stats",
         "stats": {
-            "DEF%": 0.06,
-            "ATK%": 0.06,
-            "MATK%": 0.06,
-            "HEAL%": 0.06
+            "Hero Points": 2,
+            "MAIN%": 6
         },
         "conversions": []
     },
@@ -36364,10 +36378,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+2 Hero Points, +4% Main Stats",
         "stats": {
-            "DEF%": 0.04,
-            "ATK%": 0.04,
-            "MATK%": 0.04,
-            "HEAL%": 0.04
+            "Hero Points": 2,
+            "MAIN%": 4
         },
         "conversions": []
     },
@@ -36388,10 +36400,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+2 Hero Points, +4% Main Stats",
         "stats": {
-            "DEF%": 0.04,
-            "ATK%": 0.04,
-            "MATK%": 0.04,
-            "HEAL%": 0.04
+            "Hero Points": 2,
+            "MAIN%": 4
         },
         "conversions": []
     },
@@ -36412,10 +36422,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+2 Hero Points, +4% Main Stats",
         "stats": {
-            "DEF%": 0.04,
-            "ATK%": 0.04,
-            "MATK%": 0.04,
-            "HEAL%": 0.04
+            "Hero Points": 2,
+            "MAIN%": 4
         },
         "conversions": []
     },
@@ -36436,7 +36444,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+2 Hero Points, +10% Main Stats, +3% Max HP Multiplier",
         "stats": {
-            "HP%": 3
+            "HP%": 3,
+            "Hero Points": 2,
+            "MAIN%": 10
         },
         "conversions": []
     }

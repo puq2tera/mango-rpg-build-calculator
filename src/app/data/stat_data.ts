@@ -102,6 +102,7 @@ export const StatsInfo: Record<string, StatInfoData> = {
   "DEF%":  { multi: 0.01 },
   "MATK%": { multi: 0.01 },
   "HEAL%": { multi: 0.01 },
+  "MAIN%": { multi: 0.01 },
 
   "Art_ATK%":  { multi: 0.01 },
   "Art_DEF%":  { multi: 0.01 },
@@ -242,6 +243,7 @@ export const StatsInfo: Record<string, StatInfoData> = {
   "Buff%":        { multi: 0.01 },
   "Heal Effect%": { multi: 0.01 },
   "EXP Bonus":    { multi: 1 },
+  "Hero Points":  { multi: 1 },
 
   // Class level bonuses
   "Overdrive%":   { multi: 0.01 },
