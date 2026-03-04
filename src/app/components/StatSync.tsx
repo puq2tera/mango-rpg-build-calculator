@@ -9,6 +9,7 @@ import type { Tarot } from "../data/tarot_data"
 import rune_data from "../data/rune_data"
 import { skill_data } from "../data/skill_data"
 import tarot_data from "../data/tarot_data"
+import { race_data_by_tag } from "../data/race_data"
 
 
 // Helper functions
@@ -74,9 +75,9 @@ function updateStats(targetDict: Record<string, number>, sourceDict: Record<stri
 export function computeTalentStats() {
   console.log("Updating Talent Stats")
   const raw = localStorage.getItem("selectedTalents")
-  if (!raw) return //Skip if selectedTalents doens't return anything
+  const rawSelectedRace = localStorage.getItem("SelectedRace")
   try {
-    const selected = new Set<string>(JSON.parse(raw))
+    const selected = new Set<string>(JSON.parse(raw ?? "[]"))
     const stats: Record<string, number> = {}
     for (const [name, data] of Object.entries(talent_data)) {
       if (!selected.has(name)) continue
@@ -84,6 +85,14 @@ export function computeTalentStats() {
         stats[stat] = (stats[stat] ?? 0) + (value ?? 0)
       }
     }
+
+    if (rawSelectedRace && rawSelectedRace in race_data_by_tag) {
+      const raceStats = race_data_by_tag[rawSelectedRace as keyof typeof race_data_by_tag].stats
+      for (const [stat, value] of Object.entries(raceStats)) {
+        stats[stat] = (stats[stat] ?? 0) + (value ?? 0)
+      }
+    }
+
     localStorage.setItem("StatsTalents", JSON.stringify(stats)) // Save totals to StatsTalents
     console.log(stats)
   } catch {}

@@ -1,7 +1,13 @@
 "use client"
 
-import { useState, useEffect } from "react"
-import stat_data from "../data/stat_data"
+import { useEffect, useState } from "react"
+import {
+  heroPointGainsByRace,
+  heroPointStats,
+  heroPointStatsByGroup,
+  type HeroPointStat,
+} from "../data/heropoint_data"
+import race_data, { race_data_by_tag, type RaceTag } from "../data/race_data"
 
 const STORAGE_KEYS = {
   levels: "SelectedLevels",
@@ -9,16 +15,22 @@ const STORAGE_KEYS = {
   training: "SelectedTraining",
   heroPoints: "SelectedHeroPoints",
   savedLevelOrder: "SelectedLevelOrder",
+  race: "SelectedRace",
 }
+
+const DEFAULT_RACE: RaceTag = race_data[0].tag
+const isRaceTag = (value: string): value is RaceTag => value in race_data_by_tag
 
 export default function LevelsPage() {
   type Cls = "tank" | "warrior" | "caster" | "healer"
   type LevelsByClass = Record<Cls, number>
+
   const [levels, setLevels] = useState<LevelsByClass>({ tank: 0, warrior: 0, caster: 0, healer: 0 })
   const [statPoints, setStatPoints] = useState({ ATK: 0, DEF: 0, MATK: 0, HEAL: 0 })
   const [training, setTraining] = useState({ ATK: 0, DEF: 0, MATK: 0, HEAL: 0 })
   const [heroPoints, setHeroPoints] = useState<Record<string, number>>({})
   const [classOrder, setClassOrder] = useState<Cls[]>(["tank", "warrior", "caster", "healer"])
+  const [selectedRace, setSelectedRace] = useState<RaceTag>(DEFAULT_RACE)
   const [loaded, setLoaded] = useState(false)
 
   useEffect(() => {
@@ -26,15 +38,17 @@ export default function LevelsPage() {
     const storedStatPoints = localStorage.getItem(STORAGE_KEYS.statPoints)
     const storedTraining = localStorage.getItem(STORAGE_KEYS.training)
     const storedHeroPoints = localStorage.getItem(STORAGE_KEYS.heroPoints)
-    const storedlevelOrder = localStorage.getItem(STORAGE_KEYS.savedLevelOrder)
+    const storedLevelOrder = localStorage.getItem(STORAGE_KEYS.savedLevelOrder)
+    const storedRace = localStorage.getItem(STORAGE_KEYS.race)
 
     if (storedLevels) setLevels(JSON.parse(storedLevels))
     if (storedStatPoints) setStatPoints(JSON.parse(storedStatPoints))
     if (storedTraining) setTraining(JSON.parse(storedTraining))
     if (storedHeroPoints) setHeroPoints(JSON.parse(storedHeroPoints))
-    if (storedlevelOrder) setClassOrder(JSON.parse(storedlevelOrder))
+    if (storedLevelOrder) setClassOrder(JSON.parse(storedLevelOrder))
+    if (storedRace && isRaceTag(storedRace)) setSelectedRace(storedRace)
 
-    setLoaded(true)  // <- very important
+    setLoaded(true)
   }, [])
 
   useEffect(() => {
@@ -60,13 +74,12 @@ export default function LevelsPage() {
   useEffect(() => {
     if (!loaded) return
     localStorage.setItem(STORAGE_KEYS.savedLevelOrder, JSON.stringify(classOrder))
-    // Expand to full sequence: all levels for each class, in chosen order
-    const seq: Cls[] = []
-    for (const c of classOrder) {
-      const count = levels[c]
-      for (let i = 0; i < Math.max(0, count); i++) seq.push(c)
-    }
-  }, [classOrder, levels, loaded])
+  }, [classOrder, loaded])
+
+  useEffect(() => {
+    if (!loaded) return
+    localStorage.setItem(STORAGE_KEYS.race, selectedRace)
+  }, [selectedRace, loaded])
 
   if (!loaded) {
     return <div className="p-4">Loading...</div>
@@ -79,9 +92,8 @@ export default function LevelsPage() {
   const remainingStatPoints = totalStatPoints - usedStatPoints
   const totalTraining = Object.values(training).reduce((a, b) => a + b, 0)
 
-  const totalHeroPoints = Object.entries(heroPoints).reduce((sum, [key, val]) => {
-    const cost = stat_data.heroStats.find(([k]) => k === key)?.[1] ?? 1
-    return sum + cost * val
+  const totalHeroPoints = heroPointStats.reduce((sum, { id, cost }) => {
+    return sum + (heroPoints[id] ?? 0) * cost
   }, 0)
 
   const maxHeroPoints = 320
@@ -93,7 +105,7 @@ export default function LevelsPage() {
 
   // Column reorder helpers
   const moveClass = (idx: number, dir: -1 | 1) => {
-    setClassOrder(prev => {
+    setClassOrder((prev) => {
       const i = idx
       const j = i + dir
       if (j < 0 || j >= prev.length) return prev
@@ -108,19 +120,56 @@ export default function LevelsPage() {
   const classLabel: Record<Cls, string> = { tank: "Tank", warrior: "Warrior", caster: "Caster", healer: "Healer" }
   const headerBg: Record<Cls, string> = { tank: "bg-green-100", warrior: "bg-red-100", caster: "bg-blue-100", healer: "bg-pink-100" }
 
+  const selectedRaceData = race_data_by_tag[selectedRace]
+  const selectedRaceHeroPointGains = heroPointGainsByRace[selectedRace]
+
+  const renderHeroPointInput = ({ id, cost }: HeroPointStat) => (
+    <div key={id} className={`border ${costClass(cost)}`}>
+      <label className="block font-mono text-xs text-gray-700 px-1">{id}</label>
+      <div className="text-[11px] text-gray-500 text-center">Gain: {selectedRaceHeroPointGains[id]}</div>
+      <input
+        type="number"
+        value={heroPoints[id] ?? 0}
+        onChange={(e) => setHeroPoints({ ...heroPoints, [id]: +e.target.value })}
+        className="border px-1 text-center w-full"
+      />
+    </div>
+  )
+
   return (
     <div className="p-4 space-y-6">
       <h1 className="text-xl font-bold">Level Summary</h1>
+
+      <h2 className="text-lg font-bold">Race</h2>
+      <div className="max-w-3xl border p-3 space-y-2 bg-gray-50">
+        <div className="flex flex-col gap-2 md:flex-row md:items-center">
+          <label htmlFor="race-select" className="font-semibold">Selected Race</label>
+          <select
+            id="race-select"
+            value={selectedRace}
+            onChange={(e) => {
+              if (isRaceTag(e.target.value)) setSelectedRace(e.target.value)
+            }}
+            className="border px-2 py-1 bg-white"
+          >
+            {race_data.map((race) => (
+              <option key={race.tag} value={race.tag}>{race.name}</option>
+            ))}
+          </select>
+          <span className="text-xs text-gray-600">Tag: {selectedRaceData.tag}</span>
+        </div>
+        <p className="text-sm text-gray-800">{selectedRaceData.description}</p>
+      </div>
 
       <table className="table-fixed border text-center text-sm">
         <thead>
           <tr>
             {classOrder.map((c, idx) => (
-              <th key={c} className={`${headerBg[c]} border px-2 py-1`}> 
+              <th key={c} className={`${headerBg[c]} border px-2 py-1`}>
                 <div className="flex items-center justify-between gap-1">
-                  <button className="px-1 py-0.5 border rounded text-xs" onClick={() => moveClass(idx, -1)} title="Move left" disabled={idx===0}>{"<"}</button>
+                  <button className="px-1 py-0.5 border rounded text-xs" onClick={() => moveClass(idx, -1)} title="Move left" disabled={idx === 0}>{"<"}</button>
                   <span className="font-semibold">{classLabel[c]}</span>
-                  <button className="px-1 py-0.5 border rounded text-xs" onClick={() => moveClass(idx, 1)} title="Move right" disabled={idx===classOrder.length-1}>{">"}</button>
+                  <button className="px-1 py-0.5 border rounded text-xs" onClick={() => moveClass(idx, 1)} title="Move right" disabled={idx === classOrder.length - 1}>{">"}</button>
                 </div>
               </th>
             ))}
@@ -128,12 +177,12 @@ export default function LevelsPage() {
         </thead>
         <tbody>
           <tr>
-            {classOrder.map(k => (
+            {classOrder.map((k) => (
               <td key={k} className="border">
                 <input
                   type="number"
                   value={levels[k]}
-                  onChange={e => setLevels({ ...levels, [k]: +e.target.value })}
+                  onChange={(e) => setLevels({ ...levels, [k]: +e.target.value })}
                   className="w-16 text-center"
                 />
               </td>
@@ -194,12 +243,12 @@ export default function LevelsPage() {
         </thead>
         <tbody>
           <tr>
-            {(["ATK", "DEF", "MATK", "HEAL"] as const).map(k => (
+            {(["ATK", "DEF", "MATK", "HEAL"] as const).map((k) => (
               <td key={k} className="border">
                 <input
                   type="number"
                   value={statPoints[k]}
-                  onChange={e => setStatPoints({ ...statPoints, [k]: +e.target.value })}
+                  onChange={(e) => setStatPoints({ ...statPoints, [k]: +e.target.value })}
                   className="w-16 text-center"
                 />
               </td>
@@ -223,12 +272,12 @@ export default function LevelsPage() {
         </thead>
         <tbody>
           <tr>
-            {(["DEF", "ATK", "MATK", "HEAL"] as const).map(k => (
+            {(["DEF", "ATK", "MATK", "HEAL"] as const).map((k) => (
               <td key={k} className="border">
                 <input
                   type="number"
                   value={training[k]}
-                  onChange={e => setTraining({ ...training, [k]: +e.target.value })}
+                  onChange={(e) => setTraining({ ...training, [k]: +e.target.value })}
                   className="w-16 text-center"
                 />
               </td>
@@ -257,60 +306,22 @@ export default function LevelsPage() {
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
         <div>
           <h3 className="bg-green-300 text-center font-bold">Main Stats</h3>
-          {stat_data.heroStats.filter(([k]) => k.endsWith("multi")).map(([stat, cost]) => (
-            <div key={stat} className={`border ${costClass(cost)}`}>
-              <label className="block font-mono text-xs text-gray-700">{stat}</label>
-              <input
-                type="number"
-                value={heroPoints[stat] ?? 0}
-                onChange={e => setHeroPoints({ ...heroPoints, [stat]: +e.target.value })}
-                className="border px-1 text-center w-full"
-              />
-            </div>
-          ))}
+          {heroPointStatsByGroup.main.map(renderHeroPointInput)}
         </div>
 
         <div>
           <h3 className="bg-blue-200 text-center font-bold">Elemental Damage</h3>
-          {stat_data.heroStats.filter(([k]) => k.startsWith("ele") && !k.includes("multi")).map(([stat, cost]) => (
-            <div key={stat} className={`border ${costClass(cost)}`}>
-              <label className="block font-mono text-xs text-gray-700">{stat}</label>
-              <input
-                type="number"
-                value={heroPoints[stat] ?? 0}
-                onChange={e => setHeroPoints({ ...heroPoints, [stat]: +e.target.value })}
-                className="border px-1 text-center w-full"
-              />
-            </div>
-          ))}
+          {heroPointStatsByGroup.damage.map(renderHeroPointInput)}
         </div>
 
         <div>
           <h3 className="bg-green-300 text-center font-bold">Elemental Resists</h3>
-          {stat_data.heroStats.filter(([k]) => k.startsWith("res")).map(([stat, cost]) => (
-            <div key={stat} className={`border ${costClass(cost)}`}>
-              <label className="block font-mono text-xs text-gray-700">{stat}</label>
-              <input
-                type="number"
-                value={heroPoints[stat] ?? 0}
-                onChange={e => setHeroPoints({ ...heroPoints, [stat]: +e.target.value })}
-                className="border px-1 text-center w-full"
-              />
-            </div>
-          ))}
+          {heroPointStatsByGroup.resist.map(renderHeroPointInput)}
         </div>
 
         <div>
           <h3 className="bg-cyan-100 text-center font-bold">Ele Pen</h3>
-          <div className={`border ${costClass(1)}`}>
-            <label className="block font-mono text-xs text-gray-700">penvoid</label>
-            <input
-              type="number"
-              value={heroPoints["penvoid"] ?? 0}
-              onChange={e => setHeroPoints({ ...heroPoints, penvoid: +e.target.value })}
-              className="border px-1 text-center w-full"
-            />
-          </div>
+          {heroPointStatsByGroup.penetration.map(renderHeroPointInput)}
         </div>
       </div>
 
