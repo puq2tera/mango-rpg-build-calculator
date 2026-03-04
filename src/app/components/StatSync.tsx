@@ -9,6 +9,7 @@ import type { Tarot } from "../data/tarot_data"
 import rune_data from "../data/rune_data"
 import { skill_data } from "../data/skill_data"
 import tarot_data from "../data/tarot_data"
+import { heroPointGainsByRace, heroPointStats } from "../data/heropoint_data"
 import { race_data_by_tag } from "../data/race_data"
 
 
@@ -105,6 +106,7 @@ export function computeLevelStats() {
   const rawstoredStatPoints = localStorage.getItem('SelectedStatPoints')
   const rawstoredTraining = localStorage.getItem('SelectedTraining')
   const rawstoredHeroPoints = localStorage.getItem('SelectedHeroPoints')
+  const rawSelectedRace = localStorage.getItem('SelectedRace')
 
   const StatsLevels: Record<string, number> = {}
 
@@ -113,9 +115,6 @@ export function computeLevelStats() {
   const storedStatPoints: Record<string, number> = JSON.parse(rawstoredStatPoints ?? "{}") 
   const storedTraining: Record<string, number> = JSON.parse(rawstoredTraining ?? "{}")
   const storedHeroPoints: Record<string, number> = JSON.parse(rawstoredHeroPoints ?? "{}")
-
-  //TODO: Remove once heropoints are implemented
-  console.log(storedHeroPoints)
   
   // Starting stats
   StatsLevels['Crit DMG%'] = 120
@@ -161,7 +160,25 @@ export function computeLevelStats() {
     }
   }
 
-  //TODO: HEROPOINT CALULATIONS
+  // Hero points (race-dependent stat gains)
+  const selectedRaceKey = (rawSelectedRace && rawSelectedRace in heroPointGainsByRace)
+    ? rawSelectedRace as keyof typeof heroPointGainsByRace
+    : "Skeleton"
+  const raceHeroPointGains = heroPointGainsByRace[selectedRaceKey]
+
+  for (const { id } of heroPointStats) {
+    const spentPoints = Number(storedHeroPoints[id] ?? 0)
+    if (!Number.isFinite(spentPoints) || spentPoints === 0) continue
+
+    // `penvoid` exists in hero point data but is inconsistently cased in inGameNames.
+    const mappedStat = id === "penvoid" ? "Void Pen%" : stat_data.inGameNames[id]
+    if (!mappedStat) continue
+
+    const gainPerPoint = raceHeroPointGains[id] ?? 0
+    if (gainPerPoint === 0) continue
+
+    StatsLevels[mappedStat] = (StatsLevels[mappedStat] ?? 0) + gainPerPoint * spentPoints
+  }
 
 
   localStorage.setItem("StatsLevels", JSON.stringify(StatsLevels))
