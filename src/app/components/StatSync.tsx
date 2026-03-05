@@ -160,6 +160,12 @@ export function computeLevelStats() {
     }
   }
 
+  // Every class level gives +2% to that class mainstat multiplier.
+  StatsLevels["DEF%"] = (StatsLevels["DEF%"] ?? 0) + ((storedLevels["tank"] ?? 0) * 2)
+  StatsLevels["ATK%"] = (StatsLevels["ATK%"] ?? 0) + ((storedLevels["warrior"] ?? 0) * 2)
+  StatsLevels["MATK%"] = (StatsLevels["MATK%"] ?? 0) + ((storedLevels["caster"] ?? 0) * 2)
+  StatsLevels["HEAL%"] = (StatsLevels["HEAL%"] ?? 0) + ((storedLevels["healer"] ?? 0) * 2)
+
   // Hero points (race-dependent stat gains)
   const selectedRaceKey = (rawSelectedRace && rawSelectedRace in heroPointGainsByRace)
     ? rawSelectedRace as keyof typeof heroPointGainsByRace
