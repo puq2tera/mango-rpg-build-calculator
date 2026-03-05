@@ -328,7 +328,7 @@ const ClassMainStatValues: Record<string, Record<string, number>> = {
     "HP": 22.5,
     "MP": 1,
     "Armor Save": 1,
-    "Armor Save Scaling": 0.03 //round down
+    "Armor Save Scaling": 0.4 //round down
   },
   "warrior": {
     "ATK": 7,

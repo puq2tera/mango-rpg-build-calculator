@@ -111,7 +111,7 @@ export function computeLevelStats() {
   const StatsLevels: Record<string, number> = {}
 
   const storedLevels: Record<string, number> = JSON.parse(rawstoredLevels ?? "{}")
-  const storedLevelOrder: string[] = JSON.parse(rawstoredOrder ?? "{}")
+  const storedLevelOrder: string[] = JSON.parse(rawstoredOrder ?? "[]")
   const storedStatPoints: Record<string, number> = JSON.parse(rawstoredStatPoints ?? "{}") 
   const storedTraining: Record<string, number> = JSON.parse(rawstoredTraining ?? "{}")
   const storedHeroPoints: Record<string, number> = JSON.parse(rawstoredHeroPoints ?? "{}")
@@ -139,7 +139,7 @@ export function computeLevelStats() {
         case "healer":  scaling_value += stat_data.ClassMainStatValues[ClassName][scaling_stat] + (stat_data.ClassMainStatValues[ClassName][`${scaling_stat} Scaling`] * lvl); break;
       }
     }
-    StatsLevels[scaling_stat] += scaling_value
+    StatsLevels[scaling_stat] = (StatsLevels[scaling_stat] ?? 0) + scaling_value
   }
   StatsLevels['HP'] = hp
 
