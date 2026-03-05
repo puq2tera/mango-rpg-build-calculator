@@ -7,6 +7,8 @@ import {
   heroPointStatsByGroup,
   type HeroPointStat,
 } from "../data/heropoint_data"
+import { skill_data } from "../data/skill_data"
+import { talent_data } from "../data/talent_data"
 import race_data, { race_data_by_tag, type RaceTag } from "../data/race_data"
 
 const STORAGE_KEYS = {
@@ -20,6 +22,53 @@ const STORAGE_KEYS = {
 
 const DEFAULT_RACE: RaceTag = race_data[0].tag
 const isRaceTag = (value: string): value is RaceTag => value in race_data_by_tag
+const TRAINING_GOLD_PER_POINT = 15
+
+function parseStoredStringArray(raw: string | null): string[] {
+  if (!raw) return []
+  try {
+    const parsed = JSON.parse(raw)
+    return Array.isArray(parsed) ? parsed.filter((value): value is string => typeof value === "string") : []
+  } catch {
+    return []
+  }
+}
+
+function getXpToNextLevel(level: number): number {
+  const lvl = Math.max(0, Math.floor(level))
+
+  if (lvl <= 120) {
+    return 60 + (4 * lvl) + (500 * Math.floor(lvl / 20))
+  }
+
+  if (lvl <= 259) {
+    const extraAfter140 = lvl >= 140 ? 1000 * (Math.floor((lvl - 140) / 20) + 1) : 0
+    return 6544 + (4 * (lvl - 121)) + extraAfter140
+  }
+
+  if (lvl <= 340) {
+    return 21150 + (6 * (lvl - 260)) + (1500 * Math.floor((lvl - 260) / 20))
+  }
+
+  if (lvl <= 359) {
+    return 41454 + (9 * (lvl - 341))
+  }
+
+  return 43875 + (9 * (lvl - 360)) + (2250 * Math.floor((lvl - 360) / 20))
+}
+
+function cumulativeLevelExpCost(levelCount: number): number {
+  const levels = Math.max(0, Math.floor(levelCount))
+  let totalExp = 0
+  for (let lvl = 0; lvl < levels; lvl++) {
+    totalExp += getXpToNextLevel(lvl)
+  }
+  return totalExp
+}
+
+function formatWhole(value: number): string {
+  return Math.max(0, Math.round(value)).toLocaleString()
+}
 
 export default function LevelsPage() {
   type Cls = "tank" | "warrior" | "caster" | "healer"
@@ -29,6 +78,8 @@ export default function LevelsPage() {
   const [statPoints, setStatPoints] = useState({ ATK: 0, DEF: 0, MATK: 0, HEAL: 0 })
   const [training, setTraining] = useState({ ATK: 0, DEF: 0, MATK: 0, HEAL: 0 })
   const [heroPoints, setHeroPoints] = useState<Record<string, number>>({})
+  const [selectedTalents, setSelectedTalents] = useState<string[]>([])
+  const [selectedBuffs, setSelectedBuffs] = useState<string[]>([])
   const [classOrder, setClassOrder] = useState<Cls[]>(["tank", "warrior", "caster", "healer"])
   const [selectedRace, setSelectedRace] = useState<RaceTag>(DEFAULT_RACE)
   const [loaded, setLoaded] = useState(false)
@@ -40,6 +91,8 @@ export default function LevelsPage() {
     const storedHeroPoints = localStorage.getItem(STORAGE_KEYS.heroPoints)
     const storedLevelOrder = localStorage.getItem(STORAGE_KEYS.savedLevelOrder)
     const storedRace = localStorage.getItem(STORAGE_KEYS.race)
+    const storedSelectedTalents = localStorage.getItem("selectedTalents")
+    const storedSelectedBuffs = localStorage.getItem("selectedBuffs")
 
     if (storedLevels) setLevels(JSON.parse(storedLevels))
     if (storedStatPoints) setStatPoints(JSON.parse(storedStatPoints))
@@ -47,6 +100,8 @@ export default function LevelsPage() {
     if (storedHeroPoints) setHeroPoints(JSON.parse(storedHeroPoints))
     if (storedLevelOrder) setClassOrder(JSON.parse(storedLevelOrder))
     if (storedRace && isRaceTag(storedRace)) setSelectedRace(storedRace)
+    setSelectedTalents(parseStoredStringArray(storedSelectedTalents))
+    setSelectedBuffs(parseStoredStringArray(storedSelectedBuffs))
 
     setLoaded(true)
   }, [])
@@ -86,7 +141,8 @@ export default function LevelsPage() {
   }
 
   const totalLevels = Object.values(levels).reduce((a, b) => a + b, 0)
-  const isekaiLevel = Math.max(0, Math.ceil((totalLevels - 110) / 5))
+  const availableSkillPoints = Math.ceil(totalLevels / 2)
+  const availableTalentPoints = Math.floor(totalLevels / 2)
   const totalStatPoints = totalLevels
   const usedStatPoints = Object.values(statPoints).reduce((a, b) => a + b, 0)
   const remainingStatPoints = totalStatPoints - usedStatPoints
@@ -95,6 +151,71 @@ export default function LevelsPage() {
   const totalHeroPoints = heroPointStats.reduce((sum, { id, cost }) => {
     return sum + (heroPoints[id] ?? 0) * cost
   }, 0)
+
+  const classKeys: Cls[] = ["tank", "warrior", "caster", "healer"]
+  const requiredLevelsByClass: LevelsByClass = { tank: 0, warrior: 0, caster: 0, healer: 0 }
+  let requiredTotalLevel = 0
+  let totalExpForTalents = 0
+  let totalExpForSkills = 0
+  let totalGoldForTalents = 0
+  let totalGoldForSkills = 0
+  let totalTalentPointsUsed = 0
+  let totalSkillPointsUsed = 0
+
+  for (const talentName of selectedTalents) {
+    const talent = talent_data[talentName]
+    if (!talent) continue
+
+    requiredTotalLevel = Math.max(requiredTotalLevel, talent.total_level ?? 0)
+    requiredLevelsByClass.tank = Math.max(requiredLevelsByClass.tank, talent.class_levels.tank_levels ?? 0)
+    requiredLevelsByClass.warrior = Math.max(requiredLevelsByClass.warrior, talent.class_levels.warrior_levels ?? 0)
+    requiredLevelsByClass.caster = Math.max(requiredLevelsByClass.caster, talent.class_levels.caster_levels ?? 0)
+    requiredLevelsByClass.healer = Math.max(requiredLevelsByClass.healer, talent.class_levels.healer_levels ?? 0)
+
+    totalExpForTalents += talent.exp ?? 0
+    totalGoldForTalents += talent.gold ?? 0
+    totalTalentPointsUsed += 1
+  }
+
+  for (const buffName of selectedBuffs) {
+    const skill = skill_data[buffName]
+    if (!skill) continue
+
+    requiredLevelsByClass.tank = Math.max(requiredLevelsByClass.tank, skill.class_levels.tank_levels ?? 0)
+    requiredLevelsByClass.warrior = Math.max(requiredLevelsByClass.warrior, skill.class_levels.warrior_levels ?? 0)
+    requiredLevelsByClass.caster = Math.max(requiredLevelsByClass.caster, skill.class_levels.caster_levels ?? 0)
+    requiredLevelsByClass.healer = Math.max(requiredLevelsByClass.healer, skill.class_levels.healer_levels ?? 0)
+
+    totalExpForSkills += skill.exp ?? 0
+    totalGoldForSkills += skill.gold ?? 0
+    totalSkillPointsUsed += skill.sp ?? 0
+  }
+
+  const classLevelDeficit: LevelsByClass = {
+    tank: Math.max(0, requiredLevelsByClass.tank - levels.tank),
+    warrior: Math.max(0, requiredLevelsByClass.warrior - levels.warrior),
+    caster: Math.max(0, requiredLevelsByClass.caster - levels.caster),
+    healer: Math.max(0, requiredLevelsByClass.healer - levels.healer),
+  }
+
+  const classLevelsNeeded = classKeys.reduce((sum, className) => sum + classLevelDeficit[className], 0)
+  const requiredLevelForTalentPoints = totalTalentPointsUsed * 2
+  const totalSkillPointsRequired = totalSkillPointsUsed + totalTraining
+  const requiredLevelForSkillPoints = Math.max(0, (totalSkillPointsRequired * 2) - 1)
+  const pointBasedRequiredLevel = Math.max(requiredLevelForTalentPoints, requiredLevelForSkillPoints)
+  const totalRequiredLevel = Math.max(requiredTotalLevel, pointBasedRequiredLevel)
+  const totalLevelDeficit = Math.max(0, totalRequiredLevel - totalLevels)
+  const levelsNeeded = Math.max(totalLevelDeficit, classLevelsNeeded)
+  const targetTotalLevels = totalLevels + levelsNeeded
+  const requiredIsekaiLevel = Math.max(0, Math.ceil((targetTotalLevels - 110) / 5))
+
+  const skillPointDeficit = Math.max(0, totalSkillPointsRequired - availableSkillPoints)
+  const talentPointDeficit = Math.max(0, totalTalentPointsUsed - availableTalentPoints)
+
+  const totalExpForLevels = cumulativeLevelExpCost(targetTotalLevels)
+  const totalGoldForTraining = totalTraining * TRAINING_GOLD_PER_POINT
+  const totalExp = totalExpForTalents + totalExpForSkills + totalExpForLevels
+  const totalGold = totalGoldForTalents + totalGoldForSkills + totalGoldForTraining
 
   const maxHeroPoints = 320
 
@@ -194,16 +315,55 @@ export default function LevelsPage() {
       <table className="table-fixed border text-sm text-center">
         <thead className="bg-gray-100">
           <tr>
-            <th>Total Levels</th>
-            <th>Levels Needed</th>
-            <th>Isekai Level</th>
+            <th>Class</th>
+            <th>Chosen</th>
+            <th>Required</th>
+            <th>Needed</th>
+          </tr>
+        </thead>
+        <tbody>
+          {classOrder.map((classKey) => (
+            <tr key={classKey}>
+              <td className="border px-2 py-1 font-semibold">{classLabel[classKey]}</td>
+              <td className="border px-2 py-1">{levels[classKey]}</td>
+              <td className="border px-2 py-1">{requiredLevelsByClass[classKey]}</td>
+              <td className="border px-2 py-1">{classLevelDeficit[classKey]}</td>
+            </tr>
+          ))}
+          <tr>
+            <th colSpan={2} className="border px-2 py-1">Total Levels</th>
+            <th className="border px-2 py-1">Levels Needed</th>
+            <th className="border px-2 py-1">Isekai Level Required</th>
+          </tr>
+          <tr>
+            <td colSpan={2} className="border px-2 py-1">{totalLevels}</td>
+            <td className="border px-2 py-1">{levelsNeeded}</td>
+            <td className="border px-2 py-1">{requiredIsekaiLevel}</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <table className="table-fixed border text-sm text-center">
+        <thead className="bg-gray-100">
+          <tr>
+            <th>Point Type</th>
+            <th>Used</th>
+            <th>Available</th>
+            <th>Needed</th>
           </tr>
         </thead>
         <tbody>
           <tr>
-            <td>{totalLevels}</td>
-            <td>(todo)</td>
-            <td>{isekaiLevel}</td>
+            <td className="border px-2 py-1">Skill Points (Odd Levels, Skills + Training)</td>
+            <td className="border px-2 py-1">{totalSkillPointsRequired}</td>
+            <td className="border px-2 py-1">{availableSkillPoints}</td>
+            <td className="border px-2 py-1">{skillPointDeficit}</td>
+          </tr>
+          <tr>
+            <td className="border px-2 py-1">Talent Points (Even Levels)</td>
+            <td className="border px-2 py-1">{totalTalentPointsUsed}</td>
+            <td className="border px-2 py-1">{availableTalentPoints}</td>
+            <td className="border px-2 py-1">{talentPointDeficit}</td>
           </tr>
         </tbody>
       </table>
@@ -211,11 +371,11 @@ export default function LevelsPage() {
       <h2 className="text-lg font-bold">EXP / Gold Summary</h2>
       <table className="table-fixed border text-sm text-left">
         <tbody>
-          <tr><td className="border px-2">Total EXP for Talents</td><td className="border px-2">(todo)</td></tr>
-          <tr><td className="border px-2">Total EXP for Skills</td><td className="border px-2">(todo)</td></tr>
-          <tr><td className="border px-2">Total EXP for Levels</td><td className="border px-2">(todo)</td></tr>
-          <tr><td className="border px-2">Total EXP</td><td className="border px-2">(todo)</td></tr>
-          <tr><td className="border px-2">Total Gold</td><td className="border px-2">(todo)</td></tr>
+          <tr><td className="border px-2">Total EXP for Talents</td><td className="border px-2">{formatWhole(totalExpForTalents)}</td></tr>
+          <tr><td className="border px-2">Total EXP for Skills</td><td className="border px-2">{formatWhole(totalExpForSkills)}</td></tr>
+          <tr><td className="border px-2">Total EXP for Levels</td><td className="border px-2">{formatWhole(totalExpForLevels)}</td></tr>
+          <tr><td className="border px-2">Total EXP</td><td className="border px-2">{formatWhole(totalExp)}</td></tr>
+          <tr><td className="border px-2">Total Gold</td><td className="border px-2">{formatWhole(totalGold)}</td></tr>
         </tbody>
       </table>
 

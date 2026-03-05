@@ -109,7 +109,7 @@ export function SkillButton({
     setSelected(newSet)
     localStorage.setItem("selectedBuffs", JSON.stringify(Array.from(newSet)))
   }
-
+  // TODO: ADD sp cost to button instead of just sp_spent required to learn it
   const values = [
     skillName,
     Array.isArray(skill.PreReq) ? skill.PreReq.join(", ") : skill.PreReq,
