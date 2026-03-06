@@ -7,6 +7,7 @@ import { computeBuildStatStages, readBuildSnapshot } from "@/app/lib/buildStats"
 import { calculateDamage, formatSignedDamageDelta, readDamageCalcState } from "@/app/lib/damageCalc"
 import { useManagedColumns } from "@/app/lib/managedColumns"
 import { tarotTableColumns, type TarotColumnId } from "@/app/lib/tableColumnDefinitions"
+import { getStripedRowClass } from "@/app/lib/tableRowStyles"
 import {
   getDefaultTableViewState,
   MANAGED_TABLE_VIEW_EVENT,
@@ -272,7 +273,7 @@ export default function TarotCardsPage() {
         />
 
         <div className="space-y-0.5">
-          {rows.map(row => {
+          {rows.map((row, rowIndex) => {
             const isSelected = selected.has(row.name)
             const overLimit = (tierCounts[row.tier] ?? 0) > (tierLimits[row.tier] ?? Infinity)
             const canStack = Boolean(row.stack_stats || row.stack_conversions)
@@ -282,7 +283,16 @@ export default function TarotCardsPage() {
             return (
               <div
                 key={row.name}
-                className={`grid min-w-full w-max cursor-pointer items-center px-0 py-1 ${isSelected ? "bg-sky-900/40 hover:bg-sky-800/45" : "hover:bg-slate-800/85"}`}
+                className={`grid min-w-full w-max cursor-pointer items-center px-0 py-1 ${getStripedRowClass(
+                  rowIndex,
+                  overLimit && isSelected
+                    ? "selectedInvalid"
+                    : overLimit
+                      ? "invalid"
+                      : isSelected
+                        ? "selected"
+                        : "default",
+                )}`}
                 style={{ gridTemplateColumns: columnLayout.gridTemplateColumns }}
                 onClick={() => toggle(row.name)}
               >

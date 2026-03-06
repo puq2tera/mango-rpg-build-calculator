@@ -252,7 +252,7 @@ export default function TalentsPage() {
         />
 
         <div className="space-y-0.5">
-          {displayedTalentNames.map((name) => (
+          {displayedTalentNames.map((name, rowIndex) => (
             <ToggleButton
               key={name}
               talentName={name}
@@ -265,6 +265,7 @@ export default function TalentsPage() {
               classLevels={classLevels}
               columns={columnLayout.visibleColumns}
               averageDamageChange={averageDamageChanges[name] ?? null}
+              rowIndex={rowIndex}
             />
           ))}
         </div>

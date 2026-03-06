@@ -252,7 +252,7 @@ export default function BuffsPage() {
         />
 
         <div className="space-y-0.5">
-          {displayedBuffNames.map((name) => (
+          {displayedBuffNames.map((name, rowIndex) => (
             <SkillButton
               key={name}
               skillName={name}
@@ -265,6 +265,7 @@ export default function BuffsPage() {
               classLevels={classLevels}
               columns={columnLayout.visibleColumns}
               averageDamageChange={averageDamageChanges[name] ?? null}
+              rowIndex={rowIndex}
             />
           ))}
         </div>

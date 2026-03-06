@@ -251,7 +251,7 @@ export default function SkillsPage() {
         />
 
         <div className="space-y-0.5">
-          {displayedSkillNames.map((name) => (
+          {displayedSkillNames.map((name, rowIndex) => (
             <SkillButton
               key={name}
               skillName={name}
@@ -264,6 +264,7 @@ export default function SkillsPage() {
               classLevels={classLevels}
               columns={columnLayout.visibleColumns}
               averageDamageChange={averageDamageChanges[name] ?? null}
+              rowIndex={rowIndex}
             />
           ))}
         </div>

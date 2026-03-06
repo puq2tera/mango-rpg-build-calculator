@@ -5,6 +5,7 @@ import type { Talent } from "../data/talent_data"
 import type { Skill } from "../data/skill_data"
 import { formatSignedDamageDelta } from "@/app/lib/damageCalc"
 import type { ManagedColumn } from "@/app/lib/managedColumns"
+import { getStripedRowClass } from "@/app/lib/tableRowStyles"
 import { getSkillAvailabilityState, getTalentAvailabilityState, type ClassLevels } from "@/app/lib/tableRequirements"
 
 type ToggleButtonProps = {
@@ -18,6 +19,7 @@ type ToggleButtonProps = {
   classLevels: ClassLevels
   columns: ManagedColumn[]
   averageDamageChange: number | null
+  rowIndex: number
 }
 
 type SkillButtonProps = {
@@ -31,6 +33,7 @@ type SkillButtonProps = {
   classLevels: ClassLevels
   columns: ManagedColumn[]
   averageDamageChange?: number | null
+  rowIndex: number
 }
 
 function getAverageDamageClass(value: number | null | undefined): string {
@@ -52,6 +55,7 @@ export function ToggleButton({
   classLevels,
   columns,
   averageDamageChange,
+  rowIndex,
 }: ToggleButtonProps) {
   const isSelected = selected.has(talentName)
   const { blockedTagConflict, missingRequirement } = getTalentAvailabilityState({
@@ -63,17 +67,18 @@ export function ToggleButton({
     classLevels,
     totalLevels,
   })
-  const rowClass = blockedTagConflict && isSelected
-    ? "bg-yellow-700/70 hover:bg-yellow-700/80"
+  const rowTone = blockedTagConflict && isSelected
+    ? "selectedBlocked"
     : blockedTagConflict
-      ? "bg-yellow-900/45 hover:bg-yellow-900/55"
+      ? "blocked"
       : missingRequirement && isSelected
-        ? "bg-amber-900/55 hover:bg-amber-900/65"
+        ? "selectedInvalid"
         : missingRequirement
-          ? "bg-rose-900/45 hover:bg-rose-900/55"
+          ? "invalid"
           : isSelected
-            ? "bg-sky-900/40 hover:bg-sky-800/45"
-            : "hover:bg-slate-800/85"
+            ? "selected"
+            : "default"
+  const rowClass = getStripedRowClass(rowIndex, rowTone)
 
   const handleClick = () => {
     const nextSelected = new Set(selected)
@@ -139,6 +144,7 @@ export function SkillButton({
   classLevels,
   columns,
   averageDamageChange,
+  rowIndex,
 }: SkillButtonProps) {
   const isSelected = selected.has(skillName)
   const { missingRequirement } = getSkillAvailabilityState({
@@ -184,15 +190,16 @@ export function SkillButton({
   return (
     <button
       onClick={handleClick}
-      className={`grid min-w-full w-max text-left transition px-0 py-1 ${
+      className={`grid min-w-full w-max text-left transition px-0 py-1 ${getStripedRowClass(
+        rowIndex,
         missingRequirement && isSelected
-          ? "bg-amber-900/55 hover:bg-amber-900/65"
+          ? "selectedInvalid"
           : missingRequirement
-            ? "bg-rose-900/45 hover:bg-rose-900/55"
+            ? "invalid"
             : isSelected
-              ? "bg-sky-900/40 hover:bg-sky-800/45"
-              : "hover:bg-slate-800/85"
-      }`}
+              ? "selected"
+              : "default",
+      )}`}
       style={{ gridTemplateColumns: columns.map((column) => `${column.renderWidth}px`).join(" ") }}
     >
       {columns.map((column) => (
