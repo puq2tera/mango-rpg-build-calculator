@@ -189,6 +189,19 @@ export default function TopNav() {
     updateViewState({ sortMode, sortDirection: nextSortDirection })
   }
 
+  const handleResetUiClick = () => {
+    setOpenMenu(null)
+
+    if (tablePage) {
+      const defaultViewState = getDefaultTableViewState()
+      setViewState(defaultViewState)
+      persistTableViewState(localStorage, tablePage, defaultViewState)
+      dispatchManagedTableViewChange({ page: tablePage, viewState: defaultViewState })
+    }
+
+    window.dispatchEvent(new Event("resetManagedTableUi"))
+  }
+
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 flex items-center gap-3 border-b border-slate-700 bg-slate-950/90 px-5 py-2 text-xs shadow-lg shadow-black/30 backdrop-blur">
       <div className="flex min-w-0 flex-1 flex-wrap items-center gap-3">
@@ -229,9 +242,9 @@ export default function TopNav() {
         {showResetUi ? (
           <button
             type="button"
-            onClick={() => window.dispatchEvent(new Event("resetManagedTableUi"))}
+            onClick={handleResetUiClick}
             className={`${controlButtonClass} border-slate-700 bg-slate-950/90`}
-            title="Reset column order, widths, and collapsed columns"
+            title="Reset column order, widths, collapsed columns, filters, and sorting"
           >
             Reset UI
           </button>

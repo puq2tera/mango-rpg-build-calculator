@@ -2,6 +2,16 @@
 
 import { useEffect, useState } from "react"
 import {
+  DndContext,
+  PointerSensor,
+  closestCenter,
+  useSensor,
+  useSensors,
+  type DragEndEvent,
+} from "@dnd-kit/core"
+import { arrayMove, SortableContext, verticalListSortingStrategy, useSortable } from "@dnd-kit/sortable"
+import { CSS } from "@dnd-kit/utilities"
+import {
   DUNGEON_UNLOCKS_STORAGE_KEY,
   dungeonUnlockTags,
   isDungeonUnlockTag,
@@ -78,22 +88,97 @@ function formatWhole(value: number): string {
   return Math.max(0, Math.round(value)).toLocaleString()
 }
 
-export default function LevelsPage() {
-  type Cls = "tank" | "warrior" | "caster" | "healer"
-  type LevelsByClass = Record<Cls, number>
-  type ManualRangeMode = "manual" | "estimated"
-  type ManualLevelRange = {
-    className: Cls
-    startLevel: number
-    endLevel: number
-    mode: ManualRangeMode
-    hpGain: number
-    atkGain: number
-    defGain: number
-    matkGain: number
-    healGain: number
-  }
+type Cls = "tank" | "warrior" | "caster" | "healer"
+type LevelsByClass = Record<Cls, number>
+type ManualRangeMode = "manual" | "estimated"
+type ManualLevelRange = {
+  className: Cls
+  startLevel: number
+  endLevel: number
+  mode: ManualRangeMode
+  hpGain: number
+  atkGain: number
+  defGain: number
+  matkGain: number
+  healGain: number
+}
 
+const classKeys: Cls[] = ["tank", "warrior", "caster", "healer"]
+const classLabel: Record<Cls, string> = { tank: "Tank", warrior: "Warrior", caster: "Caster", healer: "Healer" }
+const classCellBg: Record<Cls, string> = {
+  tank: "bg-emerald-900/45",
+  warrior: "bg-rose-900/45",
+  caster: "bg-sky-900/40",
+  healer: "bg-fuchsia-900/40",
+}
+
+type LevelRequirementRowProps = {
+  classNameKey: Cls
+  levels: LevelsByClass
+  requiredLevelsByClass: LevelsByClass
+  classLevelDeficit: LevelsByClass
+  onLevelChange: (className: Cls, value: number) => void
+}
+
+function LevelRequirementRow({
+  classNameKey,
+  levels,
+  requiredLevelsByClass,
+  classLevelDeficit,
+  onLevelChange,
+}: LevelRequirementRowProps) {
+  const {
+    attributes,
+    listeners,
+    setActivatorNodeRef,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id: classNameKey })
+
+  return (
+    <tr
+      ref={setNodeRef}
+      style={{
+        transform: CSS.Transform.toString(transform),
+        transition,
+        opacity: isDragging ? 0.7 : 1,
+      }}
+      className={isDragging ? "bg-slate-900/85" : ""}
+    >
+      <td className={`border px-2 py-1 font-semibold ${classCellBg[classNameKey]}`}>
+        <div className="flex items-center gap-2">
+          <button
+            ref={setActivatorNodeRef}
+            type="button"
+            {...attributes}
+            {...listeners}
+            className="rounded border border-slate-500 px-1 py-0.5 text-[10px] text-slate-200 cursor-grab active:cursor-grabbing"
+            title={`Drag to reorder ${classLabel[classNameKey]}`}
+            aria-label={`Drag to reorder ${classLabel[classNameKey]}`}
+          >
+            ::
+          </button>
+          <span>{classLabel[classNameKey]}</span>
+        </div>
+      </td>
+      <td className="border px-2 py-1">
+        <input
+          type="number"
+          min={0}
+          value={levels[classNameKey]}
+          onChange={(event) => onLevelChange(classNameKey, Number(event.target.value) || 0)}
+          className="w-20 border bg-slate-950 px-1 text-center"
+        />
+      </td>
+      <td className="border px-2 py-1">{requiredLevelsByClass[classNameKey]}</td>
+      <td className="border px-2 py-1">{classLevelDeficit[classNameKey]}</td>
+    </tr>
+  )
+}
+
+export default function LevelsPage() {
   const [levels, setLevels] = useState<LevelsByClass>({ tank: 0, warrior: 0, caster: 0, healer: 0 })
   const [statPoints, setStatPoints] = useState({ ATK: 0, DEF: 0, MATK: 0, HEAL: 0 })
   const [training, setTraining] = useState({ ATK: 0, DEF: 0, MATK: 0, HEAL: 0 })
@@ -105,6 +190,7 @@ export default function LevelsPage() {
   const [classOrder, setClassOrder] = useState<Cls[]>(["tank", "warrior", "caster", "healer"])
   const [selectedRace, setSelectedRace] = useState<RaceTag>(DEFAULT_RACE)
   const [loaded, setLoaded] = useState(false)
+  const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 4 } }))
 
   useEffect(() => {
     const storedLevels = localStorage.getItem(STORAGE_KEYS.levels)
@@ -188,7 +274,6 @@ export default function LevelsPage() {
     return sum + (heroPoints[id] ?? 0) * cost
   }, 0)
 
-  const classKeys: Cls[] = ["tank", "warrior", "caster", "healer"]
   const requiredLevelsByClass: LevelsByClass = { tank: 0, warrior: 0, caster: 0, healer: 0 }
   let requiredTotalLevel = 0
   let totalExpForTalents = 0
@@ -259,23 +344,6 @@ export default function LevelsPage() {
     cost === 1 ? "bg-emerald-900/45" :
     cost === 2 ? "bg-amber-800/50" :
     cost === 3 ? "bg-rose-800/55" : ""
-
-  // Column reorder helpers
-  const moveClass = (idx: number, dir: -1 | 1) => {
-    setClassOrder((prev) => {
-      const i = idx
-      const j = i + dir
-      if (j < 0 || j >= prev.length) return prev
-      const next = [...prev]
-      const tmp = next[i]
-      next[i] = next[j]
-      next[j] = tmp
-      return next
-    })
-  }
-
-  const classLabel: Record<Cls, string> = { tank: "Tank", warrior: "Warrior", caster: "Caster", healer: "Healer" }
-  const headerBg: Record<Cls, string> = { tank: "bg-emerald-900/45", warrior: "bg-rose-900/45", caster: "bg-sky-900/40", healer: "bg-fuchsia-900/40" }
   const selectedDungeonUnlockSet = new Set(selectedDungeonUnlocks)
 
   const selectedRaceData = race_data_by_tag[selectedRace]
@@ -334,6 +402,30 @@ export default function LevelsPage() {
     )
   }
 
+  const handleLevelChange = (className: Cls, value: number) => {
+    setLevels((prev) => ({
+      ...prev,
+      [className]: Math.max(0, Math.floor(value)),
+    }))
+  }
+
+  const handleClassOrderDragEnd = ({ active, over }: DragEndEvent) => {
+    if (!over || active.id === over.id) {
+      return
+    }
+
+    setClassOrder((prev) => {
+      const oldIndex = prev.indexOf(active.id as Cls)
+      const newIndex = prev.indexOf(over.id as Cls)
+
+      if (oldIndex < 0 || newIndex < 0) {
+        return prev
+      }
+
+      return arrayMove(prev, oldIndex, newIndex)
+    })
+  }
+
   return (
     <div className="p-4 space-y-6">
       <h1 className="text-xl font-bold">Level Summary</h1>
@@ -389,66 +481,53 @@ export default function LevelsPage() {
         </div>
       </div>
 
-      <table className="table-fixed border text-center text-sm">
-        <thead>
-          <tr>
-            {classOrder.map((c, idx) => (
-              <th key={c} className={`${headerBg[c]} border px-2 py-1`}>
-                <div className="flex items-center justify-between gap-1">
-                  <button className="px-1 py-0.5 border rounded text-xs" onClick={() => moveClass(idx, -1)} title="Move left" disabled={idx === 0}>{"<"}</button>
-                  <span className="font-semibold">{classLabel[c]}</span>
-                  <button className="px-1 py-0.5 border rounded text-xs" onClick={() => moveClass(idx, 1)} title="Move right" disabled={idx === classOrder.length - 1}>{">"}</button>
-                </div>
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            {classOrder.map((k) => (
-              <td key={k} className="border">
-                <input
-                  type="number"
-                  value={levels[k]}
-                  onChange={(e) => setLevels({ ...levels, [k]: +e.target.value })}
-                  className="w-16 text-center"
-                />
-              </td>
-            ))}
-          </tr>
-        </tbody>
-      </table>
-
-      <table className="table-fixed border text-sm text-center">
-        <thead className="bg-slate-800/85">
-          <tr>
-            <th>Class</th>
-            <th>Chosen</th>
-            <th>Required</th>
-            <th>Needed</th>
-          </tr>
-        </thead>
-        <tbody>
-          {classOrder.map((classKey) => (
-            <tr key={classKey}>
-              <td className="border px-2 py-1 font-semibold">{classLabel[classKey]}</td>
-              <td className="border px-2 py-1">{levels[classKey]}</td>
-              <td className="border px-2 py-1">{requiredLevelsByClass[classKey]}</td>
-              <td className="border px-2 py-1">{classLevelDeficit[classKey]}</td>
-            </tr>
-          ))}
-          <tr>
-            <th colSpan={2} className="border px-2 py-1">Total Levels</th>
-            <th className="border px-2 py-1">Levels Needed</th>
-            <th className="border px-2 py-1">Isekai Level Required</th>
-          </tr>
-          <tr>
-            <td colSpan={2} className="border px-2 py-1">{totalLevels}</td>
-            <td className="border px-2 py-1">{levelsNeeded}</td>
-            <td className="border px-2 py-1">{requiredIsekaiLevel}</td>
-          </tr>
-        </tbody>
-      </table>
+      <div className="space-y-2">
+        <h2 className="text-lg font-bold">Levels Required</h2>
+        <p className="text-sm text-slate-300">
+          Set chosen class levels directly in this table. Drag rows by the handle to reorder the class list.
+          The calculator applies class levels in the same top-to-bottom order shown here.
+        </p>
+        <div className="overflow-x-auto">
+          <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleClassOrderDragEnd}>
+            <table className="table-fixed border text-sm text-center">
+              <thead className="bg-slate-800/85">
+                <tr>
+                  <th>Class</th>
+                  <th>Chosen</th>
+                  <th>Required</th>
+                  <th>Needed</th>
+                </tr>
+              </thead>
+              <SortableContext items={classOrder} strategy={verticalListSortingStrategy}>
+                <tbody>
+                  {classOrder.map((classKey) => (
+                    <LevelRequirementRow
+                      key={classKey}
+                      classNameKey={classKey}
+                      levels={levels}
+                      requiredLevelsByClass={requiredLevelsByClass}
+                      classLevelDeficit={classLevelDeficit}
+                      onLevelChange={handleLevelChange}
+                    />
+                  ))}
+                </tbody>
+              </SortableContext>
+              <tbody>
+                <tr>
+                  <th colSpan={2} className="border px-2 py-1">Total Levels</th>
+                  <th className="border px-2 py-1">Levels Needed</th>
+                  <th className="border px-2 py-1">Isekai Level Required</th>
+                </tr>
+                <tr>
+                  <td colSpan={2} className="border px-2 py-1">{totalLevels}</td>
+                  <td className="border px-2 py-1">{levelsNeeded}</td>
+                  <td className="border px-2 py-1">{requiredIsekaiLevel}</td>
+                </tr>
+              </tbody>
+            </table>
+          </DndContext>
+        </div>
+      </div>
 
       <h2 className="text-lg font-bold">Manual Levelup Ranges</h2>
       <p className="text-sm text-slate-300">
