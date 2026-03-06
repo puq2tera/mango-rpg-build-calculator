@@ -37667,7 +37667,8 @@ const talent_data: Record<string, Talent> = {
     "Arachne Empress": {
         "category": "racial",
         "PreReq": [
-            "Arachne Queen 3"
+            "Arachne Queen 3",
+            "AsuraKey"
         ],
         "Tag": "",
         "BlockedTag": "",
@@ -37692,7 +37693,7 @@ const talent_data: Record<string, Talent> = {
     "Slime 1": {
         "category": "racial",
         "PreReq": [
-            "AsuraKey"
+            "Slime"
         ],
         "Tag": "",
         "BlockedTag": "",
@@ -37717,8 +37718,7 @@ const talent_data: Record<string, Talent> = {
     "Slime 2": {
         "category": "racial",
         "PreReq": [
-            "Slime 1",
-            "Slime"
+            "Slime 1"
         ],
         "Tag": "",
         "BlockedTag": "",
@@ -37984,9 +37984,10 @@ const talent_data: Record<string, Talent> = {
     "Shoggoth": {
         "category": "racial",
         "PreReq": [
-            "Ubbo Sathla 3"
+            "Ubbo Sathla 3",
+            "ValkyrieKey"
         ],
-        "Tag": "ValkyrieKey",
+        "Tag": "",
         "BlockedTag": "",
         "gold": 1000,
         "exp": 5000,
@@ -39394,7 +39395,7 @@ const talent_data: Record<string, Talent> = {
     "Erinyes 1": {
         "category": "racial",
         "PreReq": [
-            ""
+            "Succubus"
         ],
         "Tag": "",
         "BlockedTag": "",
