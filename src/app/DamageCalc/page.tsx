@@ -2,105 +2,82 @@
 
 import { useEffect, useState } from "react"
 import stat_data from "../data/stat_data"
+import {
+  calculateDamage,
+  defaultDamageCalcState,
+  persistDamageCalcState,
+  readDamageCalcState,
+  type DamageCalcInputs,
+} from "@/app/lib/damageCalc"
 
 export default function DamageCalc() {
   const [stats, setStats] = useState<Record<string, number>>({})
+  const [isHydrated, setIsHydrated] = useState(false)
+  const [mainStat, setMainStat] = useState(defaultDamageCalcState.mainStat)
+  const [secondStat, setSecondStat] = useState(defaultDamageCalcState.secondStat)
+  const [element, setElement] = useState(defaultDamageCalcState.element)
+  const [penElement, setPenElement] = useState(defaultDamageCalcState.penElement)
+  const [skillType, setSkillType] = useState(defaultDamageCalcState.skillType)
+  const [inputs, setInputs] = useState<DamageCalcInputs>(defaultDamageCalcState.inputs)
 
   useEffect(() => {
     window.dispatchEvent(new Event("computeDmgReadyStats"))
-    const raw = localStorage.getItem("StatsDmgReady")
-    if (raw) {
+
+    const rawStats = localStorage.getItem("StatsDmgReady")
+    const storedState = readDamageCalcState(localStorage)
+
+    if (rawStats) {
       try {
-        const parsed = JSON.parse(raw)
-        setStats(parsed)
+        setStats(JSON.parse(rawStats))
       } catch {}
     }
-    
+
+    setMainStat(storedState.mainStat)
+    setSecondStat(storedState.secondStat)
+    setElement(storedState.element)
+    setPenElement(storedState.penElement)
+    setSkillType(storedState.skillType)
+    setInputs(storedState.inputs)
+    setIsHydrated(true)
   }, [])
 
-  const [mainStat, setMainStat] = useState("ATK")
-  const [secondStat, setSecondStat] = useState("DEF")
-  const [element, setElement] = useState("Blunt")
-  const [penElement, setPenElement] = useState("Blunt")
-  const [skillType, setSkillType] = useState("Sword")
-  const [inputs, setInputs] = useState({
-    skillDmg: 25,
-    skillCritDmg: 100,
-    skillPen: 0,
-    skillCritChance: 0,
-    threatDef: 0,
-    armorIgnore: 0,
-    resIgnore: 0,
-    dot: 0,
-    secondSkillDmg: 0,
-    enemyArmor: 0,
-    enemyRes: 0,
-    playerLevel: 1,
-    dungeonLevel: 1,
-    bossDefPen: 0,
-    baseStat: 0,
-    buffedStat: 0,
-    defense: 0,
-    dmgReduction: 0,
-    defCap: 0
+  useEffect(() => {
+    if (!isHydrated) return
+
+    persistDamageCalcState(localStorage, {
+      mainStat,
+      secondStat,
+      element,
+      penElement,
+      skillType,
+      inputs,
+    })
+    window.dispatchEvent(new Event("damageCalcUpdated"))
+  }, [element, inputs, isHydrated, mainStat, penElement, secondStat, skillType])
+
+  const {
+    nonCrit,
+    crit,
+    maxcrit,
+    average,
+    dotNonCrit,
+    dotCrit,
+    threatNonCrit,
+    threatCrit,
+    threatAverage,
+  } = calculateDamage(stats, {
+    mainStat,
+    secondStat,
+    element,
+    penElement,
+    skillType,
+    inputs,
   })
 
-  const toMult = (v: number | undefined) => 1 + ((v ?? 0) / 100)
-
-  // Stepwise floors to mirror in-game rounding
-  const baseRaw = (stats[mainStat] ?? 0) * (inputs["skillDmg"] / 100)
-  const base = Math.floor(baseRaw)
-
-  const armorBlock = Math.floor((inputs["enemyArmor"] ?? 0) * ((inputs["armorIgnore"] ?? 0) / 100))
-  const armorBreak = Math.floor(((stats["ATK"] ?? 0) + (stats["DEF"] ?? 0) + (stats["MATK"] ?? 0) + (stats["HEAL"] ?? 0)) / 4) + (stats["Armor Strike"] ?? 0)
-  const mitigated = Math.max(0, Math.floor(base - (armorBlock - armorBreak)))
- 
-  // Apply multipliers with floors after each stage
-  let dmg = mitigated
-  const elemMult = toMult(stats[`${element}%`]) * toMult(stats[`${element} xDmg%`])
-  dmg = Math.floor(dmg * elemMult)
-  const penResMult = 1 + ((stats[`${penElement} Pen%`] ?? 0) / 100) - ((inputs["enemyRes"] ?? 0) * ((inputs["resIgnore"] ?? 0) / 100))
-  dmg = Math.floor(dmg * penResMult)
-  dmg = Math.floor(dmg * toMult(stats[`${skillType} DMG%`]))
-  dmg = Math.floor(dmg * toMult(stats["Dmg%"]))
-
-  const nonCrit = Math.max(0, dmg)
-
-  // Crit and overdrive with step floors
-  const critStage = Math.floor(nonCrit * ((inputs['skillCritDmg'] ?? 0) / 100))
-  const crit = Math.floor(critStage * ((stats['Crit DMG%'] ?? 0) / 100))
-  const maxcrit = Math.floor(crit * ((stats['Overdrive%'] ?? 0) / 100))
-
-  const clamp = (x: number, lo = 0, hi = 1): number => Math.min(hi, Math.max(lo, x))
-
-  const totalCritChance = ((stats["Crit Chance%"] ?? 0) + (inputs.skillCritChance ?? 0)) * stat_data.StatsInfo["Crit Chance%"].multi
-  const c = clamp(totalCritChance, 0, 2)
-
-  const nonCritWeight = 1 - clamp(c, 0, 1)
-  const maxCritWeight = clamp(c - 1, 0, 1)
-  const critWeight = clamp(c, 0, 1) - maxCritWeight
-  
-  const average = Math.floor(nonCrit * nonCritWeight + crit * critWeight + maxcrit * maxCritWeight)
-
-  const totalDotPercent = (inputs["dot"] ?? 0) + (stats[`${element} DOT%`] ?? 0)
-  const dotMult = Math.max(0, totalDotPercent) / 100
-  const dotNonCrit = Math.floor(nonCrit * dotMult)
-  const dotCrit = Math.floor(crit * dotMult)
-
-  // Tank skill threat generation:
-  // totalDEF * threat% * (1 + globalDef) * (1 + globalDmg) * (1 + threat bonus)
-  const threatBase = Math.floor((stats["DEF"] ?? 0) * ((inputs["threatDef"] ?? 0) / 100))
-  const threatWithGlobalDef = Math.floor(threatBase * toMult(stats["Global DEF%"]))
-  const threatWithGlobalDmg = Math.floor(threatWithGlobalDef * toMult(stats["Dmg%"]))
-  const threatNonCrit = Math.floor(threatWithGlobalDmg * toMult(stats["Threat%"]))
-  const threatCrit = Math.floor(threatNonCrit * ((stats["Crit DMG%"] ?? 0) / 100))
-  const threatAverage = Math.floor(threatNonCrit * nonCritWeight + threatCrit * (critWeight + maxCritWeight))
   const formatNumber = (value: number): string => value.toLocaleString("en-US")
 
-  const handleChange = (field: string, value: number) => {
-    setInputs(prev => ({ ...prev, [field]: value }))
-    console.log(inputs)
-    console.log(stats)
+  const handleChange = (field: keyof DamageCalcInputs, value: number) => {
+    setInputs((prev) => ({ ...prev, [field]: value }))
   }
 
   return (
@@ -110,104 +87,104 @@ export default function DamageCalc() {
       <div className="grid grid-cols-4 gap-4 bg-slate-900/60 border rounded-lg p-4">
         <div className="space-y-2">
           <label className="font-semibold">Primary Stat</label>
-          <select value={mainStat} onChange={e => setMainStat(e.target.value)} className="w-full p-1 border rounded">
-            {stat_data.Mainstats.map(s => <option key={s}>{s}</option>)}
+          <select value={mainStat} onChange={(e) => setMainStat(e.target.value)} className="w-full p-1 border rounded">
+            {stat_data.Mainstats.map((stat) => <option key={stat}>{stat}</option>)}
           </select>
 
           <label className="font-semibold">Element</label>
-          <select value={element} onChange={e => setElement(e.target.value)} className="w-full p-1 border rounded">
-            {stat_data.AllElements.map(e => <option key={e}>{e}</option>)}
+          <select value={element} onChange={(e) => setElement(e.target.value)} className="w-full p-1 border rounded">
+            {stat_data.AllElements.map((entry) => <option key={entry}>{entry}</option>)}
           </select>
 
           <label className="font-semibold">Pen Element</label>
-          <select value={penElement} onChange={e => setPenElement(e.target.value)} className="w-full p-1 border rounded">
-            {stat_data.AllElements.map(e => <option key={e}>{e}</option>)}
+          <select value={penElement} onChange={(e) => setPenElement(e.target.value)} className="w-full p-1 border rounded">
+            {stat_data.AllElements.map((entry) => <option key={entry}>{entry}</option>)}
           </select>
         </div>
 
         <div className="space-y-2">
           <label className="font-semibold">Skill Type</label>
-          <select value={skillType} onChange={e => setSkillType(e.target.value)} className="w-full p-1 border rounded">
-            {stat_data.SkillTypes.map(s => <option key={s}>{s}</option>)}
+          <select value={skillType} onChange={(e) => setSkillType(e.target.value)} className="w-full p-1 border rounded">
+            {stat_data.SkillTypes.map((entry) => <option key={entry}>{entry}</option>)}
           </select>
 
           <label className="font-semibold">Skill DMG%</label>
-          <input type="number" defaultValue={25} onChange={e => handleChange("skillDmg", +e.target.value)} className="w-full p-1 border rounded" />
+          <input type="number" value={inputs.skillDmg} onChange={(e) => handleChange("skillDmg", +e.target.value)} className="w-full p-1 border rounded" />
 
           <label className="font-semibold">Skill Crit DMG%</label>
-          <input type="number" onChange={e => handleChange("skillCritDmg", +e.target.value)} className="w-full p-1 border rounded" />
+          <input type="number" value={inputs.skillCritDmg} onChange={(e) => handleChange("skillCritDmg", +e.target.value)} className="w-full p-1 border rounded" />
         </div>
 
         <div className="space-y-2">
           <label className="font-semibold">Skill Pen%</label>
-          <input type="number" onChange={e => handleChange("skillPen", +e.target.value)} className="w-full p-1 border rounded" />
+          <input type="number" value={inputs.skillPen} onChange={(e) => handleChange("skillPen", +e.target.value)} className="w-full p-1 border rounded" />
 
           <label className="font-semibold">Crit Chance%</label>
-          <input type="number" onChange={e => handleChange("skillCritChance", +e.target.value)} className="w-full p-1 border rounded" />
+          <input type="number" value={inputs.skillCritChance} onChange={(e) => handleChange("skillCritChance", +e.target.value)} className="w-full p-1 border rounded" />
 
           <label className="font-semibold">Threat Def%</label>
-          <input type="number" onChange={e => handleChange("threatDef", +e.target.value)} className="w-full p-1 border rounded" />
+          <input type="number" value={inputs.threatDef} onChange={(e) => handleChange("threatDef", +e.target.value)} className="w-full p-1 border rounded" />
         </div>
 
         <div className="space-y-2">
           <label className="font-semibold">Armor Ignore%</label>
-          <input type="number" onChange={e => handleChange("armorIgnore", +e.target.value)} className="w-full p-1 border rounded" />
+          <input type="number" value={inputs.armorIgnore} onChange={(e) => handleChange("armorIgnore", +e.target.value)} className="w-full p-1 border rounded" />
 
           <label className="font-semibold">Res Ignore%</label>
-          <input type="number" onChange={e => handleChange("resIgnore", +e.target.value)} className="w-full p-1 border rounded" />
+          <input type="number" value={inputs.resIgnore} onChange={(e) => handleChange("resIgnore", +e.target.value)} className="w-full p-1 border rounded" />
 
           <label className="font-semibold">DOT%</label>
-          <input type="number" onChange={e => handleChange("dot", +e.target.value)} className="w-full p-1 border rounded" />
+          <input type="number" value={inputs.dot} onChange={(e) => handleChange("dot", +e.target.value)} className="w-full p-1 border rounded" />
         </div>
 
         <div className="space-y-2">
           <label className="font-semibold">2nd Stat</label>
-          <select value={secondStat} onChange={e => setSecondStat(e.target.value)} className="w-full p-1 border rounded">
-            {stat_data.Mainstats.map(s => <option key={s}>{s}</option>)}
+          <select value={secondStat} onChange={(e) => setSecondStat(e.target.value)} className="w-full p-1 border rounded">
+            {stat_data.Mainstats.map((stat) => <option key={stat}>{stat}</option>)}
           </select>
 
           <label className="font-semibold">2nd Skill DMG%</label>
-          <input type="number" onChange={e => handleChange("secondSkillDmg", +e.target.value)} className="w-full p-1 border rounded" />
+          <input type="number" value={inputs.secondSkillDmg} onChange={(e) => handleChange("secondSkillDmg", +e.target.value)} className="w-full p-1 border rounded" />
         </div>
       </div>
 
       <div className="grid grid-cols-4 gap-4 bg-slate-900/60 border rounded-lg p-4">
         <div className="space-y-1">
           <label className="font-semibold">Enemy Armor</label>
-          <input type="number" onChange={e => handleChange("enemyArmor", +e.target.value)} className="w-full p-1 border rounded" />
+          <input type="number" value={inputs.enemyArmor} onChange={(e) => handleChange("enemyArmor", +e.target.value)} className="w-full p-1 border rounded" />
 
           <label className="font-semibold">Enemy Resistance</label>
-          <input type="number" onChange={e => handleChange("enemyRes", +e.target.value)} className="w-full p-1 border rounded" />
+          <input type="number" value={inputs.enemyRes} onChange={(e) => handleChange("enemyRes", +e.target.value)} className="w-full p-1 border rounded" />
         </div>
 
         <div className="space-y-1">
           <label className="font-semibold">Player Level</label>
-          <input type="number" onChange={e => handleChange("playerLevel", +e.target.value)} className="w-full p-1 border rounded" />
+          <input type="number" value={inputs.playerLevel} onChange={(e) => handleChange("playerLevel", +e.target.value)} className="w-full p-1 border rounded" />
 
           <label className="font-semibold">Dungeon Level</label>
-          <input type="number" onChange={e => handleChange("dungeonLevel", +e.target.value)} className="w-full p-1 border rounded" />
+          <input type="number" value={inputs.dungeonLevel} onChange={(e) => handleChange("dungeonLevel", +e.target.value)} className="w-full p-1 border rounded" />
 
           <label className="font-semibold">Boss DEF Pen%</label>
-          <input type="number" onChange={e => handleChange("bossDefPen", +e.target.value)} className="w-full p-1 border rounded" />
+          <input type="number" value={inputs.bossDefPen} onChange={(e) => handleChange("bossDefPen", +e.target.value)} className="w-full p-1 border rounded" />
         </div>
 
         <div className="space-y-1">
           <label className="font-semibold">Your Defense</label>
-          <input type="number" onChange={e => handleChange("defense", +e.target.value)} className="w-full p-1 border rounded" />
+          <input type="number" value={inputs.defense} onChange={(e) => handleChange("defense", +e.target.value)} className="w-full p-1 border rounded" />
 
           <label className="font-semibold">Damage Reduction%</label>
-          <input type="number" onChange={e => handleChange("dmgReduction", +e.target.value)} className="w-full p-1 border rounded" />
+          <input type="number" value={inputs.dmgReduction} onChange={(e) => handleChange("dmgReduction", +e.target.value)} className="w-full p-1 border rounded" />
         </div>
 
         <div className="space-y-1">
           <label className="font-semibold">Defense Cap</label>
-          <input type="number" onChange={e => handleChange("defCap", +e.target.value)} className="w-full p-1 border rounded" />
+          <input type="number" value={inputs.defCap} onChange={(e) => handleChange("defCap", +e.target.value)} className="w-full p-1 border rounded" />
 
           <label className="font-semibold">Effective {mainStat}</label>
-          <input type="number" onChange={e => handleChange("baseStat", +e.target.value)} className="w-full p-1 border rounded" />
+          <input type="number" value={inputs.baseStat} onChange={(e) => handleChange("baseStat", +e.target.value)} className="w-full p-1 border rounded" />
 
           <label className="font-semibold">Total {mainStat} (buffed)</label>
-          <input type="number" onChange={e => handleChange("buffedStat", +e.target.value)} className="w-full p-1 border rounded" />
+          <input type="number" value={inputs.buffedStat} onChange={(e) => handleChange("buffedStat", +e.target.value)} className="w-full p-1 border rounded" />
         </div>
       </div>
 

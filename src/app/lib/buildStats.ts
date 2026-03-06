@@ -1,0 +1,642 @@
+import { heroPointGainsByRace, heroPointStats } from "@/app/data/heropoint_data"
+import { race_data_by_tag } from "@/app/data/race_data"
+import rune_data from "@/app/data/rune_data"
+import { skill_data, type Skill } from "@/app/data/skill_data"
+import stat_data from "@/app/data/stat_data"
+import { talent_data } from "@/app/data/talent_data"
+import tarot_data, { type Tarot } from "@/app/data/tarot_data"
+
+export type ManualLevelRange = {
+  className: string
+  startLevel: number
+  endLevel: number
+  mode: "manual" | "estimated"
+  hpGain: number
+  atkGain: number
+  defGain: number
+  matkGain: number
+  healGain: number
+}
+
+type EquipmentSlot = {
+  name: string
+  affixes: { stat: string; value: number }[]
+  mainstat: string
+  mainstat_value: number
+}
+
+type RuneSelection = { rune: string; count: number }
+
+export type BuildSnapshot = {
+  selectedTalents: string[]
+  selectedBuffs: string[]
+  selectedTarots: string[]
+  tarotStacks: Record<string, number>
+  selectedRace: string | null
+  selectedLevels: Record<string, number>
+  selectedLevelOrder: string[]
+  selectedStatPoints: Record<string, number>
+  selectedTraining: Record<string, number>
+  selectedHeroPoints: Record<string, number>
+  selectedManualLevelRanges: ManualLevelRange[]
+  selectedRunes: Record<string, RuneSelection[]>
+  equipmentSlots: EquipmentSlot[]
+  enabledEquipment: number[]
+  artifact: Record<string, number>
+}
+
+export type BuildStatStages = {
+  StatsTalents: Record<string, number>
+  StatsLevels: Record<string, number>
+  StatsEquipment: Record<string, number>
+  StatsRunes: Record<string, number>
+  StatsArtifact: Record<string, number>
+  StatsBase: Record<string, number>
+  StatsXPen: Record<string, number>
+  StatsConversionReady: Record<string, number>
+  StatsConverted: Record<string, number>
+  StatsBuffReady: Record<string, number>
+  StatsBuffs: Record<string, number>
+  StatsTarots: Record<string, number>
+  StatsDmgReady: Record<string, number>
+}
+
+const jsonParse = <T>(raw: string | null, fallback: T): T => {
+  if (!raw) return fallback
+
+  try {
+    return JSON.parse(raw) as T
+  } catch {
+    return fallback
+  }
+}
+
+const asFiniteNumber = (value: unknown, fallback = 0): number =>
+  typeof value === "number" && Number.isFinite(value) ? value : fallback
+
+const asStringArray = (value: unknown): string[] =>
+  Array.isArray(value) ? value.filter((entry): entry is string => typeof entry === "string") : []
+
+const asRecord = (value: unknown): Record<string, number> => {
+  if (typeof value !== "object" || value === null || Array.isArray(value)) return {}
+
+  return Object.entries(value).reduce<Record<string, number>>((result, [key, entry]) => {
+    if (typeof entry === "number" && Number.isFinite(entry)) {
+      result[key] = entry
+    }
+    return result
+  }, {})
+}
+
+const asRuneSelections = (value: unknown): Record<string, RuneSelection[]> => {
+  if (typeof value !== "object" || value === null || Array.isArray(value)) return {}
+
+  return Object.entries(value).reduce<Record<string, RuneSelection[]>>((result, [tier, entries]) => {
+    if (!Array.isArray(entries)) return result
+
+    result[tier] = entries
+      .filter((entry): entry is Partial<RuneSelection> => typeof entry === "object" && entry !== null)
+      .map((entry) => ({
+        rune: typeof entry.rune === "string" ? entry.rune : "",
+        count: asFiniteNumber(entry.count, 0),
+      }))
+
+    return result
+  }, {})
+}
+
+const asEquipmentSlots = (value: unknown): EquipmentSlot[] => {
+  if (!Array.isArray(value)) return []
+
+  return value
+    .filter((entry): entry is Partial<EquipmentSlot> => typeof entry === "object" && entry !== null)
+    .map((entry) => ({
+      name: typeof entry.name === "string" ? entry.name : "",
+      affixes: Array.isArray(entry.affixes)
+        ? (entry.affixes as unknown[])
+          .filter((affix): affix is Record<string, unknown> => typeof affix === "object" && affix !== null)
+          .map((affix) => ({
+            stat: typeof affix.stat === "string" ? affix.stat : "",
+            value: asFiniteNumber(affix.value, 0),
+          }))
+        : [],
+      mainstat: typeof entry.mainstat === "string" ? entry.mainstat : "",
+      mainstat_value: asFiniteNumber(entry.mainstat_value, 0),
+    }))
+}
+
+const asEnabledEquipment = (value: unknown): number[] =>
+  Array.isArray(value)
+    ? value.filter((entry): entry is number => typeof entry === "number" && Number.isFinite(entry))
+    : []
+
+const asManualLevelRanges = (value: unknown): ManualLevelRange[] => {
+  if (!Array.isArray(value)) return []
+
+  return value
+    .filter((entry): entry is Partial<ManualLevelRange> => typeof entry === "object" && entry !== null)
+    .map((entry) => {
+      const startLevel = Math.max(1, Math.floor(asFiniteNumber(entry.startLevel, 1)))
+      const endLevel = Math.max(startLevel, Math.floor(asFiniteNumber(entry.endLevel, startLevel)))
+      const mode: ManualLevelRange["mode"] = entry.mode === "manual" ? "manual" : "estimated"
+
+      return {
+        className: typeof entry.className === "string" ? entry.className : "",
+        startLevel,
+        endLevel,
+        mode,
+        hpGain: asFiniteNumber(entry.hpGain, 0),
+        atkGain: asFiniteNumber(entry.atkGain, 0),
+        defGain: asFiniteNumber(entry.defGain, 0),
+        matkGain: asFiniteNumber(entry.matkGain, 0),
+        healGain: asFiniteNumber(entry.healGain, 0),
+      }
+    })
+    .filter((entry) => stat_data.ClassNames.includes(entry.className))
+}
+
+export function readBuildSnapshot(storage: Storage): BuildSnapshot {
+  return {
+    selectedTalents: asStringArray(jsonParse(storage.getItem("selectedTalents"), [])),
+    selectedBuffs: asStringArray(jsonParse(storage.getItem("selectedBuffs"), [])),
+    selectedTarots: asStringArray(jsonParse(storage.getItem("selectedTarots"), [])),
+    tarotStacks: asRecord(jsonParse(storage.getItem("tarotStacks"), {})),
+    selectedRace: (() => {
+      const value = storage.getItem("SelectedRace")
+      return typeof value === "string" && value.length > 0 ? value : null
+    })(),
+    selectedLevels: asRecord(jsonParse(storage.getItem("SelectedLevels"), {})),
+    selectedLevelOrder: asStringArray(jsonParse(storage.getItem("SelectedLevelOrder"), [])),
+    selectedStatPoints: asRecord(jsonParse(storage.getItem("SelectedStatPoints"), {})),
+    selectedTraining: asRecord(jsonParse(storage.getItem("SelectedTraining"), {})),
+    selectedHeroPoints: asRecord(jsonParse(storage.getItem("SelectedHeroPoints"), {})),
+    selectedManualLevelRanges: asManualLevelRanges(jsonParse(storage.getItem("SelectedManualLevelRanges"), [])),
+    selectedRunes: asRuneSelections(jsonParse(storage.getItem("SelectedRunes"), {})),
+    equipmentSlots: asEquipmentSlots(jsonParse(storage.getItem("EquipmentSlots"), [])),
+    enabledEquipment: asEnabledEquipment(jsonParse(storage.getItem("EnabledEquipment"), [])),
+    artifact: asRecord(jsonParse(storage.getItem("Artifact"), {})),
+  }
+}
+
+function updateConversionSubStats(
+  targetDict: Record<string, number>,
+  sourceDict: Record<string, number>,
+  sourceStat: string,
+  ratio: number,
+  targetStat: string,
+  stackCount = 1,
+): void {
+  const buff = (sourceDict["Buff%"] ?? 0) + (targetDict["Buff%"] ?? 0)
+  const sourceValue = sourceDict[sourceStat] ?? 0
+
+  const affixInfo = stat_data.StatsInfo[targetStat as keyof typeof stat_data.StatsInfo]
+  const substats = affixInfo?.sub_stats
+  const resultValue = Math.floor(sourceValue * (ratio * stackCount) * (1 + buff))
+
+  if (substats) {
+    for (const substat of substats) {
+      targetDict[substat] = (targetDict[substat] ?? 0) + resultValue
+    }
+  } else if (affixInfo) {
+    targetDict[targetStat] = (targetDict[targetStat] ?? 0) + resultValue
+  }
+}
+
+function updateFlatSubStats(
+  targetDict: Record<string, number>,
+  sourceDict: Record<string, number>,
+  targetStat: string,
+  targetValue: number,
+  stackCount = 1,
+): void {
+  const buff = (sourceDict["Buff%"] ?? 0) + (targetDict["Buff%"] ?? 0)
+
+  const affixInfo = stat_data.StatsInfo[targetStat as keyof typeof stat_data.StatsInfo]
+  const substats = affixInfo?.sub_stats
+  const resultValue = Math.floor(targetValue * stackCount * (1 + buff))
+
+  if (substats) {
+    for (const substat of substats) {
+      targetDict[substat] = (targetDict[substat] ?? 0) + resultValue
+    }
+  } else if (affixInfo) {
+    targetDict[targetStat] = (targetDict[targetStat] ?? 0) + resultValue
+  }
+}
+
+function updateStats(
+  targetDict: Record<string, number>,
+  sourceDict: Record<string, number>,
+  stackDict: Record<string, number>,
+  sourceSkillName: string,
+  sourceSkillData?: Skill | Tarot,
+): void {
+  if (!sourceSkillData) return
+
+  if (sourceSkillData.conversions) {
+    for (const { source, ratio, resulting_stat } of sourceSkillData.conversions) {
+      updateConversionSubStats(targetDict, sourceDict, source, ratio, resulting_stat)
+    }
+  }
+
+  if (sourceSkillData.stack_conversions) {
+    for (const { source, ratio, resulting_stat } of sourceSkillData.stack_conversions) {
+      updateConversionSubStats(targetDict, sourceDict, source, ratio, resulting_stat, stackDict[sourceSkillName] ?? 0)
+    }
+  }
+
+  if (sourceSkillData.stats) {
+    for (const [stat, statAmount] of Object.entries(sourceSkillData.stats)) {
+      updateFlatSubStats(targetDict, sourceDict, stat, statAmount ?? 0)
+    }
+  }
+
+  if (sourceSkillData.stack_stats) {
+    for (const [stat, statAmount] of Object.entries(sourceSkillData.stack_stats)) {
+      updateFlatSubStats(targetDict, sourceDict, stat, statAmount ?? 0, stackDict[sourceSkillName] ?? 0)
+    }
+  }
+}
+
+function combineBaseStats(...sources: Record<string, number>[]): Record<string, number> {
+  const statsBase: Record<string, number> = {}
+  const addStat = (stat: string, value: number) => {
+    statsBase[stat] = (statsBase[stat] ?? 0) + value
+    const info = stat_data.StatsInfo[stat as keyof typeof stat_data.StatsInfo]
+    if (!info?.sub_stats) return
+
+    for (const subStat of info.sub_stats) {
+      statsBase[subStat] = (statsBase[subStat] ?? 0) + value
+    }
+  }
+
+  for (const source of sources) {
+    for (const [stat, value] of Object.entries(source)) {
+      addStat(stat, value)
+    }
+  }
+
+  return statsBase
+}
+
+function computeTalentStats(snapshot: BuildSnapshot, selectedTalentNames: readonly string[]): Record<string, number> {
+  const stats: Record<string, number> = {}
+
+  for (const name of selectedTalentNames) {
+    const data = talent_data[name]
+    if (!data) continue
+
+    for (const [stat, value] of Object.entries(data.stats)) {
+      stats[stat] = (stats[stat] ?? 0) + (value ?? 0)
+    }
+  }
+
+  if (snapshot.selectedRace && snapshot.selectedRace in race_data_by_tag) {
+    const raceStats = race_data_by_tag[snapshot.selectedRace as keyof typeof race_data_by_tag].stats
+    for (const [stat, value] of Object.entries(raceStats)) {
+      stats[stat] = (stats[stat] ?? 0) + (value ?? 0)
+    }
+  }
+
+  return stats
+}
+
+function computeLevelStats(snapshot: BuildSnapshot): Record<string, number> {
+  const statsLevels: Record<string, number> = {}
+
+  statsLevels["Crit DMG%"] = 120
+  statsLevels["Crit Chance%"] = 10
+  statsLevels["Overdrive%"] = 110
+  statsLevels["Focus Regen"] = 5
+
+  let hp = 50
+  let lvl = 0
+  const mainstatLevelGains: Record<string, number> = { ATK: 0, DEF: 0, MATK: 0, HEAL: 0 }
+
+  const findLevelRangeOverride = (className: string, classLevel: number): ManualLevelRange | null => {
+    for (let i = snapshot.selectedManualLevelRanges.length - 1; i >= 0; i--) {
+      const range = snapshot.selectedManualLevelRanges[i]
+      if (range.className !== className) continue
+      if (classLevel < range.startLevel || classLevel > range.endLevel) continue
+      return range
+    }
+
+    return null
+  }
+
+  for (const classNameRaw of snapshot.selectedLevelOrder) {
+    if (!(classNameRaw in stat_data.ClassMainStatValues) || !(classNameRaw in stat_data.ClassScalingStats)) continue
+
+    const className = classNameRaw as keyof typeof stat_data.ClassMainStatValues
+    const hpMultiplier = stat_data.ClassMainStatValues[className].HP
+    const scalingStat = stat_data.ClassScalingStats[className]
+    let scalingValue = 0
+    const classLevels = snapshot.selectedLevels[className] ?? 0
+
+    for (let i = 0; i < classLevels; i++) {
+      lvl++
+      const classLevel = i + 1
+      const rangeOverride = findLevelRangeOverride(className, classLevel)
+
+      if (rangeOverride?.mode === "manual") {
+        hp += rangeOverride.hpGain
+        mainstatLevelGains.ATK += rangeOverride.atkGain
+        mainstatLevelGains.DEF += rangeOverride.defGain
+        mainstatLevelGains.MATK += rangeOverride.matkGain
+        mainstatLevelGains.HEAL += rangeOverride.healGain
+      } else {
+        hp += Math.floor(hpMultiplier * (1 + 0.1 * (lvl - 1))) + 4 * lvl
+        for (const stat of stat_data.Mainstats) {
+          mainstatLevelGains[stat] = (mainstatLevelGains[stat] ?? 0) + (stat_data.ClassMainStatValues[className][stat] ?? 0)
+        }
+      }
+
+      switch (className) {
+        case "tank":
+          scalingValue += stat_data.ClassMainStatValues[className][scalingStat] + Math.floor(stat_data.ClassMainStatValues[className][`${scalingStat} Scaling`] * lvl)
+          break
+        case "warrior":
+          scalingValue += Math.min(0.00155, stat_data.ClassMainStatValues[className][scalingStat] + stat_data.ClassMainStatValues[className][`${scalingStat} Scaling`] * lvl)
+          break
+        case "caster":
+          scalingValue += stat_data.ClassMainStatValues[className][scalingStat] + Math.floor(stat_data.ClassMainStatValues[className][`${scalingStat} Scaling`] * lvl)
+          break
+        case "healer":
+          scalingValue += stat_data.ClassMainStatValues[className][scalingStat] + (stat_data.ClassMainStatValues[className][`${scalingStat} Scaling`] * lvl)
+          break
+      }
+    }
+
+    statsLevels[scalingStat] = (statsLevels[scalingStat] ?? 0) + scalingValue
+  }
+
+  statsLevels.HP = hp
+
+  const tankLevels = snapshot.selectedLevels.tank ?? 0
+  const warriorLevels = snapshot.selectedLevels.warrior ?? 0
+  const casterLevels = snapshot.selectedLevels.caster ?? 0
+  const healerLevels = snapshot.selectedLevels.healer ?? 0
+
+  statsLevels.MP = 8
+    + (tankLevels * stat_data.ClassMainStatValues.tank.MP)
+    + (warriorLevels * stat_data.ClassMainStatValues.warrior.MP)
+    + (casterLevels * stat_data.ClassMainStatValues.caster.MP)
+    + (healerLevels * stat_data.ClassMainStatValues.healer.MP)
+
+  statsLevels.Focus = 100 + (warriorLevels * stat_data.ClassMainStatValues.warrior.Focus)
+  if (tankLevels >= Math.max(...Object.values(snapshot.selectedLevels), 0)) {
+    statsLevels["Threat%"] = 100 + tankLevels * 10
+  } else {
+    statsLevels["Threat%"] = 100 + tankLevels * 2
+  }
+
+  for (const stat of stat_data.Mainstats) {
+    statsLevels[stat] = 5
+      + (snapshot.selectedStatPoints[stat] ?? 0)
+      + (4 * (snapshot.selectedTraining[stat] ?? 0))
+      + (mainstatLevelGains[stat] ?? 0)
+  }
+
+  statsLevels["DEF%"] = (statsLevels["DEF%"] ?? 0) + (tankLevels * 2)
+  statsLevels["ATK%"] = (statsLevels["ATK%"] ?? 0) + (warriorLevels * 2)
+  statsLevels["MATK%"] = (statsLevels["MATK%"] ?? 0) + (casterLevels * 2)
+  statsLevels["HEAL%"] = (statsLevels["HEAL%"] ?? 0) + (healerLevels * 2)
+
+  const selectedRaceKey = (snapshot.selectedRace && snapshot.selectedRace in heroPointGainsByRace)
+    ? snapshot.selectedRace as keyof typeof heroPointGainsByRace
+    : "Skeleton"
+  const raceHeroPointGains = heroPointGainsByRace[selectedRaceKey]
+
+  for (const { id } of heroPointStats) {
+    const spentPoints = Number(snapshot.selectedHeroPoints[id] ?? 0)
+    if (!Number.isFinite(spentPoints) || spentPoints === 0) continue
+
+    const mappedStat = id === "penvoid" ? "Void Pen%" : stat_data.inGameNames[id]
+    if (!mappedStat) continue
+
+    const gainPerPoint = raceHeroPointGains[id] ?? 0
+    if (gainPerPoint === 0) continue
+
+    statsLevels[mappedStat] = (statsLevels[mappedStat] ?? 0) + gainPerPoint * spentPoints
+  }
+
+  return statsLevels
+}
+
+function computeEquipmentStats(snapshot: BuildSnapshot): Record<string, number> {
+  const enabledIndices = new Set(snapshot.enabledEquipment)
+  const stats: Record<string, number> = {}
+
+  for (const [index, slot] of snapshot.equipmentSlots.entries()) {
+    if (!enabledIndices.has(index)) continue
+
+    if (slot.mainstat && slot.mainstat_value) {
+      stats[slot.mainstat] = (stats[slot.mainstat] || 0) + slot.mainstat_value
+    }
+
+    for (const affix of slot.affixes) {
+      if (!affix.stat) continue
+      const affixInfo = stat_data.StatsInfo[affix.stat as keyof typeof stat_data.StatsInfo]
+      const substats = affixInfo?.sub_stats
+      if (substats) {
+        for (const substat of substats) {
+          stats[substat] = (stats[substat] ?? 0) + affix.value
+        }
+      } else if (affixInfo) {
+        stats[affix.stat] = (stats[affix.stat] ?? 0) + affix.value
+      }
+    }
+
+    if (slot.name.includes("+10")) {
+      stats["Dmg%"] = (stats["Dmg%"] ?? 0) + 1
+    }
+  }
+
+  return stats
+}
+
+function computeRuneStats(snapshot: BuildSnapshot): Record<string, number> {
+  const stats: Record<string, number> = {}
+
+  for (const tier in snapshot.selectedRunes) {
+    for (const { rune, count } of snapshot.selectedRunes[tier]) {
+      const runeEntry = rune_data[rune]
+      if (!runeEntry) continue
+
+      for (const [stat, value] of Object.entries(runeEntry.stats)) {
+        stats[stat] = (stats[stat] || 0) + (value ?? 0) * count
+      }
+    }
+  }
+
+  return stats
+}
+
+function computeArtifactStats(snapshot: BuildSnapshot): Record<string, number> {
+  const stats: Record<string, number> = {}
+  const level = snapshot.artifact.Level
+
+  if (!Number.isFinite(level)) return stats
+
+  for (const stat of stat_data.Mainstats) {
+    const artifactMultiplier = snapshot.artifact[`${stat}%`]
+    if (Number.isFinite(artifactMultiplier)) {
+      stats[`Art_${stat}%`] = artifactMultiplier
+    }
+    stats[stat] = level
+  }
+
+  return stats
+}
+
+function computexPenStats(statsBase: Record<string, number>): Record<string, number> {
+  const statsXPen: Record<string, number> = {}
+
+  for (const [xPenStat, affectedStats] of Object.entries(stat_data.xPenMapping)) {
+    const multiplier = statsBase[xPenStat] ?? 0
+    for (const stat of affectedStats) {
+      statsXPen[stat] = Math.floor((statsBase[stat] ?? 0) * (multiplier / 100))
+    }
+  }
+
+  return statsXPen
+}
+
+function computeConversionReadyStats(statsBase: Record<string, number>, statsXPen: Record<string, number>): Record<string, number> {
+  const statsCombined: Record<string, number> = { ...statsXPen }
+
+  for (const [stat, value] of Object.entries(statsBase)) {
+    statsCombined[stat] = (statsCombined[stat] ?? 0) + value
+  }
+
+  const statsConversionReady: Record<string, number> = { ...statsCombined }
+
+  for (const stat of stat_data.Mainstats) {
+    const base = statsCombined[stat] ?? 0
+    const multiplier = statsCombined[`${stat}%`] ?? 0
+    const artifactMultiplier = statsCombined[`Art_${stat}%`] ?? 0
+    statsConversionReady[stat] = Math.floor(base * (1 + multiplier / 100) * (1 + artifactMultiplier / 100))
+  }
+
+  for (const stat of stat_data.AllElements) {
+    statsConversionReady[`${stat}%`] = statsCombined[`${stat}%`] ?? 0
+    statsConversionReady[`${stat} Pen%`] = Math.floor((statsCombined[`${stat} Pen%`] ?? 0) * (1 + (statsCombined[`${stat} xPen%`] ?? 0) / 100))
+  }
+
+  statsConversionReady.HP = Math.floor(statsCombined.HP * (1 + (statsCombined["HP%"] ?? 0)))
+
+  return statsConversionReady
+}
+
+function computeConvertedTalentStats(statsConversionReady: Record<string, number>, selectedTalentNames: readonly string[]): Record<string, number> {
+  const converted: Record<string, number> = {}
+
+  for (const name of selectedTalentNames) {
+    const data = talent_data[name]
+    if (!data || !Array.isArray(data.conversions)) continue
+
+    for (const { source, ratio, resulting_stat } of data.conversions) {
+      const base = statsConversionReady[source] ?? 0
+      converted[resulting_stat] = Math.floor((converted[resulting_stat] || 0) + (base * ratio))
+    }
+  }
+
+  return converted
+}
+
+function computeBuffReadyStats(statsConversionReady: Record<string, number>, statsConverted: Record<string, number>): Record<string, number> {
+  const statsBuffReady: Record<string, number> = {}
+
+  for (const [stat, value] of Object.entries(statsConversionReady)) {
+    statsBuffReady[stat] = (statsBuffReady[stat] || 0) + value
+  }
+
+  for (const [stat, value] of Object.entries(statsConverted)) {
+    statsBuffReady[stat] = (statsBuffReady[stat] || 0) + value
+  }
+
+  return statsBuffReady
+}
+
+function computeBuffStats(snapshot: BuildSnapshot, statsBuffReady: Record<string, number>): Record<string, number> {
+  const buffed: Record<string, number> = {}
+
+  for (const skillName of snapshot.selectedBuffs) {
+    updateStats(buffed, statsBuffReady, {}, skillName, skill_data[skillName])
+  }
+
+  return buffed
+}
+
+function computeTarotStats(snapshot: BuildSnapshot, statsBuffReady: Record<string, number>): Record<string, number> {
+  const tarotBuff: Record<string, number> = {}
+
+  for (const tarotName of snapshot.selectedTarots) {
+    updateStats(tarotBuff, statsBuffReady, snapshot.tarotStacks, tarotName, tarot_data[tarotName])
+  }
+
+  return tarotBuff
+}
+
+function computeDmgReadyStats(
+  statsBuffReady: Record<string, number>,
+  statsBuffs: Record<string, number>,
+  statsTarots: Record<string, number>,
+): Record<string, number> {
+  const result: Record<string, number> = { ...statsBuffReady }
+
+  for (const [stat, value] of Object.entries(statsBuffs)) {
+    result[stat] = (result[stat] || 0) + (value ?? 0)
+  }
+
+  for (const [stat, value] of Object.entries(statsTarots)) {
+    result[stat] = (result[stat] || 0) + (value ?? 0)
+  }
+
+  return result
+}
+
+export function computeBuildStatStages(
+  snapshot: BuildSnapshot,
+  overrides?: { selectedTalents?: Iterable<string> },
+): BuildStatStages {
+  const selectedTalents = overrides?.selectedTalents
+    ? Array.from(new Set(overrides.selectedTalents))
+    : snapshot.selectedTalents
+
+  const statsTalents = computeTalentStats(snapshot, selectedTalents)
+  const statsLevels = computeLevelStats(snapshot)
+  const statsEquipment = computeEquipmentStats(snapshot)
+  const statsRunes = computeRuneStats(snapshot)
+  const statsArtifact = computeArtifactStats(snapshot)
+  const statsBase = combineBaseStats(statsTalents, statsEquipment, statsLevels, statsRunes, statsArtifact)
+  const statsXPen = computexPenStats(statsBase)
+  const statsConversionReady = computeConversionReadyStats(statsBase, statsXPen)
+  const statsConverted = computeConvertedTalentStats(statsConversionReady, selectedTalents)
+  const statsBuffReady = computeBuffReadyStats(statsConversionReady, statsConverted)
+  const statsBuffs = computeBuffStats(snapshot, statsBuffReady)
+  const statsTarots = computeTarotStats(snapshot, statsBuffReady)
+  const statsDmgReady = computeDmgReadyStats(statsBuffReady, statsBuffs, statsTarots)
+
+  return {
+    StatsTalents: statsTalents,
+    StatsLevels: statsLevels,
+    StatsEquipment: statsEquipment,
+    StatsRunes: statsRunes,
+    StatsArtifact: statsArtifact,
+    StatsBase: statsBase,
+    StatsXPen: statsXPen,
+    StatsConversionReady: statsConversionReady,
+    StatsConverted: statsConverted,
+    StatsBuffReady: statsBuffReady,
+    StatsBuffs: statsBuffs,
+    StatsTarots: statsTarots,
+    StatsDmgReady: statsDmgReady,
+  }
+}
+
+export function persistBuildStatStages(storage: Storage, stages: BuildStatStages): void {
+  for (const [key, value] of Object.entries(stages)) {
+    storage.setItem(key, JSON.stringify(value))
+  }
+}

@@ -1,10 +1,12 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { startTransition, useEffect, useState } from "react"
 import { ToggleButton } from "@/app/components/ToggleButton"
 import { DUNGEON_UNLOCKS_STORAGE_KEY, isDungeonUnlockTag } from "@/app/data/dungeon_unlocks"
 import { talent_data, __columnWidths } from "@/app/data/talent_data"
 import { race_data_by_tag, type RaceTag } from "@/app/data/race_data"
+import { computeBuildStatStages, readBuildSnapshot } from "@/app/lib/buildStats"
+import { calculateDamage, readDamageCalcState } from "@/app/lib/damageCalc"
 
 const STORAGE_KEY = "selectedTalents"
 
@@ -12,16 +14,18 @@ const headerLabels = [
   "Name", "PreReq", "Tag", "BlockedTag",
   "Gold", "Exp", "TP", "Lvl",
   "T", "W", "C", "H",
-  "Description"
+  "Description", "Avg DMG Change"
 ]
 const classHeaderTitles: Record<number, string> = {
   8: "Tank",
   9: "Warrior",
   10: "Caster",
-  11: "Healer"
+  11: "Healer",
+  13: "Change in Damage Calculator average damage using your saved calculator settings",
 }
 
 const isRaceTag = (value: string): value is RaceTag => value in race_data_by_tag
+const talentNames = Object.keys(talent_data)
 
 export default function TalentsPage() {
   const [colWidths] = useState<string[]>(() => {
@@ -34,6 +38,7 @@ export default function TalentsPage() {
     widths[9] = "40px"
     widths[10] = "40px"
     widths[11] = "40px" // Healer
+    widths.push("110px")
     return widths
   })
   const [isHydrated, setIsHydrated] = useState(false)
@@ -42,6 +47,7 @@ export default function TalentsPage() {
   const [selectedRacePrereqs, setSelectedRacePrereqs] = useState<Set<string>>(new Set())
   const [selectedDungeonUnlocks, setSelectedDungeonUnlocks] = useState<Set<string>>(new Set())
   const [classLevels, setClassLevels] = useState({ tank: 0, warrior: 0, caster: 0, healer: 0 })
+  const [averageDamageChanges, setAverageDamageChanges] = useState<Record<string, number>>({})
 
   // Load selectedTalents on mount
   useEffect(() => {
@@ -94,6 +100,68 @@ export default function TalentsPage() {
     console.log(stored)
   }, [])
 
+  useEffect(() => {
+    if (!isHydrated) return
+
+    let cancelled = false
+    let timeoutId: number | null = null
+
+    setAverageDamageChanges({})
+
+    const snapshot = readBuildSnapshot(localStorage)
+    const damageState = readDamageCalcState(localStorage)
+    const selectedTalentNames = Array.from(selected)
+    const currentAverage = calculateDamage(
+      computeBuildStatStages(snapshot, { selectedTalents: selectedTalentNames }).StatsDmgReady,
+      damageState,
+    ).average
+
+    const computedChanges: Record<string, number> = {}
+    let index = 0
+    const chunkSize = 20
+
+    const computeChunk = () => {
+      if (cancelled) return
+
+      const maxIndex = Math.min(index + chunkSize, talentNames.length)
+      for (; index < maxIndex; index++) {
+        const talentName = talentNames[index]
+        const toggledTalents = new Set(selectedTalentNames)
+
+        if (toggledTalents.has(talentName)) {
+          toggledTalents.delete(talentName)
+        } else {
+          toggledTalents.add(talentName)
+        }
+
+        const nextAverage = calculateDamage(
+          computeBuildStatStages(snapshot, { selectedTalents: toggledTalents }).StatsDmgReady,
+          damageState,
+        ).average
+
+        computedChanges[talentName] = nextAverage - currentAverage
+      }
+
+      if (index < talentNames.length) {
+        timeoutId = window.setTimeout(computeChunk, 0)
+        return
+      }
+
+      startTransition(() => {
+        setAverageDamageChanges(computedChanges)
+      })
+    }
+
+    timeoutId = window.setTimeout(computeChunk, 0)
+
+    return () => {
+      cancelled = true
+      if (timeoutId !== null) {
+        window.clearTimeout(timeoutId)
+      }
+    }
+  }, [isHydrated, selected])
+
   if (!isHydrated || colWidths.length === 0) return <div className="p-4">Loading...</div>
 
   return (
@@ -126,6 +194,7 @@ export default function TalentsPage() {
             selectedDungeonUnlocks={selectedDungeonUnlocks}
             classLevels={classLevels}
             colWidths={colWidths}
+            averageDamageChange={averageDamageChanges[name] ?? null}
           />
         ))}
       </div>

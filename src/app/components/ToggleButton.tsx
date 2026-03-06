@@ -5,6 +5,7 @@ import type { Talent } from "../data/talent_data"
 import { talent_data } from "../data/talent_data"
 import type { Skill } from "../data/skill_data"
 import { skill_data } from "../data/skill_data"
+import { formatSignedDamageDelta } from "@/app/lib/damageCalc"
 
 type ToggleButtonProps = {
   talentName: string
@@ -21,6 +22,7 @@ type ToggleButtonProps = {
     healer: number
   }
   colWidths: string[]
+  averageDamageChange: number | null
 }
 
 type SkillButtonProps = {
@@ -49,6 +51,7 @@ export function ToggleButton({
   selectedDungeonUnlocks,
   classLevels,
   colWidths,
+  averageDamageChange,
 }: ToggleButtonProps) {
   const isSelected = selected.has(talentName)
   const tpSpent = selected.size - (isSelected ? 1 : 0)
@@ -131,8 +134,10 @@ export function ToggleButton({
     String(talent.class_levels.warrior_levels),
     String(talent.class_levels.caster_levels),
     String(talent.class_levels.healer_levels),
-    talent.description
+    talent.description,
+    formatSignedDamageDelta(averageDamageChange),
   ]
+  const avgDamageIndex = values.length - 1
 
   return (
     <button
@@ -143,7 +148,17 @@ export function ToggleButton({
       {values.map((val, i) => (
         <span
           key={i}
-          className="px-2 whitespace-nowrap border-r border-slate-700 last:border-r-0 box-border"
+          className={`px-2 whitespace-nowrap border-r border-slate-700 last:border-r-0 box-border ${
+            i === avgDamageIndex
+              ? averageDamageChange === null
+                ? "text-slate-400 text-right font-mono tabular-nums"
+                : averageDamageChange > 0
+                  ? "text-emerald-300 text-right font-mono tabular-nums"
+                  : averageDamageChange < 0
+                    ? "text-rose-300 text-right font-mono tabular-nums"
+                    : "text-slate-200 text-right font-mono tabular-nums"
+              : ""
+          }`}
         >
           {val}
         </span>
