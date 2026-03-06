@@ -36,6 +36,16 @@ type SkillButtonProps = {
   rowIndex: number
 }
 
+type ClassColorKey = "tank" | "warrior" | "caster" | "healer"
+type ClassLevelSource = {
+  class_levels: {
+    tank_levels?: number | 0
+    warrior_levels?: number | 0
+    caster_levels?: number | 0
+    healer_levels?: number | 0
+  }
+}
+
 function getAverageDamageClass(value: number | null | undefined): string {
   if (value === undefined) return ""
   if (value === null) return "text-slate-400 text-right font-mono tabular-nums"
@@ -44,17 +54,15 @@ function getAverageDamageClass(value: number | null | undefined): string {
   return "text-slate-200 text-right font-mono tabular-nums"
 }
 
-type TalentClassKey = "tank" | "warrior" | "caster" | "healer"
-
-function getPrimaryTalentClass(talent: Talent): TalentClassKey | null {
-  const levels: Record<TalentClassKey, number> = {
-    tank: talent.class_levels.tank_levels ?? 0,
-    warrior: talent.class_levels.warrior_levels ?? 0,
-    caster: talent.class_levels.caster_levels ?? 0,
-    healer: talent.class_levels.healer_levels ?? 0,
+function getPrimaryClassKey(item: ClassLevelSource): ClassColorKey | null {
+  const levels: Record<ClassColorKey, number> = {
+    tank: item.class_levels.tank_levels ?? 0,
+    warrior: item.class_levels.warrior_levels ?? 0,
+    caster: item.class_levels.caster_levels ?? 0,
+    healer: item.class_levels.healer_levels ?? 0,
   }
 
-  let primaryClass: TalentClassKey | null = null
+  let primaryClass: ClassColorKey | null = null
   let highestLevel = 0
 
   for (const classKey of ["tank", "warrior", "caster", "healer"] as const) {
@@ -67,31 +75,31 @@ function getPrimaryTalentClass(talent: Talent): TalentClassKey | null {
   return primaryClass
 }
 
-function getTalentClassTint(
-  talent: Talent,
+function getClassTint(
+  item: ClassLevelSource,
   state: "default" | "selected" | "unavailable",
 ): string {
-  const primaryClass = getPrimaryTalentClass(talent)
+  const primaryClass = getPrimaryClassKey(item)
 
   if (!primaryClass) {
     return ""
   }
 
-  const subtleTintByClass: Record<TalentClassKey, string> = {
+  const subtleTintByClass: Record<ClassColorKey, string> = {
     tank: "bg-[linear-gradient(90deg,rgba(74,222,128,0.2),rgba(74,222,128,0.09),transparent_72%)]",
     warrior: "bg-[linear-gradient(90deg,rgba(248,113,113,0.2),rgba(248,113,113,0.09),transparent_72%)]",
     caster: "bg-[linear-gradient(90deg,rgba(59,130,246,0.28),rgba(59,130,246,0.12),transparent_72%)]",
     healer: "bg-[linear-gradient(90deg,rgba(216,180,254,0.22),rgba(216,180,254,0.1),transparent_72%)]",
   }
 
-  const selectedTintByClass: Record<TalentClassKey, string> = {
+  const selectedTintByClass: Record<ClassColorKey, string> = {
     tank: "bg-[linear-gradient(90deg,rgba(34,197,94,0.62),rgba(34,197,94,0.3),transparent_80%)] ring-1 ring-inset ring-emerald-200/65",
     warrior: "bg-[linear-gradient(90deg,rgba(239,68,68,0.6),rgba(239,68,68,0.28),transparent_80%)] ring-1 ring-inset ring-rose-200/65",
     caster: "bg-[linear-gradient(90deg,rgba(37,99,235,0.68),rgba(37,99,235,0.32),transparent_80%)] ring-1 ring-inset ring-blue-200/70",
     healer: "bg-[linear-gradient(90deg,rgba(168,85,247,0.6),rgba(168,85,247,0.28),transparent_80%)] ring-1 ring-inset ring-purple-200/65",
   }
 
-  const unavailableTintByClass: Record<TalentClassKey, string> = {
+  const unavailableTintByClass: Record<ClassColorKey, string> = {
     tank: "bg-[linear-gradient(90deg,rgba(74,222,128,0.035),rgba(74,222,128,0.012),transparent_72%)]",
     warrior: "bg-[linear-gradient(90deg,rgba(248,113,113,0.032),rgba(248,113,113,0.012),transparent_72%)]",
     caster: "bg-[linear-gradient(90deg,rgba(59,130,246,0.04),rgba(59,130,246,0.014),transparent_72%)]",
@@ -182,7 +190,7 @@ export function ToggleButton({
   return (
     <button
       onClick={handleClick}
-      className={`grid min-w-full w-max text-left transition px-0 py-1 ${rowClass} ${getTalentClassTint(
+      className={`grid min-w-full w-max text-left transition px-0 py-1 ${rowClass} ${getClassTint(
         talent,
         isSelected && isUnavailable
           ? "default"
@@ -269,6 +277,13 @@ export function SkillButton({
         rowIndex,
         missingRequirement
           ? (isSelected ? "selectedUnavailable" : "unavailable")
+          : isSelected
+            ? "selected"
+            : "default",
+      )} ${getClassTint(
+        skill,
+        missingRequirement
+          ? "unavailable"
           : isSelected
             ? "selected"
             : "default",
