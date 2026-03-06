@@ -3,6 +3,7 @@
 import type { Dispatch, SetStateAction } from "react"
 import type { Talent } from "../data/talent_data"
 import type { Skill } from "../data/skill_data"
+import { skill_data } from "../data/skill_data"
 
 type ToggleButtonProps = {
   talentName: string
@@ -18,6 +19,13 @@ type SkillButtonProps = {
   skill: Skill
   selected: Set<string>
   setSelected: Dispatch<SetStateAction<Set<string>>>
+  selectedTalents: Set<string>
+  classLevels: {
+    tank: number
+    warrior: number
+    caster: number
+    healer: number
+  }
   colWidths: string[]
 }
 
@@ -89,9 +97,41 @@ export function SkillButton({
   skill,
   selected,
   setSelected,
+  selectedTalents,
+  classLevels,
   colWidths
 }: SkillButtonProps) {
   const isSelected = selected.has(skillName)
+  const selectedSkillPoints = Array.from(selected).reduce((sum, name) => sum + (skill_data[name]?.sp ?? 0), 0)
+  const spentPointsBeforeCurrent = selectedSkillPoints - (isSelected ? (skill.sp ?? 0) : 0)
+
+  const prereqTokens = Array.isArray(skill.PreReq)
+    ? skill.PreReq
+      .flatMap((rawReq) => rawReq.split(","))
+      .map((req) => req.trim())
+      .filter((req) => req.length > 0)
+    : typeof skill.PreReq === "string" && skill.PreReq.length > 0
+      ? skill.PreReq
+        .split(",")
+        .map((req) => req.trim())
+        .filter((req) => req.length > 0)
+      : []
+
+  const missingPrereq = prereqTokens.some((req) => (
+    req !== "Default Skill" &&
+    !selected.has(req) &&
+    !selectedTalents.has(req)
+  ))
+
+  const missingClassLevel = (
+    classLevels.tank < (skill.class_levels.tank_levels ?? 0) ||
+    classLevels.warrior < (skill.class_levels.warrior_levels ?? 0) ||
+    classLevels.caster < (skill.class_levels.caster_levels ?? 0) ||
+    classLevels.healer < (skill.class_levels.healer_levels ?? 0)
+  )
+
+  const missingSkillPoints = spentPointsBeforeCurrent < (skill.sp_spent ?? 0)
+  const missingRequirement = missingPrereq || missingClassLevel || missingSkillPoints
 
   const handleClick = () => {
     const newSet = new Set(selected)
@@ -125,7 +165,13 @@ export function SkillButton({
     <button
       onClick={handleClick}
       className={`grid w-full text-left transition px-0 py-1 ${
-        isSelected ? "bg-sky-900/40 hover:bg-sky-800/45" : "hover:bg-slate-800/85"
+        missingRequirement && isSelected
+          ? "bg-amber-900/55 hover:bg-amber-900/65"
+          : missingRequirement
+            ? "bg-rose-900/45 hover:bg-rose-900/55"
+            : isSelected
+              ? "bg-sky-900/40 hover:bg-sky-800/45"
+              : "hover:bg-slate-800/85"
       }`}
       style={{ gridTemplateColumns: colWidths.join(" ") }}
     >
