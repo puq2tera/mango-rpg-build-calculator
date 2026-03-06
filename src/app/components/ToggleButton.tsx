@@ -2,6 +2,7 @@
 
 import type { Dispatch, SetStateAction } from "react"
 import type { Talent } from "../data/talent_data"
+import { talent_data } from "../data/talent_data"
 import type { Skill } from "../data/skill_data"
 import { skill_data } from "../data/skill_data"
 
@@ -11,6 +12,13 @@ type ToggleButtonProps = {
   selected: Set<string>
   setSelected: Dispatch<SetStateAction<Set<string>>>
   totalLevels: number
+  selectedDungeonUnlocks: Set<string>
+  classLevels: {
+    tank: number
+    warrior: number
+    caster: number
+    healer: number
+  }
   colWidths: string[]
 }
 
@@ -30,10 +38,48 @@ type SkillButtonProps = {
   colWidths: string[]
 }
 
-export function ToggleButton({ talentName, talent, selected, setSelected, totalLevels, colWidths }: ToggleButtonProps) {
+export function ToggleButton({
+  talentName,
+  talent,
+  selected,
+  setSelected,
+  totalLevels,
+  selectedDungeonUnlocks,
+  classLevels,
+  colWidths,
+}: ToggleButtonProps) {
   const isSelected = selected.has(talentName)
   const tpSpent = selected.size - (isSelected ? 1 : 0)
-  const missingRequirement = totalLevels < (talent.total_level ?? 0) || tpSpent < (talent.tp_spent ?? 0)
+  const selectedTalentTags = new Set(
+    Array.from(selected)
+      .map((name) => talent_data[name]?.Tag)
+      .filter((tag): tag is string => Boolean(tag))
+  )
+
+  const prereqTokens = talent.PreReq
+    .flatMap((rawReq) => rawReq.split(","))
+    .map((req) => req.trim())
+    .filter((req) => req.length > 0)
+
+  const missingPrereq = prereqTokens.some((req) => (
+    !selected.has(req) &&
+    !selectedTalentTags.has(req) &&
+    !selectedDungeonUnlocks.has(req)
+  ))
+
+  const missingClassLevel = (
+    classLevels.tank < (talent.class_levels.tank_levels ?? 0) ||
+    classLevels.warrior < (talent.class_levels.warrior_levels ?? 0) ||
+    classLevels.caster < (talent.class_levels.caster_levels ?? 0) ||
+    classLevels.healer < (talent.class_levels.healer_levels ?? 0)
+  )
+
+  const missingRequirement = (
+    totalLevels < (talent.total_level ?? 0) ||
+    tpSpent < (talent.tp_spent ?? 0) ||
+    missingPrereq ||
+    missingClassLevel
+  )
 
   const handleClick = () => {
     const nextSelected = new Set(selected)

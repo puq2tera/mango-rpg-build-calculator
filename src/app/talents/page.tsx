@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react"
 import { ToggleButton } from "@/app/components/ToggleButton"
+import { DUNGEON_UNLOCKS_STORAGE_KEY, isDungeonUnlockTag } from "@/app/data/dungeon_unlocks"
 import { talent_data, __columnWidths } from "@/app/data/talent_data"
 
 const STORAGE_KEY = "selectedTalents"
@@ -35,11 +36,14 @@ export default function TalentsPage() {
   const [isHydrated, setIsHydrated] = useState(false)
   const [totalLevels, setTotalLevels] = useState(0)
   const [selected, setSelected] = useState<Set<string>>(new Set())
+  const [selectedDungeonUnlocks, setSelectedDungeonUnlocks] = useState<Set<string>>(new Set())
+  const [classLevels, setClassLevels] = useState({ tank: 0, warrior: 0, caster: 0, healer: 0 })
 
   // Load selectedTalents on mount
   useEffect(() => {
     console.log(`Loaded selectedTalents into selected`)
     const stored = localStorage.getItem(STORAGE_KEY)
+    const storedDungeonUnlocks = localStorage.getItem(DUNGEON_UNLOCKS_STORAGE_KEY)
     const rawLevels = localStorage.getItem("SelectedLevels")
 
     try {
@@ -50,13 +54,28 @@ export default function TalentsPage() {
 
     try {
       const parsedLevels: Record<string, number> = rawLevels ? JSON.parse(rawLevels) : {}
+      const nextClassLevels = {
+        tank: Number(parsedLevels.tank ?? 0),
+        warrior: Number(parsedLevels.warrior ?? 0),
+        caster: Number(parsedLevels.caster ?? 0),
+        healer: Number(parsedLevels.healer ?? 0),
+      }
       const total = ["tank", "warrior", "caster", "healer"].reduce((sum, key) => {
-        const value = Number(parsedLevels[key] ?? 0)
+        const value = nextClassLevels[key as keyof typeof nextClassLevels]
         return sum + (Number.isFinite(value) ? value : 0)
       }, 0)
+      setClassLevels(nextClassLevels)
       setTotalLevels(total)
     } catch {
+      setClassLevels({ tank: 0, warrior: 0, caster: 0, healer: 0 })
       setTotalLevels(0)
+    }
+
+    try {
+      const parsedUnlocks: string[] = storedDungeonUnlocks ? JSON.parse(storedDungeonUnlocks) : []
+      setSelectedDungeonUnlocks(new Set(parsedUnlocks.filter(isDungeonUnlockTag)))
+    } catch {
+      setSelectedDungeonUnlocks(new Set())
     }
 
     setIsHydrated(true)
@@ -91,6 +110,8 @@ export default function TalentsPage() {
             selected={selected}
             setSelected={setSelected}
             totalLevels={totalLevels}
+            selectedDungeonUnlocks={selectedDungeonUnlocks}
+            classLevels={classLevels}
             colWidths={colWidths}
           />
         ))}
