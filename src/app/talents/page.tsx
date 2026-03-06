@@ -207,22 +207,25 @@ export default function TalentsPage() {
 
     return [...filteredTalentNames].sort((left, right) => {
       if (viewState.sortMode === "damage") {
-        const difference = (averageDamageChanges[right] ?? 0) - (averageDamageChanges[left] ?? 0)
+        const difference = (averageDamageChanges[left] ?? 0) - (averageDamageChanges[right] ?? 0)
 
         if (difference !== 0) {
-          return difference
+          return viewState.sortDirection === "asc" ? difference : -difference
         }
       }
 
       if (viewState.sortMode === "cost") {
-        const difference = (talent_data[right].tp_spent ?? 0) - (talent_data[left].tp_spent ?? 0)
+        const difference = (talent_data[left].tp_spent ?? 0) - (talent_data[right].tp_spent ?? 0)
 
         if (difference !== 0) {
-          return difference
+          return viewState.sortDirection === "asc" ? difference : -difference
         }
       }
 
-      return (defaultTalentOrder.get(left) ?? 0) - (defaultTalentOrder.get(right) ?? 0)
+      const defaultDifference = (defaultTalentOrder.get(left) ?? 0) - (defaultTalentOrder.get(right) ?? 0)
+      return viewState.sortMode === "default" && viewState.sortDirection === "desc"
+        ? -defaultDifference
+        : defaultDifference
     })
   }, [
     allRaceTokens,

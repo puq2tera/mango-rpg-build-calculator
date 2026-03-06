@@ -5,12 +5,14 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import {
   dispatchManagedTableViewChange,
+  getDefaultSortDirection,
   getDefaultTableViewState,
   getTableViewPageFromPathname,
   normalizePathname,
   persistTableViewState,
   readTableViewState,
   type TableViewPage,
+  type SortMode,
   type TableViewState,
 } from "@/app/lib/tableViewState"
 
@@ -71,6 +73,8 @@ const optionButtonClass = (active: boolean) => (
   }`
 )
 
+const getDirectionArrow = (direction: TableViewState["sortDirection"]) => direction === "asc" ? "↑" : "↓"
+
 export default function TopNav() {
   const pathname = usePathname()
   const normalizedPathname = normalizePathname(pathname)
@@ -113,6 +117,11 @@ export default function TopNav() {
     viewState.raceFilter !== "all" ||
     viewState.availabilityFilter !== "all"
   )
+  const hasActiveSort = (
+    viewState.sortMode !== "default" ||
+    viewState.sortDirection !== getDefaultSortDirection("default")
+  )
+  const sortButtonLabel = hasActiveSort ? `Sort ${getDirectionArrow(viewState.sortDirection)}` : "Sort"
 
   const updateViewState = (patch: Partial<TableViewState>) => {
     if (!tablePage) {
@@ -123,6 +132,14 @@ export default function TopNav() {
     setViewState(nextViewState)
     persistTableViewState(localStorage, tablePage, nextViewState)
     dispatchManagedTableViewChange({ page: tablePage, viewState: nextViewState })
+  }
+
+  const handleSortOptionClick = (sortMode: SortMode) => {
+    const nextSortDirection = viewState.sortMode === sortMode
+      ? (viewState.sortDirection === "asc" ? "desc" : "asc")
+      : getDefaultSortDirection(sortMode)
+
+    updateViewState({ sortMode, sortDirection: nextSortDirection })
   }
 
   return (
@@ -151,11 +168,11 @@ export default function TopNav() {
             <button
               type="button"
               onClick={() => setOpenMenu((current) => current === "sort" ? null : "sort")}
-              className={`${controlButtonClass} border-slate-700 bg-slate-950/90 ${viewState.sortMode !== "default" || openMenu === "sort" ? "border-sky-500/60 text-sky-200" : "border-slate-700"}`}
+              className={`${controlButtonClass} border-slate-700 bg-slate-950/90 ${hasActiveSort || openMenu === "sort" ? "border-sky-500/60 text-sky-200" : "border-slate-700"}`}
               aria-haspopup="dialog"
               aria-expanded={openMenu === "sort"}
             >
-              Sort
+              {sortButtonLabel}
             </button>
           </>
         ) : null}
@@ -223,10 +240,14 @@ export default function TopNav() {
               <button
                 key={option.value}
                 type="button"
-                onClick={() => updateViewState({ sortMode: option.value })}
-                className={optionButtonClass(viewState.sortMode === option.value)}
+                onClick={() => handleSortOptionClick(option.value)}
+                className={`${optionButtonClass(viewState.sortMode === option.value)} flex items-center justify-between gap-3`}
+                title={viewState.sortMode === option.value ? "Click again to reverse direction" : undefined}
               >
-                {option.label}
+                <span>{option.label}</span>
+                <span className={`text-[10px] ${viewState.sortMode === option.value ? "text-sky-200" : "text-slate-500"}`}>
+                  {viewState.sortMode === option.value ? getDirectionArrow(viewState.sortDirection) : ""}
+                </span>
               </button>
             ))}
           </div>

@@ -3,12 +3,14 @@ export type ClassFilter = "all" | "tank" | "warrior" | "caster" | "healer"
 export type RaceFilter = "all" | "current" | "raceSpecific"
 export type AvailabilityFilter = "all" | "available" | "unavailable"
 export type SortMode = "default" | "damage" | "cost"
+export type SortDirection = "asc" | "desc"
 
 export type TableViewState = {
   classFilter: ClassFilter
   raceFilter: RaceFilter
   availabilityFilter: AvailabilityFilter
   sortMode: SortMode
+  sortDirection: SortDirection
 }
 
 export type ManagedTableViewChangeDetail = {
@@ -24,6 +26,7 @@ const CLASS_FILTERS = new Set<ClassFilter>(["all", "tank", "warrior", "caster", 
 const RACE_FILTERS = new Set<RaceFilter>(["all", "current", "raceSpecific"])
 const AVAILABILITY_FILTERS = new Set<AvailabilityFilter>(["all", "available", "unavailable"])
 const SORT_MODES = new Set<SortMode>(["default", "damage", "cost"])
+const SORT_DIRECTIONS = new Set<SortDirection>(["asc", "desc"])
 
 export function normalizePathname(pathname: string): string {
   const trimmed = pathname.replace(/\/+$/, "")
@@ -50,7 +53,12 @@ export function getDefaultTableViewState(): TableViewState {
     raceFilter: "all",
     availabilityFilter: "all",
     sortMode: "default",
+    sortDirection: getDefaultSortDirection("default"),
   }
+}
+
+export function getDefaultSortDirection(sortMode: SortMode): SortDirection {
+  return sortMode === "default" ? "asc" : "desc"
 }
 
 export function readTableViewState(storage: Storage, page: TableViewPage): TableViewState {
@@ -63,13 +71,19 @@ export function readTableViewState(storage: Storage, page: TableViewPage): Table
       return fallback
     }
 
+    const sortMode = SORT_MODES.has(parsed.sortMode as SortMode) ? (parsed.sortMode as SortMode) : fallback.sortMode
+    const fallbackSortDirection = getDefaultSortDirection(sortMode)
+
     return {
       classFilter: CLASS_FILTERS.has(parsed.classFilter as ClassFilter) ? (parsed.classFilter as ClassFilter) : fallback.classFilter,
       raceFilter: RACE_FILTERS.has(parsed.raceFilter as RaceFilter) ? (parsed.raceFilter as RaceFilter) : fallback.raceFilter,
       availabilityFilter: AVAILABILITY_FILTERS.has(parsed.availabilityFilter as AvailabilityFilter)
         ? (parsed.availabilityFilter as AvailabilityFilter)
         : fallback.availabilityFilter,
-      sortMode: SORT_MODES.has(parsed.sortMode as SortMode) ? (parsed.sortMode as SortMode) : fallback.sortMode,
+      sortMode,
+      sortDirection: SORT_DIRECTIONS.has(parsed.sortDirection as SortDirection)
+        ? (parsed.sortDirection as SortDirection)
+        : fallbackSortDirection,
     }
   } catch {
     return fallback

@@ -205,22 +205,25 @@ export default function SkillsPage() {
 
     return [...filteredSkillNames].sort((left, right) => {
       if (viewState.sortMode === "damage") {
-        const difference = (averageDamageChanges[right] ?? 0) - (averageDamageChanges[left] ?? 0)
+        const difference = (averageDamageChanges[left] ?? 0) - (averageDamageChanges[right] ?? 0)
 
         if (difference !== 0) {
-          return difference
+          return viewState.sortDirection === "asc" ? difference : -difference
         }
       }
 
       if (viewState.sortMode === "cost") {
-        const difference = (skill_data[right].sp_spent ?? 0) - (skill_data[left].sp_spent ?? 0)
+        const difference = (skill_data[left].sp_spent ?? 0) - (skill_data[right].sp_spent ?? 0)
 
         if (difference !== 0) {
-          return difference
+          return viewState.sortDirection === "asc" ? difference : -difference
         }
       }
 
-      return (defaultSkillOrder.get(left) ?? 0) - (defaultSkillOrder.get(right) ?? 0)
+      const defaultDifference = (defaultSkillOrder.get(left) ?? 0) - (defaultSkillOrder.get(right) ?? 0)
+      return viewState.sortMode === "default" && viewState.sortDirection === "desc"
+        ? -defaultDifference
+        : defaultDifference
     })
   }, [
     allRaceTokens,
