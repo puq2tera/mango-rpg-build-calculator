@@ -169,9 +169,11 @@ export function getTalentAvailabilityState({
     missingClassLevel
   )
   const blockedTagConflict = Boolean(talent.BlockedTag) && otherSelectedTalentTags.has(talent.BlockedTag)
+  const raceFilterTokens = collectExpandedPrereqTokens(prereqTokens)
 
   return {
     prereqTokens,
+    raceFilterTokens,
     missingRequirement,
     blockedTagConflict,
     isAvailable: !missingRequirement && !blockedTagConflict,

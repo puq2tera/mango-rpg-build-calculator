@@ -190,7 +190,7 @@ export default function TalentsPage() {
         totalLevels,
       })
 
-      if (!matchesRaceFilter(availabilityState.prereqTokens, viewState.raceFilter, selectedRacePrereqs, allRaceTokens)) {
+      if (!matchesRaceFilter(availabilityState.raceFilterTokens, viewState.raceFilter, selectedRacePrereqs, allRaceTokens)) {
         return false
       }
 
