@@ -1,12 +1,15 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import type { Dispatch, SetStateAction } from "react"
 import type { Talent } from "../data/talent_data"
 import type { Skill } from "../data/skill_data"
 
 type ToggleButtonProps = {
   talentName: string
   talent: Talent
+  selected: Set<string>
+  setSelected: Dispatch<SetStateAction<Set<string>>>
+  totalLevels: number
   colWidths: string[]
 }
 
@@ -14,42 +17,29 @@ type SkillButtonProps = {
   skillName: string
   skill: Skill
   selected: Set<string>
-  setSelected: React.Dispatch<React.SetStateAction<Set<string>>>
+  setSelected: Dispatch<SetStateAction<Set<string>>>
   colWidths: string[]
 }
 
-export function ToggleButton({ talentName, talent, colWidths }: ToggleButtonProps) {
-  const [selected, setSelected] = useState(false)
+export function ToggleButton({ talentName, talent, selected, setSelected, totalLevels, colWidths }: ToggleButtonProps) {
+  const isSelected = selected.has(talentName)
+  const tpSpent = selected.size - (isSelected ? 1 : 0)
+  const missingRequirement = totalLevels < (talent.total_level ?? 0) || tpSpent < (talent.tp_spent ?? 0)
 
-  // Initialize selection state from localStorage on mount
-  useEffect(() => {
-    const stored = localStorage.getItem("selectedTalents")
-    if (stored) {
-      const list: string[] = JSON.parse(stored)
-      setSelected(list.includes(talentName))
-    }
-  }, [talentName])
-
-  //
   const handleClick = () => {
-    const stored = localStorage.getItem("selectedTalents")
-    const list: string[] = stored ? JSON.parse(stored) : []
-
-    // Checks if talentName is in selectedTalents
-    // Only modifies specific index of the talent leaving the rest of the list untouched
-    const idx = list.indexOf(talentName)
-    if (idx >= 0) {
-      list.splice(idx, 1)
-      setSelected(false)
-      console.log(`Added ${talentName}`)
-    } else {
-      list.push(talentName)
-      setSelected(true)
+    const nextSelected = new Set(selected)
+    if (nextSelected.has(talentName)) {
+      nextSelected.delete(talentName)
       console.log(`Removed ${talentName}`)
+    } else {
+      nextSelected.add(talentName)
+      console.log(`Added ${talentName}`)
     }
 
+    setSelected(nextSelected)
     // Update selectedTalents
-    localStorage.setItem("selectedTalents", JSON.stringify(list))
+    localStorage.setItem("selectedTalents", JSON.stringify(Array.from(nextSelected)))
+    window.dispatchEvent(new Event("talentsUpdated"))
   }
 
   const values = [
@@ -72,7 +62,13 @@ export function ToggleButton({ talentName, talent, colWidths }: ToggleButtonProp
     <button
       onClick={handleClick}
       className={`grid w-full text-left transition px-0 py-1 ${
-        selected ? "bg-sky-900/40 hover:bg-sky-800/45" : "hover:bg-slate-800/85"
+        missingRequirement && isSelected
+          ? "bg-amber-900/55 hover:bg-amber-900/65"
+          : missingRequirement
+            ? "bg-rose-900/45 hover:bg-rose-900/55"
+            : isSelected
+              ? "bg-sky-900/40 hover:bg-sky-800/45"
+              : "hover:bg-slate-800/85"
       }`}
       style={{ gridTemplateColumns: colWidths.join(" ") }}
     >

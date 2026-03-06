@@ -32,21 +32,38 @@ export default function TalentsPage() {
     widths[11] = "40px" // Healer
     return widths
   })
-  const [selected, setSelected] = useState<Set<string> | null>(null)
+  const [isHydrated, setIsHydrated] = useState(false)
+  const [totalLevels, setTotalLevels] = useState(0)
+  const [selected, setSelected] = useState<Set<string>>(new Set())
 
   // Load selectedTalents on mount
   useEffect(() => {
     console.log(`Loaded selectedTalents into selected`)
     const stored = localStorage.getItem(STORAGE_KEY)
+    const rawLevels = localStorage.getItem("SelectedLevels")
+
     try {
       setSelected(stored ? new Set(JSON.parse(stored)) : new Set())
     } catch {
       setSelected(new Set())
     }
+
+    try {
+      const parsedLevels: Record<string, number> = rawLevels ? JSON.parse(rawLevels) : {}
+      const total = ["tank", "warrior", "caster", "healer"].reduce((sum, key) => {
+        const value = Number(parsedLevels[key] ?? 0)
+        return sum + (Number.isFinite(value) ? value : 0)
+      }, 0)
+      setTotalLevels(total)
+    } catch {
+      setTotalLevels(0)
+    }
+
+    setIsHydrated(true)
     console.log(stored)
   }, [])
 
-  if (selected === null || colWidths.length === 0) return <div className="p-4">Loading...</div>
+  if (!isHydrated || colWidths.length === 0) return <div className="p-4">Loading...</div>
 
   return (
     <div className="h-[80vh] overflow-y-auto border rounded-md">
@@ -71,6 +88,9 @@ export default function TalentsPage() {
             key={name}
             talentName={name}
             talent={talent_data[name]}
+            selected={selected}
+            setSelected={setSelected}
+            totalLevels={totalLevels}
             colWidths={colWidths}
           />
         ))}
