@@ -196,6 +196,12 @@ export function getSkillAvailabilityState({
       .map((name) => skill_data[name]?.Tag)
       .filter((tag): tag is string => Boolean(tag)),
   )
+  const otherSelectedSkillTags = new Set(
+    Array.from(selectedSkills)
+      .filter((name) => name !== skillName)
+      .map((name) => skill_data[name]?.Tag)
+      .filter((tag): tag is string => Boolean(tag)),
+  )
   const selectedTalentTags = new Set(
     Array.from(selectedTalents)
       .map((name) => talent_data[name]?.Tag)
@@ -223,11 +229,14 @@ export function getSkillAvailabilityState({
 
   const missingSkillPoints = spentPointsBeforeCurrent < (skill.sp_spent ?? 0)
   const missingRequirement = missingPrereq || missingClassLevel || missingSkillPoints
+  const blockedTag = skill.BlockedTag ?? ""
+  const blockedTagConflict = blockedTag.length > 0 && otherSelectedSkillTags.has(blockedTag)
 
   return {
     prereqTokens,
     raceFilterTokens,
     missingRequirement,
-    isAvailable: !missingRequirement,
+    blockedTagConflict,
+    isAvailable: !missingRequirement && !blockedTagConflict,
   }
 }

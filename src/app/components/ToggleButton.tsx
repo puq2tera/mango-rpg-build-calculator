@@ -141,17 +141,13 @@ export function ToggleButton({
     totalLevels,
   })
   const isUnavailable = blockedTagConflict || missingRequirement
-  const rowTone = blockedTagConflict && isSelected
+  const rowTone = isSelected && isUnavailable
     ? "selectedBlocked"
-    : blockedTagConflict
+    : isUnavailable
       ? "unavailable"
-      : missingRequirement && isSelected
-        ? "selectedInvalid"
-        : missingRequirement
-          ? "unavailable"
-          : isSelected
-            ? "selected"
-            : "default"
+      : isSelected
+        ? "selected"
+        : "default"
   const rowClass = getStripedRowClass(rowIndex, rowTone)
 
   const handleClick = () => {
@@ -230,7 +226,7 @@ export function SkillButton({
   rowIndex,
 }: SkillButtonProps) {
   const isSelected = selected.has(skillName)
-  const { missingRequirement } = getSkillAvailabilityState({
+  const { blockedTagConflict, missingRequirement } = getSkillAvailabilityState({
     skillName,
     skill,
     selectedSkills: selected,
@@ -239,18 +235,23 @@ export function SkillButton({
     selectedDungeonUnlocks,
     classLevels,
   })
+  const isUnavailable = blockedTagConflict || missingRequirement
 
   const handleClick = () => {
-    const newSet = new Set(selected)
-    if (newSet.has(skillName)) {
-      newSet.delete(skillName)
-      console.log(`Removed ${skillName}`)
-    } else {
-      newSet.add(skillName)
-      console.log(`Added ${skillName}`)
-    }
-    setSelected(newSet)
-    localStorage.setItem("selectedBuffs", JSON.stringify(Array.from(newSet)))
+    setSelected((currentSelected) => {
+      const newSet = new Set(currentSelected)
+
+      if (newSet.has(skillName)) {
+        newSet.delete(skillName)
+        console.log(`Removed ${skillName}`)
+      } else {
+        newSet.add(skillName)
+        console.log(`Added ${skillName}`)
+      }
+
+      localStorage.setItem("selectedBuffs", JSON.stringify(Array.from(newSet)))
+      return newSet
+    })
   }
   // TODO: ADD sp cost to button instead of just sp_spent required to learn it
   const values: Record<string, string> = {
@@ -275,15 +276,19 @@ export function SkillButton({
       onClick={handleClick}
       className={`grid min-w-full w-max text-left transition px-0 py-1 ${getStripedRowClass(
         rowIndex,
-        missingRequirement
-          ? (isSelected ? "selectedUnavailable" : "unavailable")
-          : isSelected
-            ? "selected"
-            : "default",
+        isSelected && isUnavailable
+          ? "selectedBlocked"
+          : isUnavailable
+            ? "unavailable"
+            : isSelected
+              ? "selected"
+              : "default",
       )} ${getClassTint(
         skill,
-        missingRequirement
-          ? "unavailable"
+        isSelected && isUnavailable
+          ? "default"
+          : isUnavailable
+            ? "unavailable"
           : isSelected
             ? "selected"
             : "default",
