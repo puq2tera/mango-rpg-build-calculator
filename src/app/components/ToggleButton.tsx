@@ -20,6 +20,7 @@ type SkillButtonProps = {
   selected: Set<string>
   setSelected: Dispatch<SetStateAction<Set<string>>>
   selectedTalents: Set<string>
+  selectedDungeonUnlocks: Set<string>
   classLevels: {
     tank: number
     warrior: number
@@ -98,6 +99,7 @@ export function SkillButton({
   selected,
   setSelected,
   selectedTalents,
+  selectedDungeonUnlocks,
   classLevels,
   colWidths
 }: SkillButtonProps) {
@@ -120,7 +122,8 @@ export function SkillButton({
   const missingPrereq = prereqTokens.some((req) => (
     req !== "Default Skill" &&
     !selected.has(req) &&
-    !selectedTalents.has(req)
+    !selectedTalents.has(req) &&
+    !selectedDungeonUnlocks.has(req)
   ))
 
   const missingClassLevel = (

@@ -2,6 +2,12 @@
 
 import { useEffect, useState } from "react"
 import {
+  DUNGEON_UNLOCKS_STORAGE_KEY,
+  dungeonUnlockTags,
+  isDungeonUnlockTag,
+  type DungeonUnlockTag,
+} from "../data/dungeon_unlocks"
+import {
   heroPointGainsByRace,
   heroPointStats,
   heroPointStatsByGroup,
@@ -18,6 +24,7 @@ const STORAGE_KEYS = {
   heroPoints: "SelectedHeroPoints",
   savedLevelOrder: "SelectedLevelOrder",
   manualLevelRanges: "SelectedManualLevelRanges",
+  dungeonUnlocks: DUNGEON_UNLOCKS_STORAGE_KEY,
   race: "SelectedRace",
 }
 
@@ -92,6 +99,7 @@ export default function LevelsPage() {
   const [training, setTraining] = useState({ ATK: 0, DEF: 0, MATK: 0, HEAL: 0 })
   const [heroPoints, setHeroPoints] = useState<Record<string, number>>({})
   const [manualLevelRanges, setManualLevelRanges] = useState<ManualLevelRange[]>([])
+  const [selectedDungeonUnlocks, setSelectedDungeonUnlocks] = useState<DungeonUnlockTag[]>([])
   const [selectedTalents, setSelectedTalents] = useState<string[]>([])
   const [selectedBuffs, setSelectedBuffs] = useState<string[]>([])
   const [classOrder, setClassOrder] = useState<Cls[]>(["tank", "warrior", "caster", "healer"])
@@ -105,6 +113,7 @@ export default function LevelsPage() {
     const storedHeroPoints = localStorage.getItem(STORAGE_KEYS.heroPoints)
     const storedLevelOrder = localStorage.getItem(STORAGE_KEYS.savedLevelOrder)
     const storedManualLevelRanges = localStorage.getItem(STORAGE_KEYS.manualLevelRanges)
+    const storedDungeonUnlocks = localStorage.getItem(STORAGE_KEYS.dungeonUnlocks)
     const storedRace = localStorage.getItem(STORAGE_KEYS.race)
     const storedSelectedTalents = localStorage.getItem("selectedTalents")
     const storedSelectedBuffs = localStorage.getItem("selectedBuffs")
@@ -115,6 +124,7 @@ export default function LevelsPage() {
     if (storedHeroPoints) setHeroPoints(JSON.parse(storedHeroPoints))
     if (storedLevelOrder) setClassOrder(JSON.parse(storedLevelOrder))
     if (storedManualLevelRanges) setManualLevelRanges(JSON.parse(storedManualLevelRanges))
+    setSelectedDungeonUnlocks(parseStoredStringArray(storedDungeonUnlocks).filter(isDungeonUnlockTag))
     if (storedRace && isRaceTag(storedRace)) setSelectedRace(storedRace)
     setSelectedTalents(parseStoredStringArray(storedSelectedTalents))
     setSelectedBuffs(parseStoredStringArray(storedSelectedBuffs))
@@ -151,6 +161,11 @@ export default function LevelsPage() {
     if (!loaded) return
     localStorage.setItem(STORAGE_KEYS.manualLevelRanges, JSON.stringify(manualLevelRanges))
   }, [manualLevelRanges, loaded])
+
+  useEffect(() => {
+    if (!loaded) return
+    localStorage.setItem(STORAGE_KEYS.dungeonUnlocks, JSON.stringify(selectedDungeonUnlocks))
+  }, [selectedDungeonUnlocks, loaded])
 
   useEffect(() => {
     if (!loaded) return
@@ -261,6 +276,7 @@ export default function LevelsPage() {
 
   const classLabel: Record<Cls, string> = { tank: "Tank", warrior: "Warrior", caster: "Caster", healer: "Healer" }
   const headerBg: Record<Cls, string> = { tank: "bg-emerald-900/45", warrior: "bg-rose-900/45", caster: "bg-sky-900/40", healer: "bg-fuchsia-900/40" }
+  const selectedDungeonUnlockSet = new Set(selectedDungeonUnlocks)
 
   const selectedRaceData = race_data_by_tag[selectedRace]
   const selectedRaceHeroPointGains = heroPointGainsByRace[selectedRace]
@@ -312,6 +328,12 @@ export default function LevelsPage() {
     setManualLevelRanges((prev) => prev.filter((_, i) => i !== index))
   }
 
+  const toggleDungeonUnlock = (tag: DungeonUnlockTag) => {
+    setSelectedDungeonUnlocks((prev) =>
+      prev.includes(tag) ? prev.filter((entry) => entry !== tag) : [...prev, tag]
+    )
+  }
+
   return (
     <div className="p-4 space-y-6">
       <h1 className="text-xl font-bold">Level Summary</h1>
@@ -335,6 +357,36 @@ export default function LevelsPage() {
           <span className="text-xs text-slate-300">Tag: {selectedRaceData.tag}</span>
         </div>
         <p className="text-sm text-slate-200">{selectedRaceData.description}</p>
+      </div>
+
+      <h2 className="text-lg font-bold">Dungeon Unlocks</h2>
+      <div className="max-w-6xl border p-3 space-y-3 bg-slate-900/60">
+        <div className="text-sm text-slate-300">
+          Selected: {selectedDungeonUnlocks.length} / {dungeonUnlockTags.length}
+        </div>
+        <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 xl:grid-cols-3">
+          {dungeonUnlockTags.map((tag) => {
+            const checked = selectedDungeonUnlockSet.has(tag)
+            return (
+              <label
+                key={tag}
+                className={`flex cursor-pointer items-center gap-3 border px-3 py-2 transition ${
+                  checked
+                    ? "border-amber-700/70 bg-amber-900/30"
+                    : "border-slate-700 bg-slate-900/40 hover:bg-slate-800/65"
+                }`}
+              >
+                <input
+                  type="checkbox"
+                  checked={checked}
+                  onChange={() => toggleDungeonUnlock(tag)}
+                  className="h-4 w-4"
+                />
+                <span className="font-mono text-sm">{tag}</span>
+              </label>
+            )
+          })}
+        </div>
       </div>
 
       <table className="table-fixed border text-center text-sm">

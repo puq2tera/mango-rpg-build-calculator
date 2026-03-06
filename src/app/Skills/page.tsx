@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react"
 import { SkillButton } from "@/app/components/ToggleButton"
+import { DUNGEON_UNLOCKS_STORAGE_KEY, isDungeonUnlockTag } from "@/app/data/dungeon_unlocks"
 import { skill_data, __columnWidths } from "@/app/data/skill_data"
 
 const STORAGE_KEY = "selectedBuffs"
@@ -18,11 +19,13 @@ export default function SkillsPage() {
   const [isHydrated, setIsHydrated] = useState(false)
   const [selected, setSelected] = useState<Set<string>>(new Set())
   const [selectedTalents, setSelectedTalents] = useState<Set<string>>(new Set())
+  const [selectedDungeonUnlocks, setSelectedDungeonUnlocks] = useState<Set<string>>(new Set())
   const [classLevels, setClassLevels] = useState({ tank: 0, warrior: 0, caster: 0, healer: 0 })
 
   useEffect(() => {
     const stored = localStorage.getItem(STORAGE_KEY)
     const storedTalents = localStorage.getItem("selectedTalents")
+    const storedDungeonUnlocks = localStorage.getItem(DUNGEON_UNLOCKS_STORAGE_KEY)
     const rawLevels = localStorage.getItem("SelectedLevels")
 
     try {
@@ -35,6 +38,13 @@ export default function SkillsPage() {
       setSelectedTalents(storedTalents ? new Set(JSON.parse(storedTalents)) : new Set())
     } catch {
       setSelectedTalents(new Set())
+    }
+
+    try {
+      const parsedUnlocks: string[] = storedDungeonUnlocks ? JSON.parse(storedDungeonUnlocks) : []
+      setSelectedDungeonUnlocks(new Set(parsedUnlocks.filter(isDungeonUnlockTag)))
+    } catch {
+      setSelectedDungeonUnlocks(new Set())
     }
 
     try {
@@ -79,6 +89,7 @@ export default function SkillsPage() {
             selected={selected}
             setSelected={setSelected}
             selectedTalents={selectedTalents}
+            selectedDungeonUnlocks={selectedDungeonUnlocks}
             classLevels={classLevels}
             colWidths={colWidths}
           />
