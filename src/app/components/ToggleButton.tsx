@@ -55,6 +55,12 @@ export function ToggleButton({
       .map((name) => talent_data[name]?.Tag)
       .filter((tag): tag is string => Boolean(tag))
   )
+  const otherSelectedTalentTags = new Set(
+    Array.from(selected)
+      .filter((name) => name !== talentName)
+      .map((name) => talent_data[name]?.Tag)
+      .filter((tag): tag is string => Boolean(tag))
+  )
 
   const prereqTokens = talent.PreReq
     .flatMap((rawReq) => rawReq.split(","))
@@ -73,6 +79,7 @@ export function ToggleButton({
     classLevels.caster < (talent.class_levels.caster_levels ?? 0) ||
     classLevels.healer < (talent.class_levels.healer_levels ?? 0)
   )
+  const blockedTagConflict = Boolean(talent.BlockedTag) && otherSelectedTalentTags.has(talent.BlockedTag)
 
   const missingRequirement = (
     totalLevels < (talent.total_level ?? 0) ||
@@ -80,6 +87,17 @@ export function ToggleButton({
     missingPrereq ||
     missingClassLevel
   )
+  const rowClass = blockedTagConflict && isSelected
+    ? "bg-yellow-700/70 hover:bg-yellow-700/80"
+    : blockedTagConflict
+      ? "bg-yellow-900/45 hover:bg-yellow-900/55"
+      : missingRequirement && isSelected
+        ? "bg-amber-900/55 hover:bg-amber-900/65"
+        : missingRequirement
+          ? "bg-rose-900/45 hover:bg-rose-900/55"
+          : isSelected
+            ? "bg-sky-900/40 hover:bg-sky-800/45"
+            : "hover:bg-slate-800/85"
 
   const handleClick = () => {
     const nextSelected = new Set(selected)
@@ -116,15 +134,7 @@ export function ToggleButton({
   return (
     <button
       onClick={handleClick}
-      className={`grid w-full text-left transition px-0 py-1 ${
-        missingRequirement && isSelected
-          ? "bg-amber-900/55 hover:bg-amber-900/65"
-          : missingRequirement
-            ? "bg-rose-900/45 hover:bg-rose-900/55"
-            : isSelected
-              ? "bg-sky-900/40 hover:bg-sky-800/45"
-              : "hover:bg-slate-800/85"
-      }`}
+      className={`grid w-full text-left transition px-0 py-1 ${rowClass}`}
       style={{ gridTemplateColumns: colWidths.join(" ") }}
     >
       {values.map((val, i) => (
