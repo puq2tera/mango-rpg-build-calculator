@@ -139,36 +139,48 @@ export default function TalentsPage() {
     }
   }, [isHydrated, selected])
 
+  useEffect(() => {
+    const handleResetUi = () => {
+      columnLayout.reset()
+    }
+
+    window.addEventListener("resetManagedTableUi", handleResetUi)
+    return () => {
+      window.removeEventListener("resetManagedTableUi", handleResetUi)
+    }
+  }, [columnLayout])
+
   if (!isHydrated || !columnLayout.isReady) return <div className="p-4">Loading...</div>
 
   return (
-    <div className="h-[80vh] overflow-y-auto border rounded-md">
-      <InteractiveTableHeader
-        allColumns={columnLayout.allColumns}
-        visibleColumns={columnLayout.visibleColumns}
-        gridTemplateColumns={columnLayout.gridTemplateColumns}
-        onSetColumnCollapsed={columnLayout.setColumnCollapsed}
-        onReorderColumns={columnLayout.reorderVisibleColumns}
-        onSetColumnWidth={columnLayout.setColumnWidth}
-        onReset={columnLayout.reset}
-      />
+    <div className="h-[calc(100vh-2.5rem)] overflow-auto border rounded-md">
+      <div className="min-w-full w-max">
+        <InteractiveTableHeader
+          allColumns={columnLayout.allColumns}
+          visibleColumns={columnLayout.visibleColumns}
+          gridTemplateColumns={columnLayout.gridTemplateColumns}
+          onSetColumnCollapsed={columnLayout.setColumnCollapsed}
+          onReorderColumns={columnLayout.reorderVisibleColumns}
+          onSetColumnWidth={columnLayout.setColumnWidth}
+        />
 
-      <div className="space-y-0.5">
-        {Object.entries(talent_data).map(([name]) => (
-          <ToggleButton
-            key={name}
-            talentName={name}
-            talent={talent_data[name]}
-            selected={selected}
-            setSelected={setSelected}
-            totalLevels={totalLevels}
-            selectedRacePrereqs={selectedRacePrereqs}
-            selectedDungeonUnlocks={selectedDungeonUnlocks}
-            classLevels={classLevels}
-            columns={columnLayout.visibleColumns}
-            averageDamageChange={averageDamageChanges[name] ?? null}
-          />
-        ))}
+        <div className="space-y-0.5">
+          {Object.entries(talent_data).map(([name]) => (
+            <ToggleButton
+              key={name}
+              talentName={name}
+              talent={talent_data[name]}
+              selected={selected}
+              setSelected={setSelected}
+              totalLevels={totalLevels}
+              selectedRacePrereqs={selectedRacePrereqs}
+              selectedDungeonUnlocks={selectedDungeonUnlocks}
+              classLevels={classLevels}
+              columns={columnLayout.visibleColumns}
+              averageDamageChange={averageDamageChanges[name] ?? null}
+            />
+          ))}
+        </div>
       </div>
     </div>
   )

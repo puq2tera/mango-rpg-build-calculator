@@ -75,7 +75,7 @@ export default function TarotCardsPage() {
     .map(([name, t]) => ({ name, ...t }))
 
   return (
-    <div className="h-[80vh] overflow-y-auto border rounded-md">
+    <div className="h-[calc(100vh-2.5rem)] overflow-y-auto border rounded-md">
       <div className="sticky top-0 z-10 bg-slate-900 border-b py-2 grid" style={{ gridTemplateColumns: "220px 80px 200px 100px 1fr" }}>
         {columns.map((c) => (
           <div key={c} className="px-2 font-bold whitespace-nowrap border-r border-slate-600 last:border-r-0 box-border">{c}</div>

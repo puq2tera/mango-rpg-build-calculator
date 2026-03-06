@@ -58,34 +58,46 @@ export default function SkillsPage() {
     setIsHydrated(true)
   }, [])
 
+  useEffect(() => {
+    const handleResetUi = () => {
+      columnLayout.reset()
+    }
+
+    window.addEventListener("resetManagedTableUi", handleResetUi)
+    return () => {
+      window.removeEventListener("resetManagedTableUi", handleResetUi)
+    }
+  }, [columnLayout])
+
   if (!isHydrated || !columnLayout.isReady) return <div className="p-4">Loading...</div>
 
   return (
-    <div className="h-[80vh] overflow-y-auto border rounded-md">
-      <InteractiveTableHeader
-        allColumns={columnLayout.allColumns}
-        visibleColumns={columnLayout.visibleColumns}
-        gridTemplateColumns={columnLayout.gridTemplateColumns}
-        onSetColumnCollapsed={columnLayout.setColumnCollapsed}
-        onReorderColumns={columnLayout.reorderVisibleColumns}
-        onSetColumnWidth={columnLayout.setColumnWidth}
-        onReset={columnLayout.reset}
-      />
+    <div className="h-[calc(100vh-2.5rem)] overflow-auto border rounded-md">
+      <div className="min-w-full w-max">
+        <InteractiveTableHeader
+          allColumns={columnLayout.allColumns}
+          visibleColumns={columnLayout.visibleColumns}
+          gridTemplateColumns={columnLayout.gridTemplateColumns}
+          onSetColumnCollapsed={columnLayout.setColumnCollapsed}
+          onReorderColumns={columnLayout.reorderVisibleColumns}
+          onSetColumnWidth={columnLayout.setColumnWidth}
+        />
 
-      <div className="space-y-0.5">
-        {Object.entries(skill_data).map(([name]) => (
-          <SkillButton
-            key={name}
-            skillName={name}
-            skill={skill_data[name]}
-            selected={selected}
-            setSelected={setSelected}
-            selectedTalents={selectedTalents}
-            selectedDungeonUnlocks={selectedDungeonUnlocks}
-            classLevels={classLevels}
-            columns={columnLayout.visibleColumns}
-          />
-        ))}
+        <div className="space-y-0.5">
+          {Object.entries(skill_data).map(([name]) => (
+            <SkillButton
+              key={name}
+              skillName={name}
+              skill={skill_data[name]}
+              selected={selected}
+              setSelected={setSelected}
+              selectedTalents={selectedTalents}
+              selectedDungeonUnlocks={selectedDungeonUnlocks}
+              classLevels={classLevels}
+              columns={columnLayout.visibleColumns}
+            />
+          ))}
+        </div>
       </div>
     </div>
   )

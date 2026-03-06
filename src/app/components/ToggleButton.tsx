@@ -151,7 +151,7 @@ export function ToggleButton({
   return (
     <button
       onClick={handleClick}
-      className={`grid w-full text-left transition px-0 py-1 ${rowClass}`}
+      className={`grid min-w-full w-max text-left transition px-0 py-1 ${rowClass}`}
       style={{ gridTemplateColumns: columns.map((column) => `${column.renderWidth}px`).join(" ") }}
     >
       {columns.map((column) => (
@@ -244,7 +244,7 @@ export function SkillButton({
   return (
     <button
       onClick={handleClick}
-      className={`grid w-full text-left transition px-0 py-1 ${
+      className={`grid min-w-full w-max text-left transition px-0 py-1 ${
         missingRequirement && isSelected
           ? "bg-amber-900/55 hover:bg-amber-900/65"
           : missingRequirement

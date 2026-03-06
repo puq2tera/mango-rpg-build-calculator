@@ -13,7 +13,6 @@ type InteractiveTableHeaderProps<T extends string> = {
   onSetColumnCollapsed: (id: T, collapsed: boolean) => void
   onReorderColumns: (activeId: T, overId: T) => void
   onSetColumnWidth: (id: T, width: number) => void
-  onReset: () => void
 }
 
 type ResizeState<T extends string> = {
@@ -116,11 +115,9 @@ export function InteractiveTableHeader<T extends string>({
   onSetColumnCollapsed,
   onReorderColumns,
   onSetColumnWidth,
-  onReset,
 }: InteractiveTableHeaderProps<T>) {
   const [resizeState, setResizeState] = useState<ResizeState<T> | null>(null)
   const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 4 } }))
-  const collapsedColumns = allColumns.filter((column) => column.collapsed)
 
   useEffect(() => {
     if (!resizeState) return
@@ -161,7 +158,7 @@ export function InteractiveTableHeader<T extends string>({
     <div className="sticky top-0 z-10 border-b border-slate-700 bg-slate-900">
       <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
         <SortableContext items={visibleColumns.map((column) => column.id)} strategy={horizontalListSortingStrategy}>
-          <div className="grid gap-x-0" style={{ gridTemplateColumns }}>
+          <div className="grid min-w-full w-max gap-x-0" style={{ gridTemplateColumns }}>
             {visibleColumns.map((column) => (
               <SortableHeaderCell
                 key={column.id}
@@ -174,21 +171,6 @@ export function InteractiveTableHeader<T extends string>({
           </div>
         </SortableContext>
       </DndContext>
-
-      <div className="flex flex-wrap items-center gap-2 border-t border-slate-800 px-2 py-2 text-xs">
-        <span className="text-slate-500">
-          Drag header text to reorder. Drag the right divider to resize. Right-click a header to collapse it.
-          {collapsedColumns.length > 0 ? " Click a collapsed divider to expand it." : ""}
-        </span>
-
-        <button
-          type="button"
-          onClick={onReset}
-          className="ml-auto rounded border border-slate-700 px-2 py-1 text-slate-200 hover:bg-slate-800"
-        >
-          Reset
-        </button>
-      </div>
     </div>
   )
 }
