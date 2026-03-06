@@ -106,6 +106,7 @@ export function computeLevelStats() {
   const rawstoredStatPoints = localStorage.getItem('SelectedStatPoints')
   const rawstoredTraining = localStorage.getItem('SelectedTraining')
   const rawstoredHeroPoints = localStorage.getItem('SelectedHeroPoints')
+  const rawstoredManualLevelRanges = localStorage.getItem('SelectedManualLevelRanges')
   const rawSelectedRace = localStorage.getItem('SelectedRace')
 
   const StatsLevels: Record<string, number> = {}
@@ -115,6 +116,49 @@ export function computeLevelStats() {
   const storedStatPoints: Record<string, number> = JSON.parse(rawstoredStatPoints ?? "{}") 
   const storedTraining: Record<string, number> = JSON.parse(rawstoredTraining ?? "{}")
   const storedHeroPoints: Record<string, number> = JSON.parse(rawstoredHeroPoints ?? "{}")
+
+  type ManualLevelRange = {
+    className: string
+    startLevel: number
+    endLevel: number
+    mode: "manual" | "estimated"
+    hpGain: number
+    atkGain: number
+    defGain: number
+    matkGain: number
+    healGain: number
+  }
+
+  const asFiniteNumber = (value: unknown, fallback = 0): number =>
+    typeof value === "number" && Number.isFinite(value) ? value : fallback
+
+  const parsedManualLevelRanges: ManualLevelRange[] = (() => {
+    try {
+      const parsed = JSON.parse(rawstoredManualLevelRanges ?? "[]")
+      if (!Array.isArray(parsed)) return []
+      return parsed
+        .filter((entry): entry is Partial<ManualLevelRange> => typeof entry === "object" && entry !== null)
+        .map((entry) => {
+          const startLevel = Math.max(1, Math.floor(asFiniteNumber(entry.startLevel, 1)))
+          const endLevel = Math.max(startLevel, Math.floor(asFiniteNumber(entry.endLevel, startLevel)))
+          const mode: ManualLevelRange["mode"] = entry.mode === "manual" ? "manual" : "estimated"
+          return {
+            className: typeof entry.className === "string" ? entry.className : "",
+            startLevel,
+            endLevel,
+            mode,
+            hpGain: asFiniteNumber(entry.hpGain, 0),
+            atkGain: asFiniteNumber(entry.atkGain, 0),
+            defGain: asFiniteNumber(entry.defGain, 0),
+            matkGain: asFiniteNumber(entry.matkGain, 0),
+            healGain: asFiniteNumber(entry.healGain, 0),
+          }
+        })
+        .filter((entry) => stat_data.ClassNames.includes(entry.className))
+    } catch {
+      return []
+    }
+  })()
   
   // Starting stats
   StatsLevels['Crit DMG%'] = 120
@@ -125,13 +169,43 @@ export function computeLevelStats() {
   // HP and Scaling Stats
   let hp = 50
   let lvl = 0
-  for (const ClassName of storedLevelOrder){
+  const mainstatLevelGains: Record<string, number> = { ATK: 0, DEF: 0, MATK: 0, HEAL: 0 }
+
+  const findLevelRangeOverride = (className: string, classLevel: number): ManualLevelRange | null => {
+    for (let i = parsedManualLevelRanges.length - 1; i >= 0; i--) {
+      const range = parsedManualLevelRanges[i]
+      if (range.className !== className) continue
+      if (classLevel < range.startLevel || classLevel > range.endLevel) continue
+      return range
+    }
+    return null
+  }
+
+  for (const classNameRaw of storedLevelOrder){
+    if (!(classNameRaw in stat_data.ClassMainStatValues) || !(classNameRaw in stat_data.ClassScalingStats)) continue
+    const ClassName = classNameRaw as keyof typeof stat_data.ClassMainStatValues
     const hp_multiplier = stat_data.ClassMainStatValues[ClassName]['HP']
     const scaling_stat = stat_data.ClassScalingStats[ClassName]
     let scaling_value = 0
-    for (let i = 0; i < storedLevels[ClassName]; i++) {
+    const classLevels = storedLevels[ClassName] ?? 0
+    for (let i = 0; i < classLevels; i++) {
       lvl++
-      hp += Math.floor(hp_multiplier * (1 + 0.1 * (lvl - 1))) + 4 * lvl
+      const classLevel = i + 1
+      const rangeOverride = findLevelRangeOverride(ClassName, classLevel)
+
+      if (rangeOverride?.mode === "manual") {
+        hp += rangeOverride.hpGain
+        mainstatLevelGains["ATK"] += rangeOverride.atkGain
+        mainstatLevelGains["DEF"] += rangeOverride.defGain
+        mainstatLevelGains["MATK"] += rangeOverride.matkGain
+        mainstatLevelGains["HEAL"] += rangeOverride.healGain
+      } else {
+        hp += Math.floor(hp_multiplier * (1 + 0.1 * (lvl - 1))) + 4 * lvl
+        for (const stat of stat_data.Mainstats) {
+          mainstatLevelGains[stat] = (mainstatLevelGains[stat] ?? 0) + (stat_data.ClassMainStatValues[ClassName][stat] ?? 0)
+        }
+      }
+
       switch (ClassName) {
         case "tank":    scaling_value += stat_data.ClassMainStatValues[ClassName][scaling_stat] + Math.floor(stat_data.ClassMainStatValues[ClassName][`${scaling_stat} Scaling`] * lvl); break;
         case "warrior": scaling_value += Math.min(0.00155, stat_data.ClassMainStatValues[ClassName][scaling_stat] + stat_data.ClassMainStatValues[ClassName][`${scaling_stat} Scaling`] * lvl); break;
@@ -143,28 +217,30 @@ export function computeLevelStats() {
   }
   StatsLevels['HP'] = hp
 
+  const tankLevels = storedLevels["tank"] ?? 0
+  const warriorLevels = storedLevels["warrior"] ?? 0
+  const casterLevels = storedLevels["caster"] ?? 0
+  const healerLevels = storedLevels["healer"] ?? 0
+
   //MP
-  StatsLevels['MP'] = 8 + (storedLevels["tank"] * stat_data.ClassMainStatValues["tank"]["MP"]) + (storedLevels["warrior"] * stat_data.ClassMainStatValues["warrior"]["MP"]) + (storedLevels["caster"] * stat_data.ClassMainStatValues["caster"]["MP"]) + (storedLevels["healer"] * stat_data.ClassMainStatValues["healer"]["MP"])
-  StatsLevels['Focus'] = 100 + (storedLevels["warrior"] * stat_data.ClassMainStatValues["warrior"]["Focus"])
-  if (storedLevels["tank"] >= Math.max(...Object.values(storedLevels))) {
-    StatsLevels['Threat%'] = 100 + storedLevels["tank"] * 10
+  StatsLevels['MP'] = 8 + (tankLevels * stat_data.ClassMainStatValues["tank"]["MP"]) + (warriorLevels * stat_data.ClassMainStatValues["warrior"]["MP"]) + (casterLevels * stat_data.ClassMainStatValues["caster"]["MP"]) + (healerLevels * stat_data.ClassMainStatValues["healer"]["MP"])
+  StatsLevels['Focus'] = 100 + (warriorLevels * stat_data.ClassMainStatValues["warrior"]["Focus"])
+  if (tankLevels >= Math.max(...Object.values(storedLevels))) {
+    StatsLevels['Threat%'] = 100 + tankLevels * 10
   } else {
-    StatsLevels['Threat%'] = 100 + storedLevels["tank"] * 2
+    StatsLevels['Threat%'] = 100 + tankLevels * 2
   }
 
   //Mainstats
   for (const stat of stat_data.Mainstats) {
-    StatsLevels[stat] = 5 + (storedStatPoints[stat] ?? 0) + (4 * (storedTraining[stat] ?? 0))
-    for (const ClassName of stat_data.ClassNames) {
-      StatsLevels[stat] = StatsLevels[stat] + (storedLevels[ClassName] ?? 0)*stat_data.ClassMainStatValues[ClassName][stat]
-    }
+    StatsLevels[stat] = 5 + (storedStatPoints[stat] ?? 0) + (4 * (storedTraining[stat] ?? 0)) + (mainstatLevelGains[stat] ?? 0)
   }
 
   // Every class level gives +2% to that class mainstat multiplier.
-  StatsLevels["DEF%"] = (StatsLevels["DEF%"] ?? 0) + ((storedLevels["tank"] ?? 0) * 2)
-  StatsLevels["ATK%"] = (StatsLevels["ATK%"] ?? 0) + ((storedLevels["warrior"] ?? 0) * 2)
-  StatsLevels["MATK%"] = (StatsLevels["MATK%"] ?? 0) + ((storedLevels["caster"] ?? 0) * 2)
-  StatsLevels["HEAL%"] = (StatsLevels["HEAL%"] ?? 0) + ((storedLevels["healer"] ?? 0) * 2)
+  StatsLevels["DEF%"] = (StatsLevels["DEF%"] ?? 0) + (tankLevels * 2)
+  StatsLevels["ATK%"] = (StatsLevels["ATK%"] ?? 0) + (warriorLevels * 2)
+  StatsLevels["MATK%"] = (StatsLevels["MATK%"] ?? 0) + (casterLevels * 2)
+  StatsLevels["HEAL%"] = (StatsLevels["HEAL%"] ?? 0) + (healerLevels * 2)
 
   // Hero points (race-dependent stat gains)
   const selectedRaceKey = (rawSelectedRace && rawSelectedRace in heroPointGainsByRace)

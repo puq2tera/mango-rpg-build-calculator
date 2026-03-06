@@ -17,6 +17,7 @@ const STORAGE_KEYS = {
   training: "SelectedTraining",
   heroPoints: "SelectedHeroPoints",
   savedLevelOrder: "SelectedLevelOrder",
+  manualLevelRanges: "SelectedManualLevelRanges",
   race: "SelectedRace",
 }
 
@@ -73,11 +74,24 @@ function formatWhole(value: number): string {
 export default function LevelsPage() {
   type Cls = "tank" | "warrior" | "caster" | "healer"
   type LevelsByClass = Record<Cls, number>
+  type ManualRangeMode = "manual" | "estimated"
+  type ManualLevelRange = {
+    className: Cls
+    startLevel: number
+    endLevel: number
+    mode: ManualRangeMode
+    hpGain: number
+    atkGain: number
+    defGain: number
+    matkGain: number
+    healGain: number
+  }
 
   const [levels, setLevels] = useState<LevelsByClass>({ tank: 0, warrior: 0, caster: 0, healer: 0 })
   const [statPoints, setStatPoints] = useState({ ATK: 0, DEF: 0, MATK: 0, HEAL: 0 })
   const [training, setTraining] = useState({ ATK: 0, DEF: 0, MATK: 0, HEAL: 0 })
   const [heroPoints, setHeroPoints] = useState<Record<string, number>>({})
+  const [manualLevelRanges, setManualLevelRanges] = useState<ManualLevelRange[]>([])
   const [selectedTalents, setSelectedTalents] = useState<string[]>([])
   const [selectedBuffs, setSelectedBuffs] = useState<string[]>([])
   const [classOrder, setClassOrder] = useState<Cls[]>(["tank", "warrior", "caster", "healer"])
@@ -90,6 +104,7 @@ export default function LevelsPage() {
     const storedTraining = localStorage.getItem(STORAGE_KEYS.training)
     const storedHeroPoints = localStorage.getItem(STORAGE_KEYS.heroPoints)
     const storedLevelOrder = localStorage.getItem(STORAGE_KEYS.savedLevelOrder)
+    const storedManualLevelRanges = localStorage.getItem(STORAGE_KEYS.manualLevelRanges)
     const storedRace = localStorage.getItem(STORAGE_KEYS.race)
     const storedSelectedTalents = localStorage.getItem("selectedTalents")
     const storedSelectedBuffs = localStorage.getItem("selectedBuffs")
@@ -99,6 +114,7 @@ export default function LevelsPage() {
     if (storedTraining) setTraining(JSON.parse(storedTraining))
     if (storedHeroPoints) setHeroPoints(JSON.parse(storedHeroPoints))
     if (storedLevelOrder) setClassOrder(JSON.parse(storedLevelOrder))
+    if (storedManualLevelRanges) setManualLevelRanges(JSON.parse(storedManualLevelRanges))
     if (storedRace && isRaceTag(storedRace)) setSelectedRace(storedRace)
     setSelectedTalents(parseStoredStringArray(storedSelectedTalents))
     setSelectedBuffs(parseStoredStringArray(storedSelectedBuffs))
@@ -130,6 +146,11 @@ export default function LevelsPage() {
     if (!loaded) return
     localStorage.setItem(STORAGE_KEYS.savedLevelOrder, JSON.stringify(classOrder))
   }, [classOrder, loaded])
+
+  useEffect(() => {
+    if (!loaded) return
+    localStorage.setItem(STORAGE_KEYS.manualLevelRanges, JSON.stringify(manualLevelRanges))
+  }, [manualLevelRanges, loaded])
 
   useEffect(() => {
     if (!loaded) return
@@ -257,6 +278,40 @@ export default function LevelsPage() {
     </div>
   )
 
+  const addManualRange = () => {
+    setManualLevelRanges((prev) => [
+      ...prev,
+      {
+        className: "healer",
+        startLevel: 1,
+        endLevel: 1,
+        mode: "estimated",
+        hpGain: 0,
+        atkGain: 0,
+        defGain: 0,
+        matkGain: 0,
+        healGain: 0,
+      },
+    ])
+  }
+
+  const updateManualRange = (
+    index: number,
+    key: keyof ManualLevelRange,
+    value: string | number
+  ) => {
+    setManualLevelRanges((prev) =>
+      prev.map((range, i) => {
+        if (i !== index) return range
+        return { ...range, [key]: value }
+      })
+    )
+  }
+
+  const removeManualRange = (index: number) => {
+    setManualLevelRanges((prev) => prev.filter((_, i) => i !== index))
+  }
+
   return (
     <div className="p-4 space-y-6">
       <h1 className="text-xl font-bold">Level Summary</h1>
@@ -340,6 +395,139 @@ export default function LevelsPage() {
             <td className="border px-2 py-1">{levelsNeeded}</td>
             <td className="border px-2 py-1">{requiredIsekaiLevel}</td>
           </tr>
+        </tbody>
+      </table>
+
+      <h2 className="text-lg font-bold">Manual Levelup Ranges</h2>
+      <p className="text-sm text-gray-700">
+        Define class-level ranges and whether each range uses manual gains or estimated averages.
+      </p>
+      <div className="flex gap-2">
+        <button
+          type="button"
+          className="border px-3 py-1 bg-gray-100 hover:bg-gray-200"
+          onClick={addManualRange}
+        >
+          Add Range
+        </button>
+      </div>
+      <table className="table-fixed border text-xs md:text-sm text-center">
+        <thead className="bg-gray-100">
+          <tr>
+            <th className="border px-2 py-1">Class</th>
+            <th className="border px-2 py-1">Start</th>
+            <th className="border px-2 py-1">End</th>
+            <th className="border px-2 py-1">Mode</th>
+            <th className="border px-2 py-1">HP</th>
+            <th className="border px-2 py-1">ATK</th>
+            <th className="border px-2 py-1">DEF</th>
+            <th className="border px-2 py-1">MATK</th>
+            <th className="border px-2 py-1">HEAL</th>
+            <th className="border px-2 py-1">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {manualLevelRanges.map((range, i) => {
+            const isManual = range.mode === "manual"
+            return (
+              <tr key={`${range.className}-${i}`}>
+                <td className="border px-1 py-1">
+                  <select
+                    value={range.className}
+                    onChange={(e) => updateManualRange(i, "className", e.target.value as Cls)}
+                    className="w-full border"
+                  >
+                    <option value="tank">tank</option>
+                    <option value="warrior">warrior</option>
+                    <option value="caster">caster</option>
+                    <option value="healer">healer</option>
+                  </select>
+                </td>
+                <td className="border px-1 py-1">
+                  <input
+                    type="number"
+                    min={1}
+                    value={range.startLevel}
+                    onChange={(e) => updateManualRange(i, "startLevel", Math.max(1, Number(e.target.value) || 1))}
+                    className="w-16 text-center border"
+                  />
+                </td>
+                <td className="border px-1 py-1">
+                  <input
+                    type="number"
+                    min={1}
+                    value={range.endLevel}
+                    onChange={(e) => updateManualRange(i, "endLevel", Math.max(1, Number(e.target.value) || 1))}
+                    className="w-16 text-center border"
+                  />
+                </td>
+                <td className="border px-1 py-1">
+                  <select
+                    value={range.mode}
+                    onChange={(e) => updateManualRange(i, "mode", e.target.value as ManualRangeMode)}
+                    className="w-full border"
+                  >
+                    <option value="manual">manual</option>
+                    <option value="estimated">estimated</option>
+                  </select>
+                </td>
+                <td className="border px-1 py-1">
+                  <input
+                    type="number"
+                    value={range.hpGain}
+                    disabled={!isManual}
+                    onChange={(e) => updateManualRange(i, "hpGain", Number(e.target.value) || 0)}
+                    className="w-16 text-center border disabled:bg-gray-100"
+                  />
+                </td>
+                <td className="border px-1 py-1">
+                  <input
+                    type="number"
+                    value={range.atkGain}
+                    disabled={!isManual}
+                    onChange={(e) => updateManualRange(i, "atkGain", Number(e.target.value) || 0)}
+                    className="w-16 text-center border disabled:bg-gray-100"
+                  />
+                </td>
+                <td className="border px-1 py-1">
+                  <input
+                    type="number"
+                    value={range.defGain}
+                    disabled={!isManual}
+                    onChange={(e) => updateManualRange(i, "defGain", Number(e.target.value) || 0)}
+                    className="w-16 text-center border disabled:bg-gray-100"
+                  />
+                </td>
+                <td className="border px-1 py-1">
+                  <input
+                    type="number"
+                    value={range.matkGain}
+                    disabled={!isManual}
+                    onChange={(e) => updateManualRange(i, "matkGain", Number(e.target.value) || 0)}
+                    className="w-16 text-center border disabled:bg-gray-100"
+                  />
+                </td>
+                <td className="border px-1 py-1">
+                  <input
+                    type="number"
+                    value={range.healGain}
+                    disabled={!isManual}
+                    onChange={(e) => updateManualRange(i, "healGain", Number(e.target.value) || 0)}
+                    className="w-16 text-center border disabled:bg-gray-100"
+                  />
+                </td>
+                <td className="border px-1 py-1">
+                  <button
+                    type="button"
+                    className="border px-2 py-1 bg-red-50 hover:bg-red-100"
+                    onClick={() => removeManualRange(i)}
+                  >
+                    Remove
+                  </button>
+                </td>
+              </tr>
+            )
+          })}
         </tbody>
       </table>
 
