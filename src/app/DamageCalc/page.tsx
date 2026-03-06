@@ -52,7 +52,7 @@ export default function DamageCalc() {
   const base = Math.floor(baseRaw)
 
   const armorBlock = Math.floor((inputs["enemyArmor"] ?? 0) * ((inputs["armorIgnore"] ?? 0) / 100))
-  const armorBreak = Math.floor(((stats["ATK"] ?? 0) + (stats["DEF"] ?? 0) + (stats["MATK"] ?? 0) + (stats["HEAL"] ?? 0)) / 4)
+  const armorBreak = Math.floor(((stats["ATK"] ?? 0) + (stats["DEF"] ?? 0) + (stats["MATK"] ?? 0) + (stats["HEAL"] ?? 0)) / 4) + (stats["Armor Strike"] ?? 0)
   const mitigated = Math.max(0, Math.floor(base - (armorBlock - armorBreak)))
  
   // Apply multipliers with floors after each stage
