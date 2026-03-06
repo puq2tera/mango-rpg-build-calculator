@@ -81,6 +81,20 @@ export default function DamageCalc() {
   const critWeight = clamp(c, 0, 1) - maxCritWeight
   
   const average = Math.floor(nonCrit * nonCritWeight + crit * critWeight + maxcrit * maxCritWeight)
+
+  const totalDotPercent = (inputs["dot"] ?? 0) + (stats[`${element} DOT%`] ?? 0)
+  const dotMult = Math.max(0, totalDotPercent) / 100
+  const dotNonCrit = Math.floor(nonCrit * dotMult)
+  const dotCrit = Math.floor(crit * dotMult)
+
+  // Tank skill threat generation:
+  // totalDEF * threat% * (1 + globalDef) * (1 + globalDmg) * (1 + threat bonus)
+  const threatBase = Math.floor((stats["DEF"] ?? 0) * ((inputs["threatDef"] ?? 0) / 100))
+  const threatWithGlobalDef = Math.floor(threatBase * toMult(stats["Global DEF%"]))
+  const threatWithGlobalDmg = Math.floor(threatWithGlobalDef * toMult(stats["Dmg%"]))
+  const threatNonCrit = Math.floor(threatWithGlobalDmg * toMult(stats["Threat%"]))
+  const threatCrit = Math.floor(threatNonCrit * ((stats["Crit DMG%"] ?? 0) / 100))
+  const threatAverage = Math.floor(threatNonCrit * nonCritWeight + threatCrit * (critWeight + maxCritWeight))
   const formatNumber = (value: number): string => value.toLocaleString("en-US")
 
   const handleChange = (field: string, value: number) => {
@@ -199,7 +213,7 @@ export default function DamageCalc() {
 
       <div className="grid grid-cols-2 gap-6 text-center border rounded-lg p-4 bg-white">
         <div className="space-y-2">
-          <h2 className="font-semibold text-lg">Average Damage</h2>
+          <h2 className="font-semibold text-lg">Damage</h2>
           <div className="mx-auto inline-grid w-fit grid-cols-[max-content_max-content] gap-x-3 gap-y-1">
             <strong className="text-right">Non-Crit:</strong>
             <span className="text-right font-mono tabular-nums">{formatNumber(nonCrit)}</span>
@@ -207,15 +221,17 @@ export default function DamageCalc() {
             <span className="text-right font-mono tabular-nums">{formatNumber(crit)}</span>
             <strong className="text-right">Maximized Crit:</strong>
             <span className="text-right font-mono tabular-nums">{formatNumber(maxcrit)}</span>
-            <strong className="text-right">Overall:</strong>
+            <strong className="text-right">Avg:</strong>
             <span className="text-right font-mono tabular-nums">{formatNumber(average)}</span>
           </div>
         </div>
         <div className="space-y-2">
-          <h2 className="font-semibold text-lg">Damage Over Time</h2>
-          <div><strong>DOT (Non-Crit):</strong> TBD</div>
-          <div><strong>DOT (Crit):</strong> TBD</div>
-          <div><strong>Threat Gen:</strong> TBD</div>
+          <h2 className="font-semibold text-lg">DOT & Threat</h2>
+          <div><strong>DOT (Non-Crit):</strong> {formatNumber(dotNonCrit)}</div>
+          <div><strong>DOT (Crit):</strong> {formatNumber(dotCrit)}</div>
+          <div><strong>Threat (Non-Crit):</strong> {formatNumber(threatNonCrit)}</div>
+          <div><strong>Threat (Crit):</strong> {formatNumber(threatCrit)}</div>
+          <div><strong>Threat Avg:</strong> {formatNumber(threatAverage)}</div>
         </div>
       </div>
     </div>
