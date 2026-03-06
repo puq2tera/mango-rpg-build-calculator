@@ -26,6 +26,7 @@ type SkillButtonProps = {
   selected: Set<string>
   setSelected: Dispatch<SetStateAction<Set<string>>>
   selectedTalents: Set<string>
+  selectedRacePrereqs: Set<string>
   selectedDungeonUnlocks: Set<string>
   classLevels: ClassLevels
   columns: ManagedColumn[]
@@ -133,6 +134,7 @@ export function SkillButton({
   selected,
   setSelected,
   selectedTalents,
+  selectedRacePrereqs,
   selectedDungeonUnlocks,
   classLevels,
   columns,
@@ -144,6 +146,7 @@ export function SkillButton({
     skill,
     selectedSkills: selected,
     selectedTalents,
+    selectedRacePrereqs,
     selectedDungeonUnlocks,
     classLevels,
   })

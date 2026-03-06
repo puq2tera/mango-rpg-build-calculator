@@ -184,11 +184,12 @@ export default function SkillsPage() {
         skill,
         selectedSkills: selected,
         selectedTalents,
+        selectedRacePrereqs,
         selectedDungeonUnlocks,
         classLevels,
       })
 
-      if (!matchesRaceFilter(availabilityState.prereqTokens, viewState.raceFilter, selectedRacePrereqs, allRaceTokens)) {
+      if (!matchesRaceFilter(availabilityState.raceFilterTokens, viewState.raceFilter, selectedRacePrereqs, allRaceTokens)) {
         return false
       }
 
@@ -258,6 +259,7 @@ export default function SkillsPage() {
               selected={selected}
               setSelected={setSelected}
               selectedTalents={selectedTalents}
+              selectedRacePrereqs={selectedRacePrereqs}
               selectedDungeonUnlocks={selectedDungeonUnlocks}
               classLevels={classLevels}
               columns={columnLayout.visibleColumns}

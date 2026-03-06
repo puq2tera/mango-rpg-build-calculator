@@ -9577,6 +9577,334 @@ const skill_data: Record<string, Skill> = {
     ],     
 }};
 
+// TODO: Remove the overrides and directly implement the prerequesits and conversions to the skills
+type SkillOverride = Partial<Omit<Skill, "type" | "class_levels">> & {
+    type?: Partial<NonNullable<Skill["type"]>>
+    class_levels?: Partial<Skill["class_levels"]>
+}
+
+const allResistanceStats: StatNames[] = [
+    "Fire Res%",
+    "Water Res%",
+    "Lightning Res%",
+    "Wind Res%",
+    "Earth Res%",
+    "Toxic Res%",
+    "Slash Res%",
+    "Pierce Res%",
+    "Blunt Res%",
+    "Neg Res%",
+    "Holy Res%",
+    "Void Res%",
+]
+
+const averageConversions = (sources: readonly StatNames[], ratio: number, resulting_stat: StatNames) =>
+    sources.map((source) => ({
+        source,
+        ratio: ratio / sources.length,
+        resulting_stat,
+    }))
+
+function mergeSkillOverride(skillName: string, override: SkillOverride) {
+    const existing = skill_data[skillName] ?? defaultSkill
+
+    skill_data[skillName] = {
+        ...defaultSkill,
+        ...existing,
+        ...override,
+        type: {
+            ...defaultSkill.type,
+            ...(existing.type ?? {}),
+            ...(override.type ?? {}),
+        },
+        class_levels: {
+            ...defaultSkill.class_levels,
+            ...(existing.class_levels ?? {}),
+            ...(override.class_levels ?? {}),
+        },
+        stats: override.stats ?? existing.stats ?? defaultSkill.stats,
+        stack_stats: override.stack_stats ?? existing.stack_stats ?? defaultSkill.stack_stats,
+        conversions: override.conversions ?? existing.conversions ?? defaultSkill.conversions,
+        stack_conversions: override.stack_conversions ?? existing.stack_conversions ?? defaultSkill.stack_conversions,
+        dmg_stats: override.dmg_stats ?? existing.dmg_stats,
+    }
+}
+
+const racialSkillOverrides: Record<string, SkillOverride> = {
+    "Bone Armor": { PreReq: ["Skeleton"] },
+    "The Hunger": { PreReq: ["Zombie"] },
+    "Hawk Eyes": { PreReq: ["WoodElf"] },
+    "Rune Spark": { PreReq: ["Dwarf"] },
+    "Blood Rage": { PreReq: ["Orc"] },
+    "Shadow Meld": { PreReq: ["Goblin"] },
+    "Cold Blood": { PreReq: ["Lizardman"] },
+    "Earth Flesh": { PreReq: ["Giant"] },
+    "Dragon Blood": { PreReq: ["Dragonspawn"] },
+    "Shadow Eyes": { PreReq: ["DarkElf"] },
+    "Hell Ichor": { PreReq: ["Demon"] },
+    "Light Barrier": { PreReq: ["Angel"] },
+    "Blood Thirst": { PreReq: ["Vampire"] },
+    "Vermin Claw": { PreReq: ["Insectoid"] },
+    "Brute Onslaught": { PreReq: ["Ogre"] },
+    "Hyper Regeneration": { PreReq: ["Troll"] },
+    "Steel Bristle": {
+        PreReq: ["Quogga"],
+        description: "[ ⧖ ] Raise physical damage by 20% of ATK Multiplier for 3 Turns, and gain Flat +50% Physical Resist for 1 Turn.",
+        conversions: [
+            { source: "ATK%", ratio: 0.2, resulting_stat: "Phys%" },
+        ],
+    },
+    "Gore Charge": {
+        PreReq: ["Minotaur"],
+        description: "[ ⧖ ] Raise self threat bonus by 100% for 5 turns and ATK by 70% for 1 Hit",
+        conversions: [
+            { source: "ATK", ratio: 0.7, resulting_stat: "ATK" },
+        ],
+    },
+    "Flesh Voracity": {
+        PreReq: ["Tigerman"],
+        description: "[ ⧖ ] Raise self Crit Damage by 44% for 3 Turns and decrease DEF by 44% for 2 Turns.",
+        conversions: [
+            { source: "Crit DMG%", ratio: 0.44, resulting_stat: "Crit DMG%" },
+            { source: "DEF", ratio: -0.44, resulting_stat: "DEF" },
+        ],
+    },
+    "Berserker Fury": {
+        PreReq: ["Goatman"],
+        description: "Gain Temp HP equal to 50% Max HP for 10 Turns and Raise Self ATK by 33% for 8 Turns.",
+        conversions: [
+            { source: "HP", ratio: 0.5, resulting_stat: "Temp HP" },
+            { source: "ATK", ratio: 0.33, resulting_stat: "ATK" },
+        ],
+    },
+    "Ichor Surge": { PreReq: ["RainbowMan"] },
+    "Last Prayer": { PreReq: ["NorthMan"] },
+    "Warrior Spirit": { PreReq: ["SouthMan"] },
+    "Hardpoint": {
+        PreReq: ["HalfGolem"],
+        description: "[ ⧖ , 12 Charges ] Raise self DEF by 100% and ATK by 50% DEF for 2 Turns",
+        conversions: [
+            { source: "DEF", ratio: 1, resulting_stat: "DEF" },
+            { source: "DEF", ratio: 0.5, resulting_stat: "ATK" },
+        ],
+    },
+    "Shaman Legacy": {
+        PreReq: ["Frogman"],
+        description: "Raise self MATK by 60% Healpower and vice-versa for rest of battle.",
+        conversions: [
+            { source: "HEAL", ratio: 0.6, resulting_stat: "MATK" },
+            { source: "MATK", ratio: 0.6, resulting_stat: "HEAL" },
+        ],
+    },
+    "Primal Outburst": {
+        PreReq: ["Elemental"],
+        description: "[ ⧖ ] Raise Elemental DMG by 25% of Max MP and 25x of MP Regen, lose MP equal to 2% max MP for 5 Turns",
+        conversions: [
+            { source: "MP", ratio: 0.25, resulting_stat: "Elemental%" },
+            { source: "MP Regen", ratio: 25, resulting_stat: "Elemental%" },
+            { source: "MP", ratio: -0.02, resulting_stat: "MP Regen" },
+        ],
+    },
+    "Divine Beast": {
+        PreReq: ["Tengu"],
+        description: "Raise Magic DMG by 500% Crit Chance, and gain Flat +10% Crit Chance for rest of battle.",
+    },
+    "Sky Fury": {
+        PreReq: ["Birdman"],
+        description: "[ ⧖ ] Raise Physical Damage by 325% Crit Chance and gain Flat +100% Crit Chance for 6 Turns, costs 25% Max HP",
+        stats: {
+            "Crit Chance%": 1,
+        },
+        conversions: [
+            { source: "Crit Chance%", ratio: 3.25, resulting_stat: "Phys%" },
+        ],
+    },
+    "Absorption": { PreReq: ["Slime"] },
+    "Nature's Bounty": {
+        PreReq: ["TreeSpirit"],
+        description: "Decrease Max HP by 33% and Raise HP Regen by 10% of Max HP for rest of the battle.",
+        conversions: [
+            { source: "HP", ratio: -0.33, resulting_stat: "HP" },
+            { source: "HP", ratio: 0.1, resulting_stat: "HP Regen" },
+        ],
+    },
+    "Omnisight": { PreReq: ["Arachnoid"] },
+    "Ethereal Shift": {
+        PreReq: ["Ghost"],
+        description: "[ ⧖ ] Gain Flat +60% Physical Resist and lose Flat -30% Elemental Resist for 2 Turns",
+    },
+    "True Sight": { PreReq: ["True Hero Ascendency", "Hawk Eyes", "WoodElf"] },
+    "Rune Shift": { PreReq: ["True Hero Ascendency", "Rune Spark", "Dwarf"] },
+    "Twilight Eyes": { PreReq: ["True Hero Ascendency", "Shadow Eyes", "DarkElf"] },
+    "Divine Heritage": { PreReq: ["True Hero Ascendency", "Ichor Surge", "RainbowMan"] },
+    "Divine Awakening": { PreReq: ["True Hero Ascendency", "Divine Heritage", "RainbowMan"] },
+    "Unrelenting Hero": { PreReq: ["True Hero Ascendency", "Last Prayer", "NorthMan"] },
+    "Avatar of War": { PreReq: ["True Hero Ascendency", "Warrior Spirit", "SouthMan"] },
+    "Omen of Death": { PreReq: ["Death Emperor", "Bone Armor"] },
+    "Lore of Death": { PreReq: ["Overlord", "Bone Armor"] },
+    "Rule of Death": { PreReq: ["Tomb Emperor", "The Hunger"] },
+    "Bloodrage Seal": { PreReq: ["Orc Deity", "Blood Rage"] },
+    "Shadow Merge": { PreReq: ["Goblin Deity", "Shadow Meld"] },
+    "Frost Ichor": { PreReq: ["Elder Scale Deity", "Cold Blood"] },
+    "Ice Flesh": { PreReq: ["Jotun Deity", "Earth Flesh"] },
+    "Storm Flesh": { PreReq: ["Storm Deity", "Earth Flesh"] },
+    "Titan Flesh": { PreReq: ["Mountain Deity", "Earth Flesh"] },
+    "Aspect of the Devil": { PreReq: ["Aspect of Evil", "Hell Ichor"] },
+    "Flames of Gehenna": { PreReq: ["Lord of Hell", "Hell Ichor"] },
+    "Blaze of Uriel": { PreReq: ["Cherubrim", "Light Barrier"] },
+    "Chalice of Raphael": { PreReq: ["Empyrean", "Light Barrier"] },
+    "Wings of Darkness": { PreReq: ["Lucifer"] },
+    "Blood Lord Form": { PreReq: ["Vampire Deity", "Blood Thirst"] },
+    "Blood Soul Release": { PreReq: ["Blood Lord Form"] },
+    "Vermin Rage": { PreReq: ["Vermin Deity", "Vermin Claw"] },
+    "Vermin Tide": { PreReq: ["Venomatid Deity", "Vermin Claw"] },
+    "Unending Rage": { PreReq: ["Ogre Deity", "Brute Onslaught"] },
+    "Immortal Blood": { PreReq: ["Troll Deity", "Hyper Regeneration"] },
+    "Prismatic Bristle": {
+        PreReq: ["Quogga Deity", "Steel Bristle"],
+        description: "[ ⧖ , 2 Charges ] Gain Flat +100% All Res for 1 Turn, and Raise self Physical Damage by 500% of average Resistance for rest of battle.",
+        stats: {
+            "All Res%": 1,
+        },
+        conversions: averageConversions(allResistanceStats, 5, "Phys%"),
+    },
+    "Primal Fury": {
+        PreReq: ["Minotaur Deity", "Gore Charge"],
+        description: "[ ⧖ ] Raise self Threat Bonus by 50% stacking for 10 turns, and ATK/DEF by 80% for 5 Turns.",
+        stack_stats: {
+            "Threat%": 0.5,
+        },
+        conversions: [
+            { source: "ATK", ratio: 0.8, resulting_stat: "ATK" },
+            { source: "DEF", ratio: 0.8, resulting_stat: "DEF" },
+        ],
+    },
+    "Devouring Voracity": {
+        PreReq: ["Tigerman Deity", "Flesh Voracity"],
+        description: "[ ⧖ ] Apply Devour Mark to enemy. Raise self Crit Damage by 100% for 6 Turns, but decrease DEF by 10% stacking for rest of battle.",
+        conversions: [
+            { source: "Crit DMG%", ratio: 1, resulting_stat: "Crit DMG%" },
+        ],
+        stack_conversions: [
+            { source: "DEF", ratio: -0.1, resulting_stat: "DEF" },
+        ],
+    },
+    "Bloodzerker State": {
+        PreReq: ["Goatman Deity", "Berserker Fury"],
+        description: "Heal self for 40% Max HP. Decrease self HP Regen by 5% Max HP for 5 Turns. Raise self ATK by 50% stacking up to 200% for rest of battle.",
+        conversions: [
+            { source: "HP", ratio: -0.05, resulting_stat: "HP Regen" },
+        ],
+        stack_conversions: [
+            { source: "ATK", ratio: 0.5, resulting_stat: "ATK" },
+        ],
+    },
+    "Nanocore Release": {
+        PreReq: ["Prismatic Golem", "Hardpoint"],
+        description: "[ ⧖ ] Raise self Main Stats by 100% DEF for 12 Turns, but decrease self Power by 40% DEF for 6 turns after.",
+        conversions: [
+            { source: "DEF", ratio: 1, resulting_stat: "POWER" },
+        ],
+    },
+    "Shamanic Spirit": {
+        PreReq: ["Frogman Deity", "Shaman Legacy"],
+        description: "[ ⧖ , 5 Charges ] Raise self MATK by 150% Healpower and vice-versa for 6 Turns",
+        conversions: [
+            { source: "MATK", ratio: 1.5, resulting_stat: "HEAL" },
+            { source: "HEAL", ratio: 1.5, resulting_stat: "MATK" },
+        ],
+    },
+    "Spirit Lord Dominion": {
+        PreReq: ["Spirit Lord", "Primal Outburst"],
+        description: "[ ⧖ ] Raise self Elemental Pen by 5% of Max MP and Crit Damage by 50x of MP Regen, but gain MP Degen equal to 1% of Max MP for 10 Turns.",
+        conversions: [
+            { source: "MP", ratio: 0.05, resulting_stat: "Elemental Pen%" },
+            { source: "MP Regen", ratio: 50, resulting_stat: "Crit DMG%" },
+            { source: "MP", ratio: -0.01, resulting_stat: "MP Regen" },
+        ],
+    },
+    "Kami Awakening": {
+        PreReq: ["Tengu Deity", "Divine Beast"],
+        description: "[ ⧖ ] Gain Flat 100% Crit Chance, raise Elemental DMG by 150% Void DMG, and reduce self Void DMG by 100% for rest of battle. Costs 20%/5% Max HP/MP. Requires Divine Beast active.",
+        stats: {
+            "Crit Chance%": 1,
+        },
+        conversions: [
+            { source: "Void%", ratio: 1.5, resulting_stat: "Elemental%" },
+            { source: "Void%", ratio: -1, resulting_stat: "Void%" },
+        ],
+    },
+    "Rage of the Yokai": {
+        PreReq: ["Birdman Deity", "Sky Fury"],
+        description: "[ ⧖ ] Increase Crit Damage by 150% for 3 Turns, but cannot Crit for 3 Turns after.",
+        stats: {
+            "Crit DMG%": 1.5,
+        },
+    },
+    "Nightmare Form": {
+        PreReq: ["Nightmare Lord", "Ethereal Shift"],
+        description: "[ ⧖ ] Raise self Negative Pen by 150% for 1 Hit. Requires Ethereal Shift active.",
+        stats: {},
+        conversions: [
+            { source: "Neg Pen%", ratio: 1.5, resulting_stat: "Neg Pen%" },
+        ],
+    },
+    "True Predator": { PreReq: ["Arachne Empress", "Omnisight"] },
+    "Solidify Form": {
+        PreReq: ["Shoggoth", "Absorption"],
+        description: "[ ⧖ ] Raise self ATK by 40% of Max HP for 5 Turns, but decrease HP Regen by 4% of Max HP for 10 Turns. Requires Absorption active.",
+    },
+    "Rapid Digestion": { PreReq: ["Elder Guardian Ooze", "Absorption"] },
+    "Acid Reflux": { PreReq: ["Elder Devouring Ooze", "Absorption"] },
+    "Gaia's Vision": { PreReq: ["Earth Mother", "Nature's Bounty"] },
+    "Gaia's Fury": {
+        PreReq: ["Zy'tl Q'ae", "Nature's Bounty"],
+        description: "[ ⧖ ] Raise self ATK by 1000% and self Max HP by 133% but cannot Crit for the rest of battle. Requires Nature's Bounty active.",
+        stats: {
+            "Crit Chance%": -1,
+        },
+        conversions: [
+            { source: "ATK", ratio: 10, resulting_stat: "ATK" },
+            { source: "HP", ratio: 1.33, resulting_stat: "HP" },
+        ],
+    },
+    "Dragon Blood Surge": { PreReq: ["Dragonoid Lord", "Dragon Blood"] },
+    "Dragon Lord Form": { PreReq: ["Dragon Blood Surge"] },
+    "Dragon Breath": {
+        PreReq: ["Dragon Lord Form"],
+        type: {
+            is_buff: false,
+            is_attack: true,
+        },
+        gold: 50,
+        exp: 2000,
+        description: "[ Fire ] Deal 200% ATK to all enemies. Scales to highest Physical ELE/Pen, costs 5% Max HP. Requires Dragon Lord Form active",
+        dmg_stats: {
+            dmg_element: "Fire",
+            element: "Highest Phys",
+            pen_element: "Highest Phys",
+            stat: "ATK",
+            ratio: 2,
+            armor_break: 0.25,
+        },
+    },
+    "Dragon Strength": { PreReq: ["Dragon Lord Form"] },
+    "Dragon Haki": { PreReq: ["Dragon Lord Form"] },
+    "Dragon Mana Surge": { PreReq: ["Dragonoid Sovereign", "Dragon Blood"] },
+    "Sovereign Form": { PreReq: ["Dragon Mana Surge"] },
+    "Soul Barrier": { PreReq: ["Sovereign Form"] },
+    "Soul Scales": { PreReq: ["Sovereign Form"] },
+    "Soul Burst": { PreReq: ["Sovereign Form"] },
+    "Fox Mirage": { PreReq: ["Kitsune"] },
+    "Nine Tails Inferno": { PreReq: ["Kyuubi", "Fox Mirage", "Kitsune"] },
+    "Succubus Entrancement": { PreReq: ["Succubus"] },
+    "Succubus Skill Boost": { PreReq: ["Succubus Goddess", "Succubus Entrancement", "Succubus"] },
+}
+
+for (const [skillName, override] of Object.entries(racialSkillOverrides)) {
+    mergeSkillOverride(skillName, override)
+}
+
 // inject precomputed widths
 const __columnWidths = computeColumnWidths(skill_data)
 

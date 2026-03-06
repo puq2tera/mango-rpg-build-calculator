@@ -33,6 +33,7 @@ type SkillAvailabilityArgs = {
   skill: Skill
   selectedSkills: Set<string>
   selectedTalents: Set<string>
+  selectedRacePrereqs: Set<string>
   selectedDungeonUnlocks: Set<string>
   classLevels: ClassLevels
 }
@@ -56,6 +57,32 @@ export function getTalentPrereqTokens(talent: Talent): string[] {
 
 export function getSkillPrereqTokens(skill: Skill): string[] {
   return splitPrereqTokens(skill.PreReq)
+}
+
+function collectExpandedPrereqTokens(
+  prereqTokens: readonly string[],
+  visitedSkills = new Set<string>(),
+  visitedTalents = new Set<string>(),
+): string[] {
+  const expandedTokens = new Set<string>()
+
+  for (const token of prereqTokens) {
+    expandedTokens.add(token)
+
+    if (token in skill_data && !visitedSkills.has(token)) {
+      visitedSkills.add(token)
+      collectExpandedPrereqTokens(getSkillPrereqTokens(skill_data[token]), visitedSkills, visitedTalents)
+        .forEach((expandedToken) => expandedTokens.add(expandedToken))
+    }
+
+    if (token in talent_data && !visitedTalents.has(token)) {
+      visitedTalents.add(token)
+      collectExpandedPrereqTokens(getTalentPrereqTokens(talent_data[token]), visitedSkills, visitedTalents)
+        .forEach((expandedToken) => expandedTokens.add(expandedToken))
+    }
+  }
+
+  return Array.from(expandedTokens)
 }
 
 export function matchesClassFilter(requiredClassLevels: RequiredClassLevels, classFilter: ClassFilter): boolean {
@@ -156,17 +183,32 @@ export function getSkillAvailabilityState({
   skill,
   selectedSkills,
   selectedTalents,
+  selectedRacePrereqs,
   selectedDungeonUnlocks,
   classLevels,
 }: SkillAvailabilityArgs) {
   const prereqTokens = getSkillPrereqTokens(skill)
+  const raceFilterTokens = collectExpandedPrereqTokens(prereqTokens)
+  const selectedSkillTags = new Set(
+    Array.from(selectedSkills)
+      .map((name) => skill_data[name]?.Tag)
+      .filter((tag): tag is string => Boolean(tag)),
+  )
+  const selectedTalentTags = new Set(
+    Array.from(selectedTalents)
+      .map((name) => talent_data[name]?.Tag)
+      .filter((tag): tag is string => Boolean(tag)),
+  )
   const selectedSkillPoints = Array.from(selectedSkills).reduce((sum, name) => sum + (skill_data[name]?.sp ?? 0), 0)
   const spentPointsBeforeCurrent = selectedSkillPoints - (selectedSkills.has(skillName) ? (skill.sp ?? 0) : 0)
 
   const missingPrereq = prereqTokens.some((req) => (
     req !== "Default Skill" &&
     !selectedSkills.has(req) &&
+    !selectedSkillTags.has(req) &&
     !selectedTalents.has(req) &&
+    !selectedTalentTags.has(req) &&
+    !selectedRacePrereqs.has(req) &&
     !selectedDungeonUnlocks.has(req)
   ))
 
@@ -182,6 +224,7 @@ export function getSkillAvailabilityState({
 
   return {
     prereqTokens,
+    raceFilterTokens,
     missingRequirement,
     isAvailable: !missingRequirement,
   }
