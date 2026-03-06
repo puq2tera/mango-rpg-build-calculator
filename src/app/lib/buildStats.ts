@@ -558,10 +558,10 @@ function computeBuffReadyStats(statsConversionReady: Record<string, number>, sta
   return statsBuffReady
 }
 
-function computeBuffStats(snapshot: BuildSnapshot, statsBuffReady: Record<string, number>): Record<string, number> {
+function computeBuffStats(selectedBuffNames: readonly string[], statsBuffReady: Record<string, number>): Record<string, number> {
   const buffed: Record<string, number> = {}
 
-  for (const skillName of snapshot.selectedBuffs) {
+  for (const skillName of selectedBuffNames) {
     updateStats(buffed, statsBuffReady, {}, skillName, skill_data[skillName])
   }
 
@@ -598,11 +598,14 @@ function computeDmgReadyStats(
 
 export function computeBuildStatStages(
   snapshot: BuildSnapshot,
-  overrides?: { selectedTalents?: Iterable<string> },
+  overrides?: { selectedTalents?: Iterable<string>; selectedBuffs?: Iterable<string> },
 ): BuildStatStages {
   const selectedTalents = overrides?.selectedTalents
     ? Array.from(new Set(overrides.selectedTalents))
     : snapshot.selectedTalents
+  const selectedBuffs = overrides?.selectedBuffs
+    ? Array.from(new Set(overrides.selectedBuffs))
+    : snapshot.selectedBuffs
 
   const statsTalents = computeTalentStats(snapshot, selectedTalents)
   const statsLevels = computeLevelStats(snapshot)
@@ -614,7 +617,7 @@ export function computeBuildStatStages(
   const statsConversionReady = computeConversionReadyStats(statsBase, statsXPen)
   const statsConverted = computeConvertedTalentStats(statsConversionReady, selectedTalents)
   const statsBuffReady = computeBuffReadyStats(statsConversionReady, statsConverted)
-  const statsBuffs = computeBuffStats(snapshot, statsBuffReady)
+  const statsBuffs = computeBuffStats(selectedBuffs, statsBuffReady)
   const statsTarots = computeTarotStats(snapshot, statsBuffReady)
   const statsDmgReady = computeDmgReadyStats(statsBuffReady, statsBuffs, statsTarots)
 

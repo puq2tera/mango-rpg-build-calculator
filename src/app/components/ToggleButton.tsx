@@ -39,6 +39,7 @@ type SkillButtonProps = {
     healer: number
   }
   colWidths: string[]
+  averageDamageChange?: number | null
 }
 
 export function ToggleButton({
@@ -175,7 +176,8 @@ export function SkillButton({
   selectedTalents,
   selectedDungeonUnlocks,
   classLevels,
-  colWidths
+  colWidths,
+  averageDamageChange,
 }: SkillButtonProps) {
   const isSelected = selected.has(skillName)
   const selectedSkillPoints = Array.from(selected).reduce((sum, name) => sum + (skill_data[name]?.sp ?? 0), 0)
@@ -237,6 +239,19 @@ export function SkillButton({
     String(skill.class_levels.healer_levels),
     skill.description
   ]
+  const displayedValues = averageDamageChange === undefined
+    ? values
+    : [...values, formatSignedDamageDelta(averageDamageChange)]
+  const avgDamageIndex = averageDamageChange === undefined ? -1 : displayedValues.length - 1
+  const avgDamageClass = averageDamageChange === undefined
+    ? ""
+    : averageDamageChange === null
+      ? "text-slate-400 text-right font-mono tabular-nums"
+      : averageDamageChange > 0
+        ? "text-emerald-300 text-right font-mono tabular-nums"
+        : averageDamageChange < 0
+          ? "text-rose-300 text-right font-mono tabular-nums"
+          : "text-slate-200 text-right font-mono tabular-nums"
 
   return (
     <button
@@ -252,10 +267,12 @@ export function SkillButton({
       }`}
       style={{ gridTemplateColumns: colWidths.join(" ") }}
     >
-      {values.map((val, i) => (
+      {displayedValues.map((val, i) => (
         <span
           key={i}
-          className="px-2 whitespace-nowrap border-r border-slate-700 last:border-r-0 box-border"
+          className={`px-2 whitespace-nowrap border-r border-slate-700 last:border-r-0 box-border ${
+            i === avgDamageIndex ? avgDamageClass : ""
+          }`}
         >
           {val}
         </span>

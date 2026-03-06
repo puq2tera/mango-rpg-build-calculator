@@ -1,26 +1,39 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { startTransition, useEffect, useState } from "react"
 import { SkillButton } from "@/app/components/ToggleButton"
 import { DUNGEON_UNLOCKS_STORAGE_KEY, isDungeonUnlockTag } from "@/app/data/dungeon_unlocks"
 import { skill_data, __columnWidths } from "@/app/data/skill_data"
+import { computeBuildStatStages, readBuildSnapshot } from "@/app/lib/buildStats"
+import { calculateDamage, readDamageCalcState } from "@/app/lib/damageCalc"
 
 const STORAGE_KEY = "selectedBuffs"
+const buffNames = Object.entries(skill_data)
+  .filter(([, data]) => data.type?.is_buff === true)
+  .map(([name]) => name)
 
 const headerLabels = [
   "Name", "PreReq", "Tag", "BlockedTag",
-  "Gold", "Exp", "TP", "Lvl",
+  "Gold", "Exp", "SP",
   "Tank", "Warrior", "Caster", "Healer",
-  "Description"
+  "Description", "Avg DMG Change"
 ]
+const headerTitles: Record<number, string> = {
+  12: "Change in Damage Calculator average damage using your saved calculator settings",
+}
 
 export default function BuffsPage() {
-  const [colWidths] = useState<string[]>(__columnWidths)
+  const [colWidths] = useState<string[]>(() => {
+    const widths = __columnWidths.slice(0, 12)
+    widths.push("110px")
+    return widths
+  })
   const [isHydrated, setIsHydrated] = useState(false)
   const [selected, setSelected] = useState<Set<string>>(new Set())
   const [selectedTalents, setSelectedTalents] = useState<Set<string>>(new Set())
   const [selectedDungeonUnlocks, setSelectedDungeonUnlocks] = useState<Set<string>>(new Set())
   const [classLevels, setClassLevels] = useState({ tank: 0, warrior: 0, caster: 0, healer: 0 })
+  const [averageDamageChanges, setAverageDamageChanges] = useState<Record<string, number>>({})
 
   // Load selectedBuffs on mount
   useEffect(() => {
@@ -65,6 +78,68 @@ export default function BuffsPage() {
     console.log(stored)
   }, [])
 
+  useEffect(() => {
+    if (!isHydrated) return
+
+    let cancelled = false
+    let timeoutId: number | null = null
+
+    setAverageDamageChanges({})
+
+    const snapshot = readBuildSnapshot(localStorage)
+    const damageState = readDamageCalcState(localStorage)
+    const selectedBuffNames = Array.from(selected)
+    const currentAverage = calculateDamage(
+      computeBuildStatStages(snapshot, { selectedBuffs: selectedBuffNames }).StatsDmgReady,
+      damageState,
+    ).average
+
+    const computedChanges: Record<string, number> = {}
+    let index = 0
+    const chunkSize = 20
+
+    const computeChunk = () => {
+      if (cancelled) return
+
+      const maxIndex = Math.min(index + chunkSize, buffNames.length)
+      for (; index < maxIndex; index++) {
+        const buffName = buffNames[index]
+        const toggledBuffs = new Set(selectedBuffNames)
+
+        if (toggledBuffs.has(buffName)) {
+          toggledBuffs.delete(buffName)
+        } else {
+          toggledBuffs.add(buffName)
+        }
+
+        const nextAverage = calculateDamage(
+          computeBuildStatStages(snapshot, { selectedBuffs: toggledBuffs }).StatsDmgReady,
+          damageState,
+        ).average
+
+        computedChanges[buffName] = nextAverage - currentAverage
+      }
+
+      if (index < buffNames.length) {
+        timeoutId = window.setTimeout(computeChunk, 0)
+        return
+      }
+
+      startTransition(() => {
+        setAverageDamageChanges(computedChanges)
+      })
+    }
+
+    timeoutId = window.setTimeout(computeChunk, 0)
+
+    return () => {
+      cancelled = true
+      if (timeoutId !== null) {
+        window.clearTimeout(timeoutId)
+      }
+    }
+  }, [isHydrated, selected])
+
   if (!isHydrated || colWidths.length === 0) return <div className="p-4">Loading...</div>
 
   return (
@@ -77,6 +152,7 @@ export default function BuffsPage() {
           <div
             key={i}
             className="px-2 font-bold whitespace-nowrap border-r border-slate-600 last:border-r-0 box-border"
+            title={headerTitles[i]}
           >
             {label}
           </div>
@@ -84,9 +160,7 @@ export default function BuffsPage() {
       </div>
 
       <div className="space-y-0.5">
-      {Object.entries(skill_data)
-        .filter(([, data]) => data.type?.is_buff === true)
-        .map(([name]) => (
+      {buffNames.map((name) => (
           <SkillButton
             key={name}
             skillName={name}
@@ -97,6 +171,7 @@ export default function BuffsPage() {
             selectedDungeonUnlocks={selectedDungeonUnlocks}
             classLevels={classLevels}
             colWidths={colWidths}
+            averageDamageChange={averageDamageChanges[name] ?? null}
           />
         ))}
       </div>
