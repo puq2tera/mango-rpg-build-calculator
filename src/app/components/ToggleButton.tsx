@@ -86,24 +86,24 @@ function getClassTint(
   }
 
   const subtleTintByClass: Record<ClassColorKey, string> = {
-    tank: "bg-[linear-gradient(90deg,rgba(74,222,128,0.2),rgba(74,222,128,0.09),transparent_72%)]",
+    tank: "bg-[linear-gradient(90deg,rgba(132,204,22,0.18),rgba(132,204,22,0.075),transparent_72%)]",
     warrior: "bg-[linear-gradient(90deg,rgba(248,113,113,0.2),rgba(248,113,113,0.09),transparent_72%)]",
     caster: "bg-[linear-gradient(90deg,rgba(59,130,246,0.28),rgba(59,130,246,0.12),transparent_72%)]",
-    healer: "bg-[linear-gradient(90deg,rgba(216,180,254,0.22),rgba(216,180,254,0.1),transparent_72%)]",
+    healer: "bg-[linear-gradient(90deg,rgba(192,132,252,0.18),rgba(192,132,252,0.075),transparent_72%)]",
   }
 
   const selectedTintByClass: Record<ClassColorKey, string> = {
-    tank: "bg-[linear-gradient(90deg,rgba(34,197,94,0.62),rgba(34,197,94,0.3),transparent_80%)] ring-1 ring-inset ring-emerald-200/65",
+    tank: "bg-[linear-gradient(90deg,rgba(34,197,94,0.74),rgba(34,197,94,0.38),transparent_82%)] ring-1 ring-inset ring-lime-100/75",
     warrior: "bg-[linear-gradient(90deg,rgba(239,68,68,0.6),rgba(239,68,68,0.28),transparent_80%)] ring-1 ring-inset ring-rose-200/65",
     caster: "bg-[linear-gradient(90deg,rgba(37,99,235,0.68),rgba(37,99,235,0.32),transparent_80%)] ring-1 ring-inset ring-blue-200/70",
-    healer: "bg-[linear-gradient(90deg,rgba(168,85,247,0.6),rgba(168,85,247,0.28),transparent_80%)] ring-1 ring-inset ring-purple-200/65",
+    healer: "bg-[linear-gradient(90deg,rgba(147,51,234,0.74),rgba(147,51,234,0.34),transparent_82%)] ring-1 ring-inset ring-violet-100/75",
   }
 
   const unavailableTintByClass: Record<ClassColorKey, string> = {
-    tank: "bg-[linear-gradient(90deg,rgba(74,222,128,0.035),rgba(74,222,128,0.012),transparent_72%)]",
+    tank: "bg-[linear-gradient(90deg,rgba(132,204,22,0.02),rgba(132,204,22,0.007),transparent_72%)]",
     warrior: "bg-[linear-gradient(90deg,rgba(248,113,113,0.032),rgba(248,113,113,0.012),transparent_72%)]",
     caster: "bg-[linear-gradient(90deg,rgba(59,130,246,0.04),rgba(59,130,246,0.014),transparent_72%)]",
-    healer: "bg-[linear-gradient(90deg,rgba(216,180,254,0.036),rgba(216,180,254,0.012),transparent_72%)]",
+    healer: "bg-[linear-gradient(90deg,rgba(192,132,252,0.022),rgba(192,132,252,0.008),transparent_72%)]",
   }
 
   if (state === "selected") {
