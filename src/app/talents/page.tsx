@@ -4,6 +4,7 @@ import { useEffect, useState } from "react"
 import { ToggleButton } from "@/app/components/ToggleButton"
 import { DUNGEON_UNLOCKS_STORAGE_KEY, isDungeonUnlockTag } from "@/app/data/dungeon_unlocks"
 import { talent_data, __columnWidths } from "@/app/data/talent_data"
+import { race_data_by_tag, type RaceTag } from "@/app/data/race_data"
 
 const STORAGE_KEY = "selectedTalents"
 
@@ -19,6 +20,8 @@ const classHeaderTitles: Record<number, string> = {
   10: "Caster",
   11: "Healer"
 }
+
+const isRaceTag = (value: string): value is RaceTag => value in race_data_by_tag
 
 export default function TalentsPage() {
   const [colWidths] = useState<string[]>(() => {
@@ -36,6 +39,7 @@ export default function TalentsPage() {
   const [isHydrated, setIsHydrated] = useState(false)
   const [totalLevels, setTotalLevels] = useState(0)
   const [selected, setSelected] = useState<Set<string>>(new Set())
+  const [selectedRacePrereqs, setSelectedRacePrereqs] = useState<Set<string>>(new Set())
   const [selectedDungeonUnlocks, setSelectedDungeonUnlocks] = useState<Set<string>>(new Set())
   const [classLevels, setClassLevels] = useState({ tank: 0, warrior: 0, caster: 0, healer: 0 })
 
@@ -43,6 +47,7 @@ export default function TalentsPage() {
   useEffect(() => {
     console.log(`Loaded selectedTalents into selected`)
     const stored = localStorage.getItem(STORAGE_KEY)
+    const storedRace = localStorage.getItem("SelectedRace")
     const storedDungeonUnlocks = localStorage.getItem(DUNGEON_UNLOCKS_STORAGE_KEY)
     const rawLevels = localStorage.getItem("SelectedLevels")
 
@@ -78,6 +83,13 @@ export default function TalentsPage() {
       setSelectedDungeonUnlocks(new Set())
     }
 
+    if (storedRace && isRaceTag(storedRace)) {
+      const race = race_data_by_tag[storedRace]
+      setSelectedRacePrereqs(new Set([race.tag, race.name]))
+    } else {
+      setSelectedRacePrereqs(new Set())
+    }
+
     setIsHydrated(true)
     console.log(stored)
   }, [])
@@ -110,6 +122,7 @@ export default function TalentsPage() {
             selected={selected}
             setSelected={setSelected}
             totalLevels={totalLevels}
+            selectedRacePrereqs={selectedRacePrereqs}
             selectedDungeonUnlocks={selectedDungeonUnlocks}
             classLevels={classLevels}
             colWidths={colWidths}

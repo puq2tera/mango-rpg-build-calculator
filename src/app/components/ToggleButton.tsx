@@ -12,6 +12,7 @@ type ToggleButtonProps = {
   selected: Set<string>
   setSelected: Dispatch<SetStateAction<Set<string>>>
   totalLevels: number
+  selectedRacePrereqs: Set<string>
   selectedDungeonUnlocks: Set<string>
   classLevels: {
     tank: number
@@ -44,6 +45,7 @@ export function ToggleButton({
   selected,
   setSelected,
   totalLevels,
+  selectedRacePrereqs,
   selectedDungeonUnlocks,
   classLevels,
   colWidths,
@@ -70,6 +72,7 @@ export function ToggleButton({
   const missingPrereq = prereqTokens.some((req) => (
     !selected.has(req) &&
     !selectedTalentTags.has(req) &&
+    !selectedRacePrereqs.has(req) &&
     !selectedDungeonUnlocks.has(req)
   ))
 
