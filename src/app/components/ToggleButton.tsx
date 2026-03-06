@@ -44,6 +44,53 @@ function getAverageDamageClass(value: number | null | undefined): string {
   return "text-slate-200 text-right font-mono tabular-nums"
 }
 
+type TalentClassKey = "tank" | "warrior" | "caster" | "healer"
+
+function getPrimaryTalentClass(talent: Talent): TalentClassKey | null {
+  const levels: Record<TalentClassKey, number> = {
+    tank: talent.class_levels.tank_levels ?? 0,
+    warrior: talent.class_levels.warrior_levels ?? 0,
+    caster: talent.class_levels.caster_levels ?? 0,
+    healer: talent.class_levels.healer_levels ?? 0,
+  }
+
+  let primaryClass: TalentClassKey | null = null
+  let highestLevel = 0
+
+  for (const classKey of ["tank", "warrior", "caster", "healer"] as const) {
+    if (levels[classKey] > highestLevel) {
+      highestLevel = levels[classKey]
+      primaryClass = classKey
+    }
+  }
+
+  return primaryClass
+}
+
+function getTalentClassTint(talent: Talent, isSelected: boolean): string {
+  const primaryClass = getPrimaryTalentClass(talent)
+
+  if (!primaryClass) {
+    return ""
+  }
+
+  const subtleTintByClass: Record<TalentClassKey, string> = {
+    tank: "bg-[linear-gradient(90deg,rgba(56,189,248,0.16),rgba(56,189,248,0.07),transparent_72%)]",
+    warrior: "bg-[linear-gradient(90deg,rgba(248,113,113,0.18),rgba(248,113,113,0.08),transparent_72%)]",
+    caster: "bg-[linear-gradient(90deg,rgba(59,130,246,0.26),rgba(59,130,246,0.11),transparent_72%)]",
+    healer: "bg-[linear-gradient(90deg,rgba(216,180,254,0.2),rgba(216,180,254,0.08),transparent_72%)]",
+  }
+
+  const selectedTintByClass: Record<TalentClassKey, string> = {
+    tank: "bg-[linear-gradient(90deg,rgba(14,165,233,0.42),rgba(14,165,233,0.2),transparent_78%)] ring-1 ring-inset ring-sky-300/45",
+    warrior: "bg-[linear-gradient(90deg,rgba(239,68,68,0.44),rgba(239,68,68,0.2),transparent_78%)] ring-1 ring-inset ring-rose-300/45",
+    caster: "bg-[linear-gradient(90deg,rgba(37,99,235,0.5),rgba(37,99,235,0.24),transparent_78%)] ring-1 ring-inset ring-blue-300/50",
+    healer: "bg-[linear-gradient(90deg,rgba(168,85,247,0.44),rgba(168,85,247,0.2),transparent_78%)] ring-1 ring-inset ring-purple-300/45",
+  }
+
+  return isSelected ? selectedTintByClass[primaryClass] : subtleTintByClass[primaryClass]
+}
+
 export function ToggleButton({
   talentName,
   talent,
@@ -67,17 +114,12 @@ export function ToggleButton({
     classLevels,
     totalLevels,
   })
-  const rowTone = blockedTagConflict && isSelected
-    ? "selectedBlocked"
-    : blockedTagConflict
-      ? "blocked"
-      : missingRequirement && isSelected
-        ? "selectedInvalid"
-        : missingRequirement
-          ? "invalid"
-          : isSelected
-            ? "selected"
-            : "default"
+  const isUnavailable = blockedTagConflict || missingRequirement
+  const rowTone = isUnavailable
+    ? (isSelected ? "selectedUnavailable" : "unavailable")
+    : isSelected
+      ? "selected"
+      : "default"
   const rowClass = getStripedRowClass(rowIndex, rowTone)
 
   const handleClick = () => {
@@ -116,7 +158,10 @@ export function ToggleButton({
   return (
     <button
       onClick={handleClick}
-      className={`grid min-w-full w-max text-left transition px-0 py-1 ${rowClass}`}
+      className={`grid min-w-full w-max text-left transition px-0 py-1 ${rowClass} ${getTalentClassTint(
+        talent,
+        isSelected && !isUnavailable,
+      )}`}
       style={{ gridTemplateColumns: columns.map((column) => `${column.renderWidth}px`).join(" ") }}
     >
       {columns.map((column) => (
@@ -192,13 +237,11 @@ export function SkillButton({
       onClick={handleClick}
       className={`grid min-w-full w-max text-left transition px-0 py-1 ${getStripedRowClass(
         rowIndex,
-        missingRequirement && isSelected
-          ? "selectedInvalid"
-          : missingRequirement
-            ? "invalid"
-            : isSelected
-              ? "selected"
-              : "default",
+        missingRequirement
+          ? (isSelected ? "selectedUnavailable" : "unavailable")
+          : isSelected
+            ? "selected"
+            : "default",
       )}`}
       style={{ gridTemplateColumns: columns.map((column) => `${column.renderWidth}px`).join(" ") }}
     >
