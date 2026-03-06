@@ -1,39 +1,28 @@
 "use client"
 
 import { startTransition, useEffect, useState } from "react"
+import { InteractiveTableHeader } from "@/app/components/InteractiveTableHeader"
 import { SkillButton } from "@/app/components/ToggleButton"
 import { DUNGEON_UNLOCKS_STORAGE_KEY, isDungeonUnlockTag } from "@/app/data/dungeon_unlocks"
-import { skill_data, __columnWidths } from "@/app/data/skill_data"
+import { skill_data } from "@/app/data/skill_data"
 import { computeBuildStatStages, readBuildSnapshot } from "@/app/lib/buildStats"
 import { calculateDamage, readDamageCalcState } from "@/app/lib/damageCalc"
+import { useManagedColumns } from "@/app/lib/managedColumns"
+import { buffTableColumns } from "@/app/lib/tableColumnDefinitions"
 
 const STORAGE_KEY = "selectedBuffs"
 const buffNames = Object.entries(skill_data)
   .filter(([, data]) => data.type?.is_buff === true)
   .map(([name]) => name)
 
-const headerLabels = [
-  "Name", "PreReq", "Tag", "BlockedTag",
-  "Gold", "Exp", "SP",
-  "Tank", "Warrior", "Caster", "Healer",
-  "Description", "Avg DMG Change"
-]
-const headerTitles: Record<number, string> = {
-  12: "Change in Damage Calculator average damage using your saved calculator settings",
-}
-
 export default function BuffsPage() {
-  const [colWidths] = useState<string[]>(() => {
-    const widths = __columnWidths.slice(0, 12)
-    widths.push("110px")
-    return widths
-  })
   const [isHydrated, setIsHydrated] = useState(false)
   const [selected, setSelected] = useState<Set<string>>(new Set())
   const [selectedTalents, setSelectedTalents] = useState<Set<string>>(new Set())
   const [selectedDungeonUnlocks, setSelectedDungeonUnlocks] = useState<Set<string>>(new Set())
   const [classLevels, setClassLevels] = useState({ tank: 0, warrior: 0, caster: 0, healer: 0 })
   const [averageDamageChanges, setAverageDamageChanges] = useState<Record<string, number>>({})
+  const columnLayout = useManagedColumns("buffColumnLayout", buffTableColumns)
 
   // Load selectedBuffs on mount
   useEffect(() => {
@@ -140,27 +129,22 @@ export default function BuffsPage() {
     }
   }, [isHydrated, selected])
 
-  if (!isHydrated || colWidths.length === 0) return <div className="p-4">Loading...</div>
+  if (!isHydrated || !columnLayout.isReady) return <div className="p-4">Loading...</div>
 
   return (
     <div className="h-[80vh] overflow-y-auto border rounded-md">
-      <div
-        className="sticky top-0 z-10 bg-slate-900 border-b py-2 grid gap-x-0"
-        style={{ gridTemplateColumns: colWidths.join(" ") }}
-      >
-        {headerLabels.map((label, i) => (
-          <div
-            key={i}
-            className="px-2 font-bold whitespace-nowrap border-r border-slate-600 last:border-r-0 box-border"
-            title={headerTitles[i]}
-          >
-            {label}
-          </div>
-        ))}
-      </div>
+      <InteractiveTableHeader
+        allColumns={columnLayout.allColumns}
+        visibleColumns={columnLayout.visibleColumns}
+        gridTemplateColumns={columnLayout.gridTemplateColumns}
+        onSetColumnCollapsed={columnLayout.setColumnCollapsed}
+        onReorderColumns={columnLayout.reorderVisibleColumns}
+        onSetColumnWidth={columnLayout.setColumnWidth}
+        onReset={columnLayout.reset}
+      />
 
       <div className="space-y-0.5">
-      {buffNames.map((name) => (
+        {buffNames.map((name) => (
           <SkillButton
             key={name}
             skillName={name}
@@ -170,7 +154,7 @@ export default function BuffsPage() {
             selectedTalents={selectedTalents}
             selectedDungeonUnlocks={selectedDungeonUnlocks}
             classLevels={classLevels}
-            colWidths={colWidths}
+            columns={columnLayout.visibleColumns}
             averageDamageChange={averageDamageChanges[name] ?? null}
           />
         ))}

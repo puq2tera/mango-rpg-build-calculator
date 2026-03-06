@@ -1,46 +1,22 @@
 "use client"
 
 import { startTransition, useEffect, useState } from "react"
+import { InteractiveTableHeader } from "@/app/components/InteractiveTableHeader"
 import { ToggleButton } from "@/app/components/ToggleButton"
 import { DUNGEON_UNLOCKS_STORAGE_KEY, isDungeonUnlockTag } from "@/app/data/dungeon_unlocks"
-import { talent_data, __columnWidths } from "@/app/data/talent_data"
+import { talent_data } from "@/app/data/talent_data"
 import { race_data_by_tag, type RaceTag } from "@/app/data/race_data"
 import { computeBuildStatStages, readBuildSnapshot } from "@/app/lib/buildStats"
 import { calculateDamage, readDamageCalcState } from "@/app/lib/damageCalc"
+import { useManagedColumns } from "@/app/lib/managedColumns"
+import { talentTableColumns } from "@/app/lib/tableColumnDefinitions"
 
 const STORAGE_KEY = "selectedTalents"
-
-const headerLabels = [
-  "Name", "PreReq", "Tag", "BlockedTag",
-  "Gold", "Exp", "TP", "Lvl",
-  "T", "W", "C", "H",
-  "Description", "Avg DMG Change"
-]
-const classHeaderTitles: Record<number, string> = {
-  8: "Tank",
-  9: "Warrior",
-  10: "Caster",
-  11: "Healer",
-  13: "Change in Damage Calculator average damage using your saved calculator settings",
-}
 
 const isRaceTag = (value: string): value is RaceTag => value in race_data_by_tag
 const talentNames = Object.keys(talent_data)
 
 export default function TalentsPage() {
-  const [colWidths] = useState<string[]>(() => {
-    const widths = [...__columnWidths]
-    widths[4] = "45px" // Gold
-    widths[5] = "55px"
-    widths[6] = "40px"
-    widths[7] = "40px"
-    widths[8] = "40px"
-    widths[9] = "40px"
-    widths[10] = "40px"
-    widths[11] = "40px" // Healer
-    widths.push("110px")
-    return widths
-  })
   const [isHydrated, setIsHydrated] = useState(false)
   const [totalLevels, setTotalLevels] = useState(0)
   const [selected, setSelected] = useState<Set<string>>(new Set())
@@ -48,6 +24,7 @@ export default function TalentsPage() {
   const [selectedDungeonUnlocks, setSelectedDungeonUnlocks] = useState<Set<string>>(new Set())
   const [classLevels, setClassLevels] = useState({ tank: 0, warrior: 0, caster: 0, healer: 0 })
   const [averageDamageChanges, setAverageDamageChanges] = useState<Record<string, number>>({})
+  const columnLayout = useManagedColumns("talentColumnLayout", talentTableColumns)
 
   // Load selectedTalents on mount
   useEffect(() => {
@@ -162,24 +139,19 @@ export default function TalentsPage() {
     }
   }, [isHydrated, selected])
 
-  if (!isHydrated || colWidths.length === 0) return <div className="p-4">Loading...</div>
+  if (!isHydrated || !columnLayout.isReady) return <div className="p-4">Loading...</div>
 
   return (
     <div className="h-[80vh] overflow-y-auto border rounded-md">
-      <div
-        className="sticky top-0 z-10 bg-slate-900 border-b py-2 grid gap-x-0"
-        style={{ gridTemplateColumns: colWidths.join(" ") }}
-      >
-        {headerLabels.map((label, i) => (
-          <div
-            key={i}
-            className="px-2 font-bold whitespace-nowrap border-r border-slate-600 last:border-r-0 box-border"
-            title={classHeaderTitles[i]}
-          >
-            {label}
-          </div>
-        ))}
-      </div>
+      <InteractiveTableHeader
+        allColumns={columnLayout.allColumns}
+        visibleColumns={columnLayout.visibleColumns}
+        gridTemplateColumns={columnLayout.gridTemplateColumns}
+        onSetColumnCollapsed={columnLayout.setColumnCollapsed}
+        onReorderColumns={columnLayout.reorderVisibleColumns}
+        onSetColumnWidth={columnLayout.setColumnWidth}
+        onReset={columnLayout.reset}
+      />
 
       <div className="space-y-0.5">
         {Object.entries(talent_data).map(([name]) => (
@@ -193,7 +165,7 @@ export default function TalentsPage() {
             selectedRacePrereqs={selectedRacePrereqs}
             selectedDungeonUnlocks={selectedDungeonUnlocks}
             classLevels={classLevels}
-            colWidths={colWidths}
+            columns={columnLayout.visibleColumns}
             averageDamageChange={averageDamageChanges[name] ?? null}
           />
         ))}

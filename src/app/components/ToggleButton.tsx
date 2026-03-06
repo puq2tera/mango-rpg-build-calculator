@@ -6,6 +6,7 @@ import { talent_data } from "../data/talent_data"
 import type { Skill } from "../data/skill_data"
 import { skill_data } from "../data/skill_data"
 import { formatSignedDamageDelta } from "@/app/lib/damageCalc"
+import type { ManagedColumn } from "@/app/lib/managedColumns"
 
 type ToggleButtonProps = {
   talentName: string
@@ -21,7 +22,7 @@ type ToggleButtonProps = {
     caster: number
     healer: number
   }
-  colWidths: string[]
+  columns: ManagedColumn[]
   averageDamageChange: number | null
 }
 
@@ -38,8 +39,16 @@ type SkillButtonProps = {
     caster: number
     healer: number
   }
-  colWidths: string[]
+  columns: ManagedColumn[]
   averageDamageChange?: number | null
+}
+
+function getAverageDamageClass(value: number | null | undefined): string {
+  if (value === undefined) return ""
+  if (value === null) return "text-slate-400 text-right font-mono tabular-nums"
+  if (value > 0) return "text-emerald-300 text-right font-mono tabular-nums"
+  if (value < 0) return "text-rose-300 text-right font-mono tabular-nums"
+  return "text-slate-200 text-right font-mono tabular-nums"
 }
 
 export function ToggleButton({
@@ -51,7 +60,7 @@ export function ToggleButton({
   selectedRacePrereqs,
   selectedDungeonUnlocks,
   classLevels,
-  colWidths,
+  columns,
   averageDamageChange,
 }: ToggleButtonProps) {
   const isSelected = selected.has(talentName)
@@ -122,46 +131,37 @@ export function ToggleButton({
     window.dispatchEvent(new Event("talentsUpdated"))
   }
 
-  const values = [
-    talentName,
-    Array.isArray(talent.PreReq) ? talent.PreReq.join(", ") : talent.PreReq,
-    talent.Tag,
-    talent.BlockedTag,
-    String(talent.gold),
-    String(talent.exp),
-    String(talent.tp_spent),
-    String(talent.total_level),
-    String(talent.class_levels.tank_levels),
-    String(talent.class_levels.warrior_levels),
-    String(talent.class_levels.caster_levels),
-    String(talent.class_levels.healer_levels),
-    talent.description,
-    formatSignedDamageDelta(averageDamageChange),
-  ]
-  const avgDamageIndex = values.length - 1
+  const values: Record<string, string> = {
+    name: talentName,
+    preReq: Array.isArray(talent.PreReq) ? talent.PreReq.join(", ") : talent.PreReq,
+    tag: talent.Tag,
+    blockedTag: talent.BlockedTag,
+    gold: String(talent.gold),
+    exp: String(talent.exp),
+    tp: String(talent.tp_spent),
+    lvl: String(talent.total_level),
+    tank: String(talent.class_levels.tank_levels),
+    warrior: String(talent.class_levels.warrior_levels),
+    caster: String(talent.class_levels.caster_levels),
+    healer: String(talent.class_levels.healer_levels),
+    description: talent.description,
+    avgDamageChange: formatSignedDamageDelta(averageDamageChange),
+  }
 
   return (
     <button
       onClick={handleClick}
       className={`grid w-full text-left transition px-0 py-1 ${rowClass}`}
-      style={{ gridTemplateColumns: colWidths.join(" ") }}
+      style={{ gridTemplateColumns: columns.map((column) => `${column.renderWidth}px`).join(" ") }}
     >
-      {values.map((val, i) => (
+      {columns.map((column) => (
         <span
-          key={i}
-          className={`px-2 whitespace-nowrap border-r border-slate-700 last:border-r-0 box-border ${
-            i === avgDamageIndex
-              ? averageDamageChange === null
-                ? "text-slate-400 text-right font-mono tabular-nums"
-                : averageDamageChange > 0
-                  ? "text-emerald-300 text-right font-mono tabular-nums"
-                  : averageDamageChange < 0
-                    ? "text-rose-300 text-right font-mono tabular-nums"
-                    : "text-slate-200 text-right font-mono tabular-nums"
-              : ""
+          key={column.id}
+          className={`${column.collapsed ? "px-0" : "px-2 whitespace-nowrap"} border-r border-slate-700 last:border-r-0 box-border overflow-hidden ${
+            column.id === "avgDamageChange" ? getAverageDamageClass(averageDamageChange) : ""
           }`}
         >
-          {val}
+          {column.collapsed ? "" : (values[column.id] ?? "")}
         </span>
       ))}
     </button>
@@ -176,7 +176,7 @@ export function SkillButton({
   selectedTalents,
   selectedDungeonUnlocks,
   classLevels,
-  colWidths,
+  columns,
   averageDamageChange,
 }: SkillButtonProps) {
   const isSelected = selected.has(skillName)
@@ -225,33 +225,21 @@ export function SkillButton({
     localStorage.setItem("selectedBuffs", JSON.stringify(Array.from(newSet)))
   }
   // TODO: ADD sp cost to button instead of just sp_spent required to learn it
-  const values = [
-    skillName,
-    Array.isArray(skill.PreReq) ? skill.PreReq.join(", ") : skill.PreReq,
-    skill.Tag,
-    skill.BlockedTag,
-    String(skill.gold),
-    String(skill.exp),
-    String(skill.sp_spent),
-    String(skill.class_levels.tank_levels),
-    String(skill.class_levels.warrior_levels),
-    String(skill.class_levels.caster_levels),
-    String(skill.class_levels.healer_levels),
-    skill.description
-  ]
-  const displayedValues = averageDamageChange === undefined
-    ? values
-    : [...values, formatSignedDamageDelta(averageDamageChange)]
-  const avgDamageIndex = averageDamageChange === undefined ? -1 : displayedValues.length - 1
-  const avgDamageClass = averageDamageChange === undefined
-    ? ""
-    : averageDamageChange === null
-      ? "text-slate-400 text-right font-mono tabular-nums"
-      : averageDamageChange > 0
-        ? "text-emerald-300 text-right font-mono tabular-nums"
-        : averageDamageChange < 0
-          ? "text-rose-300 text-right font-mono tabular-nums"
-          : "text-slate-200 text-right font-mono tabular-nums"
+  const values: Record<string, string> = {
+    name: skillName,
+    preReq: Array.isArray(skill.PreReq) ? skill.PreReq.join(", ") : (skill.PreReq ?? ""),
+    tag: skill.Tag ?? "",
+    blockedTag: skill.BlockedTag ?? "",
+    gold: String(skill.gold),
+    exp: String(skill.exp),
+    sp: String(skill.sp_spent ?? 0),
+    tank: String(skill.class_levels.tank_levels ?? 0),
+    warrior: String(skill.class_levels.warrior_levels ?? 0),
+    caster: String(skill.class_levels.caster_levels ?? 0),
+    healer: String(skill.class_levels.healer_levels ?? 0),
+    description: skill.description,
+    avgDamageChange: formatSignedDamageDelta(averageDamageChange ?? null),
+  }
 
   return (
     <button
@@ -265,16 +253,16 @@ export function SkillButton({
               ? "bg-sky-900/40 hover:bg-sky-800/45"
               : "hover:bg-slate-800/85"
       }`}
-      style={{ gridTemplateColumns: colWidths.join(" ") }}
+      style={{ gridTemplateColumns: columns.map((column) => `${column.renderWidth}px`).join(" ") }}
     >
-      {displayedValues.map((val, i) => (
+      {columns.map((column) => (
         <span
-          key={i}
-          className={`px-2 whitespace-nowrap border-r border-slate-700 last:border-r-0 box-border ${
-            i === avgDamageIndex ? avgDamageClass : ""
+          key={column.id}
+          className={`${column.collapsed ? "px-0" : "px-2 whitespace-nowrap"} border-r border-slate-700 last:border-r-0 box-border overflow-hidden ${
+            column.id === "avgDamageChange" ? getAverageDamageClass(averageDamageChange) : ""
           }`}
         >
-          {val}
+          {column.collapsed ? "" : (values[column.id] ?? "")}
         </span>
       ))}
     </button>

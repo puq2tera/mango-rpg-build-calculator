@@ -1,26 +1,22 @@
 "use client"
 
 import { useEffect, useState } from "react"
+import { InteractiveTableHeader } from "@/app/components/InteractiveTableHeader"
 import { SkillButton } from "@/app/components/ToggleButton"
 import { DUNGEON_UNLOCKS_STORAGE_KEY, isDungeonUnlockTag } from "@/app/data/dungeon_unlocks"
-import { skill_data, __columnWidths } from "@/app/data/skill_data"
+import { skill_data } from "@/app/data/skill_data"
+import { useManagedColumns } from "@/app/lib/managedColumns"
+import { skillTableColumns } from "@/app/lib/tableColumnDefinitions"
 
 const STORAGE_KEY = "selectedBuffs"
 
-const headerLabels = [
-  "Name", "PreReq", "Tag", "BlockedTag",
-  "Gold", "Exp", "TP", "Lvl",
-  "Tank", "Warrior", "Caster", "Healer",
-  "Description"
-]
-
 export default function SkillsPage() {
-  const [colWidths] = useState<string[]>(__columnWidths)
   const [isHydrated, setIsHydrated] = useState(false)
   const [selected, setSelected] = useState<Set<string>>(new Set())
   const [selectedTalents, setSelectedTalents] = useState<Set<string>>(new Set())
   const [selectedDungeonUnlocks, setSelectedDungeonUnlocks] = useState<Set<string>>(new Set())
   const [classLevels, setClassLevels] = useState({ tank: 0, warrior: 0, caster: 0, healer: 0 })
+  const columnLayout = useManagedColumns("skillColumnLayout", skillTableColumns)
 
   useEffect(() => {
     const stored = localStorage.getItem(STORAGE_KEY)
@@ -62,23 +58,19 @@ export default function SkillsPage() {
     setIsHydrated(true)
   }, [])
 
-  if (!isHydrated || colWidths.length === 0) return <div className="p-4">Loading...</div>
+  if (!isHydrated || !columnLayout.isReady) return <div className="p-4">Loading...</div>
 
   return (
     <div className="h-[80vh] overflow-y-auto border rounded-md">
-      <div
-        className="sticky top-0 z-10 bg-slate-900 border-b py-2 grid gap-x-0"
-        style={{ gridTemplateColumns: colWidths.join(" ") }}
-      >
-        {headerLabels.map((label, i) => (
-          <div
-            key={i}
-            className="px-2 font-bold whitespace-nowrap border-r border-slate-600 last:border-r-0 box-border"
-          >
-            {label}
-          </div>
-        ))}
-      </div>
+      <InteractiveTableHeader
+        allColumns={columnLayout.allColumns}
+        visibleColumns={columnLayout.visibleColumns}
+        gridTemplateColumns={columnLayout.gridTemplateColumns}
+        onSetColumnCollapsed={columnLayout.setColumnCollapsed}
+        onReorderColumns={columnLayout.reorderVisibleColumns}
+        onSetColumnWidth={columnLayout.setColumnWidth}
+        onReset={columnLayout.reset}
+      />
 
       <div className="space-y-0.5">
         {Object.entries(skill_data).map(([name]) => (
@@ -91,7 +83,7 @@ export default function SkillsPage() {
             selectedTalents={selectedTalents}
             selectedDungeonUnlocks={selectedDungeonUnlocks}
             classLevels={classLevels}
-            colWidths={colWidths}
+            columns={columnLayout.visibleColumns}
           />
         ))}
       </div>
