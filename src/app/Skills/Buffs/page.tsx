@@ -34,13 +34,13 @@ export default function BuffsPage() {
   return (
     <div className="h-[80vh] overflow-y-auto border rounded-md">
       <div
-        className="sticky top-0 z-10 bg-white border-b py-2 grid gap-x-0"
+        className="sticky top-0 z-10 bg-slate-900 border-b py-2 grid gap-x-0"
         style={{ gridTemplateColumns: colWidths.join(" ") }}
       >
         {headerLabels.map((label, i) => (
           <div
             key={i}
-            className="px-2 font-bold whitespace-nowrap border-r border-black last:border-r-0 box-border"
+            className="px-2 font-bold whitespace-nowrap border-r border-slate-600 last:border-r-0 box-border"
           >
             {label}
           </div>

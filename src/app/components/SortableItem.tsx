@@ -25,9 +25,9 @@ export function SortableItem({ skillName, skill, colWidths }: SortableItemProps)
     transition,
     opacity: isDragging ? 0.5 : 1,
     padding: "0",
-    border: "1px solid gray",
+    border: "1px solid #334155",
     borderRadius: "4px",
-    background: "white",
+    background: "#0f172a",
     cursor: "grab"
   }
 
@@ -42,12 +42,12 @@ export function SortableItem({ skillName, skill, colWidths }: SortableItemProps)
       style={{ ...style, gridTemplateColumns: colWidths.join(" ") }}
       {...attributes}
       {...listeners}
-      className="grid text-left transition px-0 py-1 hover:bg-gray-50"
+      className="grid text-left transition px-0 py-1 hover:bg-slate-900/60"
     >
       {values.map((val, i) => (
         <span
           key={i}
-          className="px-2 whitespace-nowrap border-r border-gray-300 last:border-r-0 box-border"
+          className="px-2 whitespace-nowrap border-r border-slate-700 last:border-r-0 box-border"
         >
           {val}
         </span>

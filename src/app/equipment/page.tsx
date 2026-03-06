@@ -284,7 +284,7 @@ export default function EquipmentPage() {
 
   const typeOptions = ["Helm", "Armor", "Amulet", "Ring", "Weapon", "Runeshard", "Tarot"]
 
-  if (!isHydrated) return <div className="p-4 text-sm text-gray-600">Loading equipment editor...</div>
+  if (!isHydrated) return <div className="p-4 text-sm text-slate-300">Loading equipment editor...</div>
 
   return (
     <div className="p-4 space-y-8">
@@ -295,11 +295,11 @@ export default function EquipmentPage() {
       <table className="table-fixed border text-center text-sm">
         <thead>
           <tr>
-            <th className="bg-green-100 border px-2 py-1">ATK%</th>
-            <th className="bg-red-100 border px-2 py-1">DEF%</th>
-            <th className="bg-blue-100 border px-2 py-1">MATK%</th>
-            <th className="bg-pink-100 border px-2 py-1">HEAL%</th>
-            <th className="bg-pink-100 border px-2 py-1">Level</th>
+            <th className="bg-emerald-900/45 border px-2 py-1">ATK%</th>
+            <th className="bg-rose-900/45 border px-2 py-1">DEF%</th>
+            <th className="bg-sky-900/40 border px-2 py-1">MATK%</th>
+            <th className="bg-fuchsia-900/40 border px-2 py-1">HEAL%</th>
+            <th className="bg-fuchsia-900/40 border px-2 py-1">Level</th>
           </tr>
         </thead>
         <tbody>
@@ -325,7 +325,7 @@ export default function EquipmentPage() {
             <h2 className="text-lg font-semibold">{tier} Tier Runes</h2>
             <table className="table-fixed border-collapse w-full text-sm">
               <thead>
-                <tr className="bg-gray-100">
+                <tr className="bg-slate-800/85">
                   <th className="border px-2 py-1">Rune</th>
                   <th className="border px-2 py-1">Count</th>
                   <th className="border px-2 py-1">Description</th>
@@ -359,7 +359,7 @@ export default function EquipmentPage() {
                       <button
                         type="button"
                         onClick={() => removeRuneRow(tier, idx)}
-                        className="px-2 py-0.5 bg-red-400 text-white text-xs rounded"
+                        className="px-2 py-0.5 bg-rose-600 text-slate-100 text-xs rounded"
                       >
                         ✕
                       </button>
@@ -376,7 +376,7 @@ export default function EquipmentPage() {
             <div className="mt-2">
               <button
                 onClick={() => addRuneRow(tier)}
-                className="px-3 py-1 bg-blue-400 text-white rounded"
+                className="px-3 py-1 bg-sky-600 text-slate-100 rounded"
               >
                 + Add Rune
               </button>
@@ -392,7 +392,7 @@ export default function EquipmentPage() {
             key={idx}
             onClick={() => toggleSlot(idx)}
             className={`border rounded p-2 text-left cursor-pointer transition flex-shrink-0 ${
-              slot.enabled ? "bg-green-100" : "bg-gray-100 opacity-50"
+              slot.enabled ? "bg-emerald-900/45" : "bg-slate-800/85 opacity-50"
               // TODO: Make the slot change color if the name contains +10
             }`}
           >
@@ -462,7 +462,7 @@ export default function EquipmentPage() {
             </div>
             <table className="table-fixed border border-collapse text-sm w-full">
               <thead>
-                <tr className="bg-gray-100">
+                <tr className="bg-slate-800/85">
                   <th className="border px-2 py-1">Affix</th>
                   <th className="border px-2 py-1">Value</th>
                 </tr>
@@ -502,7 +502,7 @@ export default function EquipmentPage() {
                   e.stopPropagation()
                   addAffixRow(idx)
                 }}
-                className="w-full px-2 py-1 bg-blue-400 text-white rounded"
+                className="w-full px-2 py-1 bg-sky-600 text-slate-100 rounded"
               >
                 + Add Affix
               </button>
@@ -510,8 +510,8 @@ export default function EquipmentPage() {
           </div>
         ))}
 
-        <div className="flex items-center justify-center w-full max-w-md border-dashed border-2 border-gray-400 rounded p-4">
-          <button onClick={addSlot} className="px-4 py-1 bg-blue-500 text-white rounded">Add Slot</button>
+        <div className="flex items-center justify-center w-full max-w-md border-dashed border-2 border-slate-600 rounded p-4">
+          <button onClick={addSlot} className="px-4 py-1 bg-sky-600 text-slate-100 rounded">Add Slot</button>
         </div>
       </div>
     </div>

@@ -94,10 +94,10 @@ export default function Skills() {
     <div className="p-4 space-y-4">
       <div>
         <h1 className="font-bold text-lg">Selected Talents Var</h1>
-        <pre className="bg-gray-100 p-2 rounded whitespace-pre-wrap break-words">{selected}</pre>
+        <pre className="bg-slate-800/85 p-2 rounded whitespace-pre-wrap break-words">{selected}</pre>
         <div>
           <h1 className="font-bold text-lg">Talent Stats</h1>
-          <pre className="bg-gray-100 p-2 rounded whitespace-pre-wrap break-words">{stats}</pre>
+          <pre className="bg-slate-800/85 p-2 rounded whitespace-pre-wrap break-words">{stats}</pre>
         </div>
 
         <h1 className="font-bold text-xl mt-4">Selected Talents Data</h1>
@@ -107,14 +107,14 @@ export default function Skills() {
         <div className="overflow-x-auto">
           <table className="min-w-fit border border-collapse text-sm">
             <thead>
-              <tr className="bg-gray-100">
+              <tr className="bg-slate-800/85">
                 <th className="border px-2 py-1">Stat Name</th>
                 <th className="border px-2 py-1">Conversion Name</th>
               </tr>
             </thead>
             <tbody>
               {Array.from({ length: maxLength }).map((_, i) => (
-                <tr key={i} className="odd:bg-white even:bg-gray-50">
+                <tr key={i} className="odd:bg-slate-900 even:bg-slate-900/60">
                   <td className="border px-2 py-1 font-mono whitespace-nowrap">{statOnly[i] ?? ""}</td>
                   <td className="border px-2 py-1 font-mono whitespace-nowrap">{convOnly[i] ?? ""}</td>
                 </tr>
@@ -135,7 +135,7 @@ export default function Skills() {
 //     <div className="overflow-x-auto">
 //       <table className="min-w-full border border-collapse text-sm">
 //         <thead>
-//           <tr className="bg-gray-100">
+//           <tr className="bg-slate-800/85">
 //             <th className="border px-2 py-1">Name</th>
 //             <th className="border px-2 py-1">Category</th>
 //             <th className="border px-2 py-1">PreReq</th>
@@ -153,7 +153,7 @@ export default function Skills() {
 //         </thead>
 //         <tbody>
 //           {data.map((t, i) => (
-//             <tr key={i} className="odd:bg-white even:bg-gray-50">
+//             <tr key={i} className="odd:bg-slate-900 even:bg-slate-900/60">
 //               <td className="border px-2 py-1 whitespace-nowrap font-mono">{t.name}</td>
 //               <td className="border px-2 py-1">{t.category}</td>
 //               <td className="border px-2 py-1">{t.PreReq}</td>

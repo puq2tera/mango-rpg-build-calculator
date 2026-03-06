@@ -241,9 +241,9 @@ export default function LevelsPage() {
   const maxHeroPoints = 320
 
   const costClass = (cost: number) =>
-    cost === 1 ? "bg-green-100" :
-    cost === 2 ? "bg-orange-200" :
-    cost === 3 ? "bg-red-300" : ""
+    cost === 1 ? "bg-emerald-900/45" :
+    cost === 2 ? "bg-amber-800/50" :
+    cost === 3 ? "bg-rose-800/55" : ""
 
   // Column reorder helpers
   const moveClass = (idx: number, dir: -1 | 1) => {
@@ -260,15 +260,15 @@ export default function LevelsPage() {
   }
 
   const classLabel: Record<Cls, string> = { tank: "Tank", warrior: "Warrior", caster: "Caster", healer: "Healer" }
-  const headerBg: Record<Cls, string> = { tank: "bg-green-100", warrior: "bg-red-100", caster: "bg-blue-100", healer: "bg-pink-100" }
+  const headerBg: Record<Cls, string> = { tank: "bg-emerald-900/45", warrior: "bg-rose-900/45", caster: "bg-sky-900/40", healer: "bg-fuchsia-900/40" }
 
   const selectedRaceData = race_data_by_tag[selectedRace]
   const selectedRaceHeroPointGains = heroPointGainsByRace[selectedRace]
 
   const renderHeroPointInput = ({ id, cost }: HeroPointStat) => (
     <div key={id} className={`border ${costClass(cost)}`}>
-      <label className="block font-mono text-xs text-gray-700 px-1">{id}</label>
-      <div className="text-[11px] text-gray-500 text-center">Gain: {selectedRaceHeroPointGains[id]}</div>
+      <label className="block font-mono text-xs text-slate-300 px-1">{id}</label>
+      <div className="text-[11px] text-slate-400 text-center">Gain: {selectedRaceHeroPointGains[id]}</div>
       <input
         type="number"
         value={heroPoints[id] ?? 0}
@@ -317,7 +317,7 @@ export default function LevelsPage() {
       <h1 className="text-xl font-bold">Level Summary</h1>
 
       <h2 className="text-lg font-bold">Race</h2>
-      <div className="max-w-3xl border p-3 space-y-2 bg-gray-50">
+      <div className="max-w-3xl border p-3 space-y-2 bg-slate-900/60">
         <div className="flex flex-col gap-2 md:flex-row md:items-center">
           <label htmlFor="race-select" className="font-semibold">Selected Race</label>
           <select
@@ -326,15 +326,15 @@ export default function LevelsPage() {
             onChange={(e) => {
               if (isRaceTag(e.target.value)) setSelectedRace(e.target.value)
             }}
-            className="border px-2 py-1 bg-white"
+            className="border px-2 py-1 bg-slate-900"
           >
             {race_data.map((race) => (
               <option key={race.tag} value={race.tag}>{race.name}</option>
             ))}
           </select>
-          <span className="text-xs text-gray-600">Tag: {selectedRaceData.tag}</span>
+          <span className="text-xs text-slate-300">Tag: {selectedRaceData.tag}</span>
         </div>
-        <p className="text-sm text-gray-800">{selectedRaceData.description}</p>
+        <p className="text-sm text-slate-200">{selectedRaceData.description}</p>
       </div>
 
       <table className="table-fixed border text-center text-sm">
@@ -368,7 +368,7 @@ export default function LevelsPage() {
       </table>
 
       <table className="table-fixed border text-sm text-center">
-        <thead className="bg-gray-100">
+        <thead className="bg-slate-800/85">
           <tr>
             <th>Class</th>
             <th>Chosen</th>
@@ -399,20 +399,20 @@ export default function LevelsPage() {
       </table>
 
       <h2 className="text-lg font-bold">Manual Levelup Ranges</h2>
-      <p className="text-sm text-gray-700">
+      <p className="text-sm text-slate-300">
         Define class-level ranges and whether each range uses manual gains or estimated averages.
       </p>
       <div className="flex gap-2">
         <button
           type="button"
-          className="border px-3 py-1 bg-gray-100 hover:bg-gray-200"
+          className="border px-3 py-1 bg-slate-800/85 hover:bg-slate-700/90"
           onClick={addManualRange}
         >
           Add Range
         </button>
       </div>
       <table className="table-fixed border text-xs md:text-sm text-center">
-        <thead className="bg-gray-100">
+        <thead className="bg-slate-800/85">
           <tr>
             <th className="border px-2 py-1">Class</th>
             <th className="border px-2 py-1">Start</th>
@@ -477,7 +477,7 @@ export default function LevelsPage() {
                     value={range.hpGain}
                     disabled={!isManual}
                     onChange={(e) => updateManualRange(i, "hpGain", Number(e.target.value) || 0)}
-                    className="w-16 text-center border disabled:bg-gray-100"
+                    className="w-16 text-center border disabled:bg-slate-800/85"
                   />
                 </td>
                 <td className="border px-1 py-1">
@@ -486,7 +486,7 @@ export default function LevelsPage() {
                     value={range.atkGain}
                     disabled={!isManual}
                     onChange={(e) => updateManualRange(i, "atkGain", Number(e.target.value) || 0)}
-                    className="w-16 text-center border disabled:bg-gray-100"
+                    className="w-16 text-center border disabled:bg-slate-800/85"
                   />
                 </td>
                 <td className="border px-1 py-1">
@@ -495,7 +495,7 @@ export default function LevelsPage() {
                     value={range.defGain}
                     disabled={!isManual}
                     onChange={(e) => updateManualRange(i, "defGain", Number(e.target.value) || 0)}
-                    className="w-16 text-center border disabled:bg-gray-100"
+                    className="w-16 text-center border disabled:bg-slate-800/85"
                   />
                 </td>
                 <td className="border px-1 py-1">
@@ -504,7 +504,7 @@ export default function LevelsPage() {
                     value={range.matkGain}
                     disabled={!isManual}
                     onChange={(e) => updateManualRange(i, "matkGain", Number(e.target.value) || 0)}
-                    className="w-16 text-center border disabled:bg-gray-100"
+                    className="w-16 text-center border disabled:bg-slate-800/85"
                   />
                 </td>
                 <td className="border px-1 py-1">
@@ -513,13 +513,13 @@ export default function LevelsPage() {
                     value={range.healGain}
                     disabled={!isManual}
                     onChange={(e) => updateManualRange(i, "healGain", Number(e.target.value) || 0)}
-                    className="w-16 text-center border disabled:bg-gray-100"
+                    className="w-16 text-center border disabled:bg-slate-800/85"
                   />
                 </td>
                 <td className="border px-1 py-1">
                   <button
                     type="button"
-                    className="border px-2 py-1 bg-red-50 hover:bg-red-100"
+                    className="border px-2 py-1 bg-rose-900/35 hover:bg-rose-900/45"
                     onClick={() => removeManualRange(i)}
                   >
                     Remove
@@ -532,7 +532,7 @@ export default function LevelsPage() {
       </table>
 
       <table className="table-fixed border text-sm text-center">
-        <thead className="bg-gray-100">
+        <thead className="bg-slate-800/85">
           <tr>
             <th>Point Type</th>
             <th>Used</th>
@@ -571,8 +571,8 @@ export default function LevelsPage() {
       <table className="text-center text-sm border">
         <thead>
           <tr>
-            <th colSpan={2} className="bg-yellow-100 px-2 py-1 border">Chosen</th>
-            <th colSpan={2} className="bg-yellow-100 px-2 py-1 border">Remaining</th>
+            <th colSpan={2} className="bg-amber-900/40 px-2 py-1 border">Chosen</th>
+            <th colSpan={2} className="bg-amber-900/40 px-2 py-1 border">Remaining</th>
           </tr>
         </thead>
         <tbody>
@@ -583,10 +583,10 @@ export default function LevelsPage() {
         </tbody>
         <thead>
           <tr>
-            <th className="bg-green-200 border">T</th>
-            <th className="bg-red-200 border">W</th>
-            <th className="bg-blue-200 border">C</th>
-            <th className="bg-pink-200 border">H</th>
+            <th className="bg-emerald-800/45 border">T</th>
+            <th className="bg-rose-800/45 border">W</th>
+            <th className="bg-sky-800/45 border">C</th>
+            <th className="bg-fuchsia-800/45 border">H</th>
           </tr>
         </thead>
         <tbody>
@@ -609,13 +609,13 @@ export default function LevelsPage() {
       <table className="text-center text-sm border">
         <thead>
           <tr>
-            <th colSpan={4} className="bg-gray-100 border">Total Chosen: {totalTraining}</th>
+            <th colSpan={4} className="bg-slate-800/85 border">Total Chosen: {totalTraining}</th>
           </tr>
           <tr>
-            <th className="bg-green-200 border">T</th>
-            <th className="bg-red-200 border">W</th>
-            <th className="bg-blue-200 border">C</th>
-            <th className="bg-pink-200 border">H</th>
+            <th className="bg-emerald-800/45 border">T</th>
+            <th className="bg-rose-800/45 border">W</th>
+            <th className="bg-sky-800/45 border">C</th>
+            <th className="bg-fuchsia-800/45 border">H</th>
           </tr>
         </thead>
         <tbody>
@@ -639,8 +639,8 @@ export default function LevelsPage() {
       <table className="text-center text-sm border mb-2">
         <thead>
           <tr>
-            <th className="bg-yellow-100 border">Chosen</th>
-            <th className="bg-yellow-100 border">Remaining</th>
+            <th className="bg-amber-900/40 border">Chosen</th>
+            <th className="bg-amber-900/40 border">Remaining</th>
           </tr>
         </thead>
         <tbody>
@@ -653,31 +653,31 @@ export default function LevelsPage() {
 
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
         <div>
-          <h3 className="bg-green-300 text-center font-bold">Main Stats</h3>
+          <h3 className="bg-emerald-800/55 text-center font-bold">Main Stats</h3>
           {heroPointStatsByGroup.main.map(renderHeroPointInput)}
         </div>
 
         <div>
-          <h3 className="bg-blue-200 text-center font-bold">Elemental Damage</h3>
+          <h3 className="bg-sky-800/45 text-center font-bold">Elemental Damage</h3>
           {heroPointStatsByGroup.damage.map(renderHeroPointInput)}
         </div>
 
         <div>
-          <h3 className="bg-green-300 text-center font-bold">Elemental Resists</h3>
+          <h3 className="bg-emerald-800/55 text-center font-bold">Elemental Resists</h3>
           {heroPointStatsByGroup.resist.map(renderHeroPointInput)}
         </div>
 
         <div>
-          <h3 className="bg-cyan-100 text-center font-bold">Ele Pen</h3>
+          <h3 className="bg-cyan-900/40 text-center font-bold">Ele Pen</h3>
           {heroPointStatsByGroup.penetration.map(renderHeroPointInput)}
         </div>
       </div>
 
       <div className="w-40 border mt-4 text-sm">
-        <div className="bg-gray-200 text-center font-bold">Key</div>
-        <div className="bg-green-100 px-2">1 point</div>
-        <div className="bg-orange-200 px-2">2 points</div>
-        <div className="bg-red-300 px-2">3 points</div>
+        <div className="bg-slate-700/90 text-center font-bold">Key</div>
+        <div className="bg-emerald-900/45 px-2">1 point</div>
+        <div className="bg-amber-800/50 px-2">2 points</div>
+        <div className="bg-rose-800/55 px-2">3 points</div>
       </div>
     </div>
   )

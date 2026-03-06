@@ -76,9 +76,9 @@ export default function TarotCardsPage() {
 
   return (
     <div className="h-[80vh] overflow-y-auto border rounded-md">
-      <div className="sticky top-0 z-10 bg-white border-b py-2 grid" style={{ gridTemplateColumns: "220px 80px 200px 100px 1fr" }}>
+      <div className="sticky top-0 z-10 bg-slate-900 border-b py-2 grid" style={{ gridTemplateColumns: "220px 80px 200px 100px 1fr" }}>
         {columns.map((c) => (
-          <div key={c} className="px-2 font-bold whitespace-nowrap border-r border-black last:border-r-0 box-border">{c}</div>
+          <div key={c} className="px-2 font-bold whitespace-nowrap border-r border-slate-600 last:border-r-0 box-border">{c}</div>
         ))}
       </div>
 
@@ -91,14 +91,14 @@ export default function TarotCardsPage() {
           return (
             <div
               key={row.name}
-              className={`grid items-center px-0 py-1 cursor-pointer ${isSelected ? "bg-blue-100 hover:bg-blue-200" : "hover:bg-gray-100"}`}
+              className={`grid items-center px-0 py-1 cursor-pointer ${isSelected ? "bg-sky-900/40 hover:bg-sky-800/45" : "hover:bg-slate-800/85"}`}
               style={{ gridTemplateColumns: "220px 80px 200px 100px 1fr" }}
               onClick={() => toggle(row.name)}
             >
-              <span className="px-2 whitespace-nowrap border-r border-gray-300">{row.name}</span>
-              <span className={`px-2 whitespace-nowrap border-r border-gray-300 ${overLimit ? "text-red-600 font-semibold" : ""}`}>{row.tier}</span>
-              <span className="px-2 whitespace-nowrap overflow-hidden text-ellipsis border-r border-gray-300">{row.skill_name}</span>
-              <span className="px-2 border-r border-gray-300">
+              <span className="px-2 whitespace-nowrap border-r border-slate-700">{row.name}</span>
+              <span className={`px-2 whitespace-nowrap border-r border-slate-700 ${overLimit ? "text-rose-300 font-semibold" : ""}`}>{row.tier}</span>
+              <span className="px-2 whitespace-nowrap overflow-hidden text-ellipsis border-r border-slate-700">{row.skill_name}</span>
+              <span className="px-2 border-r border-slate-700">
                 {canStack ? (
                   <input
                     type="number"
@@ -115,7 +115,7 @@ export default function TarotCardsPage() {
           )
         })}
       </div>
-      <div className="p-2 text-xs text-gray-600 border-t">
+      <div className="p-2 text-xs text-slate-300 border-t">
         Limits: at most 1x Tier 5, 1x Tier 4, 2x Tier 3. Tier label turns red if exceeded.
       </div>
     </div>

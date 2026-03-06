@@ -26,7 +26,7 @@ export default function CharacterSummary() {
   }, [])
 
   const statStyle = (value: number) =>
-    `border px-2 py-1 ${value === 0 ? "bg-gray-200 text-gray-400" : ""}`
+    `border px-2 py-1 ${value === 0 ? "bg-slate-700/90 text-slate-500" : ""}`
 
   const get = (stats: Record<string, number>, key: string, multiplier = 1) => ((stats[key] ?? 0) * multiplier).toFixed(0)
 
@@ -37,7 +37,7 @@ export default function CharacterSummary() {
         <thead>
           <tr className="font-bold text-center">
             {["ATK", "MATK", "DEF", "HEAL", "HP", "MP", "Focus", "MP Regen", "Focus Regen"].map((stat, i) => (
-              <th key={i} className={`px-2 py-1 ${["bg-red-200", "bg-green-200", "bg-blue-200", "bg-pink-200", "bg-green-200", "bg-blue-200", "bg-red-200", "bg-blue-200", "bg-red-200"][i]}`}>{stat}</th>
+              <th key={i} className={`px-2 py-1 ${["bg-rose-800/45", "bg-emerald-800/45", "bg-sky-800/45", "bg-fuchsia-800/45", "bg-emerald-800/45", "bg-sky-800/45", "bg-rose-800/45", "bg-sky-800/45", "bg-rose-800/45"][i]}`}>{stat}</th>
             ))}
           </tr>
         </thead>
@@ -53,7 +53,7 @@ export default function CharacterSummary() {
         <thead>
           <tr className="font-bold text-center">
             {["Crit Chance%", "Crit DMG%", "Global DMG%", "Global HealEffect", "Damage Res", "Global HP%", "Extra Threat%", "Threat%"].map((stat, i) => (
-              <th key={i} className="px-2 py-1 bg-gray-200">{stat}</th>
+              <th key={i} className="px-2 py-1 bg-slate-700/90">{stat}</th>
             ))}
           </tr>
         </thead>
@@ -67,7 +67,7 @@ export default function CharacterSummary() {
         <thead>
           <tr className="font-bold text-center">
             {["Armor Save", "Armor Strike"].map((stat, i) => (
-              <th key={i} className="px-2 py-1 bg-gray-200">{stat}</th>
+              <th key={i} className="px-2 py-1 bg-slate-700/90">{stat}</th>
             ))}
           </tr>
         </thead>
@@ -81,7 +81,7 @@ export default function CharacterSummary() {
         <thead>
           <tr className="font-bold text-center">
             {["Overdrive%"].map((stat, i) => (
-              <th key={i} className="px-2 py-1 bg-gray-200">{stat}</th>
+              <th key={i} className="px-2 py-1 bg-slate-700/90">{stat}</th>
             ))}
           </tr>
         </thead>

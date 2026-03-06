@@ -24,7 +24,7 @@ export default function HealingPage() {
   return (
     <div className="p-6 space-y-6">
       <h1 className="text-2xl font-bold text-center">Healing Calculator</h1>
-      <div className="grid grid-cols-4 gap-4 bg-gray-50 border rounded-lg p-4">
+      <div className="grid grid-cols-4 gap-4 bg-slate-900/60 border rounded-lg p-4">
         <div className="space-y-1">
           <label className="font-semibold">Base Stat</label>
           <select value={baseStat} onChange={e => setBaseStat(e.target.value)} className="w-full p-1 border rounded">
@@ -78,7 +78,7 @@ export default function HealingPage() {
         </div>
       </div>
 
-      <div className="grid grid-cols-3 gap-4 bg-white border rounded-lg p-4 text-center">
+      <div className="grid grid-cols-3 gap-4 bg-slate-900 border rounded-lg p-4 text-center">
         <div className="space-y-1">
           <h2 className="font-bold">Non-Crit Heal</h2>
           <p>{Math.round(baseHeal).toLocaleString()}</p>

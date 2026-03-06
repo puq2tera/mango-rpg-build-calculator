@@ -31,13 +31,13 @@ export default function SkillOverview() {
   return (
     <div className="h-[80vh] overflow-y-auto border rounded-md">
       <div
-        className="sticky top-0 z-10 bg-white border-b py-2 grid gap-x-0"
+        className="sticky top-0 z-10 bg-slate-900 border-b py-2 grid gap-x-0"
         style={{ gridTemplateColumns: colWidths.join(" ") }}
       >
         {headerLabels.map((label, i) => (
           <div
             key={i}
-            className="px-2 font-bold whitespace-nowrap border-r border-black last:border-r-0 box-border"
+            className="px-2 font-bold whitespace-nowrap border-r border-slate-600 last:border-r-0 box-border"
           >
             {label}
           </div>
@@ -67,13 +67,13 @@ export default function SkillOverview() {
           return (
             <div
               key={name}
-              className="grid border-b hover:bg-gray-100 transition"
+              className="grid border-b hover:bg-slate-800/85 transition"
               style={{ gridTemplateColumns: colWidths.join(" ") }}
             >
               {values.map((val, i) => (
                 <span
                   key={i}
-                  className="px-3 py-1 whitespace-nowrap border-r border-gray-300 last:border-r-0 box-border"
+                  className="px-3 py-1 whitespace-nowrap border-r border-slate-700 last:border-r-0 box-border"
                 >
                   {val}
                 </span>

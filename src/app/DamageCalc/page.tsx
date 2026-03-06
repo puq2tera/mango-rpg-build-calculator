@@ -107,7 +107,7 @@ export default function DamageCalc() {
     <div className="p-6 space-y-6">
       <h1 className="text-2xl font-bold text-center">Damage Calculator</h1>
 
-      <div className="grid grid-cols-4 gap-4 bg-gray-50 border rounded-lg p-4">
+      <div className="grid grid-cols-4 gap-4 bg-slate-900/60 border rounded-lg p-4">
         <div className="space-y-2">
           <label className="font-semibold">Primary Stat</label>
           <select value={mainStat} onChange={e => setMainStat(e.target.value)} className="w-full p-1 border rounded">
@@ -171,7 +171,7 @@ export default function DamageCalc() {
         </div>
       </div>
 
-      <div className="grid grid-cols-4 gap-4 bg-gray-50 border rounded-lg p-4">
+      <div className="grid grid-cols-4 gap-4 bg-slate-900/60 border rounded-lg p-4">
         <div className="space-y-1">
           <label className="font-semibold">Enemy Armor</label>
           <input type="number" onChange={e => handleChange("enemyArmor", +e.target.value)} className="w-full p-1 border rounded" />
@@ -211,7 +211,7 @@ export default function DamageCalc() {
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-6 text-center border rounded-lg p-4 bg-white">
+      <div className="grid grid-cols-2 gap-6 text-center border rounded-lg p-4 bg-slate-900">
         <div className="space-y-2">
           <h2 className="font-semibold text-lg">Damage</h2>
           <div className="mx-auto inline-grid w-fit grid-cols-[max-content_max-content] gap-x-3 gap-y-1">

@@ -27,50 +27,50 @@ export default function RootLayout({
     <html lang="en">
       <StatSync />
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased pt-10`}>
-        <nav className="fixed top-0 left-0 right-0 z-50 bg-gray-800 text-white px-5 py-2 flex space-x-3 text-xs shadow">
-          <Link href="/talents" className="hover:underline">
+        <nav className="fixed top-0 left-0 right-0 z-50 bg-slate-950/90 backdrop-blur border-b border-slate-700 px-5 py-2 flex space-x-3 text-xs shadow-lg shadow-black/30">
+          <Link href="/talents" className="text-slate-100 hover:text-sky-300 transition-colors">
             Talents
           </Link>
-          <Link href="/talents/TalentOverview" className="hover:underline">
+          <Link href="/talents/TalentOverview" className="text-slate-100 hover:text-sky-300 transition-colors">
             Talent Overview
           </Link>
-          <Link href="/Skills" className="hover:underline">
+          <Link href="/Skills" className="text-slate-100 hover:text-sky-300 transition-colors">
             Skills
           </Link>
-          <Link href="/Skills/SkillOverview" className="hover:underline">
+          <Link href="/Skills/SkillOverview" className="text-slate-100 hover:text-sky-300 transition-colors">
             Skill Overview
           </Link>
-          <Link href="/Levels" className="hover:underline">
+          <Link href="/Levels" className="text-slate-100 hover:text-sky-300 transition-colors">
             Levels
           </Link>
-          <Link href="/Skills/Buffs" className="hover:underline">
+          <Link href="/Skills/Buffs" className="text-slate-100 hover:text-sky-300 transition-colors">
             Buffs
           </Link>
-          <Link href="/Skills/BuffSorter" className="hover:underline">
+          <Link href="/Skills/BuffSorter" className="text-slate-100 hover:text-sky-300 transition-colors">
             Buff Overview
           </Link>
-          <Link href="/equipment" className="hover:underline">
+          <Link href="/equipment" className="text-slate-100 hover:text-sky-300 transition-colors">
             Equipment
           </Link>
-          <Link href="/equipment/Runewords" className="hover:underline">
+          <Link href="/equipment/Runewords" className="text-slate-100 hover:text-sky-300 transition-colors">
             Runewords
           </Link>
-          <Link href="/equipment/TarotCards" className="hover:underline">
+          <Link href="/equipment/TarotCards" className="text-slate-100 hover:text-sky-300 transition-colors">
             Tarot Cards
           </Link>
-          <Link href="/CharacterSummary" className="hover:underline">
+          <Link href="/CharacterSummary" className="text-slate-100 hover:text-sky-300 transition-colors">
             Character Summary
           </Link>
-          <Link href="/DamageCalc" className="hover:underline">
+          <Link href="/DamageCalc" className="text-slate-100 hover:text-sky-300 transition-colors">
             Damage
           </Link>
-          <Link href="/Healing" className="hover:underline">
+          <Link href="/Healing" className="text-slate-100 hover:text-sky-300 transition-colors">
             Healing
           </Link>
-          <Link href="/WorldBoss" className="hover:underline">
+          <Link href="/WorldBoss" className="text-slate-100 hover:text-sky-300 transition-colors">
             World Boss
           </Link>
-          <Link href="/DebugVars" className="hover:underline">
+          <Link href="/DebugVars" className="text-slate-100 hover:text-sky-300 transition-colors">
             Debug
           </Link>
         </nav>

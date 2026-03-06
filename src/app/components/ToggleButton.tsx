@@ -72,14 +72,14 @@ export function ToggleButton({ talentName, talent, colWidths }: ToggleButtonProp
     <button
       onClick={handleClick}
       className={`grid w-full text-left transition px-0 py-1 ${
-        selected ? "bg-blue-100 hover:bg-blue-200" : "hover:bg-gray-100"
+        selected ? "bg-sky-900/40 hover:bg-sky-800/45" : "hover:bg-slate-800/85"
       }`}
       style={{ gridTemplateColumns: colWidths.join(" ") }}
     >
       {values.map((val, i) => (
         <span
           key={i}
-          className="px-2 whitespace-nowrap border-r border-gray-300 last:border-r-0 box-border"
+          className="px-2 whitespace-nowrap border-r border-slate-700 last:border-r-0 box-border"
         >
           {val}
         </span>
@@ -129,14 +129,14 @@ export function SkillButton({
     <button
       onClick={handleClick}
       className={`grid w-full text-left transition px-0 py-1 ${
-        isSelected ? "bg-blue-100 hover:bg-blue-200" : "hover:bg-gray-100"
+        isSelected ? "bg-sky-900/40 hover:bg-sky-800/45" : "hover:bg-slate-800/85"
       }`}
       style={{ gridTemplateColumns: colWidths.join(" ") }}
     >
       {values.map((val, i) => (
         <span
           key={i}
-          className="px-2 whitespace-nowrap border-r border-gray-300 last:border-r-0 box-border"
+          className="px-2 whitespace-nowrap border-r border-slate-700 last:border-r-0 box-border"
         >
           {val}
         </span>
