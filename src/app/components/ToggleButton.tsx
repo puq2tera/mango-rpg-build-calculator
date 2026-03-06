@@ -67,7 +67,10 @@ function getPrimaryTalentClass(talent: Talent): TalentClassKey | null {
   return primaryClass
 }
 
-function getTalentClassTint(talent: Talent, isSelected: boolean): string {
+function getTalentClassTint(
+  talent: Talent,
+  state: "default" | "selected" | "unavailable",
+): string {
   const primaryClass = getPrimaryTalentClass(talent)
 
   if (!primaryClass) {
@@ -75,20 +78,35 @@ function getTalentClassTint(talent: Talent, isSelected: boolean): string {
   }
 
   const subtleTintByClass: Record<TalentClassKey, string> = {
-    tank: "bg-[linear-gradient(90deg,rgba(56,189,248,0.16),rgba(56,189,248,0.07),transparent_72%)]",
-    warrior: "bg-[linear-gradient(90deg,rgba(248,113,113,0.18),rgba(248,113,113,0.08),transparent_72%)]",
-    caster: "bg-[linear-gradient(90deg,rgba(59,130,246,0.26),rgba(59,130,246,0.11),transparent_72%)]",
-    healer: "bg-[linear-gradient(90deg,rgba(216,180,254,0.2),rgba(216,180,254,0.08),transparent_72%)]",
+    tank: "bg-[linear-gradient(90deg,rgba(74,222,128,0.2),rgba(74,222,128,0.09),transparent_72%)]",
+    warrior: "bg-[linear-gradient(90deg,rgba(248,113,113,0.2),rgba(248,113,113,0.09),transparent_72%)]",
+    caster: "bg-[linear-gradient(90deg,rgba(59,130,246,0.28),rgba(59,130,246,0.12),transparent_72%)]",
+    healer: "bg-[linear-gradient(90deg,rgba(216,180,254,0.22),rgba(216,180,254,0.1),transparent_72%)]",
   }
 
   const selectedTintByClass: Record<TalentClassKey, string> = {
-    tank: "bg-[linear-gradient(90deg,rgba(14,165,233,0.42),rgba(14,165,233,0.2),transparent_78%)] ring-1 ring-inset ring-sky-300/45",
-    warrior: "bg-[linear-gradient(90deg,rgba(239,68,68,0.44),rgba(239,68,68,0.2),transparent_78%)] ring-1 ring-inset ring-rose-300/45",
-    caster: "bg-[linear-gradient(90deg,rgba(37,99,235,0.5),rgba(37,99,235,0.24),transparent_78%)] ring-1 ring-inset ring-blue-300/50",
-    healer: "bg-[linear-gradient(90deg,rgba(168,85,247,0.44),rgba(168,85,247,0.2),transparent_78%)] ring-1 ring-inset ring-purple-300/45",
+    tank: "bg-[linear-gradient(90deg,rgba(34,197,94,0.62),rgba(34,197,94,0.3),transparent_80%)] ring-1 ring-inset ring-emerald-200/65",
+    warrior: "bg-[linear-gradient(90deg,rgba(239,68,68,0.6),rgba(239,68,68,0.28),transparent_80%)] ring-1 ring-inset ring-rose-200/65",
+    caster: "bg-[linear-gradient(90deg,rgba(37,99,235,0.68),rgba(37,99,235,0.32),transparent_80%)] ring-1 ring-inset ring-blue-200/70",
+    healer: "bg-[linear-gradient(90deg,rgba(168,85,247,0.6),rgba(168,85,247,0.28),transparent_80%)] ring-1 ring-inset ring-purple-200/65",
   }
 
-  return isSelected ? selectedTintByClass[primaryClass] : subtleTintByClass[primaryClass]
+  const unavailableTintByClass: Record<TalentClassKey, string> = {
+    tank: "bg-[linear-gradient(90deg,rgba(74,222,128,0.035),rgba(74,222,128,0.012),transparent_72%)]",
+    warrior: "bg-[linear-gradient(90deg,rgba(248,113,113,0.032),rgba(248,113,113,0.012),transparent_72%)]",
+    caster: "bg-[linear-gradient(90deg,rgba(59,130,246,0.04),rgba(59,130,246,0.014),transparent_72%)]",
+    healer: "bg-[linear-gradient(90deg,rgba(216,180,254,0.036),rgba(216,180,254,0.012),transparent_72%)]",
+  }
+
+  if (state === "selected") {
+    return selectedTintByClass[primaryClass]
+  }
+
+  if (state === "unavailable") {
+    return unavailableTintByClass[primaryClass]
+  }
+
+  return subtleTintByClass[primaryClass]
 }
 
 export function ToggleButton({
@@ -115,11 +133,17 @@ export function ToggleButton({
     totalLevels,
   })
   const isUnavailable = blockedTagConflict || missingRequirement
-  const rowTone = isUnavailable
-    ? (isSelected ? "selectedUnavailable" : "unavailable")
-    : isSelected
-      ? "selected"
-      : "default"
+  const rowTone = blockedTagConflict && isSelected
+    ? "selectedBlocked"
+    : blockedTagConflict
+      ? "unavailable"
+      : missingRequirement && isSelected
+        ? "selectedInvalid"
+        : missingRequirement
+          ? "unavailable"
+          : isSelected
+            ? "selected"
+            : "default"
   const rowClass = getStripedRowClass(rowIndex, rowTone)
 
   const handleClick = () => {
@@ -160,7 +184,13 @@ export function ToggleButton({
       onClick={handleClick}
       className={`grid min-w-full w-max text-left transition px-0 py-1 ${rowClass} ${getTalentClassTint(
         talent,
-        isSelected && !isUnavailable,
+        isSelected && isUnavailable
+          ? "default"
+          : isUnavailable
+            ? "unavailable"
+            : isSelected
+              ? "selected"
+              : "default",
       )}`}
       style={{ gridTemplateColumns: columns.map((column) => `${column.renderWidth}px`).join(" ") }}
     >
