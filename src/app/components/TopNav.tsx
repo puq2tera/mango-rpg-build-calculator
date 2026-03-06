@@ -4,6 +4,8 @@ import { useEffect, useRef, useState } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import {
+  type AvailabilityFilter,
+  type ClassFilter,
   dispatchManagedTableViewChange,
   getDefaultSortDirection,
   getDefaultTableViewState,
@@ -11,8 +13,12 @@ import {
   normalizePathname,
   persistTableViewState,
   readTableViewState,
+  type RaceFilter,
+  type SelectionFilter,
   type TableViewPage,
   type SortMode,
+  type TarotTierFilter,
+  type TarotTypeFilter,
   type TableViewState,
 } from "@/app/lib/tableViewState"
 
@@ -36,7 +42,7 @@ const navLinks = [
   ["/DebugVars", "Debug"],
 ] as const
 
-const classFilterOptions: Array<{ value: TableViewState["classFilter"]; label: string }> = [
+const classFilterOptions: Array<{ value: ClassFilter; label: string }> = [
   { value: "all", label: "All Classes" },
   { value: "tank", label: "Tank" },
   { value: "warrior", label: "Warrior" },
@@ -44,16 +50,35 @@ const classFilterOptions: Array<{ value: TableViewState["classFilter"]; label: s
   { value: "healer", label: "Healer" },
 ]
 
-const raceFilterOptions: Array<{ value: TableViewState["raceFilter"]; label: string }> = [
+const raceFilterOptions: Array<{ value: RaceFilter; label: string }> = [
   { value: "all", label: "All Races" },
   { value: "current", label: "Current Race" },
   { value: "raceSpecific", label: "Race-Specific" },
 ]
 
-const availabilityFilterOptions: Array<{ value: TableViewState["availabilityFilter"]; label: string }> = [
+const availabilityFilterOptions: Array<{ value: AvailabilityFilter; label: string }> = [
   { value: "all", label: "All" },
   { value: "available", label: "Available Only" },
   { value: "unavailable", label: "Unavailable Only" },
+]
+
+const tarotTierFilterOptions: Array<{ value: TarotTierFilter; label: string }> = [
+  { value: "all", label: "All Tiers" },
+  { value: "5", label: "Tier 5" },
+  { value: "4", label: "Tier 4" },
+  { value: "3", label: "Tier 3" },
+]
+
+const tarotTypeFilterOptions: Array<{ value: TarotTypeFilter; label: string }> = [
+  { value: "all", label: "All Types" },
+  { value: "active", label: "Active" },
+  { value: "passive", label: "Passive" },
+]
+
+const selectionFilterOptions: Array<{ value: SelectionFilter; label: string }> = [
+  { value: "all", label: "All" },
+  { value: "selected", label: "Selected" },
+  { value: "unselected", label: "Unselected" },
 ]
 
 const sortOptions = (page: TableViewPage): Array<{ value: TableViewState["sortMode"]; label: string }> => [
@@ -74,6 +99,9 @@ const optionButtonClass = (active: boolean) => (
 )
 
 const getDirectionArrow = (direction: TableViewState["sortDirection"]) => direction === "asc" ? "↑" : "↓"
+const isSortPage = (page: TableViewPage | null): page is "talents" | "skills" => page === "talents" || page === "skills"
+const isSkillLikeFilterPage = (page: TableViewPage | null): page is "talents" | "skills" | "buffs" =>
+  page === "talents" || page === "skills" || page === "buffs"
 
 export default function TopNav() {
   const pathname = usePathname()
@@ -83,6 +111,9 @@ export default function TopNav() {
   const [openMenu, setOpenMenu] = useState<"filter" | "sort" | null>(null)
   const [viewState, setViewState] = useState<TableViewState>(getDefaultTableViewState)
   const controlsRef = useRef<HTMLDivElement | null>(null)
+  const showFilterControls = tablePage !== null
+  const sortPage = isSortPage(tablePage) ? tablePage : null
+  const showSortControls = sortPage !== null
 
   useEffect(() => {
     setOpenMenu(null)
@@ -112,11 +143,17 @@ export default function TopNav() {
     }
   }, [openMenu])
 
-  const hasActiveFilters = (
-    viewState.classFilter !== "all" ||
-    viewState.raceFilter !== "all" ||
-    viewState.availabilityFilter !== "all"
-  )
+  const hasActiveFilters = tablePage === "tarot"
+    ? (
+      viewState.tarotTierFilter !== "all" ||
+      viewState.tarotTypeFilter !== "all" ||
+      viewState.selectionFilter !== "all"
+    )
+    : (
+      viewState.classFilter !== "all" ||
+      viewState.raceFilter !== "all" ||
+      viewState.availabilityFilter !== "all"
+    )
   const hasActiveSort = (
     viewState.sortMode !== "default" ||
     viewState.sortDirection !== getDefaultSortDirection("default")
@@ -153,7 +190,7 @@ export default function TopNav() {
       </div>
 
       <div ref={controlsRef} className="relative flex shrink-0 items-center gap-2">
-        {tablePage ? (
+        {showFilterControls ? (
           <>
             <button
               type="button"
@@ -165,15 +202,17 @@ export default function TopNav() {
               Filter
             </button>
 
-            <button
-              type="button"
-              onClick={() => setOpenMenu((current) => current === "sort" ? null : "sort")}
-              className={`${controlButtonClass} border-slate-700 bg-slate-950/90 ${hasActiveSort || openMenu === "sort" ? "border-sky-500/60 text-sky-200" : "border-slate-700"}`}
-              aria-haspopup="dialog"
-              aria-expanded={openMenu === "sort"}
-            >
-              {sortButtonLabel}
-            </button>
+            {showSortControls ? (
+              <button
+                type="button"
+                onClick={() => setOpenMenu((current) => current === "sort" ? null : "sort")}
+                className={`${controlButtonClass} border-slate-700 bg-slate-950/90 ${hasActiveSort || openMenu === "sort" ? "border-sky-500/60 text-sky-200" : "border-slate-700"}`}
+                aria-haspopup="dialog"
+                aria-expanded={openMenu === "sort"}
+              >
+                {sortButtonLabel}
+              </button>
+            ) : null}
           </>
         ) : null}
 
@@ -188,55 +227,105 @@ export default function TopNav() {
           </button>
         ) : null}
 
-        {tablePage && openMenu === "filter" ? (
+        {showFilterControls && openMenu === "filter" ? (
           <div className="absolute right-0 top-full mt-2 grid min-w-[14rem] gap-2 rounded-md border border-slate-700 bg-slate-950/95 p-2 shadow-xl shadow-black/40">
-            <div className={sectionLabelClass}>Class</div>
-            <div className="grid gap-1">
-              {classFilterOptions.map((option) => (
-                <button
-                  key={option.value}
-                  type="button"
-                  onClick={() => updateViewState({ classFilter: option.value })}
-                  className={optionButtonClass(viewState.classFilter === option.value)}
-                >
-                  {option.label}
-                </button>
-              ))}
-            </div>
+            {isSkillLikeFilterPage(tablePage) ? (
+              <>
+                <div className={sectionLabelClass}>Class</div>
+                <div className="grid gap-1">
+                  {classFilterOptions.map((option) => (
+                    <button
+                      key={option.value}
+                      type="button"
+                      onClick={() => updateViewState({ classFilter: option.value })}
+                      className={optionButtonClass(viewState.classFilter === option.value)}
+                    >
+                      {option.label}
+                    </button>
+                  ))}
+                </div>
 
-            <div className={sectionLabelClass}>Race</div>
-            <div className="grid gap-1">
-              {raceFilterOptions.map((option) => (
-                <button
-                  key={option.value}
-                  type="button"
-                  onClick={() => updateViewState({ raceFilter: option.value })}
-                  className={optionButtonClass(viewState.raceFilter === option.value)}
-                >
-                  {option.label}
-                </button>
-              ))}
-            </div>
+                <div className={sectionLabelClass}>Race</div>
+                <div className="grid gap-1">
+                  {raceFilterOptions.map((option) => (
+                    <button
+                      key={option.value}
+                      type="button"
+                      onClick={() => updateViewState({ raceFilter: option.value })}
+                      className={optionButtonClass(viewState.raceFilter === option.value)}
+                    >
+                      {option.label}
+                    </button>
+                  ))}
+                </div>
 
-            <div className={sectionLabelClass}>Availability</div>
-            <div className="grid gap-1">
-              {availabilityFilterOptions.map((option) => (
-                <button
-                  key={option.value}
-                  type="button"
-                  onClick={() => updateViewState({ availabilityFilter: option.value })}
-                  className={optionButtonClass(viewState.availabilityFilter === option.value)}
-                >
-                  {option.label}
-                </button>
-              ))}
-            </div>
+                <div className={sectionLabelClass}>Availability</div>
+                <div className="grid gap-1">
+                  {availabilityFilterOptions.map((option) => (
+                    <button
+                      key={option.value}
+                      type="button"
+                      onClick={() => updateViewState({ availabilityFilter: option.value })}
+                      className={optionButtonClass(viewState.availabilityFilter === option.value)}
+                    >
+                      {option.label}
+                    </button>
+                  ))}
+                </div>
+              </>
+            ) : null}
+
+            {tablePage === "tarot" ? (
+              <>
+                <div className={sectionLabelClass}>Tier</div>
+                <div className="grid gap-1">
+                  {tarotTierFilterOptions.map((option) => (
+                    <button
+                      key={option.value}
+                      type="button"
+                      onClick={() => updateViewState({ tarotTierFilter: option.value })}
+                      className={optionButtonClass(viewState.tarotTierFilter === option.value)}
+                    >
+                      {option.label}
+                    </button>
+                  ))}
+                </div>
+
+                <div className={sectionLabelClass}>Type</div>
+                <div className="grid gap-1">
+                  {tarotTypeFilterOptions.map((option) => (
+                    <button
+                      key={option.value}
+                      type="button"
+                      onClick={() => updateViewState({ tarotTypeFilter: option.value })}
+                      className={optionButtonClass(viewState.tarotTypeFilter === option.value)}
+                    >
+                      {option.label}
+                    </button>
+                  ))}
+                </div>
+
+                <div className={sectionLabelClass}>Selection</div>
+                <div className="grid gap-1">
+                  {selectionFilterOptions.map((option) => (
+                    <button
+                      key={option.value}
+                      type="button"
+                      onClick={() => updateViewState({ selectionFilter: option.value })}
+                      className={optionButtonClass(viewState.selectionFilter === option.value)}
+                    >
+                      {option.label}
+                    </button>
+                  ))}
+                </div>
+              </>
+            ) : null}
           </div>
         ) : null}
 
-        {tablePage && openMenu === "sort" ? (
+        {sortPage && openMenu === "sort" ? (
           <div className="absolute right-0 top-full mt-2 grid min-w-[12rem] gap-1 rounded-md border border-slate-700 bg-slate-950/95 p-2 shadow-xl shadow-black/40">
-            {sortOptions(tablePage).map((option) => (
+            {sortOptions(sortPage).map((option) => (
               <button
                 key={option.value}
                 type="button"

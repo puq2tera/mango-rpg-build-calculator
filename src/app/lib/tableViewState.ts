@@ -1,9 +1,12 @@
-export type TableViewPage = "talents" | "skills"
+export type TableViewPage = "talents" | "skills" | "buffs" | "tarot"
 export type ClassFilter = "all" | "tank" | "warrior" | "caster" | "healer"
 export type RaceFilter = "all" | "current" | "raceSpecific"
 export type AvailabilityFilter = "all" | "available" | "unavailable"
 export type SortMode = "default" | "damage" | "cost"
 export type SortDirection = "asc" | "desc"
+export type TarotTierFilter = "all" | "3" | "4" | "5"
+export type TarotTypeFilter = "all" | "active" | "passive"
+export type SelectionFilter = "all" | "selected" | "unselected"
 
 export type TableViewState = {
   classFilter: ClassFilter
@@ -11,6 +14,9 @@ export type TableViewState = {
   availabilityFilter: AvailabilityFilter
   sortMode: SortMode
   sortDirection: SortDirection
+  tarotTierFilter: TarotTierFilter
+  tarotTypeFilter: TarotTypeFilter
+  selectionFilter: SelectionFilter
 }
 
 export type ManagedTableViewChangeDetail = {
@@ -27,6 +33,9 @@ const RACE_FILTERS = new Set<RaceFilter>(["all", "current", "raceSpecific"])
 const AVAILABILITY_FILTERS = new Set<AvailabilityFilter>(["all", "available", "unavailable"])
 const SORT_MODES = new Set<SortMode>(["default", "damage", "cost"])
 const SORT_DIRECTIONS = new Set<SortDirection>(["asc", "desc"])
+const TAROT_TIER_FILTERS = new Set<TarotTierFilter>(["all", "3", "4", "5"])
+const TAROT_TYPE_FILTERS = new Set<TarotTypeFilter>(["all", "active", "passive"])
+const SELECTION_FILTERS = new Set<SelectionFilter>(["all", "selected", "unselected"])
 
 export function normalizePathname(pathname: string): string {
   const trimmed = pathname.replace(/\/+$/, "")
@@ -44,6 +53,14 @@ export function getTableViewPageFromPathname(pathname: string): TableViewPage | 
     return "skills"
   }
 
+  if (normalizedPathname === "/skills/buffs") {
+    return "buffs"
+  }
+
+  if (normalizedPathname === "/equipment/tarotcards") {
+    return "tarot"
+  }
+
   return null
 }
 
@@ -54,6 +71,9 @@ export function getDefaultTableViewState(): TableViewState {
     availabilityFilter: "all",
     sortMode: "default",
     sortDirection: getDefaultSortDirection("default"),
+    tarotTierFilter: "all",
+    tarotTypeFilter: "all",
+    selectionFilter: "all",
   }
 }
 
@@ -84,6 +104,15 @@ export function readTableViewState(storage: Storage, page: TableViewPage): Table
       sortDirection: SORT_DIRECTIONS.has(parsed.sortDirection as SortDirection)
         ? (parsed.sortDirection as SortDirection)
         : fallbackSortDirection,
+      tarotTierFilter: TAROT_TIER_FILTERS.has(parsed.tarotTierFilter as TarotTierFilter)
+        ? (parsed.tarotTierFilter as TarotTierFilter)
+        : fallback.tarotTierFilter,
+      tarotTypeFilter: TAROT_TYPE_FILTERS.has(parsed.tarotTypeFilter as TarotTypeFilter)
+        ? (parsed.tarotTypeFilter as TarotTypeFilter)
+        : fallback.tarotTypeFilter,
+      selectionFilter: SELECTION_FILTERS.has(parsed.selectionFilter as SelectionFilter)
+        ? (parsed.selectionFilter as SelectionFilter)
+        : fallback.selectionFilter,
     }
   } catch {
     return fallback

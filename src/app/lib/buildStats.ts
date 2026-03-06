@@ -568,11 +568,15 @@ function computeBuffStats(selectedBuffNames: readonly string[], statsBuffReady: 
   return buffed
 }
 
-function computeTarotStats(snapshot: BuildSnapshot, statsBuffReady: Record<string, number>): Record<string, number> {
+function computeTarotStats(
+  selectedTarots: readonly string[],
+  tarotStacks: Record<string, number>,
+  statsBuffReady: Record<string, number>,
+): Record<string, number> {
   const tarotBuff: Record<string, number> = {}
 
-  for (const tarotName of snapshot.selectedTarots) {
-    updateStats(tarotBuff, statsBuffReady, snapshot.tarotStacks, tarotName, tarot_data[tarotName])
+  for (const tarotName of selectedTarots) {
+    updateStats(tarotBuff, statsBuffReady, tarotStacks, tarotName, tarot_data[tarotName])
   }
 
   return tarotBuff
@@ -598,7 +602,12 @@ function computeDmgReadyStats(
 
 export function computeBuildStatStages(
   snapshot: BuildSnapshot,
-  overrides?: { selectedTalents?: Iterable<string>; selectedBuffs?: Iterable<string> },
+  overrides?: {
+    selectedTalents?: Iterable<string>
+    selectedBuffs?: Iterable<string>
+    selectedTarots?: Iterable<string>
+    tarotStacks?: Record<string, number>
+  },
 ): BuildStatStages {
   const selectedTalents = overrides?.selectedTalents
     ? Array.from(new Set(overrides.selectedTalents))
@@ -606,6 +615,10 @@ export function computeBuildStatStages(
   const selectedBuffs = overrides?.selectedBuffs
     ? Array.from(new Set(overrides.selectedBuffs))
     : snapshot.selectedBuffs
+  const selectedTarots = overrides?.selectedTarots
+    ? Array.from(new Set(overrides.selectedTarots))
+    : snapshot.selectedTarots
+  const tarotStacks = overrides?.tarotStacks ?? snapshot.tarotStacks
 
   const statsTalents = computeTalentStats(snapshot, selectedTalents)
   const statsLevels = computeLevelStats(snapshot)
@@ -618,7 +631,7 @@ export function computeBuildStatStages(
   const statsConverted = computeConvertedTalentStats(statsConversionReady, selectedTalents)
   const statsBuffReady = computeBuffReadyStats(statsConversionReady, statsConverted)
   const statsBuffs = computeBuffStats(selectedBuffs, statsBuffReady)
-  const statsTarots = computeTarotStats(snapshot, statsBuffReady)
+  const statsTarots = computeTarotStats(selectedTarots, tarotStacks, statsBuffReady)
   const statsDmgReady = computeDmgReadyStats(statsBuffReady, statsBuffs, statsTarots)
 
   return {
