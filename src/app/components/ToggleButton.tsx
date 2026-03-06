@@ -2,11 +2,10 @@
 
 import type { Dispatch, SetStateAction } from "react"
 import type { Talent } from "../data/talent_data"
-import { talent_data } from "../data/talent_data"
 import type { Skill } from "../data/skill_data"
-import { skill_data } from "../data/skill_data"
 import { formatSignedDamageDelta } from "@/app/lib/damageCalc"
 import type { ManagedColumn } from "@/app/lib/managedColumns"
+import { getSkillAvailabilityState, getTalentAvailabilityState, type ClassLevels } from "@/app/lib/tableRequirements"
 
 type ToggleButtonProps = {
   talentName: string
@@ -16,12 +15,7 @@ type ToggleButtonProps = {
   totalLevels: number
   selectedRacePrereqs: Set<string>
   selectedDungeonUnlocks: Set<string>
-  classLevels: {
-    tank: number
-    warrior: number
-    caster: number
-    healer: number
-  }
+  classLevels: ClassLevels
   columns: ManagedColumn[]
   averageDamageChange: number | null
 }
@@ -33,12 +27,7 @@ type SkillButtonProps = {
   setSelected: Dispatch<SetStateAction<Set<string>>>
   selectedTalents: Set<string>
   selectedDungeonUnlocks: Set<string>
-  classLevels: {
-    tank: number
-    warrior: number
-    caster: number
-    healer: number
-  }
+  classLevels: ClassLevels
   columns: ManagedColumn[]
   averageDamageChange?: number | null
 }
@@ -64,45 +53,15 @@ export function ToggleButton({
   averageDamageChange,
 }: ToggleButtonProps) {
   const isSelected = selected.has(talentName)
-  const tpSpent = selected.size - (isSelected ? 1 : 0)
-  const selectedTalentTags = new Set(
-    Array.from(selected)
-      .map((name) => talent_data[name]?.Tag)
-      .filter((tag): tag is string => Boolean(tag))
-  )
-  const otherSelectedTalentTags = new Set(
-    Array.from(selected)
-      .filter((name) => name !== talentName)
-      .map((name) => talent_data[name]?.Tag)
-      .filter((tag): tag is string => Boolean(tag))
-  )
-
-  const prereqTokens = talent.PreReq
-    .flatMap((rawReq) => rawReq.split(","))
-    .map((req) => req.trim())
-    .filter((req) => req.length > 0)
-
-  const missingPrereq = prereqTokens.some((req) => (
-    !selected.has(req) &&
-    !selectedTalentTags.has(req) &&
-    !selectedRacePrereqs.has(req) &&
-    !selectedDungeonUnlocks.has(req)
-  ))
-
-  const missingClassLevel = (
-    classLevels.tank < (talent.class_levels.tank_levels ?? 0) ||
-    classLevels.warrior < (talent.class_levels.warrior_levels ?? 0) ||
-    classLevels.caster < (talent.class_levels.caster_levels ?? 0) ||
-    classLevels.healer < (talent.class_levels.healer_levels ?? 0)
-  )
-  const blockedTagConflict = Boolean(talent.BlockedTag) && otherSelectedTalentTags.has(talent.BlockedTag)
-
-  const missingRequirement = (
-    totalLevels < (talent.total_level ?? 0) ||
-    tpSpent < (talent.tp_spent ?? 0) ||
-    missingPrereq ||
-    missingClassLevel
-  )
+  const { blockedTagConflict, missingRequirement } = getTalentAvailabilityState({
+    talentName,
+    talent,
+    selectedTalents: selected,
+    selectedRacePrereqs,
+    selectedDungeonUnlocks,
+    classLevels,
+    totalLevels,
+  })
   const rowClass = blockedTagConflict && isSelected
     ? "bg-yellow-700/70 hover:bg-yellow-700/80"
     : blockedTagConflict
@@ -180,37 +139,14 @@ export function SkillButton({
   averageDamageChange,
 }: SkillButtonProps) {
   const isSelected = selected.has(skillName)
-  const selectedSkillPoints = Array.from(selected).reduce((sum, name) => sum + (skill_data[name]?.sp ?? 0), 0)
-  const spentPointsBeforeCurrent = selectedSkillPoints - (isSelected ? (skill.sp ?? 0) : 0)
-
-  const prereqTokens = Array.isArray(skill.PreReq)
-    ? skill.PreReq
-      .flatMap((rawReq) => rawReq.split(","))
-      .map((req) => req.trim())
-      .filter((req) => req.length > 0)
-    : typeof skill.PreReq === "string" && skill.PreReq.length > 0
-      ? skill.PreReq
-        .split(",")
-        .map((req) => req.trim())
-        .filter((req) => req.length > 0)
-      : []
-
-  const missingPrereq = prereqTokens.some((req) => (
-    req !== "Default Skill" &&
-    !selected.has(req) &&
-    !selectedTalents.has(req) &&
-    !selectedDungeonUnlocks.has(req)
-  ))
-
-  const missingClassLevel = (
-    classLevels.tank < (skill.class_levels.tank_levels ?? 0) ||
-    classLevels.warrior < (skill.class_levels.warrior_levels ?? 0) ||
-    classLevels.caster < (skill.class_levels.caster_levels ?? 0) ||
-    classLevels.healer < (skill.class_levels.healer_levels ?? 0)
-  )
-
-  const missingSkillPoints = spentPointsBeforeCurrent < (skill.sp_spent ?? 0)
-  const missingRequirement = missingPrereq || missingClassLevel || missingSkillPoints
+  const { missingRequirement } = getSkillAvailabilityState({
+    skillName,
+    skill,
+    selectedSkills: selected,
+    selectedTalents,
+    selectedDungeonUnlocks,
+    classLevels,
+  })
 
   const handleClick = () => {
     const newSet = new Set(selected)

@@ -1,20 +1,29 @@
 "use client"
 
-import { startTransition, useEffect, useState } from "react"
+import { startTransition, useEffect, useMemo, useState } from "react"
 import { InteractiveTableHeader } from "@/app/components/InteractiveTableHeader"
 import { ToggleButton } from "@/app/components/ToggleButton"
 import { DUNGEON_UNLOCKS_STORAGE_KEY, isDungeonUnlockTag } from "@/app/data/dungeon_unlocks"
 import { talent_data } from "@/app/data/talent_data"
-import { race_data_by_tag, type RaceTag } from "@/app/data/race_data"
+import { race_data, race_data_by_tag, type RaceTag } from "@/app/data/race_data"
 import { computeBuildStatStages, readBuildSnapshot } from "@/app/lib/buildStats"
 import { calculateDamage, readDamageCalcState } from "@/app/lib/damageCalc"
 import { useManagedColumns } from "@/app/lib/managedColumns"
 import { talentTableColumns } from "@/app/lib/tableColumnDefinitions"
+import { getTalentAvailabilityState, matchesClassFilter, matchesRaceFilter } from "@/app/lib/tableRequirements"
+import {
+  getDefaultTableViewState,
+  MANAGED_TABLE_VIEW_EVENT,
+  readTableViewState,
+  type ManagedTableViewChangeDetail,
+  type TableViewState,
+} from "@/app/lib/tableViewState"
 
 const STORAGE_KEY = "selectedTalents"
 
 const isRaceTag = (value: string): value is RaceTag => value in race_data_by_tag
 const talentNames = Object.keys(talent_data)
+const defaultTalentOrder = new Map(talentNames.map((name, index) => [name, index]))
 
 export default function TalentsPage() {
   const [isHydrated, setIsHydrated] = useState(false)
@@ -24,7 +33,9 @@ export default function TalentsPage() {
   const [selectedDungeonUnlocks, setSelectedDungeonUnlocks] = useState<Set<string>>(new Set())
   const [classLevels, setClassLevels] = useState({ tank: 0, warrior: 0, caster: 0, healer: 0 })
   const [averageDamageChanges, setAverageDamageChanges] = useState<Record<string, number>>({})
+  const [viewState, setViewState] = useState<TableViewState>(getDefaultTableViewState)
   const columnLayout = useManagedColumns("talentColumnLayout", talentTableColumns)
+  const allRaceTokens = useMemo(() => new Set(race_data.flatMap((race) => [race.tag, race.name])), [])
 
   // Load selectedTalents on mount
   useEffect(() => {
@@ -73,6 +84,7 @@ export default function TalentsPage() {
       setSelectedRacePrereqs(new Set())
     }
 
+    setViewState(readTableViewState(localStorage, "talents"))
     setIsHydrated(true)
     console.log(stored)
   }, [])
@@ -140,15 +152,88 @@ export default function TalentsPage() {
   }, [isHydrated, selected])
 
   useEffect(() => {
+    const handleManagedTableViewChange = (event: Event) => {
+      const detail = (event as CustomEvent<ManagedTableViewChangeDetail>).detail
+
+      if (detail.page === "talents") {
+        setViewState(detail.viewState)
+      }
+    }
+
     const handleResetUi = () => {
       columnLayout.reset()
     }
 
+    window.addEventListener(MANAGED_TABLE_VIEW_EVENT, handleManagedTableViewChange)
     window.addEventListener("resetManagedTableUi", handleResetUi)
     return () => {
+      window.removeEventListener(MANAGED_TABLE_VIEW_EVENT, handleManagedTableViewChange)
       window.removeEventListener("resetManagedTableUi", handleResetUi)
     }
   }, [columnLayout])
+
+  const displayedTalentNames = useMemo(() => {
+    const filteredTalentNames = talentNames.filter((talentName) => {
+      const talent = talent_data[talentName]
+
+      if (!matchesClassFilter(talent.class_levels, viewState.classFilter)) {
+        return false
+      }
+
+      const availabilityState = getTalentAvailabilityState({
+        talentName,
+        talent,
+        selectedTalents: selected,
+        selectedRacePrereqs,
+        selectedDungeonUnlocks,
+        classLevels,
+        totalLevels,
+      })
+
+      if (!matchesRaceFilter(availabilityState.prereqTokens, viewState.raceFilter, selectedRacePrereqs, allRaceTokens)) {
+        return false
+      }
+
+      if (viewState.availabilityFilter === "available" && !availabilityState.isAvailable) {
+        return false
+      }
+
+      if (viewState.availabilityFilter === "unavailable" && availabilityState.isAvailable) {
+        return false
+      }
+
+      return true
+    })
+
+    return [...filteredTalentNames].sort((left, right) => {
+      if (viewState.sortMode === "damage") {
+        const difference = (averageDamageChanges[right] ?? 0) - (averageDamageChanges[left] ?? 0)
+
+        if (difference !== 0) {
+          return difference
+        }
+      }
+
+      if (viewState.sortMode === "cost") {
+        const difference = (talent_data[right].tp_spent ?? 0) - (talent_data[left].tp_spent ?? 0)
+
+        if (difference !== 0) {
+          return difference
+        }
+      }
+
+      return (defaultTalentOrder.get(left) ?? 0) - (defaultTalentOrder.get(right) ?? 0)
+    })
+  }, [
+    allRaceTokens,
+    averageDamageChanges,
+    classLevels,
+    selected,
+    selectedDungeonUnlocks,
+    selectedRacePrereqs,
+    totalLevels,
+    viewState,
+  ])
 
   if (!isHydrated || !columnLayout.isReady) return <div className="p-4">Loading...</div>
 
@@ -156,7 +241,6 @@ export default function TalentsPage() {
     <div className="h-[calc(100vh-2.5rem)] overflow-auto border rounded-md">
       <div className="min-w-full w-max">
         <InteractiveTableHeader
-          allColumns={columnLayout.allColumns}
           visibleColumns={columnLayout.visibleColumns}
           gridTemplateColumns={columnLayout.gridTemplateColumns}
           onSetColumnCollapsed={columnLayout.setColumnCollapsed}
@@ -165,7 +249,7 @@ export default function TalentsPage() {
         />
 
         <div className="space-y-0.5">
-          {Object.entries(talent_data).map(([name]) => (
+          {displayedTalentNames.map((name) => (
             <ToggleButton
               key={name}
               talentName={name}

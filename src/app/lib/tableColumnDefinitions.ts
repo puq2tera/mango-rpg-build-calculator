@@ -24,6 +24,7 @@ export type TalentColumnId =
 
 export type SkillColumnId =
   | "name"
+  | "avgDamageChange"
   | "preReq"
   | "tag"
   | "blockedTag"
@@ -36,7 +37,7 @@ export type SkillColumnId =
   | "healer"
   | "description"
 
-export type BuffColumnId = SkillColumnId | "avgDamageChange"
+export type BuffColumnId = SkillColumnId
 
 export const talentTableColumns: readonly ManagedColumnDefinition<TalentColumnId>[] = [
   { id: "name", label: "Name", defaultWidth: parseWidth(talentColumnWidths[0], 220), minWidth: 120 },
@@ -47,6 +48,10 @@ export const talentTableColumns: readonly ManagedColumnDefinition<TalentColumnId
     defaultWidth: 110,
     minWidth: 100,
   },
+  { id: "tank", label: "T", title: "Tank", defaultWidth: 40, minWidth: 40 },
+  { id: "warrior", label: "W", title: "Warrior", defaultWidth: 40, minWidth: 40 },
+  { id: "caster", label: "C", title: "Caster", defaultWidth: 40, minWidth: 40 },
+  { id: "healer", label: "H", title: "Healer", defaultWidth: 40, minWidth: 40 },
   { id: "description", label: "Description", defaultWidth: parseWidth(talentColumnWidths[12], 640), minWidth: 160 },
   { id: "preReq", label: "PreReq", defaultWidth: parseWidth(talentColumnWidths[1], 220), minWidth: 120 },
   { id: "tag", label: "Tag", defaultWidth: parseWidth(talentColumnWidths[2], 120), minWidth: 80 },
@@ -55,14 +60,21 @@ export const talentTableColumns: readonly ManagedColumnDefinition<TalentColumnId
   { id: "exp", label: "Exp", defaultWidth: 55, minWidth: 50 },
   { id: "tp", label: "TP", defaultWidth: 40, minWidth: 40 },
   { id: "lvl", label: "Lvl", defaultWidth: 40, minWidth: 40 },
-  { id: "tank", label: "T", title: "Tank", defaultWidth: 40, minWidth: 40 },
-  { id: "warrior", label: "W", title: "Warrior", defaultWidth: 40, minWidth: 40 },
-  { id: "caster", label: "C", title: "Caster", defaultWidth: 40, minWidth: 40 },
-  { id: "healer", label: "H", title: "Healer", defaultWidth: 40, minWidth: 40 },
 ]
 
 export const skillTableColumns: readonly ManagedColumnDefinition<SkillColumnId>[] = [
   { id: "name", label: "Name", defaultWidth: 220, minWidth: 120 },
+  {
+    id: "avgDamageChange",
+    label: "Avg DMG Change",
+    title: "Change in Damage Calculator average damage using your saved calculator settings",
+    defaultWidth: 110,
+    minWidth: 100,
+  },
+  { id: "tank", label: "Tank", defaultWidth: 72, minWidth: 56 },
+  { id: "warrior", label: "Warrior", defaultWidth: 84, minWidth: 64 },
+  { id: "caster", label: "Caster", defaultWidth: 76, minWidth: 60 },
+  { id: "healer", label: "Healer", defaultWidth: 76, minWidth: 60 },
   { id: "description", label: "Description", defaultWidth: 720, minWidth: 180 },
   { id: "preReq", label: "PreReq", defaultWidth: 220, minWidth: 120 },
   { id: "tag", label: "Tag", defaultWidth: 140, minWidth: 80 },
@@ -70,10 +82,6 @@ export const skillTableColumns: readonly ManagedColumnDefinition<SkillColumnId>[
   { id: "gold", label: "Gold", defaultWidth: 64, minWidth: 48 },
   { id: "exp", label: "Exp", defaultWidth: 72, minWidth: 56 },
   { id: "sp", label: "SP", defaultWidth: 56, minWidth: 48 },
-  { id: "tank", label: "Tank", defaultWidth: 72, minWidth: 56 },
-  { id: "warrior", label: "Warrior", defaultWidth: 84, minWidth: 64 },
-  { id: "caster", label: "Caster", defaultWidth: 76, minWidth: 60 },
-  { id: "healer", label: "Healer", defaultWidth: 76, minWidth: 60 },
 ]
 
 export const buffTableColumns: readonly ManagedColumnDefinition<BuffColumnId>[] = [
@@ -90,6 +98,10 @@ export const buffTableColumns: readonly ManagedColumnDefinition<BuffColumnId>[] 
     defaultWidth: 110,
     minWidth: 100,
   },
+  { id: "tank", label: "Tank", defaultWidth: 72, minWidth: 56 },
+  { id: "warrior", label: "Warrior", defaultWidth: 84, minWidth: 64 },
+  { id: "caster", label: "Caster", defaultWidth: 76, minWidth: 60 },
+  { id: "healer", label: "Healer", defaultWidth: 76, minWidth: 60 },
   { id: "description", label: "Description", defaultWidth: 720, minWidth: 180 },
   { id: "preReq", label: "PreReq", defaultWidth: 220, minWidth: 120 },
   { id: "tag", label: "Tag", defaultWidth: 140, minWidth: 80 },
@@ -97,8 +109,4 @@ export const buffTableColumns: readonly ManagedColumnDefinition<BuffColumnId>[] 
   { id: "gold", label: "Gold", defaultWidth: 64, minWidth: 48 },
   { id: "exp", label: "Exp", defaultWidth: 72, minWidth: 56 },
   { id: "sp", label: "SP", defaultWidth: 56, minWidth: 48 },
-  { id: "tank", label: "Tank", defaultWidth: 72, minWidth: 56 },
-  { id: "warrior", label: "Warrior", defaultWidth: 84, minWidth: 64 },
-  { id: "caster", label: "Caster", defaultWidth: 76, minWidth: 60 },
-  { id: "healer", label: "Healer", defaultWidth: 76, minWidth: 60 },
 ]

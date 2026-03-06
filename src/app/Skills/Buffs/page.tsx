@@ -146,7 +146,6 @@ export default function BuffsPage() {
     <div className="h-[calc(100vh-2.5rem)] overflow-auto border rounded-md">
       <div className="min-w-full w-max">
         <InteractiveTableHeader
-          allColumns={columnLayout.allColumns}
           visibleColumns={columnLayout.visibleColumns}
           gridTemplateColumns={columnLayout.gridTemplateColumns}
           onSetColumnCollapsed={columnLayout.setColumnCollapsed}

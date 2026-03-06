@@ -95,8 +95,10 @@ export const heroPointGainsByRace: Record<RaceTag, Record<HeroPointStatId, numbe
   Succubus: buildRaceHeroPointGains([6, 6, 6, 4, 2, 2, 3, 2, 2, 2, 3, 2, 0, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 2, 1, 2, 2, 2, 0]),
 }
 
-export default {
+const heroPointData = {
   heroPointStats,
   heroPointStatsByGroup,
   heroPointGainsByRace,
 }
+
+export default heroPointData

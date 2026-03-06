@@ -1,26 +1,45 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { startTransition, useEffect, useMemo, useState } from "react"
 import { InteractiveTableHeader } from "@/app/components/InteractiveTableHeader"
 import { SkillButton } from "@/app/components/ToggleButton"
 import { DUNGEON_UNLOCKS_STORAGE_KEY, isDungeonUnlockTag } from "@/app/data/dungeon_unlocks"
 import { skill_data } from "@/app/data/skill_data"
+import { race_data, race_data_by_tag, type RaceTag } from "@/app/data/race_data"
+import { computeBuildStatStages, readBuildSnapshot } from "@/app/lib/buildStats"
+import { calculateDamage, readDamageCalcState } from "@/app/lib/damageCalc"
 import { useManagedColumns } from "@/app/lib/managedColumns"
 import { skillTableColumns } from "@/app/lib/tableColumnDefinitions"
+import { getSkillAvailabilityState, matchesClassFilter, matchesRaceFilter } from "@/app/lib/tableRequirements"
+import {
+  getDefaultTableViewState,
+  MANAGED_TABLE_VIEW_EVENT,
+  readTableViewState,
+  type ManagedTableViewChangeDetail,
+  type TableViewState,
+} from "@/app/lib/tableViewState"
 
 const STORAGE_KEY = "selectedBuffs"
+const isRaceTag = (value: string): value is RaceTag => value in race_data_by_tag
+const skillNames = Object.keys(skill_data)
+const defaultSkillOrder = new Map(skillNames.map((name, index) => [name, index]))
 
 export default function SkillsPage() {
   const [isHydrated, setIsHydrated] = useState(false)
   const [selected, setSelected] = useState<Set<string>>(new Set())
   const [selectedTalents, setSelectedTalents] = useState<Set<string>>(new Set())
+  const [selectedRacePrereqs, setSelectedRacePrereqs] = useState<Set<string>>(new Set())
   const [selectedDungeonUnlocks, setSelectedDungeonUnlocks] = useState<Set<string>>(new Set())
   const [classLevels, setClassLevels] = useState({ tank: 0, warrior: 0, caster: 0, healer: 0 })
+  const [averageDamageChanges, setAverageDamageChanges] = useState<Record<string, number>>({})
+  const [viewState, setViewState] = useState<TableViewState>(getDefaultTableViewState)
   const columnLayout = useManagedColumns("skillColumnLayout", skillTableColumns)
+  const allRaceTokens = useMemo(() => new Set(race_data.flatMap((race) => [race.tag, race.name])), [])
 
   useEffect(() => {
     const stored = localStorage.getItem(STORAGE_KEY)
     const storedTalents = localStorage.getItem("selectedTalents")
+    const storedRace = localStorage.getItem("SelectedRace")
     const storedDungeonUnlocks = localStorage.getItem(DUNGEON_UNLOCKS_STORAGE_KEY)
     const rawLevels = localStorage.getItem("SelectedLevels")
 
@@ -34,6 +53,13 @@ export default function SkillsPage() {
       setSelectedTalents(storedTalents ? new Set(JSON.parse(storedTalents)) : new Set())
     } catch {
       setSelectedTalents(new Set())
+    }
+
+    if (storedRace && isRaceTag(storedRace)) {
+      const race = race_data_by_tag[storedRace]
+      setSelectedRacePrereqs(new Set([race.tag, race.name]))
+    } else {
+      setSelectedRacePrereqs(new Set())
     }
 
     try {
@@ -55,19 +81,157 @@ export default function SkillsPage() {
       setClassLevels({ tank: 0, warrior: 0, caster: 0, healer: 0 })
     }
 
+    setViewState(readTableViewState(localStorage, "skills"))
     setIsHydrated(true)
   }, [])
 
   useEffect(() => {
+    if (!isHydrated) {
+      setAverageDamageChanges({})
+      return
+    }
+
+    let cancelled = false
+    let timeoutId: number | null = null
+
+    const snapshot = readBuildSnapshot(localStorage)
+    const damageState = readDamageCalcState(localStorage)
+    const selectedSkillNames = Array.from(selected)
+    const currentAverage = calculateDamage(
+      computeBuildStatStages(snapshot, { selectedBuffs: selectedSkillNames }).StatsDmgReady,
+      damageState,
+    ).average
+
+    const computedChanges: Record<string, number> = {}
+    let index = 0
+    const chunkSize = 20
+
+    const computeChunk = () => {
+      if (cancelled) {
+        return
+      }
+
+      const maxIndex = Math.min(index + chunkSize, skillNames.length)
+      for (; index < maxIndex; index++) {
+        const skillName = skillNames[index]
+        const toggledSkills = new Set(selectedSkillNames)
+
+        if (toggledSkills.has(skillName)) {
+          toggledSkills.delete(skillName)
+        } else {
+          toggledSkills.add(skillName)
+        }
+
+        const nextAverage = calculateDamage(
+          computeBuildStatStages(snapshot, { selectedBuffs: toggledSkills }).StatsDmgReady,
+          damageState,
+        ).average
+
+        computedChanges[skillName] = nextAverage - currentAverage
+      }
+
+      if (index < skillNames.length) {
+        timeoutId = window.setTimeout(computeChunk, 0)
+        return
+      }
+
+      startTransition(() => {
+        setAverageDamageChanges(computedChanges)
+      })
+    }
+
+    timeoutId = window.setTimeout(computeChunk, 0)
+
+    return () => {
+      cancelled = true
+      if (timeoutId !== null) {
+        window.clearTimeout(timeoutId)
+      }
+    }
+  }, [isHydrated, selected])
+
+  useEffect(() => {
+    const handleManagedTableViewChange = (event: Event) => {
+      const detail = (event as CustomEvent<ManagedTableViewChangeDetail>).detail
+
+      if (detail.page === "skills") {
+        setViewState(detail.viewState)
+      }
+    }
+
     const handleResetUi = () => {
       columnLayout.reset()
     }
 
+    window.addEventListener(MANAGED_TABLE_VIEW_EVENT, handleManagedTableViewChange)
     window.addEventListener("resetManagedTableUi", handleResetUi)
     return () => {
+      window.removeEventListener(MANAGED_TABLE_VIEW_EVENT, handleManagedTableViewChange)
       window.removeEventListener("resetManagedTableUi", handleResetUi)
     }
   }, [columnLayout])
+
+  const displayedSkillNames = useMemo(() => {
+    const filteredSkillNames = skillNames.filter((skillName) => {
+      const skill = skill_data[skillName]
+
+      if (!matchesClassFilter(skill.class_levels, viewState.classFilter)) {
+        return false
+      }
+
+      const availabilityState = getSkillAvailabilityState({
+        skillName,
+        skill,
+        selectedSkills: selected,
+        selectedTalents,
+        selectedDungeonUnlocks,
+        classLevels,
+      })
+
+      if (!matchesRaceFilter(availabilityState.prereqTokens, viewState.raceFilter, selectedRacePrereqs, allRaceTokens)) {
+        return false
+      }
+
+      if (viewState.availabilityFilter === "available" && !availabilityState.isAvailable) {
+        return false
+      }
+
+      if (viewState.availabilityFilter === "unavailable" && availabilityState.isAvailable) {
+        return false
+      }
+
+      return true
+    })
+
+    return [...filteredSkillNames].sort((left, right) => {
+      if (viewState.sortMode === "damage") {
+        const difference = (averageDamageChanges[right] ?? 0) - (averageDamageChanges[left] ?? 0)
+
+        if (difference !== 0) {
+          return difference
+        }
+      }
+
+      if (viewState.sortMode === "cost") {
+        const difference = (skill_data[right].sp_spent ?? 0) - (skill_data[left].sp_spent ?? 0)
+
+        if (difference !== 0) {
+          return difference
+        }
+      }
+
+      return (defaultSkillOrder.get(left) ?? 0) - (defaultSkillOrder.get(right) ?? 0)
+    })
+  }, [
+    allRaceTokens,
+    averageDamageChanges,
+    classLevels,
+    selected,
+    selectedDungeonUnlocks,
+    selectedRacePrereqs,
+    selectedTalents,
+    viewState,
+  ])
 
   if (!isHydrated || !columnLayout.isReady) return <div className="p-4">Loading...</div>
 
@@ -75,7 +239,6 @@ export default function SkillsPage() {
     <div className="h-[calc(100vh-2.5rem)] overflow-auto border rounded-md">
       <div className="min-w-full w-max">
         <InteractiveTableHeader
-          allColumns={columnLayout.allColumns}
           visibleColumns={columnLayout.visibleColumns}
           gridTemplateColumns={columnLayout.gridTemplateColumns}
           onSetColumnCollapsed={columnLayout.setColumnCollapsed}
@@ -84,7 +247,7 @@ export default function SkillsPage() {
         />
 
         <div className="space-y-0.5">
-          {Object.entries(skill_data).map(([name]) => (
+          {displayedSkillNames.map((name) => (
             <SkillButton
               key={name}
               skillName={name}
@@ -95,6 +258,7 @@ export default function SkillsPage() {
               selectedDungeonUnlocks={selectedDungeonUnlocks}
               classLevels={classLevels}
               columns={columnLayout.visibleColumns}
+              averageDamageChange={averageDamageChanges[name] ?? null}
             />
           ))}
         </div>

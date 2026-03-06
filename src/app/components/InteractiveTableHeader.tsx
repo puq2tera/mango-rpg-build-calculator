@@ -7,7 +7,6 @@ import { CSS } from "@dnd-kit/utilities"
 import type { ManagedColumn } from "@/app/lib/managedColumns"
 
 type InteractiveTableHeaderProps<T extends string> = {
-  allColumns: ManagedColumn<T>[]
   visibleColumns: ManagedColumn<T>[]
   gridTemplateColumns: string
   onSetColumnCollapsed: (id: T, collapsed: boolean) => void
@@ -109,7 +108,6 @@ function SortableHeaderCell<T extends string>({
 }
 
 export function InteractiveTableHeader<T extends string>({
-  allColumns,
   visibleColumns,
   gridTemplateColumns,
   onSetColumnCollapsed,

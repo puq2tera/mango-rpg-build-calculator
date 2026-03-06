@@ -38,12 +38,12 @@ export default function TarotCardsPage() {
     if (isHydrated) {
       localStorage.setItem(STORAGE_SELECTED, JSON.stringify(Array.from(selected)))
     }
-  }, [selected])
+  }, [isHydrated, selected])
   useEffect(() => {
     if (isHydrated) {
       localStorage.setItem(STORAGE_STACKS, JSON.stringify(stacks))
     }
-  }, [stacks])
+  }, [isHydrated, stacks])
 
   // Tier counts among selected to flag constraints
   const tierCounts = useMemo(() => {
