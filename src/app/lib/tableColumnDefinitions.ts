@@ -24,7 +24,6 @@ export type TalentColumnId =
 
 export type SkillColumnId =
   | "name"
-  | "avgDamageChange"
   | "preReq"
   | "tag"
   | "blockedTag"
@@ -38,7 +37,15 @@ export type SkillColumnId =
   | "healer"
   | "description"
 
-export type BuffColumnId = SkillColumnId
+export type BuffColumnId = SkillColumnId | "avgDamageChange"
+
+export type TarotColumnId =
+  | "name"
+  | "avgDamageChange"
+  | "tier"
+  | "skillName"
+  | "stack"
+  | "description"
 
 export const talentTableColumns: readonly ManagedColumnDefinition<TalentColumnId>[] = [
   { id: "name", label: "Name", defaultWidth: parseWidth(talentColumnWidths[0], 220), minWidth: 120 },
@@ -65,13 +72,6 @@ export const talentTableColumns: readonly ManagedColumnDefinition<TalentColumnId
 
 export const skillTableColumns: readonly ManagedColumnDefinition<SkillColumnId>[] = [
   { id: "name", label: "Name", defaultWidth: 220, minWidth: 120 },
-  {
-    id: "avgDamageChange",
-    label: "Avg DMG Change",
-    title: "Change in Damage Calculator average damage using your saved calculator settings",
-    defaultWidth: 110,
-    minWidth: 100,
-  },
   { id: "tank", label: "T", title: "Tank", defaultWidth: 56, minWidth: 40 },
   { id: "warrior", label: "W", title: "Warrior", defaultWidth: 56, minWidth: 40 },
   { id: "caster", label: "C", title: "Caster", defaultWidth: 56, minWidth: 40 },
@@ -112,4 +112,19 @@ export const buffTableColumns: readonly ManagedColumnDefinition<BuffColumnId>[] 
   { id: "exp", label: "Exp", defaultWidth: 72, minWidth: 56 },
   { id: "sp", label: "SP", defaultWidth: 56, minWidth: 48 },
   { id: "spSpent", label: "SP Spent", defaultWidth: 86, minWidth: 72 },
+]
+
+export const tarotTableColumns: readonly ManagedColumnDefinition<TarotColumnId>[] = [
+  { id: "name", label: "Name", defaultWidth: 220, minWidth: 120 },
+  {
+    id: "avgDamageChange",
+    label: "Avg DMG Change",
+    title: "Change in Damage Calculator average damage using your saved calculator settings",
+    defaultWidth: 110,
+    minWidth: 100,
+  },
+  { id: "tier", label: "Tier", defaultWidth: 80, minWidth: 64 },
+  { id: "skillName", label: "Skill", defaultWidth: 220, minWidth: 120 },
+  { id: "stack", label: "Stack", defaultWidth: 100, minWidth: 84 },
+  { id: "description", label: "Description", defaultWidth: 720, minWidth: 180 },
 ]

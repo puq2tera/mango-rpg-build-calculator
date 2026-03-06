@@ -1,9 +1,12 @@
 "use client"
 
 import { startTransition, useEffect, useMemo, useState } from "react"
+import { InteractiveTableHeader } from "@/app/components/InteractiveTableHeader"
 import tarot_data from "@/app/data/tarot_data"
 import { computeBuildStatStages, readBuildSnapshot } from "@/app/lib/buildStats"
 import { calculateDamage, formatSignedDamageDelta, readDamageCalcState } from "@/app/lib/damageCalc"
+import { useManagedColumns } from "@/app/lib/managedColumns"
+import { tarotTableColumns, type TarotColumnId } from "@/app/lib/tableColumnDefinitions"
 import {
   getDefaultTableViewState,
   MANAGED_TABLE_VIEW_EVENT,
@@ -15,16 +18,7 @@ import {
 const STORAGE_SELECTED = "selectedTarots"
 const STORAGE_STACKS = "tarotStacks"
 const tarotNames = Object.keys(tarot_data)
-const gridTemplateColumns = "220px 110px 80px 220px 100px minmax(320px,1fr)"
-
-const columns = [
-  "Name",
-  "Avg DMG Change",
-  "Tier",
-  "Skill",
-  "Stack",
-  "Description"
-] as const
+const defaultTarotOrder = new Map(tarotNames.map((name, index) => [name, index]))
 
 function getAverageDamageClass(value: number | null | undefined): string {
   if (value === undefined) return ""
@@ -40,6 +34,7 @@ export default function TarotCardsPage() {
   const [stacks, setStacks] = useState<Record<string, number>>({})
   const [averageDamageChanges, setAverageDamageChanges] = useState<Record<string, number>>({})
   const [viewState, setViewState] = useState<TableViewState>(getDefaultTableViewState)
+  const columnLayout = useManagedColumns("tarotColumnLayout", tarotTableColumns)
 
   // Load persisted selection and stacks
   useEffect(() => {
@@ -139,11 +134,17 @@ export default function TarotCardsPage() {
       }
     }
 
+    const handleResetUi = () => {
+      columnLayout.reset()
+    }
+
     window.addEventListener(MANAGED_TABLE_VIEW_EVENT, handleManagedTableViewChange)
+    window.addEventListener("resetManagedTableUi", handleResetUi)
     return () => {
       window.removeEventListener(MANAGED_TABLE_VIEW_EVENT, handleManagedTableViewChange)
+      window.removeEventListener("resetManagedTableUi", handleResetUi)
     }
-  }, [])
+  }, [columnLayout])
 
   // Tier counts among selected to flag constraints
   const tierCounts = useMemo(() => {
@@ -171,8 +172,8 @@ export default function TarotCardsPage() {
     setStacks(prev => ({ ...prev, [name]: Math.max(0, Math.floor(value || 0)) }))
   }
 
-  const rows = useMemo(() => (
-    Object.entries(tarot_data)
+  const rows = useMemo(() => {
+    const filteredRows = Object.entries(tarot_data)
       .map(([name, t]) => ({ name, ...t }))
       .filter((row) => {
         if (viewState.tarotTierFilter !== "all" && String(row.tier) !== viewState.tarotTierFilter) {
@@ -199,16 +200,76 @@ export default function TarotCardsPage() {
 
         return true
       })
-  ), [selected, viewState])
+    return [...filteredRows].sort((left, right) => {
+      if (viewState.sortMode === "damage") {
+        const difference = (averageDamageChanges[left.name] ?? 0) - (averageDamageChanges[right.name] ?? 0)
+
+        if (difference !== 0) {
+          return viewState.sortDirection === "asc" ? difference : -difference
+        }
+      }
+
+      if (viewState.sortMode === "tier") {
+        const difference = left.tier - right.tier
+
+        if (difference !== 0) {
+          return viewState.sortDirection === "asc" ? difference : -difference
+        }
+      }
+
+      const defaultDifference = (defaultTarotOrder.get(left.name) ?? 0) - (defaultTarotOrder.get(right.name) ?? 0)
+      return viewState.sortMode === "default" && viewState.sortDirection === "desc"
+        ? -defaultDifference
+        : defaultDifference
+    })
+  }, [averageDamageChanges, selected, viewState])
+
+  if (!isHydrated || !columnLayout.isReady) return <div className="p-4">Loading...</div>
+
+  const renderCell = (
+    columnId: TarotColumnId,
+    row: (typeof rows)[number],
+    averageDamageChange: number | null,
+    canStack: boolean,
+    stackVal: number,
+  ) => {
+    switch (columnId) {
+      case "name":
+        return row.name
+      case "avgDamageChange":
+        return formatSignedDamageDelta(averageDamageChange)
+      case "tier":
+        return row.tier
+      case "skillName":
+        return row.skill_name
+      case "stack":
+        return canStack ? (
+          <input
+            type="number"
+            className="w-20 border px-1"
+            value={stackVal}
+            onClick={(event) => event.stopPropagation()}
+            onChange={(event) => onChangeStack(row.name, +event.target.value)}
+            min={0}
+          />
+        ) : ""
+      case "description":
+        return row.description
+      default:
+        return ""
+    }
+  }
 
   return (
     <div className="h-[calc(100vh-2.5rem)] overflow-auto border rounded-md">
       <div className="min-w-full w-max">
-        <div className="sticky top-0 z-10 grid border-b bg-slate-900 py-2" style={{ gridTemplateColumns }}>
-          {columns.map((c) => (
-            <div key={c} className="box-border border-r border-slate-600 px-2 font-bold whitespace-nowrap last:border-r-0">{c}</div>
-          ))}
-        </div>
+        <InteractiveTableHeader
+          visibleColumns={columnLayout.visibleColumns}
+          gridTemplateColumns={columnLayout.gridTemplateColumns}
+          onSetColumnCollapsed={columnLayout.setColumnCollapsed}
+          onReorderColumns={columnLayout.reorderVisibleColumns}
+          onSetColumnWidth={columnLayout.setColumnWidth}
+        />
 
         <div className="space-y-0.5">
           {rows.map(row => {
@@ -222,28 +283,29 @@ export default function TarotCardsPage() {
               <div
                 key={row.name}
                 className={`grid min-w-full w-max cursor-pointer items-center px-0 py-1 ${isSelected ? "bg-sky-900/40 hover:bg-sky-800/45" : "hover:bg-slate-800/85"}`}
-                style={{ gridTemplateColumns }}
+                style={{ gridTemplateColumns: columnLayout.gridTemplateColumns }}
                 onClick={() => toggle(row.name)}
               >
-                <span className="border-r border-slate-700 px-2 whitespace-nowrap">{row.name}</span>
-                <span className={`border-r border-slate-700 px-2 whitespace-nowrap ${getAverageDamageClass(averageDamageChange)}`}>
-                  {formatSignedDamageDelta(averageDamageChange)}
-                </span>
-                <span className={`border-r border-slate-700 px-2 whitespace-nowrap ${overLimit ? "font-semibold text-rose-300" : ""}`}>{row.tier}</span>
-                <span className="overflow-hidden text-ellipsis border-r border-slate-700 px-2 whitespace-nowrap">{row.skill_name}</span>
-                <span className="border-r border-slate-700 px-2">
-                  {canStack ? (
-                    <input
-                      type="number"
-                      className="w-20 border px-1"
-                      value={stackVal}
-                      onClick={e => e.stopPropagation()}
-                      onChange={e => onChangeStack(row.name, +e.target.value)}
-                      min={0}
-                    />
-                  ) : null}
-                </span>
-                <span className="overflow-hidden text-ellipsis px-2 whitespace-nowrap">{row.description}</span>
+                {columnLayout.visibleColumns.map((column) => (
+                  <span
+                    key={column.id}
+                    className={`${column.collapsed ? "px-0" : "px-2 whitespace-nowrap"} border-r border-slate-700 last:border-r-0 box-border overflow-hidden ${
+                      column.id === "avgDamageChange"
+                        ? getAverageDamageClass(averageDamageChange)
+                        : ""
+                    } ${
+                      column.id === "tier" && overLimit
+                        ? "font-semibold text-rose-300"
+                        : ""
+                    } ${
+                      column.id === "skillName" || column.id === "description"
+                        ? "text-ellipsis"
+                        : ""
+                    }`}
+                  >
+                    {column.collapsed ? "" : renderCell(column.id, row, averageDamageChange, canStack, stackVal)}
+                  </span>
+                ))}
               </div>
             )
           })}

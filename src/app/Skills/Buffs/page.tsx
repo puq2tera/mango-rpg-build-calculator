@@ -23,6 +23,7 @@ const STORAGE_KEY = "selectedBuffs"
 const buffNames = Object.entries(skill_data)
   .filter(([, data]) => data.type?.is_buff === true)
   .map(([name]) => name)
+const defaultBuffOrder = new Map(buffNames.map((name, index) => [name, index]))
 const isRaceTag = (value: string): value is RaceTag => value in race_data_by_tag
 
 export default function BuffsPage() {
@@ -172,8 +173,8 @@ export default function BuffsPage() {
     }
   }, [columnLayout])
 
-  const displayedBuffNames = useMemo(() => (
-    buffNames.filter((buffName) => {
+  const displayedBuffNames = useMemo(() => {
+    const filteredBuffNames = buffNames.filter((buffName) => {
       const skill = skill_data[buffName]
 
       if (!matchesClassFilter(skill.class_levels, viewState.classFilter)) {
@@ -204,7 +205,30 @@ export default function BuffsPage() {
 
       return true
     })
-  ), [
+    return [...filteredBuffNames].sort((left, right) => {
+      if (viewState.sortMode === "damage") {
+        const difference = (averageDamageChanges[left] ?? 0) - (averageDamageChanges[right] ?? 0)
+
+        if (difference !== 0) {
+          return viewState.sortDirection === "asc" ? difference : -difference
+        }
+      }
+
+      if (viewState.sortMode === "cost") {
+        const difference = (skill_data[left].sp_spent ?? 0) - (skill_data[right].sp_spent ?? 0)
+
+        if (difference !== 0) {
+          return viewState.sortDirection === "asc" ? difference : -difference
+        }
+      }
+
+      const defaultDifference = (defaultBuffOrder.get(left) ?? 0) - (defaultBuffOrder.get(right) ?? 0)
+      return viewState.sortMode === "default" && viewState.sortDirection === "desc"
+        ? -defaultDifference
+        : defaultDifference
+    })
+  }, [
+    averageDamageChanges,
     allRaceTokens,
     classLevels,
     selected,

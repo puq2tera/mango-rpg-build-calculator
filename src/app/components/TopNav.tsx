@@ -22,7 +22,7 @@ import {
   type TableViewState,
 } from "@/app/lib/tableViewState"
 
-const RESETTABLE_PATHS = new Set(["/talents", "/skills", "/skills/buffs"])
+const RESETTABLE_PATHS = new Set(["/talents", "/skills", "/skills/buffs", "/equipment/tarotcards"])
 
 const navLinks = [
   ["/talents", "Talents"],
@@ -81,11 +81,21 @@ const selectionFilterOptions: Array<{ value: SelectionFilter; label: string }> =
   { value: "unselected", label: "Unselected" },
 ]
 
-const sortOptions = (page: TableViewPage): Array<{ value: TableViewState["sortMode"]; label: string }> => [
-  { value: "default", label: "Default" },
-  { value: "damage", label: "DMG Increase" },
-  { value: "cost", label: page === "talents" ? "TP Spent" : "SP Spent" },
-]
+const sortOptions = (page: TableViewPage): Array<{ value: TableViewState["sortMode"]; label: string }> => {
+  if (page === "tarot") {
+    return [
+      { value: "default", label: "Default" },
+      { value: "damage", label: "DMG Increase" },
+      { value: "tier", label: "Tier" },
+    ]
+  }
+
+  return [
+    { value: "default", label: "Default" },
+    { value: "damage", label: "DMG Increase" },
+    { value: "cost", label: page === "talents" ? "TP Spent" : "SP Spent" },
+  ]
+}
 
 const controlButtonClass =
   "shrink-0 rounded border px-2 py-1 text-slate-200 transition hover:bg-slate-800"
@@ -99,7 +109,7 @@ const optionButtonClass = (active: boolean) => (
 )
 
 const getDirectionArrow = (direction: TableViewState["sortDirection"]) => direction === "asc" ? "↑" : "↓"
-const isSortPage = (page: TableViewPage | null): page is "talents" | "skills" => page === "talents" || page === "skills"
+const isSortPage = (page: TableViewPage | null): page is TableViewPage => page !== null
 const isSkillLikeFilterPage = (page: TableViewPage | null): page is "talents" | "skills" | "buffs" =>
   page === "talents" || page === "skills" || page === "buffs"
 
