@@ -115,7 +115,7 @@ export const buffTableColumns: readonly ManagedColumnDefinition<BuffColumnId>[] 
 ]
 
 export const tarotTableColumns: readonly ManagedColumnDefinition<TarotColumnId>[] = [
-  { id: "name", label: "Name", defaultWidth: 220, minWidth: 120 },
+  { id: "name", label: "Name", defaultWidth: 280, minWidth: 120 },
   {
     id: "avgDamageChange",
     label: "Avg DMG Change",

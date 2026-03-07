@@ -7,7 +7,6 @@ import { computeBuildStatStages, readBuildSnapshot } from "@/app/lib/buildStats"
 import { calculateDamage, formatSignedDamageDelta, readDamageCalcState } from "@/app/lib/damageCalc"
 import { useManagedColumns } from "@/app/lib/managedColumns"
 import { tarotTableColumns, type TarotColumnId } from "@/app/lib/tableColumnDefinitions"
-import { getStripedRowClass } from "@/app/lib/tableRowStyles"
 import {
   getDefaultTableViewState,
   MANAGED_TABLE_VIEW_EVENT,
@@ -27,6 +26,54 @@ function getAverageDamageClass(value: number | null | undefined): string {
   if (value > 0) return "text-emerald-300 font-mono tabular-nums"
   if (value < 0) return "text-rose-300 font-mono tabular-nums"
   return "text-slate-200 font-mono tabular-nums"
+}
+
+function getTarotRowClass(rowIndex: number, isSelected: boolean, overLimit: boolean): string {
+  const isEven = Math.abs(rowIndex) % 2 === 0
+
+  if (overLimit && isSelected) {
+    return isEven
+      ? "bg-amber-900/65 text-amber-50 ring-1 ring-inset ring-amber-300/55 hover:bg-amber-800/70"
+      : "bg-orange-900/70 text-amber-50 ring-1 ring-inset ring-orange-300/55 hover:bg-orange-800/72"
+  }
+
+  if (overLimit) {
+    return isEven
+      ? "bg-amber-950/18 text-slate-200 ring-1 ring-inset ring-amber-700/20 hover:bg-amber-900/32"
+      : "bg-orange-950/20 text-slate-200 ring-1 ring-inset ring-orange-700/22 hover:bg-orange-900/35"
+  }
+
+  if (isSelected) {
+    return isEven
+      ? "bg-cyan-900/55 text-cyan-50 ring-1 ring-inset ring-cyan-300/45 hover:bg-cyan-800/65"
+      : "bg-sky-900/60 text-sky-50 ring-1 ring-inset ring-sky-300/45 hover:bg-sky-800/68"
+  }
+
+  return isEven
+    ? "bg-slate-950/4 text-slate-200 hover:bg-slate-800/40"
+    : "bg-slate-900/16 text-slate-200 hover:bg-slate-800/46"
+}
+
+function getTarotTierBadgeClass(tier: number, overLimit: boolean): string {
+  if (overLimit) {
+    return "bg-rose-400/15 text-rose-200 ring-1 ring-inset ring-rose-300/35"
+  }
+
+  if (tier === 5) {
+    return "bg-amber-400/15 text-amber-100 ring-1 ring-inset ring-amber-300/35"
+  }
+
+  if (tier === 4) {
+    return "bg-sky-400/15 text-sky-100 ring-1 ring-inset ring-sky-300/35"
+  }
+
+  return "bg-violet-400/15 text-violet-100 ring-1 ring-inset ring-violet-300/35"
+}
+
+function getTarotTypeBadgeClass(isActive: boolean): string {
+  return isActive
+    ? "bg-cyan-400/15 text-cyan-100 ring-1 ring-inset ring-cyan-300/30"
+    : "bg-slate-400/10 text-slate-300 ring-1 ring-inset ring-slate-400/25"
 }
 
 export default function TarotCardsPage() {
@@ -225,6 +272,16 @@ export default function TarotCardsPage() {
     })
   }, [averageDamageChanges, selected, viewState])
 
+  const tarotGridTemplateColumns = useMemo(() => (
+    columnLayout.visibleColumns
+      .map((column) => (
+        column.id === "description" && !column.collapsed
+          ? `minmax(${column.renderWidth}px, 1fr)`
+          : `${column.renderWidth}px`
+      ))
+      .join(" ")
+  ), [columnLayout.visibleColumns])
+
   if (!isHydrated || !columnLayout.isReady) return <div className="p-4">Loading...</div>
 
   const renderCell = (
@@ -236,18 +293,29 @@ export default function TarotCardsPage() {
   ) => {
     switch (columnId) {
       case "name":
-        return row.name
+        return (
+          <div className="flex items-center gap-2 overflow-hidden">
+            <span className="truncate font-semibold">{row.name}</span>
+            <span className={`shrink-0 rounded-full px-2 py-0.5 text-[10px] uppercase tracking-[0.12em] ${getTarotTypeBadgeClass(row.is_active === true)}`}>
+              {row.is_active === true ? "Active" : "Passive"}
+            </span>
+          </div>
+        )
       case "avgDamageChange":
         return formatSignedDamageDelta(averageDamageChange)
       case "tier":
-        return row.tier
+        return (
+          <span className={`inline-flex min-w-9 justify-center rounded-full px-2 py-0.5 text-xs font-semibold ${getTarotTierBadgeClass(row.tier, false)}`}>
+            T{row.tier}
+          </span>
+        )
       case "skillName":
-        return row.skill_name
+        return <span className="font-medium text-slate-100">{row.skill_name}</span>
       case "stack":
         return canStack ? (
           <input
             type="number"
-            className="w-20 border px-1"
+            className="w-20 rounded border border-slate-600 bg-slate-950/85 px-1 text-right shadow-inner outline-none transition focus:border-sky-400"
             value={stackVal}
             onClick={(event) => event.stopPropagation()}
             onChange={(event) => onChangeStack(row.name, +event.target.value)}
@@ -255,7 +323,7 @@ export default function TarotCardsPage() {
           />
         ) : ""
       case "description":
-        return row.description
+        return <span className="text-slate-300">{row.description}</span>
       default:
         return ""
     }
@@ -266,7 +334,7 @@ export default function TarotCardsPage() {
       <div className="min-w-full w-max">
         <InteractiveTableHeader
           visibleColumns={columnLayout.visibleColumns}
-          gridTemplateColumns={columnLayout.gridTemplateColumns}
+          gridTemplateColumns={tarotGridTemplateColumns}
           onSetColumnCollapsed={columnLayout.setColumnCollapsed}
           onReorderColumns={columnLayout.reorderVisibleColumns}
           onSetColumnWidth={columnLayout.setColumnWidth}
@@ -283,17 +351,8 @@ export default function TarotCardsPage() {
             return (
               <div
                 key={row.name}
-                className={`grid min-w-full w-max cursor-pointer items-center px-0 py-1 ${getStripedRowClass(
-                  rowIndex,
-                  overLimit && isSelected
-                    ? "selectedInvalid"
-                    : overLimit
-                      ? "invalid"
-                      : isSelected
-                        ? "selected"
-                        : "default",
-                )}`}
-                style={{ gridTemplateColumns: columnLayout.gridTemplateColumns }}
+                className={`grid min-w-full w-max cursor-pointer items-center px-0 py-1 transition-colors ${getTarotRowClass(rowIndex, isSelected, overLimit)}`}
+                style={{ gridTemplateColumns: tarotGridTemplateColumns }}
                 onClick={() => toggle(row.name)}
               >
                 {columnLayout.visibleColumns.map((column) => (
@@ -308,12 +367,28 @@ export default function TarotCardsPage() {
                         ? "font-semibold text-rose-300"
                         : ""
                     } ${
+                      column.id === "name"
+                        ? "font-medium"
+                        : ""
+                    } ${
                       column.id === "skillName" || column.id === "description"
                         ? "text-ellipsis"
                         : ""
+                    } ${
+                      column.id === "stack"
+                        ? "flex items-center"
+                        : ""
                     }`}
                   >
-                    {column.collapsed ? "" : renderCell(column.id, row, averageDamageChange, canStack, stackVal)}
+                    {column.collapsed ? "" : (
+                      column.id === "tier"
+                        ? (
+                          <span className={`inline-flex min-w-9 justify-center rounded-full px-2 py-0.5 text-xs font-semibold ${getTarotTierBadgeClass(row.tier, overLimit)}`}>
+                            T{row.tier}
+                          </span>
+                        )
+                        : renderCell(column.id, row, averageDamageChange, canStack, stackVal)
+                    )}
                   </span>
                 ))}
               </div>
