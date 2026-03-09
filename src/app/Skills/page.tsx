@@ -20,9 +20,17 @@ import {
 } from "@/app/lib/tableViewState"
 
 const STORAGE_KEY = "selectedBuffs"
+const TRAINING_STORAGE_KEY = "SelectedTraining"
 const isRaceTag = (value: string): value is RaceTag => value in race_data_by_tag
 const skillNames = Object.keys(skill_data)
 const defaultSkillOrder = new Map(skillNames.map((name, index) => [name, index]))
+const defaultTraining = { ATK: 0, DEF: 0, MATK: 0, HEAL: 0 }
+const trainingFields = [
+  { key: "DEF", label: "Tank DEF" },
+  { key: "ATK", label: "Warrior ATK" },
+  { key: "MATK", label: "Caster MATK" },
+  { key: "HEAL", label: "Healer HEAL" },
+] as const
 
 export default function SkillsPage() {
   const [isHydrated, setIsHydrated] = useState(false)
@@ -31,6 +39,7 @@ export default function SkillsPage() {
   const [selectedRacePrereqs, setSelectedRacePrereqs] = useState<Set<string>>(new Set())
   const [selectedDungeonUnlocks, setSelectedDungeonUnlocks] = useState<Set<string>>(new Set())
   const [classLevels, setClassLevels] = useState({ tank: 0, warrior: 0, caster: 0, healer: 0 })
+  const [training, setTraining] = useState(defaultTraining)
   const [averageDamageChanges, setAverageDamageChanges] = useState<Record<string, number>>({})
   const [viewState, setViewState] = useState<TableViewState>(getDefaultTableViewState)
   const columnLayout = useManagedColumns("skillColumnLayout", skillTableColumns)
@@ -42,6 +51,7 @@ export default function SkillsPage() {
     const storedRace = localStorage.getItem("SelectedRace")
     const storedDungeonUnlocks = localStorage.getItem(DUNGEON_UNLOCKS_STORAGE_KEY)
     const rawLevels = localStorage.getItem("SelectedLevels")
+    const rawTraining = localStorage.getItem(TRAINING_STORAGE_KEY)
 
     try {
       setSelected(stored ? new Set(JSON.parse(stored)) : new Set())
@@ -81,9 +91,29 @@ export default function SkillsPage() {
       setClassLevels({ tank: 0, warrior: 0, caster: 0, healer: 0 })
     }
 
+    try {
+      const parsedTraining: Record<string, number> = rawTraining ? JSON.parse(rawTraining) : {}
+      setTraining({
+        ATK: Number(parsedTraining.ATK ?? 0),
+        DEF: Number(parsedTraining.DEF ?? 0),
+        MATK: Number(parsedTraining.MATK ?? 0),
+        HEAL: Number(parsedTraining.HEAL ?? 0),
+      })
+    } catch {
+      setTraining(defaultTraining)
+    }
+
     setViewState(readTableViewState(localStorage, "skills"))
     setIsHydrated(true)
   }, [])
+
+  useEffect(() => {
+    if (!isHydrated) {
+      return
+    }
+
+    localStorage.setItem(TRAINING_STORAGE_KEY, JSON.stringify(training))
+  }, [isHydrated, training])
 
   useEffect(() => {
     if (!isHydrated) {
@@ -95,6 +125,7 @@ export default function SkillsPage() {
     let timeoutId: number | null = null
 
     const snapshot = readBuildSnapshot(localStorage)
+    snapshot.selectedTraining = training
     const damageState = readDamageCalcState(localStorage)
     const selectedSkillNames = Array.from(selected)
     const currentAverage = calculateDamage(
@@ -148,7 +179,7 @@ export default function SkillsPage() {
         window.clearTimeout(timeoutId)
       }
     }
-  }, [isHydrated, selected])
+  }, [isHydrated, selected, training])
 
   useEffect(() => {
     const handleManagedTableViewChange = (event: Event) => {
@@ -239,9 +270,33 @@ export default function SkillsPage() {
 
   if (!isHydrated || !columnLayout.isReady) return <div className="p-4">Loading...</div>
 
+  const totalTraining = Object.values(training).reduce((sum, value) => sum + value, 0)
+
   return (
     <div className="h-[calc(100vh-2.5rem)] overflow-auto border rounded-md">
       <div className="min-w-full w-max">
+        <div className="border-b bg-slate-950/90 px-4 py-3">
+          <div className="flex flex-wrap items-center gap-4">
+            <div>
+              <div className="text-sm font-semibold text-slate-100">Training</div>
+              <div className="text-xs text-slate-400">Total chosen: {totalTraining}</div>
+            </div>
+            <div className="grid grid-cols-2 gap-2 md:grid-cols-4">
+              {trainingFields.map(({ key, label }) => (
+                <label key={key} className="flex flex-col gap-1 text-xs text-slate-300">
+                  <span>{label}</span>
+                  <input
+                    type="number"
+                    value={training[key]}
+                    onChange={(event) => setTraining({ ...training, [key]: Number(event.target.value) || 0 })}
+                    className="w-24 border bg-slate-950 px-2 py-1 text-center text-sm text-slate-100"
+                  />
+                </label>
+              ))}
+            </div>
+          </div>
+        </div>
+
         <InteractiveTableHeader
           visibleColumns={columnLayout.visibleColumns}
           gridTemplateColumns={columnLayout.gridTemplateColumns}
