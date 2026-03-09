@@ -1,6 +1,6 @@
 "use client"
 
-import { startTransition, useEffect, useMemo, useState } from "react"
+import { startTransition, useEffect, useMemo, useRef, useState } from "react"
 import { InteractiveTableHeader } from "@/app/components/InteractiveTableHeader"
 import { ToggleButton } from "@/app/components/ToggleButton"
 import { DUNGEON_UNLOCKS_STORAGE_KEY, isDungeonUnlockTag } from "@/app/data/dungeon_unlocks"
@@ -9,6 +9,11 @@ import { allRacePrereqTokens, getRacePrereqTokens, race_data_by_tag, type RaceTa
 import { computeBuildStatStages, readBuildSnapshot } from "@/app/lib/buildStats"
 import { calculateDamage, readDamageCalcState } from "@/app/lib/damageCalc"
 import { useManagedColumns } from "@/app/lib/managedColumns"
+import {
+  persistTableScrollPosition,
+  readTableScrollPosition,
+  TABLE_FOCUS_QUERY_PARAM,
+} from "@/app/lib/tableNavigation"
 import { talentTableColumns } from "@/app/lib/tableColumnDefinitions"
 import { getTalentAvailabilityState, matchesClassFilter, matchesRaceFilter } from "@/app/lib/tableRequirements"
 import {
@@ -18,8 +23,10 @@ import {
   type ManagedTableViewChangeDetail,
   type TableViewState,
 } from "@/app/lib/tableViewState"
+import { usePathname, useRouter, useSearchParams } from "next/navigation"
 
 const STORAGE_KEY = "selectedTalents"
+const TABLE_SCROLL_STORAGE_KEY = "talentsTableScroll"
 
 const isRaceTag = (value: string): value is RaceTag => value in race_data_by_tag
 const talentNames = Object.keys(talent_data)
@@ -36,6 +43,14 @@ export default function TalentsPage() {
   const [viewState, setViewState] = useState<TableViewState>(getDefaultTableViewState)
   const columnLayout = useManagedColumns("talentColumnLayout", talentTableColumns)
   const allRaceTokens = useMemo(() => allRacePrereqTokens, [])
+  const pathname = usePathname()
+  const router = useRouter()
+  const searchParams = useSearchParams()
+  const focusTalent = searchParams.get(TABLE_FOCUS_QUERY_PARAM)
+  const containerRef = useRef<HTMLDivElement | null>(null)
+  const rowRefs = useRef<Record<string, HTMLDivElement | null>>({})
+  const hasRestoredScrollRef = useRef(false)
+  const lastHandledFocusRef = useRef<string | null>(null)
 
   // Load selectedTalents on mount
   useEffect(() => {
@@ -172,6 +187,29 @@ export default function TalentsPage() {
     }
   }, [columnLayout])
 
+  useEffect(() => {
+    if (!isHydrated || !columnLayout.isReady) {
+      return
+    }
+
+    const container = containerRef.current
+    if (!container) {
+      return
+    }
+
+    const persistScroll = () => {
+      persistTableScrollPosition(localStorage, TABLE_SCROLL_STORAGE_KEY, {
+        left: container.scrollLeft,
+        top: container.scrollTop,
+      })
+    }
+
+    container.addEventListener("scroll", persistScroll, { passive: true })
+    return () => {
+      container.removeEventListener("scroll", persistScroll)
+    }
+  }, [columnLayout.isReady, isHydrated])
+
   const displayedTalentNames = useMemo(() => {
     const filteredTalentNames = talentNames.filter((talentName) => {
       const talent = talent_data[talentName]
@@ -238,6 +276,50 @@ export default function TalentsPage() {
     viewState,
   ])
 
+  useEffect(() => {
+    if (!isHydrated || !columnLayout.isReady) {
+      return
+    }
+
+    const container = containerRef.current
+    if (!container) {
+      return
+    }
+
+    if (focusTalent) {
+      const targetRow = rowRefs.current[focusTalent]
+      if (!targetRow || lastHandledFocusRef.current === focusTalent) {
+        return
+      }
+
+      lastHandledFocusRef.current = focusTalent
+      hasRestoredScrollRef.current = true
+
+      requestAnimationFrame(() => {
+        targetRow.scrollIntoView({ block: "center", inline: "nearest" })
+        const nextParams = new URLSearchParams(searchParams.toString())
+        nextParams.delete(TABLE_FOCUS_QUERY_PARAM)
+        const nextUrl = nextParams.size > 0 ? `${pathname}?${nextParams.toString()}` : pathname
+        router.replace(nextUrl, { scroll: false })
+      })
+
+      return
+    }
+
+    if (hasRestoredScrollRef.current) {
+      return
+    }
+
+    hasRestoredScrollRef.current = true
+    const savedPosition = readTableScrollPosition(localStorage, TABLE_SCROLL_STORAGE_KEY)
+    requestAnimationFrame(() => {
+      container.scrollTo({
+        left: savedPosition.left,
+        top: savedPosition.top,
+      })
+    })
+  }, [columnLayout.isReady, displayedTalentNames.length, focusTalent, isHydrated, pathname, router, searchParams])
+
   if (!isHydrated || !columnLayout.isReady) return <div className="p-4">Loading...</div>
 
   const spentTalentPoints = selected.size
@@ -245,7 +327,7 @@ export default function TalentsPage() {
   const talentPointsOverSpent = spentTalentPoints > availableTalentPoints
 
   return (
-    <div className="h-[calc(100vh-2.5rem)] overflow-auto border rounded-md">
+    <div ref={containerRef} className="h-[calc(100vh-2.5rem)] overflow-auto border rounded-md">
       <div className="min-w-full w-max">
         <InteractiveTableHeader
           visibleColumns={columnLayout.visibleColumns}
@@ -279,6 +361,9 @@ export default function TalentsPage() {
               key={name}
               talentName={name}
               talent={talent_data[name]}
+              rowRef={(node) => {
+                rowRefs.current[name] = node
+              }}
               selected={selected}
               setSelected={setSelected}
               totalLevels={totalLevels}

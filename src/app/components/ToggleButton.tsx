@@ -1,11 +1,13 @@
 "use client"
 
-import type { Dispatch, SetStateAction } from "react"
+import Link from "next/link"
+import { Fragment, type Dispatch, type KeyboardEvent, type ReactNode, type SetStateAction } from "react"
 import type { Talent } from "../data/talent_data"
 import type { Skill } from "../data/skill_data"
 import { dispatchBuildSnapshotUpdated } from "@/app/lib/buildEvents"
 import { formatSignedDamageDelta } from "@/app/lib/damageCalc"
 import type { ManagedColumn } from "@/app/lib/managedColumns"
+import { getPrereqHref } from "@/app/lib/tableNavigation"
 import { getStripedRowClass } from "@/app/lib/tableRowStyles"
 import { getSkillAvailabilityState, getTalentAvailabilityState, type ClassLevels } from "@/app/lib/tableRequirements"
 
@@ -21,6 +23,7 @@ type ToggleButtonProps = {
   columns: ManagedColumn[]
   averageDamageChange: number | null
   rowIndex: number
+  rowRef?: (node: HTMLDivElement | null) => void
 }
 
 type SkillButtonProps = {
@@ -36,6 +39,7 @@ type SkillButtonProps = {
   columns: ManagedColumn[]
   averageDamageChange?: number | null
   rowIndex: number
+  rowRef?: (node: HTMLDivElement | null) => void
 }
 
 type ClassColorKey = "tank" | "warrior" | "caster" | "healer"
@@ -119,6 +123,38 @@ function getClassTint(
   return subtleTintByClass[primaryClass]
 }
 
+function renderPrereqTokens(prereqTokens: readonly string[]): ReactNode {
+  if (prereqTokens.length === 0) {
+    return ""
+  }
+
+  return (
+    <span className="flex flex-wrap items-center gap-x-1 gap-y-0.5">
+      {prereqTokens.map((token, index) => {
+        const href = getPrereqHref(token)
+
+        return (
+          <Fragment key={`${token}-${index}`}>
+            {href ? (
+              <Link
+                href={href}
+                scroll={false}
+                onClick={(event) => event.stopPropagation()}
+                className="underline decoration-slate-500 underline-offset-2 transition hover:text-sky-300 hover:decoration-sky-400"
+              >
+                {token}
+              </Link>
+            ) : (
+              <span>{token}</span>
+            )}
+            {index < prereqTokens.length - 1 ? <span className="text-slate-500">,</span> : null}
+          </Fragment>
+        )
+      })}
+    </span>
+  )
+}
+
 export function ToggleButton({
   talentName,
   talent,
@@ -131,6 +167,7 @@ export function ToggleButton({
   columns,
   averageDamageChange,
   rowIndex,
+  rowRef,
 }: ToggleButtonProps) {
   const isSelected = selected.has(talentName)
   const {
@@ -176,9 +213,9 @@ export function ToggleButton({
     window.dispatchEvent(new Event("talentsUpdated"))
   }
 
-  const values: Record<string, string> = {
+  const values: Record<string, ReactNode> = {
     name: talentName,
-    preReq: prereqTokens.join(", "),
+    preReq: renderPrereqTokens(prereqTokens),
     tag: talent.Tag,
     blockedTag: talent.BlockedTag,
     gold: String(talent.gold),
@@ -193,10 +230,28 @@ export function ToggleButton({
     avgDamageChange: formatSignedDamageDelta(averageDamageChange),
   }
 
+  const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
+    if (event.target !== event.currentTarget) {
+      return
+    }
+
+    if (event.key !== "Enter" && event.key !== " ") {
+      return
+    }
+
+    event.preventDefault()
+    handleClick()
+  }
+
   return (
-    <button
+    <div
+      ref={rowRef}
+      role="button"
+      tabIndex={0}
+      aria-pressed={isSelected}
       onClick={handleClick}
-      className={`grid min-w-full w-max text-left transition px-0 py-1 ${rowClass} ${getClassTint(
+      onKeyDown={handleKeyDown}
+      className={`grid min-w-full w-max cursor-pointer text-left transition px-0 py-1 ${rowClass} ${getClassTint(
         talent,
         isSelected && isUnavailable
           ? "default"
@@ -211,14 +266,14 @@ export function ToggleButton({
       {columns.map((column) => (
         <span
           key={column.id}
-          className={`${column.collapsed ? "px-0" : "px-2 whitespace-nowrap"} border-r border-slate-700 last:border-r-0 box-border overflow-hidden ${
+          className={`${column.collapsed ? "px-0" : column.id === "preReq" ? "px-2 whitespace-normal" : "px-2 whitespace-nowrap"} border-r border-slate-700 last:border-r-0 box-border overflow-hidden ${
             column.id === "avgDamageChange" ? getAverageDamageClass(averageDamageChange) : ""
           }`}
         >
           {column.collapsed ? "" : (values[column.id] ?? "")}
         </span>
       ))}
-    </button>
+    </div>
   )
 }
 
@@ -235,9 +290,10 @@ export function SkillButton({
   columns,
   averageDamageChange,
   rowIndex,
+  rowRef,
 }: SkillButtonProps) {
   const isSelected = selected.has(skillName)
-  const { blockedTagConflict, missingRequirement } = getSkillAvailabilityState({
+  const { blockedTagConflict, missingRequirement, prereqTokens } = getSkillAvailabilityState({
     skillName,
     skill,
     selectedSkills: selected,
@@ -267,9 +323,9 @@ export function SkillButton({
     })
   }
   // TODO: ADD sp cost to button instead of just sp_spent required to learn it
-  const values: Record<string, string> = {
+  const values: Record<string, ReactNode> = {
     name: skillName,
-    preReq: Array.isArray(skill.PreReq) ? skill.PreReq.join(", ") : (skill.PreReq ?? ""),
+    preReq: renderPrereqTokens(prereqTokens),
     tag: skill.Tag ?? "",
     blockedTag: skill.BlockedTag ?? "",
     gold: String(skill.gold),
@@ -284,10 +340,28 @@ export function SkillButton({
     avgDamageChange: formatSignedDamageDelta(averageDamageChange ?? null),
   }
 
+  const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
+    if (event.target !== event.currentTarget) {
+      return
+    }
+
+    if (event.key !== "Enter" && event.key !== " ") {
+      return
+    }
+
+    event.preventDefault()
+    handleClick()
+  }
+
   return (
-    <button
+    <div
+      ref={rowRef}
+      role="button"
+      tabIndex={0}
+      aria-pressed={isSelected}
       onClick={handleClick}
-      className={`grid min-w-full w-max text-left transition px-0 py-1 ${getStripedRowClass(
+      onKeyDown={handleKeyDown}
+      className={`grid min-w-full w-max cursor-pointer text-left transition px-0 py-1 ${getStripedRowClass(
         rowIndex,
         isSelected && isUnavailable
           ? "selectedBlocked"
@@ -311,13 +385,13 @@ export function SkillButton({
       {columns.map((column) => (
         <span
           key={column.id}
-          className={`${column.collapsed ? "px-0" : "px-2 whitespace-nowrap"} border-r border-slate-700 last:border-r-0 box-border overflow-hidden ${
+          className={`${column.collapsed ? "px-0" : column.id === "preReq" ? "px-2 whitespace-normal" : "px-2 whitespace-nowrap"} border-r border-slate-700 last:border-r-0 box-border overflow-hidden ${
             column.id === "avgDamageChange" ? getAverageDamageClass(averageDamageChange) : ""
           }`}
         >
           {column.collapsed ? "" : (values[column.id] ?? "")}
         </span>
       ))}
-    </button>
+    </div>
   )
 }

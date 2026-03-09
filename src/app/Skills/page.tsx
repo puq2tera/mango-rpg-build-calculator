@@ -1,6 +1,6 @@
 "use client"
 
-import { startTransition, useEffect, useMemo, useState } from "react"
+import { startTransition, useEffect, useMemo, useRef, useState } from "react"
 import { InteractiveTableHeader } from "@/app/components/InteractiveTableHeader"
 import { SkillButton } from "@/app/components/ToggleButton"
 import { DUNGEON_UNLOCKS_STORAGE_KEY, isDungeonUnlockTag } from "@/app/data/dungeon_unlocks"
@@ -10,6 +10,11 @@ import { computeBuildStatStages, readBuildSnapshot } from "@/app/lib/buildStats"
 import { dispatchBuildSnapshotUpdated } from "@/app/lib/buildEvents"
 import { calculateDamage, readDamageCalcState } from "@/app/lib/damageCalc"
 import { useManagedColumns } from "@/app/lib/managedColumns"
+import {
+  persistTableScrollPosition,
+  readTableScrollPosition,
+  TABLE_FOCUS_QUERY_PARAM,
+} from "@/app/lib/tableNavigation"
 import { skillTableColumns } from "@/app/lib/tableColumnDefinitions"
 import { getSkillAvailabilityState, matchesClassFilter, matchesRaceFilter } from "@/app/lib/tableRequirements"
 import {
@@ -19,9 +24,11 @@ import {
   type ManagedTableViewChangeDetail,
   type TableViewState,
 } from "@/app/lib/tableViewState"
+import { usePathname, useRouter, useSearchParams } from "next/navigation"
 
 const STORAGE_KEY = "selectedBuffs"
 const TRAINING_STORAGE_KEY = "SelectedTraining"
+const TABLE_SCROLL_STORAGE_KEY = "skillsTableScroll"
 const isRaceTag = (value: string): value is RaceTag => value in race_data_by_tag
 const skillNames = Object.keys(skill_data)
 const defaultSkillOrder = new Map(skillNames.map((name, index) => [name, index]))
@@ -46,6 +53,14 @@ export default function SkillsPage() {
   const columnLayout = useManagedColumns("skillColumnLayout", skillTableColumns)
   const allRaceTokens = useMemo(() => allRacePrereqTokens, [])
   const totalTraining = Object.values(training).reduce((sum, value) => sum + value, 0)
+  const pathname = usePathname()
+  const router = useRouter()
+  const searchParams = useSearchParams()
+  const focusSkill = searchParams.get(TABLE_FOCUS_QUERY_PARAM)
+  const containerRef = useRef<HTMLDivElement | null>(null)
+  const rowRefs = useRef<Record<string, HTMLDivElement | null>>({})
+  const hasRestoredScrollRef = useRef(false)
+  const lastHandledFocusRef = useRef<string | null>(null)
 
   useEffect(() => {
     const stored = localStorage.getItem(STORAGE_KEY)
@@ -205,6 +220,29 @@ export default function SkillsPage() {
     }
   }, [columnLayout])
 
+  useEffect(() => {
+    if (!isHydrated || !columnLayout.isReady) {
+      return
+    }
+
+    const container = containerRef.current
+    if (!container) {
+      return
+    }
+
+    const persistScroll = () => {
+      persistTableScrollPosition(localStorage, TABLE_SCROLL_STORAGE_KEY, {
+        left: container.scrollLeft,
+        top: container.scrollTop,
+      })
+    }
+
+    container.addEventListener("scroll", persistScroll, { passive: true })
+    return () => {
+      container.removeEventListener("scroll", persistScroll)
+    }
+  }, [columnLayout.isReady, isHydrated])
+
   const displayedSkillNames = useMemo(() => {
     const filteredSkillNames = skillNames.filter((skillName) => {
       const skill = skill_data[skillName]
@@ -273,6 +311,50 @@ export default function SkillsPage() {
     viewState,
   ])
 
+  useEffect(() => {
+    if (!isHydrated || !columnLayout.isReady) {
+      return
+    }
+
+    const container = containerRef.current
+    if (!container) {
+      return
+    }
+
+    if (focusSkill) {
+      const targetRow = rowRefs.current[focusSkill]
+      if (!targetRow || lastHandledFocusRef.current === focusSkill) {
+        return
+      }
+
+      lastHandledFocusRef.current = focusSkill
+      hasRestoredScrollRef.current = true
+
+      requestAnimationFrame(() => {
+        targetRow.scrollIntoView({ block: "center", inline: "nearest" })
+        const nextParams = new URLSearchParams(searchParams.toString())
+        nextParams.delete(TABLE_FOCUS_QUERY_PARAM)
+        const nextUrl = nextParams.size > 0 ? `${pathname}?${nextParams.toString()}` : pathname
+        router.replace(nextUrl, { scroll: false })
+      })
+
+      return
+    }
+
+    if (hasRestoredScrollRef.current) {
+      return
+    }
+
+    hasRestoredScrollRef.current = true
+    const savedPosition = readTableScrollPosition(localStorage, TABLE_SCROLL_STORAGE_KEY)
+    requestAnimationFrame(() => {
+      container.scrollTo({
+        left: savedPosition.left,
+        top: savedPosition.top,
+      })
+    })
+  }, [columnLayout.isReady, displayedSkillNames.length, focusSkill, isHydrated, pathname, router, searchParams])
+
   if (!isHydrated || !columnLayout.isReady) return <div className="p-4">Loading...</div>
 
   const totalLevels = Object.values(classLevels).reduce((sum, value) => sum + value, 0)
@@ -281,7 +363,7 @@ export default function SkillsPage() {
   const skillPointsOverSpent = spentSkillPoints > availableSkillPoints
 
   return (
-    <div className="h-[calc(100vh-2.5rem)] overflow-auto border rounded-md">
+    <div ref={containerRef} className="h-[calc(100vh-2.5rem)] overflow-auto border rounded-md">
       <div className="min-w-full w-max">
         <div className="border-b bg-slate-950/90 px-4 py-3">
           <div className="flex flex-wrap items-center gap-4">
@@ -337,6 +419,9 @@ export default function SkillsPage() {
               key={name}
               skillName={name}
               skill={skill_data[name]}
+              rowRef={(node) => {
+                rowRefs.current[name] = node
+              }}
               selected={selected}
               setSelected={setSelected}
               selectedTalents={selectedTalents}
