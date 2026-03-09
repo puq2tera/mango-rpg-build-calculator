@@ -15,7 +15,7 @@ export function isHumanRace(selectedRace: string | null): boolean {
     return false
   }
 
-  return race_data_by_tag[selectedRace as keyof typeof race_data_by_tag].name.includes("Human")
+  return race_data_by_tag[selectedRace as keyof typeof race_data_by_tag].isHuman
 }
 
 export function getTalentHeroPointBonus(selectedTalentNames: readonly string[]): number {

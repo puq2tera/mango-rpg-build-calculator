@@ -39732,7 +39732,7 @@ const talent_data: Record<string, Talent> = {
     "Hero Seed Evolution": {
         "category": "racial",
         "PreReq": [
-            "HeroSeed"
+            "Humanoid"
         ],
         "Tag": "",
         "BlockedTag": "",

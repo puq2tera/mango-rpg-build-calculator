@@ -5,7 +5,7 @@ import { InteractiveTableHeader } from "@/app/components/InteractiveTableHeader"
 import { ToggleButton } from "@/app/components/ToggleButton"
 import { DUNGEON_UNLOCKS_STORAGE_KEY, isDungeonUnlockTag } from "@/app/data/dungeon_unlocks"
 import { talent_data } from "@/app/data/talent_data"
-import { race_data, race_data_by_tag, type RaceTag } from "@/app/data/race_data"
+import { allRacePrereqTokens, getRacePrereqTokens, race_data_by_tag, type RaceTag } from "@/app/data/race_data"
 import { computeBuildStatStages, readBuildSnapshot } from "@/app/lib/buildStats"
 import { calculateDamage, readDamageCalcState } from "@/app/lib/damageCalc"
 import { useManagedColumns } from "@/app/lib/managedColumns"
@@ -35,7 +35,7 @@ export default function TalentsPage() {
   const [averageDamageChanges, setAverageDamageChanges] = useState<Record<string, number>>({})
   const [viewState, setViewState] = useState<TableViewState>(getDefaultTableViewState)
   const columnLayout = useManagedColumns("talentColumnLayout", talentTableColumns)
-  const allRaceTokens = useMemo(() => new Set(race_data.flatMap((race) => [race.tag, race.name])), [])
+  const allRaceTokens = useMemo(() => allRacePrereqTokens, [])
 
   // Load selectedTalents on mount
   useEffect(() => {
@@ -79,7 +79,7 @@ export default function TalentsPage() {
 
     if (storedRace && isRaceTag(storedRace)) {
       const race = race_data_by_tag[storedRace]
-      setSelectedRacePrereqs(new Set([race.tag, race.name]))
+      setSelectedRacePrereqs(new Set(getRacePrereqTokens(race)))
     } else {
       setSelectedRacePrereqs(new Set())
     }
