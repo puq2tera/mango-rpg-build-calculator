@@ -72,7 +72,7 @@ export const defaultDamageCalcState: DamageCalcState = {
   secondStat: "DEF",
   element: "Blunt",
   penElement: "Blunt",
-  skillType: "Sword",
+  skillType: "N/A",
   inputs: defaultDamageCalcInputs,
 }
 
@@ -123,6 +123,17 @@ export function persistDamageCalcState(storage: Storage, state: DamageCalcState)
 
 const toMult = (value: number | undefined): number => 1 + ((value ?? 0) / 100)
 const clamp = (value: number, minimum = 0, maximum = 1): number => Math.min(maximum, Math.max(minimum, value))
+const skillCritDamageStatsBySkillType: Record<string, string[]> = {
+  Dagger: ["Dagger Crit DMG%"],
+  Fist: ["Fist Crit DMG%"],
+}
+const skillCritChanceStatsBySkillType: Record<string, string[]> = {
+  "Shadow Break": ["Shadow Break Crit Chance%"],
+}
+
+function getTotalStatValue(stats: Record<string, number>, statNames: readonly string[]): number {
+  return statNames.reduce((sum, statName) => sum + (stats[statName] ?? 0), 0)
+}
 
 export function calculateDamage(stats: Record<string, number>, state: DamageCalcState): DamageCalcResult {
   const { mainStat, element, penElement, skillType, inputs } = normalizeDamageCalcState(state)
@@ -143,12 +154,19 @@ export function calculateDamage(stats: Record<string, number>, state: DamageCalc
   dmg = Math.floor(dmg * toMult(stats["Dmg%"]))
 
   const nonCrit = Math.max(0, dmg)
+  const skillCritDamage =
+    getTotalStatValue(stats, skillCritDamageStatsBySkillType[skillType] ?? [])
+    + (stat_data.Elemental.includes(element) ? (stats["Elemental Crit DMG%"] ?? 0) : 0)
+    + (element === "Holy" ? (stats["Holy Crit DMG%"] ?? 0) : 0)
+  const totalCritDamage = (stats["Crit DMG%"] ?? 0) + skillCritDamage
 
   const critStage = Math.floor(nonCrit * ((inputs.skillCritDmg ?? 0) / 100))
-  const crit = Math.floor(critStage * ((stats["Crit DMG%"] ?? 0) / 100))
+  const crit = Math.floor(critStage * (totalCritDamage / 100))
   const maxcrit = Math.floor(crit * ((stats["Overdrive%"] ?? 0) / 100))
 
-  const totalCritChance = ((stats["Crit Chance%"] ?? 0) + (inputs.skillCritChance ?? 0)) * stat_data.StatsInfo["Crit Chance%"].multi
+  const skillCritChance = getTotalStatValue(stats, skillCritChanceStatsBySkillType[skillType] ?? [])
+  const totalCritChance =
+    ((stats["Crit Chance%"] ?? 0) + skillCritChance + (inputs.skillCritChance ?? 0)) * stat_data.StatsInfo["Crit Chance%"].multi
   const critChance = clamp(totalCritChance, 0, 2)
 
   const nonCritWeight = 1 - clamp(critChance, 0, 1)
@@ -166,7 +184,7 @@ export function calculateDamage(stats: Record<string, number>, state: DamageCalc
   const threatWithGlobalDef = Math.floor(threatBase * toMult(stats["Global DEF%"]))
   const threatWithGlobalDmg = Math.floor(threatWithGlobalDef * toMult(stats["Dmg%"]))
   const threatNonCrit = Math.floor(threatWithGlobalDmg * toMult(stats["Threat%"]))
-  const threatCrit = Math.floor(threatNonCrit * ((stats["Crit DMG%"] ?? 0) / 100))
+  const threatCrit = Math.floor(threatNonCrit * (totalCritDamage / 100))
   const threatAverage = Math.floor(threatNonCrit * nonCritWeight + threatCrit * (critWeight + maxCritWeight))
 
   return {

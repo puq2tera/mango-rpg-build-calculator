@@ -292,7 +292,7 @@ const Mainstats = ["ATK", "DEF", "MATK", "HEAL"]
 const AllElements = ["Slash", "Pierce", "Blunt", "Fire", "Water", "Lightning", "Wind", "Earth", "Toxic", "Neg", "Holy", "Void"]
 export type Mainstats_type = "ATK" | "DEF" | "MATK" | "HEAL"
 export type AllElements_type = "Slash" | "Pierce" | "Blunt" | "Fire" | "Water" | "Lightning" | "Wind" | "Earth" | "Toxic" | "Neg" | "Holy" | "Void"
-const SkillTypes = ["Sword", "Spear", "Void", "Fire", "Shadow Break"]
+const SkillTypes = ["N/A", "Sword", "Spear", "Hammer", "Fist", "Dagger", "Void", "Fire", "Shadow Break"]
 
 const Elemental = ["Fire", "Water", "Lightning", "Wind", "Earth", "Toxic"]
 const Physical = ["Slash", "Pierce", "Blunt"]
