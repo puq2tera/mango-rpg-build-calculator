@@ -4,6 +4,7 @@ import { startTransition, useEffect, useMemo, useState } from "react"
 import { InteractiveTableHeader } from "@/app/components/InteractiveTableHeader"
 import tarot_data from "@/app/data/tarot_data"
 import { computeBuildStatStages, readBuildSnapshot } from "@/app/lib/buildStats"
+import { dispatchBuildSnapshotUpdated } from "@/app/lib/buildEvents"
 import { calculateDamage, formatSignedDamageDelta, readDamageCalcState } from "@/app/lib/damageCalc"
 import { useManagedColumns } from "@/app/lib/managedColumns"
 import { tarotTableColumns, type TarotColumnId } from "@/app/lib/tableColumnDefinitions"
@@ -103,11 +104,13 @@ export default function TarotCardsPage() {
   useEffect(() => {
     if (isHydrated) {
       localStorage.setItem(STORAGE_SELECTED, JSON.stringify(Array.from(selected)))
+      dispatchBuildSnapshotUpdated()
     }
   }, [isHydrated, selected])
   useEffect(() => {
     if (isHydrated) {
       localStorage.setItem(STORAGE_STACKS, JSON.stringify(stacks))
+      dispatchBuildSnapshotUpdated()
     }
   }, [isHydrated, stacks])
 

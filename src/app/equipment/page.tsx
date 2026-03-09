@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import { dispatchBuildSnapshotUpdated } from "@/app/lib/buildEvents"
 import type { StatNames as StatNameType } from "../data/stat_data"
 import stat_data from "../data/stat_data"
 import rune_data from "../data/rune_data"
@@ -228,18 +229,21 @@ export default function EquipmentPage() {
       localStorage.setItem(STORAGE_KEY_SLOTS, JSON.stringify(slots))
       const enabledIndices = slots.map((slot, i) => slot.enabled ? i : null).filter(i => i !== null)
       localStorage.setItem(STORAGE_KEY_ENABLED, JSON.stringify(enabledIndices))
+      dispatchBuildSnapshotUpdated()
     }
   }, [slots, isHydrated])
 
   useEffect(() => {
     if (isHydrated) {
       localStorage.setItem(STORAGE_KEY_RUNES, JSON.stringify(selectedRunes))
+      dispatchBuildSnapshotUpdated()
     }
   }, [selectedRunes, isHydrated])
 
   useEffect(() => {
     if (isHydrated) {
       localStorage.setItem(STORAGE_KEY_ARTIFACT, JSON.stringify(artifact));
+      dispatchBuildSnapshotUpdated()
     }
   }, [artifact, isHydrated]);
 

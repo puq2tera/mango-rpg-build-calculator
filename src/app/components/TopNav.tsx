@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
+import DamageWidget from "@/app/components/DamageWidget"
 import {
   type AvailabilityFilter,
   type ClassFilter,
@@ -212,158 +213,162 @@ export default function TopNav() {
         ))}
       </div>
 
-      <div ref={controlsRef} className="relative flex shrink-0 items-center gap-2">
-        {showFilterControls ? (
-          <>
+      <div className="flex shrink-0 items-center gap-2">
+        <div ref={controlsRef} className="relative flex items-center gap-2">
+          {showFilterControls ? (
+            <>
+              <button
+                type="button"
+                onClick={() => setOpenMenu((current) => current === "filter" ? null : "filter")}
+                className={`${controlButtonClass} border-slate-700 bg-slate-950/90 ${hasActiveFilters || openMenu === "filter" ? "border-sky-500/60 text-sky-200" : "border-slate-700"}`}
+                aria-haspopup="dialog"
+                aria-expanded={openMenu === "filter"}
+              >
+                Filter
+              </button>
+
+              {showSortControls ? (
+                <button
+                  type="button"
+                  onClick={() => setOpenMenu((current) => current === "sort" ? null : "sort")}
+                  className={`${controlButtonClass} border-slate-700 bg-slate-950/90 ${hasActiveSort || openMenu === "sort" ? "border-sky-500/60 text-sky-200" : "border-slate-700"}`}
+                  aria-haspopup="dialog"
+                  aria-expanded={openMenu === "sort"}
+                >
+                  {sortButtonLabel}
+                </button>
+              ) : null}
+            </>
+          ) : null}
+
+          {showResetUi ? (
             <button
               type="button"
-              onClick={() => setOpenMenu((current) => current === "filter" ? null : "filter")}
-              className={`${controlButtonClass} border-slate-700 bg-slate-950/90 ${hasActiveFilters || openMenu === "filter" ? "border-sky-500/60 text-sky-200" : "border-slate-700"}`}
-              aria-haspopup="dialog"
-              aria-expanded={openMenu === "filter"}
+              onClick={handleResetUiClick}
+              className={`${controlButtonClass} border-slate-700 bg-slate-950/90`}
+              title="Reset column order, widths, collapsed columns, filters, and sorting"
             >
-              Filter
+              Reset UI
             </button>
+          ) : null}
 
-            {showSortControls ? (
-              <button
-                type="button"
-                onClick={() => setOpenMenu((current) => current === "sort" ? null : "sort")}
-                className={`${controlButtonClass} border-slate-700 bg-slate-950/90 ${hasActiveSort || openMenu === "sort" ? "border-sky-500/60 text-sky-200" : "border-slate-700"}`}
-                aria-haspopup="dialog"
-                aria-expanded={openMenu === "sort"}
-              >
-                {sortButtonLabel}
-              </button>
-            ) : null}
-          </>
-        ) : null}
+          {showFilterControls && openMenu === "filter" ? (
+            <div className="absolute right-0 top-full mt-2 grid min-w-[14rem] gap-2 rounded-md border border-slate-700 bg-slate-950/95 p-2 shadow-xl shadow-black/40">
+              {isSkillLikeFilterPage(tablePage) ? (
+                <>
+                  <div className={sectionLabelClass}>Class</div>
+                  <div className="grid gap-1">
+                    {classFilterOptions.map((option) => (
+                      <button
+                        key={option.value}
+                        type="button"
+                        onClick={() => updateViewState({ classFilter: option.value })}
+                        className={optionButtonClass(viewState.classFilter === option.value)}
+                      >
+                        {option.label}
+                      </button>
+                    ))}
+                  </div>
 
-        {showResetUi ? (
-          <button
-            type="button"
-            onClick={handleResetUiClick}
-            className={`${controlButtonClass} border-slate-700 bg-slate-950/90`}
-            title="Reset column order, widths, collapsed columns, filters, and sorting"
-          >
-            Reset UI
-          </button>
-        ) : null}
+                  <div className={sectionLabelClass}>Race</div>
+                  <div className="grid gap-1">
+                    {raceFilterOptions.map((option) => (
+                      <button
+                        key={option.value}
+                        type="button"
+                        onClick={() => updateViewState({ raceFilter: option.value })}
+                        className={optionButtonClass(viewState.raceFilter === option.value)}
+                      >
+                        {option.label}
+                      </button>
+                    ))}
+                  </div>
 
-        {showFilterControls && openMenu === "filter" ? (
-          <div className="absolute right-0 top-full mt-2 grid min-w-[14rem] gap-2 rounded-md border border-slate-700 bg-slate-950/95 p-2 shadow-xl shadow-black/40">
-            {isSkillLikeFilterPage(tablePage) ? (
-              <>
-                <div className={sectionLabelClass}>Class</div>
-                <div className="grid gap-1">
-                  {classFilterOptions.map((option) => (
-                    <button
-                      key={option.value}
-                      type="button"
-                      onClick={() => updateViewState({ classFilter: option.value })}
-                      className={optionButtonClass(viewState.classFilter === option.value)}
-                    >
-                      {option.label}
-                    </button>
-                  ))}
-                </div>
+                  <div className={sectionLabelClass}>Availability</div>
+                  <div className="grid gap-1">
+                    {availabilityFilterOptions.map((option) => (
+                      <button
+                        key={option.value}
+                        type="button"
+                        onClick={() => updateViewState({ availabilityFilter: option.value })}
+                        className={optionButtonClass(viewState.availabilityFilter === option.value)}
+                      >
+                        {option.label}
+                      </button>
+                    ))}
+                  </div>
+                </>
+              ) : null}
 
-                <div className={sectionLabelClass}>Race</div>
-                <div className="grid gap-1">
-                  {raceFilterOptions.map((option) => (
-                    <button
-                      key={option.value}
-                      type="button"
-                      onClick={() => updateViewState({ raceFilter: option.value })}
-                      className={optionButtonClass(viewState.raceFilter === option.value)}
-                    >
-                      {option.label}
-                    </button>
-                  ))}
-                </div>
+              {tablePage === "tarot" ? (
+                <>
+                  <div className={sectionLabelClass}>Tier</div>
+                  <div className="grid gap-1">
+                    {tarotTierFilterOptions.map((option) => (
+                      <button
+                        key={option.value}
+                        type="button"
+                        onClick={() => updateViewState({ tarotTierFilter: option.value })}
+                        className={optionButtonClass(viewState.tarotTierFilter === option.value)}
+                      >
+                        {option.label}
+                      </button>
+                    ))}
+                  </div>
 
-                <div className={sectionLabelClass}>Availability</div>
-                <div className="grid gap-1">
-                  {availabilityFilterOptions.map((option) => (
-                    <button
-                      key={option.value}
-                      type="button"
-                      onClick={() => updateViewState({ availabilityFilter: option.value })}
-                      className={optionButtonClass(viewState.availabilityFilter === option.value)}
-                    >
-                      {option.label}
-                    </button>
-                  ))}
-                </div>
-              </>
-            ) : null}
+                  <div className={sectionLabelClass}>Type</div>
+                  <div className="grid gap-1">
+                    {tarotTypeFilterOptions.map((option) => (
+                      <button
+                        key={option.value}
+                        type="button"
+                        onClick={() => updateViewState({ tarotTypeFilter: option.value })}
+                        className={optionButtonClass(viewState.tarotTypeFilter === option.value)}
+                      >
+                        {option.label}
+                      </button>
+                    ))}
+                  </div>
 
-            {tablePage === "tarot" ? (
-              <>
-                <div className={sectionLabelClass}>Tier</div>
-                <div className="grid gap-1">
-                  {tarotTierFilterOptions.map((option) => (
-                    <button
-                      key={option.value}
-                      type="button"
-                      onClick={() => updateViewState({ tarotTierFilter: option.value })}
-                      className={optionButtonClass(viewState.tarotTierFilter === option.value)}
-                    >
-                      {option.label}
-                    </button>
-                  ))}
-                </div>
+                  <div className={sectionLabelClass}>Selection</div>
+                  <div className="grid gap-1">
+                    {selectionFilterOptions.map((option) => (
+                      <button
+                        key={option.value}
+                        type="button"
+                        onClick={() => updateViewState({ selectionFilter: option.value })}
+                        className={optionButtonClass(viewState.selectionFilter === option.value)}
+                      >
+                        {option.label}
+                      </button>
+                    ))}
+                  </div>
+                </>
+              ) : null}
+            </div>
+          ) : null}
 
-                <div className={sectionLabelClass}>Type</div>
-                <div className="grid gap-1">
-                  {tarotTypeFilterOptions.map((option) => (
-                    <button
-                      key={option.value}
-                      type="button"
-                      onClick={() => updateViewState({ tarotTypeFilter: option.value })}
-                      className={optionButtonClass(viewState.tarotTypeFilter === option.value)}
-                    >
-                      {option.label}
-                    </button>
-                  ))}
-                </div>
+          {sortPage && openMenu === "sort" ? (
+            <div className="absolute right-0 top-full mt-2 grid min-w-[12rem] gap-1 rounded-md border border-slate-700 bg-slate-950/95 p-2 shadow-xl shadow-black/40">
+              {sortOptions(sortPage).map((option) => (
+                <button
+                  key={option.value}
+                  type="button"
+                  onClick={() => handleSortOptionClick(option.value)}
+                  className={`${optionButtonClass(viewState.sortMode === option.value)} flex items-center justify-between gap-3`}
+                  title={viewState.sortMode === option.value ? "Click again to reverse direction" : undefined}
+                >
+                  <span>{option.label}</span>
+                  <span className={`text-[10px] ${viewState.sortMode === option.value ? "text-sky-200" : "text-slate-500"}`}>
+                    {viewState.sortMode === option.value ? getDirectionArrow(viewState.sortDirection) : ""}
+                  </span>
+                </button>
+              ))}
+            </div>
+          ) : null}
+        </div>
 
-                <div className={sectionLabelClass}>Selection</div>
-                <div className="grid gap-1">
-                  {selectionFilterOptions.map((option) => (
-                    <button
-                      key={option.value}
-                      type="button"
-                      onClick={() => updateViewState({ selectionFilter: option.value })}
-                      className={optionButtonClass(viewState.selectionFilter === option.value)}
-                    >
-                      {option.label}
-                    </button>
-                  ))}
-                </div>
-              </>
-            ) : null}
-          </div>
-        ) : null}
-
-        {sortPage && openMenu === "sort" ? (
-          <div className="absolute right-0 top-full mt-2 grid min-w-[12rem] gap-1 rounded-md border border-slate-700 bg-slate-950/95 p-2 shadow-xl shadow-black/40">
-            {sortOptions(sortPage).map((option) => (
-              <button
-                key={option.value}
-                type="button"
-                onClick={() => handleSortOptionClick(option.value)}
-                className={`${optionButtonClass(viewState.sortMode === option.value)} flex items-center justify-between gap-3`}
-                title={viewState.sortMode === option.value ? "Click again to reverse direction" : undefined}
-              >
-                <span>{option.label}</span>
-                <span className={`text-[10px] ${viewState.sortMode === option.value ? "text-sky-200" : "text-slate-500"}`}>
-                  {viewState.sortMode === option.value ? getDirectionArrow(viewState.sortDirection) : ""}
-                </span>
-              </button>
-            ))}
-          </div>
-        ) : null}
+        <DamageWidget />
       </div>
     </nav>
   )

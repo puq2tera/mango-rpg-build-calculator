@@ -7,6 +7,7 @@ import { DUNGEON_UNLOCKS_STORAGE_KEY, isDungeonUnlockTag } from "@/app/data/dung
 import { skill_data } from "@/app/data/skill_data"
 import { allRacePrereqTokens, getRacePrereqTokens, race_data_by_tag, type RaceTag } from "@/app/data/race_data"
 import { computeBuildStatStages, readBuildSnapshot } from "@/app/lib/buildStats"
+import { dispatchBuildSnapshotUpdated } from "@/app/lib/buildEvents"
 import { calculateDamage, readDamageCalcState } from "@/app/lib/damageCalc"
 import { useManagedColumns } from "@/app/lib/managedColumns"
 import { skillTableColumns } from "@/app/lib/tableColumnDefinitions"
@@ -114,6 +115,7 @@ export default function SkillsPage() {
     }
 
     localStorage.setItem(TRAINING_STORAGE_KEY, JSON.stringify(training))
+    dispatchBuildSnapshotUpdated()
   }, [isHydrated, training])
 
   useEffect(() => {

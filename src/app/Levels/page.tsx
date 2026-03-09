@@ -24,6 +24,7 @@ import {
   heroPointStatsByGroup,
   type HeroPointStat,
 } from "../data/heropoint_data"
+import { dispatchBuildSnapshotUpdated } from "../lib/buildEvents"
 import { calculateHeroPointAvailability } from "../lib/heroPoints"
 import { skill_data } from "../data/skill_data"
 import { talent_data } from "../data/talent_data"
@@ -223,41 +224,49 @@ export default function LevelsPage() {
   useEffect(() => {
     if (!loaded) return
     localStorage.setItem(STORAGE_KEYS.levels, JSON.stringify(levels))
+    dispatchBuildSnapshotUpdated()
   }, [levels, loaded])
 
   useEffect(() => {
     if (!loaded) return
     localStorage.setItem(STORAGE_KEYS.statPoints, JSON.stringify(statPoints))
+    dispatchBuildSnapshotUpdated()
   }, [statPoints, loaded])
 
   useEffect(() => {
     if (!loaded) return
     localStorage.setItem(STORAGE_KEYS.training, JSON.stringify(training))
+    dispatchBuildSnapshotUpdated()
   }, [training, loaded])
 
   useEffect(() => {
     if (!loaded) return
     localStorage.setItem(STORAGE_KEYS.heroPoints, JSON.stringify(heroPoints))
+    dispatchBuildSnapshotUpdated()
   }, [heroPoints, loaded])
 
   useEffect(() => {
     if (!loaded) return
     localStorage.setItem(STORAGE_KEYS.savedLevelOrder, JSON.stringify(classOrder))
+    dispatchBuildSnapshotUpdated()
   }, [classOrder, loaded])
 
   useEffect(() => {
     if (!loaded) return
     localStorage.setItem(STORAGE_KEYS.manualLevelRanges, JSON.stringify(manualLevelRanges))
+    dispatchBuildSnapshotUpdated()
   }, [manualLevelRanges, loaded])
 
   useEffect(() => {
     if (!loaded) return
     localStorage.setItem(STORAGE_KEYS.dungeonUnlocks, JSON.stringify(selectedDungeonUnlocks))
+    dispatchBuildSnapshotUpdated()
   }, [selectedDungeonUnlocks, loaded])
 
   useEffect(() => {
     if (!loaded) return
     localStorage.setItem(STORAGE_KEYS.race, selectedRace)
+    dispatchBuildSnapshotUpdated()
   }, [selectedRace, loaded])
 
   if (!loaded) {

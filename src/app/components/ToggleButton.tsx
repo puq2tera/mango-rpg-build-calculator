@@ -3,6 +3,7 @@
 import type { Dispatch, SetStateAction } from "react"
 import type { Talent } from "../data/talent_data"
 import type { Skill } from "../data/skill_data"
+import { dispatchBuildSnapshotUpdated } from "@/app/lib/buildEvents"
 import { formatSignedDamageDelta } from "@/app/lib/damageCalc"
 import type { ManagedColumn } from "@/app/lib/managedColumns"
 import { getStripedRowClass } from "@/app/lib/tableRowStyles"
@@ -171,6 +172,7 @@ export function ToggleButton({
     setSelected(nextSelected)
     // Update selectedTalents
     localStorage.setItem("selectedTalents", JSON.stringify(Array.from(nextSelected)))
+    dispatchBuildSnapshotUpdated()
     window.dispatchEvent(new Event("talentsUpdated"))
   }
 
@@ -260,6 +262,7 @@ export function SkillButton({
       }
 
       localStorage.setItem("selectedBuffs", JSON.stringify(Array.from(newSet)))
+      dispatchBuildSnapshotUpdated()
       return newSet
     })
   }

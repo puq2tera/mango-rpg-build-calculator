@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect } from "react"
+import { BUILD_SNAPSHOT_UPDATED_EVENT } from "@/app/lib/buildEvents"
 import { computeBuildStatStages, persistBuildStatStages, readBuildSnapshot } from "@/app/lib/buildStats"
 
 function recomputeStoredStats() {
@@ -68,6 +69,7 @@ export default function StatSync() {
     recomputeStoredStats()
 
     const handlers: Array<[string, () => void]> = [
+      [BUILD_SNAPSHOT_UPDATED_EVENT, recomputeStoredStats],
       ["talentsUpdated", recomputeStoredStats],
       ["equipmentUpdated", recomputeStoredStats],
       ["runesUpdated", recomputeStoredStats],
