@@ -23,7 +23,7 @@ import {
   heroPointStatsByGroup,
   type HeroPointStat,
 } from "../data/heropoint_data"
-import { calculateHeroPointAvailability, isHumanRace } from "../lib/heroPoints"
+import { calculateHeroPointAvailability } from "../lib/heroPoints"
 import { skill_data } from "../data/skill_data"
 import { talent_data } from "../data/talent_data"
 import race_data, { race_data_by_tag, type RaceTag } from "../data/race_data"
@@ -270,12 +270,7 @@ export default function LevelsPage() {
   const usedStatPoints = Object.values(statPoints).reduce((a, b) => a + b, 0)
   const remainingStatPoints = totalStatPoints - usedStatPoints
   const totalTraining = Object.values(training).reduce((a, b) => a + b, 0)
-  const {
-    availablePoints: availableHeroPoints,
-    baseScaling: baseHeroPointScaling,
-    humanScaling: humanHeroPointScaling,
-    talentBonus: talentHeroPointBonus,
-  } = calculateHeroPointAvailability(totalLevels, selectedRace, selectedTalents)
+  const { availablePoints: availableHeroPoints } = calculateHeroPointAvailability(totalLevels, selectedRace, selectedTalents)
 
   const totalHeroPoints = heroPointStats.reduce((sum, { id, cost }) => {
     return sum + (heroPoints[id] ?? 0) * cost
@@ -679,13 +674,13 @@ export default function LevelsPage() {
         </thead>
         <tbody>
           <tr>
-            <td className="border px-2 py-1">Skill Points (Odd Levels, Skills + Training)</td>
+            <td className="border px-2 py-1">Skill Points</td>
             <td className="border px-2 py-1">{totalSkillPointsRequired}</td>
             <td className="border px-2 py-1">{availableSkillPoints}</td>
             <td className="border px-2 py-1">{skillPointDeficit}</td>
           </tr>
           <tr>
-            <td className="border px-2 py-1">Talent Points (Even Levels)</td>
+            <td className="border px-2 py-1">Talent Points</td>
             <td className="border px-2 py-1">{totalTalentPointsUsed}</td>
             <td className="border px-2 py-1">{availableTalentPoints}</td>
             <td className="border px-2 py-1">{talentPointDeficit}</td>
@@ -772,11 +767,6 @@ export default function LevelsPage() {
       </table>
 
       <h2 className="text-lg font-bold">Hero Points</h2>
-      <p className="text-sm text-slate-300">
-        Available hero points: {availableHeroPoints} = {baseHeroPointScaling} base
-        {isHumanRace(selectedRace) ? ` + ${humanHeroPointScaling} human bonus` : ""}
-        {talentHeroPointBonus > 0 ? ` + ${talentHeroPointBonus} from talents` : ""}
-      </p>
 
       <table className="text-center text-sm border mb-2">
         <thead>
