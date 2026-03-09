@@ -35,6 +35,37 @@ const runeTiers = ["Low", "Middle", "High", "Legacy", "Divine"] as const
 
 type RuneTier = typeof runeTiers[number]
 
+const getRuneOptionLabel = (runeName: string): string => {
+  const description = rune_data[runeName]?.description?.trim()
+  return description ? `${runeName} (${description})` : runeName
+}
+
+const formatScaledRuneEffect = (description: string, count: number): string => {
+  if (!description || count === 1) return description
+
+  return description.replace(/[+-]?\d*\.?\d+/g, (match) => {
+    const numericValue = Number(match)
+    if (Number.isNaN(numericValue)) return match
+
+    const scaledValue = numericValue * count
+    const roundedValue = Math.round(scaledValue * 1000) / 1000
+    const formattedValue = Number.isInteger(roundedValue)
+      ? String(roundedValue)
+      : roundedValue.toFixed(3).replace(/\.?0+$/, "")
+
+    return match.startsWith("+") && !formattedValue.startsWith("-")
+      ? `+${formattedValue}`
+      : formattedValue
+  })
+}
+
+const getRuneEffectLabel = (selection: RuneSelection): string => {
+  const rune = rune_data[selection.rune]
+  if (!rune) return ""
+
+  return formatScaledRuneEffect(rune.description, selection.count)
+}
+
 const initialSlot = (): Slot => ({
   name: "",
   type: "",
@@ -328,7 +359,7 @@ export default function EquipmentPage() {
                 <tr className="bg-slate-800/85">
                   <th className="border px-2 py-1">Rune</th>
                   <th className="border px-2 py-1">Count</th>
-                  <th className="border px-2 py-1">Description</th>
+                  <th className="border px-2 py-1">Effect</th>
                 </tr>
               </thead>
               <tbody>
@@ -343,7 +374,7 @@ export default function EquipmentPage() {
                         <option value="">Select Rune</option>
                         {runesByTier(tier).map(runeName => (
                           <option key={runeName} value={runeName}>
-                            {runeName}
+                            {getRuneOptionLabel(runeName)}
                           </option>
                         ))}
                       </select>
@@ -365,9 +396,7 @@ export default function EquipmentPage() {
                       </button>
                     </td>
                     <td className="border px-2 py-1">
-                      {selection.rune && rune_data[selection.rune]
-                        ? rune_data[selection.rune].description
-                        : ""}
+                      {getRuneEffectLabel(selection)}
                     </td>
                   </tr>
                 ))}
