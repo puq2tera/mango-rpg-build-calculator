@@ -240,6 +240,10 @@ export default function TalentsPage() {
 
   if (!isHydrated || !columnLayout.isReady) return <div className="p-4">Loading...</div>
 
+  const spentTalentPoints = selected.size
+  const availableTalentPoints = Math.floor(totalLevels / 2)
+  const talentPointsOverSpent = spentTalentPoints > availableTalentPoints
+
   return (
     <div className="h-[calc(100vh-2.5rem)] overflow-auto border rounded-md">
       <div className="min-w-full w-max">
@@ -249,6 +253,24 @@ export default function TalentsPage() {
           onSetColumnCollapsed={columnLayout.setColumnCollapsed}
           onReorderColumns={columnLayout.reorderVisibleColumns}
           onSetColumnWidth={columnLayout.setColumnWidth}
+          renderHeaderLabel={(column) => (
+            column.id === "name"
+              ? (
+                <span className="flex w-full min-w-0 items-center justify-start gap-2">
+                  <span
+                    className={`shrink-0 rounded border px-1.5 py-0.5 text-[10px] font-mono ${
+                      talentPointsOverSpent
+                        ? "border-rose-500/50 bg-rose-500/10 text-rose-200"
+                        : "border-sky-500/40 bg-sky-500/10 text-sky-200"
+                    }`}
+                  >
+                    {spentTalentPoints}/{availableTalentPoints}
+                  </span>
+                  <span className="truncate">{column.label}</span>
+                </span>
+              )
+              : <span className="truncate">{column.label}</span>
+          )}
         />
 
         <div className="space-y-0.5">

@@ -1,5 +1,6 @@
 "use client"
 
+import type { ReactNode } from "react"
 import { useEffect, useState } from "react"
 import { DndContext, PointerSensor, closestCenter, useSensor, useSensors, type DragEndEvent } from "@dnd-kit/core"
 import { SortableContext, horizontalListSortingStrategy, useSortable } from "@dnd-kit/sortable"
@@ -12,6 +13,7 @@ type InteractiveTableHeaderProps<T extends string> = {
   onSetColumnCollapsed: (id: T, collapsed: boolean) => void
   onReorderColumns: (activeId: T, overId: T) => void
   onSetColumnWidth: (id: T, width: number) => void
+  renderHeaderLabel?: (column: ManagedColumn<T>) => ReactNode
 }
 
 type ResizeState<T extends string> = {
@@ -25,6 +27,7 @@ type HeaderCellProps<T extends string> = {
   canCollapse: boolean
   onToggleCollapsed: (id: T, collapsed: boolean) => void
   onResizeStart: (id: T, startX: number, startWidth: number) => void
+  renderHeaderLabel?: (column: ManagedColumn<T>) => ReactNode
 }
 
 function SortableHeaderCell<T extends string>({
@@ -32,6 +35,7 @@ function SortableHeaderCell<T extends string>({
   canCollapse,
   onToggleCollapsed,
   onResizeStart,
+  renderHeaderLabel,
 }: HeaderCellProps<T>) {
   const sortable = useSortable({ id: column.id })
   const {
@@ -91,7 +95,7 @@ function SortableHeaderCell<T extends string>({
         className="flex min-w-0 flex-1 cursor-grab items-center justify-center px-2 py-2 font-bold whitespace-nowrap active:cursor-grabbing"
         title={column.title ?? `${column.label}: drag to reorder, right-click to collapse`}
       >
-        <span className="truncate">{column.label}</span>
+        {renderHeaderLabel ? renderHeaderLabel(column) : <span className="truncate">{column.label}</span>}
       </button>
 
       <div
@@ -113,6 +117,7 @@ export function InteractiveTableHeader<T extends string>({
   onSetColumnCollapsed,
   onReorderColumns,
   onSetColumnWidth,
+  renderHeaderLabel,
 }: InteractiveTableHeaderProps<T>) {
   const [resizeState, setResizeState] = useState<ResizeState<T> | null>(null)
   const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 4 } }))
@@ -164,6 +169,7 @@ export function InteractiveTableHeader<T extends string>({
                 canCollapse={visibleColumns.length > 1}
                 onToggleCollapsed={onSetColumnCollapsed}
                 onResizeStart={(id, startX, startWidth) => setResizeState({ id, startX, startWidth })}
+                renderHeaderLabel={renderHeaderLabel}
               />
             ))}
           </div>
