@@ -350,62 +350,68 @@ export default function EquipmentPage() {
       </table>
 
       {/* Rune Editor */}
-      <div className="space-y-8">
+      <div className="space-y-5">
         {runeTiers.map(tier => (
-          <div key={tier}>
-            <h2 className="text-lg font-semibold">{tier} Tier Runes</h2>
-            <table className="table-fixed border-collapse w-full text-sm">
-              <thead>
-                <tr className="bg-slate-800/85">
-                  <th className="border px-2 py-1">Rune</th>
-                  <th className="border px-2 py-1">Count</th>
-                  <th className="border px-2 py-1">Effect</th>
-                </tr>
-              </thead>
-              <tbody>
-                {selectedRunes[tier].map((selection, idx) => (
-                  <tr key={idx}>
-                    <td className="border px-2 py-1">
-                      <select
-                        value={selection.rune}
-                        onChange={e => updateRuneSelection(tier, idx, "rune", e.target.value)}
-                        className="w-full border px-1"
-                      >
-                        <option value="">Select Rune</option>
-                        {runesByTier(tier).map(runeName => (
-                          <option key={runeName} value={runeName}>
-                            {getRuneOptionLabel(runeName)}
-                          </option>
-                        ))}
-                      </select>
-                    </td>
-                    <td className="border px-2 py-1 flex gap-2 items-center">
-                      <input
-                        type="number"
-                        value={selection.count}
-                        min={1}
-                        onChange={e => updateRuneSelection(tier, idx, "count", +e.target.value)}
-                        className="w-full border px-1"
-                      />
-                      <button
-                        type="button"
-                        onClick={() => removeRuneRow(tier, idx)}
-                        className="px-2 py-0.5 bg-rose-600 text-slate-100 text-xs rounded"
-                      >
-                        ✕
-                      </button>
-                    </td>
-                    <td className="border px-2 py-1">
-                      {getRuneEffectLabel(selection)}
-                    </td>
+          <div key={tier} className="max-w-full">
+            <h2 className="text-base font-semibold">{tier} Tier Runes</h2>
+            <div className="mt-1 overflow-x-auto">
+              <table className="w-auto border-collapse text-xs leading-tight">
+                <thead>
+                  <tr className="bg-slate-800/85">
+                    <th className="border px-1.5 py-1 text-left font-semibold">Rune</th>
+                    <th className="border px-1.5 py-1 text-left font-semibold">Count</th>
+                    <th className="border px-1.5 py-1 text-left font-semibold">Effect</th>
                   </tr>
-                ))}
-            </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {selectedRunes[tier].map((selection, idx) => (
+                    <tr key={idx}>
+                      <td className="border px-1.5 py-1 align-top">
+                        <select
+                          value={selection.rune}
+                          onChange={e => updateRuneSelection(tier, idx, "rune", e.target.value)}
+                          className="w-[17rem] border px-1 py-0.5 text-xs leading-tight"
+                        >
+                          <option value="">Select Rune</option>
+                          {runesByTier(tier).map(runeName => (
+                            <option key={runeName} value={runeName}>
+                              {getRuneOptionLabel(runeName)}
+                            </option>
+                          ))}
+                        </select>
+                      </td>
+                      <td className="border px-1.5 py-1 align-top">
+                        <div className="flex items-center gap-1">
+                          <input
+                            type="number"
+                            value={selection.count}
+                            min={1}
+                            onChange={e => updateRuneSelection(tier, idx, "count", +e.target.value)}
+                            className="w-14 border px-1 py-0.5 text-xs text-center"
+                          />
+                          <button
+                            type="button"
+                            onClick={() => removeRuneRow(tier, idx)}
+                            className="px-1.5 py-0.5 bg-rose-600 text-slate-100 text-[11px] rounded"
+                          >
+                            ✕
+                          </button>
+                        </div>
+                      </td>
+                      <td className="border px-1.5 py-1 align-top">
+                        <div className="max-w-[18rem] whitespace-normal leading-snug">
+                          {getRuneEffectLabel(selection)}
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
             <div className="mt-2">
               <button
                 onClick={() => addRuneRow(tier)}
-                className="px-3 py-1 bg-sky-600 text-slate-100 rounded"
+                className="px-2.5 py-0.5 bg-sky-600 text-slate-100 text-xs rounded"
               >
                 + Add Rune
               </button>
