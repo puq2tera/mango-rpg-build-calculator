@@ -44,6 +44,7 @@ export default function SkillsPage() {
   const [viewState, setViewState] = useState<TableViewState>(getDefaultTableViewState)
   const columnLayout = useManagedColumns("skillColumnLayout", skillTableColumns)
   const allRaceTokens = useMemo(() => allRacePrereqTokens, [])
+  const totalTraining = Object.values(training).reduce((sum, value) => sum + value, 0)
 
   useEffect(() => {
     const stored = localStorage.getItem(STORAGE_KEY)
@@ -218,6 +219,7 @@ export default function SkillsPage() {
         selectedRacePrereqs,
         selectedDungeonUnlocks,
         classLevels,
+        trainingPointsSpent: totalTraining,
       })
 
       if (!matchesRaceFilter(availabilityState.raceFilterTokens, viewState.raceFilter, selectedRacePrereqs, allRaceTokens)) {
@@ -265,13 +267,13 @@ export default function SkillsPage() {
     selectedDungeonUnlocks,
     selectedRacePrereqs,
     selectedTalents,
+    totalTraining,
     viewState,
   ])
 
   if (!isHydrated || !columnLayout.isReady) return <div className="p-4">Loading...</div>
 
   const totalLevels = Object.values(classLevels).reduce((sum, value) => sum + value, 0)
-  const totalTraining = Object.values(training).reduce((sum, value) => sum + value, 0)
   const spentSkillPoints = Array.from(selected).reduce((sum, skillName) => sum + (skill_data[skillName]?.sp ?? 0), 0) + totalTraining
   const availableSkillPoints = Math.ceil(totalLevels / 2)
   const skillPointsOverSpent = spentSkillPoints > availableSkillPoints
@@ -339,6 +341,7 @@ export default function SkillsPage() {
               selectedRacePrereqs={selectedRacePrereqs}
               selectedDungeonUnlocks={selectedDungeonUnlocks}
               classLevels={classLevels}
+              trainingPointsSpent={totalTraining}
               columns={columnLayout.visibleColumns}
               averageDamageChange={averageDamageChanges[name] ?? null}
               rowIndex={rowIndex}

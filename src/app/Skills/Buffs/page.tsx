@@ -20,6 +20,7 @@ import {
 } from "@/app/lib/tableViewState"
 
 const STORAGE_KEY = "selectedBuffs"
+const TRAINING_STORAGE_KEY = "SelectedTraining"
 const buffNames = Object.entries(skill_data)
   .filter(([, data]) => data.type?.is_buff === true)
   .map(([name]) => name)
@@ -33,6 +34,7 @@ export default function BuffsPage() {
   const [selectedRacePrereqs, setSelectedRacePrereqs] = useState<Set<string>>(new Set())
   const [selectedDungeonUnlocks, setSelectedDungeonUnlocks] = useState<Set<string>>(new Set())
   const [classLevels, setClassLevels] = useState({ tank: 0, warrior: 0, caster: 0, healer: 0 })
+  const [trainingPointsSpent, setTrainingPointsSpent] = useState(0)
   const [averageDamageChanges, setAverageDamageChanges] = useState<Record<string, number>>({})
   const [viewState, setViewState] = useState<TableViewState>(getDefaultTableViewState)
   const columnLayout = useManagedColumns("buffColumnLayout", buffTableColumns)
@@ -46,6 +48,7 @@ export default function BuffsPage() {
     const storedRace = localStorage.getItem("SelectedRace")
     const storedDungeonUnlocks = localStorage.getItem(DUNGEON_UNLOCKS_STORAGE_KEY)
     const rawLevels = localStorage.getItem("SelectedLevels")
+    const rawTraining = localStorage.getItem(TRAINING_STORAGE_KEY)
 
     try {
       setSelected(stored ? new Set(JSON.parse(stored)) : new Set())
@@ -83,6 +86,18 @@ export default function BuffsPage() {
       })
     } catch {
       setClassLevels({ tank: 0, warrior: 0, caster: 0, healer: 0 })
+    }
+
+    try {
+      const parsedTraining: Record<string, number> = rawTraining ? JSON.parse(rawTraining) : {}
+      setTrainingPointsSpent(
+        Number(parsedTraining.DEF ?? 0)
+        + Number(parsedTraining.ATK ?? 0)
+        + Number(parsedTraining.MATK ?? 0)
+        + Number(parsedTraining.HEAL ?? 0),
+      )
+    } catch {
+      setTrainingPointsSpent(0)
     }
 
     setViewState(readTableViewState(localStorage, "buffs"))
@@ -189,6 +204,7 @@ export default function BuffsPage() {
         selectedRacePrereqs,
         selectedDungeonUnlocks,
         classLevels,
+        trainingPointsSpent,
       })
 
       if (!matchesRaceFilter(availabilityState.raceFilterTokens, viewState.raceFilter, selectedRacePrereqs, allRaceTokens)) {
@@ -235,6 +251,7 @@ export default function BuffsPage() {
     selectedDungeonUnlocks,
     selectedRacePrereqs,
     selectedTalents,
+    trainingPointsSpent,
     viewState,
   ])
 
@@ -263,6 +280,7 @@ export default function BuffsPage() {
               selectedRacePrereqs={selectedRacePrereqs}
               selectedDungeonUnlocks={selectedDungeonUnlocks}
               classLevels={classLevels}
+              trainingPointsSpent={trainingPointsSpent}
               columns={columnLayout.visibleColumns}
               averageDamageChange={averageDamageChanges[name] ?? null}
               rowIndex={rowIndex}

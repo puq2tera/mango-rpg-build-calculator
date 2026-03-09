@@ -31,6 +31,7 @@ type SkillButtonProps = {
   selectedRacePrereqs: Set<string>
   selectedDungeonUnlocks: Set<string>
   classLevels: ClassLevels
+  trainingPointsSpent?: number
   columns: ManagedColumn[]
   averageDamageChange?: number | null
   rowIndex: number
@@ -221,6 +222,7 @@ export function SkillButton({
   selectedRacePrereqs,
   selectedDungeonUnlocks,
   classLevels,
+  trainingPointsSpent = 0,
   columns,
   averageDamageChange,
   rowIndex,
@@ -234,6 +236,7 @@ export function SkillButton({
     selectedRacePrereqs,
     selectedDungeonUnlocks,
     classLevels,
+    trainingPointsSpent,
   })
   const isUnavailable = blockedTagConflict || missingRequirement
 

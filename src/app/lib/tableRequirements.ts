@@ -36,6 +36,7 @@ type SkillAvailabilityArgs = {
   selectedRacePrereqs: Set<string>
   selectedDungeonUnlocks: Set<string>
   classLevels: ClassLevels
+  trainingPointsSpent?: number
 }
 
 const splitPrereqTokens = (preReq: Array<string> | string | undefined): string[] => {
@@ -188,6 +189,7 @@ export function getSkillAvailabilityState({
   selectedRacePrereqs,
   selectedDungeonUnlocks,
   classLevels,
+  trainingPointsSpent = 0,
 }: SkillAvailabilityArgs) {
   const prereqTokens = getSkillPrereqTokens(skill)
   const raceFilterTokens = collectExpandedPrereqTokens(prereqTokens)
@@ -207,7 +209,7 @@ export function getSkillAvailabilityState({
       .map((name) => talent_data[name]?.Tag)
       .filter((tag): tag is string => Boolean(tag)),
   )
-  const selectedSkillPoints = Array.from(selectedSkills).reduce((sum, name) => sum + (skill_data[name]?.sp ?? 0), 0)
+  const selectedSkillPoints = Array.from(selectedSkills).reduce((sum, name) => sum + (skill_data[name]?.sp ?? 0), 0) + trainingPointsSpent
   const spentPointsBeforeCurrent = selectedSkillPoints - (selectedSkills.has(skillName) ? (skill.sp ?? 0) : 0)
 
   const missingPrereq = prereqTokens.some((req) => (
