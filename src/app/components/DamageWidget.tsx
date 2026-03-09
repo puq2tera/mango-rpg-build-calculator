@@ -85,9 +85,9 @@ export default function DamageWidget() {
   }
 
   return (
-    <div className="flex items-center gap-2 rounded-md border border-slate-700 bg-slate-950/90 px-2 py-1 shadow-sm shadow-black/25">
-      <div className="min-w-0">
-        <div className="text-[9px] font-semibold uppercase tracking-[0.14em] text-slate-400">
+    <div className="flex items-center gap-2 px-1 py-0.5">
+      <div className="flex min-w-0 items-baseline gap-1.5 leading-none">
+        <div className="shrink-0 text-[9px] font-semibold uppercase tracking-[0.14em] text-slate-400">
           Damage
         </div>
         <div className="font-mono text-sm font-semibold tabular-nums text-slate-50">
@@ -95,18 +95,23 @@ export default function DamageWidget() {
         </div>
       </div>
 
-      <select
-        aria-label="Select damage value"
-        value={mode}
-        onChange={(event) => handleModeChange(event.target.value)}
-        className="min-w-[8.5rem] rounded border border-slate-700 bg-slate-900 px-2 py-1 text-[11px]"
-      >
-        {widgetModes.map((entry) => (
-          <option key={entry.key} value={entry.key}>
-            {entry.label}
-          </option>
-        ))}
-      </select>
+      <div className="relative shrink-0">
+        <select
+          aria-label="Select damage value"
+          value={mode}
+          onChange={(event) => handleModeChange(event.target.value)}
+          className="min-w-[7.5rem] appearance-none bg-transparent py-0.5 pr-4 pl-0 text-[11px] leading-none text-slate-300 outline-none transition hover:text-sky-200"
+        >
+          {widgetModes.map((entry) => (
+            <option key={entry.key} value={entry.key}>
+              {entry.label}
+            </option>
+          ))}
+        </select>
+        <span className="pointer-events-none absolute right-0 top-1/2 -translate-y-1/2 text-[9px] text-slate-500">
+          ▾
+        </span>
+      </div>
     </div>
   )
 }

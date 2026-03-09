@@ -8,6 +8,7 @@
   --muted: #9ba9ba;
   --border: #2a3647;
   --accent: #66a9ff;
+  --top-nav-height: 2.5rem;
   color-scheme: dark;
 }
 
@@ -26,6 +27,11 @@ body {
     var(--background);
   color: var(--foreground);
   font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+}
+
+.viewport-below-top-nav {
+  height: calc(100vh - var(--top-nav-height));
+  height: calc(100dvh - var(--top-nav-height));
 }
 
 *,

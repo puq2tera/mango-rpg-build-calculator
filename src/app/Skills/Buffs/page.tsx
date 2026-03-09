@@ -258,7 +258,7 @@ export default function BuffsPage() {
   if (!isHydrated || !columnLayout.isReady) return <div className="p-4">Loading...</div>
 
   return (
-    <div className="h-[calc(100vh-2.5rem)] overflow-auto border rounded-md">
+    <div className="viewport-below-top-nav overflow-auto border rounded-md">
       <div className="min-w-full w-max">
         <InteractiveTableHeader
           visibleColumns={columnLayout.visibleColumns}

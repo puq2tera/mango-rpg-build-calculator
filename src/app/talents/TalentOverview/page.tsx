@@ -28,7 +28,7 @@ export default function TalentOverview() {
   if (colWidths.length === 0) return <div className="p-4">Loading...</div>
 
   return (
-    <div className="h-[calc(100vh-2.5rem)] overflow-y-auto border rounded-md">
+    <div className="viewport-below-top-nav overflow-y-auto border rounded-md">
       <div
         className="sticky top-0 z-10 bg-slate-900 border-b py-2 grid gap-x-0"
         style={{ gridTemplateColumns: colWidths.join(" ") }}

@@ -26,7 +26,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <StatSync />
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased pt-10`}>
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <TopNav />
         {children}
       </body>

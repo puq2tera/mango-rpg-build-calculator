@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useLayoutEffect, useRef, useState } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import DamageWidget from "@/app/components/DamageWidget"
@@ -119,12 +119,37 @@ export default function TopNav() {
   const normalizedPathname = normalizePathname(pathname)
   const showResetUi = RESETTABLE_PATHS.has(normalizedPathname)
   const tablePage = getTableViewPageFromPathname(normalizedPathname)
+  const navRef = useRef<HTMLElement | null>(null)
   const [openMenu, setOpenMenu] = useState<"filter" | "sort" | null>(null)
   const [viewState, setViewState] = useState<TableViewState>(getDefaultTableViewState)
   const controlsRef = useRef<HTMLDivElement | null>(null)
   const showFilterControls = tablePage !== null
   const sortPage = isSortPage(tablePage) ? tablePage : null
   const showSortControls = sortPage !== null
+
+  useLayoutEffect(() => {
+    const nav = navRef.current
+    if (!nav) {
+      return
+    }
+
+    const root = document.documentElement
+    const updateNavHeight = () => {
+      root.style.setProperty("--top-nav-height", `${nav.offsetHeight}px`)
+    }
+
+    updateNavHeight()
+
+    const resizeObserver = new ResizeObserver(updateNavHeight)
+    resizeObserver.observe(nav)
+    window.addEventListener("resize", updateNavHeight)
+
+    return () => {
+      resizeObserver.disconnect()
+      window.removeEventListener("resize", updateNavHeight)
+      root.style.removeProperty("--top-nav-height")
+    }
+  }, [])
 
   useEffect(() => {
     setOpenMenu(null)
@@ -204,7 +229,10 @@ export default function TopNav() {
   }
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 flex items-center gap-3 border-b border-slate-700 bg-slate-950/90 px-5 py-2 text-xs shadow-lg shadow-black/30 backdrop-blur">
+    <nav
+      ref={navRef}
+      className="sticky top-0 z-50 flex items-center gap-3 border-b border-slate-700 bg-slate-950/90 px-5 py-2 text-xs shadow-lg shadow-black/30 backdrop-blur"
+    >
       <div className="flex min-w-0 flex-1 flex-wrap items-center gap-3">
         {navLinks.map(([href, label]) => (
           <Link key={href} href={href} className="text-slate-100 transition-colors hover:text-sky-300">
@@ -214,6 +242,8 @@ export default function TopNav() {
       </div>
 
       <div className="flex shrink-0 items-center gap-2">
+        <DamageWidget />
+
         <div ref={controlsRef} className="relative flex items-center gap-2">
           {showFilterControls ? (
             <>
@@ -367,8 +397,6 @@ export default function TopNav() {
             </div>
           ) : null}
         </div>
-
-        <DamageWidget />
       </div>
     </nav>
   )

@@ -333,7 +333,7 @@ export default function TarotCardsPage() {
   }
 
   return (
-    <div className="h-[calc(100vh-2.5rem)] overflow-auto border rounded-md">
+    <div className="viewport-below-top-nav overflow-auto border rounded-md">
       <div className="min-w-full w-max">
         <InteractiveTableHeader
           visibleColumns={columnLayout.visibleColumns}

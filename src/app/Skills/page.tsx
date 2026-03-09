@@ -363,7 +363,7 @@ export default function SkillsPage() {
   const skillPointsOverSpent = spentSkillPoints > availableSkillPoints
 
   return (
-    <div ref={containerRef} className="h-[calc(100vh-2.5rem)] overflow-auto border rounded-md">
+    <div ref={containerRef} className="viewport-below-top-nav overflow-auto border rounded-md">
       <div className="min-w-full w-max">
         <div className="border-b bg-slate-950/90 px-4 py-3">
           <div className="flex flex-wrap items-center gap-4">

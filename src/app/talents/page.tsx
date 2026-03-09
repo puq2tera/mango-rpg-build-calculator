@@ -327,7 +327,7 @@ export default function TalentsPage() {
   const talentPointsOverSpent = spentTalentPoints > availableTalentPoints
 
   return (
-    <div ref={containerRef} className="h-[calc(100vh-2.5rem)] overflow-auto border rounded-md">
+    <div ref={containerRef} className="viewport-below-top-nav overflow-auto border rounded-md">
       <div className="min-w-full w-max">
         <InteractiveTableHeader
           visibleColumns={columnLayout.visibleColumns}
