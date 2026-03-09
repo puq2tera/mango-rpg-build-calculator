@@ -39,6 +39,11 @@ type SkillAvailabilityArgs = {
   trainingPointsSpent?: number
 }
 
+const secondPrestigeUnlockByPrereq = {
+  PleiadesTrial: "AncientTrial",
+  DeathGodBlessing: "SpiritFragment",
+} as const
+
 const splitPrereqTokens = (preReq: Array<string> | string | undefined): string[] => {
   if (!preReq) {
     return []
@@ -58,6 +63,34 @@ export function getTalentPrereqTokens(talent: Talent): string[] {
 
 export function getSkillPrereqTokens(skill: Skill): string[] {
   return splitPrereqTokens(skill.PreReq)
+}
+
+function getSecondPrestigeUnlock(
+  talent: Talent,
+  prereqTokens: readonly string[],
+): string | null {
+  if (talent.category !== "prestige") {
+    return null
+  }
+
+  if (prereqTokens.includes("PleiadesTrial")) {
+    return secondPrestigeUnlockByPrereq.PleiadesTrial
+  }
+
+  if (prereqTokens.includes("DeathGodBlessing")) {
+    return secondPrestigeUnlockByPrereq.DeathGodBlessing
+  }
+
+  return null
+}
+
+function multiplyClassLevels(requiredClassLevels: RequiredClassLevels, multiplier: number): RequiredClassLevels {
+  return {
+    tank_levels: (requiredClassLevels.tank_levels ?? 0) * multiplier,
+    warrior_levels: (requiredClassLevels.warrior_levels ?? 0) * multiplier,
+    caster_levels: (requiredClassLevels.caster_levels ?? 0) * multiplier,
+    healer_levels: (requiredClassLevels.healer_levels ?? 0) * multiplier,
+  }
 }
 
 function collectExpandedPrereqTokens(
@@ -140,14 +173,19 @@ export function getTalentAvailabilityState({
       .filter((tag): tag is string => Boolean(tag)),
   )
 
-  const otherSelectedTalentTags = new Set(
-    Array.from(selectedTalents)
-      .filter((name) => name !== talentName)
-      .map((name) => talent_data[name]?.Tag)
-      .filter((tag): tag is string => Boolean(tag)),
-  )
-
-  const prereqTokens = getTalentPrereqTokens(talent)
+  const basePrereqTokens = getTalentPrereqTokens(talent)
+  const matchingBlockedTagCount = talent.BlockedTag
+    ? Array.from(selectedTalents).filter((name) => name !== talentName && talent_data[name]?.Tag === talent.BlockedTag).length
+    : 0
+  const secondPrestigeUnlock = getSecondPrestigeUnlock(talent, basePrereqTokens)
+  const isSecondPrestigeSelection = Boolean(secondPrestigeUnlock) && matchingBlockedTagCount > 0
+  const prereqTokens = isSecondPrestigeSelection && secondPrestigeUnlock
+    ? [...basePrereqTokens, secondPrestigeUnlock]
+    : basePrereqTokens
+  const requirementMultiplier = isSecondPrestigeSelection ? 2 : 1
+  const requiredClassLevels = multiplyClassLevels(talent.class_levels, requirementMultiplier)
+  const requiredTotalLevel = (talent.total_level ?? 0) * requirementMultiplier
+  const requiredTalentPoints = (talent.tp_spent ?? 0) * requirementMultiplier
   const missingPrereq = prereqTokens.some((req) => (
     !selectedTalents.has(req) &&
     !selectedTalentTags.has(req) &&
@@ -156,20 +194,21 @@ export function getTalentAvailabilityState({
   ))
 
   const missingClassLevel = (
-    classLevels.tank < (talent.class_levels.tank_levels ?? 0) ||
-    classLevels.warrior < (talent.class_levels.warrior_levels ?? 0) ||
-    classLevels.caster < (talent.class_levels.caster_levels ?? 0) ||
-    classLevels.healer < (talent.class_levels.healer_levels ?? 0)
+    classLevels.tank < (requiredClassLevels.tank_levels ?? 0) ||
+    classLevels.warrior < (requiredClassLevels.warrior_levels ?? 0) ||
+    classLevels.caster < (requiredClassLevels.caster_levels ?? 0) ||
+    classLevels.healer < (requiredClassLevels.healer_levels ?? 0)
   )
 
   const tpSpent = selectedTalents.size - (selectedTalents.has(talentName) ? 1 : 0)
   const missingRequirement = (
-    totalLevels < (talent.total_level ?? 0) ||
-    tpSpent < (talent.tp_spent ?? 0) ||
+    totalLevels < requiredTotalLevel ||
+    tpSpent < requiredTalentPoints ||
     missingPrereq ||
     missingClassLevel
   )
-  const blockedTagConflict = Boolean(talent.BlockedTag) && otherSelectedTalentTags.has(talent.BlockedTag)
+  const maxSelectableTalentsInGroup = secondPrestigeUnlock && selectedDungeonUnlocks.has(secondPrestigeUnlock) ? 2 : 1
+  const blockedTagConflict = Boolean(talent.BlockedTag) && matchingBlockedTagCount >= maxSelectableTalentsInGroup
   const raceFilterTokens = collectExpandedPrereqTokens(prereqTokens)
 
   return {
@@ -177,6 +216,9 @@ export function getTalentAvailabilityState({
     raceFilterTokens,
     missingRequirement,
     blockedTagConflict,
+    requiredClassLevels,
+    requiredTotalLevel,
+    requiredTalentPoints,
     isAvailable: !missingRequirement && !blockedTagConflict,
   }
 }

@@ -132,7 +132,14 @@ export function ToggleButton({
   rowIndex,
 }: ToggleButtonProps) {
   const isSelected = selected.has(talentName)
-  const { blockedTagConflict, missingRequirement } = getTalentAvailabilityState({
+  const {
+    blockedTagConflict,
+    missingRequirement,
+    prereqTokens,
+    requiredClassLevels,
+    requiredTotalLevel,
+    requiredTalentPoints,
+  } = getTalentAvailabilityState({
     talentName,
     talent,
     selectedTalents: selected,
@@ -169,17 +176,17 @@ export function ToggleButton({
 
   const values: Record<string, string> = {
     name: talentName,
-    preReq: Array.isArray(talent.PreReq) ? talent.PreReq.join(", ") : talent.PreReq,
+    preReq: prereqTokens.join(", "),
     tag: talent.Tag,
     blockedTag: talent.BlockedTag,
     gold: String(talent.gold),
     exp: String(talent.exp),
-    tp: String(talent.tp_spent),
-    lvl: String(talent.total_level),
-    tank: String(talent.class_levels.tank_levels),
-    warrior: String(talent.class_levels.warrior_levels),
-    caster: String(talent.class_levels.caster_levels),
-    healer: String(talent.class_levels.healer_levels),
+    tp: String(requiredTalentPoints),
+    lvl: String(requiredTotalLevel),
+    tank: String(requiredClassLevels.tank_levels ?? 0),
+    warrior: String(requiredClassLevels.warrior_levels ?? 0),
+    caster: String(requiredClassLevels.caster_levels ?? 0),
+    healer: String(requiredClassLevels.healer_levels ?? 0),
     description: talent.description,
     avgDamageChange: formatSignedDamageDelta(averageDamageChange),
   }
