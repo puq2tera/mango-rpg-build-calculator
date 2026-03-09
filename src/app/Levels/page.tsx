@@ -13,6 +13,7 @@ import { arrayMove, SortableContext, verticalListSortingStrategy, useSortable } 
 import { CSS } from "@dnd-kit/utilities"
 import {
   DUNGEON_UNLOCKS_STORAGE_KEY,
+  dungeonUnlockTooltips,
   dungeonUnlockTags,
   isDungeonUnlockTag,
   type DungeonUnlockTag,
@@ -460,9 +461,11 @@ export default function LevelsPage() {
         <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 xl:grid-cols-3">
           {dungeonUnlockTags.map((tag) => {
             const checked = selectedDungeonUnlockSet.has(tag)
+            const tooltip = dungeonUnlockTooltips[tag]
             return (
               <label
                 key={tag}
+                title={tooltip}
                 className={`flex cursor-pointer items-center gap-3 border px-3 py-2 transition ${
                   checked
                     ? "border-amber-700/70 bg-amber-900/30"
