@@ -4283,7 +4283,7 @@ const talent_data: Record<string, Talent> = {
         "PreReq": [
             "T_AeonShard"
         ],
-        "Tag": "T_AeonCore",
+        "Tag": "T_AeonCore, T_StarGodHeart",
         "BlockedTag": "",
         "gold": 500,
         "exp": 15000,
@@ -4384,7 +4384,7 @@ const talent_data: Record<string, Talent> = {
         "PreReq": [
             "T_InfinityShard"
         ],
-        "Tag": "T_InfinityCore",
+        "Tag": "T_InfinityCore, T_StarGodHeart",
         "BlockedTag": "",
         "gold": 500,
         "exp": 15000,
@@ -4480,7 +4480,7 @@ const talent_data: Record<string, Talent> = {
         "PreReq": [
             "T_CosmicShard"
         ],
-        "Tag": "T_CosmicCore",
+        "Tag": "T_CosmicCore, T_StarGodHeart",
         "BlockedTag": "",
         "gold": 500,
         "exp": 15000,
@@ -10874,7 +10874,7 @@ const talent_data: Record<string, Talent> = {
         "PreReq": [
             "W_AeonShard"
         ],
-        "Tag": "W_AeonCore",
+        "Tag": "W_AeonCore, W_StarGodHeart",
         "BlockedTag": "",
         "gold": 500,
         "exp": 15000,
@@ -10979,7 +10979,7 @@ const talent_data: Record<string, Talent> = {
         "PreReq": [
             "W_InfinityShard"
         ],
-        "Tag": "W_InfinityCore",
+        "Tag": "W_InfinityCore, W_StarGodHeart",
         "BlockedTag": "",
         "gold": 500,
         "exp": 15000,
@@ -11094,7 +11094,7 @@ const talent_data: Record<string, Talent> = {
         "PreReq": [
             "W_CosmicShard"
         ],
-        "Tag": "W_CosmicCore",
+        "Tag": "W_CosmicCore, W_StarGodHeart",
         "BlockedTag": "",
         "gold": 500,
         "exp": 15000,
@@ -16060,7 +16060,7 @@ const talent_data: Record<string, Talent> = {
         "PreReq": [
             "C_AeonShard"
         ],
-        "Tag": "C_AeonCore",
+        "Tag": "C_AeonCore, C_StarGodHeart",
         "BlockedTag": "",
         "gold": 500,
         "exp": 15000,
@@ -16168,7 +16168,7 @@ const talent_data: Record<string, Talent> = {
         "PreReq": [
             "C_InfinityShard"
         ],
-        "Tag": "C_InfinityCore",
+        "Tag": "C_InfinityCore, C_StarGodHeart",
         "BlockedTag": "",
         "gold": 500,
         "exp": 15000,
@@ -16282,7 +16282,7 @@ const talent_data: Record<string, Talent> = {
         "PreReq": [
             "C_CosmicShard"
         ],
-        "Tag": "C_CosmicCore",
+        "Tag": "C_CosmicCore, C_StarGodHeart",
         "BlockedTag": "",
         "gold": 500,
         "exp": 15000,
@@ -20470,7 +20470,7 @@ const talent_data: Record<string, Talent> = {
         "PreReq": [
             "H_AeonShard"
         ],
-        "Tag": "H_AeonCore",
+        "Tag": "H_AeonCore, H_StarGodHeart",
         "BlockedTag": "",
         "gold": 500,
         "exp": 15000,
@@ -20578,7 +20578,7 @@ const talent_data: Record<string, Talent> = {
         "PreReq": [
             "H_InfinityShard"
         ],
-        "Tag": "H_InfinityCore",
+        "Tag": "H_InfinityCore, H_StarGodHeart",
         "BlockedTag": "",
         "gold": 500,
         "exp": 15000,
@@ -20692,7 +20692,7 @@ const talent_data: Record<string, Talent> = {
         "PreReq": [
             "H_CosmicShard"
         ],
-        "Tag": "H_CosmicCore",
+        "Tag": "H_CosmicCore, H_StarGodHeart",
         "BlockedTag": "",
         "gold": 500,
         "exp": 15000,

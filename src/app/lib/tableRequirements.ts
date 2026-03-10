@@ -57,6 +57,17 @@ const splitPrereqTokens = (preReq: Array<string> | string | undefined): string[]
     .filter((value) => value.length > 0)
 }
 
+const splitTagTokens = (tag: string | undefined): string[] => {
+  if (!tag) {
+    return []
+  }
+
+  return tag
+    .split(",")
+    .map((value) => value.trim())
+    .filter((value) => value.length > 0)
+}
+
 export function getTalentPrereqTokens(talent: Talent): string[] {
   return splitPrereqTokens(talent.PreReq)
 }
@@ -184,13 +195,15 @@ export function getTalentAvailabilityState({
 }: TalentAvailabilityArgs) {
   const selectedTalentTags = new Set(
     Array.from(selectedTalents)
-      .map((name) => talent_data[name]?.Tag)
-      .filter((tag): tag is string => Boolean(tag)),
+      .flatMap((name) => splitTagTokens(talent_data[name]?.Tag)),
   )
 
   const basePrereqTokens = getTalentPrereqTokens(talent)
   const matchingBlockedTagCount = talent.BlockedTag
-    ? Array.from(selectedTalents).filter((name) => name !== talentName && talent_data[name]?.Tag === talent.BlockedTag).length
+    ? Array.from(selectedTalents).filter((name) => (
+      name !== talentName &&
+      splitTagTokens(talent_data[name]?.Tag).includes(talent.BlockedTag)
+    )).length
     : 0
   const secondPrestigeUnlock = getSecondPrestigeUnlock(talent, basePrereqTokens)
   const isSecondPrestigeSelection = Boolean(secondPrestigeUnlock) && matchingBlockedTagCount > 0
@@ -263,8 +276,7 @@ export function getSkillAvailabilityState({
   )
   const selectedTalentTags = new Set(
     Array.from(selectedTalents)
-      .map((name) => talent_data[name]?.Tag)
-      .filter((tag): tag is string => Boolean(tag)),
+      .flatMap((name) => splitTagTokens(talent_data[name]?.Tag)),
   )
   const selectedSkillPoints = Array.from(selectedSkills).reduce((sum, name) => sum + (skill_data[name]?.sp ?? 0), 0) + trainingPointsSpent
   const spentPointsBeforeCurrent = selectedSkillPoints - (selectedSkills.has(skillName) ? (skill.sp ?? 0) : 0)
