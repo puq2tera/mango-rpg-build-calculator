@@ -155,6 +155,26 @@ function renderPrereqTokens(prereqTokens: readonly string[]): ReactNode {
   )
 }
 
+function formatDebugJson(value: unknown, fallback: string): string {
+  if (Array.isArray(value)) {
+    return value.length > 0 ? JSON.stringify(value) : fallback
+  }
+
+  if (value && typeof value === "object") {
+    return Object.keys(value).length > 0 ? JSON.stringify(value) : fallback
+  }
+
+  return fallback
+}
+
+function renderDebugJson(value: unknown, fallback: string): ReactNode {
+  return (
+    <span className="block truncate whitespace-nowrap font-mono text-[11px] leading-4 text-slate-300">
+      {formatDebugJson(value, fallback)}
+    </span>
+  )
+}
+
 export function ToggleButton({
   talentName,
   talent,
@@ -227,6 +247,8 @@ export function ToggleButton({
     caster: String(requiredClassLevels.caster_levels ?? 0),
     healer: String(requiredClassLevels.healer_levels ?? 0),
     description: talent.description,
+    stats: renderDebugJson(talent.stats, "{}"),
+    conversions: renderDebugJson(talent.conversions, "[]"),
     avgDamageChange: formatSignedDamageDelta(averageDamageChange),
   }
 
@@ -337,6 +359,9 @@ export function SkillButton({
     caster: String(skill.class_levels.caster_levels ?? 0),
     healer: String(skill.class_levels.healer_levels ?? 0),
     description: skill.description,
+    stats: renderDebugJson(skill.stats, "{}"),
+    dmgStats: renderDebugJson(skill.dmg_stats, "{}"),
+    conversions: renderDebugJson(skill.conversions, "[]"),
     avgDamageChange: formatSignedDamageDelta(averageDamageChange ?? null),
   }
 

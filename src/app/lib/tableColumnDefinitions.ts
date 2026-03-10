@@ -20,6 +20,8 @@ export type TalentColumnId =
   | "caster"
   | "healer"
   | "description"
+  | "stats"
+  | "conversions"
   | "avgDamageChange"
 
 export type SkillColumnId =
@@ -36,6 +38,9 @@ export type SkillColumnId =
   | "caster"
   | "healer"
   | "description"
+  | "stats"
+  | "dmgStats"
+  | "conversions"
 
 export type BuffColumnId = SkillColumnId | "avgDamageChange"
 
@@ -68,6 +73,8 @@ export const talentTableColumns: readonly ManagedColumnDefinition<TalentColumnId
   { id: "exp", label: "Exp", defaultWidth: 55, minWidth: 50 },
   { id: "tp", label: "TP", defaultWidth: 40, minWidth: 40 },
   { id: "lvl", label: "Lvl", defaultWidth: 40, minWidth: 40 },
+  { id: "stats", label: "Stats", defaultWidth: 320, minWidth: 180 },
+  { id: "conversions", label: "Conversions", defaultWidth: 320, minWidth: 180 },
 ]
 
 export const skillTableColumns: readonly ManagedColumnDefinition<SkillColumnId>[] = [
@@ -84,6 +91,9 @@ export const skillTableColumns: readonly ManagedColumnDefinition<SkillColumnId>[
   { id: "exp", label: "Exp", defaultWidth: 72, minWidth: 56 },
   { id: "sp", label: "SP", defaultWidth: 56, minWidth: 48 },
   { id: "spSpent", label: "SP Spent", defaultWidth: 86, minWidth: 72 },
+  { id: "stats", label: "Stats", defaultWidth: 320, minWidth: 180 },
+  { id: "dmgStats", label: "DMG Stats", defaultWidth: 320, minWidth: 180 },
+  { id: "conversions", label: "Conversions", defaultWidth: 320, minWidth: 180 },
 ]
 
 export const buffTableColumns: readonly ManagedColumnDefinition<BuffColumnId>[] = [
