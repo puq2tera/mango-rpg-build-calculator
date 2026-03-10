@@ -119,15 +119,14 @@ export default function DamageCalc() {
       <h1 className="text-2xl font-bold text-center">Damage Calculator</h1>
 
       <div className="rounded-lg border bg-slate-900/60 p-4">
-        <div className="grid gap-4 md:grid-cols-[minmax(0,18rem)_1fr]">
-          <div className="space-y-2">
-            <label className="font-semibold">Attack Preset</label>
+        <div className="grid items-stretch gap-4 md:grid-cols-[minmax(0,18rem)_1fr]">
+          <div className="flex h-full items-center">
             <select
               value={attackPreset}
               onChange={(e) => handleAttackPresetChange(e.target.value)}
               className="w-full p-1 border rounded"
             >
-              <option value="">Custom</option>
+              <option value="">Custom Skill</option>
               {attackPresets.map((preset) => (
                 <option key={preset.name} value={preset.name}>
                   {preset.name}
@@ -137,7 +136,7 @@ export default function DamageCalc() {
           </div>
 
           {selectedAttackPreset ? (
-            <div className="space-y-2">
+            <div className="flex h-full flex-col justify-center space-y-2">
               <p className="text-sm text-slate-100">{selectedAttackPreset.description}</p>
               {selectedAttackPreset.note ? (
                 <p className="text-xs uppercase tracking-[0.12em] text-slate-400">
@@ -145,7 +144,10 @@ export default function DamageCalc() {
                 </p>
               ) : null}
             </div>
-          ) : null}
+          ) : // If an invalid skill is selected (or "Custom Skill")
+          <div className="flex h-full flex-col justify-center space-y-2">
+            <p className="text-sm text-slate-100">{"Select a skill to autofill the fields below"}</p>
+          </div>}
         </div>
       </div>
 
