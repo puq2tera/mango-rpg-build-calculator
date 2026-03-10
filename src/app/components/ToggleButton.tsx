@@ -2,6 +2,7 @@
 
 import Link from "next/link"
 import { Fragment, type Dispatch, type KeyboardEvent, type ReactNode, type SetStateAction } from "react"
+import { OverflowTitle } from "@/app/components/OverflowTitle"
 import type { Talent } from "../data/talent_data"
 import type { Skill } from "../data/skill_data"
 import { dispatchBuildSnapshotUpdated } from "@/app/lib/buildEvents"
@@ -170,11 +171,30 @@ function formatDebugJson(value: unknown, fallback: string): string {
   return fallback
 }
 
-function renderDebugJson(value: unknown, fallback: string): ReactNode {
+function getOverflowWrapperClass(columnId: string): string {
+  if (columnId === "preReq") {
+    return "block min-w-0 overflow-hidden"
+  }
+
+  if (columnId === "stats" || columnId === "conversions" || columnId === "dmgStats") {
+    return "block min-w-0 overflow-hidden text-ellipsis whitespace-nowrap font-mono text-[11px] leading-4 text-slate-300"
+  }
+
+  return "block min-w-0 overflow-hidden text-ellipsis whitespace-nowrap"
+}
+
+function renderOverflowValue(columnId: string, value: ReactNode, tooltipText?: string): ReactNode {
+  if (!tooltipText) {
+    return value
+  }
+
   return (
-    <span className="block truncate whitespace-nowrap font-mono text-[11px] leading-4 text-slate-300">
-      {formatDebugJson(value, fallback)}
-    </span>
+    <OverflowTitle
+      tooltipText={tooltipText}
+      className={getOverflowWrapperClass(columnId)}
+    >
+      {value}
+    </OverflowTitle>
   )
 }
 
@@ -250,8 +270,26 @@ export function ToggleButton({
     caster: String(requiredClassLevels.caster_levels ?? 0),
     healer: String(requiredClassLevels.healer_levels ?? 0),
     description: talent.description,
-    stats: renderDebugJson(talent.stats, "{}"),
-    conversions: renderDebugJson(talent.conversions, "[]"),
+    stats: formatDebugJson(talent.stats, "{}"),
+    conversions: formatDebugJson(talent.conversions, "[]"),
+    avgDamageChange: formatSignedDamageDelta(averageDamageChange),
+  }
+  const tooltipValues: Record<string, string> = {
+    name: talentName,
+    preReq: prereqTokens.join(", "),
+    tag: talent.Tag,
+    blockedTag: talent.BlockedTag,
+    gold: String(talent.gold),
+    exp: String(talent.exp),
+    tp: String(requiredTalentPoints),
+    lvl: String(requiredTotalLevel),
+    tank: String(requiredClassLevels.tank_levels ?? 0),
+    warrior: String(requiredClassLevels.warrior_levels ?? 0),
+    caster: String(requiredClassLevels.caster_levels ?? 0),
+    healer: String(requiredClassLevels.healer_levels ?? 0),
+    description: talent.description,
+    stats: formatDebugJson(talent.stats, "{}"),
+    conversions: formatDebugJson(talent.conversions, "[]"),
     avgDamageChange: formatSignedDamageDelta(averageDamageChange),
   }
 
@@ -295,7 +333,7 @@ export function ToggleButton({
             column.id === "avgDamageChange" ? getAverageDamageClass(averageDamageChange) : ""
           }`}
         >
-          {column.collapsed ? "" : (values[column.id] ?? "")}
+          {column.collapsed ? "" : renderOverflowValue(column.id, values[column.id] ?? "", tooltipValues[column.id])}
         </span>
       ))}
     </div>
@@ -365,9 +403,9 @@ export function SkillButton({
     caster: String(skill.class_levels.caster_levels ?? 0),
     healer: String(skill.class_levels.healer_levels ?? 0),
     description: skill.description,
-    stats: renderDebugJson(skill.stats, "{}"),
-    dmgStats: renderDebugJson(skill.dmg_stats, "{}"),
-    conversions: renderDebugJson(skill.conversions, "[]"),
+    stats: formatDebugJson(skill.stats, "{}"),
+    dmgStats: formatDebugJson(skill.dmg_stats, "{}"),
+    conversions: formatDebugJson(skill.conversions, "[]"),
     avgDamageChange: formatSignedDamageDelta(averageDamageChange ?? null),
     stack: canStack ? (
       <input
@@ -379,6 +417,25 @@ export function SkillButton({
         min={0}
       />
     ) : "",
+  }
+  const tooltipValues: Record<string, string> = {
+    name: skillName,
+    preReq: prereqTokens.join(", "),
+    tag: skill.Tag ?? "",
+    blockedTag: skill.BlockedTag ?? "",
+    gold: String(skill.gold),
+    exp: String(skill.exp),
+    sp: String(skill.sp ?? 0),
+    spSpent: String(skill.sp_spent ?? 0),
+    tank: String(skill.class_levels.tank_levels ?? 0),
+    warrior: String(skill.class_levels.warrior_levels ?? 0),
+    caster: String(skill.class_levels.caster_levels ?? 0),
+    healer: String(skill.class_levels.healer_levels ?? 0),
+    description: skill.description,
+    stats: formatDebugJson(skill.stats, "{}"),
+    dmgStats: formatDebugJson(skill.dmg_stats, "{}"),
+    conversions: formatDebugJson(skill.conversions, "[]"),
+    avgDamageChange: formatSignedDamageDelta(averageDamageChange ?? null),
   }
 
   const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
@@ -430,7 +487,7 @@ export function SkillButton({
             column.id === "avgDamageChange" ? getAverageDamageClass(averageDamageChange) : ""
           }`}
         >
-          {column.collapsed ? "" : (values[column.id] ?? "")}
+          {column.collapsed ? "" : renderOverflowValue(column.id, values[column.id] ?? "", tooltipValues[column.id])}
         </span>
       ))}
     </div>

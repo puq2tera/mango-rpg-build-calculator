@@ -1,6 +1,7 @@
 "use client"
 
 import { startTransition, useEffect, useMemo, useState } from "react"
+import { OverflowTitle } from "@/app/components/OverflowTitle"
 import { InteractiveTableHeader } from "@/app/components/InteractiveTableHeader"
 import tarot_data from "@/app/data/tarot_data"
 import { computeBuildStatStages, readBuildSnapshot } from "@/app/lib/buildStats"
@@ -298,7 +299,12 @@ export default function TarotCardsPage() {
       case "name":
         return (
           <div className="flex items-center gap-2 overflow-hidden">
-            <span className="truncate font-semibold">{row.name}</span>
+            <OverflowTitle
+              tooltipText={row.name}
+              className="min-w-0 truncate font-semibold"
+            >
+              {row.name}
+            </OverflowTitle>
             <span className={`shrink-0 rounded-full px-2 py-0.5 text-[10px] uppercase tracking-[0.12em] ${getTarotTypeBadgeClass(row.is_active === true)}`}>
               {row.is_active === true ? "Active" : "Passive"}
             </span>
@@ -313,7 +319,14 @@ export default function TarotCardsPage() {
           </span>
         )
       case "skillName":
-        return <span className="font-medium text-slate-100">{row.skill_name}</span>
+        return (
+          <OverflowTitle
+            tooltipText={row.skill_name}
+            className="block min-w-0 overflow-hidden text-ellipsis whitespace-nowrap font-medium text-slate-100"
+          >
+            {row.skill_name}
+          </OverflowTitle>
+        )
       case "stack":
         return canStack ? (
           <input
@@ -326,7 +339,14 @@ export default function TarotCardsPage() {
           />
         ) : ""
       case "description":
-        return <span className="text-slate-300">{row.description}</span>
+        return (
+          <OverflowTitle
+            tooltipText={row.description}
+            className="block min-w-0 overflow-hidden text-ellipsis whitespace-nowrap text-slate-300"
+          >
+            {row.description}
+          </OverflowTitle>
+        )
       default:
         return ""
     }
