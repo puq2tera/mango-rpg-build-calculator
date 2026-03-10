@@ -8,7 +8,7 @@ type RaceDefinition = {
   stats: Partial<Record<StatNames, number>>
 }
 
-export const HUMANOID_PREREQ_TOKEN = "Humanoid"
+export const HUMANOID_PREREQ_TOKEN = "HeroSeed"
 
 export const race_data = [
   {

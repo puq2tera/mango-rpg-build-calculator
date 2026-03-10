@@ -550,9 +550,10 @@ function computeConversionReadyStats(statsBase: Record<string, number>, statsXPe
 
   for (const stat of stat_data.Mainstats) {
     const base = statsCombined[stat] ?? 0
-    const multiplier = statsCombined[`${stat}%`] ?? 0
+    const multiplier = (statsCombined[`${stat}%`] ?? 0)
+    const globalMultiplier = (statsCombined[`Global ${stat}%`] ?? 0)
     const artifactMultiplier = statsCombined[`Art_${stat}%`] ?? 0
-    statsConversionReady[stat] = Math.floor(base * (1 + multiplier / 100) * (1 + artifactMultiplier / 100))
+    statsConversionReady[stat] = Math.floor(base * (1 + multiplier / 100) * (1 + globalMultiplier / 100) * (1 + artifactMultiplier / 100))
   }
 
   for (const stat of stat_data.AllElements) {

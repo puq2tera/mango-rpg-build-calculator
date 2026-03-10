@@ -4237,11 +4237,11 @@ const talent_data: Record<string, Talent> = {
             "caster_levels": 0,
             "healer_levels": 0
         },
-        "description": "+40% Threat Gained, +10% Void Penetration, +20% Void Damage",
+        "description": "+15% Threat Gained, +10% Void Penetration, +20% Void Damage",
         "stats": {
             "Void%": 20,
             "Void Pen%": 10,
-            "Threat%": 40
+            "Threat%": 15
         },
         "conversions": []
     },
@@ -4615,9 +4615,15 @@ const talent_data: Record<string, Talent> = {
         "description": "+1.5% HP Regen, +5% Max HP Multi, Temp HP Start of 15% Max HP",
         "stats": {
             "HP Regen%": 1.5,
-            "HP%": 15
+            "HP%": 5
         },
-        "conversions": []
+        "conversions": [
+            {
+                "source": "HP",
+                "ratio": 0.15,
+                "resulting_stat": "Temp HP"
+            }
+        ]
     },
     "Soul Shard of Mogdrolo'toth": {
         "category": "tank",
@@ -4693,9 +4699,15 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "-25% Max HP Multi, Temp HP Start of 100% Max HP.",
         "stats": {
-            "HP%": 100
+            "HP%": -25
         },
-        "conversions": []
+        "conversions": [
+            {
+                "source": "HP",
+                "ratio": 1,
+                "resulting_stat": "Temp HP"
+            }
+        ]
     },
     "Soul Core of Mogdrolo'toth": {
         "category": "tank",
@@ -10840,9 +10852,9 @@ const talent_data: Record<string, Talent> = {
     "Scion of Ulster": {
         "category": "warrior",
         "PreReq": [
-            ""
+            "War125"
         ],
-        "Tag": "",
+        "Tag": "War125Cap",
         "BlockedTag": "War125Cap",
         "gold": 500,
         "exp": 15000,
@@ -10856,9 +10868,6 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% Physical Damage, 33% of Physical Pen converted into Void Pen",
         "stats": {
-            "Slash%": 20,
-            "Pierce%": 20,
-            "Blunt%": 20,
             "Phys%": 20
         },
         "conversions": [
@@ -10872,9 +10881,9 @@ const talent_data: Record<string, Talent> = {
     "Astrapste Argo": {
         "category": "warrior",
         "PreReq": [
-            ""
+            "War125"
         ],
-        "Tag": "",
+        "Tag": "War125Cap",
         "BlockedTag": "War125Cap",
         "gold": 500,
         "exp": 15000,
@@ -10896,9 +10905,9 @@ const talent_data: Record<string, Talent> = {
     "Dragonslayer's Twilight": {
         "category": "warrior",
         "PreReq": [
-            ""
+            "War125"
         ],
-        "Tag": "",
+        "Tag": "War125Cap",
         "BlockedTag": "War125Cap",
         "gold": 500,
         "exp": 15000,
@@ -10941,9 +10950,6 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+1% Global ATK, +10% Physical DMG, Conversion 5% ATK to DEF",
         "stats": {
-            "Slash%": 10,
-            "Pierce%": 10,
-            "Blunt%": 10,
             "Global ATK%": 1,
             "Phys%": 10
         },
@@ -10974,9 +10980,6 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "-3% Global ATK, +20% Physical DMG, Conversion 5% ATK to DEF",
         "stats": {
-            "Slash%": 20,
-            "Pierce%": 20,
-            "Blunt%": 20,
             "Global ATK%": -3,
             "Phys%": 20
         },
@@ -11285,10 +11288,15 @@ const talent_data: Record<string, Talent> = {
         "stats": {
             "Global ATK%": 3,
             "Global MATK%": -33,
-            "HP%": 25,
             "Global HEAL%": -33
         },
-        "conversions": []
+        "conversions": [
+            {
+                "source": "HP",
+                "ratio": 0.25,
+                "resulting_stat": "Temp HP"
+            }
+        ]
     },
     "Soul Shard of T'sanogora": {
         "category": "warrior",
@@ -16105,9 +16113,9 @@ const talent_data: Record<string, Talent> = {
     "Ideals of the Saoshyant": {
         "category": "caster",
         "PreReq": [
-            ""
+            "Cast125"
         ],
-        "Tag": "",
+        "Tag": "Cast125Cap",
         "BlockedTag": "Cast125Cap",
         "gold": 500,
         "exp": 15000,
@@ -16140,9 +16148,9 @@ const talent_data: Record<string, Talent> = {
     "Seal of Solomon": {
         "category": "caster",
         "PreReq": [
-            ""
+            "Cast125"
         ],
-        "Tag": "",
+        "Tag": "Cast125Cap",
         "BlockedTag": "Cast125Cap",
         "gold": 500,
         "exp": 15000,
@@ -16154,19 +16162,20 @@ const talent_data: Record<string, Talent> = {
             "caster_levels": 125,
             "healer_levels": 0
         },
-        "description": "+10% Void Pen, -40 MP, +35% Global Void DMG",
+        "description": "+10% Void Pen, -40 MP, +35% Void Damage",
         "stats": {
             "Void Pen%": 10,
-            "MP": -40
+            "MP": -40,
+            "Void%": 35
         },
         "conversions": []
     },
     "Avatar's Rebirth": {
         "category": "caster",
         "PreReq": [
-            ""
+            "Cast125"
         ],
-        "Tag": "",
+        "Tag": "Cast125Cap",
         "BlockedTag": "Cast125Cap",
         "gold": 500,
         "exp": 15000,
@@ -16209,15 +16218,6 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+1% Global MATK, +8% Magic DMG, Conversion 4% MATK to DEF",
         "stats": {
-            "Fire%": 8,
-            "Water%": 8,
-            "Lightning%": 8,
-            "Wind%": 8,
-            "Earth%": 8,
-            "Toxic%": 8,
-            "Neg%": 8,
-            "Holy%": 8,
-            "Void%": 8,
             "Global MATK%": 1,
             "Magic%": 8
         },
@@ -16248,15 +16248,6 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "-3% Global MATK, +16% Magic DMG, Conversion 4% MATK to DEF",
         "stats": {
-            "Fire%": 16,
-            "Water%": 16,
-            "Lightning%": 16,
-            "Wind%": 16,
-            "Earth%": 16,
-            "Toxic%": 16,
-            "Neg%": 16,
-            "Holy%": 16,
-            "Void%": 16,
             "Global MATK%": -3,
             "Magic%": 16
         },
@@ -16288,15 +16279,6 @@ const talent_data: Record<string, Talent> = {
         "description": "+1% Global MATK, -6% xMagic DMG, Conversion 4% MATK to DEF",
         "stats": {
             "Global MATK%": 1,
-            "Fire xDmg%": -6,
-            "Water xDmg%": -6,
-            "Lightning xDmg%": -6,
-            "Wind xDmg%": -6,
-            "Earth xDmg%": -6,
-            "Toxic xDmg%": -6,
-            "Neg xDmg%": -6,
-            "Holy xDmg%": -6,
-            "Void xDmg%": -6,
             "Magic xDmg%": -6
         },
         "conversions": [
@@ -16327,15 +16309,6 @@ const talent_data: Record<string, Talent> = {
         "description": "+1% Global MATK, +3% xMagic DMG, Conversion 4% MATK to DEF",
         "stats": {
             "Global MATK%": 1,
-            "Fire xDmg%": 3,
-            "Water xDmg%": 3,
-            "Lightning xDmg%": 3,
-            "Wind xDmg%": 3,
-            "Earth xDmg%": 3,
-            "Toxic xDmg%": 3,
-            "Neg xDmg%": 3,
-            "Holy xDmg%": 3,
-            "Void xDmg%": 3,
             "Magic xDmg%": 3
         },
         "conversions": [
@@ -16467,15 +16440,6 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+1% Global MATK, +8% Magic DMG, Conversion 8% DEF to MATK",
         "stats": {
-            "Fire%": 8,
-            "Water%": 8,
-            "Lightning%": 8,
-            "Wind%": 8,
-            "Earth%": 8,
-            "Toxic%": 8,
-            "Neg%": 8,
-            "Holy%": 8,
-            "Void%": 8,
             "Global MATK%": 1,
             "Magic%": 8
         },
@@ -16506,15 +16470,6 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+1% Global MATK, +8% Magic DMG, Conversion 8% ATK to MATK",
         "stats": {
-            "Fire%": 8,
-            "Water%": 8,
-            "Lightning%": 8,
-            "Wind%": 8,
-            "Earth%": 8,
-            "Toxic%": 8,
-            "Neg%": 8,
-            "Holy%": 8,
-            "Void%": 8,
             "Global MATK%": 1,
             "Magic%": 8
         },
@@ -16545,15 +16500,6 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+1% Global MATK, +8% Magic DMG, Conversion 8% Healpower to MATK",
         "stats": {
-            "Fire%": 8,
-            "Water%": 8,
-            "Lightning%": 8,
-            "Wind%": 8,
-            "Earth%": 8,
-            "Toxic%": 8,
-            "Neg%": 8,
-            "Holy%": 8,
-            "Void%": 8,
             "Global MATK%": 1,
             "Magic%": 8
         },
@@ -16612,10 +16558,15 @@ const talent_data: Record<string, Talent> = {
         "stats": {
             "Global ATK%": -33,
             "Global MATK%": 1,
-            "HP%": 20,
             "Global HEAL%": -33
         },
-        "conversions": []
+        "conversions": [
+            {
+                "source": "HP",
+                "ratio": 0.2,
+                "resulting_stat": "Temp HP"
+            }
+        ]
     },
     "Soul Shard of Mephis'ronan": {
         "category": "caster",
@@ -16689,11 +16640,15 @@ const talent_data: Record<string, Talent> = {
         "description": "+15 MP Regen, -85% Global MP, Temp HP Start of 20% Max HP",
         "stats": {
             "MP Regen": 15,
-            "MP": 15,
-            "MP%": -85,
-            "HP%": 20
+            "MP%": -85
         },
-        "conversions": []
+        "conversions": [
+            {
+                "source": "HP",
+                "ratio": 0.2,
+                "resulting_stat": "Temp HP"
+            }
+        ]
     },
     "Soul Core of Mephis'ronan": {
         "category": "caster",
@@ -20457,8 +20412,6 @@ const talent_data: Record<string, Talent> = {
         "stats": {
             "Global HEAL%": 1,
             "Toxic%": 15,
-            "Neg%": 10,
-            "Holy%": 10,
             "Divine%": 10
         },
         "conversions": []
@@ -20483,8 +20436,6 @@ const talent_data: Record<string, Talent> = {
         "description": "+1% Global Healpower, +10% Divine Damage and +15% Toxic Damage",
         "stats": {
             "Toxic%": 15,
-            "Neg%": 10,
-            "Holy%": 10,
             "Global HEAL%": 1,
             "Divine%": 10
         },
@@ -20510,8 +20461,6 @@ const talent_data: Record<string, Talent> = {
         "description": "+1% Global Healpower, +10% Divine Penetration and +15% Toxic Penetration",
         "stats": {
             "Toxic Pen%": 15,
-            "Neg Pen%": 10,
-            "Holy Pen%": 10,
             "Global HEAL%": 1,
             "Divine Pen%": 10
         },
@@ -20584,7 +20533,6 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+4% Global Heal Effect, -8% Threat Generated, +6% Global Max Health",
         "stats": {
-            "Global HEAL%": 4,
             "Heal Effect%": 4,
             "HP%": 6,
             "Threat%": -8
@@ -20684,7 +20632,6 @@ const talent_data: Record<string, Talent> = {
         "description": "+25% Global Damage, -40% Global Heal Effect, +25% Divine and Toxic Damage",
         "stats": {
             "Dmg%": 25,
-            "Global HEAL%": -40,
             "Heal Effect%": -40,
             "Divine%": 25,
             "Toxic%": 25
@@ -20710,7 +20657,6 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10% Global Heal Effect, +10% Global Max Health, +25% Threat Generated",
         "stats": {
-            "Global HEAL%": 10,
             "Heal Effect%": 10,
             "HP%": 10,
             "Threat%": 25
@@ -20984,15 +20930,6 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+1% Global Heal, +8% Magic DMG, Conversion 8% DEF to Heal",
         "stats": {
-            "Fire%": 8,
-            "Water%": 8,
-            "Lightning%": 8,
-            "Wind%": 8,
-            "Earth%": 8,
-            "Toxic%": 8,
-            "Neg%": 8,
-            "Holy%": 8,
-            "Void%": 8,
             "Global HEAL%": 1,
             "Magic%": 8
         },
@@ -21023,15 +20960,6 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+1% Global Heal, +8% Magic DMG, Conversion 8% ATK to Heal",
         "stats": {
-            "Fire%": 8,
-            "Water%": 8,
-            "Lightning%": 8,
-            "Wind%": 8,
-            "Earth%": 8,
-            "Toxic%": 8,
-            "Neg%": 8,
-            "Holy%": 8,
-            "Void%": 8,
             "Global HEAL%": 1,
             "Magic%": 8
         },
@@ -21062,15 +20990,6 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+1% Global Heal, +8% Magic DMG, Conversion 8% MATK to Heal",
         "stats": {
-            "Fire%": 8,
-            "Water%": 8,
-            "Lightning%": 8,
-            "Wind%": 8,
-            "Earth%": 8,
-            "Toxic%": 8,
-            "Neg%": 8,
-            "Holy%": 8,
-            "Void%": 8,
             "Global HEAL%": 1,
             "Magic%": 8
         },
@@ -21129,10 +21048,15 @@ const talent_data: Record<string, Talent> = {
         "stats": {
             "Global HEAL%": 1,
             "Global MATK%": -33,
-            "Global ATK%": -33,
-            "HP%": 20
+            "Global ATK%": -33
         },
-        "conversions": []
+        "conversions": [
+            {
+                "source": "HP",
+                "ratio": 0.2,
+                "resulting_stat": "Temp HP"
+            }
+        ]
     },
     "Soul Shard of Azago'toth": {
         "category": "healer",
@@ -40954,7 +40878,7 @@ const talent_data: Record<string, Talent> = {
     "Hero Seed Evolution": {
         "category": "racial",
         "PreReq": [
-            "Humanoid"
+            "HeroSeed"
         ],
         "Tag": "",
         "BlockedTag": "",

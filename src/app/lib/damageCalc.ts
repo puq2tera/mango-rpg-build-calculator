@@ -181,8 +181,7 @@ export function calculateDamage(stats: Record<string, number>, state: DamageCalc
   const dotCrit = Math.floor(crit * dotMult)
 
   const threatBase = Math.floor((stats["DEF"] ?? 0) * ((inputs.threatDef ?? 0) / 100))
-  const threatWithGlobalDef = Math.floor(threatBase * toMult(stats["Global DEF%"]))
-  const threatWithGlobalDmg = Math.floor(threatWithGlobalDef * toMult(stats["Dmg%"]))
+  const threatWithGlobalDmg = Math.floor(threatBase * toMult(stats["Dmg%"]))
   const threatNonCrit = Math.floor(threatWithGlobalDmg * toMult(stats["Threat%"]))
   const threatCrit = Math.floor(threatNonCrit * (totalCritDamage / 100))
   const threatAverage = Math.floor(threatNonCrit * nonCritWeight + threatCrit * (critWeight + maxCritWeight))
