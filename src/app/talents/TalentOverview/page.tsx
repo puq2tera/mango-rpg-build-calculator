@@ -1,84 +1,48 @@
 "use client"
 
-import { useEffect, useState } from "react"
-import { talent_data, __columnWidths } from "@/app/data/talent_data"
-
-const STORAGE_KEY = "selectedTalents"
-
-const headerLabels = [
-  "Name", "PreReq", "Tag", "BlockedTag",
-  "Gold", "Exp", "TP", "Lvl",
-  "Tank", "Warrior", "Caster", "Healer",
-  "Description"
-]
+import { useMemo } from "react"
+import LearnCommandOutput from "@/app/components/LearnCommandOutput"
+import {
+  buildLearnCommandBatches,
+  DEFAULT_LEARN_COMMAND_MAX_LENGTH,
+  DEFAULT_TALENT_LEARN_COMMAND_PREFIX,
+  getOrderedTalentNames,
+} from "@/app/lib/learnCommands"
+import { useLearnSelections } from "@/app/lib/useLearnSelections"
 
 export default function TalentOverview() {
-  const [colWidths] = useState<string[]>(__columnWidths)
-  const [selected, setSelected] = useState<Set<string>>(new Set())
+  const { isHydrated, selectedTalents } = useLearnSelections()
 
-  useEffect(() => {
-    const stored = localStorage.getItem(STORAGE_KEY)
-    try {
-      setSelected(stored ? new Set(JSON.parse(stored)) : new Set())
-    } catch {
-      setSelected(new Set())
-    }
-  }, [])
+  const orderedTalentNames = useMemo(
+    () => getOrderedTalentNames(selectedTalents),
+    [selectedTalents],
+  )
+  const commandBatches = useMemo(
+    () => buildLearnCommandBatches(
+      orderedTalentNames,
+      DEFAULT_TALENT_LEARN_COMMAND_PREFIX,
+      DEFAULT_LEARN_COMMAND_MAX_LENGTH,
+    ),
+    [orderedTalentNames],
+  )
 
-  if (colWidths.length === 0) return <div className="p-4">Loading...</div>
+  if (!isHydrated) {
+    return <div className="p-4 text-sm text-slate-300">Loading talent overview...</div>
+  }
 
   return (
-    <div className="viewport-below-top-nav overflow-y-auto border rounded-md">
-      <div
-        className="sticky top-0 z-10 bg-slate-900 border-b py-2 grid gap-x-0"
-        style={{ gridTemplateColumns: colWidths.join(" ") }}
-      >
-        {headerLabels.map((label, i) => (
-          <div
-            key={i}
-            className="px-2 font-bold whitespace-nowrap border-r border-slate-600 last:border-r-0 box-border"
-          >
-            {label}
-          </div>
-        ))}
-      </div>
-
-      <div className="space-y-0.5">
-        {Array.from(selected).map((name) => {
-          const t = talent_data[name]
-          const values = [
-            name,
-            t.PreReq.join(", "),
-            t.Tag,
-            t.BlockedTag,
-            t.gold,
-            t.exp,
-            t.tp_spent,
-            t.total_level,
-            t.class_levels.tank_levels,
-            t.class_levels.warrior_levels,
-            t.class_levels.caster_levels,
-            t.class_levels.healer_levels,
-            t.description
-          ]
-          
-          return (
-            <div
-              key={name}
-              className="grid border-b hover:bg-slate-800/85 transition"
-              style={{ gridTemplateColumns: colWidths.join(" ") }}
-            >
-              {values.map((val, i) => (
-                <span
-                  key={i}
-                  className="px-3 py-1 whitespace-nowrap border-r border-slate-700 last:border-r-0 box-border"
-                >
-                  {val}
-                </span>
-              ))}
-            </div>
-          )
-        })}
+    <div className="min-h-[calc(100vh-var(--top-nav-height))] bg-[radial-gradient(circle_at_top_left,rgba(56,189,248,0.11),transparent_30%),radial-gradient(circle_at_bottom_right,rgba(249,115,22,0.08),transparent_26%)]">
+      <div className="mx-auto max-w-7xl px-4 py-6">
+        <div className="space-y-6">
+          <LearnCommandOutput
+            title="Talent Learn Commands"
+            subtitle="Commands use the current selected talent list and are split at 300 characters."
+            orderedNames={orderedTalentNames}
+            batches={commandBatches}
+            maxLength={DEFAULT_LEARN_COMMAND_MAX_LENGTH}
+            emptyMessage="No talents are selected."
+          />
+        </div>
       </div>
     </div>
   )

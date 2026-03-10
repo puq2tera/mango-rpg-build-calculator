@@ -1,86 +1,48 @@
 "use client"
 
-import { useEffect, useState } from "react"
-import { skill_data, __columnWidths } from "@/app/data/skill_data"
-
-const STORAGE_KEY = "selectedBuffs"
-
-const headerLabels = [
-  "Name", "PreReq", "Tag", "BlockedTag",
-  "Gold", "Exp", "SP", "Lvl",
-  "Tank", "Warrior", "Caster", "Healer",
-  "Description"
-]
+import { useMemo } from "react"
+import LearnCommandOutput from "@/app/components/LearnCommandOutput"
+import {
+  buildLearnCommandBatches,
+  DEFAULT_LEARN_COMMAND_MAX_LENGTH,
+  DEFAULT_SKILL_LEARN_COMMAND_PREFIX,
+  getOrderedSkillNames,
+} from "@/app/lib/learnCommands"
+import { useLearnSelections } from "@/app/lib/useLearnSelections"
 
 export default function SkillOverview() {
-  const [colWidths] = useState<string[]>(__columnWidths)
-  const [selected, setSelected] = useState<string[]>([])
+  const { isHydrated, selectedSkills } = useLearnSelections()
 
-  useEffect(() => {
-    const stored = localStorage.getItem(STORAGE_KEY)
-    try {
-      const parsed = stored ? JSON.parse(stored) : []
-      setSelected(Array.isArray(parsed) ? parsed : [])
-    } catch {
-      setSelected([])
-    }
-  }, [])
+  const orderedSkillNames = useMemo(
+    () => getOrderedSkillNames(selectedSkills),
+    [selectedSkills],
+  )
+  const commandBatches = useMemo(
+    () => buildLearnCommandBatches(
+      orderedSkillNames,
+      DEFAULT_SKILL_LEARN_COMMAND_PREFIX,
+      DEFAULT_LEARN_COMMAND_MAX_LENGTH,
+    ),
+    [orderedSkillNames],
+  )
 
-  if (colWidths.length === 0) return <div className="p-4">Loading...</div>
+  if (!isHydrated) {
+    return <div className="p-4 text-sm text-slate-300">Loading skill overview...</div>
+  }
 
   return (
-    <div className="viewport-below-top-nav overflow-y-auto border rounded-md">
-      <div
-        className="sticky top-0 z-10 bg-slate-900 border-b py-2 grid gap-x-0"
-        style={{ gridTemplateColumns: colWidths.join(" ") }}
-      >
-        {headerLabels.map((label, i) => (
-          <div
-            key={i}
-            className="px-2 font-bold whitespace-nowrap border-r border-slate-600 last:border-r-0 box-border"
-          >
-            {label}
-          </div>
-        ))}
-      </div>
-
-      <div className="space-y-0.5">
-        {selected.map((name) => {
-          const skill = skill_data[name]
-          if (!skill) return null
-
-          const values = [
-            name,
-            Array.isArray(skill.PreReq) ? skill.PreReq.join(", ") : skill.PreReq,
-            skill.Tag,
-            skill.BlockedTag,
-            skill.gold,
-            skill.exp,
-            skill.sp_spent,
-            skill.class_levels.tank_levels,
-            skill.class_levels.warrior_levels,
-            skill.class_levels.caster_levels,
-            skill.class_levels.healer_levels,
-            skill.description
-          ]
-
-          return (
-            <div
-              key={name}
-              className="grid border-b hover:bg-slate-800/85 transition"
-              style={{ gridTemplateColumns: colWidths.join(" ") }}
-            >
-              {values.map((val, i) => (
-                <span
-                  key={i}
-                  className="px-3 py-1 whitespace-nowrap border-r border-slate-700 last:border-r-0 box-border"
-                >
-                  {val}
-                </span>
-              ))}
-            </div>
-          )
-        })}
+    <div className="min-h-[calc(100vh-var(--top-nav-height))] bg-[radial-gradient(circle_at_top_right,rgba(59,130,246,0.14),transparent_30%),radial-gradient(circle_at_bottom_left,rgba(16,185,129,0.08),transparent_24%)]">
+      <div className="mx-auto max-w-7xl px-4 py-6">
+        <div className="space-y-6">
+          <LearnCommandOutput
+            title="Skill Learn Commands"
+            subtitle="Commands use the current selected skill list and are split at 300 characters."
+            orderedNames={orderedSkillNames}
+            batches={commandBatches}
+            maxLength={DEFAULT_LEARN_COMMAND_MAX_LENGTH}
+            emptyMessage="No skills are selected."
+          />
+        </div>
       </div>
     </div>
   )

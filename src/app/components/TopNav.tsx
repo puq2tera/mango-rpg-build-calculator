@@ -32,6 +32,7 @@ const navLinks = [
   ["/talents/TalentOverview", "Talent Overview"],
   ["/Skills", "Skills"],
   ["/Skills/SkillOverview", "Skill Overview"],
+  ["/CopyPaste", "Copy Paste"],
   ["/Levels", "Levels"],
   ["/Skills/Buffs", "Buffs"],
   ["/Skills/BuffSorter", "Buff Overview"],
