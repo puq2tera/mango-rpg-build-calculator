@@ -233,6 +233,7 @@ export const StatsInfo: Record<string, StatInfoData> = {
   "Focus Regen": { multi: 1 },
 
   "MP":       { multi: 1 },
+  "Temp MP":  { multi: 1 },
   "MP Regen": { multi: 1 },
   "MP%":      { multi: 0.01 },
 

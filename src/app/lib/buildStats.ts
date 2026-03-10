@@ -31,6 +31,7 @@ type RuneSelection = { rune: string; count: number }
 export type BuildSnapshot = {
   selectedTalents: string[]
   selectedBuffs: string[]
+  selectedBuffStacks: Record<string, number>
   selectedTarots: string[]
   tarotStacks: Record<string, number>
   selectedRace: string | null
@@ -160,6 +161,7 @@ export function readBuildSnapshot(storage: Storage): BuildSnapshot {
   return {
     selectedTalents: asStringArray(jsonParse(storage.getItem("selectedTalents"), [])),
     selectedBuffs: asStringArray(jsonParse(storage.getItem("selectedBuffs"), [])),
+    selectedBuffStacks: asRecord(jsonParse(storage.getItem("selectedBuffStacks"), {})),
     selectedTarots: asStringArray(jsonParse(storage.getItem("selectedTarots"), [])),
     tarotStacks: asRecord(jsonParse(storage.getItem("tarotStacks"), {})),
     selectedRace: (() => {
@@ -209,12 +211,16 @@ function updateFlatSubStats(
   targetStat: string,
   targetValue: number,
   stackCount = 1,
+  flatStatScale = 1,
 ): void {
   const buff = (sourceDict["Buff%"] ?? 0) + (targetDict["Buff%"] ?? 0)
 
   const affixInfo = stat_data.StatsInfo[targetStat as keyof typeof stat_data.StatsInfo]
   const substats = affixInfo?.sub_stats
-  const resultValue = Math.floor(targetValue * stackCount * (1 + buff))
+  const normalizedTargetValue = affixInfo?.multi === 0.01
+    ? targetValue * flatStatScale
+    : targetValue
+  const resultValue = Math.floor(normalizedTargetValue * stackCount * (1 + buff))
 
   if (substats) {
     for (const substat of substats) {
@@ -231,6 +237,7 @@ function updateStats(
   stackDict: Record<string, number>,
   sourceSkillName: string,
   sourceSkillData?: Skill | Tarot,
+  flatStatScale = 1,
 ): void {
   if (!sourceSkillData) return
 
@@ -248,13 +255,13 @@ function updateStats(
 
   if (sourceSkillData.stats) {
     for (const [stat, statAmount] of Object.entries(sourceSkillData.stats)) {
-      updateFlatSubStats(targetDict, sourceDict, stat, statAmount ?? 0)
+      updateFlatSubStats(targetDict, sourceDict, stat, statAmount ?? 0, 1, flatStatScale)
     }
   }
 
   if (sourceSkillData.stack_stats) {
     for (const [stat, statAmount] of Object.entries(sourceSkillData.stack_stats)) {
-      updateFlatSubStats(targetDict, sourceDict, stat, statAmount ?? 0, stackDict[sourceSkillName] ?? 0)
+      updateFlatSubStats(targetDict, sourceDict, stat, statAmount ?? 0, stackDict[sourceSkillName] ?? 0, flatStatScale)
     }
   }
 }
@@ -559,11 +566,15 @@ function computeBuffReadyStats(statsConversionReady: Record<string, number>, sta
   return statsBuffReady
 }
 
-function computeBuffStats(selectedBuffNames: readonly string[], statsBuffReady: Record<string, number>): Record<string, number> {
+function computeBuffStats(
+  selectedBuffNames: readonly string[],
+  buffStacks: Record<string, number>,
+  statsBuffReady: Record<string, number>,
+): Record<string, number> {
   const buffed: Record<string, number> = {}
 
   for (const skillName of selectedBuffNames) {
-    updateStats(buffed, statsBuffReady, {}, skillName, skill_data[skillName])
+    updateStats(buffed, statsBuffReady, buffStacks, skillName, skill_data[skillName], 100)
   }
 
   return buffed
@@ -606,6 +617,7 @@ export function computeBuildStatStages(
   overrides?: {
     selectedTalents?: Iterable<string>
     selectedBuffs?: Iterable<string>
+    buffStacks?: Record<string, number>
     selectedTarots?: Iterable<string>
     tarotStacks?: Record<string, number>
   },
@@ -619,6 +631,7 @@ export function computeBuildStatStages(
   const selectedTarots = overrides?.selectedTarots
     ? Array.from(new Set(overrides.selectedTarots))
     : snapshot.selectedTarots
+  const buffStacks = overrides?.buffStacks ?? snapshot.selectedBuffStacks
   const tarotStacks = overrides?.tarotStacks ?? snapshot.tarotStacks
 
   const statsTalents = computeTalentStats(snapshot, selectedTalents)
@@ -631,7 +644,7 @@ export function computeBuildStatStages(
   const statsConversionReady = computeConversionReadyStats(statsBase, statsXPen)
   const statsConverted = computeConvertedTalentStats(statsConversionReady, selectedTalents)
   const statsBuffReady = computeBuffReadyStats(statsConversionReady, statsConverted)
-  const statsBuffs = computeBuffStats(selectedBuffs, statsBuffReady)
+  const statsBuffs = computeBuffStats(selectedBuffs, buffStacks, statsBuffReady)
   const statsTarots = computeTarotStats(selectedTarots, tarotStacks, statsBuffReady)
   const statsDmgReady = computeDmgReadyStats(statsBuffReady, statsBuffs, statsTarots)
 

@@ -7395,7 +7395,7 @@ const skill_data: Record<string, Skill> = {
         description: "[ 1 Charge ] Gain Temporary MP equal to MATK Multiplier and increase MATK by 20% for 7 turns.",
         conversions: [
     { source: "MATK", ratio: 0.2, resulting_stat: "MATK" },
-    { source: "MATK%", ratio: 1, resulting_stat: "MP" },
+    { source: "MATK%", ratio: 1, resulting_stat: "Temp MP" },
     ],
         
 },
@@ -13540,6 +13540,7 @@ const skill_data: Record<string, Skill> = {
             self_cast: false,
             free_turn: true
         },
+        PreReq: ["Skeleton"],
         sp: 1,
         gold: 50,
         exp: 100,
@@ -13556,6 +13557,7 @@ const skill_data: Record<string, Skill> = {
             self_cast: false,
             free_turn: true
         },
+        PreReq: ["Zombie"],
         sp: 1,
         gold: 50,
         exp: 100,
@@ -13573,6 +13575,7 @@ const skill_data: Record<string, Skill> = {
             self_cast: false,
             free_turn: true
         },
+        PreReq: ["WoodElf"],
         sp: 1,
         gold: 50,
         exp: 100,
@@ -13591,6 +13594,7 @@ const skill_data: Record<string, Skill> = {
             self_cast: true,
             free_turn: false
         },
+        PreReq: ["Dwarf"],
         sp: 1,
         gold: 50,
         exp: 100,
@@ -13607,6 +13611,7 @@ const skill_data: Record<string, Skill> = {
             self_cast: false,
             free_turn: true
         },
+        PreReq: ["Orc"],
         sp: 1,
         gold: 50,
         exp: 100,
@@ -13624,11 +13629,13 @@ const skill_data: Record<string, Skill> = {
             self_cast: false,
             free_turn: true
         },
+        PreReq: ["Goblin"],
         sp: 1,
         gold: 50,
         exp: 100,
         description: "[ ⧖ ] Reduce self Threat value by 50%. Gain flat +15% Crit Chance for 8 Turns.",
         stats: {
+    "Threat%": -0.5,
     "Crit Chance%": 0.15,
     },
         
@@ -13640,6 +13647,7 @@ const skill_data: Record<string, Skill> = {
             self_cast: false,
             free_turn: true
         },
+        PreReq: ["Lizardman"],
         sp: 1,
         gold: 50,
         exp: 100,
@@ -13657,6 +13665,7 @@ const skill_data: Record<string, Skill> = {
             self_cast: false,
             free_turn: false
         },
+        PreReq: ["Giant"],
         sp: 1,
         gold: 50,
         exp: 100,
@@ -13674,6 +13683,7 @@ const skill_data: Record<string, Skill> = {
             self_cast: false,
             free_turn: true
         },
+        PreReq: ["Dragonspawn"],
         sp: 1,
         gold: 50,
         exp: 100,
@@ -13691,6 +13701,7 @@ const skill_data: Record<string, Skill> = {
             self_cast: false,
             free_turn: true
         },
+        PreReq: ["DarkElf"],
         sp: 1,
         gold: 50,
         exp: 100,
@@ -13708,6 +13719,7 @@ const skill_data: Record<string, Skill> = {
             self_cast: false,
             free_turn: true
         },
+        PreReq: ["Demon"],
         sp: 1,
         gold: 50,
         exp: 100,
@@ -13727,6 +13739,7 @@ const skill_data: Record<string, Skill> = {
             self_cast: false,
             free_turn: true
         },
+        PreReq: ["Angel"],
         sp: 1,
         gold: 50,
         exp: 100,
@@ -13743,6 +13756,7 @@ const skill_data: Record<string, Skill> = {
             self_cast: false,
             free_turn: true
         },
+        PreReq: ["Vampire"],
         sp: 1,
         gold: 50,
         exp: 100,
@@ -13760,6 +13774,7 @@ const skill_data: Record<string, Skill> = {
             self_cast: false,
             free_turn: true
         },
+        PreReq: ["Insectoid"],
         sp: 1,
         gold: 50,
         exp: 100,
@@ -13777,6 +13792,7 @@ const skill_data: Record<string, Skill> = {
             self_cast: false,
             free_turn: true
         },
+        PreReq: ["Ogre"],
         sp: 1,
         gold: 50,
         exp: 100,
@@ -13794,6 +13810,7 @@ const skill_data: Record<string, Skill> = {
             self_cast: false,
             free_turn: true
         },
+        PreReq: ["Troll"],
         sp: 1,
         gold: 50,
         exp: 100,
@@ -13811,15 +13828,16 @@ const skill_data: Record<string, Skill> = {
             self_cast: false,
             free_turn: true
         },
+        PreReq: ["Quogga"],
         sp: 1,
         gold: 50,
         exp: 100,
-        description: "[ ⧖ ] Raise physical damage by 15% of ATK Multiplier for 3 Turns, and gain Flat +50% Physical Resist for 1 Turn.",
+        description: "[ ⧖ ] Raise physical damage by 20% of ATK Multiplier for 3 Turns, and gain Flat +50% Physical Resist for 1 Turn.",
         stats: {
     "Phys Res%": 0.5,
     },
         conversions: [
-    { source: "ATK%", ratio: 0.15, resulting_stat: "Phys%" },
+    { source: "ATK%", ratio: 0.2, resulting_stat: "Phys%" },
     ],
         
 },
@@ -13830,15 +13848,16 @@ const skill_data: Record<string, Skill> = {
             self_cast: false,
             free_turn: true
         },
+        PreReq: ["Minotaur"],
         sp: 1,
         gold: 50,
         exp: 100,
-        description: "[ ⧖ ] Raise self threat bonus by 100% for 5 turns and ATK by 25% for 1 Turn",
+        description: "[ ⧖ ] Raise self threat bonus by 100% for 5 turns and ATK by 70% for 1 Hit",
         stats: {
     "Threat%": 1,
     },
         conversions: [
-    { source: "ATK", ratio: 0.25, resulting_stat: "ATK" },
+    { source: "ATK", ratio: 0.7, resulting_stat: "ATK" },
     ],
         
 },
@@ -13849,13 +13868,14 @@ const skill_data: Record<string, Skill> = {
             self_cast: false,
             free_turn: true
         },
+        PreReq: ["Tigerman"],
         sp: 1,
         gold: 50,
         exp: 100,
-        description: "[ ⧖ , 3 Charges ] Raise self Crit Damage by 33% for 2 Turns and decrease DEF by 50% for 4 Turns.",
+        description: "[ ⧖ ] Raise self Crit Damage by 44% for 3 Turns and decrease DEF by 44% for 2 Turns.",
         conversions: [
-    { source: "Crit DMG%", ratio: 0.33, resulting_stat: "Crit DMG%" },
-    { source: "DEF", ratio: -0.5, resulting_stat: "DEF" },
+    { source: "Crit DMG%", ratio: 0.44, resulting_stat: "Crit DMG%" },
+    { source: "DEF", ratio: -0.44, resulting_stat: "DEF" },
     ],
         
 },
@@ -13866,13 +13886,14 @@ const skill_data: Record<string, Skill> = {
             self_cast: false,
             free_turn: false
         },
+        PreReq: ["Goatman"],
         sp: 1,
         gold: 50,
         exp: 100,
-        description: "Gain Temp HP equal to 50% Max HP for 10 Turns and Raise Self ATK by 15% for 8 Turns.",
+        description: "Gain Temp HP equal to 50% Max HP for 10 Turns and Raise Self ATK by 33% for 8 Turns.",
         conversions: [
     { source: "HP", ratio: 0.5, resulting_stat: "Temp HP" },
-    { source: "ATK", ratio: 0.15, resulting_stat: "ATK" },
+    { source: "ATK", ratio: 0.33, resulting_stat: "ATK" },
     ],
         
 },
@@ -13883,6 +13904,7 @@ const skill_data: Record<string, Skill> = {
             self_cast: false,
             free_turn: true
         },
+        PreReq: ["RainbowMan"],
         sp: 1,
         gold: 50,
         exp: 100,
@@ -13899,6 +13921,7 @@ const skill_data: Record<string, Skill> = {
             self_cast: false,
             free_turn: true
         },
+        PreReq: ["NorthMan"],
         sp: 1,
         gold: 50,
         exp: 100,
@@ -13917,6 +13940,7 @@ const skill_data: Record<string, Skill> = {
             self_cast: false,
             free_turn: true
         },
+        PreReq: ["SouthMan"],
         sp: 1,
         gold: 50,
         exp: 100,
@@ -13933,12 +13957,13 @@ const skill_data: Record<string, Skill> = {
             self_cast: false,
             free_turn: true
         },
+        PreReq: ["HalfGolem"],
         sp: 1,
         gold: 50,
         exp: 100,
-        description: "[ ⧖ , 12 Charges ] Raise self DEF by 50% and ATK by 50% DEF for 1 Turn",
+        description: "[ ⧖ , 12 Charges ] Raise self DEF by 100% and ATK by 50% DEF for 2 Turns",
         conversions: [
-    { source: "DEF", ratio: 0.5, resulting_stat: "DEF" },
+    { source: "DEF", ratio: 1, resulting_stat: "DEF" },
     { source: "DEF", ratio: 0.5, resulting_stat: "ATK" },
     ],
         
@@ -13950,13 +13975,14 @@ const skill_data: Record<string, Skill> = {
             self_cast: false,
             free_turn: false
         },
+        PreReq: ["Frogman"],
         sp: 1,
         gold: 50,
         exp: 100,
-        description: "Raise self MATK by 55% Healpower and vice-versa for 10 Turns.",
+        description: "Raise self MATK by 60% Healpower and vice-versa for rest of battle.",
         conversions: [
-    { source: "HEAL", ratio: 0.55, resulting_stat: "MATK" },
-    { source: "MATK", ratio: 0.55, resulting_stat: "HEAL" },
+    { source: "HEAL", ratio: 0.6, resulting_stat: "MATK" },
+    { source: "MATK", ratio: 0.6, resulting_stat: "HEAL" },
     ],
         
 },
@@ -13967,12 +13993,15 @@ const skill_data: Record<string, Skill> = {
             self_cast: false,
             free_turn: true
         },
+        PreReq: ["Elemental"],
         sp: 1,
         gold: 50,
         exp: 100,
-        description: "[ ⧖ ] Raise Elemental DMG by 25% of Max MP, lose MP equal to 2% max MP for 5 Turns",
+        description: "[ ⧖ ] Raise Elemental DMG by 25% of Max MP and 25x of MP Regen, lose MP equal to 2% max MP for 5 Turns",
         conversions: [
     { source: "MP", ratio: 0.25, resulting_stat: "Elemental%" },
+    { source: "MP Regen", ratio: 25, resulting_stat: "Elemental%" },
+    { source: "MP", ratio: -0.02, resulting_stat: "MP Regen" },
     ],
         
 },
@@ -13983,10 +14012,11 @@ const skill_data: Record<string, Skill> = {
             self_cast: false,
             free_turn: false
         },
+        PreReq: ["Tengu"],
         sp: 1,
         gold: 50,
         exp: 100,
-        description: "Raise Magic DMG by 500% Crit Chance, and gain Flat +10% Crit Chance for 12 Turns",
+        description: "Raise Magic DMG by 500% Crit Chance, and gain Flat +10% Crit Chance for rest of battle.",
         stats: {
     "Crit Chance%": 0.1,
     },
@@ -14002,12 +14032,13 @@ const skill_data: Record<string, Skill> = {
             self_cast: false,
             free_turn: true
         },
+        PreReq: ["Birdman"],
         sp: 1,
         gold: 50,
         exp: 100,
-        description: "[ ⧖ ] Raise Physical Damage by 325% Crit Chance and gain Flat +50% Crit Chance for 1 Turn, costs 25% Max HP",
+        description: "[ ⧖ ] Raise Physical Damage by 325% Crit Chance and gain Flat +100% Crit Chance for 6 Turns, costs 25% Max HP",
         stats: {
-    "Crit Chance%": 0.5,
+    "Crit Chance%": 1,
     },
         conversions: [
     { source: "Crit Chance%", ratio: 3.25, resulting_stat: "Phys%" },
@@ -14021,6 +14052,7 @@ const skill_data: Record<string, Skill> = {
             self_cast: false,
             free_turn: false
         },
+        PreReq: ["Slime"],
         sp: 1,
         gold: 50,
         exp: 100,
@@ -14040,12 +14072,13 @@ const skill_data: Record<string, Skill> = {
             self_cast: false,
             free_turn: false
         },
+        PreReq: ["TreeSpirit"],
         sp: 1,
         gold: 50,
         exp: 100,
-        description: "Decrease Max HP by 50% and Raise HP Regen by 10% of Max HP for rest of the battle.",
+        description: "Decrease Max HP by 33% and Raise HP Regen by 10% of Max HP for rest of the battle.",
         conversions: [
-    { source: "HP", ratio: -0.5, resulting_stat: "HP" },
+    { source: "HP", ratio: -0.33, resulting_stat: "HP" },
     { source: "HP", ratio: 0.1, resulting_stat: "HP Regen" },
     ],
         
@@ -14057,6 +14090,7 @@ const skill_data: Record<string, Skill> = {
             self_cast: false,
             free_turn: true
         },
+        PreReq: ["Arachnoid"],
         sp: 1,
         gold: 50,
         exp: 100,
@@ -14074,10 +14108,11 @@ const skill_data: Record<string, Skill> = {
             self_cast: false,
             free_turn: true
         },
+        PreReq: ["Ghost"],
         sp: 1,
         gold: 50,
         exp: 100,
-        description: "[ ⧖ ] Gain Flat +60% Physical Resist and lose Flat -30% Elemental Resist for 3 Turns",
+        description: "[ ⧖ ] Gain Flat +60% Physical Resist and lose Flat -30% Elemental Resist for 2 Turns",
         stats: {
     "Phys Res%": 0.6,
     "Elemental Res%": -0.3,
@@ -14091,6 +14126,7 @@ const skill_data: Record<string, Skill> = {
             self_cast: false,
             free_turn: false
         },
+        PreReq: ["True Hero Ascendency", "Hawk Eyes", "WoodElf"],
         sp: 2,
         gold: 500,
         exp: 10000,
@@ -14109,6 +14145,7 @@ const skill_data: Record<string, Skill> = {
             self_cast: true,
             free_turn: false
         },
+        PreReq: ["True Hero Ascendency", "Rune Spark", "Dwarf"],
         sp: 2,
         gold: 500,
         exp: 10000,
@@ -14128,6 +14165,7 @@ const skill_data: Record<string, Skill> = {
             self_cast: false,
             free_turn: false
         },
+        PreReq: ["True Hero Ascendency", "Shadow Eyes", "DarkElf"],
         sp: 2,
         gold: 500,
         exp: 10000,
@@ -14145,12 +14183,13 @@ const skill_data: Record<string, Skill> = {
             self_cast: false,
             free_turn: false
         },
+        PreReq: ["True Hero Ascendency", "Ichor Surge", "RainbowMan"],
         sp: 1,
         gold: 250,
         exp: 5000,
         description: "[ 1 Charge ] Gain Temp MP equal to 15% of Max MP and HP Degen equal to 6% of Max HP for 5 Turns.",
         conversions: [
-    { source: "MP", ratio: 0.15, resulting_stat: "MP" },
+    { source: "MP", ratio: 0.15, resulting_stat: "Temp MP" },
     { source: "HP", ratio: -0.06, resulting_stat: "HP Regen" },
     ],
         
@@ -14162,6 +14201,7 @@ const skill_data: Record<string, Skill> = {
             self_cast: false,
             free_turn: false
         },
+        PreReq: ["True Hero Ascendency", "Divine Heritage", "RainbowMan"],
         sp: 1,
         gold: 250,
         exp: 5000,
@@ -14179,6 +14219,7 @@ const skill_data: Record<string, Skill> = {
             self_cast: false,
             free_turn: false
         },
+        PreReq: ["True Hero Ascendency", "Last Prayer", "NorthMan"],
         sp: 2,
         gold: 500,
         exp: 10000,
@@ -14197,6 +14238,7 @@ const skill_data: Record<string, Skill> = {
             self_cast: false,
             free_turn: false
         },
+        PreReq: ["True Hero Ascendency", "Warrior Spirit", "SouthMan"],
         sp: 2,
         gold: 500,
         exp: 10000,
@@ -14213,6 +14255,7 @@ const skill_data: Record<string, Skill> = {
             self_cast: false,
             free_turn: true
         },
+        PreReq: ["Death Emperor", "Bone Armor"],
         sp: 2,
         gold: 500,
         exp: 10000,
@@ -14232,6 +14275,7 @@ const skill_data: Record<string, Skill> = {
             self_cast: false,
             free_turn: false
         },
+        PreReq: ["Overlord", "Bone Armor"],
         sp: 2,
         gold: 500,
         exp: 10000,
@@ -14249,6 +14293,7 @@ const skill_data: Record<string, Skill> = {
             self_cast: false,
             free_turn: false
         },
+        PreReq: ["Tomb Emperor", "The Hunger"],
         sp: 2,
         gold: 500,
         exp: 10000,
@@ -14266,11 +14311,12 @@ const skill_data: Record<string, Skill> = {
             self_cast: false,
             free_turn: false
         },
+        PreReq: ["Orc Deity", "Blood Rage"],
         sp: 2,
         gold: 500,
         exp: 10000,
         description: "Raise self ATK and DEF by 20% of ATK stacking for rest of battle. Costs 20/10% Max HP and MP.",
-        conversions: [
+        stack_conversions: [
     { source: "ATK", ratio: 0.2, resulting_stat: "ATK" },
     { source: "ATK", ratio: 0.2, resulting_stat: "DEF" },
     ],
@@ -14283,10 +14329,15 @@ const skill_data: Record<string, Skill> = {
             self_cast: false,
             free_turn: true
         },
+        PreReq: ["Goblin Deity", "Shadow Meld"],
         sp: 2,
         gold: 500,
         exp: 10000,
         description: "[ ⧖ , 2 Charges ] Reset self threat to 0, and Raise self Crit Damage by 100% for 1 Turn. Increase self Crit Damage by 50% for 13 Turns",
+        stats: {
+    "Threat%": -1,
+    "Crit DMG%": 1,
+    },
         conversions: [
     { source: "Crit DMG%", ratio: 0.5, resulting_stat: "Crit DMG%" },
     ],
@@ -14299,6 +14350,7 @@ const skill_data: Record<string, Skill> = {
             self_cast: false,
             free_turn: false
         },
+        PreReq: ["Elder Scale Deity", "Cold Blood"],
         sp: 2,
         gold: 500,
         exp: 10000,
@@ -14316,6 +14368,7 @@ const skill_data: Record<string, Skill> = {
             self_cast: false,
             free_turn: false
         },
+        PreReq: ["Jotun Deity", "Earth Flesh"],
         sp: 2,
         gold: 500,
         exp: 10000,
@@ -14334,6 +14387,7 @@ const skill_data: Record<string, Skill> = {
             self_cast: false,
             free_turn: false
         },
+        PreReq: ["Storm Deity", "Earth Flesh"],
         sp: 2,
         gold: 500,
         exp: 10000,
@@ -14351,6 +14405,7 @@ const skill_data: Record<string, Skill> = {
             self_cast: false,
             free_turn: false
         },
+        PreReq: ["Mountain Deity", "Earth Flesh"],
         sp: 2,
         gold: 500,
         exp: 10000,
@@ -14368,6 +14423,7 @@ const skill_data: Record<string, Skill> = {
             self_cast: false,
             free_turn: true
         },
+        PreReq: ["Aspect of Evil", "Hell Ichor"],
         sp: 2,
         gold: 500,
         exp: 10000,
@@ -14387,6 +14443,7 @@ const skill_data: Record<string, Skill> = {
             self_cast: false,
             free_turn: false
         },
+        PreReq: ["Lord of Hell", "Hell Ichor"],
         sp: 2,
         gold: 500,
         exp: 10000,
@@ -14403,6 +14460,7 @@ const skill_data: Record<string, Skill> = {
             self_cast: false,
             free_turn: true
         },
+        PreReq: ["Cherubrim", "Light Barrier"],
         sp: 2,
         gold: 500,
         exp: 10000,
@@ -14420,6 +14478,7 @@ const skill_data: Record<string, Skill> = {
             self_cast: false,
             free_turn: true
         },
+        PreReq: ["Empyrean", "Light Barrier"],
         sp: 2,
         gold: 500,
         exp: 10000,
@@ -14440,6 +14499,7 @@ const skill_data: Record<string, Skill> = {
             self_cast: false,
             free_turn: true
         },
+        PreReq: ["Lucifer"],
         sp: 2,
         gold: 500,
         exp: 10000,
@@ -14457,6 +14517,7 @@ const skill_data: Record<string, Skill> = {
             self_cast: false,
             free_turn: false
         },
+        PreReq: ["Vampire Deity", "Blood Thirst"],
         sp: 1,
         gold: 250,
         exp: 5000,
@@ -14475,6 +14536,7 @@ const skill_data: Record<string, Skill> = {
             self_cast: false,
             free_turn: true
         },
+        PreReq: ["Blood Lord Form"],
         sp: 1,
         gold: 250,
         exp: 5000,
@@ -14495,6 +14557,7 @@ const skill_data: Record<string, Skill> = {
             self_cast: false,
             free_turn: true
         },
+        PreReq: ["Vermin Deity", "Vermin Claw"],
         sp: 2,
         gold: 500,
         exp: 10000,
@@ -14512,6 +14575,7 @@ const skill_data: Record<string, Skill> = {
             self_cast: false,
             free_turn: true
         },
+        PreReq: ["Venomatid Deity", "Vermin Claw"],
         sp: 2,
         gold: 500,
         exp: 10000,
@@ -14529,6 +14593,7 @@ const skill_data: Record<string, Skill> = {
             self_cast: false,
             free_turn: true
         },
+        PreReq: ["Ogre Deity", "Brute Onslaught"],
         sp: 2,
         gold: 500,
         exp: 10000,
@@ -14546,6 +14611,7 @@ const skill_data: Record<string, Skill> = {
             self_cast: false,
             free_turn: false
         },
+        PreReq: ["Troll Deity", "Hyper Regeneration"],
         sp: 2,
         gold: 500,
         exp: 10000,
@@ -14564,15 +14630,27 @@ const skill_data: Record<string, Skill> = {
             self_cast: false,
             free_turn: true
         },
+        PreReq: ["Quogga Deity", "Steel Bristle"],
         sp: 2,
         gold: 500,
         exp: 10000,
-        description: "[ ⧖ , 2 Charges ] Gain Flat +100% All Res for 1 Turn, and Raise self Physical Damage by 15% of ATK Multi for 2 Turns.",
+        description: "[ ⧖ , 2 Charges ] Gain Flat +100% All Res for 1 Turn, and Raise self Physical Damage by 500% of average Resistance for rest of battle.",
         stats: {
     "All Res%": 1,
     },
         conversions: [
-    { source: "ATK%", ratio: 0.15, resulting_stat: "Phys%" },
+    { source: "Fire Res%", ratio: 5 / 12, resulting_stat: "Phys%" },
+    { source: "Water Res%", ratio: 5 / 12, resulting_stat: "Phys%" },
+    { source: "Lightning Res%", ratio: 5 / 12, resulting_stat: "Phys%" },
+    { source: "Wind Res%", ratio: 5 / 12, resulting_stat: "Phys%" },
+    { source: "Earth Res%", ratio: 5 / 12, resulting_stat: "Phys%" },
+    { source: "Toxic Res%", ratio: 5 / 12, resulting_stat: "Phys%" },
+    { source: "Slash Res%", ratio: 5 / 12, resulting_stat: "Phys%" },
+    { source: "Pierce Res%", ratio: 5 / 12, resulting_stat: "Phys%" },
+    { source: "Blunt Res%", ratio: 5 / 12, resulting_stat: "Phys%" },
+    { source: "Neg Res%", ratio: 5 / 12, resulting_stat: "Phys%" },
+    { source: "Holy Res%", ratio: 5 / 12, resulting_stat: "Phys%" },
+    { source: "Void Res%", ratio: 5 / 12, resulting_stat: "Phys%" },
     ],
         
 },
@@ -14583,16 +14661,17 @@ const skill_data: Record<string, Skill> = {
             self_cast: false,
             free_turn: true
         },
+        PreReq: ["Minotaur Deity", "Gore Charge"],
         sp: 2,
         gold: 500,
         exp: 10000,
-        description: "[ ⧖ ] Raise self Threat Bonus by 50% stacking for 10 turns, and ATK/DEF by 25% for 5 Turns.",
+        description: "[ ⧖ ] Raise self Threat Bonus by 50% stacking for 10 turns, and ATK/DEF by 80% for 5 Turns.",
         stack_stats: {
     "Threat%": 0.5,
     },
         conversions: [
-    { source: "ATK", ratio: 0.25, resulting_stat: "ATK" },
-    { source: "DEF", ratio: 0.25, resulting_stat: "DEF" },
+    { source: "ATK", ratio: 0.8, resulting_stat: "ATK" },
+    { source: "DEF", ratio: 0.8, resulting_stat: "DEF" },
     ],
         
 },
@@ -14603,15 +14682,16 @@ const skill_data: Record<string, Skill> = {
             self_cast: false,
             free_turn: true
         },
+        PreReq: ["Tigerman Deity", "Flesh Voracity"],
         sp: 2,
         gold: 500,
         exp: 10000,
-        description: "[ ⧖ ] Apply Devour Mark to enemy. Raise self Crit Damage by 50% for 3 Turns, but decrease DEF by 15% stacking for rest of battle.",
+        description: "[ ⧖ ] Apply Devour Mark to enemy. Raise self Crit Damage by 100% for 6 Turns, but decrease DEF by 10% stacking for rest of battle.",
         conversions: [
-    { source: "Crit DMG%", ratio: 0.5, resulting_stat: "Crit DMG%" },
+    { source: "Crit DMG%", ratio: 1, resulting_stat: "Crit DMG%" },
     ],
         stack_conversions: [
-    { source: "DEF", ratio: -0.15, resulting_stat: "DEF" },
+    { source: "DEF", ratio: -0.1, resulting_stat: "DEF" },
     ],
         
 },
@@ -14622,15 +14702,16 @@ const skill_data: Record<string, Skill> = {
             self_cast: false,
             free_turn: false
         },
+        PreReq: ["Goatman Deity", "Berserker Fury"],
         sp: 2,
         gold: 500,
         exp: 10000,
-        description: "Heal self for 40% Max HP. Decrease self HP Regen by 5% Max HP for 8 Turns. Raise self ATK by 10% stacking for rest of battle.",
+        description: "Heal self for 40% Max HP. Decrease self HP Regen by 5% Max HP for 5 Turns. Raise self ATK by 50% stacking up to 200% for rest of battle.",
         conversions: [
     { source: "HP", ratio: -0.05, resulting_stat: "HP Regen" },
     ],
         stack_conversions: [
-    { source: "ATK", ratio: 0.1, resulting_stat: "ATK" },
+    { source: "ATK", ratio: 0.5, resulting_stat: "ATK" },
     ],
         
 },
@@ -14641,13 +14722,13 @@ const skill_data: Record<string, Skill> = {
             self_cast: false,
             free_turn: true
         },
+        PreReq: ["Prismatic Golem", "Hardpoint"],
         sp: 2,
         gold: 500,
         exp: 10000,
-        description: "[ ⧖ ] Raise self Main Stats by 50% DEF for 12 Turns, but decrease self Power by 40% DEF for 6 turns after.",
+        description: "[ ⧖ ] Raise self Main Stats by 100% DEF for 12 Turns, but decrease self Power by 40% DEF for 6 turns after.",
         conversions: [
-    { source: "DEF", ratio: 0.5, resulting_stat: "POWER" },
-    { source: "DEF", ratio: 0.5, resulting_stat: "DEF" },
+    { source: "DEF", ratio: 1, resulting_stat: "POWER" },
     ],
         
 },
@@ -14658,13 +14739,14 @@ const skill_data: Record<string, Skill> = {
             self_cast: false,
             free_turn: true
         },
+        PreReq: ["Frogman Deity", "Shaman Legacy"],
         sp: 2,
         gold: 500,
         exp: 10000,
-        description: "[ ⧖ , 5 Charges ] Raise self MATK by 125% Healpower and vice-versa for 5 Turns",
+        description: "[ ⧖ , 5 Charges ] Raise self MATK by 150% Healpower and vice-versa for 6 Turns",
         conversions: [
-    { source: "MATK%", ratio: 1.25, resulting_stat: "HEAL" },
-    { source: "HEAL", ratio: 1.25, resulting_stat: "MATK" },
+    { source: "MATK", ratio: 1.5, resulting_stat: "HEAL" },
+    { source: "HEAL", ratio: 1.5, resulting_stat: "MATK" },
     ],
         
 },
@@ -14675,13 +14757,15 @@ const skill_data: Record<string, Skill> = {
             self_cast: false,
             free_turn: true
         },
+        PreReq: ["Spirit Lord", "Primal Outburst"],
         sp: 2,
         gold: 500,
         exp: 10000,
-        description: "[ ⧖ ] Raise self Elemental Pen by 5% of Max MP, but gain MP Degen equal to 0.6% of Max MP for 10 Turns.",
+        description: "[ ⧖ ] Raise self Elemental Pen by 5% of Max MP and Crit Damage by 50x of MP Regen, but gain MP Degen equal to 1% of Max MP for 10 Turns.",
         conversions: [
     { source: "MP", ratio: 0.05, resulting_stat: "Elemental Pen%" },
-    { source: "MP", ratio: -0.006, resulting_stat: "MP Regen" },
+    { source: "MP Regen", ratio: 50, resulting_stat: "Crit DMG%" },
+    { source: "MP", ratio: -0.01, resulting_stat: "MP Regen" },
     ],
         
 },
@@ -14692,15 +14776,17 @@ const skill_data: Record<string, Skill> = {
             self_cast: false,
             free_turn: true
         },
+        PreReq: ["Tengu Deity", "Divine Beast"],
         sp: 2,
         gold: 500,
         exp: 10000,
-        description: "[ ⧖ ] Gain Flat 40% Crit Chance, and Raise Elemental DMG by 300% Void DMG for 1 Turn. Costs 4%/1% Max HP/MP. Requires Divine Beast active.",
+        description: "[ ⧖ ] Gain Flat 100% Crit Chance, raise Elemental DMG by 150% Void DMG, and reduce self Void DMG by 100% for rest of battle. Costs 20%/5% Max HP/MP. Requires Divine Beast active.",
         stats: {
-    "Crit Chance%": 0.4,
+    "Crit Chance%": 1,
     },
         conversions: [
-    { source: "Void%", ratio: 3, resulting_stat: "Elemental%" },
+    { source: "Void%", ratio: 1.5, resulting_stat: "Elemental%" },
+    { source: "Void%", ratio: -1, resulting_stat: "Void%" },
     ],
         
 },
@@ -14711,13 +14797,13 @@ const skill_data: Record<string, Skill> = {
             self_cast: false,
             free_turn: true
         },
+        PreReq: ["Birdman Deity", "Sky Fury"],
         sp: 2,
         gold: 500,
         exp: 10000,
-        description: "[ ⧖ ] Gain Flat 750% Crit Chance/Damage for 4 Turns, but -250% Crit Chance for 4 Turns after.",
+        description: "[ ⧖ ] Increase Crit Damage by 150% for 3 Turns, but cannot Crit for 3 Turns after.",
         stats: {
-    "Crit Chance%": 7.5,
-    "Crit DMG%": 7.5,
+    "Crit DMG%": 1.5,
     },
         
 },
@@ -14728,15 +14814,13 @@ const skill_data: Record<string, Skill> = {
             self_cast: false,
             free_turn: true
         },
+        PreReq: ["Nightmare Lord", "Ethereal Shift"],
         sp: 2,
         gold: 500,
         exp: 10000,
-        description: "[ ⧖ , 3 Charges ] Raise self Negative Pen by 100% for 1 Turn and lose flat -100% All Res for 2 Turns. Requires Ethereal Shift active.",
-        stats: {
-    "All Res%": -1,
-    },
+        description: "[ ⧖ ] Raise self Negative Pen by 150% for 1 Hit. Requires Ethereal Shift active.",
         conversions: [
-    { source: "Neg Pen%", ratio: 1, resulting_stat: "Neg Pen%" },
+    { source: "Neg Pen%", ratio: 1.5, resulting_stat: "Neg Pen%" },
     ],
         
 },
@@ -14747,6 +14831,7 @@ const skill_data: Record<string, Skill> = {
             self_cast: false,
             free_turn: true
         },
+        PreReq: ["Arachne Empress", "Omnisight"],
         sp: 2,
         gold: 500,
         exp: 10000,
@@ -14766,10 +14851,11 @@ const skill_data: Record<string, Skill> = {
             self_cast: false,
             free_turn: true
         },
+        PreReq: ["Shoggoth", "Absorption"],
         sp: 2,
         gold: 500,
         exp: 10000,
-        description: "[ ⧖ ] Raise self ATK by 40% of Max HP for 5 Turns, but decrease HP Regen by 4% of Max HP for 10 Turns. Requires Absorbption active.",
+        description: "[ ⧖ ] Raise self ATK by 40% of Max HP for 5 Turns, but decrease HP Regen by 4% of Max HP for 10 Turns. Requires Absorption active.",
         conversions: [
     { source: "HP", ratio: 0.4, resulting_stat: "ATK" },
     { source: "HP", ratio: -0.04, resulting_stat: "HP Regen" },
@@ -14783,6 +14869,7 @@ const skill_data: Record<string, Skill> = {
             self_cast: false,
             free_turn: true
         },
+        PreReq: ["Elder Guardian Ooze", "Absorption"],
         sp: 2,
         gold: 500,
         exp: 10000,
@@ -14802,6 +14889,7 @@ const skill_data: Record<string, Skill> = {
             self_cast: false,
             free_turn: true
         },
+        PreReq: ["Elder Devouring Ooze", "Absorption"],
         sp: 2,
         gold: 500,
         exp: 10000,
@@ -14819,6 +14907,7 @@ const skill_data: Record<string, Skill> = {
             self_cast: false,
             free_turn: false
         },
+        PreReq: ["Earth Mother", "Nature's Bounty"],
         sp: 2,
         gold: 500,
         exp: 10000,
@@ -14836,13 +14925,17 @@ const skill_data: Record<string, Skill> = {
             self_cast: false,
             free_turn: true
         },
+        PreReq: ["Zy'tl Q'ae", "Nature's Bounty"],
         sp: 2,
         gold: 500,
         exp: 10000,
-        description: "[ ⧖ ] Raise Blunt Penetration by 100% Earth Res for 2 Turns, and self Max HP by 10% for rest of battle.",
+        description: "[ ⧖ ] Raise self ATK by 1000% and self Max HP by 133% but cannot Crit for the rest of battle. Requires Nature's Bounty active.",
+        stats: {
+    "Crit Chance%": -1,
+    },
         conversions: [
-    { source: "Earth Res%", ratio: 1, resulting_stat: "Blunt Pen%" },
-    { source: "HP", ratio: 0.1, resulting_stat: "HP" },
+    { source: "ATK", ratio: 10, resulting_stat: "ATK" },
+    { source: "HP", ratio: 1.33, resulting_stat: "HP" },
     ],
         
 },
@@ -14853,6 +14946,7 @@ const skill_data: Record<string, Skill> = {
             self_cast: false,
             free_turn: false
         },
+        PreReq: ["Dragonoid Lord", "Dragon Blood"],
         sp: 1,
         gold: 250,
         exp: 5000,
@@ -14869,6 +14963,7 @@ const skill_data: Record<string, Skill> = {
             self_cast: false,
             free_turn: false
         },
+        PreReq: ["Dragon Blood Surge"],
         sp: 1,
         gold: 250,
         exp: 5000,
@@ -14909,6 +15004,7 @@ const skill_data: Record<string, Skill> = {
             self_cast: false,
             free_turn: true
         },
+        PreReq: ["Dragon Lord Form"],
         gold: 50,
         exp: 2000,
         description: "[ ⧖ ] Raise self ATK by 20% for 6 Turns and ATK by 5% Stacking for 7 Turns, costs 10% Max HP. Requires Dragon Lord Form active",
@@ -14927,6 +15023,7 @@ const skill_data: Record<string, Skill> = {
             self_cast: false,
             free_turn: false
         },
+        PreReq: ["Dragon Lord Form"],
         gold: 50,
         exp: 2000,
         description: "Gain flat +75% All Resist for 1 Turn, and raise Self Crit Damage by 15% for 12 Turns. Requires Dragon Lord Form active",
@@ -14945,6 +15042,7 @@ const skill_data: Record<string, Skill> = {
             self_cast: false,
             free_turn: false
         },
+        PreReq: ["Dragonoid Sovereign", "Dragon Blood"],
         sp: 1,
         gold: 250,
         exp: 5000,
@@ -14961,6 +15059,7 @@ const skill_data: Record<string, Skill> = {
             self_cast: false,
             free_turn: false
         },
+        PreReq: ["Dragon Mana Surge"],
         sp: 1,
         gold: 250,
         exp: 5000,
@@ -14978,6 +15077,7 @@ const skill_data: Record<string, Skill> = {
             self_cast: false,
             free_turn: true
         },
+        PreReq: ["Sovereign Form"],
         gold: 50,
         exp: 2000,
         description: "[ ⧖, 1 Charge ] Raise target ally DEF by 12% MATK for rest of battle. Costs 10%/2.5% of Max HP/MP",
@@ -14993,6 +15093,7 @@ const skill_data: Record<string, Skill> = {
             self_cast: true,
             free_turn: true
         },
+        PreReq: ["Sovereign Form"],
         gold: 50,
         exp: 2000,
         description: "[ ⧖, 1 Charge ] Raise self DEF by 18% MATK for rest of battle. Costs 10%/2.5% of Max HP/MP",
@@ -15008,6 +15109,7 @@ const skill_data: Record<string, Skill> = {
             self_cast: false,
             free_turn: true
         },
+        PreReq: ["Sovereign Form"],
         gold: 50,
         exp: 2000,
         description: "[ ⧖ ] Raise self MATK by 20% for 1 Turn, and 10% MATK Stacking for 7 Turns. 6 Turn Cooldown. Costs 1% of Current and Max MP.",
@@ -15026,6 +15128,7 @@ const skill_data: Record<string, Skill> = {
             self_cast: false,
             free_turn: true
         },
+        PreReq: ["Kitsune"],
         sp: 1,
         gold: 50,
         exp: 100,
@@ -15051,6 +15154,7 @@ const skill_data: Record<string, Skill> = {
             self_cast: false,
             free_turn: true
         },
+        PreReq: ["Kyuubi", "Fox Mirage", "Kitsune"],
         sp: 2,
         gold: 500,
         exp: 10000,
@@ -15062,8 +15166,8 @@ const skill_data: Record<string, Skill> = {
         },
         description: "[ ⧖ ] Apply Foxfire Mark to target enemy. Max 1 Foxfire Mark per enemy. Debuff target AllRes by 20% of average Penslash and Penfire. Breaks 25% armor. Costs 5% Max MP, minimum 28 MP.",
         conversions: [
-    { source: "Post Slash Pen%", ratio: 0.1, resulting_stat: "All Pen%" },
-    { source: "Post Fire Pen%", ratio: 0.1, resulting_stat: "All Pen%" },
+    { source: "Slash Pen%", ratio: 0.1, resulting_stat: "All Pen%" },
+    { source: "Fire Pen%", ratio: 0.1, resulting_stat: "All Pen%" },
     ],
         
 },
@@ -15074,6 +15178,7 @@ const skill_data: Record<string, Skill> = {
             self_cast: true,
             free_turn: true
         },
+        PreReq: ["Succubus"],
         sp: 1,
         gold: 50,
         exp: 100,
@@ -15096,6 +15201,7 @@ const skill_data: Record<string, Skill> = {
             self_cast: true,
             free_turn: false
         },
+        PreReq: ["Succubus Goddess", "Succubus Entrancement", "Succubus"],
         sp: 2,
         gold: 500,
         exp: 10000,
@@ -15111,315 +15217,6 @@ const skill_data: Record<string, Skill> = {
     ],     
 }};
 
-// TODO: Remove the overrides and directly implement the prerequesits and conversions to the skills
-type SkillOverride = Partial<Omit<Skill, "type" | "class_levels">> & {
-    type?: Partial<NonNullable<Skill["type"]>>
-    class_levels?: Partial<Skill["class_levels"]>
-}
-
-const allResistanceStats: StatNames[] = [
-    "Fire Res%",
-    "Water Res%",
-    "Lightning Res%",
-    "Wind Res%",
-    "Earth Res%",
-    "Toxic Res%",
-    "Slash Res%",
-    "Pierce Res%",
-    "Blunt Res%",
-    "Neg Res%",
-    "Holy Res%",
-    "Void Res%",
-]
-
-const averageConversions = (sources: readonly StatNames[], ratio: number, resulting_stat: StatNames) =>
-    sources.map((source) => ({
-        source,
-        ratio: ratio / sources.length,
-        resulting_stat,
-    }))
-
-function mergeSkillOverride(skillName: string, override: SkillOverride) {
-    const existing = skill_data[skillName] ?? defaultSkill
-
-    skill_data[skillName] = {
-        ...defaultSkill,
-        ...existing,
-        ...override,
-        type: {
-            ...defaultSkill.type,
-            ...(existing.type ?? {}),
-            ...(override.type ?? {}),
-        },
-        class_levels: {
-            ...defaultSkill.class_levels,
-            ...(existing.class_levels ?? {}),
-            ...(override.class_levels ?? {}),
-        },
-        stats: override.stats ?? existing.stats ?? defaultSkill.stats,
-        stack_stats: override.stack_stats ?? existing.stack_stats ?? defaultSkill.stack_stats,
-        conversions: override.conversions ?? existing.conversions ?? defaultSkill.conversions,
-        stack_conversions: override.stack_conversions ?? existing.stack_conversions ?? defaultSkill.stack_conversions,
-        dmg_stats: override.dmg_stats ?? existing.dmg_stats,
-    }
-}
-
-const racialSkillOverrides: Record<string, SkillOverride> = {
-    "Bone Armor": { PreReq: ["Skeleton"] },
-    "The Hunger": { PreReq: ["Zombie"] },
-    "Hawk Eyes": { PreReq: ["WoodElf"] },
-    "Rune Spark": { PreReq: ["Dwarf"] },
-    "Blood Rage": { PreReq: ["Orc"] },
-    "Shadow Meld": { PreReq: ["Goblin"] },
-    "Cold Blood": { PreReq: ["Lizardman"] },
-    "Earth Flesh": { PreReq: ["Giant"] },
-    "Dragon Blood": { PreReq: ["Dragonspawn"] },
-    "Shadow Eyes": { PreReq: ["DarkElf"] },
-    "Hell Ichor": { PreReq: ["Demon"] },
-    "Light Barrier": { PreReq: ["Angel"] },
-    "Blood Thirst": { PreReq: ["Vampire"] },
-    "Vermin Claw": { PreReq: ["Insectoid"] },
-    "Brute Onslaught": { PreReq: ["Ogre"] },
-    "Hyper Regeneration": { PreReq: ["Troll"] },
-    "Steel Bristle": {
-        PreReq: ["Quogga"],
-        description: "[ ⧖ ] Raise physical damage by 20% of ATK Multiplier for 3 Turns, and gain Flat +50% Physical Resist for 1 Turn.",
-        conversions: [
-            { source: "ATK%", ratio: 0.2, resulting_stat: "Phys%" },
-        ],
-    },
-    "Gore Charge": {
-        PreReq: ["Minotaur"],
-        description: "[ ⧖ ] Raise self threat bonus by 100% for 5 turns and ATK by 70% for 1 Hit",
-        conversions: [
-            { source: "ATK", ratio: 0.7, resulting_stat: "ATK" },
-        ],
-    },
-    "Flesh Voracity": {
-        PreReq: ["Tigerman"],
-        description: "[ ⧖ ] Raise self Crit Damage by 44% for 3 Turns and decrease DEF by 44% for 2 Turns.",
-        conversions: [
-            { source: "Crit DMG%", ratio: 0.44, resulting_stat: "Crit DMG%" },
-            { source: "DEF", ratio: -0.44, resulting_stat: "DEF" },
-        ],
-    },
-    "Berserker Fury": {
-        PreReq: ["Goatman"],
-        description: "Gain Temp HP equal to 50% Max HP for 10 Turns and Raise Self ATK by 33% for 8 Turns.",
-        conversions: [
-            { source: "HP", ratio: 0.5, resulting_stat: "Temp HP" },
-            { source: "ATK", ratio: 0.33, resulting_stat: "ATK" },
-        ],
-    },
-    "Ichor Surge": { PreReq: ["RainbowMan"] },
-    "Last Prayer": { PreReq: ["NorthMan"] },
-    "Warrior Spirit": { PreReq: ["SouthMan"] },
-    "Hardpoint": {
-        PreReq: ["HalfGolem"],
-        description: "[ ⧖ , 12 Charges ] Raise self DEF by 100% and ATK by 50% DEF for 2 Turns",
-        conversions: [
-            { source: "DEF", ratio: 1, resulting_stat: "DEF" },
-            { source: "DEF", ratio: 0.5, resulting_stat: "ATK" },
-        ],
-    },
-    "Shaman Legacy": {
-        PreReq: ["Frogman"],
-        description: "Raise self MATK by 60% Healpower and vice-versa for rest of battle.",
-        conversions: [
-            { source: "HEAL", ratio: 0.6, resulting_stat: "MATK" },
-            { source: "MATK", ratio: 0.6, resulting_stat: "HEAL" },
-        ],
-    },
-    "Primal Outburst": {
-        PreReq: ["Elemental"],
-        description: "[ ⧖ ] Raise Elemental DMG by 25% of Max MP and 25x of MP Regen, lose MP equal to 2% max MP for 5 Turns",
-        conversions: [
-            { source: "MP", ratio: 0.25, resulting_stat: "Elemental%" },
-            { source: "MP Regen", ratio: 25, resulting_stat: "Elemental%" },
-            { source: "MP", ratio: -0.02, resulting_stat: "MP Regen" },
-        ],
-    },
-    "Divine Beast": {
-        PreReq: ["Tengu"],
-        description: "Raise Magic DMG by 500% Crit Chance, and gain Flat +10% Crit Chance for rest of battle.",
-    },
-    "Sky Fury": {
-        PreReq: ["Birdman"],
-        description: "[ ⧖ ] Raise Physical Damage by 325% Crit Chance and gain Flat +100% Crit Chance for 6 Turns, costs 25% Max HP",
-        stats: {
-            "Crit Chance%": 1,
-        },
-        conversions: [
-            { source: "Crit Chance%", ratio: 3.25, resulting_stat: "Phys%" },
-        ],
-    },
-    "Absorption": { PreReq: ["Slime"] },
-    "Nature's Bounty": {
-        PreReq: ["TreeSpirit"],
-        description: "Decrease Max HP by 33% and Raise HP Regen by 10% of Max HP for rest of the battle.",
-        conversions: [
-            { source: "HP", ratio: -0.33, resulting_stat: "HP" },
-            { source: "HP", ratio: 0.1, resulting_stat: "HP Regen" },
-        ],
-    },
-    "Omnisight": { PreReq: ["Arachnoid"] },
-    "Ethereal Shift": {
-        PreReq: ["Ghost"],
-        description: "[ ⧖ ] Gain Flat +60% Physical Resist and lose Flat -30% Elemental Resist for 2 Turns",
-    },
-    "True Sight": { PreReq: ["True Hero Ascendency", "Hawk Eyes", "WoodElf"] },
-    "Rune Shift": { PreReq: ["True Hero Ascendency", "Rune Spark", "Dwarf"] },
-    "Twilight Eyes": { PreReq: ["True Hero Ascendency", "Shadow Eyes", "DarkElf"] },
-    "Divine Heritage": { PreReq: ["True Hero Ascendency", "Ichor Surge", "RainbowMan"] },
-    "Divine Awakening": { PreReq: ["True Hero Ascendency", "Divine Heritage", "RainbowMan"] },
-    "Unrelenting Hero": { PreReq: ["True Hero Ascendency", "Last Prayer", "NorthMan"] },
-    "Avatar of War": { PreReq: ["True Hero Ascendency", "Warrior Spirit", "SouthMan"] },
-    "Omen of Death": { PreReq: ["Death Emperor", "Bone Armor"] },
-    "Lore of Death": { PreReq: ["Overlord", "Bone Armor"] },
-    "Rule of Death": { PreReq: ["Tomb Emperor", "The Hunger"] },
-    "Bloodrage Seal": { PreReq: ["Orc Deity", "Blood Rage"] },
-    "Shadow Merge": { PreReq: ["Goblin Deity", "Shadow Meld"] },
-    "Frost Ichor": { PreReq: ["Elder Scale Deity", "Cold Blood"] },
-    "Ice Flesh": { PreReq: ["Jotun Deity", "Earth Flesh"] },
-    "Storm Flesh": { PreReq: ["Storm Deity", "Earth Flesh"] },
-    "Titan Flesh": { PreReq: ["Mountain Deity", "Earth Flesh"] },
-    "Aspect of the Devil": { PreReq: ["Aspect of Evil", "Hell Ichor"] },
-    "Flames of Gehenna": { PreReq: ["Lord of Hell", "Hell Ichor"] },
-    "Blaze of Uriel": { PreReq: ["Cherubrim", "Light Barrier"] },
-    "Chalice of Raphael": { PreReq: ["Empyrean", "Light Barrier"] },
-    "Wings of Darkness": { PreReq: ["Lucifer"] },
-    "Blood Lord Form": { PreReq: ["Vampire Deity", "Blood Thirst"] },
-    "Blood Soul Release": { PreReq: ["Blood Lord Form"] },
-    "Vermin Rage": { PreReq: ["Vermin Deity", "Vermin Claw"] },
-    "Vermin Tide": { PreReq: ["Venomatid Deity", "Vermin Claw"] },
-    "Unending Rage": { PreReq: ["Ogre Deity", "Brute Onslaught"] },
-    "Immortal Blood": { PreReq: ["Troll Deity", "Hyper Regeneration"] },
-    "Prismatic Bristle": {
-        PreReq: ["Quogga Deity", "Steel Bristle"],
-        description: "[ ⧖ , 2 Charges ] Gain Flat +100% All Res for 1 Turn, and Raise self Physical Damage by 500% of average Resistance for rest of battle.",
-        stats: {
-            "All Res%": 1,
-        },
-        conversions: averageConversions(allResistanceStats, 5, "Phys%"),
-    },
-    "Primal Fury": {
-        PreReq: ["Minotaur Deity", "Gore Charge"],
-        description: "[ ⧖ ] Raise self Threat Bonus by 50% stacking for 10 turns, and ATK/DEF by 80% for 5 Turns.",
-        stack_stats: {
-            "Threat%": 0.5,
-        },
-        conversions: [
-            { source: "ATK", ratio: 0.8, resulting_stat: "ATK" },
-            { source: "DEF", ratio: 0.8, resulting_stat: "DEF" },
-        ],
-    },
-    "Devouring Voracity": {
-        PreReq: ["Tigerman Deity", "Flesh Voracity"],
-        description: "[ ⧖ ] Apply Devour Mark to enemy. Raise self Crit Damage by 100% for 6 Turns, but decrease DEF by 10% stacking for rest of battle.",
-        conversions: [
-            { source: "Crit DMG%", ratio: 1, resulting_stat: "Crit DMG%" },
-        ],
-        stack_conversions: [
-            { source: "DEF", ratio: -0.1, resulting_stat: "DEF" },
-        ],
-    },
-    "Bloodzerker State": {
-        PreReq: ["Goatman Deity", "Berserker Fury"],
-        description: "Heal self for 40% Max HP. Decrease self HP Regen by 5% Max HP for 5 Turns. Raise self ATK by 50% stacking up to 200% for rest of battle.",
-        conversions: [
-            { source: "HP", ratio: -0.05, resulting_stat: "HP Regen" },
-        ],
-        stack_conversions: [
-            { source: "ATK", ratio: 0.5, resulting_stat: "ATK" },
-        ],
-    },
-    "Nanocore Release": {
-        PreReq: ["Prismatic Golem", "Hardpoint"],
-        description: "[ ⧖ ] Raise self Main Stats by 100% DEF for 12 Turns, but decrease self Power by 40% DEF for 6 turns after.",
-        conversions: [
-            { source: "DEF", ratio: 1, resulting_stat: "POWER" },
-        ],
-    },
-    "Shamanic Spirit": {
-        PreReq: ["Frogman Deity", "Shaman Legacy"],
-        description: "[ ⧖ , 5 Charges ] Raise self MATK by 150% Healpower and vice-versa for 6 Turns",
-        conversions: [
-            { source: "MATK", ratio: 1.5, resulting_stat: "HEAL" },
-            { source: "HEAL", ratio: 1.5, resulting_stat: "MATK" },
-        ],
-    },
-    "Spirit Lord Dominion": {
-        PreReq: ["Spirit Lord", "Primal Outburst"],
-        description: "[ ⧖ ] Raise self Elemental Pen by 5% of Max MP and Crit Damage by 50x of MP Regen, but gain MP Degen equal to 1% of Max MP for 10 Turns.",
-        conversions: [
-            { source: "MP", ratio: 0.05, resulting_stat: "Elemental Pen%" },
-            { source: "MP Regen", ratio: 50, resulting_stat: "Crit DMG%" },
-            { source: "MP", ratio: -0.01, resulting_stat: "MP Regen" },
-        ],
-    },
-    "Kami Awakening": {
-        PreReq: ["Tengu Deity", "Divine Beast"],
-        description: "[ ⧖ ] Gain Flat 100% Crit Chance, raise Elemental DMG by 150% Void DMG, and reduce self Void DMG by 100% for rest of battle. Costs 20%/5% Max HP/MP. Requires Divine Beast active.",
-        stats: {
-            "Crit Chance%": 1,
-        },
-        conversions: [
-            { source: "Void%", ratio: 1.5, resulting_stat: "Elemental%" },
-            { source: "Void%", ratio: -1, resulting_stat: "Void%" },
-        ],
-    },
-    "Rage of the Yokai": {
-        PreReq: ["Birdman Deity", "Sky Fury"],
-        description: "[ ⧖ ] Increase Crit Damage by 150% for 3 Turns, but cannot Crit for 3 Turns after.",
-        stats: {
-            "Crit DMG%": 1.5,
-        },
-    },
-    "Nightmare Form": {
-        PreReq: ["Nightmare Lord", "Ethereal Shift"],
-        description: "[ ⧖ ] Raise self Negative Pen by 150% for 1 Hit. Requires Ethereal Shift active.",
-        stats: {},
-        conversions: [
-            { source: "Neg Pen%", ratio: 1.5, resulting_stat: "Neg Pen%" },
-        ],
-    },
-    "True Predator": { PreReq: ["Arachne Empress", "Omnisight"] },
-    "Solidify Form": {
-        PreReq: ["Shoggoth", "Absorption"],
-        description: "[ ⧖ ] Raise self ATK by 40% of Max HP for 5 Turns, but decrease HP Regen by 4% of Max HP for 10 Turns. Requires Absorption active.",
-    },
-    "Rapid Digestion": { PreReq: ["Elder Guardian Ooze", "Absorption"] },
-    "Acid Reflux": { PreReq: ["Elder Devouring Ooze", "Absorption"] },
-    "Gaia's Vision": { PreReq: ["Earth Mother", "Nature's Bounty"] },
-    "Gaia's Fury": {
-        PreReq: ["Zy'tl Q'ae", "Nature's Bounty"],
-        description: "[ ⧖ ] Raise self ATK by 1000% and self Max HP by 133% but cannot Crit for the rest of battle. Requires Nature's Bounty active.",
-        stats: {
-            "Crit Chance%": -1,
-        },
-        conversions: [
-            { source: "ATK", ratio: 10, resulting_stat: "ATK" },
-            { source: "HP", ratio: 1.33, resulting_stat: "HP" },
-        ],
-    },
-    "Dragon Blood Surge": { PreReq: ["Dragonoid Lord", "Dragon Blood"] },
-    "Dragon Lord Form": { PreReq: ["Dragon Blood Surge"] },
-    "Dragon Strength": { PreReq: ["Dragon Lord Form"] },
-    "Dragon Haki": { PreReq: ["Dragon Lord Form"] },
-    "Dragon Mana Surge": { PreReq: ["Dragonoid Sovereign", "Dragon Blood"] },
-    "Sovereign Form": { PreReq: ["Dragon Mana Surge"] },
-    "Soul Barrier": { PreReq: ["Sovereign Form"] },
-    "Soul Scales": { PreReq: ["Sovereign Form"] },
-    "Soul Burst": { PreReq: ["Sovereign Form"] },
-    "Fox Mirage": { PreReq: ["Kitsune"] },
-    "Nine Tails Inferno": { PreReq: ["Kyuubi", "Fox Mirage", "Kitsune"] },
-    "Succubus Entrancement": { PreReq: ["Succubus"] },
-    "Succubus Skill Boost": { PreReq: ["Succubus Goddess", "Succubus Entrancement", "Succubus"] },
-}
-
-for (const [skillName, override] of Object.entries(racialSkillOverrides)) {
-    mergeSkillOverride(skillName, override)
-}
 // inject precomputed widths
 const __columnWidths = computeColumnWidths(skill_data)
 

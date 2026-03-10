@@ -40,6 +40,9 @@ type SkillButtonProps = {
   averageDamageChange?: number | null
   rowIndex: number
   rowRef?: (node: HTMLDivElement | null) => void
+  canStack?: boolean
+  stackValue?: number
+  onChangeStack?: (skillName: string, value: number) => void
 }
 
 type ClassColorKey = "tank" | "warrior" | "caster" | "healer"
@@ -313,6 +316,9 @@ export function SkillButton({
   averageDamageChange,
   rowIndex,
   rowRef,
+  canStack = false,
+  stackValue = 0,
+  onChangeStack,
 }: SkillButtonProps) {
   const isSelected = selected.has(skillName)
   const { blockedTagConflict, missingRequirement, prereqTokens } = getSkillAvailabilityState({
@@ -363,6 +369,16 @@ export function SkillButton({
     dmgStats: renderDebugJson(skill.dmg_stats, "{}"),
     conversions: renderDebugJson(skill.conversions, "[]"),
     avgDamageChange: formatSignedDamageDelta(averageDamageChange ?? null),
+    stack: canStack ? (
+      <input
+        type="number"
+        className="w-20 rounded border border-slate-600 bg-slate-950/85 px-1 text-right shadow-inner outline-none transition focus:border-sky-400"
+        value={stackValue}
+        onClick={(event) => event.stopPropagation()}
+        onChange={(event) => onChangeStack?.(skillName, Math.max(0, Number(event.target.value) || 0))}
+        min={0}
+      />
+    ) : "",
   }
 
   const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {

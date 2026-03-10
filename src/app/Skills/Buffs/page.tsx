@@ -6,6 +6,7 @@ import { SkillButton } from "@/app/components/ToggleButton"
 import { DUNGEON_UNLOCKS_STORAGE_KEY, isDungeonUnlockTag } from "@/app/data/dungeon_unlocks"
 import { skill_data } from "@/app/data/skill_data"
 import { allRacePrereqTokens, getRacePrereqTokens, race_data_by_tag, type RaceTag } from "@/app/data/race_data"
+import { dispatchBuildSnapshotUpdated } from "@/app/lib/buildEvents"
 import { computeBuildStatStages, readBuildSnapshot } from "@/app/lib/buildStats"
 import { calculateDamage, readDamageCalcState } from "@/app/lib/damageCalc"
 import { useManagedColumns } from "@/app/lib/managedColumns"
@@ -20,6 +21,7 @@ import {
 } from "@/app/lib/tableViewState"
 
 const STORAGE_KEY = "selectedBuffs"
+const STACK_STORAGE_KEY = "selectedBuffStacks"
 const TRAINING_STORAGE_KEY = "SelectedTraining"
 const buffNames = Object.entries(skill_data)
   .filter(([, data]) => data.type?.is_buff === true)
@@ -30,6 +32,7 @@ const isRaceTag = (value: string): value is RaceTag => value in race_data_by_tag
 export default function BuffsPage() {
   const [isHydrated, setIsHydrated] = useState(false)
   const [selected, setSelected] = useState<Set<string>>(new Set())
+  const [buffStacks, setBuffStacks] = useState<Record<string, number>>({})
   const [selectedTalents, setSelectedTalents] = useState<Set<string>>(new Set())
   const [selectedRacePrereqs, setSelectedRacePrereqs] = useState<Set<string>>(new Set())
   const [selectedDungeonUnlocks, setSelectedDungeonUnlocks] = useState<Set<string>>(new Set())
@@ -44,6 +47,7 @@ export default function BuffsPage() {
   useEffect(() => {
     console.log(`Loaded selectedBuffs into selected`)
     const stored = localStorage.getItem(STORAGE_KEY)
+    const storedStacks = localStorage.getItem(STACK_STORAGE_KEY)
     const storedTalents = localStorage.getItem("selectedTalents")
     const storedRace = localStorage.getItem("SelectedRace")
     const storedDungeonUnlocks = localStorage.getItem(DUNGEON_UNLOCKS_STORAGE_KEY)
@@ -54,6 +58,22 @@ export default function BuffsPage() {
       setSelected(stored ? new Set(JSON.parse(stored)) : new Set())
     } catch {
       setSelected(new Set())
+    }
+
+    try {
+      const parsedStacks = storedStacks ? JSON.parse(storedStacks) : {}
+      setBuffStacks(
+        typeof parsedStacks === "object" && parsedStacks !== null
+          ? Object.entries(parsedStacks).reduce<Record<string, number>>((result, [name, value]) => {
+            if (typeof value === "number" && Number.isFinite(value)) {
+              result[name] = Math.max(0, Math.floor(value))
+            }
+            return result
+          }, {})
+          : {},
+      )
+    } catch {
+      setBuffStacks({})
     }
 
     try {
@@ -117,7 +137,7 @@ export default function BuffsPage() {
     const damageState = readDamageCalcState(localStorage)
     const selectedBuffNames = Array.from(selected)
     const currentAverage = calculateDamage(
-      computeBuildStatStages(snapshot, { selectedBuffs: selectedBuffNames }).StatsDmgReady,
+      computeBuildStatStages(snapshot, { selectedBuffs: selectedBuffNames, buffStacks }).StatsDmgReady,
       damageState,
     ).average
 
@@ -140,7 +160,7 @@ export default function BuffsPage() {
         }
 
         const nextAverage = calculateDamage(
-          computeBuildStatStages(snapshot, { selectedBuffs: toggledBuffs }).StatsDmgReady,
+          computeBuildStatStages(snapshot, { selectedBuffs: toggledBuffs, buffStacks }).StatsDmgReady,
           damageState,
         ).average
 
@@ -165,7 +185,7 @@ export default function BuffsPage() {
         window.clearTimeout(timeoutId)
       }
     }
-  }, [isHydrated, selected])
+  }, [buffStacks, isHydrated, selected])
 
   useEffect(() => {
     const handleManagedTableViewChange = (event: Event) => {
@@ -257,6 +277,18 @@ export default function BuffsPage() {
 
   if (!isHydrated || !columnLayout.isReady) return <div className="p-4">Loading...</div>
 
+  const handleChangeStack = (buffName: string, nextValue: number) => {
+    setBuffStacks((currentStacks) => {
+      const updatedStacks = {
+        ...currentStacks,
+        [buffName]: nextValue,
+      }
+      localStorage.setItem(STACK_STORAGE_KEY, JSON.stringify(updatedStacks))
+      dispatchBuildSnapshotUpdated()
+      return updatedStacks
+    })
+  }
+
   return (
     <div className="viewport-below-top-nav overflow-auto border rounded-md">
       <div className="min-w-full w-max">
@@ -284,6 +316,9 @@ export default function BuffsPage() {
               columns={columnLayout.visibleColumns}
               averageDamageChange={averageDamageChanges[name] ?? null}
               rowIndex={rowIndex}
+              canStack={Boolean(skill_data[name].stack_stats || skill_data[name].stack_conversions)}
+              stackValue={buffStacks[name] ?? 0}
+              onChangeStack={handleChangeStack}
             />
           ))}
         </div>

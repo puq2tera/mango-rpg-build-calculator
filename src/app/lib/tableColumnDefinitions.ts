@@ -42,7 +42,7 @@ export type SkillColumnId =
   | "dmgStats"
   | "conversions"
 
-export type BuffColumnId = SkillColumnId | "avgDamageChange"
+export type BuffColumnId = SkillColumnId | "avgDamageChange" | "stack"
 
 export type TarotColumnId =
   | "name"
@@ -110,6 +110,7 @@ export const buffTableColumns: readonly ManagedColumnDefinition<BuffColumnId>[] 
     defaultWidth: 110,
     minWidth: 100,
   },
+  { id: "stack", label: "Stack", defaultWidth: 90, minWidth: 80 },
   { id: "tank", label: "T", title: "Tank", defaultWidth: 56, minWidth: 40 },
   { id: "warrior", label: "W", title: "Warrior", defaultWidth: 56, minWidth: 40 },
   { id: "caster", label: "C", title: "Caster", defaultWidth: 56, minWidth: 40 },
