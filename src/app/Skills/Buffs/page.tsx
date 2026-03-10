@@ -28,6 +28,14 @@ const buffNames = Object.entries(skill_data)
   .map(([name]) => name)
 const defaultBuffOrder = new Map(buffNames.map((name, index) => [name, index]))
 const isRaceTag = (value: string): value is RaceTag => value in race_data_by_tag
+const canBuffStack = (buffName: string): boolean => {
+  const skill = skill_data[buffName]
+
+  return (
+    (skill.stack_conversions?.length ?? 0) > 0
+    || Object.keys(skill.stack_stats ?? {}).length > 0
+  )
+}
 
 export default function BuffsPage() {
   const [isHydrated, setIsHydrated] = useState(false)
@@ -316,7 +324,7 @@ export default function BuffsPage() {
               columns={columnLayout.visibleColumns}
               averageDamageChange={averageDamageChanges[name] ?? null}
               rowIndex={rowIndex}
-              canStack={Boolean(skill_data[name].stack_stats || skill_data[name].stack_conversions)}
+              canStack={canBuffStack(name)}
               stackValue={buffStacks[name] ?? 0}
               onChangeStack={handleChangeStack}
             />
