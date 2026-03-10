@@ -6,8 +6,10 @@ import { usePathname } from "next/navigation"
 import DamageWidget from "@/app/components/DamageWidget"
 import {
   type AvailabilityFilter,
-  type ClassFilter,
+  type ClassFilterKey,
+  type ClassFilterMode,
   dispatchManagedTableViewChange,
+  getDefaultClassFilter,
   getDefaultSortDirection,
   getDefaultTableViewState,
   getTableViewPageFromPathname,
@@ -43,12 +45,18 @@ const navLinks = [
   ["/DebugVars", "Debug"],
 ] as const
 
-const classFilterOptions: Array<{ value: ClassFilter; label: string }> = [
-  { value: "all", label: "All Classes" },
+const classFilterOptions: Array<{ value: ClassFilterKey; label: string }> = [
   { value: "tank", label: "Tank" },
   { value: "warrior", label: "Warrior" },
   { value: "caster", label: "Caster" },
   { value: "healer", label: "Healer" },
+]
+
+const classFilterModeOptions: Array<{ value: ClassFilterMode; label: string }> = [
+  { value: "any", label: "Any" },
+  { value: "required", label: "Required" },
+  { value: "optional", label: "Optional" },
+  { value: "excluded", label: "Excluded" },
 ]
 
 const raceFilterOptions: Array<{ value: RaceFilter; label: string }> = [
@@ -108,6 +116,26 @@ const optionButtonClass = (active: boolean) => (
     active ? "bg-sky-500/20 text-sky-200" : "text-slate-200 hover:bg-slate-800"
   }`
 )
+
+const classFilterModeButtonClass = (mode: ClassFilterMode, active: boolean) => {
+  if (active) {
+    if (mode === "required") {
+      return "rounded border border-emerald-500/70 bg-emerald-500/15 px-2 py-1 text-center text-[11px] text-emerald-200 transition"
+    }
+
+    if (mode === "optional") {
+      return "rounded border border-sky-500/70 bg-sky-500/15 px-2 py-1 text-center text-[11px] text-sky-200 transition"
+    }
+
+    if (mode === "excluded") {
+      return "rounded border border-rose-500/70 bg-rose-500/15 px-2 py-1 text-center text-[11px] text-rose-200 transition"
+    }
+
+    return "rounded border border-slate-500/70 bg-slate-800 px-2 py-1 text-center text-[11px] text-slate-100 transition"
+  }
+
+  return "rounded border border-slate-700 px-2 py-1 text-center text-[11px] text-slate-300 transition hover:bg-slate-800"
+}
 
 const getDirectionArrow = (direction: TableViewState["sortDirection"]) => direction === "asc" ? "↑" : "↓"
 const isSortPage = (page: TableViewPage | null): page is TableViewPage => page !== null
@@ -186,7 +214,7 @@ export default function TopNav() {
       viewState.selectionFilter !== "all"
     )
     : (
-      viewState.classFilter !== "all" ||
+      Object.values(viewState.classFilter).some((mode) => mode !== "any") ||
       viewState.raceFilter !== "all" ||
       viewState.availabilityFilter !== "all"
     )
@@ -205,6 +233,15 @@ export default function TopNav() {
     setViewState(nextViewState)
     persistTableViewState(localStorage, tablePage, nextViewState)
     dispatchManagedTableViewChange({ page: tablePage, viewState: nextViewState })
+  }
+
+  const updateClassFilter = (classKey: ClassFilterKey, mode: ClassFilterMode) => {
+    updateViewState({
+      classFilter: {
+        ...viewState.classFilter,
+        [classKey]: mode,
+      },
+    })
   }
 
   const handleSortOptionClick = (sortMode: SortMode) => {
@@ -283,20 +320,39 @@ export default function TopNav() {
           ) : null}
 
           {showFilterControls && openMenu === "filter" ? (
-            <div className="absolute right-0 top-full mt-2 grid min-w-[14rem] gap-2 rounded-md border border-slate-700 bg-slate-950/95 p-2 shadow-xl shadow-black/40">
+            <div className="absolute right-0 top-full mt-2 grid w-[22rem] max-w-[calc(100vw-2rem)] gap-2 rounded-md border border-slate-700 bg-slate-950/95 p-2 shadow-xl shadow-black/40">
               {isSkillLikeFilterPage(tablePage) ? (
                 <>
-                  <div className={sectionLabelClass}>Class</div>
-                  <div className="grid gap-1">
+                  <div className="flex items-center justify-between px-1">
+                    <div className={sectionLabelClass}>Class</div>
+                    <button
+                      type="button"
+                      onClick={() => updateViewState({ classFilter: getDefaultClassFilter() })}
+                      className="rounded px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-400 transition hover:bg-slate-800 hover:text-slate-200"
+                    >
+                      Clear
+                    </button>
+                  </div>
+                  <div className="grid gap-2">
                     {classFilterOptions.map((option) => (
-                      <button
-                        key={option.value}
-                        type="button"
-                        onClick={() => updateViewState({ classFilter: option.value })}
-                        className={optionButtonClass(viewState.classFilter === option.value)}
-                      >
-                        {option.label}
-                      </button>
+                      <div key={option.value} className="grid gap-1 rounded border border-slate-800/80 bg-slate-900/60 p-2">
+                        <div className="px-1 text-[11px] font-medium text-slate-200">{option.label}</div>
+                        <div className="grid grid-cols-4 gap-1">
+                          {classFilterModeOptions.map((modeOption) => (
+                            <button
+                              key={modeOption.value}
+                              type="button"
+                              onClick={() => updateClassFilter(option.value, modeOption.value)}
+                              className={classFilterModeButtonClass(
+                                modeOption.value,
+                                viewState.classFilter[option.value] === modeOption.value,
+                              )}
+                            >
+                              {modeOption.label}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
                     ))}
                   </div>
 

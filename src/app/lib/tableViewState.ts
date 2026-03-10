@@ -1,5 +1,8 @@
 export type TableViewPage = "talents" | "skills" | "buffs" | "tarot"
-export type ClassFilter = "all" | "tank" | "warrior" | "caster" | "healer"
+export const CLASS_FILTER_KEYS = ["tank", "warrior", "caster", "healer"] as const
+export type ClassFilterKey = typeof CLASS_FILTER_KEYS[number]
+export type ClassFilterMode = "any" | "required" | "optional" | "excluded"
+export type ClassFilter = Record<ClassFilterKey, ClassFilterMode>
 export type RaceFilter = "all" | "current" | "raceSpecific"
 export type AvailabilityFilter = "all" | "available" | "unavailable"
 export type SortMode = "default" | "damage" | "cost" | "tier"
@@ -28,7 +31,8 @@ export const MANAGED_TABLE_VIEW_EVENT = "managedTableViewChanged"
 
 const STORAGE_KEY_PREFIX = "managedTableView:"
 
-const CLASS_FILTERS = new Set<ClassFilter>(["all", "tank", "warrior", "caster", "healer"])
+const LEGACY_CLASS_FILTERS = new Set(["all", ...CLASS_FILTER_KEYS] as const)
+const CLASS_FILTER_MODES = new Set<ClassFilterMode>(["any", "required", "optional", "excluded"])
 const RACE_FILTERS = new Set<RaceFilter>(["all", "current", "raceSpecific"])
 const AVAILABILITY_FILTERS = new Set<AvailabilityFilter>(["all", "available", "unavailable"])
 const SORT_MODES = new Set<SortMode>(["default", "damage", "cost", "tier"])
@@ -66,7 +70,7 @@ export function getTableViewPageFromPathname(pathname: string): TableViewPage | 
 
 export function getDefaultTableViewState(): TableViewState {
   return {
-    classFilter: "all",
+    classFilter: getDefaultClassFilter(),
     raceFilter: "all",
     availabilityFilter: "all",
     sortMode: "default",
@@ -79,6 +83,49 @@ export function getDefaultTableViewState(): TableViewState {
 
 export function getDefaultSortDirection(sortMode: SortMode): SortDirection {
   return sortMode === "default" ? "asc" : "desc"
+}
+
+export function getDefaultClassFilter(): ClassFilter {
+  return {
+    tank: "any",
+    warrior: "any",
+    caster: "any",
+    healer: "any",
+  }
+}
+
+function readClassFilterMode(rawMode: unknown, fallback: ClassFilterMode): ClassFilterMode {
+  if (rawMode === "ignore") {
+    return "any"
+  }
+
+  return CLASS_FILTER_MODES.has(rawMode as ClassFilterMode) ? (rawMode as ClassFilterMode) : fallback
+}
+
+function readClassFilter(rawClassFilter: unknown, fallback: ClassFilter): ClassFilter {
+  if (typeof rawClassFilter === "string" && LEGACY_CLASS_FILTERS.has(rawClassFilter as typeof CLASS_FILTER_KEYS[number] | "all")) {
+    if (rawClassFilter === "all") {
+      return fallback
+    }
+
+    return {
+      ...getDefaultClassFilter(),
+      [rawClassFilter]: "required",
+    }
+  }
+
+  if (!rawClassFilter || typeof rawClassFilter !== "object" || Array.isArray(rawClassFilter)) {
+    return fallback
+  }
+
+  const parsed = rawClassFilter as Partial<Record<ClassFilterKey, unknown>>
+
+  return {
+    tank: readClassFilterMode(parsed.tank, fallback.tank),
+    warrior: readClassFilterMode(parsed.warrior, fallback.warrior),
+    caster: readClassFilterMode(parsed.caster, fallback.caster),
+    healer: readClassFilterMode(parsed.healer, fallback.healer),
+  }
 }
 
 export function readTableViewState(storage: Storage, page: TableViewPage): TableViewState {
@@ -95,7 +142,7 @@ export function readTableViewState(storage: Storage, page: TableViewPage): Table
     const fallbackSortDirection = getDefaultSortDirection(sortMode)
 
     return {
-      classFilter: CLASS_FILTERS.has(parsed.classFilter as ClassFilter) ? (parsed.classFilter as ClassFilter) : fallback.classFilter,
+      classFilter: readClassFilter(parsed.classFilter, fallback.classFilter),
       raceFilter: RACE_FILTERS.has(parsed.raceFilter as RaceFilter) ? (parsed.raceFilter as RaceFilter) : fallback.raceFilter,
       availabilityFilter: AVAILABILITY_FILTERS.has(parsed.availabilityFilter as AvailabilityFilter)
         ? (parsed.availabilityFilter as AvailabilityFilter)

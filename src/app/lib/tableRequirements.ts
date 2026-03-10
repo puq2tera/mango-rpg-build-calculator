@@ -2,7 +2,7 @@ import type { Skill } from "@/app/data/skill_data"
 import { skill_data } from "@/app/data/skill_data"
 import type { Talent } from "@/app/data/talent_data"
 import { talent_data } from "@/app/data/talent_data"
-import type { ClassFilter } from "@/app/lib/tableViewState"
+import { CLASS_FILTER_KEYS, type ClassFilter } from "@/app/lib/tableViewState"
 
 export type ClassLevels = {
   tank: number
@@ -120,10 +120,6 @@ function collectExpandedPrereqTokens(
 }
 
 export function matchesClassFilter(requiredClassLevels: RequiredClassLevels, classFilter: ClassFilter): boolean {
-  if (classFilter === "all") {
-    return true
-  }
-
   const normalizedLevels = {
     tank: Number(requiredClassLevels.tank_levels ?? 0),
     warrior: Number(requiredClassLevels.warrior_levels ?? 0),
@@ -131,8 +127,27 @@ export function matchesClassFilter(requiredClassLevels: RequiredClassLevels, cla
     healer: Number(requiredClassLevels.healer_levels ?? 0),
   }
 
-  const hasClassRequirement = Object.values(normalizedLevels).some((value) => value > 0)
-  return !hasClassRequirement || normalizedLevels[classFilter] > 0
+  const requiredClasses = CLASS_FILTER_KEYS.filter((classKey) => classFilter[classKey] === "required")
+  const optionalClasses = CLASS_FILTER_KEYS.filter((classKey) => classFilter[classKey] === "optional")
+  const excludedClasses = CLASS_FILTER_KEYS.filter((classKey) => classFilter[classKey] === "excluded")
+
+  if (excludedClasses.some((classKey) => normalizedLevels[classKey] > 0)) {
+    return false
+  }
+
+  if (requiredClasses.some((classKey) => normalizedLevels[classKey] <= 0)) {
+    return false
+  }
+
+  if (requiredClasses.length > 0) {
+    return true
+  }
+
+  if (optionalClasses.length === 0) {
+    return true
+  }
+
+  return optionalClasses.some((classKey) => normalizedLevels[classKey] > 0)
 }
 
 export function matchesRaceFilter(
