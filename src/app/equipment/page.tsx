@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { dispatchBuildSnapshotUpdated } from "@/app/lib/buildEvents"
+import { ARTIFACT_STAT_KEYS, createDefaultArtifact, normalizeArtifact, type ArtifactState } from "@/app/lib/artifactState"
 import type { StatNames as StatNameType } from "../data/stat_data"
 import stat_data from "../data/stat_data"
 import rune_data from "../data/rune_data"
@@ -33,6 +34,7 @@ const STORAGE_KEY_ARTIFACT = "Artifact"
 
 
 const runeTiers = ["Low", "Middle", "High", "Legacy", "Divine"] as const
+const artifactFieldOrder = [...ARTIFACT_STAT_KEYS, "Level"] as const
 
 type RuneTier = typeof runeTiers[number]
 
@@ -93,7 +95,7 @@ export default function EquipmentPage() {
   const [isHydrated, setIsHydrated] = useState(false)
   const [slots, setSlots] = useState<Slot[]>([])
   const [selectedRunes, setSelectedRunes] = useState<Record<RuneTier, RuneSelection[]>>(emptyRuneSet())
-  const [artifact, setArtifact] = useState({ "ATK%": 0, "DEF%": 0, "MATK%": 0, 'HEAL%': 0, 'Level': 0 })
+  const [artifact, setArtifact] = useState<ArtifactState>(createDefaultArtifact)
 
   const allStatNames = Object.keys(stat_data.StatsInfo) as StatNameType[]
 
@@ -219,7 +221,11 @@ export default function EquipmentPage() {
     }
 
     const storedArtifact = localStorage.getItem(STORAGE_KEY_ARTIFACT)
-    if (storedArtifact) setArtifact(JSON.parse(storedArtifact))
+    try {
+      setArtifact(normalizeArtifact(storedArtifact ? JSON.parse(storedArtifact) : null))
+    } catch {
+      setArtifact(createDefaultArtifact())
+    }
 
     setIsHydrated(true)
   }, [])
@@ -339,7 +345,7 @@ export default function EquipmentPage() {
         </thead>
         <tbody>
           <tr>
-            {(["ATK%", "DEF%", "MATK%", "HEAL%", "Level"] as const).map(k => (
+            {artifactFieldOrder.map(k => (
               <td key={k} className="border">
                 <input
                   type="number"

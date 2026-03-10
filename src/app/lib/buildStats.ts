@@ -5,6 +5,7 @@ import { skill_data, type Skill } from "@/app/data/skill_data"
 import stat_data from "@/app/data/stat_data"
 import { talent_data } from "@/app/data/talent_data"
 import tarot_data, { type Tarot } from "@/app/data/tarot_data"
+import { normalizeArtifact } from "@/app/lib/artifactState"
 
 export type ManualLevelRange = {
   className: string
@@ -174,7 +175,7 @@ export function readBuildSnapshot(storage: Storage): BuildSnapshot {
     selectedRunes: asRuneSelections(jsonParse(storage.getItem("SelectedRunes"), {})),
     equipmentSlots: asEquipmentSlots(jsonParse(storage.getItem("EquipmentSlots"), [])),
     enabledEquipment: asEnabledEquipment(jsonParse(storage.getItem("EnabledEquipment"), [])),
-    artifact: asRecord(jsonParse(storage.getItem("Artifact"), {})),
+    artifact: normalizeArtifact(jsonParse(storage.getItem("Artifact"), null)),
   }
 }
 
