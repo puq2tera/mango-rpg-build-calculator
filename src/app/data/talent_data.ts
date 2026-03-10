@@ -41268,7 +41268,217 @@ const talent_data: Record<string, Talent> = {
             "MAIN%": 10
         },
         "conversions": []
-    }
+    },
+    "Celestial's Avatar": {
+        "category": "prestige",
+        "PreReq": [
+            "DeathGodBlessing",
+        ],
+        "Tag": "HeraldPrestige",
+        "BlockedTag": "HeraldPrestige",
+        "gold": 1250,
+        "exp": 10000,
+        "tp_spent": 49,
+        "total_level": 100,
+        "class_levels": {
+            "tank_levels": 100,
+            "warrior_levels": 0,
+            "caster_levels": 0,
+            "healer_levels": 0
+        },
+        "description": "+20% ATK, +50% DEF, +5% All Res",
+        "stats": { "ATK%": 20, "DEF%": 50, "All Res%": 5 },
+        "conversions": []
+    },
+    "Devourer's Avatar": {
+        "category": "prestige",
+        "PreReq": [
+            "DeathGodBlessing",
+        ],
+        "Tag": "HeraldPrestige",
+        "BlockedTag": "HeraldPrestige",
+        "gold": 1250,
+        "exp": 10000,
+        "tp_spent": 49,
+        "total_level": 100,
+        "class_levels": {
+            "tank_levels": 0,
+            "warrior_levels": 100,
+            "caster_levels": 0,
+            "healer_levels": 0
+        },
+        "description": "+100% ATK, +10% Physical Pen",
+        "stats": { "ATK%": 100, "Phys Pen%": 10 },
+        "conversions": []
+    },
+    "Sin's Avatar": {
+        "category": "prestige",
+        "PreReq": [
+            "DeathGodBlessing",
+        ],
+        "Tag": "HeraldPrestige",
+        "BlockedTag": "HeraldPrestige",
+        "gold": 1250,
+        "exp": 10000,
+        "tp_spent": 49,
+        "total_level": 100,
+        "class_levels": {
+            "tank_levels": 0,
+            "warrior_levels": 0,
+            "caster_levels": 100,
+            "healer_levels": 0
+        },
+        "description": "+15% MATK, -10% Crit Chance, +150% Crit Damage",
+        "stats": { "MATK%": 15, "Crit Chance%": -10, "Crit DMG%": 150 },
+        "conversions": []
+    },
+    "Sephira's Avatar": {
+        "category": "prestige",
+        "PreReq": [
+            "DeathGodBlessing",
+        ],
+        "Tag": "HeraldPrestige",
+        "BlockedTag": "HeraldPrestige",
+        "gold": 1250,
+        "exp": 10000,
+        "tp_spent": 49,
+        "total_level": 100,
+        "class_levels": {
+            "tank_levels": 0,
+            "warrior_levels": 0,
+            "caster_levels": 0,
+            "healer_levels": 100
+        },
+        "description": "+60% Heal, +%5 Crit Chance, +20% Crit Damage",
+        "stats": { "HEAL%": 60, "Crit Chance%": 5, "Crit DMG%": 20 },
+        "conversions": []
+    },
+    "Bahamut's Avatar": {
+        "category": "prestige",
+        "PreReq": [
+            "DeathGodBlessing",
+        ],
+        "Tag": "HeraldPrestige",
+        "BlockedTag": "HeraldPrestige",
+        "gold": 1250,
+        "exp": 10000,
+        "tp_spent": 49,
+        "total_level": 100,
+        "class_levels": {
+            "tank_levels": 50,
+            "warrior_levels": 50,
+            "caster_levels": 0,
+            "healer_levels": 0
+        },
+        "description": "+20% Physical Damage, +8% Max HP",
+        "stats": { "Phys%": 20, "HP%": 8 },
+        "conversions": []
+    },
+    "Tiamat's Avatar": {
+        "category": "prestige",
+        "PreReq": [
+            "DeathGodBlessing",
+        ],
+        "Tag": "HeraldPrestige",
+        "BlockedTag": "HeraldPrestige",
+        "gold": 1250,
+        "exp": 10000,
+        "tp_spent": 49,
+        "total_level": 100,
+        "class_levels": {
+            "tank_levels": 50,
+            "warrior_levels": 0,
+            "caster_levels": 50,
+            "healer_levels": 0
+        },
+        "description": "+125% MATK, -25% DEF",
+        "stats": { "MATK%": 125, "DEF%": -25 },
+        "conversions": []
+    },
+    "Odin's Avatar": {
+        "category": "prestige",
+        "PreReq": [
+            "DeathGodBlessing",
+        ],
+        "Tag": "HeraldPrestige",
+        "BlockedTag": "HeraldPrestige",
+        "gold": 1250,
+        "exp": 10000,
+        "tp_spent": 49,
+        "total_level": 100,
+        "class_levels": {
+            "tank_levels": 50,
+            "warrior_levels": 0,
+            "caster_levels": 0,
+            "healer_levels": 50
+        },
+        "description": "+50% Heal, +5% All Res",
+        "stats": { "HEAL%": 50, "All Res%": 5 },
+        "conversions": []
+    },
+    "Reaper's Avatar": {
+        "category": "prestige",
+        "PreReq": [
+            "DeathGodBlessing",
+        ],
+        "Tag": "HeraldPrestige",
+        "BlockedTag": "HeraldPrestige",
+        "gold": 1250,
+        "exp": 10000,
+        "tp_spent": 49,
+        "total_level": 100,
+        "class_levels": {
+            "tank_levels": 0,
+            "warrior_levels": 50,
+            "caster_levels": 50,
+            "healer_levels": 0
+        },
+        "description": "+75% ATK, +75% MATK, +35% Crit Damage",
+        "stats": { "ATK%": 75, "MATK%": 75, "Crit DMG%": 35 },
+        "conversions": []
+    },
+    "Gaia's Avatar": {
+        "category": "prestige",
+        "PreReq": [
+            "DeathGodBlessing",
+        ],
+        "Tag": "HeraldPrestige",
+        "BlockedTag": "HeraldPrestige",
+        "gold": 1250,
+        "exp": 10000,
+        "tp_spent": 49,
+        "total_level": 100,
+        "class_levels": {
+            "tank_levels": 0,
+            "warrior_levels": 50,
+            "caster_levels": 0,
+            "healer_levels": 50
+        },
+        "description": "+75% Heal, +25% ATK, +20% Divine Damage",
+        "stats": { "HEAL%": 75, "ATK%": 25, "Divine%": 20 },
+        "conversions": []
+    },
+    "Goddess's Avatar": {
+        "category": "prestige",
+        "PreReq": [
+            "DeathGodBlessing",
+        ],
+        "Tag": "HeraldPrestige",
+        "BlockedTag": "HeraldPrestige",
+        "gold": 1250,
+        "exp": 10000,
+        "tp_spent": 49,
+        "total_level": 100,
+        "class_levels": {
+            "tank_levels": 0,
+            "warrior_levels": 0,
+            "caster_levels": 50,
+            "healer_levels": 50
+        },
+        "description": "+25% Heal, +50% MATK, +40% Divine Damage",
+        "stats": { "HEAL%": 25, "MATK%": 50, "Divine%": 40 },
+        "conversions": []
+    },
 };
 
 const statSet = new Set<string>()

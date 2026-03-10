@@ -117,7 +117,201 @@ function computeColumnWidths(data: Record<string, Skill>): string[] {
 
 
 const skill_data: Record<string, Skill> = {
-    "Focus": {...defaultSkill,
+    "Sword Slash": {...defaultSkill,
+        category: "basic",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 0,
+        gold: 25,
+        exp: 25,
+        sp_spent: 0,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 0,
+            caster_levels: 0,
+            healer_levels: 0
+        },
+        description: "[ Slash ] Deal 80% ATK DMG",
+},
+"Axe Slash": {...defaultSkill,
+        category: "basic",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 0,
+        gold: 25,
+        exp: 25,
+        sp_spent: 0,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 0,
+            caster_levels: 0,
+            healer_levels: 0
+        },
+        description: "[ Slash ] Deal 80% ATK DMG",
+},
+"Spear Thrust": {...defaultSkill,
+        category: "basic",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 0,
+        gold: 25,
+        exp: 25,
+        sp_spent: 0,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 0,
+            caster_levels: 0,
+            healer_levels: 0
+        },
+        description: "[ Pierce ] Deal 80% ATK DMG",
+},
+"Arrow Shot": {...defaultSkill,
+        category: "basic",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 0,
+        gold: 25,
+        exp: 25,
+        sp_spent: 0,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 0,
+            caster_levels: 0,
+            healer_levels: 0
+        },
+        description: "[ Pierce ] Deal 80% ATK DMG",
+},
+"Mace Smash": {...defaultSkill,
+        category: "basic",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 0,
+        gold: 25,
+        exp: 25,
+        sp_spent: 0,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 0,
+            caster_levels: 0,
+            healer_levels: 0
+        },
+        description: "[ Blunt ] Deal 80% ATK DMG",
+},
+"Staff Smash": {...defaultSkill,
+        category: "basic",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 0,
+        gold: 25,
+        exp: 25,
+        sp_spent: 0,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 0,
+            caster_levels: 0,
+            healer_levels: 0
+        },
+        description: "[ Blunt ] Deal 80% ATK DMG",
+},
+"Punch": {...defaultSkill,
+        category: "basic",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: true
+        },
+        PreReq: [
+            "Default Skill",
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 0,
+        gold: 0,
+        exp: 0,
+        sp_spent: 0,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 0,
+            caster_levels: 0,
+            healer_levels: 0
+        },
+        description: "[ ⧖, Blunt ] Punch helplessly for 25% ATK DMG",
+},
+"Wait": {...defaultSkill,
+        category: "basic",
+        type: {
+            is_buff: true,
+            is_attack: false,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+            "Default Skill",
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 0,
+        gold: 0,
+        exp: 0,
+        sp_spent: 0,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 0,
+            caster_levels: 0,
+            healer_levels: 0
+        },
+        description: "Pass your team's turn.",
+},
+"Focus": {...defaultSkill,
         type: {
             is_buff: true,
             is_attack: false,
@@ -152,6 +346,102 @@ const skill_data: Record<string, Skill> = {
     "Threat%": 0.5,
     },
         dmg_stats: {stat: "DEF", ratio: 3.6, element: "Void%", pen_element: "Void Pen%"}
+},
+"Body Slam": {...defaultSkill,
+        category: "tank",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 1,
+        gold: 25,
+        exp: 25,
+        sp_spent: 0,
+        class_levels: {
+            tank_levels: 1,
+            warrior_levels: 0,
+            caster_levels: 0,
+            healer_levels: 0
+        },
+        description: "[ Blunt ] Deal 65% ATK DMG, 150% DEF Threat",
+},
+"Blunt Sunder 1": {...defaultSkill,
+        category: "tank",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 1,
+        gold: 25,
+        exp: 25,
+        sp_spent: 0,
+        class_levels: {
+            tank_levels: 1,
+            warrior_levels: 0,
+            caster_levels: 0,
+            healer_levels: 0
+        },
+        description: "[ Blunt ] Deals 70%/50% ATK/DEF DMG, Breaks 5% Armor",
+},
+"Slash Sunder 1": {...defaultSkill,
+        category: "tank",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 1,
+        gold: 25,
+        exp: 25,
+        sp_spent: 0,
+        class_levels: {
+            tank_levels: 1,
+            warrior_levels: 0,
+            caster_levels: 0,
+            healer_levels: 0
+        },
+        description: "[ Slash ] Deals 70%/50% ATK/DEF DMG, Breaks 5% Armor",
+},
+"Pierce Sunder 1": {...defaultSkill,
+        category: "tank",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 1,
+        gold: 25,
+        exp: 25,
+        sp_spent: 0,
+        class_levels: {
+            tank_levels: 1,
+            warrior_levels: 0,
+            caster_levels: 0,
+            healer_levels: 0
+        },
+        description: "[ Pierce ] Deals 70%/50% ATK/DEF DMG, Breaks 5% Armor",
 },
 "Taunt": {...defaultSkill,
         type: {
@@ -241,6 +531,102 @@ const skill_data: Record<string, Skill> = {
         },
         description: "[ ⧖, 2 Charges ] Raises self DEF by 40% for 1 Turn, 1 MP",
         
+},
+"MA Sunder": {...defaultSkill,
+        category: "tank",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 1,
+        gold: 100,
+        exp: 100,
+        sp_spent: 2,
+        class_levels: {
+            tank_levels: 10,
+            warrior_levels: 0,
+            caster_levels: 0,
+            healer_levels: 0
+        },
+        description: "[ Blunt ] Deals 90% ATK DMG, Breaks 7% Armor, 1 MP",
+},
+"Blunt Sunder EX": {...defaultSkill,
+        category: "tank",
+        type: {
+            is_buff: true,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 1,
+        gold: 100,
+        exp: 100,
+        sp_spent: 2,
+        class_levels: {
+            tank_levels: 10,
+            warrior_levels: 0,
+            caster_levels: 0,
+            healer_levels: 0
+        },
+        description: "[ Blunt, 2 Charges ] Deals 100% DEF DMG, Breaks 35% Armor",
+},
+"Slash Sunder EX": {...defaultSkill,
+        category: "tank",
+        type: {
+            is_buff: true,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 1,
+        gold: 100,
+        exp: 100,
+        sp_spent: 2,
+        class_levels: {
+            tank_levels: 10,
+            warrior_levels: 0,
+            caster_levels: 0,
+            healer_levels: 0
+        },
+        description: "[ Slash, 2 Charges ] Deals 100% DEF DMG, Breaks 35% Armor",
+},
+"Pierce Sunder EX": {...defaultSkill,
+        category: "tank",
+        type: {
+            is_buff: true,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 1,
+        gold: 100,
+        exp: 100,
+        sp_spent: 2,
+        class_levels: {
+            tank_levels: 10,
+            warrior_levels: 0,
+            caster_levels: 0,
+            healer_levels: 0
+        },
+        description: "[ Pierce, 2 Charges ] Deals 100% DEF DMG, Breaks 35% Armor",
 },
 "MA Fortitude": {...defaultSkill,
         type: {
@@ -492,6 +878,78 @@ const skill_data: Record<string, Skill> = {
     ],
         
 },
+"Blunt Sunder 2": {...defaultSkill,
+        category: "tank",
+        type: {
+            is_buff: true,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 2,
+        gold: 100,
+        exp: 800,
+        sp_spent: 6,
+        class_levels: {
+            tank_levels: 20,
+            warrior_levels: 0,
+            caster_levels: 0,
+            healer_levels: 0
+        },
+        description: "[ Blunt, 4 Charges ] Deals 100% DEF DMG, Breaks 15% Armor",
+},
+"Slash Sunder 2": {...defaultSkill,
+        category: "tank",
+        type: {
+            is_buff: true,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 2,
+        gold: 100,
+        exp: 800,
+        sp_spent: 6,
+        class_levels: {
+            tank_levels: 20,
+            warrior_levels: 0,
+            caster_levels: 0,
+            healer_levels: 0
+        },
+        description: "[ Slash, 4 Charges ] Deals 100% DEF DMG, Breaks 15% Armor",
+},
+"Pierce Sunder 2": {...defaultSkill,
+        category: "tank",
+        type: {
+            is_buff: true,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 2,
+        gold: 100,
+        exp: 800,
+        sp_spent: 6,
+        class_levels: {
+            tank_levels: 20,
+            warrior_levels: 0,
+            caster_levels: 0,
+            healer_levels: 0
+        },
+        description: "[ Pierce, 4 Charges ] Deals 100% DEF DMG, Breaks 15% Armor",
+},
 "MA Fortress": {...defaultSkill,
         type: {
             is_buff: true,
@@ -624,6 +1082,30 @@ const skill_data: Record<string, Skill> = {
         description: "[ ⧖, 2 Charges ] Remove 75% of target ally threat value",
         
 },
+"MA Titan Swing": {...defaultSkill,
+        category: "tank",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 2,
+        gold: 100,
+        exp: 800,
+        sp_spent: 6,
+        class_levels: {
+            tank_levels: 20,
+            warrior_levels: 0,
+            caster_levels: 0,
+            healer_levels: 0
+        },
+        description: "[ Blunt ] Inflicts 240% ATK AOE, Cap 80% per Target, +50% Threat Generated, 2 MP",
+},
 "Heroic Block": {...defaultSkill,
         type: {
             is_buff: true,
@@ -695,6 +1177,30 @@ const skill_data: Record<string, Skill> = {
     { source: "DEF", ratio: 0.25, resulting_stat: "ATK" },
     ],
         
+},
+"Sunder Cleave": {...defaultSkill,
+        category: "tank",
+        type: {
+            is_buff: true,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 2,
+        gold: 200,
+        exp: 2500,
+        sp_spent: 14,
+        class_levels: {
+            tank_levels: 40,
+            warrior_levels: 0,
+            caster_levels: 0,
+            healer_levels: 0
+        },
+        description: "[ Blunt, 3 Charges ] Deals 200% ATK AOE, cap 100% per Target, Breaks 25% Armor",
 },
 "Draw Hatred": {...defaultSkill,
         type: {
@@ -951,6 +1457,78 @@ const skill_data: Record<string, Skill> = {
     { source: "DEF", ratio: 1, resulting_stat: "Temp HP" },
     ],
         
+},
+"MA Fury Strike": {...defaultSkill,
+        category: "tank",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 2,
+        gold: 200,
+        exp: 2500,
+        sp_spent: 14,
+        class_levels: {
+            tank_levels: 40,
+            warrior_levels: 0,
+            caster_levels: 0,
+            healer_levels: 0
+        },
+        description: "[ Blunt ] Deal 130% DEF DMG, 3 MP",
+},
+"MA Fury Slash": {...defaultSkill,
+        category: "tank",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 2,
+        gold: 200,
+        exp: 2500,
+        sp_spent: 14,
+        class_levels: {
+            tank_levels: 40,
+            warrior_levels: 0,
+            caster_levels: 0,
+            healer_levels: 0
+        },
+        description: "[ Slash ] Deal 130% DEF DMG, 3 MP",
+},
+"MA Fury Thrust": {...defaultSkill,
+        category: "tank",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 2,
+        gold: 200,
+        exp: 2500,
+        sp_spent: 14,
+        class_levels: {
+            tank_levels: 40,
+            warrior_levels: 0,
+            caster_levels: 0,
+            healer_levels: 0
+        },
+        description: "[ Pierce ] Deal 130% DEF DMG, 3 MP",
 },
 "Unyielding Life": {...defaultSkill,
         type: {
@@ -1278,6 +1856,78 @@ const skill_data: Record<string, Skill> = {
     ],
         
 },
+"MA Fury Blows": {...defaultSkill,
+        category: "tank",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 3,
+        gold: 250,
+        exp: 4000,
+        sp_spent: 22,
+        class_levels: {
+            tank_levels: 70,
+            warrior_levels: 0,
+            caster_levels: 0,
+            healer_levels: 0
+        },
+        description: "[ Blunt ] Deal 130% DEF DMG, Breaks 8% Armor, 4 MP",
+},
+"MA Fury Swipes": {...defaultSkill,
+        category: "tank",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 3,
+        gold: 250,
+        exp: 4000,
+        sp_spent: 22,
+        class_levels: {
+            tank_levels: 70,
+            warrior_levels: 0,
+            caster_levels: 0,
+            healer_levels: 0
+        },
+        description: "[ Slash ] Deal 130% DEF DMG, Breaks 8% Armor, 4 MP",
+},
+"MA Fury Jabs": {...defaultSkill,
+        category: "tank",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 3,
+        gold: 250,
+        exp: 4000,
+        sp_spent: 22,
+        class_levels: {
+            tank_levels: 70,
+            warrior_levels: 0,
+            caster_levels: 0,
+            healer_levels: 0
+        },
+        description: "[ Pierce ] Deal 130% DEF DMG, Breaks 8% Armor, 4 MP",
+},
 "Smith God's Blessing": {...defaultSkill,
         type: {
             is_buff: true,
@@ -1397,6 +2047,106 @@ const skill_data: Record<string, Skill> = {
     "Threat%": 0.5,
     },
         dmg_stats: {stat: "DEF", ratio: 8, element: "Void%", pen_element: "Void Pen%"}
+},
+"MA Eyes of Hatred": {...defaultSkill,
+        category: "tank",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+            "DeathGodBlessing",
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 3,
+        gold: 350,
+        exp: 6000,
+        sp_spent: 48,
+        class_levels: {
+            tank_levels: 100,
+            warrior_levels: 0,
+            caster_levels: 0,
+            healer_levels: 0
+        },
+        description: "Inflicts 880% DEF Threat, 10 MP",
+},
+"MA Hatred Nexus": {...defaultSkill,
+        category: "tank",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+            "DeathGodBlessing",
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 3,
+        gold: 350,
+        exp: 6000,
+        sp_spent: 48,
+        class_levels: {
+            tank_levels: 100,
+            warrior_levels: 0,
+            caster_levels: 0,
+            healer_levels: 0
+        },
+        description: "Inflicts 265% DEF Threat per Enemy, 12 MP",
+},
+"Nightmare Crush": {...defaultSkill,
+        category: "tank",
+        type: {
+            is_buff: true,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+            "DeathGodBlessing",
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 3,
+        gold: 350,
+        exp: 6000,
+        sp_spent: 48,
+        class_levels: {
+            tank_levels: 100,
+            warrior_levels: 0,
+            caster_levels: 0,
+            healer_levels: 0
+        },
+        description: "[ Void, 4 Charges ] Deals 400% DEF DMG, Breaks 35% Armor",
+},
+"Horror Whirlwind": {...defaultSkill,
+        category: "tank",
+        type: {
+            is_buff: true,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+            "DeathGodBlessing",
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 3,
+        gold: 350,
+        exp: 6000,
+        sp_spent: 48,
+        class_levels: {
+            tank_levels: 100,
+            warrior_levels: 0,
+            caster_levels: 0,
+            healer_levels: 0
+        },
+        description: "[ Void, 2 Charges ] Deals 800% DEF AOE, cap 280% per Target, Breaks 30% Armor",
 },
 "Terror Strike": {...defaultSkill,
         type: {
@@ -1590,6 +2340,81 @@ const skill_data: Record<string, Skill> = {
     "Wind Res%": 1,
     },
         
+},
+"MA God Fury Blows": {...defaultSkill,
+        category: "tank",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+            "DeathGodBlessing",
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 3,
+        gold: 350,
+        exp: 6000,
+        sp_spent: 48,
+        class_levels: {
+            tank_levels: 100,
+            warrior_levels: 0,
+            caster_levels: 0,
+            healer_levels: 0
+        },
+        description: "[ Blunt ] Deal 300% DEF DMG and 180% ATK DMG, Breaks 4% Armor, +10% Penetration, 9 MP",
+},
+"MA God Fury Slash": {...defaultSkill,
+        category: "tank",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+            "DeathGodBlessing",
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 3,
+        gold: 350,
+        exp: 6000,
+        sp_spent: 48,
+        class_levels: {
+            tank_levels: 100,
+            warrior_levels: 0,
+            caster_levels: 0,
+            healer_levels: 0
+        },
+        description: "[ Slash ] Deal 300% DEF DMG and 180% ATK DMG, Breaks 4% Armor, +10% Penetration,  9 MP",
+},
+"MA God Fury Thrust": {...defaultSkill,
+        category: "tank",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+            "DeathGodBlessing",
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 3,
+        gold: 350,
+        exp: 6000,
+        sp_spent: 48,
+        class_levels: {
+            tank_levels: 100,
+            warrior_levels: 0,
+            caster_levels: 0,
+            healer_levels: 0
+        },
+        description: "[ Pierce ] Deal 300% DEF DMG and 180% ATK DMG, Breaks 4% Armor, +10% Penetration,  9 MP",
 },
 "Victim's Aegis": {...defaultSkill,
         type: {
@@ -1831,6 +2656,102 @@ const skill_data: Record<string, Skill> = {
         stats: {
             "All Res%": 0.1,
         }
+},
+"MA Heavy Slash": {...defaultSkill,
+        category: "warrior",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 1,
+        gold: 25,
+        exp: 25,
+        sp_spent: 0,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 1,
+            caster_levels: 0,
+            healer_levels: 0
+        },
+        description: "[ Slash ] Deal 110% ATK DMG, +40% Crit Chance, 6 Focus",
+},
+"MA Heavy Shot": {...defaultSkill,
+        category: "warrior",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 1,
+        gold: 25,
+        exp: 25,
+        sp_spent: 0,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 1,
+            caster_levels: 0,
+            healer_levels: 0
+        },
+        description: "[ Pierce ] Deal 100% ATK DMG, +40% Crit Chance, +5% Crit Damage, 6 Focus",
+},
+"MA Heavy Blow": {...defaultSkill,
+        category: "warrior",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 1,
+        gold: 25,
+        exp: 25,
+        sp_spent: 0,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 1,
+            caster_levels: 0,
+            healer_levels: 0
+        },
+        description: "[ Blunt ] Deal 110% ATK DMG, +40% Crit Chance, 6 Focus",
+},
+"MA Heavy Thrust": {...defaultSkill,
+        category: "warrior",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 1,
+        gold: 25,
+        exp: 25,
+        sp_spent: 0,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 1,
+            caster_levels: 0,
+            healer_levels: 0
+        },
+        description: "[ Pierce ] Deal 110% ATK DMG, +40% Crit Chance, 6 Focus",
 },
 "MA Body Defense 1": {...defaultSkill,
         type: {
@@ -2289,6 +3210,228 @@ const skill_data: Record<string, Skill> = {
     },
         
 },
+"MA Aura Slash": {...defaultSkill,
+        category: "warrior",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 2,
+        gold: 100,
+        exp: 600,
+        sp_spent: 6,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 20,
+            caster_levels: 0,
+            healer_levels: 0
+        },
+        description: "[ Slash ] Deals 100% ATK DMG, +15% Penetration, 7 Focus",
+},
+"MA Aura Pierce": {...defaultSkill,
+        category: "warrior",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 2,
+        gold: 100,
+        exp: 600,
+        sp_spent: 6,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 20,
+            caster_levels: 0,
+            healer_levels: 0
+        },
+        description: "[ Pierce ] Deals 100% ATK DMG, +15% Penetration, 7 Focus",
+},
+"MA Aura Smash": {...defaultSkill,
+        category: "warrior",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 2,
+        gold: 100,
+        exp: 600,
+        sp_spent: 6,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 20,
+            caster_levels: 0,
+            healer_levels: 0
+        },
+        description: "[ Blunt ] Deals 100% ATK DMG, +15% Penetration, 7 Focus",
+},
+"Ethereal Shot": {...defaultSkill,
+        category: "warrior",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: true
+        },
+        PreReq: [
+            "Arrow Saint",
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 2,
+        gold: 150,
+        exp: 1800,
+        sp_spent: 8,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 30,
+            caster_levels: 0,
+            healer_levels: 0
+        },
+        description: "[ ⧖, Void ] Deals 220% ATK DMG, scales via pierce damage, +10% Crit Damage, 7 Focus",
+},
+"6 Fold Slash of Light": {...defaultSkill,
+        category: "warrior",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+            "Sword Saint",
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 2,
+        gold: 150,
+        exp: 1800,
+        sp_spent: 8,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 30,
+            caster_levels: 0,
+            healer_levels: 0
+        },
+        description: "[ Slash ] Deals 600% ATK DMG AOE, Cap 235% per Target, 12/-1 Focus",
+},
+"Dragon Fang Thrust": {...defaultSkill,
+        category: "warrior",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+            "Spear Saint",
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 2,
+        gold: 150,
+        exp: 1800,
+        sp_spent: 8,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 30,
+            caster_levels: 0,
+            healer_levels: 0
+        },
+        description: "[ Pierce ] Deals 220% ATK DMG, 25% Penetration, ignores 15% Enemy Resist. 12/-1 Focus",
+},
+"Grand Lord Strike": {...defaultSkill,
+        category: "warrior",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+            "Hammer Saint",
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 2,
+        gold: 150,
+        exp: 1800,
+        sp_spent: 8,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 30,
+            caster_levels: 0,
+            healer_levels: 0
+        },
+        description: "[ Blunt ] Deals 220% ATK DMG, 25% Penetration, 12/-1 Focus",
+},
+"Roaring Lion Fist": {...defaultSkill,
+        category: "warrior",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+            "Martial Saint",
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 2,
+        gold: 150,
+        exp: 1800,
+        sp_spent: 8,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 30,
+            caster_levels: 0,
+            healer_levels: 0
+        },
+        description: "[ Blunt ] Deals, 255% ATK DMG, 12/-1 Focus",
+},
+"Shadow Execution": {...defaultSkill,
+        category: "warrior",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+            "Dagger Demon",
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 2,
+        gold: 150,
+        exp: 1800,
+        sp_spent: 8,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 30,
+            caster_levels: 0,
+            healer_levels: 0
+        },
+        description: "[ Slash ] Deals 215% ATK DMG, +30% Crit DMG, 12/-1 Focus",
+},
 "MA Endure": {...defaultSkill,
         type: {
             is_buff: true,
@@ -2660,6 +3803,156 @@ const skill_data: Record<string, Skill> = {
     ],
         
 },
+"Arrows of Ullr": {...defaultSkill,
+        category: "warrior",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: true
+        },
+        PreReq: [
+            "Arrow Demigod",
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 2,
+        gold: 225,
+        exp: 3200,
+        sp_spent: 16,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 50,
+            caster_levels: 0,
+            healer_levels: 0
+        },
+        description: "[ ⧖, Void ] Deals 320% ATK DMG, scales via Pierce, +20% Crit Damage, 10/-1 Focus",
+},
+"Hofung's Cleave": {...defaultSkill,
+        category: "warrior",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+            "Sword Demigod",
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 2,
+        gold: 225,
+        exp: 3200,
+        sp_spent: 16,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 50,
+            caster_levels: 0,
+            healer_levels: 0
+        },
+        description: "[ Slash ] Deals 900% ATK DMG AOE, Cap 350% per Target, 18/-2 Focus",
+},
+"Touch of Gungnir": {...defaultSkill,
+        category: "warrior",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+            "Spear Demigod",
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 2,
+        gold: 225,
+        exp: 3200,
+        sp_spent: 16,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 50,
+            caster_levels: 0,
+            healer_levels: 0
+        },
+        description: "[ Pierce ] Deals 300% ATK DMG, 50% Penetration, ignores 25% Enemy Resist. 18/-2 Focus",
+},
+"Strike of Mjolnir": {...defaultSkill,
+        category: "warrior",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+            "Hammer Demigod",
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 2,
+        gold: 225,
+        exp: 3200,
+        sp_spent: 16,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 50,
+            caster_levels: 0,
+            healer_levels: 0
+        },
+        description: "[ Blunt ] Deals 330% ATK DMG, 25% Penetration, 18/-2 Focus",
+},
+"Dragon Fury's Fist": {...defaultSkill,
+        category: "warrior",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+            "Martial Demigod",
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 2,
+        gold: 225,
+        exp: 3200,
+        sp_spent: 16,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 50,
+            caster_levels: 0,
+            healer_levels: 0
+        },
+        description: "[ Blunt ] Deals, 380% ATK DMG, 18/-2 Focus",
+},
+"Gift of Loki": {...defaultSkill,
+        category: "warrior",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+            "Dagger Demigod",
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 2,
+        gold: 225,
+        exp: 3200,
+        sp_spent: 16,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 50,
+            caster_levels: 0,
+            healer_levels: 0
+        },
+        description: "[ Slash ] Deals, 275% ATK DMG, +40% Crit Damage, 18/-2 Focus",
+},
 "Hawk Snipe": {...defaultSkill,
         type: {
             is_buff: true,
@@ -2867,6 +4160,78 @@ const skill_data: Record<string, Skill> = {
     ],
         
 },
+"MA Aura Stroke": {...defaultSkill,
+        category: "warrior",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 3,
+        gold: 250,
+        exp: 4000,
+        sp_spent: 22,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 70,
+            caster_levels: 0,
+            healer_levels: 0
+        },
+        description: "[ Slash ] Deals 160% ATK DMG, +25% Penetration, 10 Focus",
+},
+"MA Aura Thrust": {...defaultSkill,
+        category: "warrior",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 3,
+        gold: 250,
+        exp: 4000,
+        sp_spent: 22,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 70,
+            caster_levels: 0,
+            healer_levels: 0
+        },
+        description: "[ Pierce ] Deals 160% ATK DMG, +25% Penetration, 10 Focus",
+},
+"MA Aura Strike": {...defaultSkill,
+        category: "warrior",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 3,
+        gold: 250,
+        exp: 4000,
+        sp_spent: 22,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 70,
+            caster_levels: 0,
+            healer_levels: 0
+        },
+        description: "[ Blunt ] Deals 160% ATK DMG, +25% Penetration, 10 Focus",
+},
 "MA Blood Strength": {...defaultSkill,
         type: {
             is_buff: true,
@@ -2942,6 +4307,31 @@ const skill_data: Record<string, Skill> = {
     ],
         dmg_stats: {dmg_element: "Void",     element: "Pierce",     pen_element: "Void",     stat: "ATK", ratio: 4, }
 },
+"Storm Flash Stroke": {...defaultSkill,
+        category: "warrior",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+            "Sword Deity",
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 3,
+        gold: 300,
+        exp: 5000,
+        sp_spent: 26,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 85,
+            caster_levels: 0,
+            healer_levels: 0
+        },
+        description: "[ Slash ] Deals 1650% ATK DMG AOE, Cap 450% per Target. 25/-3 Focus",
+},
 "Valkyrie's Fury": {...defaultSkill,
         type: {
             is_buff: true,
@@ -2965,6 +4355,81 @@ const skill_data: Record<string, Skill> = {
     { source: "Crit DMG%", ratio: 0.25, resulting_stat: "Crit DMG%" },
     ],
         dmg_stats: {dmg_element: "Pierce",     element: "Pierce",     pen_element: "Pierce",     stat: "ATK", ratio: 4.2, }
+},
+"Yamantaka Judgement": {...defaultSkill,
+        category: "warrior",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+            "Hammer Deity",
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 3,
+        gold: 300,
+        exp: 5000,
+        sp_spent: 26,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 85,
+            caster_levels: 0,
+            healer_levels: 0
+        },
+        description: "[ Blunt ] Deals 485% ATK DMG, +25% Penetration. 25/-3 Focus",
+},
+"Dragon Axe Kick": {...defaultSkill,
+        category: "warrior",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+            "Martial Deity",
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 3,
+        gold: 300,
+        exp: 5000,
+        sp_spent: 26,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 85,
+            caster_levels: 0,
+            healer_levels: 0
+        },
+        description: "[ Blunt ] Deals 530% ATK DMG. Breaks 10% Armor. 25/-3 Focus",
+},
+"Tsukiyomi Flash": {...defaultSkill,
+        category: "warrior",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+            "Dagger Deity",
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 3,
+        gold: 300,
+        exp: 5000,
+        sp_spent: 26,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 85,
+            caster_levels: 0,
+            healer_levels: 0
+        },
+        description: "[ Slash ] Deals 400% ATK DMG, +100% Crit Chance, +30% Crit Damage. 25/-3 Focus",
 },
 "Astral Shot": {...defaultSkill,
         type: {
@@ -3104,6 +4569,156 @@ const skill_data: Record<string, Skill> = {
     },
         dmg_stats: {dmg_element: "Blunt",     element: "Blunt",     pen_element: "Blunt",     stat: "ATK", ratio: 3.2, }
 },
+"Cosmic Arrow Storm": {...defaultSkill,
+        category: "warrior",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+            "DeathGodBlessing",
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 3,
+        gold: 350,
+        exp: 6000,
+        sp_spent: 48,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 100,
+            caster_levels: 0,
+            healer_levels: 0
+        },
+        description: "[ Pierce ] Deals 540% ATK DMG AOE, Cap 220% per Target. Pens with Void, +10% Crit Damage, 33/-1 Focus",
+},
+"Lion Whirlwind Kick": {...defaultSkill,
+        category: "warrior",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+            "DeathGodBlessing",
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 3,
+        gold: 350,
+        exp: 6000,
+        sp_spent: 48,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 100,
+            caster_levels: 0,
+            healer_levels: 0
+        },
+        description: "[ Blunt ] Deals 540% ATK DMG AOE, Cap 220% per Target.+10% Crit Damage, 33/-1 Focus",
+},
+"Comet Cyclone": {...defaultSkill,
+        category: "warrior",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+            "DeathGodBlessing",
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 3,
+        gold: 350,
+        exp: 6000,
+        sp_spent: 48,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 100,
+            caster_levels: 0,
+            healer_levels: 0
+        },
+        description: "[ Pierce ] Deals 600% ATK DMG AOE, Cap 245% per Target, 33/-1 Focus",
+},
+"Blade Demon Flash": {...defaultSkill,
+        category: "warrior",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+            "DeathGodBlessing",
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 3,
+        gold: 350,
+        exp: 6000,
+        sp_spent: 48,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 100,
+            caster_levels: 0,
+            healer_levels: 0
+        },
+        description: "[ Slash ] Deals 600% ATK DMG AOE, Cap 245% per Target, 33/-1 Focus",
+},
+"Shadow Blade Dance": {...defaultSkill,
+        category: "warrior",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+            "DeathGodBlessing",
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 3,
+        gold: 350,
+        exp: 6000,
+        sp_spent: 48,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 100,
+            caster_levels: 0,
+            healer_levels: 0
+        },
+        description: "[ Slash ] Deals 540% ATK DMG AOE, Cap 220% per Target. +10% Crit Damage, 33/-1 Focus",
+},
+"Meteor Impact": {...defaultSkill,
+        category: "warrior",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+            "DeathGodBlessing",
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 3,
+        gold: 350,
+        exp: 6000,
+        sp_spent: 48,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 100,
+            caster_levels: 0,
+            healer_levels: 0
+        },
+        description: "[ Blunt ] Deals 600% ATK DMG AOE, Cap 245% per Target, 33/-1 Focus",
+},
 "Calm Focus Stance": {...defaultSkill,
         type: {
             is_buff: true,
@@ -3177,6 +4792,81 @@ const skill_data: Record<string, Skill> = {
     { source: "Crit DMG%", ratio: -0.05, resulting_stat: "Crit DMG%" },
     ],
         
+},
+"MA Spirit Stroke": {...defaultSkill,
+        category: "warrior",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+            "DeathGodBlessing",
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 3,
+        gold: 350,
+        exp: 6000,
+        sp_spent: 48,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 100,
+            caster_levels: 0,
+            healer_levels: 0
+        },
+        description: "[ Slash ] Deals 200% ATK DMG, +30% Penetration, 16 Focus",
+},
+"MA Spirit Thrust": {...defaultSkill,
+        category: "warrior",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+            "DeathGodBlessing",
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 3,
+        gold: 350,
+        exp: 6000,
+        sp_spent: 48,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 100,
+            caster_levels: 0,
+            healer_levels: 0
+        },
+        description: "[ Pierce ] Deals 200% ATK DMG, +30% Penetration, 16 Focus",
+},
+"MA Spirit Strike": {...defaultSkill,
+        category: "warrior",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+            "DeathGodBlessing",
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 3,
+        gold: 350,
+        exp: 6000,
+        sp_spent: 48,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 100,
+            caster_levels: 0,
+            healer_levels: 0
+        },
+        description: "[ Blunt ] Deals 200% ATK DMG, +30% Penetration, 16 Focus",
 },
 "MA Mana Strength": {...defaultSkill,
         type: {
@@ -3301,6 +4991,31 @@ const skill_data: Record<string, Skill> = {
     },
         dmg_stats: {dmg_element: "Slash",     element: "Slash",     pen_element: "Slash",     stat: "ATK", ratio: 2.9, }
 },
+"Iaido Blossom": {...defaultSkill,
+        category: "warrior",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+            "Sword Archon",
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 3,
+        gold: 350,
+        exp: 6000,
+        sp_spent: 48,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 100,
+            caster_levels: 0,
+            healer_levels: 0
+        },
+        description: "[ Slash ] Deals 450% ATK DMG. 25/-4 Focus",
+},
 "Guarding Flourish": {...defaultSkill,
         type: {
             is_buff: true,
@@ -3351,6 +5066,31 @@ const skill_data: Record<string, Skill> = {
     { source: "Pierce Pen%", ratio: 0.1, resulting_stat: "Pierce Pen%" },
     ],
         dmg_stats: {dmg_element: "Pierce",     element: "Pierce",     pen_element: "Pierce",     stat: "ATK", ratio: 3.2, }
+},
+"Calamity Impact": {...defaultSkill,
+        category: "warrior",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+            "Hammer Archon",
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 3,
+        gold: 350,
+        exp: 6000,
+        sp_spent: 48,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 100,
+            caster_levels: 0,
+            healer_levels: 0
+        },
+        description: "[ Blunt ] Deals 1800% ATK DMG AOE, Cap 385% per Target. 40/-10 Focus",
 },
 "Leaping Rampage": {...defaultSkill,
         type: {
@@ -3619,6 +5359,32 @@ const skill_data: Record<string, Skill> = {
     ],
         dmg_stats: {dmg_element: "Void",     element: "Pierce",     pen_element: "Void",     stat: "ATK", ratio: 6, }
 },
+"World's Divide": {...defaultSkill,
+        category: "warrior",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+            "Storm Flash Stroke",
+            "PrimalEssence",
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 3,
+        gold: 750,
+        exp: 10000,
+        sp_spent: 75,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 160,
+            caster_levels: 0,
+            healer_levels: 0
+        },
+        description: "[ Slash ] Deals 515% ATK DMG to all Enemies, 45/-15 Focus",
+},
 "Piercer of Heaven": {...defaultSkill,
         type: {
             is_buff: true,
@@ -3642,6 +5408,444 @@ const skill_data: Record<string, Skill> = {
     { source: "Crit DMG%", ratio: 0.25, resulting_stat: "Crit DMG%" },
     ],
         dmg_stats: {dmg_element: "Pierce",     element: "Pierce",     pen_element: "Pierce",     stat: "ATK", ratio: 5.05, }
+},
+"Kundali's Retribution": {...defaultSkill,
+        category: "warrior",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+            "Yamantaka Judgement",
+            "PrimalEssence",
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 3,
+        gold: 750,
+        exp: 10000,
+        sp_spent: 75,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 160,
+            caster_levels: 0,
+            healer_levels: 0
+        },
+        description: "[ Blunt ] Deals 555% ATK DMG, +150% Penetration. 45/-15 Focus",
+},
+"Infinite Strike": {...defaultSkill,
+        category: "warrior",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+            "Dragon Axe Kick",
+            "PrimalEssence",
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 3,
+        gold: 750,
+        exp: 10000,
+        sp_spent: 75,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 160,
+            caster_levels: 0,
+            healer_levels: 0
+        },
+        description: "[ Blunt ] Deals 600% ATK DMG. Ignores 100% Armor. 45/-15 Focus",
+},
+"Izanagi Severence": {...defaultSkill,
+        category: "warrior",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+            "Tsukiyomi Flash",
+            "PrimalEssence",
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 3,
+        gold: 750,
+        exp: 10000,
+        sp_spent: 75,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 160,
+            caster_levels: 0,
+            healer_levels: 0
+        },
+        description: "[ Slash ] Deals 500% ATK DMG, +100% Crit Chance, +40% Crit Damage. 40/-10 Focus",
+},
+"Magic Missile": {...defaultSkill,
+        category: "caster",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 1,
+        gold: 25,
+        exp: 25,
+        sp_spent: 0,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 0,
+            caster_levels: 1,
+            healer_levels: 0
+        },
+        description: "[ Void ] Deal 135% MATK DMG, 1 MP",
+},
+"Scorch Bolt": {...defaultSkill,
+        category: "caster",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 1,
+        gold: 25,
+        exp: 25,
+        sp_spent: 0,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 0,
+            caster_levels: 1,
+            healer_levels: 0
+        },
+        description: "[ Fire ] Deal 110% MATK DMG, 1 MP",
+},
+"Air Punch": {...defaultSkill,
+        category: "caster",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 1,
+        gold: 25,
+        exp: 25,
+        sp_spent: 0,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 0,
+            caster_levels: 1,
+            healer_levels: 0
+        },
+        description: "[ Wind ] Deal 110% MATK DMG, 1 MP",
+},
+"Dew Blast": {...defaultSkill,
+        category: "caster",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 1,
+        gold: 25,
+        exp: 25,
+        sp_spent: 0,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 0,
+            caster_levels: 1,
+            healer_levels: 0
+        },
+        description: "[ Water ] Deal 110% MATK DMG, 1 MP",
+},
+"Spark": {...defaultSkill,
+        category: "caster",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 1,
+        gold: 25,
+        exp: 25,
+        sp_spent: 0,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 0,
+            caster_levels: 1,
+            healer_levels: 0
+        },
+        description: "[ Lightning ] Deal 110% MATK DMG, 1 MP",
+},
+"Stone Bullet": {...defaultSkill,
+        category: "caster",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 1,
+        gold: 25,
+        exp: 25,
+        sp_spent: 0,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 0,
+            caster_levels: 1,
+            healer_levels: 0
+        },
+        description: "[ Earth ] Deals 110% MATK DMG, 1 MP",
+},
+"Force Blast": {...defaultSkill,
+        category: "caster",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 1,
+        gold: 100,
+        exp: 100,
+        sp_spent: 2,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 0,
+            caster_levels: 10,
+            healer_levels: 0
+        },
+        description: "[ Void ] Deals 240% MATK AOE DMG, cap 90% per Target, 3 MP",
+},
+"Fire Lance": {...defaultSkill,
+        category: "caster",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 1,
+        gold: 100,
+        exp: 100,
+        sp_spent: 2,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 0,
+            caster_levels: 10,
+            healer_levels: 0
+        },
+        description: "[ Fire ] Deals 180% MATK DMG, 3 MP",
+},
+"Wind Blade": {...defaultSkill,
+        category: "caster",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 1,
+        gold: 100,
+        exp: 100,
+        sp_spent: 2,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 0,
+            caster_levels: 10,
+            healer_levels: 0
+        },
+        description: "[ Wind ] Deals 180% MATK DMG, 3 MP",
+},
+"Water Bomb": {...defaultSkill,
+        category: "caster",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 1,
+        gold: 100,
+        exp: 100,
+        sp_spent: 2,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 0,
+            caster_levels: 10,
+            healer_levels: 0
+        },
+        description: "[ Water ] Deals 200% MATK AOE DMG, cap 80% per Target, 3 MP",
+},
+"Electrosphere": {...defaultSkill,
+        category: "caster",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 1,
+        gold: 100,
+        exp: 100,
+        sp_spent: 2,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 0,
+            caster_levels: 10,
+            healer_levels: 0
+        },
+        description: "[ Lightning ] Deals 200% MATK AOE DMG, cap 80% per Target, 3 MP",
+},
+"Earth Impaler": {...defaultSkill,
+        category: "caster",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 1,
+        gold: 100,
+        exp: 100,
+        sp_spent: 2,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 0,
+            caster_levels: 10,
+            healer_levels: 0
+        },
+        description: "[ Earth ] Deals 180% MATK DMG, 3 MP",
+},
+"Negative Ray": {...defaultSkill,
+        category: "caster",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 1,
+        gold: 100,
+        exp: 100,
+        sp_spent: 2,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 0,
+            caster_levels: 10,
+            healer_levels: 0
+        },
+        description: "[ Neg ] Deals 180% MATK DMG, 3 MP",
+},
+"Radiance": {...defaultSkill,
+        category: "caster",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 1,
+        gold: 100,
+        exp: 100,
+        sp_spent: 2,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 0,
+            caster_levels: 10,
+            healer_levels: 0
+        },
+        description: "[ Holy ] Deals 180% MATK DMG, 3 MP",
+},
+"Poison Shot": {...defaultSkill,
+        category: "caster",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 1,
+        gold: 100,
+        exp: 100,
+        sp_spent: 2,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 0,
+            caster_levels: 10,
+            healer_levels: 0
+        },
+        description: "[ Toxic ] Deals 180% MATK DMG, 3 MP",
 },
 "Enchant Weapon": {...defaultSkill,
         type: {
@@ -3735,6 +5939,30 @@ const skill_data: Record<string, Skill> = {
     ],
         
 },
+"Fireball": {...defaultSkill,
+        category: "caster",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 1,
+        gold: 150,
+        exp: 1800,
+        sp_spent: 6,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 0,
+            caster_levels: 20,
+            healer_levels: 0
+        },
+        description: "[ Fire ] Deals 500% MATK AOE DMG, cap 270% per Target, 9 MP",
+},
 "Whirlwind": {...defaultSkill,
         type: {
             is_buff: true,
@@ -3757,6 +5985,150 @@ const skill_data: Record<string, Skill> = {
     { source: "Wind%", ratio: 0.05, resulting_stat: "Wind%" },
     ],
         dmg_stats: {dmg_element: "Wind",     element: "Wind",     pen_element: "Wind",     stat: "MATK", ratio: 2, }
+},
+"Frozen Lance": {...defaultSkill,
+        category: "caster",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 1,
+        gold: 150,
+        exp: 1800,
+        sp_spent: 6,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 0,
+            caster_levels: 20,
+            healer_levels: 0
+        },
+        description: "[ Water ] Deals 240% MATK DMG, +15% Crit Chance, 7 MP",
+},
+"Lightning": {...defaultSkill,
+        category: "caster",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 1,
+        gold: 150,
+        exp: 1800,
+        sp_spent: 6,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 0,
+            caster_levels: 20,
+            healer_levels: 0
+        },
+        description: "[ Lightning ] Deals 300% MATK DMG, 7 MP",
+},
+"Earth Surge": {...defaultSkill,
+        category: "caster",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 1,
+        gold: 150,
+        exp: 1800,
+        sp_spent: 6,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 0,
+            caster_levels: 20,
+            healer_levels: 0
+        },
+        description: "[ Earth ] Deals 350% MATK AOE DMG, cap 200% per Target, after breaking 6% Armor, Ignores 45% Armor. 8 MP",
+},
+"Negative Wave": {...defaultSkill,
+        category: "caster",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 1,
+        gold: 150,
+        exp: 1800,
+        sp_spent: 6,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 0,
+            caster_levels: 20,
+            healer_levels: 0
+        },
+        description: "[ Neg ] Deals 350% MATK AOE DMG, cap 200% per Target, +50% Crit Damage, -10% Crit Chance, 8 MP",
+},
+"White Veil": {...defaultSkill,
+        category: "caster",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 1,
+        gold: 150,
+        exp: 1800,
+        sp_spent: 6,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 0,
+            caster_levels: 20,
+            healer_levels: 0
+        },
+        description: "[ Holy ] Deals 380% MATK AOE DMG, cap 210% per Target, 6 MP",
+},
+"Acid Javelin": {...defaultSkill,
+        category: "caster",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 1,
+        gold: 150,
+        exp: 1800,
+        sp_spent: 6,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 0,
+            caster_levels: 20,
+            healer_levels: 0
+        },
+        description: "[ Toxic ] Deals 260% MATK DMG, 3% Damage Done applied as DOT, Ignores 10% Armor, 7 MP",
 },
 "Mana Barrier": {...defaultSkill,
         type: {
@@ -3950,6 +6322,54 @@ const skill_data: Record<string, Skill> = {
     ],
         
 },
+"Inferno Blast": {...defaultSkill,
+        category: "caster",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 2,
+        gold: 200,
+        exp: 2500,
+        sp_spent: 14,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 0,
+            caster_levels: 40,
+            healer_levels: 0
+        },
+        description: "[ Fire ] Deals 320% MATK DMG, 12 MP",
+},
+"Fire Wall": {...defaultSkill,
+        category: "caster",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 2,
+        gold: 200,
+        exp: 2500,
+        sp_spent: 14,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 0,
+            caster_levels: 40,
+            healer_levels: 0
+        },
+        description: "[ Fire ] Deals 800% MATK AOE DMG, cap 375% MATK per Target, 18 MP",
+},
 "Piercing Gale": {...defaultSkill,
         type: {
             is_buff: true,
@@ -3996,6 +6416,318 @@ const skill_data: Record<string, Skill> = {
     ],
         dmg_stats: {dmg_element: "Wind",     element: "Wind",     pen_element: "Wind",     stat: "MATK", ratio: 3.4, }
 },
+"Frost Impaler": {...defaultSkill,
+        category: "caster",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 2,
+        gold: 200,
+        exp: 2500,
+        sp_spent: 14,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 0,
+            caster_levels: 40,
+            healer_levels: 0
+        },
+        description: "[ Water ] Deals 320% MATK DMG, +20% Crit Chance, 12 MP",
+},
+"Blizzard": {...defaultSkill,
+        category: "caster",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 2,
+        gold: 200,
+        exp: 2500,
+        sp_spent: 14,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 0,
+            caster_levels: 40,
+            healer_levels: 0
+        },
+        description: "[ Water ] Deals 475% MATK AOE DMG, cap 340% MATK per Target, +15% Crit Chance, 15 MP",
+},
+"Chain Lightning": {...defaultSkill,
+        category: "caster",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 2,
+        gold: 200,
+        exp: 2500,
+        sp_spent: 14,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 0,
+            caster_levels: 40,
+            healer_levels: 0
+        },
+        description: "[ Lightning ] Deals 475% MATK AOE DMG, cap 340% MATK per Target, 15 MP",
+},
+"Dragon Lightning": {...defaultSkill,
+        category: "caster",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 2,
+        gold: 200,
+        exp: 2500,
+        sp_spent: 14,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 0,
+            caster_levels: 40,
+            healer_levels: 0
+        },
+        description: "[ Lightning ] Deals 420% MATK DMG, 14 MP",
+},
+"Terra Wave": {...defaultSkill,
+        category: "caster",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 2,
+        gold: 200,
+        exp: 2500,
+        sp_spent: 14,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 0,
+            caster_levels: 40,
+            healer_levels: 0
+        },
+        description: "[ Earth ] Deals 475% MATK AOE DMG, cap 340% MATK per target after breaking 4% Armor, Ignores 45% Armor. 15 MP",
+},
+"Terra Spiker": {...defaultSkill,
+        category: "caster",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 2,
+        gold: 200,
+        exp: 2500,
+        sp_spent: 14,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 0,
+            caster_levels: 40,
+            healer_levels: 0
+        },
+        description: "[ Earth ] Deals 320% MATK DMG, after breaking 6% Armor, Ignores 45% Armor.12 MP",
+},
+"Negative Burst": {...defaultSkill,
+        category: "caster",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 2,
+        gold: 200,
+        exp: 2500,
+        sp_spent: 14,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 0,
+            caster_levels: 40,
+            healer_levels: 0
+        },
+        description: "[ Neg ] Deals 475% MATK AOE DMG, cap 320% per Target, +25% Crit Damage, -10% Crit Chance, 15 MP",
+},
+"Lesser Death": {...defaultSkill,
+        category: "caster",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 2,
+        gold: 200,
+        exp: 2500,
+        sp_spent: 14,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 0,
+            caster_levels: 40,
+            healer_levels: 0
+        },
+        description: "[ Neg ] Deals 320% MATK DMG, +45% Crit Damage, -10% Crit Chance, 12 MP",
+},
+"Dark Call": {...defaultSkill,
+        category: "caster",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 2,
+        gold: 200,
+        exp: 2500,
+        sp_spent: 14,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 0,
+            caster_levels: 40,
+            healer_levels: 0
+        },
+        description: "[ Void ] Deals 205% MATK DMG, +10% Crit Damage, Scales with Negative Damage, 12 MP",
+},
+"Radiant Field": {...defaultSkill,
+        category: "caster",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 2,
+        gold: 200,
+        exp: 2500,
+        sp_spent: 14,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 0,
+            caster_levels: 40,
+            healer_levels: 0
+        },
+        description: "[ Holy ] Deals 500% MATK AOE DMG, cap 360% per Target, 10 MP",
+},
+"Greater Radiance": {...defaultSkill,
+        category: "caster",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 2,
+        gold: 200,
+        exp: 2500,
+        sp_spent: 14,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 0,
+            caster_levels: 40,
+            healer_levels: 0
+        },
+        description: "[ Holy ] Deals 340% MATK DMG, 8 MP",
+},
+"Poison Nova": {...defaultSkill,
+        category: "caster",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 2,
+        gold: 200,
+        exp: 2500,
+        sp_spent: 14,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 0,
+            caster_levels: 40,
+            healer_levels: 0
+        },
+        description: "[ Toxic ] Deals 340% MATK DMG, 3% Damage Done applied as DOT, Ignores 10% Armor, 12 MP",
+},
+"Acid Stream": {...defaultSkill,
+        category: "caster",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 2,
+        gold: 200,
+        exp: 2500,
+        sp_spent: 14,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 0,
+            caster_levels: 40,
+            healer_levels: 0
+        },
+        description: "[ Toxic ] Deals 500% MATK AOE DMG, cap 360% MATK per Target. 2% Damage Done applied as DOT, Ignores 10% Armor, 15 MP",
+},
 "Mana Armor": {...defaultSkill,
         type: {
             is_buff: true,
@@ -4041,6 +6773,30 @@ const skill_data: Record<string, Skill> = {
     "Elemental xDmg%": 0.3,
     },
         
+},
+"Void Blast": {...defaultSkill,
+        category: "caster",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 2,
+        gold: 200,
+        exp: 2500,
+        sp_spent: 14,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 0,
+            caster_levels: 40,
+            healer_levels: 0
+        },
+        description: "[ Void ] Deals 400% MATK DMG, 11 MP",
 },
 "Study of Power": {...defaultSkill,
         type: {
@@ -4115,6 +6871,462 @@ const skill_data: Record<string, Skill> = {
     { source: "MATK", ratio: 0.3, resulting_stat: "HEAL" },
     ],
         
+},
+"Hellfire Flame": {...defaultSkill,
+        category: "caster",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 3,
+        gold: 250,
+        exp: 4000,
+        sp_spent: 22,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 0,
+            caster_levels: 70,
+            healer_levels: 0
+        },
+        description: "[ Fire ] Deals 450% MATK DMG, 16 MP",
+},
+"Explosion": {...defaultSkill,
+        category: "caster",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 3,
+        gold: 250,
+        exp: 4000,
+        sp_spent: 22,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 0,
+            caster_levels: 70,
+            healer_levels: 0
+        },
+        description: "[ Fire ] Deals 1200% MATK AOE DMG, cap 500% MATK per Target, 22 MP",
+},
+"Sonic Crush": {...defaultSkill,
+        category: "caster",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 3,
+        gold: 250,
+        exp: 4000,
+        sp_spent: 22,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 0,
+            caster_levels: 70,
+            healer_levels: 0
+        },
+        description: "[ Wind ] Deals 450% MATK DMG, 16% Penetration, ignores 15% Enemy Resist. 16 MP",
+},
+"Shark Cyclone": {...defaultSkill,
+        category: "caster",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 3,
+        gold: 250,
+        exp: 4000,
+        sp_spent: 22,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 0,
+            caster_levels: 70,
+            healer_levels: 0
+        },
+        description: "[ Wind ] Deals 775% MATK AOE DMG, cap 400% MATK per Target, 12% Penetration, ignores 15% Enemy Resist. 20 MP",
+},
+"Spear of Niflheim": {...defaultSkill,
+        category: "caster",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 3,
+        gold: 250,
+        exp: 4000,
+        sp_spent: 22,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 0,
+            caster_levels: 70,
+            healer_levels: 0
+        },
+        description: "[ Water ] Deals 450% MATK DMG, +24% Crit Chance, 16 MP",
+},
+"Ice Shard Storm": {...defaultSkill,
+        category: "caster",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 3,
+        gold: 250,
+        exp: 4000,
+        sp_spent: 22,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 0,
+            caster_levels: 70,
+            healer_levels: 0
+        },
+        description: "[ Water ] Deals 775% MATK AOE DMG, cap 400% MATK per Target, +18% Crit Chance, 20 MP",
+},
+"Chain Dragon Lightning": {...defaultSkill,
+        category: "caster",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 3,
+        gold: 250,
+        exp: 4000,
+        sp_spent: 22,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 0,
+            caster_levels: 70,
+            healer_levels: 0
+        },
+        description: "[ Lightning ] Deals 775% MATK AOE DMG, cap 400% MATK per Target, 20 MP",
+},
+"Call Greater Thunder": {...defaultSkill,
+        category: "caster",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 3,
+        gold: 250,
+        exp: 4000,
+        sp_spent: 22,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 0,
+            caster_levels: 70,
+            healer_levels: 0
+        },
+        description: "[ Lightning ] Deals 540% MATK DMG, 18 MP",
+},
+"Gaia's Wrath": {...defaultSkill,
+        category: "caster",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 3,
+        gold: 250,
+        exp: 4000,
+        sp_spent: 22,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 0,
+            caster_levels: 70,
+            healer_levels: 0
+        },
+        description: "[ Earth ] Deals 775% MATK AOE DMG, cap 400% MATK per target after breaking 7% Armor, Ignores 55% Armor. 20 MP",
+},
+"Gaia's Spear": {...defaultSkill,
+        category: "caster",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 3,
+        gold: 250,
+        exp: 4000,
+        sp_spent: 22,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 0,
+            caster_levels: 70,
+            healer_levels: 0
+        },
+        description: "[ Earth ] Deals 450% MATK DMG, after breaking 9% Armor, Ignores 55% Armor. 16 MP",
+},
+"Death Nova": {...defaultSkill,
+        category: "caster",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 3,
+        gold: 250,
+        exp: 4000,
+        sp_spent: 22,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 0,
+            caster_levels: 70,
+            healer_levels: 0
+        },
+        description: "[ Neg ] Deals 775% MATK AOE DMG, cap 400% per Target, +40% Crit Damage, -15% Crit Chance, 20 MP",
+},
+"Death": {...defaultSkill,
+        category: "caster",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 3,
+        gold: 250,
+        exp: 4000,
+        sp_spent: 22,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 0,
+            caster_levels: 70,
+            healer_levels: 0
+        },
+        description: "[ Neg ] Deals 430% MATK DMG, +40% Crit Damage, -15% Crit Chance, 16 MP",
+},
+"Darkness": {...defaultSkill,
+        category: "caster",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 3,
+        gold: 250,
+        exp: 4000,
+        sp_spent: 22,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 0,
+            caster_levels: 70,
+            healer_levels: 0
+        },
+        description: "[ Void ] Deals 300% MATK DMG, +15% Crit Damage, Scales by Negative Damage, 16 MP",
+},
+"Odin's Gaze": {...defaultSkill,
+        category: "caster",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 3,
+        gold: 250,
+        exp: 4000,
+        sp_spent: 22,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 0,
+            caster_levels: 70,
+            healer_levels: 0
+        },
+        description: "[ Holy ] Deals 800% MATK AOE DMG, cap 420% per Target, 15 MP",
+},
+"Light of Valhalla": {...defaultSkill,
+        category: "caster",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 3,
+        gold: 250,
+        exp: 4000,
+        sp_spent: 22,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 0,
+            caster_levels: 70,
+            healer_levels: 0
+        },
+        description: "[ Holy ] Deals 475% MATK DMG, 12 MP",
+},
+"Gravity Maelstrom": {...defaultSkill,
+        category: "caster",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 3,
+        gold: 250,
+        exp: 4000,
+        sp_spent: 22,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 0,
+            caster_levels: 70,
+            healer_levels: 0
+        },
+        description: "[ Void ] Deals 500% MATK DMG, 16 MP",
+},
+"Gravity Crush": {...defaultSkill,
+        category: "caster",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 3,
+        gold: 250,
+        exp: 4000,
+        sp_spent: 22,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 0,
+            caster_levels: 70,
+            healer_levels: 0
+        },
+        description: "[ Void ] Deals 880% MATK AOE DMG, cap 455% MATK per target, 20 MP",
+},
+"Corrosion Impact": {...defaultSkill,
+        category: "caster",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 3,
+        gold: 250,
+        exp: 4000,
+        sp_spent: 22,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 0,
+            caster_levels: 70,
+            healer_levels: 0
+        },
+        description: "[ Toxic ] Deals 475% MATK DMG, 3% Damage Done applied as DOT, Ignores 15% Armor, 16 MP",
+},
+"Venom Shroud": {...defaultSkill,
+        category: "caster",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 3,
+        gold: 250,
+        exp: 4000,
+        sp_spent: 22,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 0,
+            caster_levels: 70,
+            healer_levels: 0
+        },
+        description: "[ Toxic ] Deals 800% MATK DMG, cap 420% MATK per Target. 2% Damage Done applied as DOT, Ignores 15% Armor, 20 MP",
 },
 "Metamagic Boost": {...defaultSkill,
         type: {
@@ -4239,6 +7451,56 @@ const skill_data: Record<string, Skill> = {
     ],
         
 },
+"Hellfire Lance": {...defaultSkill,
+        category: "caster",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+            "DeathGodBlessing",
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 3,
+        gold: 350,
+        exp: 6000,
+        sp_spent: 48,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 0,
+            caster_levels: 100,
+            healer_levels: 0
+        },
+        description: "[ Fire ] Deals 550% MATK DMG, 24 MP",
+},
+"Nuclear Orb": {...defaultSkill,
+        category: "caster",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+            "DeathGodBlessing",
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 3,
+        gold: 350,
+        exp: 6000,
+        sp_spent: 48,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 0,
+            caster_levels: 100,
+            healer_levels: 0
+        },
+        description: "[ Fire ] Deals 1750% MATK AOE DMG, cap 610% MATK per Target, 30 MP",
+},
 "Mach Cannon": {...defaultSkill,
         type: {
             is_buff: true,
@@ -4284,6 +7546,381 @@ const skill_data: Record<string, Skill> = {
     { source: "Wind%", ratio: 0.05, resulting_stat: "Wind%" },
     ],
         dmg_stats: {dmg_element: "Wind",     element: "Wind",     pen_element: "Wind",     stat: "MATK", ratio: 7.75, }
+},
+"Wrath of Hela": {...defaultSkill,
+        category: "caster",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+            "DeathGodBlessing",
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 3,
+        gold: 350,
+        exp: 6000,
+        sp_spent: 48,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 0,
+            caster_levels: 100,
+            healer_levels: 0
+        },
+        description: "[ Water ] Deals 550% MATK DMG, +35% Crit Chance, 24 MP",
+},
+"Niflheim Storm": {...defaultSkill,
+        category: "caster",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+            "DeathGodBlessing",
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 3,
+        gold: 350,
+        exp: 6000,
+        sp_spent: 48,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 0,
+            caster_levels: 100,
+            healer_levels: 0
+        },
+        description: "[ Water ] Deals 1000% MATK AOE DMG, cap 500% MATK per Target, +25% Crit Chance, 28 MP",
+},
+"Mjolnir's Blast": {...defaultSkill,
+        category: "caster",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+            "DeathGodBlessing",
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 3,
+        gold: 350,
+        exp: 6000,
+        sp_spent: 48,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 0,
+            caster_levels: 100,
+            healer_levels: 0
+        },
+        description: "[ Lightning ] Deals 660% MATK DMG, 26 MP",
+},
+"Dragon Storm Nova": {...defaultSkill,
+        category: "caster",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+            "DeathGodBlessing",
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 3,
+        gold: 350,
+        exp: 6000,
+        sp_spent: 48,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 0,
+            caster_levels: 100,
+            healer_levels: 0
+        },
+        description: "[ Lightning ] Deals 1000% MATK AOE DMG, cap 500% MATK per Target, 28 MP",
+},
+"Lance of Joro": {...defaultSkill,
+        category: "caster",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+            "DeathGodBlessing",
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 3,
+        gold: 350,
+        exp: 6000,
+        sp_spent: 48,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 0,
+            caster_levels: 100,
+            healer_levels: 0
+        },
+        description: "[ Earth ] Deals 550% MATK DMG, after breaking 9% Armor, Ignores 55% Armor. 24 MP",
+},
+"Joro's Judgement": {...defaultSkill,
+        category: "caster",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+            "DeathGodBlessing",
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 3,
+        gold: 350,
+        exp: 6000,
+        sp_spent: 48,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 0,
+            caster_levels: 100,
+            healer_levels: 0
+        },
+        description: "[ Earth ] Deals 1000% MATK AOE DMG, cap 500% MATK per target after breaking 7% Armor, Ignores 55% Armor. 28 MP",
+},
+"True Death": {...defaultSkill,
+        category: "caster",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+            "DeathGodBlessing",
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 3,
+        gold: 350,
+        exp: 6000,
+        sp_spent: 48,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 0,
+            caster_levels: 100,
+            healer_levels: 0
+        },
+        description: "[ Neg ] Deals 500% MATK DMG, +50% Crit Damage, -20% Crit Chance, 25 MP",
+},
+"Cry of the Banshee": {...defaultSkill,
+        category: "caster",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+            "DeathGodBlessing",
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 3,
+        gold: 350,
+        exp: 6000,
+        sp_spent: 48,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 0,
+            caster_levels: 100,
+            healer_levels: 0
+        },
+        description: "[ Neg ] Deals 1000% MATK AOE DMG, cap 465% per Target, +50% Crit Damage, -20% Crit Chance, 30 MP",
+},
+"True Darkness": {...defaultSkill,
+        category: "caster",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+            "DeathGodBlessing",
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 3,
+        gold: 350,
+        exp: 6000,
+        sp_spent: 48,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 0,
+            caster_levels: 100,
+            healer_levels: 0
+        },
+        description: "[ Void ] Deals 420% MATK DMG, +18% Crit Damage, Scales by Negative Damage, 25 MP",
+},
+"Shadow of Longinus": {...defaultSkill,
+        category: "caster",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+            "DeathGodBlessing",
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 3,
+        gold: 350,
+        exp: 6000,
+        sp_spent: 48,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 0,
+            caster_levels: 100,
+            healer_levels: 0
+        },
+        description: "[ Holy ] Deals 575% MATK DMG, 18 MP",
+},
+"Megido": {...defaultSkill,
+        category: "caster",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+            "DeathGodBlessing",
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 3,
+        gold: 350,
+        exp: 6000,
+        sp_spent: 48,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 0,
+            caster_levels: 100,
+            healer_levels: 0
+        },
+        description: "[ Holy ] Deals 1100% MATK AOE DMG, cap 510% per Target, 22 MP",
+},
+"Reality Slash": {...defaultSkill,
+        category: "caster",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+            "DeathGodBlessing",
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 3,
+        gold: 350,
+        exp: 6000,
+        sp_spent: 48,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 0,
+            caster_levels: 100,
+            healer_levels: 0
+        },
+        description: "[ Void ] Deals 600% MATK DMG, 24 MP",
+},
+"Black Hole": {...defaultSkill,
+        category: "caster",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+            "DeathGodBlessing",
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 3,
+        gold: 350,
+        exp: 6000,
+        sp_spent: 48,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 0,
+            caster_levels: 100,
+            healer_levels: 0
+        },
+        description: "[ Void ] Deals 1200% MATK AOE DMG, cap 575% MATK per target, 28 MP",
+},
+"Curse of Eitr": {...defaultSkill,
+        category: "caster",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+            "DeathGodBlessing",
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 3,
+        gold: 350,
+        exp: 6000,
+        sp_spent: 48,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 0,
+            caster_levels: 100,
+            healer_levels: 0
+        },
+        description: "[ Toxic ] Deals 575% MATK DMG, 3% Damage Done applied as DOT, Ignores 15% Armor, 24 MP",
+},
+"Acid Tsunami": {...defaultSkill,
+        category: "caster",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+            "DeathGodBlessing",
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 3,
+        gold: 350,
+        exp: 6000,
+        sp_spent: 48,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 0,
+            caster_levels: 100,
+            healer_levels: 0
+        },
+        description: "[ Toxic ] Deals 1100% MATK DMG, cap 510% MATK per Target. 2% Damage Done applied as DOT, Ignores 15% Armor, 28 MP",
 },
 "Metamagic Penetrate": {...defaultSkill,
         type: {
@@ -4403,6 +8040,231 @@ const skill_data: Record<string, Skill> = {
     },
         
 },
+"Phantom Flame": {...defaultSkill,
+        category: "caster",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+            "DeathGodBlessing",
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 3,
+        gold: 100,
+        exp: 2000,
+        sp_spent: 48,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 0,
+            caster_levels: 100,
+            healer_levels: 0
+        },
+        description: "[ Fire ] Deals 450% MATK DMG, scales to Max Mag DMG/Pen, 24 MP",
+},
+"Phantom Bolt": {...defaultSkill,
+        category: "caster",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+            "DeathGodBlessing",
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 3,
+        gold: 100,
+        exp: 2000,
+        sp_spent: 48,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 0,
+            caster_levels: 100,
+            healer_levels: 0
+        },
+        description: "[ Lightning ] Deals 450% MATK DMG, scales to Max Mag DMG/Pen, 24 MP",
+},
+"Phantom Scar": {...defaultSkill,
+        category: "caster",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+            "DeathGodBlessing",
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 3,
+        gold: 100,
+        exp: 2000,
+        sp_spent: 48,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 0,
+            caster_levels: 100,
+            healer_levels: 0
+        },
+        description: "[ Wind ] Deals 450% MATK DMG, scales to Max Mag DMG/Pen, 24 MP",
+},
+"Phantom Wave": {...defaultSkill,
+        category: "caster",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+            "DeathGodBlessing",
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 3,
+        gold: 100,
+        exp: 2000,
+        sp_spent: 48,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 0,
+            caster_levels: 100,
+            healer_levels: 0
+        },
+        description: "[ Water ] Deals 450% MATK DMG, scales to Max Mag DMG/Pen, 24 MP",
+},
+"Phantom Impaler": {...defaultSkill,
+        category: "caster",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+            "DeathGodBlessing",
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 3,
+        gold: 100,
+        exp: 2000,
+        sp_spent: 48,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 0,
+            caster_levels: 100,
+            healer_levels: 0
+        },
+        description: "[ Earth ] Deals 450% MATK DMG, scales to Max Mag DMG/Pen, 24 MP",
+},
+"Phantom Melt": {...defaultSkill,
+        category: "caster",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+            "DeathGodBlessing",
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 3,
+        gold: 100,
+        exp: 2000,
+        sp_spent: 48,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 0,
+            caster_levels: 100,
+            healer_levels: 0
+        },
+        description: "[ Toxic ] Deals 450% MATK DMG, scales to Max Mag DMG/Pen, 24 MP",
+},
+"Phantom Crush": {...defaultSkill,
+        category: "caster",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+            "DeathGodBlessing",
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 3,
+        gold: 100,
+        exp: 2000,
+        sp_spent: 48,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 0,
+            caster_levels: 100,
+            healer_levels: 0
+        },
+        description: "[ Void ] Deals 450% MATK DMG, scales to Max Mag DMG/Pen, 24 MP",
+},
+"Phantom Light": {...defaultSkill,
+        category: "caster",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+            "DeathGodBlessing",
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 3,
+        gold: 100,
+        exp: 2000,
+        sp_spent: 48,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 0,
+            caster_levels: 100,
+            healer_levels: 0
+        },
+        description: "[ Holy ] Deals 450% MATK DMG, scales to Max Mag DMG/Pen, 24 MP",
+},
+"Phantom Shadow": {...defaultSkill,
+        category: "caster",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+            "DeathGodBlessing",
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 3,
+        gold: 100,
+        exp: 2000,
+        sp_spent: 48,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 0,
+            caster_levels: 100,
+            healer_levels: 0
+        },
+        description: "[ Neg ] Deals 450% MATK DMG, scales to Max Mag DMG/Pen, 24 MP",
+},
 "Realm Barrier": {...defaultSkill,
         type: {
             is_buff: true,
@@ -4520,6 +8382,58 @@ const skill_data: Record<string, Skill> = {
     ],
         
 },
+"Blade of Agni": {...defaultSkill,
+        category: "caster",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+            "Hellfire Lance",
+            "PrimalEssence",
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 3,
+        gold: 750,
+        exp: 10000,
+        sp_spent: 75,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 0,
+            caster_levels: 160,
+            healer_levels: 0
+        },
+        description: "[ Fire ] Deals 725% MATK DMG, 38 MP",
+},
+"Breath of Sora": {...defaultSkill,
+        category: "caster",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+            "Nuclear Orb",
+            "PrimalEssence",
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 3,
+        gold: 750,
+        exp: 10000,
+        sp_spent: 75,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 0,
+            caster_levels: 160,
+            healer_levels: 0
+        },
+        description: "[ Fire ] Deals 725% MATK to all Enemies, 48 MP",
+},
 "Vayu's Blades": {...defaultSkill,
         type: {
             is_buff: true,
@@ -4567,6 +8481,396 @@ const skill_data: Record<string, Skill> = {
     { source: "Wind%", ratio: 0.05, resulting_stat: "Wind%" },
     ],
         dmg_stats: {dmg_element: "Wind",     element: "Wind",     pen_element: "Wind",     stat: "MATK", ratio: 6.5, }
+},
+"Eye of Varu'kora": {...defaultSkill,
+        category: "caster",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+            "Wrath of Hela",
+            "PrimalEssence",
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 3,
+        gold: 750,
+        exp: 10000,
+        sp_spent: 75,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 0,
+            caster_levels: 160,
+            healer_levels: 0
+        },
+        description: "[ Water ] Deals 715% MATK DMG, +40% Crit Chance, 38 MP",
+},
+"Fury of Okeanos": {...defaultSkill,
+        category: "caster",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+            "Niflheim Storm",
+            "PrimalEssence",
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 3,
+        gold: 750,
+        exp: 10000,
+        sp_spent: 75,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 0,
+            caster_levels: 160,
+            healer_levels: 0
+        },
+        description: "[ Water ] Deals 1500% MATK AOE DMG, cap 650% MATK per Target, +40% Crit Chance, 45 MP",
+},
+"Vayu's Spear": {...defaultSkill,
+        category: "caster",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+            "Mjolnir's Blast",
+            "PrimalEssence",
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 3,
+        gold: 750,
+        exp: 10000,
+        sp_spent: 75,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 0,
+            caster_levels: 160,
+            healer_levels: 0
+        },
+        description: "[ Lightning ] Deals 860% MATK DMG, 42 MP",
+},
+"Talons of Hanu'stora": {...defaultSkill,
+        category: "caster",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+            "Dragon Storm Nova",
+            "PrimalEssence",
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 3,
+        gold: 750,
+        exp: 10000,
+        sp_spent: 75,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 0,
+            caster_levels: 160,
+            healer_levels: 0
+        },
+        description: "[ Lightning ] Deals 1350% MATK AOE DMG, cap 600% MATK per Target, 45 MP",
+},
+"Fist of Gen'vimata": {...defaultSkill,
+        category: "caster",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+            "Lance of Joro",
+            "PrimalEssence",
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 3,
+        gold: 750,
+        exp: 10000,
+        sp_spent: 75,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 0,
+            caster_levels: 160,
+            healer_levels: 0
+        },
+        description: "[ Earth ] Deals 720% MATK DMG, after breaking 9% Armor, Ignores 70% Armor. 38 MP",
+},
+"Will of Gen'vimata": {...defaultSkill,
+        category: "caster",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+            "Joro's Judgement",
+            "PrimalEssence",
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 3,
+        gold: 750,
+        exp: 10000,
+        sp_spent: 75,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 0,
+            caster_levels: 160,
+            healer_levels: 0
+        },
+        description: "[ Earth ] Deals 1600% MATK AOE DMG, cap 665% MATK per target after breaking 7% Armor, Ignores 70% Armor. 45 MP",
+},
+"Gren'neketer's Grasp": {...defaultSkill,
+        category: "caster",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+            "True Death",
+            "PrimalEssence",
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 3,
+        gold: 750,
+        exp: 10000,
+        sp_spent: 75,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 0,
+            caster_levels: 160,
+            healer_levels: 0
+        },
+        description: "[ Neg ] Deals 570% MATK DMG, +70% Crit Damage, -25% Crit Chance, 40 MP",
+},
+"Winds of Gren'neketer": {...defaultSkill,
+        category: "caster",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+            "Cry of the Banshee",
+            "PrimalEssence",
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 3,
+        gold: 750,
+        exp: 10000,
+        sp_spent: 75,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 0,
+            caster_levels: 160,
+            healer_levels: 0
+        },
+        description: "[ Neg ] Deals 1600% MATK AOE DMG, cap 565% per Target, +70% Crit Damage, -25% Crit Chance, 48 MP",
+},
+"Shadow of As'moraeldan": {...defaultSkill,
+        category: "caster",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+            "True Darkness",
+            "PrimalEssence",
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 3,
+        gold: 750,
+        exp: 10000,
+        sp_spent: 75,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 0,
+            caster_levels: 160,
+            healer_levels: 0
+        },
+        description: "[ Void ] Deals 545% MATK DMG, +20% Crit Damage, Scales by Negative Damage, 40 MP",
+},
+"Spear of Garabre'alos": {...defaultSkill,
+        category: "caster",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+            "Shadow of Longinus",
+            "PrimalEssence",
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 3,
+        gold: 750,
+        exp: 10000,
+        sp_spent: 75,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 0,
+            caster_levels: 160,
+            healer_levels: 0
+        },
+        description: "[ Holy ] Deals 750% MATK DMG, 30 MP",
+},
+"Downfall of Garabre'alos": {...defaultSkill,
+        category: "caster",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+            "Megido",
+            "PrimalEssence",
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 3,
+        gold: 750,
+        exp: 10000,
+        sp_spent: 75,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 0,
+            caster_levels: 160,
+            healer_levels: 0
+        },
+        description: "[ Holy ] Deals 1800% MATK AOE DMG, cap 675% per Target, 35 MP",
+},
+"Blade of Gen'vimata": {...defaultSkill,
+        category: "caster",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+            "Reality Slash",
+            "PrimalEssence",
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 3,
+        gold: 750,
+        exp: 10000,
+        sp_spent: 75,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 0,
+            caster_levels: 160,
+            healer_levels: 0
+        },
+        description: "[ Void ] Deals 785% MATK DMG, 38 MP",
+},
+"Gate of Gen'vimata": {...defaultSkill,
+        category: "caster",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+            "Black Hole",
+            "PrimalEssence",
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 3,
+        gold: 750,
+        exp: 10000,
+        sp_spent: 75,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 0,
+            caster_levels: 160,
+            healer_levels: 0
+        },
+        description: "[ Void ] Deals 1800% MATK AOE DMG, cap 700% MATK per target, 45 MP",
+},
+"Mith'sara's Claws": {...defaultSkill,
+        category: "caster",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+            "Curse of Eitr",
+            "PrimalEssence",
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 3,
+        gold: 750,
+        exp: 10000,
+        sp_spent: 75,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 0,
+            caster_levels: 160,
+            healer_levels: 0
+        },
+        description: "[ Toxic ] Deals 750% MATK DMG, 3% Damage Done applied as DOT, Ignores 15% Armor, 38 MP",
+},
+"Mith'sara's Breath": {...defaultSkill,
+        category: "caster",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+            "Acid Tsunami",
+            "PrimalEssence",
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 3,
+        gold: 750,
+        exp: 10000,
+        sp_spent: 75,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 0,
+            caster_levels: 160,
+            healer_levels: 0
+        },
+        description: "[ Toxic ] Deals 2000% MATK DMG, cap 675% MATK per Target. 2% Damage Done applied as DOT, Ignores 15% Armor, 45 MP",
 },
 "Metamagic Multi Penetrate": {...defaultSkill,
         type: {
@@ -4634,6 +8938,54 @@ const skill_data: Record<string, Skill> = {
         description: "Recover Target Life by 50+5% Healpower, 1 MP",
         
 },
+"Smite 1": {...defaultSkill,
+        category: "healer",
+        type: {
+            is_buff: true,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 1,
+        gold: 25,
+        exp: 25,
+        sp_spent: 0,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 0,
+            caster_levels: 0,
+            healer_levels: 1
+        },
+        description: "[ Holy ] Deal 60% Heal DMG, 1 MP",
+},
+"Lethal 1": {...defaultSkill,
+        category: "healer",
+        type: {
+            is_buff: true,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 1,
+        gold: 25,
+        exp: 25,
+        sp_spent: 0,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 0,
+            caster_levels: 0,
+            healer_levels: 1
+        },
+        description: "[ Neg ] Deal 60% Heal DMG, 1 MP",
+},
 "Lesser Strength": {...defaultSkill,
         type: {
             is_buff: true,
@@ -4694,6 +9046,78 @@ const skill_data: Record<string, Skill> = {
         },
         description: "Recover Target Life by 500+7% Healpower, 3 MP",
         
+},
+"Smite 2": {...defaultSkill,
+        category: "healer",
+        type: {
+            is_buff: true,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 1,
+        gold: 100,
+        exp: 100,
+        sp_spent: 2,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 0,
+            caster_levels: 0,
+            healer_levels: 10
+        },
+        description: "[ Holy ] Deal 110% Heal DMG, 3 MP",
+},
+"Lethal 2": {...defaultSkill,
+        category: "healer",
+        type: {
+            is_buff: true,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 1,
+        gold: 100,
+        exp: 100,
+        sp_spent: 2,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 0,
+            caster_levels: 0,
+            healer_levels: 10
+        },
+        description: "[ Neg ] Deal 110% Heal DMG, 3 MP",
+},
+"Toxic Touch": {...defaultSkill,
+        category: "healer",
+        type: {
+            is_buff: true,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 1,
+        gold: 100,
+        exp: 100,
+        sp_spent: 2,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 0,
+            caster_levels: 0,
+            healer_levels: 10
+        },
+        description: "[ Toxic ] Deal 100% Heal DMG, 5% Damage Done applied as DOT, 3 MP",
 },
 "Strength": {...defaultSkill,
         type: {
@@ -4893,6 +9317,78 @@ const skill_data: Record<string, Skill> = {
         description: "Recover Target Life by 5,000+9% Healpower, 6 MP",
         
 },
+"Judgement": {...defaultSkill,
+        category: "healer",
+        type: {
+            is_buff: true,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 1,
+        gold: 150,
+        exp: 1800,
+        sp_spent: 6,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 0,
+            caster_levels: 0,
+            healer_levels: 20
+        },
+        description: "[ Holy ] Deal 220% Heal AOE DMG, cap 130% per Target, 6 MP",
+},
+"Corruption": {...defaultSkill,
+        category: "healer",
+        type: {
+            is_buff: true,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 1,
+        gold: 150,
+        exp: 1800,
+        sp_spent: 6,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 0,
+            caster_levels: 0,
+            healer_levels: 20
+        },
+        description: "[ Neg ] Deal 220% Heal AOE DMG, cap 130% per Target, 6 MP",
+},
+"Sacrilege": {...defaultSkill,
+        category: "healer",
+        type: {
+            is_buff: true,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 1,
+        gold: 150,
+        exp: 1800,
+        sp_spent: 6,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 0,
+            caster_levels: 0,
+            healer_levels: 20
+        },
+        description: "[ Toxic ] Deal 200% Heal AOE DMG, cap 120% per Target, 5% Damage Done applied as DOT, 6 MP",
+},
 "Life Surge": {...defaultSkill,
         type: {
             is_buff: true,
@@ -5047,6 +9543,30 @@ const skill_data: Record<string, Skill> = {
         },
         description: "[ 1 Charge ] Give target ally 12 MP, costs 25 MP",
         
+},
+"Poison Blood": {...defaultSkill,
+        category: "healer",
+        type: {
+            is_buff: true,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 1,
+        gold: 150,
+        exp: 1800,
+        sp_spent: 6,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 0,
+            caster_levels: 0,
+            healer_levels: 20
+        },
+        description: "[ Toxic ] Deal 100% Heal DMG, -50% Threat, 2 MP",
 },
 "Rejuvenation": {...defaultSkill,
         type: {
@@ -5209,6 +9729,78 @@ const skill_data: Record<string, Skill> = {
     { source: "HEAL", ratio: 0.6, resulting_stat: "HP Regen" },
     ],
         
+},
+"Holy Smite": {...defaultSkill,
+        category: "healer",
+        type: {
+            is_buff: true,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 2,
+        gold: 200,
+        exp: 2500,
+        sp_spent: 14,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 0,
+            caster_levels: 0,
+            healer_levels: 40
+        },
+        description: "[ Holy ] Deals 250% Heal DMG, 12 MP",
+},
+"Greater Lethal": {...defaultSkill,
+        category: "healer",
+        type: {
+            is_buff: true,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 2,
+        gold: 200,
+        exp: 2500,
+        sp_spent: 14,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 0,
+            caster_levels: 0,
+            healer_levels: 40
+        },
+        description: "[ Neg ] Deals 250% Heal DMG, 12 MP",
+},
+"Blood Boil": {...defaultSkill,
+        category: "healer",
+        type: {
+            is_buff: true,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 2,
+        gold: 200,
+        exp: 2500,
+        sp_spent: 14,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 0,
+            caster_levels: 0,
+            healer_levels: 40
+        },
+        description: "[ Toxic ] Deals 230% Heal DMG, 5% Damage Done applied as DOT, 12 MP",
 },
 "Lifeflow Surge": {...defaultSkill,
         type: {
@@ -5613,6 +10205,150 @@ const skill_data: Record<string, Skill> = {
     },
         
 },
+"Greater Smite": {...defaultSkill,
+        category: "healer",
+        type: {
+            is_buff: true,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 3,
+        gold: 250,
+        exp: 4000,
+        sp_spent: 22,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 0,
+            caster_levels: 0,
+            healer_levels: 70
+        },
+        description: "[ Holy ] Deals 320% Heal DMG, 15 MP",
+},
+"Lethal Infusion": {...defaultSkill,
+        category: "healer",
+        type: {
+            is_buff: true,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 3,
+        gold: 250,
+        exp: 4000,
+        sp_spent: 22,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 0,
+            caster_levels: 0,
+            healer_levels: 70
+        },
+        description: "[ Neg ] Deals 320% Heal DMG, 15 MP",
+},
+"Final Judgement": {...defaultSkill,
+        category: "healer",
+        type: {
+            is_buff: true,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 3,
+        gold: 250,
+        exp: 4000,
+        sp_spent: 22,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 0,
+            caster_levels: 0,
+            healer_levels: 70
+        },
+        description: "[ Holy ] Deal 500% Heal AOE DMG, cap 300% per Target, 18 MP",
+},
+"True Corruption": {...defaultSkill,
+        category: "healer",
+        type: {
+            is_buff: true,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 3,
+        gold: 250,
+        exp: 4000,
+        sp_spent: 22,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 0,
+            caster_levels: 0,
+            healer_levels: 70
+        },
+        description: "[ Neg ] Deal 500% Heal AOE DMG, cap 300% per Target, 18 MP",
+},
+"Blood Sear": {...defaultSkill,
+        category: "healer",
+        type: {
+            is_buff: true,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 3,
+        gold: 250,
+        exp: 4000,
+        sp_spent: 22,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 0,
+            caster_levels: 0,
+            healer_levels: 70
+        },
+        description: "[ Toxic ] Deals 300% Heal DMG, 5% Damage Done applied as DOT, 15 MP",
+},
+"Blood Explosion": {...defaultSkill,
+        category: "healer",
+        type: {
+            is_buff: true,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 3,
+        gold: 250,
+        exp: 4000,
+        sp_spent: 22,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 0,
+            caster_levels: 0,
+            healer_levels: 70
+        },
+        description: "[ Toxic ] Deal 460% Heal AOE DMG, cap 280% per Target, 4% Damage Done applied as DOT, 18 MP",
+},
 "Group Flame Ward": {...defaultSkill,
         type: {
             is_buff: true,
@@ -5952,6 +10688,206 @@ const skill_data: Record<string, Skill> = {
     ],
         
 },
+"Soul Exorcism": {...defaultSkill,
+        category: "healer",
+        type: {
+            is_buff: true,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+            "DeathGodBlessing",
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 3,
+        gold: 350,
+        exp: 6000,
+        sp_spent: 48,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 0,
+            caster_levels: 0,
+            healer_levels: 100
+        },
+        description: "[ Holy ] Deals 420% Heal DMG. 22 MP",
+},
+"Soul Curse": {...defaultSkill,
+        category: "healer",
+        type: {
+            is_buff: true,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+            "DeathGodBlessing",
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 3,
+        gold: 350,
+        exp: 6000,
+        sp_spent: 48,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 0,
+            caster_levels: 0,
+            healer_levels: 100
+        },
+        description: "[ Neg ] Deal 420% Heal DMG, 22 MP",
+},
+"Samsara Light": {...defaultSkill,
+        category: "healer",
+        type: {
+            is_buff: true,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+            "DeathGodBlessing",
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 3,
+        gold: 350,
+        exp: 6000,
+        sp_spent: 48,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 0,
+            caster_levels: 0,
+            healer_levels: 100
+        },
+        description: "[ Holy ] Deal 700% Heal AOE DMG, cap 400% per Target. 25 MP",
+},
+"Spirit Harvest": {...defaultSkill,
+        category: "healer",
+        type: {
+            is_buff: true,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+            "DeathGodBlessing",
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 3,
+        gold: 350,
+        exp: 6000,
+        sp_spent: 48,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 0,
+            caster_levels: 0,
+            healer_levels: 100
+        },
+        description: "[ Neg ] Deal 700% Heal AOE DMG, cap 400% per Target. 25 MP",
+},
+"Pandamonium": {...defaultSkill,
+        category: "healer",
+        type: {
+            is_buff: true,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+            "DeathGodBlessing",
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 3,
+        gold: 350,
+        exp: 6000,
+        sp_spent: 48,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 0,
+            caster_levels: 0,
+            healer_levels: 100
+        },
+        description: "[ Void ] Deals 500% Heal Damage, 22 MP",
+},
+"Armageddon": {...defaultSkill,
+        category: "healer",
+        type: {
+            is_buff: true,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+            "DeathGodBlessing",
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 3,
+        gold: 350,
+        exp: 6000,
+        sp_spent: 48,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 0,
+            caster_levels: 0,
+            healer_levels: 100
+        },
+        description: "[ Void ] Deals 800% Heal AOE Damage, cap 480% per Target, 25 MP",
+},
+"Vita Collapse": {...defaultSkill,
+        category: "healer",
+        type: {
+            is_buff: true,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+            "DeathGodBlessing",
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 3,
+        gold: 350,
+        exp: 6000,
+        sp_spent: 48,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 0,
+            caster_levels: 0,
+            healer_levels: 100
+        },
+        description: "[ Toxic ] Deals 480% Heal DMG, 5% Damage Done applied as DOT, 22 MP",
+},
+"Blood Annihilation": {...defaultSkill,
+        category: "healer",
+        type: {
+            is_buff: true,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+            "DeathGodBlessing",
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 3,
+        gold: 350,
+        exp: 6000,
+        sp_spent: 48,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 0,
+            caster_levels: 0,
+            healer_levels: 100
+        },
+        description: "[ Toxic ] Deal 775% Heal AOE DMG, cap 440% per Target, 4% Damage Done applied as DOT, 25 MP",
+},
 "Divine Strength": {...defaultSkill,
         type: {
             is_buff: true,
@@ -6087,6 +11023,231 @@ const skill_data: Record<string, Skill> = {
     },
         
 },
+"Divine Flame": {...defaultSkill,
+        category: "healer",
+        type: {
+            is_buff: true,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+            "DeathGodBlessing",
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 3,
+        gold: 100,
+        exp: 2000,
+        sp_spent: 48,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 0,
+            caster_levels: 0,
+            healer_levels: 100
+        },
+        description: "[ Fire ] Deals 380% Heal DMG, scales to Max Divine DMG/Pen, 22 MP",
+},
+"Divine Bolt": {...defaultSkill,
+        category: "healer",
+        type: {
+            is_buff: true,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+            "DeathGodBlessing",
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 3,
+        gold: 100,
+        exp: 2000,
+        sp_spent: 48,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 0,
+            caster_levels: 0,
+            healer_levels: 100
+        },
+        description: "[ Lightning ] Deals 380% Heal DMG, scales to Max Divine DMG/Pen, 22 MP",
+},
+"Divine Scar": {...defaultSkill,
+        category: "healer",
+        type: {
+            is_buff: true,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+            "DeathGodBlessing",
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 3,
+        gold: 100,
+        exp: 2000,
+        sp_spent: 48,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 0,
+            caster_levels: 0,
+            healer_levels: 100
+        },
+        description: "[ Wind ] Deals 380% Heal DMG, scales to Max Divine DMG/Pen, 22 MP",
+},
+"Divine Wave": {...defaultSkill,
+        category: "healer",
+        type: {
+            is_buff: true,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+            "DeathGodBlessing",
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 3,
+        gold: 100,
+        exp: 2000,
+        sp_spent: 48,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 0,
+            caster_levels: 0,
+            healer_levels: 100
+        },
+        description: "[ Water ] Deals 380% Heal DMG, scales to Max Divine DMG/Pen, 22 MP",
+},
+"Divine Impaler": {...defaultSkill,
+        category: "healer",
+        type: {
+            is_buff: true,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+            "DeathGodBlessing",
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 3,
+        gold: 100,
+        exp: 2000,
+        sp_spent: 48,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 0,
+            caster_levels: 0,
+            healer_levels: 100
+        },
+        description: "[ Earth ] Deals 380% Heal DMG, scales to Max Divine DMG/Pen, 22 MP",
+},
+"Divine Melt": {...defaultSkill,
+        category: "healer",
+        type: {
+            is_buff: true,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+            "DeathGodBlessing",
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 3,
+        gold: 100,
+        exp: 2000,
+        sp_spent: 48,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 0,
+            caster_levels: 0,
+            healer_levels: 100
+        },
+        description: "[ Toxic ] Deals 380% Heal DMG, scales to Max Divine DMG/Pen, 22 MP",
+},
+"Divine Crush": {...defaultSkill,
+        category: "healer",
+        type: {
+            is_buff: true,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+            "DeathGodBlessing",
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 3,
+        gold: 100,
+        exp: 2000,
+        sp_spent: 48,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 0,
+            caster_levels: 0,
+            healer_levels: 100
+        },
+        description: "[ Void ] Deals 380% Heal DMG, scales to Max Divine DMG/Pen, 22 MP",
+},
+"Divine Light": {...defaultSkill,
+        category: "healer",
+        type: {
+            is_buff: true,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+            "DeathGodBlessing",
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 3,
+        gold: 100,
+        exp: 2000,
+        sp_spent: 48,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 0,
+            caster_levels: 0,
+            healer_levels: 100
+        },
+        description: "[ Holy ] Deals 380% Heal DMG, scales to Max Divine DMG/Pen, 22 MP",
+},
+"Divine Shadow": {...defaultSkill,
+        category: "healer",
+        type: {
+            is_buff: true,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+            "DeathGodBlessing",
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 3,
+        gold: 100,
+        exp: 2000,
+        sp_spent: 48,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 0,
+            caster_levels: 0,
+            healer_levels: 100
+        },
+        description: "[ Neg ] Deals 380% Heal DMG, scales to Max Divine DMG/Pen, 22 MP",
+},
 "Flash Restoration": {...defaultSkill,
         type: {
             is_buff: true,
@@ -6126,6 +11287,31 @@ const skill_data: Record<string, Skill> = {
         },
         description: "[ ⧖, 1 Charge ] Recover Party HP by 100,000+35% Healpower, 80 MP",
         
+},
+"Restore Soul": {...defaultSkill,
+        category: "healer",
+        type: {
+            is_buff: false,
+            is_attack: false,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+            "DeathGodBlessing",
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 3,
+        gold: 600,
+        exp: 8000,
+        sp_spent: 70,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 0,
+            caster_levels: 0,
+            healer_levels: 150
+        },
+        description: "[ 1 Charge ] Resurrect slain party member. Revived ally has 60% Max HP and 15% Penalty to Main Stats. 40 MP",
 },
 "Nature Dominion": {...defaultSkill,
         type: {
@@ -6562,6 +11748,56 @@ const skill_data: Record<string, Skill> = {
     ],
         
 },
+"Shadow Catastrophe": {...defaultSkill,
+        category: "caster",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+            "World Disaster",
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 2,
+        gold: 100,
+        exp: 2000,
+        sp_spent: 20,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 0,
+            caster_levels: 60,
+            healer_levels: 0
+        },
+        description: "[ Void ] Deals 1200% MATK to all Enemies, Generates +100% Threat, 30% of Max MP",
+},
+"The Shadowed Soul": {...defaultSkill,
+        category: "caster",
+        type: {
+            is_buff: true,
+            is_attack: false,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+            "World Disaster",
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 2,
+        gold: 100,
+        exp: 2000,
+        sp_spent: 20,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 0,
+            caster_levels: 60,
+            healer_levels: 0
+        },
+        description: "Increase self MATK by 80% but also Increases MP cost of all skills by 100% for rest of battle.",
+},
 "Shadow Reversal": {...defaultSkill,
         type: {
             is_buff: true,
@@ -6779,6 +12015,31 @@ const skill_data: Record<string, Skill> = {
     "Threat%": 0.7,
     },
         
+},
+"Shadow Terror": {...defaultSkill,
+        category: "tank",
+        type: {
+            is_buff: true,
+            is_attack: true,
+            self_cast: true,
+            free_turn: true
+        },
+        PreReq: [
+            "Void Guardian",
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 3,
+        gold: 200,
+        exp: 4000,
+        sp_spent: 20,
+        class_levels: {
+            tank_levels: 60,
+            warrior_levels: 0,
+            caster_levels: 0,
+            healer_levels: 0
+        },
+        description: "[ ⧖, 3 Charges ] Debuff enemy Damage by 15x of DEF Multiplier. Cannot be stacked. Increase self threat gen by 3x stacking per cast for rest of battle.",
 },
 "Shadow Slayer's Form": {...defaultSkill,
         type: {
@@ -8021,6 +13282,256 @@ const skill_data: Record<string, Skill> = {
     { source: "Crit DMG%", ratio: 0.75, resulting_stat: "Holy Crit DMG%" },
     ],
         
+},
+"Hand of the Celestial": {...defaultSkill,
+        category: "tank",
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: true
+        },
+        PreReq: [
+            "Celestial's Avatar",
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 5,
+        gold: 1000,
+        exp: 10000,
+        sp_spent: 45,
+        class_levels: {
+            tank_levels: 100,
+            warrior_levels: 0,
+            caster_levels: 0,
+            healer_levels: 0
+        },
+        description: "[ ⧖, Void ] Deals 600% DEF DMG, Ignores 100% armor. Generates 5x threat.",
+},
+"Devourer's Corruption": {...defaultSkill,
+        category: "warrior",
+        type: {
+            is_buff: true,
+            is_attack: false,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+            "Devourer's Avatar",
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 5,
+        gold: 1000,
+        exp: 10000,
+        sp_spent: 45,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 100,
+            caster_levels: 0,
+            healer_levels: 0
+        },
+        description: "Increase self ATK by 300% ATK stacking up to 1500%. On first cast, gain All Res equal to 25% of your average Resist but cannot no longer Crit. Effects last rest of battle. Costs 33% Max HP.",
+},
+"Shadows of Sin": {...defaultSkill,
+        category: "caster",
+        type: {
+            is_buff: true,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+            "Sin's Avatar",
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 5,
+        gold: 1000,
+        exp: 10000,
+        sp_spent: 45,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 0,
+            caster_levels: 100,
+            healer_levels: 0
+        },
+        description: "Increase self Crit Damage by 30% MATK Multiplier stacking up to 120%. Reduces Crit Chance by 50%. Effects last rest of battle. Costs 25% of Max MP.",
+},
+"Divine Avatar Form": {...defaultSkill,
+        category: "healer",
+        type: {
+            is_buff: true,
+            is_attack: false,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+            "Sephira's Avatar",
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 5,
+        gold: 1000,
+        exp: 10000,
+        sp_spent: 45,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 0,
+            caster_levels: 0,
+            healer_levels: 100
+        },
+        description: "Ignore armor for Divine attacks but lose 90% ATK and MATK. Lasts rest of battle.",
+},
+"Strength of Bahamut": {...defaultSkill,
+        category: "hybrid",
+        type: {
+            is_buff: true,
+            is_attack: false,
+            self_cast: false,
+            free_turn: true
+        },
+        PreReq: [
+            "Bahamut's Avatar",
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 5,
+        gold: 1000,
+        exp: 10000,
+        sp_spent: 45,
+        class_levels: {
+            tank_levels: 50,
+            warrior_levels: 50,
+            caster_levels: 0,
+            healer_levels: 0
+        },
+        description: "[ ⧖ ] Raise self ATK by 100% of Current HP for 2 hits.",
+},
+"Heart of Tiamat": {...defaultSkill,
+        category: "hybrid",
+        type: {
+            is_buff: true,
+            is_attack: false,
+            self_cast: false,
+            free_turn: true
+        },
+        PreReq: [
+            "Tiamat's Avatar",
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 5,
+        gold: 1000,
+        exp: 10000,
+        sp_spent: 45,
+        class_levels: {
+            tank_levels: 50,
+            warrior_levels: 0,
+            caster_levels: 50,
+            healer_levels: 0
+        },
+        description: "[ ⧖ ] Raise self MATK by 70% DEF, lose 50% DEF, for rest of battle.",
+},
+"Asgard's Chosen": {...defaultSkill,
+        category: "hybrid",
+        type: {
+            is_buff: true,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+            "Odin's Avatar",
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 5,
+        gold: 1000,
+        exp: 10000,
+        sp_spent: 45,
+        class_levels: {
+            tank_levels: 50,
+            warrior_levels: 0,
+            caster_levels: 0,
+            healer_levels: 50
+        },
+        description: "Increase rest of party Allres by 50% of self average Resist with self at 10% average, but reduce Self damage by 50%. 60 MP.",
+},
+"Cloak of the Reaper": {...defaultSkill,
+        category: "hybrid",
+        type: {
+            is_buff: true,
+            is_attack: false,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+            "Reaper's Avatar",
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 5,
+        gold: 1000,
+        exp: 10000,
+        sp_spent: 45,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 50,
+            caster_levels: 50,
+            healer_levels: 0
+        },
+        description: "Increase self DEF by 25% of your AVG MATK+ATK and increase all self xPen by 20% for rest of battle.",
+},
+"Fist of Terra": {...defaultSkill,
+        category: "hybrid",
+        type: {
+            is_buff: true,
+            is_attack: true,
+            self_cast: false,
+            free_turn: true
+        },
+        PreReq: [
+            "Gaia's Avatar",
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 5,
+        gold: 1000,
+        exp: 10000,
+        sp_spent: 45,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 50,
+            caster_levels: 0,
+            healer_levels: 50
+        },
+        description: "[ ⧖, Blunt ] Deals 150% ATK + 300% Heal DMG, scales to max Divine Damage and breaks 25% Armor. Increases self Heal by 25% ATK, stacking up to 75%, for rest of battle. 2 Turn Cooldown. 45 MP.",
+},
+"The Goddess Descends": {...defaultSkill,
+        category: "hybrid",
+        type: {
+            is_buff: true,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+            "Goddess's Avatar",
+        ],
+        Tag: "",
+        BlockedTag: "",
+        sp: 3,
+        gold: 500,
+        exp: 6000,
+        sp_spent: 45,
+        class_levels: {
+            tank_levels: 0,
+            warrior_levels: 0,
+            caster_levels: 50,
+            healer_levels: 50
+        },
+        description: "Increase self Heal by 50% MATK, stacking up to 150%. Reduce self MATK by 75%. Increase Holy damage by average Elemental Damage.",
 },
 "Bone Armor": {...defaultSkill,
         type: {
@@ -9368,6 +14879,29 @@ const skill_data: Record<string, Skill> = {
     ],
         
 },
+"Dragon Breath": {...defaultSkill,
+        type: {
+            is_buff: false,
+            is_attack: true,
+            self_cast: false,
+            free_turn: false
+        },
+        PreReq: [
+            "Dragon Lord Form",
+        ],
+        gold: 50,
+        exp: 2000,
+        description: "[ Fire ] Deal 200% ATK to all enemies. Scales to highest Physical ELE/Pen, costs 5% Max HP. Requires Dragon Lord Form active",
+        dmg_stats: {
+    dmg_element: "Fire",
+    element: "Highest Phys",
+    pen_element: "Highest Phys",
+    stat: "ATK",
+    ratio: 2,
+    armor_break: 0.25
+    },
+        
+},
 "Dragon Strength": {...defaultSkill,
         type: {
             is_buff: true,
@@ -9870,24 +15404,6 @@ const racialSkillOverrides: Record<string, SkillOverride> = {
     },
     "Dragon Blood Surge": { PreReq: ["Dragonoid Lord", "Dragon Blood"] },
     "Dragon Lord Form": { PreReq: ["Dragon Blood Surge"] },
-    "Dragon Breath": {
-        PreReq: ["Dragon Lord Form"],
-        type: {
-            is_buff: false,
-            is_attack: true,
-        },
-        gold: 50,
-        exp: 2000,
-        description: "[ Fire ] Deal 200% ATK to all enemies. Scales to highest Physical ELE/Pen, costs 5% Max HP. Requires Dragon Lord Form active",
-        dmg_stats: {
-            dmg_element: "Fire",
-            element: "Highest Phys",
-            pen_element: "Highest Phys",
-            stat: "ATK",
-            ratio: 2,
-            armor_break: 0.25,
-        },
-    },
     "Dragon Strength": { PreReq: ["Dragon Lord Form"] },
     "Dragon Haki": { PreReq: ["Dragon Lord Form"] },
     "Dragon Mana Surge": { PreReq: ["Dragonoid Sovereign", "Dragon Blood"] },
@@ -9904,7 +15420,6 @@ const racialSkillOverrides: Record<string, SkillOverride> = {
 for (const [skillName, override] of Object.entries(racialSkillOverrides)) {
     mergeSkillOverride(skillName, override)
 }
-
 // inject precomputed widths
 const __columnWidths = computeColumnWidths(skill_data)
 
