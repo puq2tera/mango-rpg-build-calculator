@@ -1,6 +1,6 @@
 "use client"
 
-import { startTransition, useEffect, useMemo, useRef, useState } from "react"
+import { Suspense, startTransition, useEffect, useMemo, useRef, useState } from "react"
 import { InteractiveTableHeader } from "@/app/components/InteractiveTableHeader"
 import { ToggleButton } from "@/app/components/ToggleButton"
 import { DUNGEON_UNLOCKS_STORAGE_KEY, isDungeonUnlockTag } from "@/app/data/dungeon_unlocks"
@@ -32,7 +32,7 @@ const isRaceTag = (value: string): value is RaceTag => value in race_data_by_tag
 const talentNames = Object.keys(talent_data)
 const defaultTalentOrder = new Map(talentNames.map((name, index) => [name, index]))
 
-export default function TalentsPage() {
+function TalentsPageContent() {
   const [isHydrated, setIsHydrated] = useState(false)
   const [totalLevels, setTotalLevels] = useState(0)
   const [selected, setSelected] = useState<Set<string>>(new Set())
@@ -378,5 +378,13 @@ export default function TalentsPage() {
         </div>
       </div>
     </div>
+  )
+}
+
+export default function TalentsPage() {
+  return (
+    <Suspense fallback={<div className="p-4">Loading...</div>}>
+      <TalentsPageContent />
+    </Suspense>
   )
 }

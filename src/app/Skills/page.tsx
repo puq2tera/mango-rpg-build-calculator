@@ -1,6 +1,6 @@
 "use client"
 
-import { startTransition, useEffect, useMemo, useRef, useState } from "react"
+import { Suspense, startTransition, useEffect, useMemo, useRef, useState } from "react"
 import { InteractiveTableHeader } from "@/app/components/InteractiveTableHeader"
 import { SkillButton } from "@/app/components/ToggleButton"
 import { DUNGEON_UNLOCKS_STORAGE_KEY, isDungeonUnlockTag } from "@/app/data/dungeon_unlocks"
@@ -40,7 +40,7 @@ const trainingFields = [
   { key: "HEAL", label: "Healer HEAL" },
 ] as const
 
-export default function SkillsPage() {
+function SkillsPageContent() {
   const [isHydrated, setIsHydrated] = useState(false)
   const [selected, setSelected] = useState<Set<string>>(new Set())
   const [selectedTalents, setSelectedTalents] = useState<Set<string>>(new Set())
@@ -437,5 +437,13 @@ export default function SkillsPage() {
         </div>
       </div>
     </div>
+  )
+}
+
+export default function SkillsPage() {
+  return (
+    <Suspense fallback={<div className="p-4">Loading...</div>}>
+      <SkillsPageContent />
+    </Suspense>
   )
 }
