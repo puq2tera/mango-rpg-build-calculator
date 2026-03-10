@@ -61,9 +61,7 @@ function computeColumnWidths(data: Record<string, Talent>): string[] {
 const talent_data: Record<string, Talent> = {
     "Slash Training 1": {
         "category": "basic",
-        "PreReq": [
-            ""
-        ],
+        "PreReq": [],
         "Tag": "",
         "BlockedTag": "",
         "gold": 25,
@@ -130,9 +128,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Pierce Training 1": {
         "category": "basic",
-        "PreReq": [
-            ""
-        ],
+        "PreReq": [],
         "Tag": "",
         "BlockedTag": "",
         "gold": 25,
@@ -199,9 +195,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Blunt Training 1": {
         "category": "basic",
-        "PreReq": [
-            ""
-        ],
+        "PreReq": [],
         "Tag": "",
         "BlockedTag": "",
         "gold": 25,
@@ -268,9 +262,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Vanguard 1": {
         "category": "tank",
-        "PreReq": [
-            ""
-        ],
+        "PreReq": [],
         "Tag": "",
         "BlockedTag": "",
         "gold": 25,
@@ -338,9 +330,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Defense Training 1": {
         "category": "tank",
-        "PreReq": [
-            ""
-        ],
+        "PreReq": [],
         "Tag": "",
         "BlockedTag": "",
         "gold": 25,
@@ -407,9 +397,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Tank Basic Training 1": {
         "category": "tank",
-        "PreReq": [
-            ""
-        ],
+        "PreReq": [],
         "Tag": "",
         "BlockedTag": "",
         "gold": 25,
@@ -476,9 +464,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Frontliner 1": {
         "category": "tank",
-        "PreReq": [
-            ""
-        ],
+        "PreReq": [],
         "Tag": "",
         "BlockedTag": "",
         "gold": 40,
@@ -548,9 +534,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Fortitude 1": {
         "category": "tank",
-        "PreReq": [
-            ""
-        ],
+        "PreReq": [],
         "Tag": "",
         "BlockedTag": "",
         "gold": 40,
@@ -690,9 +674,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Protector of War": {
         "category": "tank",
-        "PreReq": [
-            ""
-        ],
+        "PreReq": [],
         "Tag": "DEF Path 1",
         "BlockedTag": "DEF Path 1",
         "gold": 200,
@@ -784,9 +766,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Protector of Magic": {
         "category": "tank",
-        "PreReq": [
-            ""
-        ],
+        "PreReq": [],
         "Tag": "DEF Path 1",
         "BlockedTag": "DEF Path 1",
         "gold": 200,
@@ -878,9 +858,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Protector of Divinity": {
         "category": "tank",
-        "PreReq": [
-            ""
-        ],
+        "PreReq": [],
         "Tag": "DEF Path 1",
         "BlockedTag": "DEF Path 1",
         "gold": 200,
@@ -971,9 +949,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Intimidation 1": {
         "category": "tank",
-        "PreReq": [
-            ""
-        ],
+        "PreReq": [],
         "Tag": "",
         "BlockedTag": "",
         "gold": 50,
@@ -1112,9 +1088,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Shield Lord": {
         "category": "tank",
-        "PreReq": [
-            ""
-        ],
+        "PreReq": [],
         "Tag": "DEF Path 2",
         "BlockedTag": "DEF Path 2",
         "gold": 200,
@@ -1204,9 +1178,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Protector Lord": {
         "category": "tank",
-        "PreReq": [
-            ""
-        ],
+        "PreReq": [],
         "Tag": "DEF Path 2",
         "BlockedTag": "DEF Path 2",
         "gold": 200,
@@ -1300,9 +1272,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Knight Lord": {
         "category": "tank",
-        "PreReq": [
-            ""
-        ],
+        "PreReq": [],
         "Tag": "DEF Path 2",
         "BlockedTag": "DEF Path 2",
         "gold": 200,
@@ -1400,9 +1370,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Inner Will 1": {
         "category": "tank",
-        "PreReq": [
-            ""
-        ],
+        "PreReq": [],
         "Tag": "",
         "BlockedTag": "",
         "gold": 50,
@@ -1423,9 +1391,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Inner Will 2": {
         "category": "tank",
-        "PreReq": [
-            ""
-        ],
+        "PreReq": [],
         "Tag": "",
         "BlockedTag": "",
         "gold": 50,
@@ -1446,9 +1412,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Inner Will 3": {
         "category": "tank",
-        "PreReq": [
-            ""
-        ],
+        "PreReq": [],
         "Tag": "",
         "BlockedTag": "",
         "gold": 50,
@@ -1469,9 +1433,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Hero's Will 1": {
         "category": "tank",
-        "PreReq": [
-            ""
-        ],
+        "PreReq": [],
         "Tag": "",
         "BlockedTag": "",
         "gold": 50,
@@ -1541,9 +1503,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Scorn 1": {
         "category": "tank",
-        "PreReq": [
-            ""
-        ],
+        "PreReq": [],
         "Tag": "",
         "BlockedTag": "",
         "gold": 50,
@@ -1611,9 +1571,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Aggression 1": {
         "category": "tank",
-        "PreReq": [
-            ""
-        ],
+        "PreReq": [],
         "Tag": "",
         "BlockedTag": "",
         "gold": 50,
@@ -1754,9 +1712,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Shield Hero": {
         "category": "tank",
-        "PreReq": [
-            ""
-        ],
+        "PreReq": [],
         "Tag": "DEF Path 3",
         "BlockedTag": "DEF Path 3",
         "gold": 200,
@@ -1846,9 +1802,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Prismatic Hero": {
         "category": "tank",
-        "PreReq": [
-            ""
-        ],
+        "PreReq": [],
         "Tag": "DEF Path 3",
         "BlockedTag": "DEF Path 3",
         "gold": 200,
@@ -1985,9 +1939,7 @@ const talent_data: Record<string, Talent> = {
     },
     "War Hero": {
         "category": "tank",
-        "PreReq": [
-            ""
-        ],
+        "PreReq": [],
         "Tag": "DEF Path 3",
         "BlockedTag": "DEF Path 3",
         "gold": 200,
@@ -2083,9 +2035,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Unbreaking Will 1": {
         "category": "tank",
-        "PreReq": [
-            ""
-        ],
+        "PreReq": [],
         "Tag": "",
         "BlockedTag": "",
         "gold": 50,
@@ -2156,9 +2106,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Demigod's Blood 1": {
         "category": "tank",
-        "PreReq": [
-            ""
-        ],
+        "PreReq": [],
         "Tag": "",
         "BlockedTag": "",
         "gold": 50,
@@ -2228,9 +2176,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Mockery 1": {
         "category": "tank",
-        "PreReq": [
-            ""
-        ],
+        "PreReq": [],
         "Tag": "",
         "BlockedTag": "",
         "gold": 50,
@@ -2298,9 +2244,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Pressure 1": {
         "category": "tank",
-        "PreReq": [
-            ""
-        ],
+        "PreReq": [],
         "Tag": "",
         "BlockedTag": "",
         "gold": 50,
@@ -2367,9 +2311,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Paragon of Life": {
         "category": "tank",
-        "PreReq": [
-            ""
-        ],
+        "PreReq": [],
         "Tag": "DEF Path 4",
         "BlockedTag": "DEF Path 4",
         "gold": 200,
@@ -2432,9 +2374,6 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10% Physical Resist",
         "stats": {
-            "Slash Res%": 10,
-            "Pierce Res%": 10,
-            "Blunt Res%": 10,
             "Phys Res%": 10
         },
         "conversions": []
@@ -2464,9 +2403,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Paragon of War": {
         "category": "tank",
-        "PreReq": [
-            ""
-        ],
+        "PreReq": [],
         "Tag": "DEF Path 4",
         "BlockedTag": "DEF Path 4",
         "gold": 200,
@@ -2562,9 +2499,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Paragon of Courage": {
         "category": "tank",
-        "PreReq": [
-            ""
-        ],
+        "PreReq": [],
         "Tag": "DEF Path 4",
         "BlockedTag": "DEF Path 4",
         "gold": 200,
@@ -2659,9 +2594,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Heimdall's Blessing 1": {
         "category": "tank",
-        "PreReq": [
-            ""
-        ],
+        "PreReq": [],
         "Tag": "",
         "BlockedTag": "",
         "gold": 50,
@@ -2734,9 +2667,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Vidar's Blessing 1": {
         "category": "tank",
-        "PreReq": [
-            ""
-        ],
+        "PreReq": [],
         "Tag": "",
         "BlockedTag": "",
         "gold": 50,
@@ -2809,9 +2740,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Bragi's Blessing 1": {
         "category": "tank",
-        "PreReq": [
-            ""
-        ],
+        "PreReq": [],
         "Tag": "",
         "BlockedTag": "",
         "gold": 50,
@@ -2879,9 +2808,7 @@ const talent_data: Record<string, Talent> = {
     },
     "God of Eternity": {
         "category": "tank",
-        "PreReq": [
-            ""
-        ],
+        "PreReq": [],
         "Tag": "DEF Path 5",
         "BlockedTag": "DEF Path 5",
         "gold": 200,
@@ -2974,9 +2901,7 @@ const talent_data: Record<string, Talent> = {
     },
     "God of Vengeance": {
         "category": "tank",
-        "PreReq": [
-            ""
-        ],
+        "PreReq": [],
         "Tag": "DEF Path 5",
         "BlockedTag": "DEF Path 5",
         "gold": 200,
@@ -3072,9 +2997,7 @@ const talent_data: Record<string, Talent> = {
     },
     "God of Protection": {
         "category": "tank",
-        "PreReq": [
-            ""
-        ],
+        "PreReq": [],
         "Tag": "DEF Path 5",
         "BlockedTag": "DEF Path 5",
         "gold": 200,
@@ -3169,9 +3092,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Saga of Hercules 1": {
         "category": "tank",
-        "PreReq": [
-            ""
-        ],
+        "PreReq": [],
         "Tag": "",
         "BlockedTag": "",
         "gold": 75,
@@ -3241,9 +3162,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Saga of Ajax 1": {
         "category": "tank",
-        "PreReq": [
-            ""
-        ],
+        "PreReq": [],
         "Tag": "",
         "BlockedTag": "",
         "gold": 75,
@@ -3316,9 +3235,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Saga of Theseus 1": {
         "category": "tank",
-        "PreReq": [
-            ""
-        ],
+        "PreReq": [],
         "Tag": "",
         "BlockedTag": "",
         "gold": 75,
@@ -3389,9 +3306,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Mark of Hephaestus": {
         "category": "tank",
-        "PreReq": [
-            ""
-        ],
+        "PreReq": [],
         "Tag": "DEF Path 6",
         "BlockedTag": "DEF Path 6",
         "gold": 300,
@@ -3480,18 +3395,13 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10% Physical Resist",
         "stats": {
-            "Slash Res%": 10,
-            "Pierce Res%": 10,
-            "Blunt Res%": 10,
             "Phys Res%": 10
         },
         "conversions": []
     },
     "Mark of Ares": {
         "category": "tank",
-        "PreReq": [
-            ""
-        ],
+        "PreReq": [],
         "Tag": "DEF Path 6",
         "BlockedTag": "DEF Path 6",
         "gold": 300,
@@ -3588,9 +3498,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Mark of Athena": {
         "category": "tank",
-        "PreReq": [
-            ""
-        ],
+        "PreReq": [],
         "Tag": "DEF Path 6",
         "BlockedTag": "DEF Path 6",
         "gold": 300,
@@ -3694,7 +3602,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 100,
+        "total_level": 0,
         "class_levels": {
             "tank_levels": 100,
             "warrior_levels": 0,
@@ -3719,7 +3627,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 100,
+        "total_level": 0,
         "class_levels": {
             "tank_levels": 100,
             "warrior_levels": 0,
@@ -3744,7 +3652,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 100,
+        "total_level": 0,
         "class_levels": {
             "tank_levels": 100,
             "warrior_levels": 0,
@@ -3769,7 +3677,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 100,
+        "total_level": 0,
         "class_levels": {
             "tank_levels": 100,
             "warrior_levels": 0,
@@ -3794,7 +3702,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 100,
+        "total_level": 0,
         "class_levels": {
             "tank_levels": 100,
             "warrior_levels": 0,
@@ -3819,7 +3727,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 100,
+        "total_level": 0,
         "class_levels": {
             "tank_levels": 100,
             "warrior_levels": 0,
@@ -3830,7 +3738,6 @@ const talent_data: Record<string, Talent> = {
         "stats": {
             "DEF%": 10,
             "HEAL%": 10,
-            "Global HEAL%": 2,
             "Heal Effect%": 2
         },
         "conversions": []
@@ -3845,7 +3752,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 100,
+        "total_level": 0,
         "class_levels": {
             "tank_levels": 100,
             "warrior_levels": 0,
@@ -3856,7 +3763,6 @@ const talent_data: Record<string, Talent> = {
         "stats": {
             "DEF%": 10,
             "HEAL%": 10,
-            "Global HEAL%": 2,
             "Heal Effect%": 2
         },
         "conversions": []
@@ -3871,7 +3777,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 100,
+        "total_level": 0,
         "class_levels": {
             "tank_levels": 100,
             "warrior_levels": 0,
@@ -3881,7 +3787,6 @@ const talent_data: Record<string, Talent> = {
         "description": "+15% DEF, +2% Global Heal Effect, +1% HP Regen Rate",
         "stats": {
             "DEF%": 15,
-            "Global HEAL%": 2,
             "HP Regen%": 1,
             "Heal Effect%": 2
         },
@@ -3897,7 +3802,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 100,
+        "total_level": 0,
         "class_levels": {
             "tank_levels": 100,
             "warrior_levels": 0,
@@ -3923,7 +3828,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 100,
+        "total_level": 0,
         "class_levels": {
             "tank_levels": 100,
             "warrior_levels": 0,
@@ -3948,7 +3853,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 100,
+        "total_level": 0,
         "class_levels": {
             "tank_levels": 100,
             "warrior_levels": 0,
@@ -3973,7 +3878,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 100,
+        "total_level": 0,
         "class_levels": {
             "tank_levels": 100,
             "warrior_levels": 0,
@@ -4800,7 +4705,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 400,
         "exp": 15000,
         "tp_spent": 101,
-        "total_level": 200,
+        "total_level": 0,
         "class_levels": {
             "tank_levels": 200,
             "warrior_levels": 0,
@@ -4826,7 +4731,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 425,
         "exp": 16000,
         "tp_spent": 101,
-        "total_level": 200,
+        "total_level": 0,
         "class_levels": {
             "tank_levels": 200,
             "warrior_levels": 0,
@@ -4852,7 +4757,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 450,
         "exp": 17000,
         "tp_spent": 101,
-        "total_level": 200,
+        "total_level": 0,
         "class_levels": {
             "tank_levels": 200,
             "warrior_levels": 0,
@@ -4877,7 +4782,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 400,
         "exp": 15000,
         "tp_spent": 101,
-        "total_level": 200,
+        "total_level": 0,
         "class_levels": {
             "tank_levels": 200,
             "warrior_levels": 0,
@@ -4908,7 +4813,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 425,
         "exp": 16000,
         "tp_spent": 101,
-        "total_level": 200,
+        "total_level": 0,
         "class_levels": {
             "tank_levels": 200,
             "warrior_levels": 0,
@@ -4939,7 +4844,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 450,
         "exp": 17000,
         "tp_spent": 101,
-        "total_level": 200,
+        "total_level": 0,
         "class_levels": {
             "tank_levels": 200,
             "warrior_levels": 0,
@@ -4969,7 +4874,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 400,
         "exp": 15000,
         "tp_spent": 101,
-        "total_level": 200,
+        "total_level": 0,
         "class_levels": {
             "tank_levels": 200,
             "warrior_levels": 0,
@@ -4995,7 +4900,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 425,
         "exp": 16000,
         "tp_spent": 101,
-        "total_level": 200,
+        "total_level": 0,
         "class_levels": {
             "tank_levels": 200,
             "warrior_levels": 0,
@@ -5021,7 +4926,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 450,
         "exp": 17000,
         "tp_spent": 101,
-        "total_level": 200,
+        "total_level": 0,
         "class_levels": {
             "tank_levels": 200,
             "warrior_levels": 0,
@@ -5046,7 +4951,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 500,
         "exp": 18000,
         "tp_spent": 101,
-        "total_level": 200,
+        "total_level": 0,
         "class_levels": {
             "tank_levels": 200,
             "warrior_levels": 0,
@@ -5071,7 +4976,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 500,
         "exp": 18000,
         "tp_spent": 101,
-        "total_level": 200,
+        "total_level": 0,
         "class_levels": {
             "tank_levels": 200,
             "warrior_levels": 0,
@@ -5096,7 +5001,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 500,
         "exp": 18000,
         "tp_spent": 101,
-        "total_level": 200,
+        "total_level": 0,
         "class_levels": {
             "tank_levels": 200,
             "warrior_levels": 0,
@@ -5114,9 +5019,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Resolve 1": {
         "category": "warrior",
-        "PreReq": [
-            ""
-        ],
+        "PreReq": [],
         "Tag": "",
         "BlockedTag": "",
         "gold": 25,
@@ -5184,9 +5087,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Combat Training 1": {
         "category": "warrior",
-        "PreReq": [
-            ""
-        ],
+        "PreReq": [],
         "Tag": "",
         "BlockedTag": "",
         "gold": 25,
@@ -5253,9 +5154,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Strength Training 1": {
         "category": "warrior",
-        "PreReq": [
-            ""
-        ],
+        "PreReq": [],
         "Tag": "",
         "BlockedTag": "",
         "gold": 25,
@@ -5322,9 +5221,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Warrior Spirit 1": {
         "category": "warrior",
-        "PreReq": [
-            ""
-        ],
+        "PreReq": [],
         "Tag": "",
         "BlockedTag": "",
         "gold": 40,
@@ -5394,9 +5291,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Combat Mastery 1": {
         "category": "warrior",
-        "PreReq": [
-            ""
-        ],
+        "PreReq": [],
         "Tag": "",
         "BlockedTag": "",
         "gold": 40,
@@ -5534,9 +5429,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Path of the Archer": {
         "category": "warrior",
-        "PreReq": [
-            ""
-        ],
+        "PreReq": [],
         "Tag": "ATK Path 1",
         "BlockedTag": "ATK Path 1",
         "gold": 200,
@@ -5630,9 +5523,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Path of the Sword": {
         "category": "warrior",
-        "PreReq": [
-            ""
-        ],
+        "PreReq": [],
         "Tag": "ATK Path 1",
         "BlockedTag": "ATK Path 1",
         "gold": 200,
@@ -5722,9 +5613,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Path of the Lance": {
         "category": "warrior",
-        "PreReq": [
-            ""
-        ],
+        "PreReq": [],
         "Tag": "ATK Path 1",
         "BlockedTag": "ATK Path 1",
         "gold": 200,
@@ -5814,9 +5703,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Path of the Hammer": {
         "category": "warrior",
-        "PreReq": [
-            ""
-        ],
+        "PreReq": [],
         "Tag": "ATK Path 1",
         "BlockedTag": "ATK Path 1",
         "gold": 200,
@@ -5906,9 +5793,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Path of the Fist": {
         "category": "warrior",
-        "PreReq": [
-            ""
-        ],
+        "PreReq": [],
         "Tag": "ATK Path 1",
         "BlockedTag": "ATK Path 1",
         "gold": 200,
@@ -6002,9 +5887,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Path of the Dagger": {
         "category": "warrior",
-        "PreReq": [
-            ""
-        ],
+        "PreReq": [],
         "Tag": "ATK Path 1",
         "BlockedTag": "ATK Path 1",
         "gold": 200,
@@ -6089,10 +5972,11 @@ const talent_data: Record<string, Talent> = {
             "caster_levels": 0,
             "healer_levels": 0
         },
-        "description": "+2% Slash Damage, +2% Crit Chance",
+        "description": "+2% Slash Damage, +2% Pierce Damage, +2% Crit Chance",
         "stats": {
             "Crit Chance%": 2,
-            "Slash%": 2
+            "Slash%": 2,
+            "Pierce%": 2
         },
         "conversions": []
     },
@@ -6741,9 +6625,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Weakpoints 1": {
         "category": "warrior",
-        "PreReq": [
-            ""
-        ],
+        "PreReq": [],
         "Tag": "",
         "BlockedTag": "",
         "gold": 50,
@@ -6810,9 +6692,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Hero's Strength 1": {
         "category": "warrior",
-        "PreReq": [
-            ""
-        ],
+        "PreReq": [],
         "Tag": "",
         "BlockedTag": "",
         "gold": 50,
@@ -6879,9 +6759,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Inner Spirit 1": {
         "category": "warrior",
-        "PreReq": [
-            ""
-        ],
+        "PreReq": [],
         "Tag": "",
         "BlockedTag": "",
         "gold": 50,
@@ -6902,9 +6780,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Inner Spirit 2": {
         "category": "warrior",
-        "PreReq": [
-            ""
-        ],
+        "PreReq": [],
         "Tag": "",
         "BlockedTag": "",
         "gold": 50,
@@ -6925,9 +6801,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Inner Spirit 3": {
         "category": "warrior",
-        "PreReq": [
-            ""
-        ],
+        "PreReq": [],
         "Tag": "",
         "BlockedTag": "",
         "gold": 50,
@@ -6948,9 +6822,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Critical Exploit 1": {
         "category": "warrior",
-        "PreReq": [
-            ""
-        ],
+        "PreReq": [],
         "Tag": "",
         "BlockedTag": "",
         "gold": 50,
@@ -7035,10 +6907,10 @@ const talent_data: Record<string, Talent> = {
             "caster_levels": 0,
             "healer_levels": 0
         },
-        "description": "+15% Pierce Damage, +25% Crit DMG, +5% ATK",
+        "description": "+15% Pierce Damage, +25% Crit DMG, +15% ATK",
         "stats": {
             "Crit DMG%": 25,
-            "ATK%": 5,
+            "ATK%": 15,
             "Pierce%": 15
         },
         "conversions": []
@@ -7601,9 +7473,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Penetration 1": {
         "category": "warrior",
-        "PreReq": [
-            ""
-        ],
+        "PreReq": [],
         "Tag": "",
         "BlockedTag": "",
         "gold": 50,
@@ -7670,9 +7540,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Demigod's Strength 1": {
         "category": "warrior",
-        "PreReq": [
-            ""
-        ],
+        "PreReq": [],
         "Tag": "",
         "BlockedTag": "",
         "gold": 50,
@@ -7739,9 +7607,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Heroic Spirit 1": {
         "category": "warrior",
-        "PreReq": [
-            ""
-        ],
+        "PreReq": [],
         "Tag": "",
         "BlockedTag": "",
         "gold": 50,
@@ -8414,9 +8280,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Tyr's Blessing 1": {
         "category": "warrior",
-        "PreReq": [
-            ""
-        ],
+        "PreReq": [],
         "Tag": "",
         "BlockedTag": "",
         "gold": 50,
@@ -8431,9 +8295,6 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10% Physical Damage",
         "stats": {
-            "Slash%": 10,
-            "Pierce%": 10,
-            "Blunt%": 10,
             "Phys%": 10
         },
         "conversions": []
@@ -8457,9 +8318,6 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10% Physical Damage",
         "stats": {
-            "Slash%": 10,
-            "Pierce%": 10,
-            "Blunt%": 10,
             "Phys%": 10
         },
         "conversions": []
@@ -8489,9 +8347,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Magni's Blessing 1": {
         "category": "warrior",
-        "PreReq": [
-            ""
-        ],
+        "PreReq": [],
         "Tag": "",
         "BlockedTag": "",
         "gold": 50,
@@ -8558,9 +8414,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Thor's Blessing 1": {
         "category": "warrior",
-        "PreReq": [
-            ""
-        ],
+        "PreReq": [],
         "Tag": "",
         "BlockedTag": "",
         "gold": 50,
@@ -9233,9 +9087,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Saga of Atlanta 1": {
         "category": "warrior",
-        "PreReq": [
-            ""
-        ],
+        "PreReq": [],
         "Tag": "",
         "BlockedTag": "",
         "gold": 75,
@@ -9250,9 +9102,6 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15% Physical Damage",
         "stats": {
-            "Slash%": 15,
-            "Pierce%": 15,
-            "Blunt%": 15,
             "Phys%": 15
         },
         "conversions": []
@@ -9276,9 +9125,6 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15% Physical Damage",
         "stats": {
-            "Slash%": 15,
-            "Pierce%": 15,
-            "Blunt%": 15,
             "Phys%": 15
         },
         "conversions": []
@@ -9308,9 +9154,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Saga of Achilles 1": {
         "category": "warrior",
-        "PreReq": [
-            ""
-        ],
+        "PreReq": [],
         "Tag": "",
         "BlockedTag": "",
         "gold": 75,
@@ -9377,9 +9221,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Saga of Odysseus 1": {
         "category": "warrior",
-        "PreReq": [
-            ""
-        ],
+        "PreReq": [],
         "Tag": "",
         "BlockedTag": "",
         "gold": 75,
@@ -10058,7 +9900,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 100,
+        "total_level": 0,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 100,
@@ -10083,7 +9925,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 100,
+        "total_level": 0,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 100,
@@ -10106,7 +9948,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 100,
+        "total_level": 0,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 100,
@@ -10130,7 +9972,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 100,
+        "total_level": 0,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 100,
@@ -10160,7 +10002,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 100,
+        "total_level": 0,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 100,
@@ -10185,7 +10027,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 100,
+        "total_level": 0,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 100,
@@ -10208,7 +10050,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 100,
+        "total_level": 0,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 100,
@@ -10232,7 +10074,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 100,
+        "total_level": 0,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 100,
@@ -10256,7 +10098,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 100,
+        "total_level": 0,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 100,
@@ -10281,7 +10123,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 100,
+        "total_level": 0,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 100,
@@ -10304,7 +10146,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 100,
+        "total_level": 0,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 100,
@@ -10328,7 +10170,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 100,
+        "total_level": 0,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 100,
@@ -10351,7 +10193,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 100,
+        "total_level": 0,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 100,
@@ -10376,7 +10218,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 100,
+        "total_level": 0,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 100,
@@ -10399,7 +10241,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 100,
+        "total_level": 0,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 100,
@@ -10423,7 +10265,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 100,
+        "total_level": 0,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 100,
@@ -10448,7 +10290,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 100,
+        "total_level": 0,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 100,
@@ -10473,7 +10315,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 100,
+        "total_level": 0,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 100,
@@ -10496,7 +10338,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 100,
+        "total_level": 0,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 100,
@@ -10520,7 +10362,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 100,
+        "total_level": 0,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 100,
@@ -10543,7 +10385,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 100,
+        "total_level": 0,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 100,
@@ -10568,7 +10410,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 100,
+        "total_level": 0,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 100,
@@ -10592,7 +10434,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 100,
+        "total_level": 0,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 100,
@@ -10616,7 +10458,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 100,
+        "total_level": 0,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 100,
@@ -10634,7 +10476,7 @@ const talent_data: Record<string, Talent> = {
     "Legend of Nuada 1": {
         "category": "warrior",
         "PreReq": [
-            ""
+            "DeathGodBlessing"
         ],
         "Tag": "",
         "BlockedTag": "",
@@ -10658,7 +10500,8 @@ const talent_data: Record<string, Talent> = {
     "Legend of Nuada 2": {
         "category": "warrior",
         "PreReq": [
-            "Legend of Nuada 1"
+            "Legend of Nuada 1",
+            "DeathGodBlessing"
         ],
         "Tag": "",
         "BlockedTag": "",
@@ -10682,9 +10525,10 @@ const talent_data: Record<string, Talent> = {
     "Legacy of Fragarach": {
         "category": "warrior",
         "PreReq": [
-            "Legend of Nuada 2"
+            "Legend of Nuada 2",
+            "DeathGodBlessing"
         ],
-        "Tag": "",
+        "Tag": "War125",
         "BlockedTag": "",
         "gold": 300,
         "exp": 12500,
@@ -10707,7 +10551,7 @@ const talent_data: Record<string, Talent> = {
     "Saga of Brynhildr 1": {
         "category": "warrior",
         "PreReq": [
-            ""
+            "DeathGodBlessing"
         ],
         "Tag": "",
         "BlockedTag": "",
@@ -10731,7 +10575,8 @@ const talent_data: Record<string, Talent> = {
     "Saga of Brynhildr 2": {
         "category": "warrior",
         "PreReq": [
-            "Saga of Brynhildr 1"
+            "Saga of Brynhildr 1",
+            "DeathGodBlessing"
         ],
         "Tag": "",
         "BlockedTag": "",
@@ -10755,9 +10600,10 @@ const talent_data: Record<string, Talent> = {
     "Legacy of Gram": {
         "category": "warrior",
         "PreReq": [
-            "Saga of Brynhildr 2"
+            "Saga of Brynhildr 2",
+            "DeathGodBlessing"
         ],
-        "Tag": "",
+        "Tag": "War125",
         "BlockedTag": "",
         "gold": 300,
         "exp": 12500,
@@ -10779,7 +10625,7 @@ const talent_data: Record<string, Talent> = {
     "Epic of Jason 1": {
         "category": "warrior",
         "PreReq": [
-            ""
+            "DeathGodBlessing"
         ],
         "Tag": "",
         "BlockedTag": "",
@@ -10803,7 +10649,8 @@ const talent_data: Record<string, Talent> = {
     "Epic of Jason 2": {
         "category": "warrior",
         "PreReq": [
-            "Epic of Jason 1"
+            "Epic of Jason 1",
+            "DeathGodBlessing"
         ],
         "Tag": "",
         "BlockedTag": "",
@@ -10827,9 +10674,10 @@ const talent_data: Record<string, Talent> = {
     "Dioskouroi's Dance": {
         "category": "warrior",
         "PreReq": [
-            "Epic of Jason 2"
+            "Epic of Jason 2",
+            "DeathGodBlessing"
         ],
-        "Tag": "",
+        "Tag": "War125",
         "BlockedTag": "",
         "gold": 300,
         "exp": 12500,
@@ -11468,7 +11316,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 400,
         "exp": 15000,
         "tp_spent": 101,
-        "total_level": 200,
+        "total_level": 0,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 200,
@@ -11494,7 +11342,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 425,
         "exp": 16000,
         "tp_spent": 101,
-        "total_level": 200,
+        "total_level": 0,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 200,
@@ -11520,7 +11368,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 450,
         "exp": 17000,
         "tp_spent": 101,
-        "total_level": 200,
+        "total_level": 0,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 200,
@@ -11545,7 +11393,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 400,
         "exp": 15000,
         "tp_spent": 101,
-        "total_level": 200,
+        "total_level": 0,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 200,
@@ -11570,7 +11418,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 425,
         "exp": 16000,
         "tp_spent": 101,
-        "total_level": 200,
+        "total_level": 0,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 200,
@@ -11595,7 +11443,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 450,
         "exp": 17000,
         "tp_spent": 101,
-        "total_level": 200,
+        "total_level": 0,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 200,
@@ -11619,7 +11467,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 400,
         "exp": 15000,
         "tp_spent": 101,
-        "total_level": 200,
+        "total_level": 0,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 200,
@@ -11645,7 +11493,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 425,
         "exp": 16000,
         "tp_spent": 101,
-        "total_level": 200,
+        "total_level": 0,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 200,
@@ -11671,7 +11519,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 450,
         "exp": 17000,
         "tp_spent": 101,
-        "total_level": 200,
+        "total_level": 0,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 200,
@@ -11696,7 +11544,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 500,
         "exp": 18000,
         "tp_spent": 101,
-        "total_level": 200,
+        "total_level": 0,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 200,
@@ -11720,7 +11568,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 500,
         "exp": 18000,
         "tp_spent": 101,
-        "total_level": 200,
+        "total_level": 0,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 200,
@@ -11744,7 +11592,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 500,
         "exp": 18000,
         "tp_spent": 101,
-        "total_level": 200,
+        "total_level": 0,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 200,
@@ -11762,9 +11610,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Arcane Study 1": {
         "category": "caster",
-        "PreReq": [
-            ""
-        ],
+        "PreReq": [],
         "Tag": "",
         "BlockedTag": "",
         "gold": 25,
@@ -11831,9 +11677,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Divine Study 1": {
         "category": "caster",
-        "PreReq": [
-            ""
-        ],
+        "PreReq": [],
         "Tag": "",
         "BlockedTag": "",
         "gold": 25,
@@ -11904,9 +11748,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Mage Body Training 1": {
         "category": "caster",
-        "PreReq": [
-            ""
-        ],
+        "PreReq": [],
         "Tag": "",
         "BlockedTag": "",
         "gold": 25,
@@ -11976,14 +11818,12 @@ const talent_data: Record<string, Talent> = {
     },
     "Arcane Mastery 1": {
         "category": "caster",
-        "PreReq": [
-            ""
-        ],
+        "PreReq": [],
         "Tag": "",
         "BlockedTag": "",
         "gold": 40,
         "exp": 100,
-        "tp_spent": 0,
+        "tp_spent": 2,
         "total_level": 8,
         "class_levels": {
             "tank_levels": 0,
@@ -12006,7 +11846,7 @@ const talent_data: Record<string, Talent> = {
         "BlockedTag": "",
         "gold": 40,
         "exp": 100,
-        "tp_spent": 0,
+        "tp_spent": 2,
         "total_level": 8,
         "class_levels": {
             "tank_levels": 0,
@@ -12029,7 +11869,7 @@ const talent_data: Record<string, Talent> = {
         "BlockedTag": "",
         "gold": 40,
         "exp": 100,
-        "tp_spent": 0,
+        "tp_spent": 2,
         "total_level": 8,
         "class_levels": {
             "tank_levels": 0,
@@ -12045,9 +11885,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Divine Mastery 1": {
         "category": "caster",
-        "PreReq": [
-            ""
-        ],
+        "PreReq": [],
         "Tag": "",
         "BlockedTag": "",
         "gold": 40,
@@ -12190,9 +12028,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Path of the Arcane": {
         "category": "caster",
-        "PreReq": [
-            ""
-        ],
+        "PreReq": [],
         "Tag": "MATK Path 1",
         "BlockedTag": "MATK Path 1",
         "gold": 200,
@@ -12282,9 +12118,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Path of the Divine": {
         "category": "caster",
-        "PreReq": [
-            ""
-        ],
+        "PreReq": [],
         "Tag": "MATK Path 1",
         "BlockedTag": "MATK Path 1",
         "gold": 200,
@@ -12378,9 +12212,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Path of the Shadow": {
         "category": "caster",
-        "PreReq": [
-            ""
-        ],
+        "PreReq": [],
         "Tag": "MATK Path 1",
         "BlockedTag": "MATK Path 1",
         "gold": 200,
@@ -12547,9 +12379,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Path of the Elements": {
         "category": "caster",
-        "PreReq": [
-            ""
-        ],
+        "PreReq": [],
         "Tag": "MATK Path 2",
         "BlockedTag": "MATK Path 2",
         "gold": 200,
@@ -12884,7 +12714,7 @@ const talent_data: Record<string, Talent> = {
             "caster_levels": 15,
             "healer_levels": 0
         },
-        "description": "+4% Eath Damage",
+        "description": "+4% Earth Damage",
         "stats": {
             "Earth%": 4
         },
@@ -12907,7 +12737,7 @@ const talent_data: Record<string, Talent> = {
             "caster_levels": 15,
             "healer_levels": 0
         },
-        "description": "+8% Eath Damage",
+        "description": "+8% Earth Damage",
         "stats": {
             "Earth%": 8
         },
@@ -12923,7 +12753,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 50,
         "tp_spent": 4,
-        "total_level": 15,
+        "total_level": 0,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
@@ -12946,7 +12776,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 150,
         "tp_spent": 4,
-        "total_level": 15,
+        "total_level": 0,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
@@ -12969,7 +12799,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 150,
         "tp_spent": 4,
-        "total_level": 15,
+        "total_level": 0,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
@@ -12984,9 +12814,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Path of Nature": {
         "category": "caster",
-        "PreReq": [
-            ""
-        ],
+        "PreReq": [],
         "Tag": "MATK Path 2",
         "BlockedTag": "MATK Path 2",
         "gold": 200,
@@ -13084,9 +12912,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Path of the Dead": {
         "category": "caster",
-        "PreReq": [
-            ""
-        ],
+        "PreReq": [],
         "Tag": "MATK Path 2",
         "BlockedTag": "MATK Path 2",
         "gold": 200,
@@ -13180,9 +13006,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Magic Flow 1": {
         "category": "caster",
-        "PreReq": [
-            ""
-        ],
+        "PreReq": [],
         "Tag": "",
         "BlockedTag": "",
         "gold": 50,
@@ -13195,7 +13019,7 @@ const talent_data: Record<string, Talent> = {
             "caster_levels": 30,
             "healer_levels": 0
         },
-        "description": "+6% MATK, +2 MP +1% Crit Chance",
+        "description": "+6% MATK, +2 MP, +1% Crit Chance",
         "stats": {
             "Crit Chance%": 1,
             "MATK%": 6,
@@ -13255,9 +13079,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Mana Blood 1": {
         "category": "caster",
-        "PreReq": [
-            ""
-        ],
+        "PreReq": [],
         "Tag": "",
         "BlockedTag": "",
         "gold": 50,
@@ -13327,9 +13149,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Mana Catalyst 1": {
         "category": "caster",
-        "PreReq": [
-            ""
-        ],
+        "PreReq": [],
         "Tag": "",
         "BlockedTag": "",
         "gold": 50,
@@ -13402,9 +13222,7 @@ const talent_data: Record<string, Talent> = {
     },
     "The Reality": {
         "category": "caster",
-        "PreReq": [
-            ""
-        ],
+        "PreReq": [],
         "Tag": "MATK Path 3",
         "BlockedTag": "MATK Path 3",
         "gold": 200,
@@ -13500,9 +13318,7 @@ const talent_data: Record<string, Talent> = {
     },
     "The Essence": {
         "category": "caster",
-        "PreReq": [
-            ""
-        ],
+        "PreReq": [],
         "Tag": "MATK Path 3",
         "BlockedTag": "MATK Path 3",
         "gold": 200,
@@ -13598,9 +13414,7 @@ const talent_data: Record<string, Talent> = {
     },
     "The Soul": {
         "category": "caster",
-        "PreReq": [
-            ""
-        ],
+        "PreReq": [],
         "Tag": "MATK Path 3",
         "BlockedTag": "MATK Path 3",
         "gold": 200,
@@ -13696,9 +13510,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Sage Study 1": {
         "category": "caster",
-        "PreReq": [
-            ""
-        ],
+        "PreReq": [],
         "Tag": "",
         "BlockedTag": "",
         "gold": 50,
@@ -13768,9 +13580,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Demigod's Magic 1": {
         "category": "caster",
-        "PreReq": [
-            ""
-        ],
+        "PreReq": [],
         "Tag": "",
         "BlockedTag": "",
         "gold": 50,
@@ -13843,9 +13653,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Elemental Sage": {
         "category": "caster",
-        "PreReq": [
-            ""
-        ],
+        "PreReq": [],
         "Tag": "MATK Path 4",
         "BlockedTag": "MATK Path 4",
         "gold": 200,
@@ -13941,9 +13749,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Spirit Sage": {
         "category": "caster",
-        "PreReq": [
-            ""
-        ],
+        "PreReq": [],
         "Tag": "MATK Path 4",
         "BlockedTag": "MATK Path 4",
         "gold": 200,
@@ -14039,9 +13845,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Life Sage": {
         "category": "caster",
-        "PreReq": [
-            ""
-        ],
+        "PreReq": [],
         "Tag": "MATK Path 4",
         "BlockedTag": "MATK Path 4",
         "gold": 200,
@@ -14136,9 +13940,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Odin's Blessing 1": {
         "category": "caster",
-        "PreReq": [
-            ""
-        ],
+        "PreReq": [],
         "Tag": "",
         "BlockedTag": "",
         "gold": 50,
@@ -14205,9 +14007,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Loki's Blessing 1": {
         "category": "caster",
-        "PreReq": [
-            ""
-        ],
+        "PreReq": [],
         "Tag": "",
         "BlockedTag": "",
         "gold": 50,
@@ -14277,9 +14077,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Hela's Blessing 1": {
         "category": "caster",
-        "PreReq": [
-            ""
-        ],
+        "PreReq": [],
         "Tag": "",
         "BlockedTag": "",
         "gold": 50,
@@ -14349,9 +14147,7 @@ const talent_data: Record<string, Talent> = {
     },
     "God of Nature": {
         "category": "caster",
-        "PreReq": [
-            ""
-        ],
+        "PreReq": [],
         "Tag": "MATK Path 5",
         "BlockedTag": "MATK Path 5",
         "gold": 200,
@@ -14447,9 +14243,7 @@ const talent_data: Record<string, Talent> = {
     },
     "God of Death": {
         "category": "caster",
-        "PreReq": [
-            ""
-        ],
+        "PreReq": [],
         "Tag": "MATK Path 5",
         "BlockedTag": "MATK Path 5",
         "gold": 200,
@@ -14543,9 +14337,7 @@ const talent_data: Record<string, Talent> = {
     },
     "God of Light": {
         "category": "caster",
-        "PreReq": [
-            ""
-        ],
+        "PreReq": [],
         "Tag": "MATK Path 5",
         "BlockedTag": "MATK Path 5",
         "gold": 200,
@@ -14640,9 +14432,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Saga of Circe 1": {
         "category": "caster",
-        "PreReq": [
-            ""
-        ],
+        "PreReq": [],
         "Tag": "",
         "BlockedTag": "",
         "gold": 75,
@@ -14709,9 +14499,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Saga of Pythagoras 1": {
         "category": "caster",
-        "PreReq": [
-            ""
-        ],
+        "PreReq": [],
         "Tag": "",
         "BlockedTag": "",
         "gold": 75,
@@ -14781,9 +14569,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Saga of Medea 1": {
         "category": "caster",
-        "PreReq": [
-            ""
-        ],
+        "PreReq": [],
         "Tag": "",
         "BlockedTag": "",
         "gold": 75,
@@ -14853,9 +14639,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Blessing of Olympus": {
         "category": "caster",
-        "PreReq": [
-            ""
-        ],
+        "PreReq": [],
         "Tag": "MATK Path 6",
         "BlockedTag": "MATK Path 6",
         "gold": 300,
@@ -14951,9 +14735,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Blessing of Hades": {
         "category": "caster",
-        "PreReq": [
-            ""
-        ],
+        "PreReq": [],
         "Tag": "MATK Path 6",
         "BlockedTag": "MATK Path 6",
         "gold": 300,
@@ -15047,9 +14829,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Blessing of the Titans": {
         "category": "caster",
-        "PreReq": [
-            ""
-        ],
+        "PreReq": [],
         "Tag": "MATK Path 6",
         "BlockedTag": "MATK Path 6",
         "gold": 300,
@@ -15150,7 +14930,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 100,
+        "total_level": 0,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
@@ -15159,20 +14939,8 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+5% Elemental Penetration, +15% Elemental Damage",
         "stats": {
-            "Fire%": 15,
-            "Water%": 15,
-            "Lightning%": 15,
-            "Wind%": 15,
-            "Earth%": 15,
-            "Toxic%": 15,
-            "Fire Pen%": 5,
-            "Water Pen%": 5,
-            "Lightning Pen%": 5,
-            "Wind Pen%": 5,
-            "Earth Pen%": 5,
-            "Toxic Pen%": 5,
-            "Elemental%": 15,
-            "Elemental Pen%": 5
+            "Elemental Pen%": 5,
+            "Elemental%": 15
         },
         "conversions": []
     },
@@ -15186,7 +14954,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 100,
+        "total_level": 0,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
@@ -15210,7 +14978,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 100,
+        "total_level": 0,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
@@ -15234,7 +15002,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 100,
+        "total_level": 0,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
@@ -15259,7 +15027,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 100,
+        "total_level": 0,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
@@ -15283,7 +15051,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 100,
+        "total_level": 0,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
@@ -15307,7 +15075,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 100,
+        "total_level": 0,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
@@ -15332,7 +15100,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 100,
+        "total_level": 0,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
@@ -15356,7 +15124,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 100,
+        "total_level": 0,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
@@ -15380,7 +15148,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 100,
+        "total_level": 0,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
@@ -15405,7 +15173,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 100,
+        "total_level": 0,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
@@ -15429,7 +15197,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 100,
+        "total_level": 0,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
@@ -15453,7 +15221,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 100,
+        "total_level": 0,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
@@ -15478,7 +15246,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 100,
+        "total_level": 0,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
@@ -15502,7 +15270,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 100,
+        "total_level": 0,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
@@ -15526,7 +15294,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 100,
+        "total_level": 0,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
@@ -15551,7 +15319,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 100,
+        "total_level": 0,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
@@ -15575,7 +15343,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 100,
+        "total_level": 0,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
@@ -15599,7 +15367,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 100,
+        "total_level": 0,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
@@ -15616,15 +15384,13 @@ const talent_data: Record<string, Talent> = {
     },
     "Soul Ascendency": {
         "category": "caster",
-        "PreReq": [
-            ""
-        ],
+        "PreReq": [],
         "Tag": "CasterAscend",
         "BlockedTag": "CasterAscend",
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 100,
+        "total_level": 0,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
@@ -15633,10 +15399,6 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+5% Divine Penetration, +25% Divine Damage",
         "stats": {
-            "Neg%": 25,
-            "Holy%": 25,
-            "Neg Pen%": 5,
-            "Holy Pen%": 5,
             "Divine%": 25,
             "Divine Pen%": 5
         },
@@ -15652,7 +15414,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 100,
+        "total_level": 0,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
@@ -15676,7 +15438,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 100,
+        "total_level": 0,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
@@ -15700,7 +15462,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 100,
+        "total_level": 0,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
@@ -15725,7 +15487,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 100,
+        "total_level": 0,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
@@ -15750,7 +15512,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 100,
+        "total_level": 0,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
@@ -15775,7 +15537,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 100,
+        "total_level": 0,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
@@ -15792,15 +15554,13 @@ const talent_data: Record<string, Talent> = {
     },
     "Arcane Ascendency": {
         "category": "caster",
-        "PreReq": [
-            ""
-        ],
+        "PreReq": [],
         "Tag": "CasterAscend",
         "BlockedTag": "CasterAscend",
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 100,
+        "total_level": 0,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
@@ -15825,7 +15585,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 100,
+        "total_level": 0,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
@@ -15850,7 +15610,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 100,
+        "total_level": 0,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
@@ -15875,7 +15635,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 100,
+        "total_level": 0,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
@@ -15893,7 +15653,7 @@ const talent_data: Record<string, Talent> = {
     "Studies of Trismegistus 1": {
         "category": "caster",
         "PreReq": [
-            ""
+            "DeathGodBlessing"
         ],
         "Tag": "",
         "BlockedTag": "",
@@ -15917,7 +15677,8 @@ const talent_data: Record<string, Talent> = {
     "Studies of Trismegistus 2": {
         "category": "caster",
         "PreReq": [
-            "Studies of Trismegistus 1"
+            "Studies of Trismegistus 1",
+            "DeathGodBlessing"
         ],
         "Tag": "",
         "BlockedTag": "",
@@ -15941,9 +15702,10 @@ const talent_data: Record<string, Talent> = {
     "Lore of the Corpus": {
         "category": "caster",
         "PreReq": [
-            "Studies of Trismegistus 2"
+            "Studies of Trismegistus 2",
+            "DeathGodBlessing"
         ],
-        "Tag": "",
+        "Tag": "Cast125",
         "BlockedTag": "",
         "gold": 300,
         "exp": 12500,
@@ -15966,7 +15728,7 @@ const talent_data: Record<string, Talent> = {
     "Buddha's Blessing 1": {
         "category": "caster",
         "PreReq": [
-            ""
+            "DeathGodBlessing"
         ],
         "Tag": "",
         "BlockedTag": "",
@@ -15990,7 +15752,8 @@ const talent_data: Record<string, Talent> = {
     "Buddha's Blessing 2": {
         "category": "caster",
         "PreReq": [
-            "Buddha's Blessing 1"
+            "Buddha's Blessing 1",
+            "DeathGodBlessing"
         ],
         "Tag": "",
         "BlockedTag": "",
@@ -16014,9 +15777,10 @@ const talent_data: Record<string, Talent> = {
     "Buddha's Enlightenment": {
         "category": "caster",
         "PreReq": [
-            "Buddha's Blessing 2"
+            "Buddha's Blessing 2",
+            "DeathGodBlessing"
         ],
-        "Tag": "",
+        "Tag": "Cast125",
         "BlockedTag": "",
         "gold": 300,
         "exp": 12500,
@@ -16038,7 +15802,7 @@ const talent_data: Record<string, Talent> = {
     "Damned Sorceries 1": {
         "category": "caster",
         "PreReq": [
-            ""
+            "DeathGodBlessing"
         ],
         "Tag": "",
         "BlockedTag": "",
@@ -16063,7 +15827,8 @@ const talent_data: Record<string, Talent> = {
     "Damned Sorceries 2": {
         "category": "caster",
         "PreReq": [
-            "Damned Sorceries 1"
+            "Damned Sorceries 1",
+            "DeathGodBlessing"
         ],
         "Tag": "",
         "BlockedTag": "",
@@ -16088,9 +15853,10 @@ const talent_data: Record<string, Talent> = {
     "Follies of Faustus": {
         "category": "caster",
         "PreReq": [
-            "Damned Sorceries 2"
+            "Damned Sorceries 2",
+            "DeathGodBlessing"
         ],
-        "Tag": "",
+        "Tag": "Cast125",
         "BlockedTag": "",
         "gold": 300,
         "exp": 12500,
@@ -16754,7 +16520,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 400,
         "exp": 15000,
         "tp_spent": 101,
-        "total_level": 200,
+        "total_level": 0,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
@@ -16780,7 +16546,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 425,
         "exp": 16000,
         "tp_spent": 101,
-        "total_level": 200,
+        "total_level": 0,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
@@ -16806,7 +16572,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 450,
         "exp": 17000,
         "tp_spent": 101,
-        "total_level": 200,
+        "total_level": 0,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
@@ -16831,7 +16597,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 400,
         "exp": 15000,
         "tp_spent": 101,
-        "total_level": 200,
+        "total_level": 0,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
@@ -16856,7 +16622,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 425,
         "exp": 16000,
         "tp_spent": 101,
-        "total_level": 200,
+        "total_level": 0,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
@@ -16881,7 +16647,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 450,
         "exp": 17000,
         "tp_spent": 101,
-        "total_level": 200,
+        "total_level": 0,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
@@ -16905,7 +16671,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 400,
         "exp": 15000,
         "tp_spent": 101,
-        "total_level": 200,
+        "total_level": 0,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
@@ -16931,7 +16697,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 425,
         "exp": 16000,
         "tp_spent": 101,
-        "total_level": 200,
+        "total_level": 0,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
@@ -16957,7 +16723,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 450,
         "exp": 17000,
         "tp_spent": 101,
-        "total_level": 200,
+        "total_level": 0,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
@@ -16982,7 +16748,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 500,
         "exp": 18000,
         "tp_spent": 101,
-        "total_level": 200,
+        "total_level": 0,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
@@ -17008,7 +16774,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 500,
         "exp": 18000,
         "tp_spent": 101,
-        "total_level": 200,
+        "total_level": 0,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
@@ -17033,7 +16799,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 500,
         "exp": 18000,
         "tp_spent": 101,
-        "total_level": 200,
+        "total_level": 0,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
@@ -17050,9 +16816,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Healing Study 1": {
         "category": "healer",
-        "PreReq": [
-            ""
-        ],
+        "PreReq": [],
         "Tag": "",
         "BlockedTag": "",
         "gold": 25,
@@ -17119,9 +16883,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Cleric Training 1": {
         "category": "healer",
-        "PreReq": [
-            ""
-        ],
+        "PreReq": [],
         "Tag": "",
         "BlockedTag": "",
         "gold": 25,
@@ -17191,9 +16953,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Magic Body Training 1": {
         "category": "healer",
-        "PreReq": [
-            ""
-        ],
+        "PreReq": [],
         "Tag": "",
         "BlockedTag": "",
         "gold": 25,
@@ -17263,9 +17023,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Heal Locus 1": {
         "category": "healer",
-        "PreReq": [
-            ""
-        ],
+        "PreReq": [],
         "Tag": "",
         "BlockedTag": "",
         "gold": 40,
@@ -17332,9 +17090,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Faith War 1": {
         "category": "healer",
-        "PreReq": [
-            ""
-        ],
+        "PreReq": [],
         "Tag": "",
         "BlockedTag": "",
         "gold": 40,
@@ -17479,9 +17235,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Path of the Healer": {
         "category": "healer",
-        "PreReq": [
-            ""
-        ],
+        "PreReq": [],
         "Tag": "Heal Path 1",
         "BlockedTag": "Heal Path 1",
         "gold": 200,
@@ -17571,9 +17325,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Path of the Guardian": {
         "category": "healer",
-        "PreReq": [
-            ""
-        ],
+        "PreReq": [],
         "Tag": "Heal Path 1",
         "BlockedTag": "Heal Path 1",
         "gold": 200,
@@ -17671,9 +17423,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Path of the Bishop": {
         "category": "healer",
-        "PreReq": [
-            ""
-        ],
+        "PreReq": [],
         "Tag": "Heal Path 1",
         "BlockedTag": "Heal Path 1",
         "gold": 200,
@@ -17845,9 +17595,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Life Saint": {
         "category": "healer",
-        "PreReq": [
-            ""
-        ],
+        "PreReq": [],
         "Tag": "Heal Path 2",
         "BlockedTag": "Heal Path 2",
         "gold": 200,
@@ -17937,9 +17685,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Protection Saint": {
         "category": "healer",
-        "PreReq": [
-            ""
-        ],
+        "PreReq": [],
         "Tag": "Heal Path 2",
         "BlockedTag": "Heal Path 2",
         "gold": 200,
@@ -18037,9 +17783,7 @@ const talent_data: Record<string, Talent> = {
     },
     "War Saint": {
         "category": "healer",
-        "PreReq": [
-            ""
-        ],
+        "PreReq": [],
         "Tag": "Heal Path 2",
         "BlockedTag": "Heal Path 2",
         "gold": 200,
@@ -18137,9 +17881,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Soul Care 1": {
         "category": "healer",
-        "PreReq": [
-            ""
-        ],
+        "PreReq": [],
         "Tag": "",
         "BlockedTag": "",
         "gold": 50,
@@ -18209,9 +17951,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Spirit Mastery 1": {
         "category": "healer",
-        "PreReq": [
-            ""
-        ],
+        "PreReq": [],
         "Tag": "",
         "BlockedTag": "",
         "gold": 50,
@@ -18281,9 +18021,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Soul Power 1": {
         "category": "healer",
-        "PreReq": [
-            ""
-        ],
+        "PreReq": [],
         "Tag": "",
         "BlockedTag": "",
         "gold": 50,
@@ -18354,9 +18092,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Life Weaver": {
         "category": "healer",
-        "PreReq": [
-            ""
-        ],
+        "PreReq": [],
         "Tag": "Heal Path 3",
         "BlockedTag": "Heal Path 3",
         "gold": 200,
@@ -18377,9 +18113,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Fate Weaver": {
         "category": "healer",
-        "PreReq": [
-            ""
-        ],
+        "PreReq": [],
         "Tag": "Heal Path 3",
         "BlockedTag": "Heal Path 3",
         "gold": 200,
@@ -18401,9 +18135,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Death Weaver": {
         "category": "healer",
-        "PreReq": [
-            ""
-        ],
+        "PreReq": [],
         "Tag": "Heal Path 3",
         "BlockedTag": "Heal Path 3",
         "gold": 200,
@@ -18635,9 +18367,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Spirit's Touch 1": {
         "category": "healer",
-        "PreReq": [
-            ""
-        ],
+        "PreReq": [],
         "Tag": "",
         "BlockedTag": "",
         "gold": 50,
@@ -18707,9 +18437,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Demigod's Spirit 1": {
         "category": "healer",
-        "PreReq": [
-            ""
-        ],
+        "PreReq": [],
         "Tag": "",
         "BlockedTag": "",
         "gold": 50,
@@ -18782,9 +18510,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Emissary of Life": {
         "category": "healer",
-        "PreReq": [
-            ""
-        ],
+        "PreReq": [],
         "Tag": "Heal Path 4",
         "BlockedTag": "Heal Path 4",
         "gold": 200,
@@ -18806,9 +18532,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Emissary of Fortune": {
         "category": "healer",
-        "PreReq": [
-            ""
-        ],
+        "PreReq": [],
         "Tag": "Heal Path 4",
         "BlockedTag": "Heal Path 4",
         "gold": 200,
@@ -18831,9 +18555,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Emissary of War": {
         "category": "healer",
-        "PreReq": [
-            ""
-        ],
+        "PreReq": [],
         "Tag": "Heal Path 4",
         "BlockedTag": "Heal Path 4",
         "gold": 200,
@@ -18881,7 +18603,7 @@ const talent_data: Record<string, Talent> = {
     "Fortune Vision 1": {
         "category": "healer",
         "PreReq": [
-            ""
+            "Heal Path 4"
         ],
         "Tag": "Heal4Tier1",
         "BlockedTag": "Heal4Tier1",
@@ -18906,7 +18628,7 @@ const talent_data: Record<string, Talent> = {
     "War Vision 1": {
         "category": "healer",
         "PreReq": [
-            ""
+            "Heal Path 4"
         ],
         "Tag": "Heal4Tier1",
         "BlockedTag": "Heal4Tier1",
@@ -19072,9 +18794,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Frigg's Blessing 1": {
         "category": "healer",
-        "PreReq": [
-            ""
-        ],
+        "PreReq": [],
         "Tag": "",
         "BlockedTag": "",
         "gold": 50,
@@ -19144,9 +18864,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Idun's Blessing 1": {
         "category": "healer",
-        "PreReq": [
-            ""
-        ],
+        "PreReq": [],
         "Tag": "",
         "BlockedTag": "",
         "gold": 50,
@@ -19216,9 +18934,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Freya's Blessing 1": {
         "category": "healer",
-        "PreReq": [
-            ""
-        ],
+        "PreReq": [],
         "Tag": "",
         "BlockedTag": "",
         "gold": 50,
@@ -19291,9 +19007,7 @@ const talent_data: Record<string, Talent> = {
     },
     "God of Life": {
         "category": "healer",
-        "PreReq": [
-            ""
-        ],
+        "PreReq": [],
         "Tag": "Heal Path 5",
         "BlockedTag": "Heal Path 5",
         "gold": 200,
@@ -19315,9 +19029,7 @@ const talent_data: Record<string, Talent> = {
     },
     "God of Fate": {
         "category": "healer",
-        "PreReq": [
-            ""
-        ],
+        "PreReq": [],
         "Tag": "Heal Path 5",
         "BlockedTag": "Heal Path 5",
         "gold": 200,
@@ -19340,9 +19052,7 @@ const talent_data: Record<string, Talent> = {
     },
     "God of Justice": {
         "category": "healer",
-        "PreReq": [
-            ""
-        ],
+        "PreReq": [],
         "Tag": "Heal Path 5",
         "BlockedTag": "Heal Path 5",
         "gold": 200,
@@ -19581,9 +19291,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Saga of Empedocles 1": {
         "category": "healer",
-        "PreReq": [
-            ""
-        ],
+        "PreReq": [],
         "Tag": "",
         "BlockedTag": "",
         "gold": 75,
@@ -19656,9 +19364,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Saga of Pandora 1": {
         "category": "healer",
-        "PreReq": [
-            ""
-        ],
+        "PreReq": [],
         "Tag": "",
         "BlockedTag": "",
         "gold": 75,
@@ -19731,9 +19437,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Saga of Orpheus 1": {
         "category": "healer",
-        "PreReq": [
-            ""
-        ],
+        "PreReq": [],
         "Tag": "",
         "BlockedTag": "",
         "gold": 75,
@@ -19806,9 +19510,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Mark of Apollo": {
         "category": "healer",
-        "PreReq": [
-            ""
-        ],
+        "PreReq": [],
         "Tag": "Heal Path 6",
         "BlockedTag": "Heal Path 6",
         "gold": 300,
@@ -19830,9 +19532,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Mark of Hades": {
         "category": "healer",
-        "PreReq": [
-            ""
-        ],
+        "PreReq": [],
         "Tag": "Heal Path 6",
         "BlockedTag": "Heal Path 6",
         "gold": 300,
@@ -19854,9 +19554,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Mark of Demeter": {
         "category": "healer",
-        "PreReq": [
-            ""
-        ],
+        "PreReq": [],
         "Tag": "Heal Path 6",
         "BlockedTag": "Heal Path 6",
         "gold": 300,
@@ -20097,15 +19795,13 @@ const talent_data: Record<string, Talent> = {
     },
     "Sanctified Legate": {
         "category": "healer",
-        "PreReq": [
-            ""
-        ],
+        "PreReq": [],
         "Tag": "HealAscend",
         "BlockedTag": "HealAscend",
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 100,
+        "total_level": 0,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
@@ -20115,22 +19811,19 @@ const talent_data: Record<string, Talent> = {
         "description": "+15% Heal, +5% Global Heal Effect",
         "stats": {
             "HEAL%": 15,
-            "Heal Effect%": 5,
-            "Global HEAL%": 5
+            "Heal Effect%": 5
         },
         "conversions": []
     },
     "Guardian Legate": {
         "category": "healer",
-        "PreReq": [
-            ""
-        ],
+        "PreReq": [],
         "Tag": "HealAscend",
         "BlockedTag": "HealAscend",
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 100,
+        "total_level": 0,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
@@ -20147,15 +19840,13 @@ const talent_data: Record<string, Talent> = {
     },
     "Inquisitor Legate": {
         "category": "healer",
-        "PreReq": [
-            ""
-        ],
+        "PreReq": [],
         "Tag": "HealAscend",
         "BlockedTag": "HealAscend",
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 100,
+        "total_level": 0,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
@@ -20179,7 +19870,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 100,
+        "total_level": 0,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
@@ -20202,7 +19893,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 100,
+        "total_level": 0,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
@@ -20227,7 +19918,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 100,
+        "total_level": 0,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
@@ -20251,7 +19942,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 100,
+        "total_level": 0,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
@@ -20262,7 +19953,6 @@ const talent_data: Record<string, Talent> = {
         "stats": {
             "Crit DMG%": 75,
             "Dmg%": -10,
-            "Global HEAL%": 5,
             "Heal Effect%": 5
         },
         "conversions": []
@@ -20277,7 +19967,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 100,
+        "total_level": 0,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
@@ -20300,7 +19990,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 100,
+        "total_level": 0,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
@@ -20309,8 +19999,6 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+8% Divine Penetration",
         "stats": {
-            "Neg Pen%": 8,
-            "Holy Pen%": 8,
             "Divine Pen%": 8
         },
         "conversions": []
@@ -20325,7 +20013,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 100,
+        "total_level": 0,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
@@ -20350,7 +20038,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 100,
+        "total_level": 0,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
@@ -20375,7 +20063,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 200,
         "exp": 7500,
         "tp_spent": 49,
-        "total_level": 100,
+        "total_level": 0,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
@@ -20384,8 +20072,6 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+3% Divine Penetration Multiplier, +10% Divine Damage",
         "stats": {
-            "Neg%": 10,
-            "Holy%": 10,
             "Divine%": 10,
             "Divine xPen%": 3
         },
@@ -20394,7 +20080,7 @@ const talent_data: Record<string, Talent> = {
     "Valkyrie's Charm 1": {
         "category": "healer",
         "PreReq": [
-            ""
+            "DeathGodBlessing"
         ],
         "Tag": "",
         "BlockedTag": "",
@@ -20419,7 +20105,7 @@ const talent_data: Record<string, Talent> = {
     "Valkyrie's Charm 2": {
         "category": "healer",
         "PreReq": [
-            "Valkyrie's Charm 1"
+            "DeathGodBlessing"
         ],
         "Tag": "",
         "BlockedTag": "",
@@ -20444,9 +20130,9 @@ const talent_data: Record<string, Talent> = {
     "Protection of Eir": {
         "category": "healer",
         "PreReq": [
-            "Valkyrie's Charm 2"
+            "DeathGodBlessing"
         ],
-        "Tag": "",
+        "Tag": "Heal125",
         "BlockedTag": "",
         "gold": 300,
         "exp": 12500,
@@ -20469,7 +20155,7 @@ const talent_data: Record<string, Talent> = {
     "Power of Isis 1": {
         "category": "healer",
         "PreReq": [
-            ""
+            "DeathGodBlessing"
         ],
         "Tag": "",
         "BlockedTag": "",
@@ -20493,7 +20179,7 @@ const talent_data: Record<string, Talent> = {
     "Power of Isis 2": {
         "category": "healer",
         "PreReq": [
-            "Power of Isis 1"
+            "DeathGodBlessing"
         ],
         "Tag": "",
         "BlockedTag": "",
@@ -20517,9 +20203,9 @@ const talent_data: Record<string, Talent> = {
     "Sacred Tyet": {
         "category": "healer",
         "PreReq": [
-            "Power of Isis 2"
+            "DeathGodBlessing"
         ],
-        "Tag": "",
+        "Tag": "Heal125",
         "BlockedTag": "",
         "gold": 300,
         "exp": 12500,
@@ -20542,7 +20228,7 @@ const talent_data: Record<string, Talent> = {
     "Divine Medicine 1": {
         "category": "healer",
         "PreReq": [
-            ""
+            "DeathGodBlessing"
         ],
         "Tag": "",
         "BlockedTag": "",
@@ -20566,7 +20252,7 @@ const talent_data: Record<string, Talent> = {
     "Divine Medicine 2": {
         "category": "healer",
         "PreReq": [
-            "Divine Medicine 1"
+            "DeathGodBlessing"
         ],
         "Tag": "",
         "BlockedTag": "",
@@ -20590,9 +20276,9 @@ const talent_data: Record<string, Talent> = {
     "Favor of Delphinios": {
         "category": "healer",
         "PreReq": [
-            "Divine Medicine 2"
+            "DeathGodBlessing"
         ],
-        "Tag": "",
+        "Tag": "Heal125",
         "BlockedTag": "",
         "gold": 300,
         "exp": 12500,
@@ -21222,7 +20908,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 400,
         "exp": 15000,
         "tp_spent": 101,
-        "total_level": 200,
+        "total_level": 0,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
@@ -21253,7 +20939,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 425,
         "exp": 16000,
         "tp_spent": 101,
-        "total_level": 200,
+        "total_level": 0,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
@@ -21284,7 +20970,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 450,
         "exp": 17000,
         "tp_spent": 101,
-        "total_level": 200,
+        "total_level": 0,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
@@ -21314,7 +21000,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 400,
         "exp": 15000,
         "tp_spent": 101,
-        "total_level": 200,
+        "total_level": 0,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
@@ -21350,7 +21036,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 425,
         "exp": 16000,
         "tp_spent": 101,
-        "total_level": 200,
+        "total_level": 0,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
@@ -21386,7 +21072,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 450,
         "exp": 17000,
         "tp_spent": 101,
-        "total_level": 200,
+        "total_level": 0,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
@@ -21421,7 +21107,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 400,
         "exp": 15000,
         "tp_spent": 101,
-        "total_level": 200,
+        "total_level": 0,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
@@ -21446,7 +21132,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 425,
         "exp": 16000,
         "tp_spent": 101,
-        "total_level": 200,
+        "total_level": 0,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
@@ -21471,7 +21157,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 450,
         "exp": 17000,
         "tp_spent": 101,
-        "total_level": 200,
+        "total_level": 0,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
@@ -21495,7 +21181,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 500,
         "exp": 18000,
         "tp_spent": 101,
-        "total_level": 200,
+        "total_level": 0,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
@@ -21521,7 +21207,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 500,
         "exp": 18000,
         "tp_spent": 101,
-        "total_level": 200,
+        "total_level": 0,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
@@ -21557,7 +21243,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 500,
         "exp": 18000,
         "tp_spent": 101,
-        "total_level": 200,
+        "total_level": 0,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
@@ -21575,9 +21261,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Warrior's Path": {
         "category": "hybrid",
-        "PreReq": [
-            ""
-        ],
+        "PreReq": [],
         "Tag": "",
         "BlockedTag": "",
         "gold": 200,
@@ -21705,7 +21389,7 @@ const talent_data: Record<string, Talent> = {
         ],
         "Tag": "",
         "BlockedTag": "",
-        "gold": 150,
+        "gold": 200,
         "exp": 3000,
         "tp_spent": 20,
         "total_level": 48,
@@ -21730,7 +21414,7 @@ const talent_data: Record<string, Talent> = {
         ],
         "Tag": "",
         "BlockedTag": "",
-        "gold": 150,
+        "gold": 200,
         "exp": 3000,
         "tp_spent": 20,
         "total_level": 48,
@@ -21755,7 +21439,7 @@ const talent_data: Record<string, Talent> = {
         ],
         "Tag": "",
         "BlockedTag": "",
-        "gold": 150,
+        "gold": 200,
         "exp": 3000,
         "tp_spent": 20,
         "total_level": 48,
@@ -22025,9 +21709,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Battle Mage's Path": {
         "category": "hybrid",
-        "PreReq": [
-            ""
-        ],
+        "PreReq": [],
         "Tag": "",
         "BlockedTag": "",
         "gold": 200,
@@ -22475,9 +22157,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Paladin's Path": {
         "category": "hybrid",
-        "PreReq": [
-            ""
-        ],
+        "PreReq": [],
         "Tag": "",
         "BlockedTag": "",
         "gold": 200,
@@ -22925,9 +22605,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Spellblade's Path": {
         "category": "hybrid",
-        "PreReq": [
-            ""
-        ],
+        "PreReq": [],
         "Tag": "",
         "BlockedTag": "",
         "gold": 200,
@@ -23375,9 +23053,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Templar's Path": {
         "category": "hybrid",
-        "PreReq": [
-            ""
-        ],
+        "PreReq": [],
         "Tag": "",
         "BlockedTag": "",
         "gold": 200,
@@ -23825,9 +23501,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Inquisitor's Path": {
         "category": "hybrid",
-        "PreReq": [
-            ""
-        ],
+        "PreReq": [],
         "Tag": "",
         "BlockedTag": "",
         "gold": 200,
@@ -24283,7 +23957,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 500,
         "exp": 3500,
         "tp_spent": 20,
-        "total_level": 0,
+        "total_level": 60,
         "class_levels": {
             "tank_levels": 60,
             "warrior_levels": 0,
@@ -24308,7 +23982,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 500,
         "exp": 3500,
         "tp_spent": 20,
-        "total_level": 0,
+        "total_level": 60,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 60,
@@ -24333,7 +24007,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 500,
         "exp": 3500,
         "tp_spent": 20,
-        "total_level": 0,
+        "total_level": 60,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
@@ -24358,7 +24032,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 500,
         "exp": 3500,
         "tp_spent": 20,
-        "total_level": 0,
+        "total_level": 60,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
@@ -24383,7 +24057,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 500,
         "exp": 3500,
         "tp_spent": 20,
-        "total_level": 0,
+        "total_level": 60,
         "class_levels": {
             "tank_levels": 30,
             "warrior_levels": 30,
@@ -24408,7 +24082,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 500,
         "exp": 3500,
         "tp_spent": 20,
-        "total_level": 0,
+        "total_level": 60,
         "class_levels": {
             "tank_levels": 30,
             "warrior_levels": 0,
@@ -24433,7 +24107,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 500,
         "exp": 3500,
         "tp_spent": 20,
-        "total_level": 0,
+        "total_level": 60,
         "class_levels": {
             "tank_levels": 30,
             "warrior_levels": 0,
@@ -24458,7 +24132,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 500,
         "exp": 3500,
         "tp_spent": 20,
-        "total_level": 0,
+        "total_level": 60,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 30,
@@ -24483,7 +24157,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 500,
         "exp": 3500,
         "tp_spent": 20,
-        "total_level": 0,
+        "total_level": 60,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 30,
@@ -24508,7 +24182,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 500,
         "exp": 3500,
         "tp_spent": 20,
-        "total_level": 0,
+        "total_level": 60,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
@@ -24533,7 +24207,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 500,
         "exp": 3500,
         "tp_spent": 20,
-        "total_level": 0,
+        "total_level": 60,
         "class_levels": {
             "tank_levels": 60,
             "warrior_levels": 0,
@@ -24558,7 +24232,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 500,
         "exp": 3500,
         "tp_spent": 20,
-        "total_level": 0,
+        "total_level": 60,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 60,
@@ -24583,7 +24257,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 500,
         "exp": 3500,
         "tp_spent": 20,
-        "total_level": 0,
+        "total_level": 60,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
@@ -24608,7 +24282,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 500,
         "exp": 3500,
         "tp_spent": 20,
-        "total_level": 0,
+        "total_level": 60,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
@@ -24632,7 +24306,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 500,
         "exp": 3500,
         "tp_spent": 20,
-        "total_level": 0,
+        "total_level": 60,
         "class_levels": {
             "tank_levels": 30,
             "warrior_levels": 30,
@@ -24657,7 +24331,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 500,
         "exp": 3500,
         "tp_spent": 20,
-        "total_level": 0,
+        "total_level": 60,
         "class_levels": {
             "tank_levels": 30,
             "warrior_levels": 0,
@@ -24682,7 +24356,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 500,
         "exp": 3500,
         "tp_spent": 20,
-        "total_level": 0,
+        "total_level": 60,
         "class_levels": {
             "tank_levels": 30,
             "warrior_levels": 0,
@@ -24707,7 +24381,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 500,
         "exp": 3500,
         "tp_spent": 20,
-        "total_level": 0,
+        "total_level": 60,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 30,
@@ -24732,7 +24406,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 500,
         "exp": 3500,
         "tp_spent": 20,
-        "total_level": 0,
+        "total_level": 60,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 30,
@@ -24757,7 +24431,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 500,
         "exp": 3500,
         "tp_spent": 20,
-        "total_level": 0,
+        "total_level": 60,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
@@ -24782,7 +24456,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 500,
         "exp": 3500,
         "tp_spent": 20,
-        "total_level": 0,
+        "total_level": 60,
         "class_levels": {
             "tank_levels": 60,
             "warrior_levels": 0,
@@ -24807,7 +24481,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 500,
         "exp": 3500,
         "tp_spent": 20,
-        "total_level": 0,
+        "total_level": 60,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 60,
@@ -24831,7 +24505,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 500,
         "exp": 3500,
         "tp_spent": 20,
-        "total_level": 0,
+        "total_level": 60,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
@@ -24855,7 +24529,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 500,
         "exp": 3500,
         "tp_spent": 20,
-        "total_level": 0,
+        "total_level": 60,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
@@ -24879,7 +24553,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 500,
         "exp": 3500,
         "tp_spent": 20,
-        "total_level": 0,
+        "total_level": 60,
         "class_levels": {
             "tank_levels": 30,
             "warrior_levels": 30,
@@ -24904,7 +24578,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 500,
         "exp": 3500,
         "tp_spent": 20,
-        "total_level": 0,
+        "total_level": 60,
         "class_levels": {
             "tank_levels": 30,
             "warrior_levels": 0,
@@ -24929,7 +24603,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 500,
         "exp": 3500,
         "tp_spent": 20,
-        "total_level": 0,
+        "total_level": 60,
         "class_levels": {
             "tank_levels": 30,
             "warrior_levels": 0,
@@ -24954,7 +24628,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 500,
         "exp": 3500,
         "tp_spent": 20,
-        "total_level": 0,
+        "total_level": 60,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 30,
@@ -24978,7 +24652,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 500,
         "exp": 3500,
         "tp_spent": 20,
-        "total_level": 0,
+        "total_level": 60,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 30,
@@ -25003,7 +24677,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 500,
         "exp": 3500,
         "tp_spent": 20,
-        "total_level": 0,
+        "total_level": 60,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
@@ -25928,7 +25602,7 @@ const talent_data: Record<string, Talent> = {
     "Saint's Essence of the Flame": {
         "category": "hybrid",
         "PreReq": [
-            "AquaKey"
+            "IgnisKey"
         ],
         "Tag": "PrimalFire",
         "BlockedTag": "PrimalFire",
@@ -26394,7 +26068,7 @@ const talent_data: Record<string, Talent> = {
             "caster_levels": 125,
             "healer_levels": 0
         },
-        "description": "+25% MATK, +10% Wind Penetration, Conversion 50% Penwind to Elewind, 15% Reswind to Penwind, -50% Reduction to Reswind",
+        "description": "+25% MATK, +10% Wind Penetration, Conversion 50% Penwind to Elewind, 20% Reswind to Penwind, -50% Reduction to Reswind",
         "stats": {
             "MATK%": 25,
             "Wind Pen%": 10
@@ -26407,7 +26081,7 @@ const talent_data: Record<string, Talent> = {
             },
             {
                 "source": "Wind Res%",
-                "ratio": 0.15,
+                "ratio": 0.2,
                 "resulting_stat": "Wind Pen%"
             },
             {
@@ -26786,7 +26460,6 @@ const talent_data: Record<string, Talent> = {
         "stats": {
             "HEAL%": 15,
             "Heal Effect%": 20,
-            "Global HEAL%": 20,
             "Threat%": 100
         },
         "conversions": []
@@ -26878,7 +26551,7 @@ const talent_data: Record<string, Talent> = {
             "caster_levels": 125,
             "healer_levels": 0
         },
-        "description": "+35% MATK, +10% Earth Penetration, Conversion 2000% Eleearth to DEF, 150% Researth to Eleearth, -75% Reduction to Researth",
+        "description": "+35% MATK, +10% Earth Penetration, Conversion 1250% Eleearth to DEF, 150% Researth to Eleearth, -75% Reduction to Researth",
         "stats": {
             "MATK%": 35,
             "Earth Pen%": 10
@@ -26886,7 +26559,7 @@ const talent_data: Record<string, Talent> = {
         "conversions": [
             {
                 "source": "Earth%",
-                "ratio": 20,
+                "ratio": 12.5,
                 "resulting_stat": "DEF"
             },
             {
@@ -27519,7 +27192,7 @@ const talent_data: Record<string, Talent> = {
             "caster_levels": 0,
             "healer_levels": 0
         },
-        "description": "+20% DEF, +20% Threat Bonus, +20% Elevoid, Conversion 50% Resnegative to Elevoid, Reduction -25% to Resnegative and Elephys",
+        "description": "+20% DEF, +20% Threat Bonus, +20% Elevoid, Conversion 50% Resnegative to Elevoid, Reduction -50% to Resnegative and -25% Elephys",
         "stats": {
             "DEF%": 20,
             "Void%": 20,
@@ -27533,7 +27206,7 @@ const talent_data: Record<string, Talent> = {
             },
             {
                 "source": "Neg Res%",
-                "ratio": -0.25,
+                "ratio": -0.5,
                 "resulting_stat": "Neg Res%"
             },
             {
@@ -27670,13 +27343,11 @@ const talent_data: Record<string, Talent> = {
             "caster_levels": 0,
             "healer_levels": 125
         },
-        "description": "+15% Heal,  -10% Global Heal Effect, +20% Eleholy, Conversion 15% Max HP to Heal, 1000% Eleholy to Heal",
+        "description": "+15% Heal, -10% Global Heal Effect, +20% Eleholy, Conversion 15% Max HP to Heal, 1000% Eleholy to Heal",
         "stats": {
             "HEAL%": 15,
             "Holy%": 20,
-            "Heal Effect%": -10,
-            "Global HEAL%": -10,
-            "HP%": 15
+            "Heal Effect%": -10
         },
         "conversions": [
             {
@@ -30113,7 +29784,7 @@ const talent_data: Record<string, Talent> = {
         "gold": 50,
         "exp": 3000,
         "tp_spent": 0,
-        "total_level": 35,
+        "total_level": 50,
         "class_levels": {
             "tank_levels": 0,
             "warrior_levels": 0,
@@ -32542,10 +32213,11 @@ const talent_data: Record<string, Talent> = {
             "caster_levels": 0,
             "healer_levels": 0
         },
-        "description": "+14 ATK, +25 HP",
+        "description": "+14 ATK, +25 HP, +4% Crit Damage",
         "stats": {
             "ATK": 14,
-            "HP": 25
+            "HP": 25,
+            "Crit DMG%": 4
         },
         "conversions": []
     },
@@ -32566,10 +32238,11 @@ const talent_data: Record<string, Talent> = {
             "caster_levels": 0,
             "healer_levels": 0
         },
-        "description": "+14 ATK, +25 HP",
+        "description": "+14 ATK, +25 HP, +4% Crit Damage",
         "stats": {
             "ATK": 14,
-            "HP": 25
+            "HP": 25,
+            "Crit DMG%": 4
         },
         "conversions": []
     },
@@ -39176,11 +38849,11 @@ const talent_data: Record<string, Talent> = {
             "caster_levels": 0,
             "healer_levels": 0
         },
-        "description": "+20% DEF, +10% Crit Damage, +9 HP Regen",
+        "description": "+20% DEF, +10% Crit Damage, +0.4% HP Regen",
         "stats": {
             "Crit DMG%": 10,
             "DEF%": 20,
-            "HP Regen": 9
+            "HP Regen%": 0.4
         },
         "conversions": []
     },
@@ -39249,11 +38922,11 @@ const talent_data: Record<string, Talent> = {
             "caster_levels": 0,
             "healer_levels": 0
         },
-        "description": "+25% DEF, +15% Crit Damage, +25 HP Regen",
+        "description": "+25% DEF, +15% Crit Damage, +0.4% HP Regen",
         "stats": {
             "Crit DMG%": 15,
             "DEF%": 25,
-            "HP Regen": 25
+            "HP Regen%": 0.4
         },
         "conversions": []
     },
@@ -39347,11 +39020,11 @@ const talent_data: Record<string, Talent> = {
             "caster_levels": 0,
             "healer_levels": 0
         },
-        "description": "+15 DEF, +2% Crit Chance, +30 HP Regen",
+        "description": "+15 DEF, +2% Crit Chance, +0.4% HP Regen",
         "stats": {
             "Crit Chance%": 2,
             "DEF": 15,
-            "HP Regen": 30
+            "HP Regen%": 0.4
         },
         "conversions": []
     },
@@ -39372,11 +39045,11 @@ const talent_data: Record<string, Talent> = {
             "caster_levels": 0,
             "healer_levels": 0
         },
-        "description": "+15 DEF, +2% Crit Chance, +30 HP Regen",
+        "description": "+15 DEF, +2% Crit Chance, +0.4% HP Regen",
         "stats": {
             "Crit Chance%": 2,
             "DEF": 15,
-            "HP Regen": 30
+            "HP Regen%": 0.4
         },
         "conversions": []
     },
@@ -39398,11 +39071,11 @@ const talent_data: Record<string, Talent> = {
             "caster_levels": 0,
             "healer_levels": 0
         },
-        "description": "+45% DEF, +500 HP Regen, +35% Crit Damage",
+        "description": "+45% DEF, +0.9% HP Regen, +35% Crit Damage",
         "stats": {
             "Crit DMG%": 35,
             "DEF%": 45,
-            "HP Regen": 500
+            "HP Regen%": 0.9
         },
         "conversions": []
     },
@@ -40540,9 +40213,7 @@ const talent_data: Record<string, Talent> = {
     },
     "Erinyes 1": {
         "category": "racial",
-        "PreReq": [
-            "Succubus"
-        ],
+        "PreReq": [],
         "Tag": "",
         "BlockedTag": "",
         "gold": 100,
@@ -41129,7 +40800,7 @@ const talent_data: Record<string, Talent> = {
     "Celestial's Avatar": {
         "category": "prestige",
         "PreReq": [
-            "DeathGodBlessing",
+            "DeathGodBlessing"
         ],
         "Tag": "HeraldPrestige",
         "BlockedTag": "HeraldPrestige",
@@ -41144,13 +40815,17 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+20% ATK, +50% DEF, +5% All Res",
-        "stats": { "ATK%": 20, "DEF%": 50, "All Res%": 5 },
+        "stats": {
+            "ATK%": 20,
+            "DEF%": 50,
+            "All Res%": 5
+        },
         "conversions": []
     },
     "Devourer's Avatar": {
         "category": "prestige",
         "PreReq": [
-            "DeathGodBlessing",
+            "DeathGodBlessing"
         ],
         "Tag": "HeraldPrestige",
         "BlockedTag": "HeraldPrestige",
@@ -41165,13 +40840,16 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+100% ATK, +10% Physical Pen",
-        "stats": { "ATK%": 100, "Phys Pen%": 10 },
+        "stats": {
+            "ATK%": 100,
+            "Phys Pen%": 10
+        },
         "conversions": []
     },
     "Sin's Avatar": {
         "category": "prestige",
         "PreReq": [
-            "DeathGodBlessing",
+            "DeathGodBlessing"
         ],
         "Tag": "HeraldPrestige",
         "BlockedTag": "HeraldPrestige",
@@ -41186,13 +40864,17 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+15% MATK, -10% Crit Chance, +150% Crit Damage",
-        "stats": { "MATK%": 15, "Crit Chance%": -10, "Crit DMG%": 150 },
+        "stats": {
+            "MATK%": 15,
+            "Crit Chance%": -10,
+            "Crit DMG%": 150
+        },
         "conversions": []
     },
     "Sephira's Avatar": {
         "category": "prestige",
         "PreReq": [
-            "DeathGodBlessing",
+            "DeathGodBlessing"
         ],
         "Tag": "HeraldPrestige",
         "BlockedTag": "HeraldPrestige",
@@ -41207,13 +40889,17 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 100
         },
         "description": "+60% Heal, +%5 Crit Chance, +20% Crit Damage",
-        "stats": { "HEAL%": 60, "Crit Chance%": 5, "Crit DMG%": 20 },
+        "stats": {
+            "HEAL%": 60,
+            "Crit Chance%": 5,
+            "Crit DMG%": 20
+        },
         "conversions": []
     },
     "Bahamut's Avatar": {
         "category": "prestige",
         "PreReq": [
-            "DeathGodBlessing",
+            "DeathGodBlessing"
         ],
         "Tag": "HeraldPrestige",
         "BlockedTag": "HeraldPrestige",
@@ -41228,13 +40914,16 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+20% Physical Damage, +8% Max HP",
-        "stats": { "Phys%": 20, "HP%": 8 },
+        "stats": {
+            "Phys%": 20,
+            "HP%": 8
+        },
         "conversions": []
     },
     "Tiamat's Avatar": {
         "category": "prestige",
         "PreReq": [
-            "DeathGodBlessing",
+            "DeathGodBlessing"
         ],
         "Tag": "HeraldPrestige",
         "BlockedTag": "HeraldPrestige",
@@ -41249,13 +40938,16 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+125% MATK, -25% DEF",
-        "stats": { "MATK%": 125, "DEF%": -25 },
+        "stats": {
+            "MATK%": 125,
+            "DEF%": -25
+        },
         "conversions": []
     },
     "Odin's Avatar": {
         "category": "prestige",
         "PreReq": [
-            "DeathGodBlessing",
+            "DeathGodBlessing"
         ],
         "Tag": "HeraldPrestige",
         "BlockedTag": "HeraldPrestige",
@@ -41270,13 +40962,16 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 50
         },
         "description": "+50% Heal, +5% All Res",
-        "stats": { "HEAL%": 50, "All Res%": 5 },
+        "stats": {
+            "HEAL%": 50,
+            "All Res%": 5
+        },
         "conversions": []
     },
     "Reaper's Avatar": {
         "category": "prestige",
         "PreReq": [
-            "DeathGodBlessing",
+            "DeathGodBlessing"
         ],
         "Tag": "HeraldPrestige",
         "BlockedTag": "HeraldPrestige",
@@ -41291,13 +40986,17 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 0
         },
         "description": "+75% ATK, +75% MATK, +35% Crit Damage",
-        "stats": { "ATK%": 75, "MATK%": 75, "Crit DMG%": 35 },
+        "stats": {
+            "ATK%": 75,
+            "MATK%": 75,
+            "Crit DMG%": 35
+        },
         "conversions": []
     },
     "Gaia's Avatar": {
         "category": "prestige",
         "PreReq": [
-            "DeathGodBlessing",
+            "DeathGodBlessing"
         ],
         "Tag": "HeraldPrestige",
         "BlockedTag": "HeraldPrestige",
@@ -41312,13 +41011,17 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 50
         },
         "description": "+75% Heal, +25% ATK, +20% Divine Damage",
-        "stats": { "HEAL%": 75, "ATK%": 25, "Divine%": 20 },
+        "stats": {
+            "HEAL%": 75,
+            "ATK%": 25,
+            "Divine%": 20
+        },
         "conversions": []
     },
     "Goddess's Avatar": {
         "category": "prestige",
         "PreReq": [
-            "DeathGodBlessing",
+            "DeathGodBlessing"
         ],
         "Tag": "HeraldPrestige",
         "BlockedTag": "HeraldPrestige",
@@ -41333,9 +41036,13 @@ const talent_data: Record<string, Talent> = {
             "healer_levels": 50
         },
         "description": "+25% Heal, +50% MATK, +40% Divine Damage",
-        "stats": { "HEAL%": 25, "MATK%": 50, "Divine%": 40 },
+        "stats": {
+            "HEAL%": 25,
+            "MATK%": 50,
+            "Divine%": 40
+        },
         "conversions": []
-    },
+    }
 };
 
 const statSet = new Set<string>()
