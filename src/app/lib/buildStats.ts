@@ -560,7 +560,7 @@ function computeConversionReadyStats(statsBase: Record<string, number>, statsXPe
     statsConversionReady[`${stat} Pen%`] = Math.floor((statsCombined[`${stat} Pen%`] ?? 0) * (1 + (statsCombined[`${stat} xPen%`] ?? 0) / 100))
   }
 
-  statsConversionReady.HP = Math.floor(statsCombined.HP * (1 + (statsCombined["HP%"] ?? 0)))
+  statsConversionReady.HP = Math.floor(statsCombined.HP * (1 + ((statsCombined["HP%"] ?? 0) / 100)))
 
   return statsConversionReady
 }
