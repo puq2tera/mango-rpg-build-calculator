@@ -32,13 +32,11 @@ const readBuildStats = (): WorldBossUserStats => {
 }
 
 export default function WorldBoss() {
-  const [buildStats, setBuildStats] = useState<WorldBossUserStats>({ ...defaultWorldBossUserStats })
   const [userStats, setUserStats] = useState<WorldBossUserStats>({ ...defaultWorldBossUserStats })
 
   useEffect(() => {
     window.dispatchEvent(new Event("computeDmgReadyStats"))
     const nextBuildStats = readBuildStats()
-    setBuildStats(nextBuildStats)
     setUserStats(nextBuildStats)
   }, [])
 
