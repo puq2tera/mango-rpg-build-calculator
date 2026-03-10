@@ -25,6 +25,7 @@ export type DamageCalcInputs = {
 }
 
 export type DamageCalcState = {
+  attackPreset: string
   mainStat: string
   secondStat: string
   element: string
@@ -68,6 +69,7 @@ export const defaultDamageCalcInputs: DamageCalcInputs = {
 }
 
 export const defaultDamageCalcState: DamageCalcState = {
+  attackPreset: "",
   mainStat: "ATK",
   secondStat: "DEF",
   element: "Blunt",
@@ -104,6 +106,7 @@ export function normalizeDamageCalcState(raw: unknown): DamageCalcState {
   }, { ...defaultDamageCalcInputs })
 
   return {
+    attackPreset: typeof data.attackPreset === "string" ? data.attackPreset : defaultDamageCalcState.attackPreset,
     mainStat: isOneOf(data.mainStat, stat_data.Mainstats) ? data.mainStat : defaultDamageCalcState.mainStat,
     secondStat: isOneOf(data.secondStat, stat_data.Mainstats) ? data.secondStat : defaultDamageCalcState.secondStat,
     element: isOneOf(data.element, stat_data.AllElements) ? data.element : defaultDamageCalcState.element,

@@ -9,10 +9,14 @@ import {
   readDamageCalcState,
   type DamageCalcInputs,
 } from "@/app/lib/damageCalc"
+import { attackPresetInputKeys, getDamageCalcAttackPresets } from "@/app/lib/damageCalcAttackPresets"
+
+const attackPresetInputKeySet = new Set<keyof DamageCalcInputs>(attackPresetInputKeys)
 
 export default function DamageCalc() {
   const [stats, setStats] = useState<Record<string, number>>({})
   const [isHydrated, setIsHydrated] = useState(false)
+  const [attackPreset, setAttackPreset] = useState(defaultDamageCalcState.attackPreset)
   const [mainStat, setMainStat] = useState(defaultDamageCalcState.mainStat)
   const [secondStat, setSecondStat] = useState(defaultDamageCalcState.secondStat)
   const [element, setElement] = useState(defaultDamageCalcState.element)
@@ -32,6 +36,7 @@ export default function DamageCalc() {
       } catch {}
     }
 
+    setAttackPreset(storedState.attackPreset)
     setMainStat(storedState.mainStat)
     setSecondStat(storedState.secondStat)
     setElement(storedState.element)
@@ -45,6 +50,7 @@ export default function DamageCalc() {
     if (!isHydrated) return
 
     persistDamageCalcState(localStorage, {
+      attackPreset,
       mainStat,
       secondStat,
       element,
@@ -53,7 +59,10 @@ export default function DamageCalc() {
       inputs,
     })
     window.dispatchEvent(new Event("damageCalcUpdated"))
-  }, [element, inputs, isHydrated, mainStat, penElement, secondStat, skillType])
+  }, [attackPreset, element, inputs, isHydrated, mainStat, penElement, secondStat, skillType])
+
+  const attackPresets = getDamageCalcAttackPresets(stats)
+  const selectedAttackPreset = attackPresets.find((entry) => entry.name === attackPreset) ?? null
 
   const {
     nonCrit,
@@ -66,6 +75,7 @@ export default function DamageCalc() {
     threatCrit,
     threatAverage,
   } = calculateDamage(stats, {
+    attackPreset,
     mainStat,
     secondStat,
     element,
@@ -77,34 +87,117 @@ export default function DamageCalc() {
   const formatNumber = (value: number): string => value.toLocaleString("en-US")
 
   const handleChange = (field: keyof DamageCalcInputs, value: number) => {
+    if (attackPresetInputKeySet.has(field)) {
+      setAttackPreset("")
+    }
+
     setInputs((prev) => ({ ...prev, [field]: value }))
+  }
+
+  const handleAttackPresetChange = (nextPreset: string) => {
+    setAttackPreset(nextPreset)
+
+    if (!nextPreset) {
+      return
+    }
+
+    const preset = attackPresets.find((entry) => entry.name === nextPreset)
+    if (!preset) {
+      return
+    }
+
+    setMainStat(preset.mainStat)
+    setSecondStat(preset.secondStat)
+    setElement(preset.element)
+    setPenElement(preset.penElement)
+    setSkillType(preset.skillType)
+    setInputs((prev) => ({ ...prev, ...preset.inputs }))
   }
 
   return (
     <div className="p-6 space-y-6">
       <h1 className="text-2xl font-bold text-center">Damage Calculator</h1>
 
+      <div className="rounded-lg border bg-slate-900/60 p-4">
+        <div className="grid gap-4 md:grid-cols-[minmax(0,18rem)_1fr]">
+          <div className="space-y-2">
+            <label className="font-semibold">Attack Preset</label>
+            <select
+              value={attackPreset}
+              onChange={(e) => handleAttackPresetChange(e.target.value)}
+              className="w-full p-1 border rounded"
+            >
+              <option value="">Custom</option>
+              {attackPresets.map((preset) => (
+                <option key={preset.name} value={preset.name}>
+                  {preset.name}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {selectedAttackPreset ? (
+            <div className="space-y-2">
+              <p className="text-sm text-slate-100">{selectedAttackPreset.description}</p>
+              {selectedAttackPreset.note ? (
+                <p className="text-xs uppercase tracking-[0.12em] text-slate-400">
+                  {selectedAttackPreset.note}
+                </p>
+              ) : null}
+            </div>
+          ) : null}
+        </div>
+      </div>
+
       <div className="grid grid-cols-4 gap-4 bg-slate-900/60 border rounded-lg p-4">
         <div className="space-y-2">
           <label className="font-semibold">Primary Stat</label>
-          <select value={mainStat} onChange={(e) => setMainStat(e.target.value)} className="w-full p-1 border rounded">
+          <select
+            value={mainStat}
+            onChange={(e) => {
+              setAttackPreset("")
+              setMainStat(e.target.value)
+            }}
+            className="w-full p-1 border rounded"
+          >
             {stat_data.Mainstats.map((stat) => <option key={stat}>{stat}</option>)}
           </select>
 
           <label className="font-semibold">Element</label>
-          <select value={element} onChange={(e) => setElement(e.target.value)} className="w-full p-1 border rounded">
+          <select
+            value={element}
+            onChange={(e) => {
+              setAttackPreset("")
+              setElement(e.target.value)
+            }}
+            className="w-full p-1 border rounded"
+          >
             {stat_data.AllElements.map((entry) => <option key={entry}>{entry}</option>)}
           </select>
 
           <label className="font-semibold">Pen Element</label>
-          <select value={penElement} onChange={(e) => setPenElement(e.target.value)} className="w-full p-1 border rounded">
+          <select
+            value={penElement}
+            onChange={(e) => {
+              setAttackPreset("")
+              setPenElement(e.target.value)
+            }}
+            className="w-full p-1 border rounded"
+          >
             {stat_data.AllElements.map((entry) => <option key={entry}>{entry}</option>)}
           </select>
         </div>
 
         <div className="space-y-2">
           <label className="font-semibold">Skill Type</label>
-          <select value={skillType} onChange={(e) => setSkillType(e.target.value)} className="w-full p-1 border rounded">
+          <select
+            value={skillType}
+            onChange={(e) => {
+              setAttackPreset("")
+              setSkillType(e.target.value)
+            }}
+            className="w-full p-1 border rounded"
+          >
             {stat_data.SkillTypes.map((entry) => <option key={entry}>{entry}</option>)}
           </select>
 
@@ -139,7 +232,14 @@ export default function DamageCalc() {
 
         <div className="space-y-2">
           <label className="font-semibold">2nd Stat</label>
-          <select value={secondStat} onChange={(e) => setSecondStat(e.target.value)} className="w-full p-1 border rounded">
+          <select
+            value={secondStat}
+            onChange={(e) => {
+              setAttackPreset("")
+              setSecondStat(e.target.value)
+            }}
+            className="w-full p-1 border rounded"
+          >
             {stat_data.Mainstats.map((stat) => <option key={stat}>{stat}</option>)}
           </select>
 
