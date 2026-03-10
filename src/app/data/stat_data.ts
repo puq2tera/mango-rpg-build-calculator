@@ -229,6 +229,7 @@ export const StatsInfo: Record<string, StatInfoData> = {
 
   // Character Stats
   "Focus":       { multi: 1 },
+  "Focus%":      { multi: 0.01 },
   "Focus Regen": { multi: 1 },
 
   "MP":       { multi: 1 },

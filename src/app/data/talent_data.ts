@@ -4778,6 +4778,328 @@ const talent_data: Record<string, Talent> = {
         },
         "conversions": []
     },
+    "Mark of Slime Teapot 1": {
+        "category": "tank",
+        "PreReq": [
+            "StarEssence"
+        ],
+        "Tag": "",
+        "BlockedTag": "",
+        "gold": 400,
+        "exp": 15000,
+        "tp_spent": 101,
+        "total_level": 200,
+        "class_levels": {
+            "tank_levels": 200,
+            "warrior_levels": 0,
+            "caster_levels": 0,
+            "healer_levels": 0
+        },
+        "description": "-3% DMG Taken, -5% Global DMG, +30% DEF",
+        "stats": {
+            "DMG Res%": 3,
+            "Dmg%": -5,
+            "DEF%": 30
+        },
+        "conversions": []
+    },
+    "Mark of Slime Teapot 2": {
+        "category": "tank",
+        "PreReq": [
+            "Mark of Slime Teapot 1",
+            "StarEssence"
+        ],
+        "Tag": "TankStar",
+        "BlockedTag": "",
+        "gold": 425,
+        "exp": 16000,
+        "tp_spent": 101,
+        "total_level": 200,
+        "class_levels": {
+            "tank_levels": 200,
+            "warrior_levels": 0,
+            "caster_levels": 0,
+            "healer_levels": 0
+        },
+        "description": "-3% DMG Taken, -5% Global DMG, +30% DEF",
+        "stats": {
+            "DMG Res%": 3,
+            "Dmg%": -5,
+            "DEF%": 30
+        },
+        "conversions": []
+    },
+    "Mark of Slime Teapot 3": {
+        "category": "tank",
+        "PreReq": [
+            "Mark of Slime Teapot 2",
+            "StarEssence"
+        ],
+        "Tag": "",
+        "BlockedTag": "",
+        "gold": 450,
+        "exp": 17000,
+        "tp_spent": 101,
+        "total_level": 200,
+        "class_levels": {
+            "tank_levels": 200,
+            "warrior_levels": 0,
+            "caster_levels": 0,
+            "healer_levels": 0
+        },
+        "description": "-4% DMG Taken, -4% Global DMG, +30% DEF",
+        "stats": {
+            "DMG Res%": 4,
+            "Dmg%": -4,
+            "DEF%": 30
+        },
+        "conversions": []
+    },
+    "Mark of Big Eater 1": {
+        "category": "tank",
+        "PreReq": [
+            "StarEssence"
+        ],
+        "Tag": "",
+        "BlockedTag": "",
+        "gold": 400,
+        "exp": 15000,
+        "tp_spent": 101,
+        "total_level": 200,
+        "class_levels": {
+            "tank_levels": 200,
+            "warrior_levels": 0,
+            "caster_levels": 0,
+            "healer_levels": 0
+        },
+        "description": "+1% Global DEF, Conversion 6% DEF to Power, +20% DEF",
+        "stats": {
+            "Global DEF%": 1,
+            "DEF%": 20
+        },
+        "conversions": [
+            {
+                "source": "DEF",
+                "ratio": 0.06,
+                "resulting_stat": "POWER"
+            }
+        ]
+    },
+    "Mark of Big Eater 2": {
+        "category": "tank",
+        "PreReq": [
+            "Mark of Big Eater 1",
+            "StarEssence"
+        ],
+        "Tag": "TankStar",
+        "BlockedTag": "",
+        "gold": 425,
+        "exp": 16000,
+        "tp_spent": 101,
+        "total_level": 200,
+        "class_levels": {
+            "tank_levels": 200,
+            "warrior_levels": 0,
+            "caster_levels": 0,
+            "healer_levels": 0
+        },
+        "description": "+1% Global DEF, Conversion 6% DEF to Power, +20% DEF",
+        "stats": {
+            "Global DEF%": 1,
+            "DEF%": 20
+        },
+        "conversions": [
+            {
+                "source": "DEF",
+                "ratio": 0.06,
+                "resulting_stat": "POWER"
+            }
+        ]
+    },
+    "Mark of Big Eater 3": {
+        "category": "tank",
+        "PreReq": [
+            "Mark of Big Eater 2",
+            "StarEssence"
+        ],
+        "Tag": "",
+        "BlockedTag": "",
+        "gold": 450,
+        "exp": 17000,
+        "tp_spent": 101,
+        "total_level": 200,
+        "class_levels": {
+            "tank_levels": 200,
+            "warrior_levels": 0,
+            "caster_levels": 0,
+            "healer_levels": 0
+        },
+        "description": "+3% Global DEF, Conversion 8% DEF to Power, +30% DEF",
+        "stats": {
+            "Global DEF%": 3,
+            "DEF%": 30
+        },
+        "conversions": [
+            {
+                "source": "DEF",
+                "ratio": 0.08,
+                "resulting_stat": "POWER"
+            }
+        ]
+    },
+    "Mark of Dragon Rider 1": {
+        "category": "tank",
+        "PreReq": [
+            "StarEssence"
+        ],
+        "Tag": "",
+        "BlockedTag": "",
+        "gold": 400,
+        "exp": 15000,
+        "tp_spent": 101,
+        "total_level": 200,
+        "class_levels": {
+            "tank_levels": 200,
+            "warrior_levels": 0,
+            "caster_levels": 0,
+            "healer_levels": 0
+        },
+        "description": "+1% Global DEF, +3% Global DMG, -25% Power Stats",
+        "stats": {
+            "Global DEF%": 1,
+            "Dmg%": 3,
+            "MAIN%": -25
+        },
+        "conversions": []
+    },
+    "Mark of Dragon Rider 2": {
+        "category": "tank",
+        "PreReq": [
+            "Mark of Dragon Rider 1",
+            "StarEssence"
+        ],
+        "Tag": "TankStar",
+        "BlockedTag": "",
+        "gold": 425,
+        "exp": 16000,
+        "tp_spent": 101,
+        "total_level": 200,
+        "class_levels": {
+            "tank_levels": 200,
+            "warrior_levels": 0,
+            "caster_levels": 0,
+            "healer_levels": 0
+        },
+        "description": "+1% Global DEF, +3% Global DMG, -25% Power Stats",
+        "stats": {
+            "Global DEF%": 1,
+            "Dmg%": 3,
+            "MAIN%": -25
+        },
+        "conversions": []
+    },
+    "Mark of Dragon Rider 3": {
+        "category": "tank",
+        "PreReq": [
+            "Mark of Dragon Rider 2",
+            "StarEssence"
+        ],
+        "Tag": "",
+        "BlockedTag": "",
+        "gold": 450,
+        "exp": 17000,
+        "tp_spent": 101,
+        "total_level": 200,
+        "class_levels": {
+            "tank_levels": 200,
+            "warrior_levels": 0,
+            "caster_levels": 0,
+            "healer_levels": 0
+        },
+        "description": "+3% Global DEF, +4% Global DMG, -15% Power Stats",
+        "stats": {
+            "Global DEF%": 3,
+            "Dmg%": 4,
+            "MAIN%": -15
+        },
+        "conversions": []
+    },
+    "Slime Teapot Blessing": {
+        "category": "tank",
+        "PreReq": [
+            "TankStar"
+        ],
+        "Tag": "TankAwaken",
+        "BlockedTag": "TankAwaken",
+        "gold": 500,
+        "exp": 18000,
+        "tp_spent": 101,
+        "total_level": 200,
+        "class_levels": {
+            "tank_levels": 200,
+            "warrior_levels": 0,
+            "caster_levels": 0,
+            "healer_levels": 0
+        },
+        "description": "+40% Max HP, -8% HP Regen Rate, +75% DEF",
+        "stats": {
+            "HP%": 40,
+            "HP Regen%": -8,
+            "DEF%": 75
+        },
+        "conversions": []
+    },
+    "Big Eater Blessing": {
+        "category": "tank",
+        "PreReq": [
+            "TankStar"
+        ],
+        "Tag": "TankAwaken",
+        "BlockedTag": "TankAwaken",
+        "gold": 500,
+        "exp": 18000,
+        "tp_spent": 101,
+        "total_level": 200,
+        "class_levels": {
+            "tank_levels": 200,
+            "warrior_levels": 0,
+            "caster_levels": 0,
+            "healer_levels": 0
+        },
+        "description": "-5% DMG Taken, 20% Armor Pen with Void, +75% DEF",
+        "stats": {
+            "DMG Res%": 5,
+            "Void Armor Ignore%": 20,
+            "DEF%": 75
+        },
+        "conversions": []
+    },
+    "Dragon Rider Blessing": {
+        "category": "tank",
+        "PreReq": [
+            "TankStar"
+        ],
+        "Tag": "TankAwaken",
+        "BlockedTag": "TankAwaken",
+        "gold": 500,
+        "exp": 18000,
+        "tp_spent": 101,
+        "total_level": 200,
+        "class_levels": {
+            "tank_levels": 200,
+            "warrior_levels": 0,
+            "caster_levels": 0,
+            "healer_levels": 0
+        },
+        "description": "+10% DMG Taken, 33% Armor Pen",
+        "stats": {
+            "DMG Res%": -10,
+            "Phys Armor Ignore%": 33,
+            "Magic Armor Ignore%": 33,
+            "Void Armor Ignore%": 33
+        },
+        "conversions": []
+    },
     "Resolve 1": {
         "category": "warrior",
         "PreReq": [
@@ -11128,6 +11450,308 @@ const talent_data: Record<string, Talent> = {
         },
         "conversions": []
     },
+    "Mark of Avian Sniper 1": {
+        "category": "warrior",
+        "PreReq": [
+            "StarEssence"
+        ],
+        "Tag": "",
+        "BlockedTag": "",
+        "gold": 400,
+        "exp": 15000,
+        "tp_spent": 101,
+        "total_level": 200,
+        "class_levels": {
+            "tank_levels": 0,
+            "warrior_levels": 200,
+            "caster_levels": 0,
+            "healer_levels": 0
+        },
+        "description": "+4% xPhys DMG, +20% Physical DMG, +1% Global ATK",
+        "stats": {
+            "Phys xDmg%": 4,
+            "Phys%": 20,
+            "Global ATK%": 1
+        },
+        "conversions": []
+    },
+    "Mark of Avian Sniper 2": {
+        "category": "warrior",
+        "PreReq": [
+            "Mark of Avian Sniper 1",
+            "StarEssence"
+        ],
+        "Tag": "WarStar",
+        "BlockedTag": "",
+        "gold": 425,
+        "exp": 16000,
+        "tp_spent": 101,
+        "total_level": 200,
+        "class_levels": {
+            "tank_levels": 0,
+            "warrior_levels": 200,
+            "caster_levels": 0,
+            "healer_levels": 0
+        },
+        "description": "+4% xPhys DMG, +20% Physical DMG, +1% Global ATK",
+        "stats": {
+            "Phys xDmg%": 4,
+            "Phys%": 20,
+            "Global ATK%": 1
+        },
+        "conversions": []
+    },
+    "Mark of Avian Sniper 3": {
+        "category": "warrior",
+        "PreReq": [
+            "Mark of Avian Sniper 2",
+            "StarEssence"
+        ],
+        "Tag": "",
+        "BlockedTag": "",
+        "gold": 450,
+        "exp": 17000,
+        "tp_spent": 101,
+        "total_level": 200,
+        "class_levels": {
+            "tank_levels": 0,
+            "warrior_levels": 200,
+            "caster_levels": 0,
+            "healer_levels": 0
+        },
+        "description": "+7% xPhys DMG, +20% Physical DMG, +3% Global ATK",
+        "stats": {
+            "Phys xDmg%": 7,
+            "Phys%": 20,
+            "Global ATK%": 3
+        },
+        "conversions": []
+    },
+    "Mark of Samurai Titan 1": {
+        "category": "warrior",
+        "PreReq": [
+            "StarEssence"
+        ],
+        "Tag": "",
+        "BlockedTag": "",
+        "gold": 400,
+        "exp": 15000,
+        "tp_spent": 101,
+        "total_level": 200,
+        "class_levels": {
+            "tank_levels": 0,
+            "warrior_levels": 200,
+            "caster_levels": 0,
+            "healer_levels": 0
+        },
+        "description": "+5% Armor Pen with Phys, +1% Global ATK",
+        "stats": {
+            "Phys Armor Ignore%": 5,
+            "Global ATK%": 1
+        },
+        "conversions": []
+    },
+    "Mark of Samurai Titan 2": {
+        "category": "warrior",
+        "PreReq": [
+            "Mark of Samurai Titan 1",
+            "StarEssence"
+        ],
+        "Tag": "WarStar",
+        "BlockedTag": "",
+        "gold": 425,
+        "exp": 16000,
+        "tp_spent": 101,
+        "total_level": 200,
+        "class_levels": {
+            "tank_levels": 0,
+            "warrior_levels": 200,
+            "caster_levels": 0,
+            "healer_levels": 0
+        },
+        "description": "+5% Armor Pen with Phys, +1% Global ATK",
+        "stats": {
+            "Phys Armor Ignore%": 5,
+            "Global ATK%": 1
+        },
+        "conversions": []
+    },
+    "Mark of Samurai Titan 3": {
+        "category": "warrior",
+        "PreReq": [
+            "Mark of Samurai Titan 2",
+            "StarEssence"
+        ],
+        "Tag": "",
+        "BlockedTag": "",
+        "gold": 450,
+        "exp": 17000,
+        "tp_spent": 101,
+        "total_level": 200,
+        "class_levels": {
+            "tank_levels": 0,
+            "warrior_levels": 200,
+            "caster_levels": 0,
+            "healer_levels": 0
+        },
+        "description": "+10% Armor Pen with Phys, +3% Global ATK",
+        "stats": {
+            "Phys Armor Ignore%": 10,
+            "Global ATK%": 3
+        },
+        "conversions": []
+    },
+    "Mark of Golem Ninja 1": {
+        "category": "warrior",
+        "PreReq": [
+            "StarEssence"
+        ],
+        "Tag": "",
+        "BlockedTag": "",
+        "gold": 400,
+        "exp": 15000,
+        "tp_spent": 101,
+        "total_level": 200,
+        "class_levels": {
+            "tank_levels": 0,
+            "warrior_levels": 200,
+            "caster_levels": 0,
+            "healer_levels": 0
+        },
+        "description": "+1% Global ATK, +50% ATK, +30% DEF",
+        "stats": {
+            "Global ATK%": 1,
+            "ATK%": 50,
+            "DEF%": 30
+        },
+        "conversions": []
+    },
+    "Mark of Golem Ninja 2": {
+        "category": "warrior",
+        "PreReq": [
+            "Mark of Golem Ninja 1",
+            "StarEssence"
+        ],
+        "Tag": "WarStar",
+        "BlockedTag": "",
+        "gold": 425,
+        "exp": 16000,
+        "tp_spent": 101,
+        "total_level": 200,
+        "class_levels": {
+            "tank_levels": 0,
+            "warrior_levels": 200,
+            "caster_levels": 0,
+            "healer_levels": 0
+        },
+        "description": "+1% Global ATK, +50% ATK, +30% DEF",
+        "stats": {
+            "Global ATK%": 1,
+            "ATK%": 50,
+            "DEF%": 30
+        },
+        "conversions": []
+    },
+    "Mark of Golem Ninja 3": {
+        "category": "warrior",
+        "PreReq": [
+            "Mark of Golem Ninja 2",
+            "StarEssence"
+        ],
+        "Tag": "",
+        "BlockedTag": "",
+        "gold": 450,
+        "exp": 17000,
+        "tp_spent": 101,
+        "total_level": 200,
+        "class_levels": {
+            "tank_levels": 0,
+            "warrior_levels": 200,
+            "caster_levels": 0,
+            "healer_levels": 0
+        },
+        "description": "+3% Global ATK, +50% ATK, +30% DEF",
+        "stats": {
+            "Global ATK%": 3,
+            "ATK%": 50,
+            "DEF%": 30
+        },
+        "conversions": []
+    },
+    "Avian Sniper Blessing": {
+        "category": "warrior",
+        "PreReq": [
+            "WarStar"
+        ],
+        "Tag": "WarAwaken",
+        "BlockedTag": "WarAwaken",
+        "gold": 500,
+        "exp": 18000,
+        "tp_spent": 101,
+        "total_level": 200,
+        "class_levels": {
+            "tank_levels": 0,
+            "warrior_levels": 200,
+            "caster_levels": 0,
+            "healer_levels": 0
+        },
+        "description": "-50% Crit Chance, +20% Global Crit DMG",
+        "stats": {
+            "Crit Chance%": -50,
+            "Crit DMG%": 20
+        },
+        "conversions": []
+    },
+    "Samurai Titan Blessing": {
+        "category": "warrior",
+        "PreReq": [
+            "WarStar"
+        ],
+        "Tag": "WarAwaken",
+        "BlockedTag": "WarAwaken",
+        "gold": 500,
+        "exp": 18000,
+        "tp_spent": 101,
+        "total_level": 200,
+        "class_levels": {
+            "tank_levels": 0,
+            "warrior_levels": 200,
+            "caster_levels": 0,
+            "healer_levels": 0
+        },
+        "description": "+30% Armor Pen with Phys, +3% Global ATK",
+        "stats": {
+            "Phys Armor Ignore%": 30,
+            "Global ATK%": 3
+        },
+        "conversions": []
+    },
+    "Golem Ninja Blessing": {
+        "category": "warrior",
+        "PreReq": [
+            "WarStar"
+        ],
+        "Tag": "WarAwaken",
+        "BlockedTag": "WarAwaken",
+        "gold": 500,
+        "exp": 18000,
+        "tp_spent": 101,
+        "total_level": 200,
+        "class_levels": {
+            "tank_levels": 0,
+            "warrior_levels": 200,
+            "caster_levels": 0,
+            "healer_levels": 0
+        },
+        "description": "+100% Global ATK, -100% Crit Chance, -90% Global Crit DMG, -15% DMG Taken",
+        "stats": {
+            "Global ATK%": 100,
+            "Crit Chance%": -100,
+            "Crit DMG%": -90,
+            "DMG Res%": 15
+        },
+        "conversions": []
+    },
     "Arcane Study 1": {
         "category": "caster",
         "PreReq": [
@@ -16165,6 +16789,310 @@ const talent_data: Record<string, Talent> = {
         },
         "conversions": []
     },
+    "Mark of Demon Herald 1": {
+        "category": "caster",
+        "PreReq": [
+            "StarEssence"
+        ],
+        "Tag": "",
+        "BlockedTag": "",
+        "gold": 400,
+        "exp": 15000,
+        "tp_spent": 101,
+        "total_level": 200,
+        "class_levels": {
+            "tank_levels": 0,
+            "warrior_levels": 0,
+            "caster_levels": 200,
+            "healer_levels": 0
+        },
+        "description": "+7% Overdrive Scaling, -8% Crit Chance, +2% Global MATK",
+        "stats": {
+            "Overdrive%": 7,
+            "Crit Chance%": -8,
+            "Global MATK%": 2
+        },
+        "conversions": []
+    },
+    "Mark of Demon Herald 2": {
+        "category": "caster",
+        "PreReq": [
+            "Mark of Demon Herald 1",
+            "StarEssence"
+        ],
+        "Tag": "CastStar",
+        "BlockedTag": "",
+        "gold": 425,
+        "exp": 16000,
+        "tp_spent": 101,
+        "total_level": 200,
+        "class_levels": {
+            "tank_levels": 0,
+            "warrior_levels": 0,
+            "caster_levels": 200,
+            "healer_levels": 0
+        },
+        "description": "+7% Overdrive Scaling, -8% Crit Chance, +2% Global MATK",
+        "stats": {
+            "Overdrive%": 7,
+            "Crit Chance%": -8,
+            "Global MATK%": 2
+        },
+        "conversions": []
+    },
+    "Mark of Demon Herald 3": {
+        "category": "caster",
+        "PreReq": [
+            "Mark of Demon Herald 2",
+            "StarEssence"
+        ],
+        "Tag": "",
+        "BlockedTag": "",
+        "gold": 450,
+        "exp": 17000,
+        "tp_spent": 101,
+        "total_level": 200,
+        "class_levels": {
+            "tank_levels": 0,
+            "warrior_levels": 0,
+            "caster_levels": 200,
+            "healer_levels": 0
+        },
+        "description": "+10% Overdrive Scaling, -9% Crit Chance, +3% Global MATK",
+        "stats": {
+            "Overdrive%": 10,
+            "Crit Chance%": -9,
+            "Global MATK%": 3
+        },
+        "conversions": []
+    },
+    "Mark of Cursed Alchemist 1": {
+        "category": "caster",
+        "PreReq": [
+            "StarEssence"
+        ],
+        "Tag": "",
+        "BlockedTag": "",
+        "gold": 400,
+        "exp": 15000,
+        "tp_spent": 101,
+        "total_level": 200,
+        "class_levels": {
+            "tank_levels": 0,
+            "warrior_levels": 0,
+            "caster_levels": 200,
+            "healer_levels": 0
+        },
+        "description": "+10% Armor Pen with Magic, +2% Global MATK",
+        "stats": {
+            "Magic Armor Ignore%": 10,
+            "Global MATK%": 2
+        },
+        "conversions": []
+    },
+    "Mark of Cursed Alchemist 2": {
+        "category": "caster",
+        "PreReq": [
+            "Mark of Cursed Alchemist 1",
+            "StarEssence"
+        ],
+        "Tag": "CastStar",
+        "BlockedTag": "",
+        "gold": 425,
+        "exp": 16000,
+        "tp_spent": 101,
+        "total_level": 200,
+        "class_levels": {
+            "tank_levels": 0,
+            "warrior_levels": 0,
+            "caster_levels": 200,
+            "healer_levels": 0
+        },
+        "description": "+10% Armor Pen with Magic, +2% Global MATK",
+        "stats": {
+            "Magic Armor Ignore%": 10,
+            "Global MATK%": 2
+        },
+        "conversions": []
+    },
+    "Mark of Cursed Alchemist 3": {
+        "category": "caster",
+        "PreReq": [
+            "Mark of Cursed Alchemist 2",
+            "StarEssence"
+        ],
+        "Tag": "",
+        "BlockedTag": "",
+        "gold": 450,
+        "exp": 17000,
+        "tp_spent": 101,
+        "total_level": 200,
+        "class_levels": {
+            "tank_levels": 0,
+            "warrior_levels": 0,
+            "caster_levels": 200,
+            "healer_levels": 0
+        },
+        "description": "+15% Armor Pen with Magic, +3% Global MATK",
+        "stats": {
+            "Magic Armor Ignore%": 15,
+            "Global MATK%": 3
+        },
+        "conversions": []
+    },
+    "Mark of Sorcerer King 1": {
+        "category": "caster",
+        "PreReq": [
+            "StarEssence"
+        ],
+        "Tag": "",
+        "BlockedTag": "",
+        "gold": 400,
+        "exp": 15000,
+        "tp_spent": 101,
+        "total_level": 200,
+        "class_levels": {
+            "tank_levels": 0,
+            "warrior_levels": 0,
+            "caster_levels": 200,
+            "healer_levels": 0
+        },
+        "description": "+2% Global MATK, +4% xMagic, +8 All Res",
+        "stats": {
+            "Global MATK%": 2,
+            "Magic xDmg%": 4,
+            "All Res%": 8
+        },
+        "conversions": []
+    },
+    "Mark of Sorcerer King 2": {
+        "category": "caster",
+        "PreReq": [
+            "Mark of Sorcerer King 1",
+            "StarEssence"
+        ],
+        "Tag": "CastStar",
+        "BlockedTag": "",
+        "gold": 425,
+        "exp": 16000,
+        "tp_spent": 101,
+        "total_level": 200,
+        "class_levels": {
+            "tank_levels": 0,
+            "warrior_levels": 0,
+            "caster_levels": 200,
+            "healer_levels": 0
+        },
+        "description": "+2% Global MATK, +4% xMagic, +8 All Res",
+        "stats": {
+            "Global MATK%": 2,
+            "Magic xDmg%": 4,
+            "All Res%": 8
+        },
+        "conversions": []
+    },
+    "Mark of Sorcerer King 3": {
+        "category": "caster",
+        "PreReq": [
+            "Mark of Sorcerer King 2",
+            "StarEssence"
+        ],
+        "Tag": "",
+        "BlockedTag": "",
+        "gold": 450,
+        "exp": 17000,
+        "tp_spent": 101,
+        "total_level": 200,
+        "class_levels": {
+            "tank_levels": 0,
+            "warrior_levels": 0,
+            "caster_levels": 200,
+            "healer_levels": 0
+        },
+        "description": "+3% Global MATK, +7% xMagic, +9 All Res",
+        "stats": {
+            "Global MATK%": 3,
+            "Magic xDmg%": 7,
+            "All Res%": 9
+        },
+        "conversions": []
+    },
+    "Demon Herald Blessing": {
+        "category": "caster",
+        "PreReq": [
+            "CastStar"
+        ],
+        "Tag": "CastAwaken",
+        "BlockedTag": "CastAwaken",
+        "gold": 500,
+        "exp": 18000,
+        "tp_spent": 101,
+        "total_level": 200,
+        "class_levels": {
+            "tank_levels": 0,
+            "warrior_levels": 0,
+            "caster_levels": 200,
+            "healer_levels": 0
+        },
+        "description": "+25% Global DMG, -40% Max Mana, -80% Focus, +100% MATK",
+        "stats": {
+            "Dmg%": 25,
+            "MP%": -40,
+            "Focus%": -80,
+            "MATK%": 100
+        },
+        "conversions": []
+    },
+    "Cursed Alchemist Blessing": {
+        "category": "caster",
+        "PreReq": [
+            "CastStar"
+        ],
+        "Tag": "CastAwaken",
+        "BlockedTag": "CastAwaken",
+        "gold": 500,
+        "exp": 18000,
+        "tp_spent": 101,
+        "total_level": 200,
+        "class_levels": {
+            "tank_levels": 0,
+            "warrior_levels": 0,
+            "caster_levels": 200,
+            "healer_levels": 0
+        },
+        "description": "+10% Overdrive Scaling, +15% Armor Pen with Magic, -15% Crit Chance",
+        "stats": {
+            "Overdrive%": 10,
+            "Magic Armor Ignore%": 15,
+            "Crit Chance%": -15
+        },
+        "conversions": []
+    },
+    "Sorcerer King Blessing": {
+        "category": "caster",
+        "PreReq": [
+            "CastStar"
+        ],
+        "Tag": "CastAwaken",
+        "BlockedTag": "CastAwaken",
+        "gold": 500,
+        "exp": 18000,
+        "tp_spent": 101,
+        "total_level": 200,
+        "class_levels": {
+            "tank_levels": 0,
+            "warrior_levels": 0,
+            "caster_levels": 200,
+            "healer_levels": 0
+        },
+        "description": "+100% Max MP, +10% Global MATK, +100% MATK",
+        "stats": {
+            "MP%": 100,
+            "Global MATK%": 10,
+            "MATK%": 100
+        },
+        "conversions": []
+    },
     "Healing Study 1": {
         "category": "healer",
         "PreReq": [
@@ -20357,6 +21285,367 @@ const talent_data: Record<string, Talent> = {
             "Crit DMG%": 33,
             "Global HEAL%": 3,
             "Buff%": 3
+        },
+        "conversions": []
+    },
+    "Mark of Gentle Giant 1": {
+        "category": "healer",
+        "PreReq": [
+            "StarEssence"
+        ],
+        "Tag": "",
+        "BlockedTag": "",
+        "gold": 400,
+        "exp": 15000,
+        "tp_spent": 101,
+        "total_level": 200,
+        "class_levels": {
+            "tank_levels": 0,
+            "warrior_levels": 0,
+            "caster_levels": 0,
+            "healer_levels": 200
+        },
+        "description": "+1% Global Healpower, 10% Healpower to DEF, +1% HP Regen Rate",
+        "stats": {
+            "Global HEAL%": 1,
+            "HP Regen%": 1
+        },
+        "conversions": [
+            {
+                "source": "HEAL",
+                "ratio": 0.1,
+                "resulting_stat": "DEF"
+            }
+        ]
+    },
+    "Mark of Gentle Giant 2": {
+        "category": "healer",
+        "PreReq": [
+            "Mark of Gentle Giant 1",
+            "StarEssence"
+        ],
+        "Tag": "HealStar",
+        "BlockedTag": "",
+        "gold": 425,
+        "exp": 16000,
+        "tp_spent": 101,
+        "total_level": 200,
+        "class_levels": {
+            "tank_levels": 0,
+            "warrior_levels": 0,
+            "caster_levels": 0,
+            "healer_levels": 200
+        },
+        "description": "+1% Global Healpower, 10% Healpower to DEF, +1% HP Regen Rate",
+        "stats": {
+            "Global HEAL%": 1,
+            "HP Regen%": 1
+        },
+        "conversions": [
+            {
+                "source": "HEAL",
+                "ratio": 0.1,
+                "resulting_stat": "DEF"
+            }
+        ]
+    },
+    "Mark of Gentle Giant 3": {
+        "category": "healer",
+        "PreReq": [
+            "Mark of Gentle Giant 2",
+            "StarEssence"
+        ],
+        "Tag": "",
+        "BlockedTag": "",
+        "gold": 450,
+        "exp": 17000,
+        "tp_spent": 101,
+        "total_level": 200,
+        "class_levels": {
+            "tank_levels": 0,
+            "warrior_levels": 0,
+            "caster_levels": 0,
+            "healer_levels": 200
+        },
+        "description": "+3% Global Healpower, 15% Healpower to DEF, +2% HP Regen Rate",
+        "stats": {
+            "Global HEAL%": 3,
+            "HP Regen%": 2
+        },
+        "conversions": [
+            {
+                "source": "HEAL",
+                "ratio": 0.15,
+                "resulting_stat": "DEF"
+            }
+        ]
+    },
+    "Mark of Verdant Strategist 1": {
+        "category": "healer",
+        "PreReq": [
+            "StarEssence"
+        ],
+        "Tag": "",
+        "BlockedTag": "",
+        "gold": 400,
+        "exp": 15000,
+        "tp_spent": 101,
+        "total_level": 200,
+        "class_levels": {
+            "tank_levels": 0,
+            "warrior_levels": 0,
+            "caster_levels": 0,
+            "healer_levels": 200
+        },
+        "description": "+1% Global Healpower, 12% ATK/MATK to Healpower, +4% xMagic",
+        "stats": {
+            "Global HEAL%": 1,
+            "Magic xDmg%": 4
+        },
+        "conversions": [
+            {
+                "source": "ATK",
+                "ratio": 0.12,
+                "resulting_stat": "HEAL"
+            },
+            {
+                "source": "MATK",
+                "ratio": 0.12,
+                "resulting_stat": "HEAL"
+            }
+        ]
+    },
+    "Mark of Verdant Strategist 2": {
+        "category": "healer",
+        "PreReq": [
+            "Mark of Verdant Strategist 1",
+            "StarEssence"
+        ],
+        "Tag": "HealStar",
+        "BlockedTag": "",
+        "gold": 425,
+        "exp": 16000,
+        "tp_spent": 101,
+        "total_level": 200,
+        "class_levels": {
+            "tank_levels": 0,
+            "warrior_levels": 0,
+            "caster_levels": 0,
+            "healer_levels": 200
+        },
+        "description": "+1% Global Healpower, 12% ATK/MATK to Healpower, +4% xMagic",
+        "stats": {
+            "Global HEAL%": 1,
+            "Magic xDmg%": 4
+        },
+        "conversions": [
+            {
+                "source": "ATK",
+                "ratio": 0.12,
+                "resulting_stat": "HEAL"
+            },
+            {
+                "source": "MATK",
+                "ratio": 0.12,
+                "resulting_stat": "HEAL"
+            }
+        ]
+    },
+    "Mark of Verdant Strategist 3": {
+        "category": "healer",
+        "PreReq": [
+            "Mark of Verdant Strategist 2",
+            "StarEssence"
+        ],
+        "Tag": "",
+        "BlockedTag": "",
+        "gold": 450,
+        "exp": 17000,
+        "tp_spent": 101,
+        "total_level": 200,
+        "class_levels": {
+            "tank_levels": 0,
+            "warrior_levels": 0,
+            "caster_levels": 0,
+            "healer_levels": 200
+        },
+        "description": "+3% Global Healpower, 16% ATK/MATK to Healpower, +7% xMagic",
+        "stats": {
+            "Global HEAL%": 3,
+            "Magic xDmg%": 7
+        },
+        "conversions": [
+            {
+                "source": "ATK",
+                "ratio": 0.16,
+                "resulting_stat": "HEAL"
+            },
+            {
+                "source": "MATK",
+                "ratio": 0.16,
+                "resulting_stat": "HEAL"
+            }
+        ]
+    },
+    "Mark of Arbor Avenger 1": {
+        "category": "healer",
+        "PreReq": [
+            "StarEssence"
+        ],
+        "Tag": "",
+        "BlockedTag": "",
+        "gold": 400,
+        "exp": 15000,
+        "tp_spent": 101,
+        "total_level": 200,
+        "class_levels": {
+            "tank_levels": 0,
+            "warrior_levels": 0,
+            "caster_levels": 0,
+            "healer_levels": 200
+        },
+        "description": "+1% Global Healpower, +3% xMagicPen",
+        "stats": {
+            "Global HEAL%": 1,
+            "Magic xPen%": 3
+        },
+        "conversions": []
+    },
+    "Mark of Arbor Avenger 2": {
+        "category": "healer",
+        "PreReq": [
+            "Mark of Arbor Avenger 1",
+            "StarEssence"
+        ],
+        "Tag": "HealStar",
+        "BlockedTag": "",
+        "gold": 425,
+        "exp": 16000,
+        "tp_spent": 101,
+        "total_level": 200,
+        "class_levels": {
+            "tank_levels": 0,
+            "warrior_levels": 0,
+            "caster_levels": 0,
+            "healer_levels": 200
+        },
+        "description": "+1% Global Healpower, +3% xMagicPen",
+        "stats": {
+            "Global HEAL%": 1,
+            "Magic xPen%": 3
+        },
+        "conversions": []
+    },
+    "Mark of Arbor Avenger 3": {
+        "category": "healer",
+        "PreReq": [
+            "Mark of Arbor Avenger 2",
+            "StarEssence"
+        ],
+        "Tag": "",
+        "BlockedTag": "",
+        "gold": 450,
+        "exp": 17000,
+        "tp_spent": 101,
+        "total_level": 200,
+        "class_levels": {
+            "tank_levels": 0,
+            "warrior_levels": 0,
+            "caster_levels": 0,
+            "healer_levels": 200
+        },
+        "description": "+3% Global Healpower, +4% xMagicPen",
+        "stats": {
+            "Global HEAL%": 3,
+            "Magic xPen%": 4
+        },
+        "conversions": []
+    },
+    "Gentle Giant Blessing": {
+        "category": "healer",
+        "PreReq": [
+            "HealStar"
+        ],
+        "Tag": "HealAwaken",
+        "BlockedTag": "HealAwaken",
+        "gold": 500,
+        "exp": 18000,
+        "tp_spent": 101,
+        "total_level": 200,
+        "class_levels": {
+            "tank_levels": 0,
+            "warrior_levels": 0,
+            "caster_levels": 0,
+            "healer_levels": 200
+        },
+        "description": "-90% Global ATK/MATK, 40% xMagicPen, +4% Global Healpower",
+        "stats": {
+            "Global ATK%": -90,
+            "Global MATK%": -90,
+            "Magic xPen%": 40,
+            "Global HEAL%": 4
+        },
+        "conversions": []
+    },
+    "Verdant Strategist Blessing": {
+        "category": "healer",
+        "PreReq": [
+            "HealStar"
+        ],
+        "Tag": "HealAwaken",
+        "BlockedTag": "HealAwaken",
+        "gold": 500,
+        "exp": 18000,
+        "tp_spent": 101,
+        "total_level": 200,
+        "class_levels": {
+            "tank_levels": 0,
+            "warrior_levels": 0,
+            "caster_levels": 0,
+            "healer_levels": 200
+        },
+        "description": "30% Healpower to ATK/MATK, +10% Max HP, +2% HP Regen Rate, +5% Global Healpower",
+        "stats": {
+            "HP%": 10,
+            "HP Regen%": 2,
+            "Global HEAL%": 5
+        },
+        "conversions": [
+            {
+                "source": "HEAL",
+                "ratio": 0.3,
+                "resulting_stat": "ATK"
+            },
+            {
+                "source": "HEAL",
+                "ratio": 0.3,
+                "resulting_stat": "MATK"
+            }
+        ]
+    },
+    "Arbor Avenger Blessing": {
+        "category": "healer",
+        "PreReq": [
+            "HealStar"
+        ],
+        "Tag": "HealAwaken",
+        "BlockedTag": "HealAwaken",
+        "gold": 500,
+        "exp": 18000,
+        "tp_spent": 101,
+        "total_level": 200,
+        "class_levels": {
+            "tank_levels": 0,
+            "warrior_levels": 0,
+            "caster_levels": 0,
+            "healer_levels": 200
+        },
+        "description": "+25% MP, +50 Focus, +5% Global Power, +100% Healpower",
+        "stats": {
+            "MP%": 25,
+            "Focus": 50,
+            "MAIN%": 5,
+            "HEAL%": 100
         },
         "conversions": []
     },

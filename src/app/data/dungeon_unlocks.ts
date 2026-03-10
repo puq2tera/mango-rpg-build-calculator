@@ -45,7 +45,7 @@ export const dungeonUnlockTooltips: Partial<Record<DungeonUnlockTag, string>> = 
   AncientTrial: "Second lvl 60 prestige",
   SpiritFragment: "Second lvl 100 prestige",
   StarAtlas: "Raid 3 final dungeon",
-  StarEssence: "Lvl 175 talent capstone",
+  StarEssence: "Lvl 175 talent capstone, lvl 200 talents",
 }
 
 export function isDungeonUnlockTag(value: string): value is DungeonUnlockTag {
