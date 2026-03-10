@@ -45,6 +45,7 @@ export type Skill = {
         skill_type?: string | ""
         skill_pen?: number | 0
         armor_ignore?: number | 0
+        res_ignore?: number | 0
         crit_chance?: number | 0
         crit_dmg?: number |0
         threat?: number | 0
@@ -80,7 +81,6 @@ const defaultSkill = {
     conversions: [],
     stack_conversions: []
 }
-  
 
 function computeColumnWidths(data: Record<string, Skill>): string[] {
     console.log("Computing talent_data column widths")
@@ -140,6 +140,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Slash ] Deal 80% ATK DMG",
+        dmg_stats: { dmg_element: "Slash", element: "Slash", pen_element: "Slash", stat: "ATK", ratio: 0.8 },
 },
 "Axe Slash": {...defaultSkill,
         category: "basic",
@@ -164,6 +165,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Slash ] Deal 80% ATK DMG",
+        dmg_stats: { dmg_element: "Slash", element: "Slash", pen_element: "Slash", stat: "ATK", ratio: 0.8 },
 },
 "Spear Thrust": {...defaultSkill,
         category: "basic",
@@ -188,6 +190,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Pierce ] Deal 80% ATK DMG",
+        dmg_stats: { dmg_element: "Pierce", element: "Pierce", pen_element: "Pierce", stat: "ATK", ratio: 0.8 },
 },
 "Arrow Shot": {...defaultSkill,
         category: "basic",
@@ -212,6 +215,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Pierce ] Deal 80% ATK DMG",
+        dmg_stats: { dmg_element: "Pierce", element: "Pierce", pen_element: "Pierce", stat: "ATK", ratio: 0.8 },
 },
 "Mace Smash": {...defaultSkill,
         category: "basic",
@@ -236,6 +240,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Blunt ] Deal 80% ATK DMG",
+        dmg_stats: { dmg_element: "Blunt", element: "Blunt", pen_element: "Blunt", stat: "ATK", ratio: 0.8 },
 },
 "Staff Smash": {...defaultSkill,
         category: "basic",
@@ -260,6 +265,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Blunt ] Deal 80% ATK DMG",
+        dmg_stats: { dmg_element: "Blunt", element: "Blunt", pen_element: "Blunt", stat: "ATK", ratio: 0.8 },
 },
 "Punch": {...defaultSkill,
         category: "basic",
@@ -285,6 +291,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ ⧖, Blunt ] Punch helplessly for 25% ATK DMG",
+        dmg_stats: { dmg_element: "Blunt", element: "Blunt", pen_element: "Blunt", stat: "ATK", ratio: 0.25 },
 },
 "Wait": {...defaultSkill,
         category: "basic",
@@ -345,7 +352,7 @@ const skill_data: Record<string, Skill> = {
         stats: {
     "Threat%": 0.5,
     },
-        dmg_stats: {stat: "DEF", ratio: 3.6, element: "Void%", pen_element: "Void Pen%"}
+        dmg_stats: { element: "Void", pen_element: "Void", stat: "DEF", ratio: 3.6, crit_dmg: 0.1 },
 },
 "Body Slam": {...defaultSkill,
         category: "tank",
@@ -370,6 +377,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Blunt ] Deal 65% ATK DMG, 150% DEF Threat",
+        dmg_stats: { dmg_element: "Blunt", element: "Blunt", pen_element: "Blunt", stat: "ATK", ratio: 0.65, threat: 1.5 },
 },
 "Blunt Sunder 1": {...defaultSkill,
         category: "tank",
@@ -394,6 +402,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Blunt ] Deals 70%/50% ATK/DEF DMG, Breaks 5% Armor",
+        dmg_stats: { dmg_element: "Blunt", element: "Blunt", pen_element: "Blunt", stat: "ATK", ratio: 0.7, stat2: "DEF", ratio2: 0.5, armor_break: 0.05 },
 },
 "Slash Sunder 1": {...defaultSkill,
         category: "tank",
@@ -418,6 +427,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Slash ] Deals 70%/50% ATK/DEF DMG, Breaks 5% Armor",
+        dmg_stats: { dmg_element: "Slash", element: "Slash", pen_element: "Slash", stat: "ATK", ratio: 0.7, stat2: "DEF", ratio2: 0.5, armor_break: 0.05 },
 },
 "Pierce Sunder 1": {...defaultSkill,
         category: "tank",
@@ -442,6 +452,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Pierce ] Deals 70%/50% ATK/DEF DMG, Breaks 5% Armor",
+        dmg_stats: { dmg_element: "Pierce", element: "Pierce", pen_element: "Pierce", stat: "ATK", ratio: 0.7, stat2: "DEF", ratio2: 0.5, armor_break: 0.05 },
 },
 "Taunt": {...defaultSkill,
         type: {
@@ -464,7 +475,7 @@ const skill_data: Record<string, Skill> = {
         stats: {
     "Threat%": 0.5,
     },
-        dmg_stats: {stat: "DEF", ratio: 1.5, element: "Void%", pen_element: "Void Pen%"}
+        dmg_stats: { element: "Void", pen_element: "Void", stat: "DEF", ratio: 1.5 },
 },
 "Insult": {...defaultSkill,
         type: {
@@ -487,7 +498,7 @@ const skill_data: Record<string, Skill> = {
         stats: {
     "Threat%": 0.5,
     },
-        dmg_stats: {stat: "DEF", ratio: 4, element: "Void%", pen_element: "Void Pen%"}
+        dmg_stats: { element: "Void", pen_element: "Void", stat: "DEF", ratio: 4 },
 },
 "Challenge": {...defaultSkill,
         type: {
@@ -510,7 +521,7 @@ const skill_data: Record<string, Skill> = {
         conversions: [
     { source: "DEF", ratio: 0.4, resulting_stat: "DEF" },
     ],
-        dmg_stats: {stat: "DEF", ratio: 12, element: "Void%", pen_element: "Void Pen%"}
+        dmg_stats: { element: "Void", pen_element: "Void", stat: "DEF", ratio: 12 },
 },
 "MA Lesser Fortress": {...defaultSkill,
         type: {
@@ -555,6 +566,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Blunt ] Deals 90% ATK DMG, Breaks 7% Armor, 1 MP",
+        dmg_stats: { dmg_element: "Blunt", element: "Blunt", pen_element: "Blunt", stat: "ATK", ratio: 0.9, armor_break: 0.07 },
 },
 "Blunt Sunder EX": {...defaultSkill,
         category: "tank",
@@ -579,6 +591,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Blunt, 2 Charges ] Deals 100% DEF DMG, Breaks 35% Armor",
+        dmg_stats: { dmg_element: "Blunt", element: "Blunt", pen_element: "Blunt", stat: "DEF", ratio: 1, armor_break: 0.35 },
 },
 "Slash Sunder EX": {...defaultSkill,
         category: "tank",
@@ -603,6 +616,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Slash, 2 Charges ] Deals 100% DEF DMG, Breaks 35% Armor",
+        dmg_stats: { dmg_element: "Slash", element: "Slash", pen_element: "Slash", stat: "DEF", ratio: 1, armor_break: 0.35 },
 },
 "Pierce Sunder EX": {...defaultSkill,
         category: "tank",
@@ -627,6 +641,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Pierce, 2 Charges ] Deals 100% DEF DMG, Breaks 35% Armor",
+        dmg_stats: { dmg_element: "Pierce", element: "Pierce", pen_element: "Pierce", stat: "DEF", ratio: 1, armor_break: 0.35 },
 },
 "MA Fortitude": {...defaultSkill,
         type: {
@@ -830,7 +845,7 @@ const skill_data: Record<string, Skill> = {
         stats: {
     "Threat%": 0.5,
     },
-        dmg_stats: {stat: "DEF", ratio: 14.5, element: "Void%", pen_element: "Void Pen%"}
+        dmg_stats: { element: "Void", pen_element: "Void", stat: "DEF", ratio: 14.5 },
 },
 "Cry of Mockery": {...defaultSkill,
         type: {
@@ -853,7 +868,7 @@ const skill_data: Record<string, Skill> = {
         stats: {
     "Threat%": 0.5,
     },
-        dmg_stats: {stat: "DEF", ratio: 3, element: "Void%", pen_element: "Void Pen%"}
+        dmg_stats: { element: "Void", pen_element: "Void", stat: "DEF", ratio: 3 },
 },
 "Martyr Block": {...defaultSkill,
         type: {
@@ -901,6 +916,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Blunt, 4 Charges ] Deals 100% DEF DMG, Breaks 15% Armor",
+        dmg_stats: { dmg_element: "Blunt", element: "Blunt", pen_element: "Blunt", stat: "DEF", ratio: 1, armor_break: 0.15 },
 },
 "Slash Sunder 2": {...defaultSkill,
         category: "tank",
@@ -925,6 +941,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Slash, 4 Charges ] Deals 100% DEF DMG, Breaks 15% Armor",
+        dmg_stats: { dmg_element: "Slash", element: "Slash", pen_element: "Slash", stat: "DEF", ratio: 1, armor_break: 0.15 },
 },
 "Pierce Sunder 2": {...defaultSkill,
         category: "tank",
@@ -949,6 +966,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Pierce, 4 Charges ] Deals 100% DEF DMG, Breaks 15% Armor",
+        dmg_stats: { dmg_element: "Pierce", element: "Pierce", pen_element: "Pierce", stat: "DEF", ratio: 1, armor_break: 0.15 },
 },
 "MA Fortress": {...defaultSkill,
         type: {
@@ -1017,7 +1035,7 @@ const skill_data: Record<string, Skill> = {
         conversions: [
     { source: "DEF", ratio: -0.25, resulting_stat: "DEF" },
     ],
-        dmg_stats: {dmg_element: "Blunt",     element: "Blunt",     pen_element: "Blunt",     stat: "DEF", ratio: 1.5, }
+        dmg_stats: { dmg_element: "Blunt", element: "Blunt", pen_element: "Blunt", stat: "DEF", ratio: 1.5, armor_break: 0.55 },
 },
 "MA Counter": {...defaultSkill,
         type: {
@@ -1060,7 +1078,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ ⧖ ] Inflicts 350% DEF Threat, +100% Crit Chance",
-        dmg_stats: {stat: "DEF", ratio: 3.5, element: "Void%", pen_element: "Void Pen%"}
+        dmg_stats: { element: "Void", pen_element: "Void", stat: "DEF", ratio: 3.5, crit_chance: 1 },
 },
 "Focus Break": {...defaultSkill,
         type: {
@@ -1105,6 +1123,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Blunt ] Inflicts 240% ATK AOE, Cap 80% per Target, +50% Threat Generated, 2 MP",
+        dmg_stats: { dmg_element: "Blunt", element: "Blunt", pen_element: "Blunt", stat: "ATK", ratio: 0.8 },
 },
 "Heroic Block": {...defaultSkill,
         type: {
@@ -1201,6 +1220,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Blunt, 3 Charges ] Deals 200% ATK AOE, cap 100% per Target, Breaks 25% Armor",
+        dmg_stats: { dmg_element: "Blunt", element: "Blunt", pen_element: "Blunt", stat: "ATK", ratio: 1, armor_break: 0.25 },
 },
 "Draw Hatred": {...defaultSkill,
         type: {
@@ -1223,7 +1243,7 @@ const skill_data: Record<string, Skill> = {
         stats: {
     "Threat%": 0.5,
     },
-        dmg_stats: {stat: "DEF", ratio: 10, element: "Void%", pen_element: "Void Pen%"}
+        dmg_stats: { element: "Void", pen_element: "Void", stat: "DEF", ratio: 10 },
 },
 "MA Invulnerable": {...defaultSkill,
         type: {
@@ -1481,6 +1501,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Blunt ] Deal 130% DEF DMG, 3 MP",
+        dmg_stats: { dmg_element: "Blunt", element: "Blunt", pen_element: "Blunt", stat: "DEF", ratio: 1.3 },
 },
 "MA Fury Slash": {...defaultSkill,
         category: "tank",
@@ -1505,6 +1526,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Slash ] Deal 130% DEF DMG, 3 MP",
+        dmg_stats: { dmg_element: "Slash", element: "Slash", pen_element: "Slash", stat: "DEF", ratio: 1.3 },
 },
 "MA Fury Thrust": {...defaultSkill,
         category: "tank",
@@ -1529,6 +1551,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Pierce ] Deal 130% DEF DMG, 3 MP",
+        dmg_stats: { dmg_element: "Pierce", element: "Pierce", pen_element: "Pierce", stat: "DEF", ratio: 1.3 },
 },
 "Unyielding Life": {...defaultSkill,
         type: {
@@ -1624,7 +1647,7 @@ const skill_data: Record<string, Skill> = {
         stats: {
     "Threat%": 0.5,
     },
-        dmg_stats: {stat: "DEF", ratio: 11, element: "Void%", pen_element: "Void Pen%"}
+        dmg_stats: { element: "Void", pen_element: "Void", stat: "DEF", ratio: 11 },
 },
 "Curse of Hatred": {...defaultSkill,
         type: {
@@ -1647,7 +1670,7 @@ const skill_data: Record<string, Skill> = {
         stats: {
     "Threat%": 0.5,
     },
-        dmg_stats: {stat: "DEF", ratio: 4.25, element: "Void%", pen_element: "Void Pen%"}
+        dmg_stats: { element: "Void", pen_element: "Void", stat: "DEF", ratio: 4.25 },
 },
 "Intimidation": {...defaultSkill,
         type: {
@@ -1879,6 +1902,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Blunt ] Deal 130% DEF DMG, Breaks 8% Armor, 4 MP",
+        dmg_stats: { dmg_element: "Blunt", element: "Blunt", pen_element: "Blunt", stat: "DEF", ratio: 1.3, armor_break: 0.08 },
 },
 "MA Fury Swipes": {...defaultSkill,
         category: "tank",
@@ -1903,6 +1927,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Slash ] Deal 130% DEF DMG, Breaks 8% Armor, 4 MP",
+        dmg_stats: { dmg_element: "Slash", element: "Slash", pen_element: "Slash", stat: "DEF", ratio: 1.3, armor_break: 0.08 },
 },
 "MA Fury Jabs": {...defaultSkill,
         category: "tank",
@@ -1927,6 +1952,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Pierce ] Deal 130% DEF DMG, Breaks 8% Armor, 4 MP",
+        dmg_stats: { dmg_element: "Pierce", element: "Pierce", pen_element: "Pierce", stat: "DEF", ratio: 1.3, armor_break: 0.08 },
 },
 "Smith God's Blessing": {...defaultSkill,
         type: {
@@ -2022,7 +2048,7 @@ const skill_data: Record<string, Skill> = {
         stats: {
     "Threat%": 0.5,
     },
-        dmg_stats: {stat: "DEF", ratio: 20, element: "Void%", pen_element: "Void Pen%"}
+        dmg_stats: { element: "Void", pen_element: "Void", stat: "DEF", ratio: 20 },
 },
 "Murderous Aura": {...defaultSkill,
         type: {
@@ -2046,7 +2072,7 @@ const skill_data: Record<string, Skill> = {
         stats: {
     "Threat%": 0.5,
     },
-        dmg_stats: {stat: "DEF", ratio: 8, element: "Void%", pen_element: "Void Pen%"}
+        dmg_stats: { element: "Void", pen_element: "Void", stat: "DEF", ratio: 8 },
 },
 "MA Eyes of Hatred": {...defaultSkill,
         category: "tank",
@@ -2072,6 +2098,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "Inflicts 880% DEF Threat, 10 MP",
+        dmg_stats: { element: "Void", pen_element: "Void", stat: "DEF", ratio: 8.8 },
 },
 "MA Hatred Nexus": {...defaultSkill,
         category: "tank",
@@ -2097,6 +2124,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "Inflicts 265% DEF Threat per Enemy, 12 MP",
+        dmg_stats: { element: "Void", pen_element: "Void", stat: "DEF", ratio: 2.65 },
 },
 "Nightmare Crush": {...defaultSkill,
         category: "tank",
@@ -2122,6 +2150,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Void, 4 Charges ] Deals 400% DEF DMG, Breaks 35% Armor",
+        dmg_stats: { dmg_element: "Void", element: "Void", pen_element: "Void", stat: "DEF", ratio: 4, armor_break: 0.35 },
 },
 "Horror Whirlwind": {...defaultSkill,
         category: "tank",
@@ -2147,6 +2176,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Void, 2 Charges ] Deals 800% DEF AOE, cap 280% per Target, Breaks 30% Armor",
+        dmg_stats: { dmg_element: "Void", element: "Void", pen_element: "Void", stat: "DEF", ratio: 2.8, armor_break: 0.3 },
 },
 "Terror Strike": {...defaultSkill,
         type: {
@@ -2170,7 +2200,7 @@ const skill_data: Record<string, Skill> = {
         conversions: [
     { source: "DEF", ratio: -0.3, resulting_stat: "DEF" },
     ],
-        dmg_stats: {dmg_element: "Void",     element: "Void",     pen_element: "Void",     stat: "DEF", ratio: 7.5, }
+        dmg_stats: { dmg_element: "Void", element: "Void", pen_element: "Void", stat: "DEF", ratio: 7.5, armor_break: 0.7 },
 },
 "Wall of Jericho": {...defaultSkill,
         type: {
@@ -2365,6 +2395,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Blunt ] Deal 300% DEF DMG and 180% ATK DMG, Breaks 4% Armor, +10% Penetration, 9 MP",
+        dmg_stats: { dmg_element: "Blunt", element: "Blunt", pen_element: "Blunt", stat: "DEF", ratio: 3, stat2: "ATK", ratio2: 1.8, skill_pen: 0.1, armor_break: 0.04 },
 },
 "MA God Fury Slash": {...defaultSkill,
         category: "tank",
@@ -2390,6 +2421,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Slash ] Deal 300% DEF DMG and 180% ATK DMG, Breaks 4% Armor, +10% Penetration,  9 MP",
+        dmg_stats: { dmg_element: "Slash", element: "Slash", pen_element: "Slash", stat: "DEF", ratio: 3, stat2: "ATK", ratio2: 1.8, skill_pen: 0.1, armor_break: 0.04 },
 },
 "MA God Fury Thrust": {...defaultSkill,
         category: "tank",
@@ -2415,6 +2447,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Pierce ] Deal 300% DEF DMG and 180% ATK DMG, Breaks 4% Armor, +10% Penetration,  9 MP",
+        dmg_stats: { dmg_element: "Pierce", element: "Pierce", pen_element: "Pierce", stat: "DEF", ratio: 3, stat2: "ATK", ratio2: 1.8, skill_pen: 0.1, armor_break: 0.04 },
 },
 "Victim's Aegis": {...defaultSkill,
         type: {
@@ -2459,7 +2492,7 @@ const skill_data: Record<string, Skill> = {
         conversions: [
     { source: "DEF", ratio: -0.35, resulting_stat: "DEF" },
     ],
-        dmg_stats: {dmg_element: "Void",     element: "Void",     pen_element: "Void",     stat: "DEF", ratio: 3.5, }
+        dmg_stats: { dmg_element: "Void", element: "Void", pen_element: "Void", stat: "DEF", ratio: 3.5, armor_break: 0.5 },
 },
 "Martyr's Revenge": {...defaultSkill,
         type: {
@@ -2534,7 +2567,7 @@ const skill_data: Record<string, Skill> = {
         conversions: [
     { source: "HP", ratio: 0.5, resulting_stat: "Temp HP" },
     ],
-        dmg_stats: {stat: "DEF", ratio: 50, element: "Void%", pen_element: "Void Pen%"}
+        dmg_stats: { element: "Void", pen_element: "Void", stat: "DEF", ratio: 50 },
 },
 "Immortal Hero": {...defaultSkill,
         type: {
@@ -2584,7 +2617,7 @@ const skill_data: Record<string, Skill> = {
         stats: {
     "Threat%": 0.5,
     },
-        dmg_stats: {stat: "DEF", ratio: 24, element: "Void%", pen_element: "Void Pen%"}
+        dmg_stats: { element: "Void", pen_element: "Void", stat: "DEF", ratio: 24, armor_break: 0.08 },
 },
 "World Quaker": {...defaultSkill,
         type: {
@@ -2608,7 +2641,7 @@ const skill_data: Record<string, Skill> = {
         stats: {
     "Threat%": 0.5,
     },
-        dmg_stats: {dmg_element: "Void",     element: "Void",     pen_element: "Void",     stat: "DEF", ratio: 5.5, }
+        dmg_stats: { dmg_element: "Void", element: "Void", pen_element: "Void", stat: "DEF", ratio: 5.5 },
 },
 "Atlas Domination": {...defaultSkill,
         type: {
@@ -2632,7 +2665,7 @@ const skill_data: Record<string, Skill> = {
         stats: {
     "Threat%": 0.5,
     },
-        dmg_stats: {dmg_element: "Void",     element: "Void",     pen_element: "Void",     stat: "DEF", ratio: 12.5, }
+        dmg_stats: { dmg_element: "Void", element: "Void", pen_element: "Void", stat: "DEF", ratio: 12.5 },
 },
 "World Guard": {...defaultSkill,
         type: {
@@ -2680,6 +2713,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Slash ] Deal 110% ATK DMG, +40% Crit Chance, 6 Focus",
+        dmg_stats: { dmg_element: "Slash", element: "Slash", pen_element: "Slash", stat: "ATK", ratio: 1.1, crit_chance: 0.4 },
 },
 "MA Heavy Shot": {...defaultSkill,
         category: "warrior",
@@ -2704,6 +2738,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Pierce ] Deal 100% ATK DMG, +40% Crit Chance, +5% Crit Damage, 6 Focus",
+        dmg_stats: { dmg_element: "Pierce", element: "Pierce", pen_element: "Pierce", stat: "ATK", ratio: 1, crit_chance: 0.4, crit_dmg: 0.05 },
 },
 "MA Heavy Blow": {...defaultSkill,
         category: "warrior",
@@ -2728,6 +2763,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Blunt ] Deal 110% ATK DMG, +40% Crit Chance, 6 Focus",
+        dmg_stats: { dmg_element: "Blunt", element: "Blunt", pen_element: "Blunt", stat: "ATK", ratio: 1.1, crit_chance: 0.4 },
 },
 "MA Heavy Thrust": {...defaultSkill,
         category: "warrior",
@@ -2752,6 +2788,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Pierce ] Deal 110% ATK DMG, +40% Crit Chance, 6 Focus",
+        dmg_stats: { dmg_element: "Pierce", element: "Pierce", pen_element: "Pierce", stat: "ATK", ratio: 1.1, crit_chance: 0.4 },
 },
 "MA Body Defense 1": {...defaultSkill,
         type: {
@@ -2796,7 +2833,7 @@ const skill_data: Record<string, Skill> = {
         stats: {
     "Bow Crit DMG%": 0.15,
     },
-        dmg_stats: {dmg_element: "Pierce",     element: "Pierce",     pen_element: "Pierce",     stat: "ATK", ratio: 1, }
+        dmg_stats: { dmg_element: "Pierce", element: "Pierce", pen_element: "Void", stat: "ATK", ratio: 1, crit_dmg: 0.1 },
 },
 "Iron Fist": {...defaultSkill,
         type: {
@@ -2819,7 +2856,7 @@ const skill_data: Record<string, Skill> = {
         stats: {
     "Fist Crit DMG%": 0.15,
     },
-        dmg_stats: {dmg_element: "Blunt",     element: "Blunt",     pen_element: "Blunt",     stat: "ATK", ratio: 1, }
+        dmg_stats: { dmg_element: "Blunt", element: "Blunt", pen_element: "Blunt", stat: "ATK", ratio: 1, skill_type: "Fist", crit_dmg: 0.1 },
 },
 "Impaling Strike": {...defaultSkill,
         type: {
@@ -2842,7 +2879,7 @@ const skill_data: Record<string, Skill> = {
         stats: {
     "Spear DMG%": 0.15,
     },
-        dmg_stats: {dmg_element: "Pierce",     element: "Pierce",     pen_element: "Pierce",     stat: "ATK", ratio: 1.1, }
+        dmg_stats: { dmg_element: "Pierce", element: "Pierce", pen_element: "Pierce", stat: "ATK", ratio: 1.1, skill_type: "Spear" },
 },
 "Mortal Slash": {...defaultSkill,
         type: {
@@ -2865,7 +2902,7 @@ const skill_data: Record<string, Skill> = {
         stats: {
     "Sword DMG%": 0.15,
     },
-        dmg_stats: {dmg_element: "Slash",     element: "Slash",     pen_element: "Slash",     stat: "ATK", ratio: 1.1, }
+        dmg_stats: { dmg_element: "Slash", element: "Slash", pen_element: "Slash", stat: "ATK", ratio: 1.1, skill_type: "Sword" },
 },
 "Tremor Strike": {...defaultSkill,
         type: {
@@ -2888,7 +2925,7 @@ const skill_data: Record<string, Skill> = {
         stats: {
     "Hammer DMG%": 0.15,
     },
-        dmg_stats: {dmg_element: "Blunt",     element: "Blunt",     pen_element: "Blunt",     stat: "ATK", ratio: 1.1, }
+        dmg_stats: { dmg_element: "Blunt", element: "Blunt", pen_element: "Blunt", stat: "ATK", ratio: 1.1, skill_type: "Hammer" },
 },
 "Backside Sever": {...defaultSkill,
         type: {
@@ -2911,7 +2948,7 @@ const skill_data: Record<string, Skill> = {
         stats: {
     "Dagger Crit DMG%": 0.15,
     },
-        dmg_stats: {dmg_element: "Slash",     element: "Slash",     pen_element: "Slash",     stat: "ATK", ratio: 1, }
+        dmg_stats: { dmg_element: "Slash", element: "Slash", pen_element: "Slash", stat: "ATK", ratio: 1, skill_type: "Dagger", crit_dmg: 0.1 },
 },
 "Limit Release": {...defaultSkill,
         type: {
@@ -3047,7 +3084,7 @@ const skill_data: Record<string, Skill> = {
         stats: {
     "Bow Crit DMG%": 0.15,
     },
-        dmg_stats: {dmg_element: "Pierce",     element: "Pierce",     pen_element: "Pierce",     stat: "ATK", ratio: 1.4, }
+        dmg_stats: { dmg_element: "Pierce", element: "Pierce", pen_element: "Void", stat: "ATK", ratio: 1.4, crit_dmg: 0.1 },
 },
 "Impact Blows": {...defaultSkill,
         type: {
@@ -3070,7 +3107,7 @@ const skill_data: Record<string, Skill> = {
         stats: {
     "Fist Crit DMG%": 0.15,
     },
-        dmg_stats: {dmg_element: "Blunt",     element: "Blunt",     pen_element: "Blunt",     stat: "ATK", ratio: 1.4, }
+        dmg_stats: { dmg_element: "Blunt", element: "Blunt", pen_element: "Blunt", stat: "ATK", ratio: 1.4, skill_type: "Fist", crit_dmg: 0.1 },
 },
 "Fatal Puncture": {...defaultSkill,
         type: {
@@ -3093,7 +3130,7 @@ const skill_data: Record<string, Skill> = {
         stats: {
     "Spear DMG%": 0.15,
     },
-        dmg_stats: {dmg_element: "Pierce",     element: "Pierce",     pen_element: "Pierce",     stat: "ATK", ratio: 1.55, }
+        dmg_stats: { dmg_element: "Pierce", element: "Pierce", pen_element: "Pierce", stat: "ATK", ratio: 1.55, skill_type: "Spear" },
 },
 "Deadly Edge": {...defaultSkill,
         type: {
@@ -3116,7 +3153,7 @@ const skill_data: Record<string, Skill> = {
         stats: {
     "Sword DMG%": 0.15,
     },
-        dmg_stats: {dmg_element: "Slash",     element: "Slash",     pen_element: "Slash",     stat: "ATK", ratio: 1.55, }
+        dmg_stats: { dmg_element: "Slash", element: "Slash", pen_element: "Slash", stat: "ATK", ratio: 1.55, skill_type: "Sword" },
 },
 "Assassinate": {...defaultSkill,
         type: {
@@ -3139,7 +3176,7 @@ const skill_data: Record<string, Skill> = {
         stats: {
     "Hammer DMG%": 0.15,
     },
-        dmg_stats: {dmg_element: "Slash",     element: "Slash",     pen_element: "Slash",     stat: "ATK", ratio: 1.4, }
+        dmg_stats: { dmg_element: "Slash", element: "Slash", pen_element: "Slash", stat: "ATK", ratio: 1.4, skill_type: "Dagger", crit_dmg: 0.1 },
 },
 "Quake Smash": {...defaultSkill,
         type: {
@@ -3162,7 +3199,7 @@ const skill_data: Record<string, Skill> = {
         stats: {
     "Dagger Crit DMG%": 0.15,
     },
-        dmg_stats: {dmg_element: "Blunt",     element: "Blunt",     pen_element: "Blunt",     stat: "ATK", ratio: 1.55, }
+        dmg_stats: { dmg_element: "Blunt", element: "Blunt", pen_element: "Blunt", stat: "ATK", ratio: 1.55, skill_type: "Hammer" },
 },
 "MA Lesser Field": {...defaultSkill,
         type: {
@@ -3233,6 +3270,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Slash ] Deals 100% ATK DMG, +15% Penetration, 7 Focus",
+        dmg_stats: { dmg_element: "Slash", element: "Slash", pen_element: "Slash", stat: "ATK", ratio: 1, skill_pen: 0.15 },
 },
 "MA Aura Pierce": {...defaultSkill,
         category: "warrior",
@@ -3257,6 +3295,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Pierce ] Deals 100% ATK DMG, +15% Penetration, 7 Focus",
+        dmg_stats: { dmg_element: "Pierce", element: "Pierce", pen_element: "Pierce", stat: "ATK", ratio: 1, skill_pen: 0.15 },
 },
 "MA Aura Smash": {...defaultSkill,
         category: "warrior",
@@ -3281,6 +3320,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Blunt ] Deals 100% ATK DMG, +15% Penetration, 7 Focus",
+        dmg_stats: { dmg_element: "Blunt", element: "Blunt", pen_element: "Blunt", stat: "ATK", ratio: 1, skill_pen: 0.15 },
 },
 "Ethereal Shot": {...defaultSkill,
         category: "warrior",
@@ -3306,6 +3346,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ ⧖, Void ] Deals 220% ATK DMG, scales via pierce damage, +10% Crit Damage, 7 Focus",
+        dmg_stats: { dmg_element: "Void", element: "Pierce", pen_element: "Void", stat: "ATK", ratio: 2.2, crit_dmg: 0.1 },
 },
 "6 Fold Slash of Light": {...defaultSkill,
         category: "warrior",
@@ -3331,6 +3372,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Slash ] Deals 600% ATK DMG AOE, Cap 235% per Target, 12/-1 Focus",
+        dmg_stats: { dmg_element: "Slash", element: "Slash", pen_element: "Slash", stat: "ATK", ratio: 2.35 },
 },
 "Dragon Fang Thrust": {...defaultSkill,
         category: "warrior",
@@ -3356,6 +3398,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Pierce ] Deals 220% ATK DMG, 25% Penetration, ignores 15% Enemy Resist. 12/-1 Focus",
+        dmg_stats: { dmg_element: "Pierce", element: "Pierce", pen_element: "Pierce", stat: "ATK", ratio: 2.2, skill_pen: 0.25, res_ignore: 0.15 },
 },
 "Grand Lord Strike": {...defaultSkill,
         category: "warrior",
@@ -3381,6 +3424,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Blunt ] Deals 220% ATK DMG, 25% Penetration, 12/-1 Focus",
+        dmg_stats: { dmg_element: "Blunt", element: "Blunt", pen_element: "Blunt", stat: "ATK", ratio: 2.2, skill_pen: 0.25 },
 },
 "Roaring Lion Fist": {...defaultSkill,
         category: "warrior",
@@ -3406,6 +3450,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Blunt ] Deals, 255% ATK DMG, 12/-1 Focus",
+        dmg_stats: { dmg_element: "Blunt", element: "Blunt", pen_element: "Blunt", stat: "ATK", ratio: 2.55 },
 },
 "Shadow Execution": {...defaultSkill,
         category: "warrior",
@@ -3431,6 +3476,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Slash ] Deals 215% ATK DMG, +30% Crit DMG, 12/-1 Focus",
+        dmg_stats: { dmg_element: "Slash", element: "Slash", pen_element: "Slash", stat: "ATK", ratio: 2.15, crit_dmg: 0.3 },
 },
 "MA Endure": {...defaultSkill,
         type: {
@@ -3479,7 +3525,7 @@ const skill_data: Record<string, Skill> = {
         stats: {
     "Bow Crit DMG%": 0.15,
     },
-        dmg_stats: {dmg_element: "Pierce",     element: "Pierce",     pen_element: "Pierce",     stat: "ATK", ratio: 1.8, }
+        dmg_stats: { dmg_element: "Pierce", element: "Pierce", pen_element: "Void", stat: "ATK", ratio: 1.8, crit_dmg: 0.1 },
 },
 "Fierce Strikes": {...defaultSkill,
         type: {
@@ -3502,7 +3548,7 @@ const skill_data: Record<string, Skill> = {
         stats: {
     "Fist Crit DMG%": 0.15,
     },
-        dmg_stats: {dmg_element: "Blunt",     element: "Blunt",     pen_element: "Blunt",     stat: "ATK", ratio: 1.8, }
+        dmg_stats: { dmg_element: "Blunt", element: "Blunt", pen_element: "Blunt", stat: "ATK", ratio: 1.8, skill_type: "Fist", crit_dmg: 0.1 },
 },
 "Doom Spike": {...defaultSkill,
         type: {
@@ -3525,7 +3571,7 @@ const skill_data: Record<string, Skill> = {
         stats: {
     "Spear DMG%": 0.15,
     },
-        dmg_stats: {dmg_element: "Pierce",     element: "Pierce",     pen_element: "Pierce",     stat: "ATK", ratio: 2, }
+        dmg_stats: { dmg_element: "Pierce", element: "Pierce", pen_element: "Pierce", stat: "ATK", ratio: 2, skill_type: "Spear" },
 },
 "Dragon's Slice": {...defaultSkill,
         type: {
@@ -3548,7 +3594,7 @@ const skill_data: Record<string, Skill> = {
         stats: {
     "Sword DMG%": 0.15,
     },
-        dmg_stats: {dmg_element: "Slash",     element: "Slash",     pen_element: "Slash",     stat: "ATK", ratio: 2, }
+        dmg_stats: { dmg_element: "Slash", element: "Slash", pen_element: "Slash", stat: "ATK", ratio: 2, skill_type: "Sword" },
 },
 "Quicksilver Backstab": {...defaultSkill,
         type: {
@@ -3571,7 +3617,7 @@ const skill_data: Record<string, Skill> = {
         stats: {
     "Hammer DMG%": 0.15,
     },
-        dmg_stats: {dmg_element: "Slash",     element: "Slash",     pen_element: "Slash",     stat: "ATK", ratio: 1.8, }
+        dmg_stats: { dmg_element: "Slash", element: "Slash", pen_element: "Slash", stat: "ATK", ratio: 1.8, skill_type: "Dagger", crit_dmg: 0.1 },
 },
 "Earthbreaker": {...defaultSkill,
         type: {
@@ -3594,7 +3640,7 @@ const skill_data: Record<string, Skill> = {
         stats: {
     "Dagger Crit DMG%": 0.15,
     },
-        dmg_stats: {dmg_element: "Blunt",     element: "Blunt",     pen_element: "Blunt",     stat: "ATK", ratio: 2, }
+        dmg_stats: { dmg_element: "Blunt", element: "Blunt", pen_element: "Blunt", stat: "ATK", ratio: 2, skill_type: "Hammer" },
 },
 "MA Field": {...defaultSkill,
         type: {
@@ -3827,6 +3873,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ ⧖, Void ] Deals 320% ATK DMG, scales via Pierce, +20% Crit Damage, 10/-1 Focus",
+        dmg_stats: { dmg_element: "Void", element: "Pierce", pen_element: "Void", stat: "ATK", ratio: 3.2, crit_dmg: 0.2 },
 },
 "Hofung's Cleave": {...defaultSkill,
         category: "warrior",
@@ -3852,6 +3899,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Slash ] Deals 900% ATK DMG AOE, Cap 350% per Target, 18/-2 Focus",
+        dmg_stats: { dmg_element: "Slash", element: "Slash", pen_element: "Slash", stat: "ATK", ratio: 3.5 },
 },
 "Touch of Gungnir": {...defaultSkill,
         category: "warrior",
@@ -3877,6 +3925,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Pierce ] Deals 300% ATK DMG, 50% Penetration, ignores 25% Enemy Resist. 18/-2 Focus",
+        dmg_stats: { dmg_element: "Pierce", element: "Pierce", pen_element: "Pierce", stat: "ATK", ratio: 3, skill_pen: 0.5, res_ignore: 0.25 },
 },
 "Strike of Mjolnir": {...defaultSkill,
         category: "warrior",
@@ -3902,6 +3951,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Blunt ] Deals 330% ATK DMG, 25% Penetration, 18/-2 Focus",
+        dmg_stats: { dmg_element: "Blunt", element: "Blunt", pen_element: "Blunt", stat: "ATK", ratio: 3.3, skill_pen: 0.25 },
 },
 "Dragon Fury's Fist": {...defaultSkill,
         category: "warrior",
@@ -3927,6 +3977,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Blunt ] Deals, 380% ATK DMG, 18/-2 Focus",
+        dmg_stats: { dmg_element: "Blunt", element: "Blunt", pen_element: "Blunt", stat: "ATK", ratio: 3.8 },
 },
 "Gift of Loki": {...defaultSkill,
         category: "warrior",
@@ -3952,6 +4003,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Slash ] Deals, 275% ATK DMG, +40% Crit Damage, 18/-2 Focus",
+        dmg_stats: { dmg_element: "Slash", element: "Slash", pen_element: "Slash", stat: "ATK", ratio: 2.75, crit_dmg: 0.4 },
 },
 "Hawk Snipe": {...defaultSkill,
         type: {
@@ -3974,7 +4026,7 @@ const skill_data: Record<string, Skill> = {
         stats: {
     "Bow Crit DMG%": 0.2,
     },
-        dmg_stats: {dmg_element: "Pierce",     element: "Pierce",     pen_element: "Pierce",     stat: "ATK", ratio: 2.25, }
+        dmg_stats: { dmg_element: "Pierce", element: "Pierce", pen_element: "Void", stat: "ATK", ratio: 2.25, crit_dmg: 0.1 },
 },
 "Seven Sided Strike": {...defaultSkill,
         type: {
@@ -3997,7 +4049,7 @@ const skill_data: Record<string, Skill> = {
         stats: {
     "Fist Crit DMG%": 0.2,
     },
-        dmg_stats: {dmg_element: "Blunt",     element: "Blunt",     pen_element: "Blunt",     stat: "ATK", ratio: 2.25, }
+        dmg_stats: { dmg_element: "Blunt", element: "Blunt", pen_element: "Blunt", stat: "ATK", ratio: 2.25, skill_type: "Fist", crit_dmg: 0.1 },
 },
 "Serpent's Fang": {...defaultSkill,
         type: {
@@ -4020,7 +4072,7 @@ const skill_data: Record<string, Skill> = {
         stats: {
     "Spear DMG%": 0.2,
     },
-        dmg_stats: {dmg_element: "Pierce",     element: "Pierce",     pen_element: "Pierce",     stat: "ATK", ratio: 2.5, }
+        dmg_stats: { dmg_element: "Pierce", element: "Pierce", pen_element: "Pierce", stat: "ATK", ratio: 2.5, skill_type: "Spear" },
 },
 "Kensai Stroke": {...defaultSkill,
         type: {
@@ -4043,7 +4095,7 @@ const skill_data: Record<string, Skill> = {
         stats: {
     "Sword DMG%": 0.2,
     },
-        dmg_stats: {dmg_element: "Slash",     element: "Slash",     pen_element: "Slash",     stat: "ATK", ratio: 2.5, }
+        dmg_stats: { dmg_element: "Slash", element: "Slash", pen_element: "Slash", stat: "ATK", ratio: 2.5, skill_type: "Sword" },
 },
 "Phantom Strikes": {...defaultSkill,
         type: {
@@ -4066,7 +4118,7 @@ const skill_data: Record<string, Skill> = {
         stats: {
     "Dagger Crit DMG%": 0.2,
     },
-        dmg_stats: {dmg_element: "Slash",     element: "Slash",     pen_element: "Slash",     stat: "ATK", ratio: 2.25, }
+        dmg_stats: { dmg_element: "Slash", element: "Slash", pen_element: "Slash", stat: "ATK", ratio: 2.25, skill_type: "Dagger", crit_dmg: 0.1 },
 },
 "Silver Assault": {...defaultSkill,
         type: {
@@ -4089,7 +4141,7 @@ const skill_data: Record<string, Skill> = {
         stats: {
     "Hammer DMG%": 0.2,
     },
-        dmg_stats: {dmg_element: "Blunt",     element: "Blunt",     pen_element: "Blunt",     stat: "ATK", ratio: 2.5, }
+        dmg_stats: { dmg_element: "Blunt", element: "Blunt", pen_element: "Blunt", stat: "ATK", ratio: 2.5, skill_type: "Hammer" },
 },
 "Silent Movements": {...defaultSkill,
         type: {
@@ -4183,6 +4235,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Slash ] Deals 160% ATK DMG, +25% Penetration, 10 Focus",
+        dmg_stats: { dmg_element: "Slash", element: "Slash", pen_element: "Slash", stat: "ATK", ratio: 1.6, skill_pen: 0.25 },
 },
 "MA Aura Thrust": {...defaultSkill,
         category: "warrior",
@@ -4207,6 +4260,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Pierce ] Deals 160% ATK DMG, +25% Penetration, 10 Focus",
+        dmg_stats: { dmg_element: "Pierce", element: "Pierce", pen_element: "Pierce", stat: "ATK", ratio: 1.6, skill_pen: 0.25 },
 },
 "MA Aura Strike": {...defaultSkill,
         category: "warrior",
@@ -4231,6 +4285,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Blunt ] Deals 160% ATK DMG, +25% Penetration, 10 Focus",
+        dmg_stats: { dmg_element: "Blunt", element: "Blunt", pen_element: "Blunt", stat: "ATK", ratio: 1.6, skill_pen: 0.25 },
 },
 "MA Blood Strength": {...defaultSkill,
         type: {
@@ -4305,7 +4360,7 @@ const skill_data: Record<string, Skill> = {
         conversions: [
     { source: "Crit DMG%", ratio: 0.2, resulting_stat: "Crit DMG%" },
     ],
-        dmg_stats: {dmg_element: "Void",     element: "Pierce",     pen_element: "Void",     stat: "ATK", ratio: 4, }
+        dmg_stats: { dmg_element: "Void", element: "Pierce", pen_element: "Void", stat: "ATK", ratio: 4, crit_dmg: 0.25 },
 },
 "Storm Flash Stroke": {...defaultSkill,
         category: "warrior",
@@ -4331,6 +4386,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Slash ] Deals 1650% ATK DMG AOE, Cap 450% per Target. 25/-3 Focus",
+        dmg_stats: { dmg_element: "Slash", element: "Slash", pen_element: "Slash", stat: "ATK", ratio: 4.5 },
 },
 "Valkyrie's Fury": {...defaultSkill,
         type: {
@@ -4354,7 +4410,7 @@ const skill_data: Record<string, Skill> = {
         conversions: [
     { source: "Crit DMG%", ratio: 0.25, resulting_stat: "Crit DMG%" },
     ],
-        dmg_stats: {dmg_element: "Pierce",     element: "Pierce",     pen_element: "Pierce",     stat: "ATK", ratio: 4.2, }
+        dmg_stats: { dmg_element: "Pierce", element: "Pierce", pen_element: "Pierce", stat: "ATK", ratio: 4.2, skill_pen: 0.5 },
 },
 "Yamantaka Judgement": {...defaultSkill,
         category: "warrior",
@@ -4380,6 +4436,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Blunt ] Deals 485% ATK DMG, +25% Penetration. 25/-3 Focus",
+        dmg_stats: { dmg_element: "Blunt", element: "Blunt", pen_element: "Blunt", stat: "ATK", ratio: 4.85, skill_pen: 0.25 },
 },
 "Dragon Axe Kick": {...defaultSkill,
         category: "warrior",
@@ -4405,6 +4462,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Blunt ] Deals 530% ATK DMG. Breaks 10% Armor. 25/-3 Focus",
+        dmg_stats: { dmg_element: "Blunt", element: "Blunt", pen_element: "Blunt", stat: "ATK", ratio: 5.3, armor_break: 0.1 },
 },
 "Tsukiyomi Flash": {...defaultSkill,
         category: "warrior",
@@ -4430,6 +4488,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Slash ] Deals 400% ATK DMG, +100% Crit Chance, +30% Crit Damage. 25/-3 Focus",
+        dmg_stats: { dmg_element: "Slash", element: "Slash", pen_element: "Slash", stat: "ATK", ratio: 4, crit_chance: 1, crit_dmg: 0.3 },
 },
 "Astral Shot": {...defaultSkill,
         type: {
@@ -4452,7 +4511,7 @@ const skill_data: Record<string, Skill> = {
         stats: {
     "Bow Crit DMG%": 0.2,
     },
-        dmg_stats: {dmg_element: "Pierce",     element: "Pierce",     pen_element: "Pierce",     stat: "ATK", ratio: 2.9, }
+        dmg_stats: { dmg_element: "Pierce", element: "Pierce", pen_element: "Void", stat: "ATK", ratio: 2.9, crit_dmg: 0.1 },
 },
 "Roaring Dragon Fist": {...defaultSkill,
         type: {
@@ -4475,7 +4534,7 @@ const skill_data: Record<string, Skill> = {
         stats: {
     "Fist Crit DMG%": 0.2,
     },
-        dmg_stats: {dmg_element: "Blunt",     element: "Blunt",     pen_element: "Blunt",     stat: "ATK", ratio: 2.9, }
+        dmg_stats: { dmg_element: "Blunt", element: "Blunt", pen_element: "Blunt", stat: "ATK", ratio: 2.9, skill_type: "Fist", crit_dmg: 0.1 },
 },
 "Meteor Spiral Thrust": {...defaultSkill,
         type: {
@@ -4498,7 +4557,7 @@ const skill_data: Record<string, Skill> = {
         stats: {
     "Spear DMG%": 0.2,
     },
-        dmg_stats: {dmg_element: "Pierce",     element: "Pierce",     pen_element: "Pierce",     stat: "ATK", ratio: 3.2, }
+        dmg_stats: { dmg_element: "Pierce", element: "Pierce", pen_element: "Pierce", stat: "ATK", ratio: 3.2, skill_type: "Spear" },
 },
 "Wisdom King Strike": {...defaultSkill,
         type: {
@@ -4521,7 +4580,7 @@ const skill_data: Record<string, Skill> = {
         stats: {
     "Sword DMG%": 0.2,
     },
-        dmg_stats: {dmg_element: "Slash",     element: "Slash",     pen_element: "Slash",     stat: "ATK", ratio: 3.2, }
+        dmg_stats: { dmg_element: "Slash", element: "Slash", pen_element: "Slash", stat: "ATK", ratio: 3.2, skill_type: "Sword" },
 },
 "Twilight Strikes": {...defaultSkill,
         type: {
@@ -4544,7 +4603,7 @@ const skill_data: Record<string, Skill> = {
         stats: {
     "Dagger Crit DMG%": 0.2,
     },
-        dmg_stats: {dmg_element: "Slash",     element: "Slash",     pen_element: "Slash",     stat: "ATK", ratio: 2.9, }
+        dmg_stats: { dmg_element: "Slash", element: "Slash", pen_element: "Slash", stat: "ATK", ratio: 2.9, skill_type: "Dagger", crit_dmg: 0.1 },
 },
 "Damnation Blow": {...defaultSkill,
         type: {
@@ -4567,7 +4626,7 @@ const skill_data: Record<string, Skill> = {
         stats: {
     "Hammer DMG%": 0.2,
     },
-        dmg_stats: {dmg_element: "Blunt",     element: "Blunt",     pen_element: "Blunt",     stat: "ATK", ratio: 3.2, }
+        dmg_stats: { dmg_element: "Blunt", element: "Blunt", pen_element: "Blunt", stat: "ATK", ratio: 3.2, skill_type: "Hammer" },
 },
 "Cosmic Arrow Storm": {...defaultSkill,
         category: "warrior",
@@ -4593,6 +4652,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Pierce ] Deals 540% ATK DMG AOE, Cap 220% per Target. Pens with Void, +10% Crit Damage, 33/-1 Focus",
+        dmg_stats: { dmg_element: "Pierce", element: "Pierce", pen_element: "Void", stat: "ATK", ratio: 2.2, crit_dmg: 0.1 },
 },
 "Lion Whirlwind Kick": {...defaultSkill,
         category: "warrior",
@@ -4618,6 +4678,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Blunt ] Deals 540% ATK DMG AOE, Cap 220% per Target.+10% Crit Damage, 33/-1 Focus",
+        dmg_stats: { dmg_element: "Blunt", element: "Blunt", pen_element: "Blunt", stat: "ATK", ratio: 2.2, crit_dmg: 0.1 },
 },
 "Comet Cyclone": {...defaultSkill,
         category: "warrior",
@@ -4643,6 +4704,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Pierce ] Deals 600% ATK DMG AOE, Cap 245% per Target, 33/-1 Focus",
+        dmg_stats: { dmg_element: "Pierce", element: "Pierce", pen_element: "Pierce", stat: "ATK", ratio: 2.45 },
 },
 "Blade Demon Flash": {...defaultSkill,
         category: "warrior",
@@ -4668,6 +4730,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Slash ] Deals 600% ATK DMG AOE, Cap 245% per Target, 33/-1 Focus",
+        dmg_stats: { dmg_element: "Slash", element: "Slash", pen_element: "Slash", stat: "ATK", ratio: 2.45 },
 },
 "Shadow Blade Dance": {...defaultSkill,
         category: "warrior",
@@ -4693,6 +4756,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Slash ] Deals 540% ATK DMG AOE, Cap 220% per Target. +10% Crit Damage, 33/-1 Focus",
+        dmg_stats: { dmg_element: "Slash", element: "Slash", pen_element: "Slash", stat: "ATK", ratio: 2.2, crit_dmg: 0.1 },
 },
 "Meteor Impact": {...defaultSkill,
         category: "warrior",
@@ -4718,6 +4782,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Blunt ] Deals 600% ATK DMG AOE, Cap 245% per Target, 33/-1 Focus",
+        dmg_stats: { dmg_element: "Blunt", element: "Blunt", pen_element: "Blunt", stat: "ATK", ratio: 2.45 },
 },
 "Calm Focus Stance": {...defaultSkill,
         type: {
@@ -4817,6 +4882,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Slash ] Deals 200% ATK DMG, +30% Penetration, 16 Focus",
+        dmg_stats: { dmg_element: "Slash", element: "Slash", pen_element: "Slash", stat: "ATK", ratio: 2, skill_pen: 0.3 },
 },
 "MA Spirit Thrust": {...defaultSkill,
         category: "warrior",
@@ -4842,6 +4908,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Pierce ] Deals 200% ATK DMG, +30% Penetration, 16 Focus",
+        dmg_stats: { dmg_element: "Pierce", element: "Pierce", pen_element: "Pierce", stat: "ATK", ratio: 2, skill_pen: 0.3 },
 },
 "MA Spirit Strike": {...defaultSkill,
         category: "warrior",
@@ -4867,6 +4934,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Blunt ] Deals 200% ATK DMG, +30% Penetration, 16 Focus",
+        dmg_stats: { dmg_element: "Blunt", element: "Blunt", pen_element: "Blunt", stat: "ATK", ratio: 2, skill_pen: 0.3 },
 },
 "MA Mana Strength": {...defaultSkill,
         type: {
@@ -4989,7 +5057,7 @@ const skill_data: Record<string, Skill> = {
         stats: {
     "Sword DMG%": 0.15,
     },
-        dmg_stats: {dmg_element: "Slash",     element: "Slash",     pen_element: "Slash",     stat: "ATK", ratio: 2.9, }
+        dmg_stats: { dmg_element: "Slash", element: "Slash", pen_element: "Slash", stat: "ATK", ratio: 2.9, skill_type: "Sword" },
 },
 "Iaido Blossom": {...defaultSkill,
         category: "warrior",
@@ -5015,6 +5083,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Slash ] Deals 450% ATK DMG. 25/-4 Focus",
+        dmg_stats: { dmg_element: "Slash", element: "Slash", pen_element: "Slash", stat: "ATK", ratio: 4.5 },
 },
 "Guarding Flourish": {...defaultSkill,
         type: {
@@ -5065,7 +5134,7 @@ const skill_data: Record<string, Skill> = {
         stack_conversions: [
     { source: "Pierce Pen%", ratio: 0.1, resulting_stat: "Pierce Pen%" },
     ],
-        dmg_stats: {dmg_element: "Pierce",     element: "Pierce",     pen_element: "Pierce",     stat: "ATK", ratio: 3.2, }
+        dmg_stats: { dmg_element: "Pierce", element: "Pierce", pen_element: "Pierce", stat: "ATK", ratio: 3.2 },
 },
 "Calamity Impact": {...defaultSkill,
         category: "warrior",
@@ -5091,6 +5160,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Blunt ] Deals 1800% ATK DMG AOE, Cap 385% per Target. 40/-10 Focus",
+        dmg_stats: { dmg_element: "Blunt", element: "Blunt", pen_element: "Blunt", stat: "ATK", ratio: 3.85 },
 },
 "Leaping Rampage": {...defaultSkill,
         type: {
@@ -5163,7 +5233,7 @@ const skill_data: Record<string, Skill> = {
         conversions: [
     { source: "ATK", ratio: 0.4, resulting_stat: "ATK" },
     ],
-        dmg_stats: {dmg_element: "Blunt",     element: "Blunt",     pen_element: "Blunt",     stat: "ATK", ratio: 3, }
+        dmg_stats: { dmg_element: "Blunt", element: "Blunt", pen_element: "Blunt", stat: "ATK", ratio: 3, crit_dmg: 0.1 },
 },
 "Razored Edges": {...defaultSkill,
         type: {
@@ -5357,7 +5427,7 @@ const skill_data: Record<string, Skill> = {
         conversions: [
     { source: "Crit DMG%", ratio: 0.25, resulting_stat: "Crit DMG%" },
     ],
-        dmg_stats: {dmg_element: "Void",     element: "Pierce",     pen_element: "Void",     stat: "ATK", ratio: 6, }
+        dmg_stats: { dmg_element: "Void", element: "Pierce", pen_element: "Void", stat: "ATK", ratio: 6, crit_dmg: 0.3 },
 },
 "World's Divide": {...defaultSkill,
         category: "warrior",
@@ -5384,6 +5454,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Slash ] Deals 515% ATK DMG to all Enemies, 45/-15 Focus",
+        dmg_stats: { dmg_element: "Slash", element: "Slash", pen_element: "Slash", stat: "ATK", ratio: 5.15 },
 },
 "Piercer of Heaven": {...defaultSkill,
         type: {
@@ -5407,7 +5478,7 @@ const skill_data: Record<string, Skill> = {
         conversions: [
     { source: "Crit DMG%", ratio: 0.25, resulting_stat: "Crit DMG%" },
     ],
-        dmg_stats: {dmg_element: "Pierce",     element: "Pierce",     pen_element: "Pierce",     stat: "ATK", ratio: 5.05, }
+        dmg_stats: { dmg_element: "Pierce", element: "Pierce", pen_element: "Pierce", stat: "ATK", ratio: 5.05, skill_pen: 0.5 },
 },
 "Kundali's Retribution": {...defaultSkill,
         category: "warrior",
@@ -5434,6 +5505,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Blunt ] Deals 555% ATK DMG, +150% Penetration. 45/-15 Focus",
+        dmg_stats: { dmg_element: "Blunt", element: "Blunt", pen_element: "Blunt", stat: "ATK", ratio: 5.55, skill_pen: 1.5 },
 },
 "Infinite Strike": {...defaultSkill,
         category: "warrior",
@@ -5460,6 +5532,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Blunt ] Deals 600% ATK DMG. Ignores 100% Armor. 45/-15 Focus",
+        dmg_stats: { dmg_element: "Blunt", element: "Blunt", pen_element: "Blunt", stat: "ATK", ratio: 6, armor_ignore: 1 },
 },
 "Izanagi Severence": {...defaultSkill,
         category: "warrior",
@@ -5486,6 +5559,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Slash ] Deals 500% ATK DMG, +100% Crit Chance, +40% Crit Damage. 40/-10 Focus",
+        dmg_stats: { dmg_element: "Slash", element: "Slash", pen_element: "Slash", stat: "ATK", ratio: 5, crit_chance: 1, crit_dmg: 0.4 },
 },
 "Magic Missile": {...defaultSkill,
         category: "caster",
@@ -5510,6 +5584,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Void ] Deal 135% MATK DMG, 1 MP",
+        dmg_stats: { dmg_element: "Void", element: "Void", pen_element: "Void", stat: "MATK", ratio: 1.35 },
 },
 "Scorch Bolt": {...defaultSkill,
         category: "caster",
@@ -5534,6 +5609,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Fire ] Deal 110% MATK DMG, 1 MP",
+        dmg_stats: { dmg_element: "Fire", element: "Fire", pen_element: "Fire", stat: "MATK", ratio: 1.1 },
 },
 "Air Punch": {...defaultSkill,
         category: "caster",
@@ -5558,6 +5634,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Wind ] Deal 110% MATK DMG, 1 MP",
+        dmg_stats: { dmg_element: "Wind", element: "Wind", pen_element: "Wind", stat: "MATK", ratio: 1.1 },
 },
 "Dew Blast": {...defaultSkill,
         category: "caster",
@@ -5582,6 +5659,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Water ] Deal 110% MATK DMG, 1 MP",
+        dmg_stats: { dmg_element: "Water", element: "Water", pen_element: "Water", stat: "MATK", ratio: 1.1 },
 },
 "Spark": {...defaultSkill,
         category: "caster",
@@ -5606,6 +5684,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Lightning ] Deal 110% MATK DMG, 1 MP",
+        dmg_stats: { dmg_element: "Lightning", element: "Lightning", pen_element: "Lightning", stat: "MATK", ratio: 1.1 },
 },
 "Stone Bullet": {...defaultSkill,
         category: "caster",
@@ -5630,6 +5709,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Earth ] Deals 110% MATK DMG, 1 MP",
+        dmg_stats: { dmg_element: "Earth", element: "Earth", pen_element: "Earth", stat: "MATK", ratio: 1.1 },
 },
 "Force Blast": {...defaultSkill,
         category: "caster",
@@ -5654,6 +5734,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Void ] Deals 240% MATK AOE DMG, cap 90% per Target, 3 MP",
+        dmg_stats: { dmg_element: "Void", element: "Void", pen_element: "Void", stat: "MATK", ratio: 0.9 },
 },
 "Fire Lance": {...defaultSkill,
         category: "caster",
@@ -5678,6 +5759,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Fire ] Deals 180% MATK DMG, 3 MP",
+        dmg_stats: { dmg_element: "Fire", element: "Fire", pen_element: "Fire", stat: "MATK", ratio: 1.8 },
 },
 "Wind Blade": {...defaultSkill,
         category: "caster",
@@ -5702,6 +5784,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Wind ] Deals 180% MATK DMG, 3 MP",
+        dmg_stats: { dmg_element: "Wind", element: "Wind", pen_element: "Wind", stat: "MATK", ratio: 1.8 },
 },
 "Water Bomb": {...defaultSkill,
         category: "caster",
@@ -5726,6 +5809,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Water ] Deals 200% MATK AOE DMG, cap 80% per Target, 3 MP",
+        dmg_stats: { dmg_element: "Water", element: "Water", pen_element: "Water", stat: "MATK", ratio: 0.8 },
 },
 "Electrosphere": {...defaultSkill,
         category: "caster",
@@ -5750,6 +5834,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Lightning ] Deals 200% MATK AOE DMG, cap 80% per Target, 3 MP",
+        dmg_stats: { dmg_element: "Lightning", element: "Lightning", pen_element: "Lightning", stat: "MATK", ratio: 0.8 },
 },
 "Earth Impaler": {...defaultSkill,
         category: "caster",
@@ -5774,6 +5859,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Earth ] Deals 180% MATK DMG, 3 MP",
+        dmg_stats: { dmg_element: "Earth", element: "Earth", pen_element: "Earth", stat: "MATK", ratio: 1.8 },
 },
 "Negative Ray": {...defaultSkill,
         category: "caster",
@@ -5798,6 +5884,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Neg ] Deals 180% MATK DMG, 3 MP",
+        dmg_stats: { dmg_element: "Neg", element: "Neg", pen_element: "Neg", stat: "MATK", ratio: 1.8 },
 },
 "Radiance": {...defaultSkill,
         category: "caster",
@@ -5822,6 +5909,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Holy ] Deals 180% MATK DMG, 3 MP",
+        dmg_stats: { dmg_element: "Holy", element: "Holy", pen_element: "Holy", stat: "MATK", ratio: 1.8 },
 },
 "Poison Shot": {...defaultSkill,
         category: "caster",
@@ -5846,6 +5934,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Toxic ] Deals 180% MATK DMG, 3 MP",
+        dmg_stats: { dmg_element: "Toxic", element: "Toxic", pen_element: "Toxic", stat: "MATK", ratio: 1.8 },
 },
 "Enchant Weapon": {...defaultSkill,
         type: {
@@ -5962,6 +6051,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Fire ] Deals 500% MATK AOE DMG, cap 270% per Target, 9 MP",
+        dmg_stats: { dmg_element: "Fire", element: "Fire", pen_element: "Fire", stat: "MATK", ratio: 2.7 },
 },
 "Whirlwind": {...defaultSkill,
         type: {
@@ -5984,7 +6074,7 @@ const skill_data: Record<string, Skill> = {
         stack_conversions: [
     { source: "Wind%", ratio: 0.05, resulting_stat: "Wind%" },
     ],
-        dmg_stats: {dmg_element: "Wind",     element: "Wind",     pen_element: "Wind",     stat: "MATK", ratio: 2, }
+        dmg_stats: { dmg_element: "Wind", element: "Wind", pen_element: "Wind", stat: "MATK", ratio: 2, skill_pen: 0.15, res_ignore: 0.1 },
 },
 "Frozen Lance": {...defaultSkill,
         category: "caster",
@@ -6009,6 +6099,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Water ] Deals 240% MATK DMG, +15% Crit Chance, 7 MP",
+        dmg_stats: { dmg_element: "Water", element: "Water", pen_element: "Water", stat: "MATK", ratio: 2.4, crit_chance: 0.15 },
 },
 "Lightning": {...defaultSkill,
         category: "caster",
@@ -6033,6 +6124,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Lightning ] Deals 300% MATK DMG, 7 MP",
+        dmg_stats: { dmg_element: "Lightning", element: "Lightning", pen_element: "Lightning", stat: "MATK", ratio: 3 },
 },
 "Earth Surge": {...defaultSkill,
         category: "caster",
@@ -6057,6 +6149,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Earth ] Deals 350% MATK AOE DMG, cap 200% per Target, after breaking 6% Armor, Ignores 45% Armor. 8 MP",
+        dmg_stats: { dmg_element: "Earth", element: "Earth", pen_element: "Earth", stat: "MATK", ratio: 2, armor_ignore: 0.45, armor_break: 0.06 },
 },
 "Negative Wave": {...defaultSkill,
         category: "caster",
@@ -6081,6 +6174,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Neg ] Deals 350% MATK AOE DMG, cap 200% per Target, +50% Crit Damage, -10% Crit Chance, 8 MP",
+        dmg_stats: { dmg_element: "Neg", element: "Neg", pen_element: "Neg", stat: "MATK", ratio: 2, crit_chance: -0.1, crit_dmg: 0.5 },
 },
 "White Veil": {...defaultSkill,
         category: "caster",
@@ -6105,6 +6199,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Holy ] Deals 380% MATK AOE DMG, cap 210% per Target, 6 MP",
+        dmg_stats: { dmg_element: "Holy", element: "Holy", pen_element: "Holy", stat: "MATK", ratio: 2.1 },
 },
 "Acid Javelin": {...defaultSkill,
         category: "caster",
@@ -6129,6 +6224,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Toxic ] Deals 260% MATK DMG, 3% Damage Done applied as DOT, Ignores 10% Armor, 7 MP",
+        dmg_stats: { dmg_element: "Toxic", element: "Toxic", pen_element: "Toxic", stat: "MATK", ratio: 2.6, armor_ignore: 0.1, dot: 0.03 },
 },
 "Mana Barrier": {...defaultSkill,
         type: {
@@ -6345,6 +6441,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Fire ] Deals 320% MATK DMG, 12 MP",
+        dmg_stats: { dmg_element: "Fire", element: "Fire", pen_element: "Fire", stat: "MATK", ratio: 3.2 },
 },
 "Fire Wall": {...defaultSkill,
         category: "caster",
@@ -6369,6 +6466,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Fire ] Deals 800% MATK AOE DMG, cap 375% MATK per Target, 18 MP",
+        dmg_stats: { dmg_element: "Fire", element: "Fire", pen_element: "Fire", stat: "MATK", ratio: 3.75 },
 },
 "Piercing Gale": {...defaultSkill,
         type: {
@@ -6391,7 +6489,7 @@ const skill_data: Record<string, Skill> = {
         stack_conversions: [
     { source: "Wind%", ratio: 0.05, resulting_stat: "Wind%" },
     ],
-        dmg_stats: {dmg_element: "Wind",     element: "Wind",     pen_element: "Wind",     stat: "MATK", ratio: 3.2, }
+        dmg_stats: { dmg_element: "Wind", element: "Wind", pen_element: "Wind", stat: "MATK", ratio: 3.2, skill_pen: 0.16, res_ignore: 0.1 },
 },
 "Hurricane": {...defaultSkill,
         type: {
@@ -6414,7 +6512,7 @@ const skill_data: Record<string, Skill> = {
         stack_conversions: [
     { source: "Wind%", ratio: 0.05, resulting_stat: "Wind%" },
     ],
-        dmg_stats: {dmg_element: "Wind",     element: "Wind",     pen_element: "Wind",     stat: "MATK", ratio: 3.4, }
+        dmg_stats: { dmg_element: "Wind", element: "Wind", pen_element: "Wind", stat: "MATK", ratio: 3.4, skill_pen: 0.12, res_ignore: 0.1 },
 },
 "Frost Impaler": {...defaultSkill,
         category: "caster",
@@ -6439,6 +6537,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Water ] Deals 320% MATK DMG, +20% Crit Chance, 12 MP",
+        dmg_stats: { dmg_element: "Water", element: "Water", pen_element: "Water", stat: "MATK", ratio: 3.2, crit_chance: 0.2 },
 },
 "Blizzard": {...defaultSkill,
         category: "caster",
@@ -6463,6 +6562,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Water ] Deals 475% MATK AOE DMG, cap 340% MATK per Target, +15% Crit Chance, 15 MP",
+        dmg_stats: { dmg_element: "Water", element: "Water", pen_element: "Water", stat: "MATK", ratio: 3.4, crit_chance: 0.15 },
 },
 "Chain Lightning": {...defaultSkill,
         category: "caster",
@@ -6487,6 +6587,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Lightning ] Deals 475% MATK AOE DMG, cap 340% MATK per Target, 15 MP",
+        dmg_stats: { dmg_element: "Lightning", element: "Lightning", pen_element: "Lightning", stat: "MATK", ratio: 3.4 },
 },
 "Dragon Lightning": {...defaultSkill,
         category: "caster",
@@ -6511,6 +6612,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Lightning ] Deals 420% MATK DMG, 14 MP",
+        dmg_stats: { dmg_element: "Lightning", element: "Lightning", pen_element: "Lightning", stat: "MATK", ratio: 4.2 },
 },
 "Terra Wave": {...defaultSkill,
         category: "caster",
@@ -6535,6 +6637,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Earth ] Deals 475% MATK AOE DMG, cap 340% MATK per target after breaking 4% Armor, Ignores 45% Armor. 15 MP",
+        dmg_stats: { dmg_element: "Earth", element: "Earth", pen_element: "Earth", stat: "MATK", ratio: 3.4, armor_ignore: 0.45, armor_break: 0.04 },
 },
 "Terra Spiker": {...defaultSkill,
         category: "caster",
@@ -6559,6 +6662,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Earth ] Deals 320% MATK DMG, after breaking 6% Armor, Ignores 45% Armor.12 MP",
+        dmg_stats: { dmg_element: "Earth", element: "Earth", pen_element: "Earth", stat: "MATK", ratio: 3.2, armor_ignore: 0.45, armor_break: 0.06 },
 },
 "Negative Burst": {...defaultSkill,
         category: "caster",
@@ -6583,6 +6687,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Neg ] Deals 475% MATK AOE DMG, cap 320% per Target, +25% Crit Damage, -10% Crit Chance, 15 MP",
+        dmg_stats: { dmg_element: "Neg", element: "Neg", pen_element: "Neg", stat: "MATK", ratio: 3.2, crit_chance: -0.1, crit_dmg: 0.25 },
 },
 "Lesser Death": {...defaultSkill,
         category: "caster",
@@ -6607,6 +6712,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Neg ] Deals 320% MATK DMG, +45% Crit Damage, -10% Crit Chance, 12 MP",
+        dmg_stats: { dmg_element: "Neg", element: "Neg", pen_element: "Neg", stat: "MATK", ratio: 3.2, crit_chance: -0.1, crit_dmg: 0.45 },
 },
 "Dark Call": {...defaultSkill,
         category: "caster",
@@ -6631,6 +6737,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Void ] Deals 205% MATK DMG, +10% Crit Damage, Scales with Negative Damage, 12 MP",
+        dmg_stats: { dmg_element: "Void", element: "Neg", pen_element: "Void", stat: "MATK", ratio: 2.05, crit_dmg: 0.1 },
 },
 "Radiant Field": {...defaultSkill,
         category: "caster",
@@ -6655,6 +6762,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Holy ] Deals 500% MATK AOE DMG, cap 360% per Target, 10 MP",
+        dmg_stats: { dmg_element: "Holy", element: "Holy", pen_element: "Holy", stat: "MATK", ratio: 3.6 },
 },
 "Greater Radiance": {...defaultSkill,
         category: "caster",
@@ -6679,6 +6787,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Holy ] Deals 340% MATK DMG, 8 MP",
+        dmg_stats: { dmg_element: "Holy", element: "Holy", pen_element: "Holy", stat: "MATK", ratio: 3.4 },
 },
 "Poison Nova": {...defaultSkill,
         category: "caster",
@@ -6703,6 +6812,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Toxic ] Deals 340% MATK DMG, 3% Damage Done applied as DOT, Ignores 10% Armor, 12 MP",
+        dmg_stats: { dmg_element: "Toxic", element: "Toxic", pen_element: "Toxic", stat: "MATK", ratio: 3.4, armor_ignore: 0.1, dot: 0.03 },
 },
 "Acid Stream": {...defaultSkill,
         category: "caster",
@@ -6727,6 +6837,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Toxic ] Deals 500% MATK AOE DMG, cap 360% MATK per Target. 2% Damage Done applied as DOT, Ignores 10% Armor, 15 MP",
+        dmg_stats: { dmg_element: "Toxic", element: "Toxic", pen_element: "Toxic", stat: "MATK", ratio: 3.6, armor_ignore: 0.1, dot: 0.02 },
 },
 "Mana Armor": {...defaultSkill,
         type: {
@@ -6797,6 +6908,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Void ] Deals 400% MATK DMG, 11 MP",
+        dmg_stats: { dmg_element: "Void", element: "Void", pen_element: "Void", stat: "MATK", ratio: 4 },
 },
 "Study of Power": {...defaultSkill,
         type: {
@@ -6895,6 +7007,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Fire ] Deals 450% MATK DMG, 16 MP",
+        dmg_stats: { dmg_element: "Fire", element: "Fire", pen_element: "Fire", stat: "MATK", ratio: 4.5 },
 },
 "Explosion": {...defaultSkill,
         category: "caster",
@@ -6919,6 +7032,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Fire ] Deals 1200% MATK AOE DMG, cap 500% MATK per Target, 22 MP",
+        dmg_stats: { dmg_element: "Fire", element: "Fire", pen_element: "Fire", stat: "MATK", ratio: 5 },
 },
 "Sonic Crush": {...defaultSkill,
         category: "caster",
@@ -6943,6 +7057,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Wind ] Deals 450% MATK DMG, 16% Penetration, ignores 15% Enemy Resist. 16 MP",
+        dmg_stats: { dmg_element: "Wind", element: "Wind", pen_element: "Wind", stat: "MATK", ratio: 4.5, skill_pen: 0.16, res_ignore: 0.15 },
 },
 "Shark Cyclone": {...defaultSkill,
         category: "caster",
@@ -6967,6 +7082,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Wind ] Deals 775% MATK AOE DMG, cap 400% MATK per Target, 12% Penetration, ignores 15% Enemy Resist. 20 MP",
+        dmg_stats: { dmg_element: "Wind", element: "Wind", pen_element: "Wind", stat: "MATK", ratio: 4, skill_pen: 0.12, res_ignore: 0.15 },
 },
 "Spear of Niflheim": {...defaultSkill,
         category: "caster",
@@ -6991,6 +7107,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Water ] Deals 450% MATK DMG, +24% Crit Chance, 16 MP",
+        dmg_stats: { dmg_element: "Water", element: "Water", pen_element: "Water", stat: "MATK", ratio: 4.5, crit_chance: 0.24 },
 },
 "Ice Shard Storm": {...defaultSkill,
         category: "caster",
@@ -7015,6 +7132,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Water ] Deals 775% MATK AOE DMG, cap 400% MATK per Target, +18% Crit Chance, 20 MP",
+        dmg_stats: { dmg_element: "Water", element: "Water", pen_element: "Water", stat: "MATK", ratio: 4, crit_chance: 0.18 },
 },
 "Chain Dragon Lightning": {...defaultSkill,
         category: "caster",
@@ -7039,6 +7157,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Lightning ] Deals 775% MATK AOE DMG, cap 400% MATK per Target, 20 MP",
+        dmg_stats: { dmg_element: "Lightning", element: "Lightning", pen_element: "Lightning", stat: "MATK", ratio: 4 },
 },
 "Call Greater Thunder": {...defaultSkill,
         category: "caster",
@@ -7063,6 +7182,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Lightning ] Deals 540% MATK DMG, 18 MP",
+        dmg_stats: { dmg_element: "Lightning", element: "Lightning", pen_element: "Lightning", stat: "MATK", ratio: 5.4 },
 },
 "Gaia's Wrath": {...defaultSkill,
         category: "caster",
@@ -7087,6 +7207,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Earth ] Deals 775% MATK AOE DMG, cap 400% MATK per target after breaking 7% Armor, Ignores 55% Armor. 20 MP",
+        dmg_stats: { dmg_element: "Earth", element: "Earth", pen_element: "Earth", stat: "MATK", ratio: 4, armor_ignore: 0.55, armor_break: 0.07 },
 },
 "Gaia's Spear": {...defaultSkill,
         category: "caster",
@@ -7111,6 +7232,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Earth ] Deals 450% MATK DMG, after breaking 9% Armor, Ignores 55% Armor. 16 MP",
+        dmg_stats: { dmg_element: "Earth", element: "Earth", pen_element: "Earth", stat: "MATK", ratio: 4.5, armor_ignore: 0.55, armor_break: 0.09 },
 },
 "Death Nova": {...defaultSkill,
         category: "caster",
@@ -7135,6 +7257,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Neg ] Deals 775% MATK AOE DMG, cap 400% per Target, +40% Crit Damage, -15% Crit Chance, 20 MP",
+        dmg_stats: { dmg_element: "Neg", element: "Neg", pen_element: "Neg", stat: "MATK", ratio: 4, crit_chance: -0.15, crit_dmg: 0.4 },
 },
 "Death": {...defaultSkill,
         category: "caster",
@@ -7159,6 +7282,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Neg ] Deals 430% MATK DMG, +40% Crit Damage, -15% Crit Chance, 16 MP",
+        dmg_stats: { dmg_element: "Neg", element: "Neg", pen_element: "Neg", stat: "MATK", ratio: 4.3, crit_chance: -0.15, crit_dmg: 0.4 },
 },
 "Darkness": {...defaultSkill,
         category: "caster",
@@ -7183,6 +7307,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Void ] Deals 300% MATK DMG, +15% Crit Damage, Scales by Negative Damage, 16 MP",
+        dmg_stats: { dmg_element: "Void", element: "Neg", pen_element: "Void", stat: "MATK", ratio: 3, crit_dmg: 0.15 },
 },
 "Odin's Gaze": {...defaultSkill,
         category: "caster",
@@ -7207,6 +7332,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Holy ] Deals 800% MATK AOE DMG, cap 420% per Target, 15 MP",
+        dmg_stats: { dmg_element: "Holy", element: "Holy", pen_element: "Holy", stat: "MATK", ratio: 4.2 },
 },
 "Light of Valhalla": {...defaultSkill,
         category: "caster",
@@ -7231,6 +7357,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Holy ] Deals 475% MATK DMG, 12 MP",
+        dmg_stats: { dmg_element: "Holy", element: "Holy", pen_element: "Holy", stat: "MATK", ratio: 4.75 },
 },
 "Gravity Maelstrom": {...defaultSkill,
         category: "caster",
@@ -7255,6 +7382,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Void ] Deals 500% MATK DMG, 16 MP",
+        dmg_stats: { dmg_element: "Void", element: "Void", pen_element: "Void", stat: "MATK", ratio: 5 },
 },
 "Gravity Crush": {...defaultSkill,
         category: "caster",
@@ -7279,6 +7407,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Void ] Deals 880% MATK AOE DMG, cap 455% MATK per target, 20 MP",
+        dmg_stats: { dmg_element: "Void", element: "Void", pen_element: "Void", stat: "MATK", ratio: 4.55 },
 },
 "Corrosion Impact": {...defaultSkill,
         category: "caster",
@@ -7303,6 +7432,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Toxic ] Deals 475% MATK DMG, 3% Damage Done applied as DOT, Ignores 15% Armor, 16 MP",
+        dmg_stats: { dmg_element: "Toxic", element: "Toxic", pen_element: "Toxic", stat: "MATK", ratio: 4.75, armor_ignore: 0.15, dot: 0.03 },
 },
 "Venom Shroud": {...defaultSkill,
         category: "caster",
@@ -7327,6 +7457,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Toxic ] Deals 800% MATK DMG, cap 420% MATK per Target. 2% Damage Done applied as DOT, Ignores 15% Armor, 20 MP",
+        dmg_stats: { dmg_element: "Toxic", element: "Toxic", pen_element: "Toxic", stat: "MATK", ratio: 4.2, armor_ignore: 0.15, dot: 0.02 },
 },
 "Metamagic Boost": {...defaultSkill,
         type: {
@@ -7475,6 +7606,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Fire ] Deals 550% MATK DMG, 24 MP",
+        dmg_stats: { dmg_element: "Fire", element: "Fire", pen_element: "Fire", stat: "MATK", ratio: 5.5 },
 },
 "Nuclear Orb": {...defaultSkill,
         category: "caster",
@@ -7500,6 +7632,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Fire ] Deals 1750% MATK AOE DMG, cap 610% MATK per Target, 30 MP",
+        dmg_stats: { dmg_element: "Fire", element: "Fire", pen_element: "Fire", stat: "MATK", ratio: 6.1 },
 },
 "Mach Cannon": {...defaultSkill,
         type: {
@@ -7522,7 +7655,7 @@ const skill_data: Record<string, Skill> = {
         stack_conversions: [
     { source: "Wind%", ratio: 0.05, resulting_stat: "Wind%" },
     ],
-        dmg_stats: {dmg_element: "Wind",     element: "Wind",     pen_element: "Wind",     stat: "MATK", ratio: 4.5, }
+        dmg_stats: { dmg_element: "Wind", element: "Wind", pen_element: "Wind", stat: "MATK", ratio: 4.5, skill_pen: 0.16, res_ignore: 0.15 },
 },
 "Mach Hurricane": {...defaultSkill,
         type: {
@@ -7545,7 +7678,7 @@ const skill_data: Record<string, Skill> = {
         stack_conversions: [
     { source: "Wind%", ratio: 0.05, resulting_stat: "Wind%" },
     ],
-        dmg_stats: {dmg_element: "Wind",     element: "Wind",     pen_element: "Wind",     stat: "MATK", ratio: 7.75, }
+        dmg_stats: { dmg_element: "Wind", element: "Wind", pen_element: "Wind", stat: "MATK", ratio: 4, skill_pen: 0.12, res_ignore: 0.15 },
 },
 "Wrath of Hela": {...defaultSkill,
         category: "caster",
@@ -7571,6 +7704,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Water ] Deals 550% MATK DMG, +35% Crit Chance, 24 MP",
+        dmg_stats: { dmg_element: "Water", element: "Water", pen_element: "Water", stat: "MATK", ratio: 5.5, crit_chance: 0.35 },
 },
 "Niflheim Storm": {...defaultSkill,
         category: "caster",
@@ -7596,6 +7730,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Water ] Deals 1000% MATK AOE DMG, cap 500% MATK per Target, +25% Crit Chance, 28 MP",
+        dmg_stats: { dmg_element: "Water", element: "Water", pen_element: "Water", stat: "MATK", ratio: 5, crit_chance: 0.25 },
 },
 "Mjolnir's Blast": {...defaultSkill,
         category: "caster",
@@ -7621,6 +7756,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Lightning ] Deals 660% MATK DMG, 26 MP",
+        dmg_stats: { dmg_element: "Lightning", element: "Lightning", pen_element: "Lightning", stat: "MATK", ratio: 6.6 },
 },
 "Dragon Storm Nova": {...defaultSkill,
         category: "caster",
@@ -7646,6 +7782,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Lightning ] Deals 1000% MATK AOE DMG, cap 500% MATK per Target, 28 MP",
+        dmg_stats: { dmg_element: "Lightning", element: "Lightning", pen_element: "Lightning", stat: "MATK", ratio: 5 },
 },
 "Lance of Joro": {...defaultSkill,
         category: "caster",
@@ -7671,6 +7808,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Earth ] Deals 550% MATK DMG, after breaking 9% Armor, Ignores 55% Armor. 24 MP",
+        dmg_stats: { dmg_element: "Earth", element: "Earth", pen_element: "Earth", stat: "MATK", ratio: 5.5, armor_ignore: 0.55, armor_break: 0.09 },
 },
 "Joro's Judgement": {...defaultSkill,
         category: "caster",
@@ -7696,6 +7834,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Earth ] Deals 1000% MATK AOE DMG, cap 500% MATK per target after breaking 7% Armor, Ignores 55% Armor. 28 MP",
+        dmg_stats: { dmg_element: "Earth", element: "Earth", pen_element: "Earth", stat: "MATK", ratio: 5, armor_ignore: 0.55, armor_break: 0.07 },
 },
 "True Death": {...defaultSkill,
         category: "caster",
@@ -7721,6 +7860,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Neg ] Deals 500% MATK DMG, +50% Crit Damage, -20% Crit Chance, 25 MP",
+        dmg_stats: { dmg_element: "Neg", element: "Neg", pen_element: "Neg", stat: "MATK", ratio: 5, crit_chance: -0.2, crit_dmg: 0.5 },
 },
 "Cry of the Banshee": {...defaultSkill,
         category: "caster",
@@ -7746,6 +7886,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Neg ] Deals 1000% MATK AOE DMG, cap 465% per Target, +50% Crit Damage, -20% Crit Chance, 30 MP",
+        dmg_stats: { dmg_element: "Neg", element: "Neg", pen_element: "Neg", stat: "MATK", ratio: 4.65, crit_chance: -0.2, crit_dmg: 0.5 },
 },
 "True Darkness": {...defaultSkill,
         category: "caster",
@@ -7771,6 +7912,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Void ] Deals 420% MATK DMG, +18% Crit Damage, Scales by Negative Damage, 25 MP",
+        dmg_stats: { dmg_element: "Void", element: "Neg", pen_element: "Void", stat: "MATK", ratio: 4.2, crit_dmg: 0.18 },
 },
 "Shadow of Longinus": {...defaultSkill,
         category: "caster",
@@ -7796,6 +7938,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Holy ] Deals 575% MATK DMG, 18 MP",
+        dmg_stats: { dmg_element: "Holy", element: "Holy", pen_element: "Holy", stat: "MATK", ratio: 5.75 },
 },
 "Megido": {...defaultSkill,
         category: "caster",
@@ -7821,6 +7964,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Holy ] Deals 1100% MATK AOE DMG, cap 510% per Target, 22 MP",
+        dmg_stats: { dmg_element: "Holy", element: "Holy", pen_element: "Holy", stat: "MATK", ratio: 5.1 },
 },
 "Reality Slash": {...defaultSkill,
         category: "caster",
@@ -7846,6 +7990,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Void ] Deals 600% MATK DMG, 24 MP",
+        dmg_stats: { dmg_element: "Void", element: "Void", pen_element: "Void", stat: "MATK", ratio: 6 },
 },
 "Black Hole": {...defaultSkill,
         category: "caster",
@@ -7871,6 +8016,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Void ] Deals 1200% MATK AOE DMG, cap 575% MATK per target, 28 MP",
+        dmg_stats: { dmg_element: "Void", element: "Void", pen_element: "Void", stat: "MATK", ratio: 5.75 },
 },
 "Curse of Eitr": {...defaultSkill,
         category: "caster",
@@ -7896,6 +8042,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Toxic ] Deals 575% MATK DMG, 3% Damage Done applied as DOT, Ignores 15% Armor, 24 MP",
+        dmg_stats: { dmg_element: "Toxic", element: "Toxic", pen_element: "Toxic", stat: "MATK", ratio: 5.75, armor_ignore: 0.15, dot: 0.03 },
 },
 "Acid Tsunami": {...defaultSkill,
         category: "caster",
@@ -7921,6 +8068,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Toxic ] Deals 1100% MATK DMG, cap 510% MATK per Target. 2% Damage Done applied as DOT, Ignores 15% Armor, 28 MP",
+        dmg_stats: { dmg_element: "Toxic", element: "Toxic", pen_element: "Toxic", stat: "MATK", ratio: 5.1, armor_ignore: 0.15, dot: 0.02 },
 },
 "Metamagic Penetrate": {...defaultSkill,
         type: {
@@ -8064,6 +8212,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Fire ] Deals 450% MATK DMG, scales to Max Mag DMG/Pen, 24 MP",
+        dmg_stats: { dmg_element: "Fire", element: "Highest Magic", pen_element: "Highest Magic", stat: "MATK", ratio: 4.5 },
 },
 "Phantom Bolt": {...defaultSkill,
         category: "caster",
@@ -8089,6 +8238,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Lightning ] Deals 450% MATK DMG, scales to Max Mag DMG/Pen, 24 MP",
+        dmg_stats: { dmg_element: "Lightning", element: "Highest Magic", pen_element: "Highest Magic", stat: "MATK", ratio: 4.5 },
 },
 "Phantom Scar": {...defaultSkill,
         category: "caster",
@@ -8114,6 +8264,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Wind ] Deals 450% MATK DMG, scales to Max Mag DMG/Pen, 24 MP",
+        dmg_stats: { dmg_element: "Wind", element: "Highest Magic", pen_element: "Highest Magic", stat: "MATK", ratio: 4.5 },
 },
 "Phantom Wave": {...defaultSkill,
         category: "caster",
@@ -8139,6 +8290,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Water ] Deals 450% MATK DMG, scales to Max Mag DMG/Pen, 24 MP",
+        dmg_stats: { dmg_element: "Water", element: "Highest Magic", pen_element: "Highest Magic", stat: "MATK", ratio: 4.5 },
 },
 "Phantom Impaler": {...defaultSkill,
         category: "caster",
@@ -8164,6 +8316,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Earth ] Deals 450% MATK DMG, scales to Max Mag DMG/Pen, 24 MP",
+        dmg_stats: { dmg_element: "Earth", element: "Highest Magic", pen_element: "Highest Magic", stat: "MATK", ratio: 4.5 },
 },
 "Phantom Melt": {...defaultSkill,
         category: "caster",
@@ -8189,6 +8342,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Toxic ] Deals 450% MATK DMG, scales to Max Mag DMG/Pen, 24 MP",
+        dmg_stats: { dmg_element: "Toxic", element: "Highest Magic", pen_element: "Highest Magic", stat: "MATK", ratio: 4.5 },
 },
 "Phantom Crush": {...defaultSkill,
         category: "caster",
@@ -8214,6 +8368,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Void ] Deals 450% MATK DMG, scales to Max Mag DMG/Pen, 24 MP",
+        dmg_stats: { dmg_element: "Void", element: "Highest Magic", pen_element: "Highest Magic", stat: "MATK", ratio: 4.5 },
 },
 "Phantom Light": {...defaultSkill,
         category: "caster",
@@ -8239,6 +8394,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Holy ] Deals 450% MATK DMG, scales to Max Mag DMG/Pen, 24 MP",
+        dmg_stats: { dmg_element: "Holy", element: "Highest Magic", pen_element: "Highest Magic", stat: "MATK", ratio: 4.5 },
 },
 "Phantom Shadow": {...defaultSkill,
         category: "caster",
@@ -8264,6 +8420,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Neg ] Deals 450% MATK DMG, scales to Max Mag DMG/Pen, 24 MP",
+        dmg_stats: { dmg_element: "Neg", element: "Highest Magic", pen_element: "Highest Magic", stat: "MATK", ratio: 4.5 },
 },
 "Realm Barrier": {...defaultSkill,
         type: {
@@ -8407,6 +8564,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Fire ] Deals 725% MATK DMG, 38 MP",
+        dmg_stats: { dmg_element: "Fire", element: "Fire", pen_element: "Fire", stat: "MATK", ratio: 7.25 },
 },
 "Breath of Sora": {...defaultSkill,
         category: "caster",
@@ -8433,6 +8591,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Fire ] Deals 725% MATK to all Enemies, 48 MP",
+        dmg_stats: { dmg_element: "Fire", element: "Fire", pen_element: "Fire", stat: "MATK", ratio: 7.25 },
 },
 "Vayu's Blades": {...defaultSkill,
         type: {
@@ -8456,7 +8615,7 @@ const skill_data: Record<string, Skill> = {
         stack_conversions: [
     { source: "Wind%", ratio: 0.05, resulting_stat: "Wind%" },
     ],
-        dmg_stats: {dmg_element: "Wind",     element: "Wind",     pen_element: "Wind",     stat: "MATK", ratio: 7, }
+        dmg_stats: { dmg_element: "Wind", element: "Wind", pen_element: "Wind", stat: "MATK", ratio: 7, skill_pen: 0.2, res_ignore: 0.15 },
 },
 "Bhi'mola's Wings": {...defaultSkill,
         type: {
@@ -8480,7 +8639,7 @@ const skill_data: Record<string, Skill> = {
         stack_conversions: [
     { source: "Wind%", ratio: 0.05, resulting_stat: "Wind%" },
     ],
-        dmg_stats: {dmg_element: "Wind",     element: "Wind",     pen_element: "Wind",     stat: "MATK", ratio: 6.5, }
+        dmg_stats: { dmg_element: "Wind", element: "Wind", pen_element: "Wind", stat: "MATK", ratio: 6.5, skill_pen: 0.15, res_ignore: 0.15 },
 },
 "Eye of Varu'kora": {...defaultSkill,
         category: "caster",
@@ -8507,6 +8666,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Water ] Deals 715% MATK DMG, +40% Crit Chance, 38 MP",
+        dmg_stats: { dmg_element: "Water", element: "Water", pen_element: "Water", stat: "MATK", ratio: 7.15, crit_chance: 0.4 },
 },
 "Fury of Okeanos": {...defaultSkill,
         category: "caster",
@@ -8533,6 +8693,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Water ] Deals 1500% MATK AOE DMG, cap 650% MATK per Target, +40% Crit Chance, 45 MP",
+        dmg_stats: { dmg_element: "Water", element: "Water", pen_element: "Water", stat: "MATK", ratio: 6.5, crit_chance: 0.4 },
 },
 "Vayu's Spear": {...defaultSkill,
         category: "caster",
@@ -8559,6 +8720,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Lightning ] Deals 860% MATK DMG, 42 MP",
+        dmg_stats: { dmg_element: "Lightning", element: "Lightning", pen_element: "Lightning", stat: "MATK", ratio: 8.6 },
 },
 "Talons of Hanu'stora": {...defaultSkill,
         category: "caster",
@@ -8585,6 +8747,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Lightning ] Deals 1350% MATK AOE DMG, cap 600% MATK per Target, 45 MP",
+        dmg_stats: { dmg_element: "Lightning", element: "Lightning", pen_element: "Lightning", stat: "MATK", ratio: 6 },
 },
 "Fist of Gen'vimata": {...defaultSkill,
         category: "caster",
@@ -8611,6 +8774,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Earth ] Deals 720% MATK DMG, after breaking 9% Armor, Ignores 70% Armor. 38 MP",
+        dmg_stats: { dmg_element: "Earth", element: "Earth", pen_element: "Earth", stat: "MATK", ratio: 7.2, armor_ignore: 0.7, armor_break: 0.09 },
 },
 "Will of Gen'vimata": {...defaultSkill,
         category: "caster",
@@ -8637,6 +8801,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Earth ] Deals 1600% MATK AOE DMG, cap 665% MATK per target after breaking 7% Armor, Ignores 70% Armor. 45 MP",
+        dmg_stats: { dmg_element: "Earth", element: "Earth", pen_element: "Earth", stat: "MATK", ratio: 6.65, armor_ignore: 0.7, armor_break: 0.07 },
 },
 "Gren'neketer's Grasp": {...defaultSkill,
         category: "caster",
@@ -8663,6 +8828,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Neg ] Deals 570% MATK DMG, +70% Crit Damage, -25% Crit Chance, 40 MP",
+        dmg_stats: { dmg_element: "Neg", element: "Neg", pen_element: "Neg", stat: "MATK", ratio: 5.7, crit_chance: -0.25, crit_dmg: 0.7 },
 },
 "Winds of Gren'neketer": {...defaultSkill,
         category: "caster",
@@ -8689,6 +8855,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Neg ] Deals 1600% MATK AOE DMG, cap 565% per Target, +70% Crit Damage, -25% Crit Chance, 48 MP",
+        dmg_stats: { dmg_element: "Neg", element: "Neg", pen_element: "Neg", stat: "MATK", ratio: 5.65, crit_chance: -0.25, crit_dmg: 0.7 },
 },
 "Shadow of As'moraeldan": {...defaultSkill,
         category: "caster",
@@ -8715,6 +8882,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Void ] Deals 545% MATK DMG, +20% Crit Damage, Scales by Negative Damage, 40 MP",
+        dmg_stats: { dmg_element: "Void", element: "Neg", pen_element: "Void", stat: "MATK", ratio: 5.45, crit_dmg: 0.2 },
 },
 "Spear of Garabre'alos": {...defaultSkill,
         category: "caster",
@@ -8741,6 +8909,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Holy ] Deals 750% MATK DMG, 30 MP",
+        dmg_stats: { dmg_element: "Holy", element: "Holy", pen_element: "Holy", stat: "MATK", ratio: 7.5 },
 },
 "Downfall of Garabre'alos": {...defaultSkill,
         category: "caster",
@@ -8767,6 +8936,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Holy ] Deals 1800% MATK AOE DMG, cap 675% per Target, 35 MP",
+        dmg_stats: { dmg_element: "Holy", element: "Holy", pen_element: "Holy", stat: "MATK", ratio: 6.75 },
 },
 "Blade of Gen'vimata": {...defaultSkill,
         category: "caster",
@@ -8793,6 +8963,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Void ] Deals 785% MATK DMG, 38 MP",
+        dmg_stats: { dmg_element: "Void", element: "Void", pen_element: "Void", stat: "MATK", ratio: 7.85 },
 },
 "Gate of Gen'vimata": {...defaultSkill,
         category: "caster",
@@ -8819,6 +8990,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Void ] Deals 1800% MATK AOE DMG, cap 700% MATK per target, 45 MP",
+        dmg_stats: { dmg_element: "Void", element: "Void", pen_element: "Void", stat: "MATK", ratio: 7 },
 },
 "Mith'sara's Claws": {...defaultSkill,
         category: "caster",
@@ -8845,6 +9017,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Toxic ] Deals 750% MATK DMG, 3% Damage Done applied as DOT, Ignores 15% Armor, 38 MP",
+        dmg_stats: { dmg_element: "Toxic", element: "Toxic", pen_element: "Toxic", stat: "MATK", ratio: 7.5, armor_ignore: 0.15, dot: 0.03 },
 },
 "Mith'sara's Breath": {...defaultSkill,
         category: "caster",
@@ -8871,6 +9044,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Toxic ] Deals 2000% MATK DMG, cap 675% MATK per Target. 2% Damage Done applied as DOT, Ignores 15% Armor, 45 MP",
+        dmg_stats: { dmg_element: "Toxic", element: "Toxic", pen_element: "Toxic", stat: "MATK", ratio: 6.75, armor_ignore: 0.15, dot: 0.02 },
 },
 "Metamagic Multi Penetrate": {...defaultSkill,
         type: {
@@ -8961,6 +9135,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 1
         },
         description: "[ Holy ] Deal 60% Heal DMG, 1 MP",
+        dmg_stats: { dmg_element: "Holy", element: "Holy", pen_element: "Holy", stat: "HEAL", ratio: 0.6 },
 },
 "Lethal 1": {...defaultSkill,
         category: "healer",
@@ -8985,6 +9160,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 1
         },
         description: "[ Neg ] Deal 60% Heal DMG, 1 MP",
+        dmg_stats: { dmg_element: "Neg", element: "Neg", pen_element: "Neg", stat: "HEAL", ratio: 0.6 },
 },
 "Lesser Strength": {...defaultSkill,
         type: {
@@ -9070,6 +9246,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 10
         },
         description: "[ Holy ] Deal 110% Heal DMG, 3 MP",
+        dmg_stats: { dmg_element: "Holy", element: "Holy", pen_element: "Holy", stat: "HEAL", ratio: 1.1 },
 },
 "Lethal 2": {...defaultSkill,
         category: "healer",
@@ -9094,6 +9271,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 10
         },
         description: "[ Neg ] Deal 110% Heal DMG, 3 MP",
+        dmg_stats: { dmg_element: "Neg", element: "Neg", pen_element: "Neg", stat: "HEAL", ratio: 1.1 },
 },
 "Toxic Touch": {...defaultSkill,
         category: "healer",
@@ -9118,6 +9296,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 10
         },
         description: "[ Toxic ] Deal 100% Heal DMG, 5% Damage Done applied as DOT, 3 MP",
+        dmg_stats: { dmg_element: "Toxic", element: "Toxic", pen_element: "Toxic", stat: "HEAL", ratio: 1, dot: 0.05 },
 },
 "Strength": {...defaultSkill,
         type: {
@@ -9340,6 +9519,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 20
         },
         description: "[ Holy ] Deal 220% Heal AOE DMG, cap 130% per Target, 6 MP",
+        dmg_stats: { dmg_element: "Holy", element: "Holy", pen_element: "Holy", stat: "HEAL", ratio: 1.3 },
 },
 "Corruption": {...defaultSkill,
         category: "healer",
@@ -9364,6 +9544,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 20
         },
         description: "[ Neg ] Deal 220% Heal AOE DMG, cap 130% per Target, 6 MP",
+        dmg_stats: { dmg_element: "Neg", element: "Neg", pen_element: "Neg", stat: "HEAL", ratio: 1.3 },
 },
 "Sacrilege": {...defaultSkill,
         category: "healer",
@@ -9388,6 +9569,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 20
         },
         description: "[ Toxic ] Deal 200% Heal AOE DMG, cap 120% per Target, 5% Damage Done applied as DOT, 6 MP",
+        dmg_stats: { dmg_element: "Toxic", element: "Toxic", pen_element: "Toxic", stat: "HEAL", ratio: 1.2, dot: 0.05 },
 },
 "Life Surge": {...defaultSkill,
         type: {
@@ -9567,6 +9749,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 20
         },
         description: "[ Toxic ] Deal 100% Heal DMG, -50% Threat, 2 MP",
+        dmg_stats: { dmg_element: "Toxic", element: "Toxic", pen_element: "Toxic", stat: "HEAL", ratio: 1 },
 },
 "Rejuvenation": {...defaultSkill,
         type: {
@@ -9753,6 +9936,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 40
         },
         description: "[ Holy ] Deals 250% Heal DMG, 12 MP",
+        dmg_stats: { dmg_element: "Holy", element: "Holy", pen_element: "Holy", stat: "HEAL", ratio: 2.5 },
 },
 "Greater Lethal": {...defaultSkill,
         category: "healer",
@@ -9777,6 +9961,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 40
         },
         description: "[ Neg ] Deals 250% Heal DMG, 12 MP",
+        dmg_stats: { dmg_element: "Neg", element: "Neg", pen_element: "Neg", stat: "HEAL", ratio: 2.5 },
 },
 "Blood Boil": {...defaultSkill,
         category: "healer",
@@ -9801,6 +9986,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 40
         },
         description: "[ Toxic ] Deals 230% Heal DMG, 5% Damage Done applied as DOT, 12 MP",
+        dmg_stats: { dmg_element: "Toxic", element: "Toxic", pen_element: "Toxic", stat: "HEAL", ratio: 2.3, dot: 0.05 },
 },
 "Lifeflow Surge": {...defaultSkill,
         type: {
@@ -10228,6 +10414,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 70
         },
         description: "[ Holy ] Deals 320% Heal DMG, 15 MP",
+        dmg_stats: { dmg_element: "Holy", element: "Holy", pen_element: "Holy", stat: "HEAL", ratio: 3.2 },
 },
 "Lethal Infusion": {...defaultSkill,
         category: "healer",
@@ -10252,6 +10439,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 70
         },
         description: "[ Neg ] Deals 320% Heal DMG, 15 MP",
+        dmg_stats: { dmg_element: "Neg", element: "Neg", pen_element: "Neg", stat: "HEAL", ratio: 3.2 },
 },
 "Final Judgement": {...defaultSkill,
         category: "healer",
@@ -10276,6 +10464,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 70
         },
         description: "[ Holy ] Deal 500% Heal AOE DMG, cap 300% per Target, 18 MP",
+        dmg_stats: { dmg_element: "Holy", element: "Holy", pen_element: "Holy", stat: "HEAL", ratio: 3 },
 },
 "True Corruption": {...defaultSkill,
         category: "healer",
@@ -10300,6 +10489,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 70
         },
         description: "[ Neg ] Deal 500% Heal AOE DMG, cap 300% per Target, 18 MP",
+        dmg_stats: { dmg_element: "Neg", element: "Neg", pen_element: "Neg", stat: "HEAL", ratio: 3 },
 },
 "Blood Sear": {...defaultSkill,
         category: "healer",
@@ -10324,6 +10514,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 70
         },
         description: "[ Toxic ] Deals 300% Heal DMG, 5% Damage Done applied as DOT, 15 MP",
+        dmg_stats: { dmg_element: "Toxic", element: "Toxic", pen_element: "Toxic", stat: "HEAL", ratio: 3, dot: 0.05 },
 },
 "Blood Explosion": {...defaultSkill,
         category: "healer",
@@ -10348,6 +10539,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 70
         },
         description: "[ Toxic ] Deal 460% Heal AOE DMG, cap 280% per Target, 4% Damage Done applied as DOT, 18 MP",
+        dmg_stats: { dmg_element: "Toxic", element: "Toxic", pen_element: "Toxic", stat: "HEAL", ratio: 2.8, dot: 0.04 },
 },
 "Group Flame Ward": {...defaultSkill,
         type: {
@@ -10712,6 +10904,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 100
         },
         description: "[ Holy ] Deals 420% Heal DMG. 22 MP",
+        dmg_stats: { dmg_element: "Holy", element: "Holy", pen_element: "Holy", stat: "HEAL", ratio: 4.2 },
 },
 "Soul Curse": {...defaultSkill,
         category: "healer",
@@ -10737,6 +10930,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 100
         },
         description: "[ Neg ] Deal 420% Heal DMG, 22 MP",
+        dmg_stats: { dmg_element: "Neg", element: "Neg", pen_element: "Neg", stat: "HEAL", ratio: 4.2 },
 },
 "Samsara Light": {...defaultSkill,
         category: "healer",
@@ -10762,6 +10956,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 100
         },
         description: "[ Holy ] Deal 700% Heal AOE DMG, cap 400% per Target. 25 MP",
+        dmg_stats: { dmg_element: "Holy", element: "Holy", pen_element: "Holy", stat: "HEAL", ratio: 4 },
 },
 "Spirit Harvest": {...defaultSkill,
         category: "healer",
@@ -10787,6 +10982,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 100
         },
         description: "[ Neg ] Deal 700% Heal AOE DMG, cap 400% per Target. 25 MP",
+        dmg_stats: { dmg_element: "Neg", element: "Neg", pen_element: "Neg", stat: "HEAL", ratio: 4 },
 },
 "Pandamonium": {...defaultSkill,
         category: "healer",
@@ -10812,6 +11008,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 100
         },
         description: "[ Void ] Deals 500% Heal Damage, 22 MP",
+        dmg_stats: { dmg_element: "Void", element: "Void", pen_element: "Void", stat: "HEAL", ratio: 5 },
 },
 "Armageddon": {...defaultSkill,
         category: "healer",
@@ -10837,6 +11034,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 100
         },
         description: "[ Void ] Deals 800% Heal AOE Damage, cap 480% per Target, 25 MP",
+        dmg_stats: { dmg_element: "Void", element: "Void", pen_element: "Void", stat: "HEAL", ratio: 4.8 },
 },
 "Vita Collapse": {...defaultSkill,
         category: "healer",
@@ -10862,6 +11060,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 100
         },
         description: "[ Toxic ] Deals 480% Heal DMG, 5% Damage Done applied as DOT, 22 MP",
+        dmg_stats: { dmg_element: "Toxic", element: "Toxic", pen_element: "Toxic", stat: "HEAL", ratio: 4.8, dot: 0.05 },
 },
 "Blood Annihilation": {...defaultSkill,
         category: "healer",
@@ -10887,6 +11086,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 100
         },
         description: "[ Toxic ] Deal 775% Heal AOE DMG, cap 440% per Target, 4% Damage Done applied as DOT, 25 MP",
+        dmg_stats: { dmg_element: "Toxic", element: "Toxic", pen_element: "Toxic", stat: "HEAL", ratio: 4.4, dot: 0.04 },
 },
 "Divine Strength": {...defaultSkill,
         type: {
@@ -11047,6 +11247,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 100
         },
         description: "[ Fire ] Deals 380% Heal DMG, scales to Max Divine DMG/Pen, 22 MP",
+        dmg_stats: { dmg_element: "Fire", element: "Highest Divine", pen_element: "Highest Divine", stat: "HEAL", ratio: 3.8 },
 },
 "Divine Bolt": {...defaultSkill,
         category: "healer",
@@ -11072,6 +11273,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 100
         },
         description: "[ Lightning ] Deals 380% Heal DMG, scales to Max Divine DMG/Pen, 22 MP",
+        dmg_stats: { dmg_element: "Lightning", element: "Highest Divine", pen_element: "Highest Divine", stat: "HEAL", ratio: 3.8 },
 },
 "Divine Scar": {...defaultSkill,
         category: "healer",
@@ -11097,6 +11299,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 100
         },
         description: "[ Wind ] Deals 380% Heal DMG, scales to Max Divine DMG/Pen, 22 MP",
+        dmg_stats: { dmg_element: "Wind", element: "Highest Divine", pen_element: "Highest Divine", stat: "HEAL", ratio: 3.8 },
 },
 "Divine Wave": {...defaultSkill,
         category: "healer",
@@ -11122,6 +11325,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 100
         },
         description: "[ Water ] Deals 380% Heal DMG, scales to Max Divine DMG/Pen, 22 MP",
+        dmg_stats: { dmg_element: "Water", element: "Highest Divine", pen_element: "Highest Divine", stat: "HEAL", ratio: 3.8 },
 },
 "Divine Impaler": {...defaultSkill,
         category: "healer",
@@ -11147,6 +11351,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 100
         },
         description: "[ Earth ] Deals 380% Heal DMG, scales to Max Divine DMG/Pen, 22 MP",
+        dmg_stats: { dmg_element: "Earth", element: "Highest Divine", pen_element: "Highest Divine", stat: "HEAL", ratio: 3.8 },
 },
 "Divine Melt": {...defaultSkill,
         category: "healer",
@@ -11172,6 +11377,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 100
         },
         description: "[ Toxic ] Deals 380% Heal DMG, scales to Max Divine DMG/Pen, 22 MP",
+        dmg_stats: { dmg_element: "Toxic", element: "Highest Divine", pen_element: "Highest Divine", stat: "HEAL", ratio: 3.8 },
 },
 "Divine Crush": {...defaultSkill,
         category: "healer",
@@ -11197,6 +11403,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 100
         },
         description: "[ Void ] Deals 380% Heal DMG, scales to Max Divine DMG/Pen, 22 MP",
+        dmg_stats: { dmg_element: "Void", element: "Highest Divine", pen_element: "Highest Divine", stat: "HEAL", ratio: 3.8 },
 },
 "Divine Light": {...defaultSkill,
         category: "healer",
@@ -11222,6 +11429,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 100
         },
         description: "[ Holy ] Deals 380% Heal DMG, scales to Max Divine DMG/Pen, 22 MP",
+        dmg_stats: { dmg_element: "Holy", element: "Highest Divine", pen_element: "Highest Divine", stat: "HEAL", ratio: 3.8 },
 },
 "Divine Shadow": {...defaultSkill,
         category: "healer",
@@ -11247,6 +11455,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 100
         },
         description: "[ Neg ] Deals 380% Heal DMG, scales to Max Divine DMG/Pen, 22 MP",
+        dmg_stats: { dmg_element: "Neg", element: "Highest Divine", pen_element: "Highest Divine", stat: "HEAL", ratio: 3.8 },
 },
 "Flash Restoration": {...defaultSkill,
         type: {
@@ -11473,7 +11682,7 @@ const skill_data: Record<string, Skill> = {
         conversions: [
     { source: "HEAL", ratio: -0.9, resulting_stat: "HEAL" },
     ],
-        dmg_stats: {dmg_element: "Holy",     element: "Holy",     pen_element: "Holy",     stat: "HEAL", ratio: 9, }
+        dmg_stats: { dmg_element: "Holy", element: "Holy", pen_element: "Holy", stat: "HEAL", ratio: 9, res_ignore: 0.2 },
 },
 "True Soul Blight": {...defaultSkill,
         type: {
@@ -11497,7 +11706,7 @@ const skill_data: Record<string, Skill> = {
         conversions: [
     { source: "HEAL", ratio: -0.9, resulting_stat: "HEAL" },
     ],
-        dmg_stats: {dmg_element: "Neg",     element: "Neg",     pen_element: "Neg",     stat: "HEAL", ratio: 9, }
+        dmg_stats: { dmg_element: "Neg", element: "Neg", pen_element: "Neg", stat: "HEAL", ratio: 9, crit_dmg: 0.1 },
 },
 "Nirvana Wind": {...defaultSkill,
         type: {
@@ -11521,7 +11730,7 @@ const skill_data: Record<string, Skill> = {
         conversions: [
     { source: "HEAL", ratio: -0.9, resulting_stat: "HEAL" },
     ],
-        dmg_stats: {dmg_element: "Holy",     element: "Holy",     pen_element: "Holy",     stat: "HEAL", ratio: 7.75, }
+        dmg_stats: { dmg_element: "Holy", element: "Holy", pen_element: "Holy", stat: "HEAL", ratio: 7.75, res_ignore: 0.2 },
 },
 "Soul Devour": {...defaultSkill,
         type: {
@@ -11545,7 +11754,7 @@ const skill_data: Record<string, Skill> = {
         conversions: [
     { source: "HEAL", ratio: -0.9, resulting_stat: "HEAL" },
     ],
-        dmg_stats: {dmg_element: "Neg",     element: "Neg",     pen_element: "Neg",     stat: "HEAL", ratio: 7.75, }
+        dmg_stats: { dmg_element: "Neg", element: "Neg", pen_element: "Neg", stat: "HEAL", ratio: 7.75, crit_dmg: 0.1 },
 },
 "Shadow Orb": {...defaultSkill,
         type: {
@@ -11569,7 +11778,7 @@ const skill_data: Record<string, Skill> = {
         conversions: [
     { source: "HEAL", ratio: -0.9, resulting_stat: "HEAL" },
     ],
-        dmg_stats: {dmg_element: "Void",     element: "Void",     pen_element: "Void",     stat: "HEAL", ratio: 1100, }
+        dmg_stats: { dmg_element: "Void", element: "Void", pen_element: "Void", stat: "HEAL", ratio: 11 },
 },
 "Shadow Horizon": {...defaultSkill,
         type: {
@@ -11593,7 +11802,7 @@ const skill_data: Record<string, Skill> = {
         conversions: [
     { source: "HEAL", ratio: -0.9, resulting_stat: "HEAL" },
     ],
-        dmg_stats: {dmg_element: "Void",     element: "Void",     pen_element: "Void",     stat: "HEAL", ratio: 8.25, }
+        dmg_stats: { dmg_element: "Void", element: "Void", pen_element: "Void", stat: "HEAL", ratio: 8.25 },
 },
 "Abyssal Curse": {...defaultSkill,
         type: {
@@ -11617,7 +11826,7 @@ const skill_data: Record<string, Skill> = {
         conversions: [
     { source: "HEAL", ratio: -0.9, resulting_stat: "HEAL" },
     ],
-        dmg_stats: {dmg_element: "Toxic",     element: "Toxic",     pen_element: "Toxic",     stat: "HEAL", ratio: 8.5, }
+        dmg_stats: { dmg_element: "Toxic", element: "Toxic", pen_element: "Toxic", stat: "HEAL", ratio: 8.5, dot: 0.05 },
 },
 "Realm of the Damned": {...defaultSkill,
         type: {
@@ -11641,7 +11850,7 @@ const skill_data: Record<string, Skill> = {
         conversions: [
     { source: "HEAL", ratio: -0.9, resulting_stat: "HEAL" },
     ],
-        dmg_stats: {dmg_element: "Toxic",     element: "Toxic",     pen_element: "Toxic",     stat: "HEAL", ratio: 7.25, }
+        dmg_stats: { dmg_element: "Toxic", element: "Toxic", pen_element: "Toxic", stat: "HEAL", ratio: 7.25, dot: 0.04 },
 },
 "Shadow Guard": {...defaultSkill,
         type: {
@@ -11772,6 +11981,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Void ] Deals 1200% MATK to all Enemies, Generates +100% Threat, 30% of Max MP",
+        dmg_stats: { dmg_element: "Void", element: "Void", pen_element: "Void", stat: "MATK", ratio: 12 },
 },
 "The Shadowed Soul": {...defaultSkill,
         category: "caster",
@@ -11847,7 +12057,7 @@ const skill_data: Record<string, Skill> = {
         stats: {
     "DMG Res%": 0.1,
     },
-        dmg_stats: {dmg_element: "Void",     element: "Highest Phys",     pen_element: "Void",}
+        dmg_stats: { dmg_element: "Void", element: "Highest Phys", pen_element: "Void", stat: "ATK", ratio: 1.6, stat2: "DEF", ratio2: 3.5, skill_type: "Shadow Break" },
 },
 "Shadow Energy": {...defaultSkill,
         type: {
@@ -11999,7 +12209,6 @@ const skill_data: Record<string, Skill> = {
     { source: "Crit Chance%", ratio: -1, resulting_stat: "Crit Chance%" },
     { source: "MP", ratio: 3, resulting_stat: "Crit DMG%" },
     ],
-        dmg_stats: {armor_break: 0.9}        
 },
 "Shadow Terror": {...defaultSkill,
         category: "tank",
@@ -12298,7 +12507,6 @@ const skill_data: Record<string, Skill> = {
         stack_conversions: [
     { source: "MATK%", ratio: 0.2, resulting_stat: "Crit DMG%" },
     ],
-        dmg_stats: {armor_break: 0.5}
         
 },
 "Divine Shadow Mark": {...defaultSkill,
@@ -12325,7 +12533,6 @@ const skill_data: Record<string, Skill> = {
         stack_conversions: [
     { source: "HEAL%", ratio: 0.2, resulting_stat: "Crit DMG%" },
     ],
-        dmg_stats: {armor_break: 0.5}
         
 },
 "Spirit Guard": {...defaultSkill,
@@ -12706,7 +12913,7 @@ const skill_data: Record<string, Skill> = {
     { source: "Neg%", ratio: 2.5, resulting_stat: "Crit DMG%" },
     { source: "Void%", ratio: -1.5, resulting_stat: "Crit DMG%" },
     ],
-        dmg_stats: {dmg_element: "Void",     element: "Highest Phys",     pen_element: "Highest Phys",     stat: "ATK", ratio: 3.5, }
+        dmg_stats: { dmg_element: "Void", element: "Highest Phys", pen_element: "Highest Phys", stat: "ATK", ratio: 3.5 },
 },
 "Speech of Sin": {...defaultSkill,
         type: {
@@ -12863,7 +13070,7 @@ const skill_data: Record<string, Skill> = {
         conversions: [
     { source: "MP Regen", ratio: 25, resulting_stat: "Crit DMG%" },
     ],
-        dmg_stats: {dmg_element: "Void",     element: "Void",     pen_element: "Void",     stat: "ATK", ratio: 400,     stat2: "MATK",     ratio2: 400, }
+        dmg_stats: { dmg_element: "Void", element: "Highest Elemental", pen_element: "Highest Elemental", stat: "ATK", ratio: 4, stat2: "MATK", ratio2: 4 },
 },
 "Gaia's Embrace": {...defaultSkill,
         type: {
@@ -13344,6 +13551,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ ⧖, Void ] Deals 600% DEF DMG, Ignores 100% armor. Generates 5x threat.",
+        dmg_stats: { dmg_element: "Void", element: "Void", pen_element: "Void", stat: "DEF", ratio: 6, armor_ignore: 1 },
 },
 "Devourer's Corruption": {...defaultSkill,
         category: "warrior",
@@ -13615,6 +13823,7 @@ const skill_data: Record<string, Skill> = {
     { source: "ATK", ratio: 0.25, resulting_stat: "HEAL" },
     ],
         
+        dmg_stats: { dmg_element: "Blunt", element: "Highest Divine", pen_element: "Blunt", stat: "ATK", ratio: 1.5, stat2: "HEAL", ratio2: 3, armor_break: 0.25 },
 },
 "The Goddess Descends": {...defaultSkill,
         category: "hybrid",
@@ -15108,15 +15317,8 @@ const skill_data: Record<string, Skill> = {
         gold: 50,
         exp: 2000,
         description: "[ Fire ] Deal 200% ATK to all enemies. Scales to highest Physical ELE/Pen, costs 5% Max HP. Requires Dragon Lord Form active",
-        dmg_stats: {
-    dmg_element: "Fire",
-    element: "Highest Phys",
-    pen_element: "Highest Phys",
-    stat: "ATK",
-    ratio: 2,
-    armor_break: 0.25
-    },
         
+        dmg_stats: { dmg_element: "Fire", element: "Highest Phys", pen_element: "Highest Phys", stat: "ATK", ratio: 2, armor_break: 0.25 },
 },
 "Dragon Strength": {...defaultSkill,
         type: {

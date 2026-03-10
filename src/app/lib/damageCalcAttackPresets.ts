@@ -50,14 +50,25 @@ export const attackPresetInputKeys: AttackPresetInputKey[] = [
   "secondSkillDmg",
 ]
 
-const physicalElements = ["Slash", "Pierce", "Blunt"] as const
+const highestElementGroups = {
+  "Highest Phys": ["Slash", "Pierce", "Blunt"],
+  "Highest Magic": ["Fire", "Water", "Lightning", "Wind", "Earth", "Toxic", "Neg", "Holy", "Void"],
+  "Highest Elemental": ["Fire", "Water", "Lightning", "Wind", "Earth", "Toxic"],
+  "Highest Divine": ["Neg", "Holy", "Void"],
+} as const
+
+type DynamicElementSource = keyof typeof highestElementGroups
+
+function isDynamicElementSource(value: string): value is DynamicElementSource {
+  return value in highestElementGroups
+}
 
 function normalizeElementName(value: unknown): string | null {
   if (typeof value !== "string" || value.length === 0) {
     return null
   }
 
-  if (value === "Highest Phys") {
+  if (isDynamicElementSource(value)) {
     return value
   }
 
@@ -93,8 +104,12 @@ function toSkillPercent(value: unknown): number {
   return Math.abs(value) >= 100 ? value : value * 100
 }
 
-function resolveHighestPhysElement(stats: Record<string, number>, mode: "damage" | "pen"): string {
-  const best = physicalElements.reduce<{ element: string; score: number }>((result, element) => {
+function resolveHighestElement(
+  stats: Record<string, number>,
+  source: DynamicElementSource,
+  mode: "damage" | "pen",
+): string {
+  const best = highestElementGroups[source].reduce<{ element: string; score: number }>((result, element) => {
     const score =
       mode === "pen"
         ? (stats[`${element} Pen%`] ?? 0)
@@ -111,8 +126,8 @@ function resolveElementName(
   stats: Record<string, number>,
   mode: "damage" | "pen",
 ): string {
-  if (source === "Highest Phys") {
-    return resolveHighestPhysElement(stats, mode)
+  if (source && isDynamicElementSource(source)) {
+    return resolveHighestElement(stats, source, mode)
   }
 
   return source ?? (mode === "pen" ? defaultDamageCalcState.penElement : defaultDamageCalcState.element)
@@ -133,14 +148,14 @@ function buildPresetNote(
     parts.push(`Damage: ${preset.damageType}`)
   }
 
-  if (preset.element === "Highest Phys") {
-    parts.push(`Scale: ${resolvedElement} (Highest Phys)`)
+  if (preset.element && isDynamicElementSource(preset.element)) {
+    parts.push(`Scale: ${resolvedElement} (${preset.element})`)
   } else if (preset.element && preset.damageType && preset.element !== preset.damageType) {
     parts.push(`Scale: ${resolvedElement}`)
   }
 
-  if (preset.penElement === "Highest Phys") {
-    parts.push(`Pen: ${resolvedPenElement} (Highest Phys)`)
+  if (preset.penElement && isDynamicElementSource(preset.penElement)) {
+    parts.push(`Pen: ${resolvedPenElement} (${preset.penElement})`)
   } else if (preset.penElement && preset.penElement !== resolvedElement) {
     parts.push(`Pen: ${resolvedPenElement}`)
   }
@@ -173,7 +188,7 @@ const rawAttackPresets: RawAttackPreset[] = Object.entries(skill_data)
         skillCritChance: toPercentValue(dmg.crit_chance),
         threatDef: isThreatOnly ? toSkillPercent(dmg.ratio) : toSkillPercent(dmg.threat),
         armorIgnore: toPercentValue(dmg.armor_ignore ?? dmg.armor_break),
-        resIgnore: 0,
+        resIgnore: toPercentValue(dmg.res_ignore),
         dot: toPercentValue(dmg.dot),
         secondSkillDmg: isThreatOnly ? 0 : toSkillPercent(dmg.ratio2),
       },
