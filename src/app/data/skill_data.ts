@@ -25,12 +25,12 @@ export type Skill = {
     stats?: Partial<Record<StatNames, number>>
     stack_stats?: Partial<Record<StatNames, number>>
     conversions?: Array<{
-        source: StatNames
+        source: StatNames | string
         ratio: number
         resulting_stat: StatNames
     }>
     stack_conversions?: Array<{
-        source: StatNames
+        source: StatNames | string
         ratio: number
         resulting_stat: StatNames
     }>
@@ -11803,7 +11803,7 @@ const skill_data: Record<string, Skill> = {
             is_buff: true,
             is_attack: false,
             self_cast: true,
-            free_turn: false
+            free_turn: true
         },
         PreReq: ["World Mender"],
         sp: 3,
@@ -11816,10 +11816,13 @@ const skill_data: Record<string, Skill> = {
             caster_levels: 0,
             healer_levels: 60
         },
-        description: "[ 2 Charges ] Give Target Life Regen equal to 30% Healpower for 6 Turns.",
+        description: "[ ⧖, 2 Charges ] Give party Life Regen equal to 50% of self Max HP and +50 Focus Regen for 3 turns. 6 Turn Cooldown.",
+        stats: {
+    "Focus Regen": 50,
+    },
         conversions: [
-    { source: "HEAL", ratio: 0.3, resulting_stat: "HP Regen" },
-    ],
+    { source: "HP", ratio: 0.5, resulting_stat: "HP Regen" },
+        ],
         
 },
 "Shadow Break Crush": {...defaultSkill,
@@ -11864,10 +11867,12 @@ const skill_data: Record<string, Skill> = {
             caster_levels: 30,
             healer_levels: 0
         },
-        description: "[ 1 Charge ] Restore 4 MP for each point of Void Resist, raise self MATK by 30% for 18 Turns",
+        description: "[ 1 Charge ] Restore 4 MP for each point of Void Resist, raise self MATK by 5% per turn up to a maximum of 100% for the rest of the battle.",
         conversions: [
     { source: "Void Res%", ratio: 4, resulting_stat: "MP" },
-    { source: "MATK", ratio: 0.3, resulting_stat: "MATK" },
+    ],
+        stack_conversions: [
+    { source: "MATK", ratio: 0.05, resulting_stat: "MATK" },
     ],
         
 },
@@ -11876,7 +11881,7 @@ const skill_data: Record<string, Skill> = {
             is_buff: true,
             is_attack: false,
             self_cast: false,
-            free_turn: false
+            free_turn: true
         },
         PreReq: ["World Preserver"],
         sp: 3,
@@ -11889,7 +11894,10 @@ const skill_data: Record<string, Skill> = {
             caster_levels: 0,
             healer_levels: 30
         },
-        description: "[ 3 Charges ] Heal Party HP by 50K+50% Heal, +25% Threat Generated. Give party HP regen equal to 5% of Heal for 10 turns. 20 MP",
+        description: "[ ⧖ ] Heal Party HP by 50K+50% Heal, +300% Threat Generated. Give party HP regen equal to 5% of Heal for 5 turns. 9 turn cooldown. 20 MP",
+        stats: {
+    "Threat%": 3,
+    },
         conversions: [
     { source: "HEAL", ratio: 0.05, resulting_stat: "HP Regen" },
     ],
@@ -11986,11 +11994,12 @@ const skill_data: Record<string, Skill> = {
             caster_levels: 30,
             healer_levels: 30
         },
-        description: "[ ⧖ ] Break target armor by 80%. Lose 100% of Self Crit Chance for 8 turns. 12 Turn Cooldown.",
+        description: "[ ⧖ ] Break target armor by 90%. Lose 100% of Self Crit Chance for 2 turns. Increase self Crit DMG by 3x current MP for 4 turns. 4 Turn Cooldown.",
         conversions: [
     { source: "Crit Chance%", ratio: -1, resulting_stat: "Crit Chance%" },
+    { source: "MP", ratio: 3, resulting_stat: "Crit DMG%" },
     ],
-        dmg_stats: {armor_break: 0.8}
+        dmg_stats: {armor_break: 0.9}
 },
 "Shadow Cloak": {...defaultSkill,
         type: {
@@ -12040,6 +12049,9 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ ⧖, 3 Charges ] Debuff enemy Damage by 15x of DEF Multiplier. Cannot be stacked. Increase self threat gen by 3x stacking per cast for rest of battle.",
+        stack_stats: {
+    "Threat%": 3,
+    },
 },
 "Shadow Slayer's Form": {...defaultSkill,
         type: {
@@ -12059,13 +12071,13 @@ const skill_data: Record<string, Skill> = {
             caster_levels: 0,
             healer_levels: 0
         },
-        description: "[ 1 Charge ] Give self DMG Multiplier equal to 40% of ATK Multiplier and reduce DMG Taken by 20% for rest of the battle. However can no longer land Critical Hits.",
+        description: "[ 1 Charge ] Give self DMG Multiplier equal to 50% of ATK Multiplier and reduce DMG Taken by 25% for rest of the battle. However can no longer land Critical Hits.",
         stats: {
-    "DMG Res%": 0.2,
-    "Crit Chance%": -99.99,
+    "DMG Res%": 0.25,
     },
         conversions: [
-    { source: "ATK%", ratio: 0.4, resulting_stat: "Dmg%" },
+    { source: "ATK%", ratio: 0.5, resulting_stat: "Dmg%" },
+    { source: "Crit Chance%", ratio: -1, resulting_stat: "Crit Chance%" },
     ],
         
 },
@@ -12166,11 +12178,14 @@ const skill_data: Record<string, Skill> = {
             caster_levels: 30,
             healer_levels: 0
         },
-        description: "[ ⧖ ] Gain MP/MP Degen equal to 25%/5% of Max MP. MP Degen stacks for rest of battle. Increase self MATK by 25% for 5 Turns.",
+        description: "[ ⧖ ] Gain MP/MP Degen equal to 10%/1% of Max MP. MP Degen stacks for rest of battle. Increase self Crit DMG by 50% of MATK Multiplier and self MATK by 25% for 5 turns.",
         conversions: [
-    { source: "MP", ratio: 0.25, resulting_stat: "MP" },
-    { source: "MP", ratio: -0.05, resulting_stat: "MP Regen" },
+    { source: "MP", ratio: 0.1, resulting_stat: "MP" },
+    { source: "MATK%", ratio: 0.5, resulting_stat: "Crit DMG%" },
     { source: "MATK", ratio: 0.25, resulting_stat: "MATK" },
+    ],
+        stack_conversions: [
+    { source: "MP", ratio: -0.01, resulting_stat: "MP Regen" },
     ],
         
 },
@@ -12178,7 +12193,7 @@ const skill_data: Record<string, Skill> = {
         type: {
             is_buff: true,
             is_attack: false,
-            self_cast: true,
+            self_cast: false,
             free_turn: false
         },
         PreReq: ["Void Preserver"],
@@ -12192,12 +12207,9 @@ const skill_data: Record<string, Skill> = {
             caster_levels: 0,
             healer_levels: 30
         },
-        description: "[ 1 Charge ] Raise target ally threat generated by 30%. Increase self DEF by 30%. Lasts entire battle.",
-        stats: {
-    "Threat%": 0.3,
-    },
-        conversions: [
-    { source: "DEF", ratio: 0.3, resulting_stat: "DEF" },
+        description: "Reduce target ally DMG Taken by 25%. Reduce self DEF by 15% stacking per use. Lasts entire battle but buffs vanish if caster is killed. Cannot target self.",
+        stack_conversions: [
+    { source: "DEF", ratio: -0.15, resulting_stat: "DEF" },
     ],
         
 },
@@ -12206,7 +12218,7 @@ const skill_data: Record<string, Skill> = {
             is_buff: true,
             is_attack: false,
             self_cast: false,
-            free_turn: false
+            free_turn: true
         },
         PreReq: ["Void Conqueror"],
         sp: 2,
@@ -12219,10 +12231,18 @@ const skill_data: Record<string, Skill> = {
             caster_levels: 30,
             healer_levels: 0
         },
-        description: "[ 1 Charge ] Raise self ATK by 125% MATK, lose 100% MATK, for rest of battle.",
+        description: "[ ⧖ ] Raise self Magic Pen and Magic Ele by 45%/45% highest Phys Pen/Ele respectively for 3 hits. 40 MP.",
         conversions: [
-    { source: "MATK", ratio: 1.25, resulting_stat: "ATK" },
-    { source: "MATK", ratio: -1, resulting_stat: "MATK" },
+    { source: "Highest Phys Pen%", ratio: 0.45, resulting_stat: "Fire Pen%" },
+    { source: "Highest Phys Pen%", ratio: 0.45, resulting_stat: "Water Pen%" },
+    { source: "Highest Phys Pen%", ratio: 0.45, resulting_stat: "Lightning Pen%" },
+    { source: "Highest Phys Pen%", ratio: 0.45, resulting_stat: "Wind Pen%" },
+    { source: "Highest Phys Pen%", ratio: 0.45, resulting_stat: "Earth Pen%" },
+    { source: "Highest Phys Pen%", ratio: 0.45, resulting_stat: "Toxic Pen%" },
+    { source: "Highest Phys Pen%", ratio: 0.45, resulting_stat: "Neg Pen%" },
+    { source: "Highest Phys Pen%", ratio: 0.45, resulting_stat: "Holy Pen%" },
+    { source: "Highest Phys Pen%", ratio: 0.45, resulting_stat: "Void Pen%" },
+    { source: "Highest Phys%", ratio: 0.45, resulting_stat: "Magic%" },
     ],
         
 },
@@ -12231,7 +12251,7 @@ const skill_data: Record<string, Skill> = {
             is_buff: true,
             is_attack: false,
             self_cast: false,
-            free_turn: false
+            free_turn: true
         },
         PreReq: ["Void Conqueror"],
         sp: 2,
@@ -12244,10 +12264,10 @@ const skill_data: Record<string, Skill> = {
             caster_levels: 30,
             healer_levels: 0
         },
-        description: "[ 1 Charge ] Raise self MATK by 125% ATK, lose 100% ATK, for rest of battle.",
+        description: "[ ⧖ ] Raise self Phys Pen and Phys Ele by 45%/45% highest Magic Pen/Ele respectively for 3 hits. 40 MP.",
         conversions: [
-    { source: "ATK", ratio: 1.25, resulting_stat: "MATK" },
-    { source: "ATK", ratio: -1, resulting_stat: "ATK" },
+    { source: "Highest Magic Pen%", ratio: 0.45, resulting_stat: "Phys Pen%" },
+    { source: "Highest Magic%", ratio: 0.45, resulting_stat: "Phys%" },
     ],
         
 },
@@ -12298,10 +12318,11 @@ const skill_data: Record<string, Skill> = {
             caster_levels: 30,
             healer_levels: 30
         },
-        description: "[ ⧖ ] Apply Shadow Mark to enemy. Max 1 Mark per enemy. Increase self MATK by 7%. Breaks 7% Armor. Stacking for rest of battle. 8 MP.",
+        description: "[ ⧖ ] Apply Shadow Mark to enemy. Max 1 Mark per enemy. Increase self Crit DMG by 20% MATK Multiplier. Breaks 50% Armor. Stacking for rest of battle. 8 MP.",
         stack_conversions: [
-    { source: "MATK", ratio: 0.07, resulting_stat: "MATK" },
+    { source: "MATK%", ratio: 0.2, resulting_stat: "Crit DMG%" },
     ],
+        dmg_stats: {armor_break: 0.5}
         
 },
 "Divine Shadow Mark": {...defaultSkill,
@@ -12324,10 +12345,11 @@ const skill_data: Record<string, Skill> = {
             caster_levels: 30,
             healer_levels: 30
         },
-        description: "[ ⧖ ] Apply Shadow Mark to enemy. Max 1 Mark per enemy. Increase self Heal by 7%. Breaks 7% Armor. Stacking for rest of battle. 8 MP.",
+        description: "[ ⧖ ] Apply Shadow Mark to enemy. Max 1 Mark per enemy. Increase self Crit DMG by 20% Heal Multiplier. Breaks 50% Armor. Stacking for rest of battle. 8 MP.",
         stack_conversions: [
-    { source: "HEAL", ratio: 0.07, resulting_stat: "HEAL" },
+    { source: "HEAL%", ratio: 0.2, resulting_stat: "Crit DMG%" },
     ],
+        dmg_stats: {armor_break: 0.5}
         
 },
 "Spirit Guard": {...defaultSkill,
@@ -12348,8 +12370,23 @@ const skill_data: Record<string, Skill> = {
             caster_levels: 0,
             healer_levels: 0
         },
-        description: "[ 1 Charge ] Give target ally 50% of self DEF. Lose 50% DEF. Lasts for entire battle.",
+        description: "[ 1 Charge ] Give party All Res equal to 33% of self average resists. Increase self threat gen by 4x but lose 50% DEF. Lasts for entire battle but buffs vanish if caster is killed.",
+        stats: {
+    "Threat%": 4,
+    },
         conversions: [
+    { source: "Fire Res%", ratio: 0.33 / 12, resulting_stat: "All Res%" },
+    { source: "Water Res%", ratio: 0.33 / 12, resulting_stat: "All Res%" },
+    { source: "Lightning Res%", ratio: 0.33 / 12, resulting_stat: "All Res%" },
+    { source: "Wind Res%", ratio: 0.33 / 12, resulting_stat: "All Res%" },
+    { source: "Earth Res%", ratio: 0.33 / 12, resulting_stat: "All Res%" },
+    { source: "Toxic Res%", ratio: 0.33 / 12, resulting_stat: "All Res%" },
+    { source: "Slash Res%", ratio: 0.33 / 12, resulting_stat: "All Res%" },
+    { source: "Pierce Res%", ratio: 0.33 / 12, resulting_stat: "All Res%" },
+    { source: "Blunt Res%", ratio: 0.33 / 12, resulting_stat: "All Res%" },
+    { source: "Neg Res%", ratio: 0.33 / 12, resulting_stat: "All Res%" },
+    { source: "Holy Res%", ratio: 0.33 / 12, resulting_stat: "All Res%" },
+    { source: "Void Res%", ratio: 0.33 / 12, resulting_stat: "All Res%" },
     { source: "DEF", ratio: -0.5, resulting_stat: "DEF" },
     ],
         
@@ -12372,9 +12409,11 @@ const skill_data: Record<string, Skill> = {
             caster_levels: 0,
             healer_levels: 0
         },
-        description: "Give self Crit Damage of 300% Holy Resist for 16 Turns. 10 MP.",
+        description: "Give self Crit Damage of 220% Holy Damage, increase self MATK by 10% and reduce self ATK by 50% for rest of battle. 10 MP.",
         conversions: [
-    { source: "Holy Res%", ratio: 3, resulting_stat: "Crit DMG%" },
+    { source: "Holy%", ratio: 2.2, resulting_stat: "Crit DMG%" },
+    { source: "MATK", ratio: 0.1, resulting_stat: "MATK" },
+    { source: "ATK", ratio: -0.5, resulting_stat: "ATK" },
     ],
         
 },
@@ -12396,9 +12435,11 @@ const skill_data: Record<string, Skill> = {
             caster_levels: 0,
             healer_levels: 0
         },
-        description: "Give self Crit Damage of 300% Negative Resist for 16 Turns. 10 MP.",
+        description: "Give self Crit Damage of 180% Negative Damage, increase self MATK by 50% and reduce self ATK by 50% for rest of battle. 10 MP.",
         conversions: [
-    { source: "Neg Res%", ratio: 3, resulting_stat: "Crit DMG%" },
+    { source: "Neg%", ratio: 1.8, resulting_stat: "Crit DMG%" },
+    { source: "MATK", ratio: 0.5, resulting_stat: "MATK" },
+    { source: "ATK", ratio: -0.5, resulting_stat: "ATK" },
     ],
         
 },
@@ -12456,7 +12497,7 @@ const skill_data: Record<string, Skill> = {
     "Crit Chance%": 0.03,
     },
         conversions: [
-    { source: "Holy Pen%", ratio: 0.12, resulting_stat: "Holy Pen%" },
+    { source: "Neg Pen%", ratio: 0.12, resulting_stat: "Neg Pen%" },
     ],
         
 },
@@ -12465,7 +12506,7 @@ const skill_data: Record<string, Skill> = {
             is_buff: true,
             is_attack: false,
             self_cast: false,
-            free_turn: false
+            free_turn: true
         },
         PreReq: ["Spirit Mender"],
         sp: 3,
@@ -12478,10 +12519,10 @@ const skill_data: Record<string, Skill> = {
             caster_levels: 0,
             healer_levels: 60
         },
-        description: "[ 1 Charge ] Give target ally +5 MP Regen. Lose 5 Self MP a Turn. Lasts for 30 Turns.",
-        stats: {
-    "MP Regen": -5,
-    },
+        description: "[ ⧖, 1 Charge ] Give target 80% of self Focus Regen and Power equal to 50% of Healpower. Lose 125% of self Focus Regen. Lasts for rest of battle. These buffs vanish if the caster is killed.",
+        conversions: [
+    { source: "Focus Regen", ratio: -1.25, resulting_stat: "Focus Regen" },
+    ],
         
 },
 "Spirit Form": {...defaultSkill,
@@ -12502,7 +12543,7 @@ const skill_data: Record<string, Skill> = {
             caster_levels: 0,
             healer_levels: 0
         },
-        description: "[ 1 Charge ] Raises self Crit Damage by 400% Void Resist and reduce damage taken by 15% for 12 Turns.",
+        description: "[ 1 Charge ] Raises self Crit Damage by 400% Void Resist and reduce damage taken by 15% for the rest of the battle.",
         stats: {
     "DMG Res%": 0.15,
     },
@@ -12515,8 +12556,8 @@ const skill_data: Record<string, Skill> = {
         type: {
             is_buff: true,
             is_attack: false,
-            self_cast: false,
-            free_turn: false
+            self_cast: true,
+            free_turn: true
         },
         PreReq: ["Spirit Liberator"],
         sp: 3,
@@ -12529,21 +12570,22 @@ const skill_data: Record<string, Skill> = {
             caster_levels: 30,
             healer_levels: 0
         },
-        description: "[ 3 Charges ] Give target ally DEF equal to 100% MATK for 6 Turns. Lose 5 MP a Turn while someone has this buff. 10 MP.",
-        stats: {
-    "MP Regen": -5,
-    },
+        description: "[ ⧖ ] Increase target ally Power by 100% MATK and DEF by 20% MATK for rest of battle. Gain 10 MP Degen per cast stacking. These buffs vanish if the caster is killed. Costs 20% of Max HP.",
         conversions: [
-    { source: "MATK", ratio: 1, resulting_stat: "DEF" },
+    { source: "MATK", ratio: 1, resulting_stat: "POWER" },
+    { source: "MATK", ratio: 0.2, resulting_stat: "DEF" },
     ],
+        stack_stats: {
+    "MP Regen": -10,
+    },
         
 },
 "Spirit Memory": {...defaultSkill,
         type: {
             is_buff: true,
             is_attack: false,
-            self_cast: false,
-            free_turn: false
+            self_cast: true,
+            free_turn: true
         },
         PreReq: ["Spirit Preserver"],
         sp: 3,
@@ -12556,9 +12598,11 @@ const skill_data: Record<string, Skill> = {
             caster_levels: 0,
             healer_levels: 30
         },
-        description: "[ 1 Charge ] Give target ally temporary MP equal to self Starting MP for 8 Turns.",
+        description: "[ ⧖ ] Give target Max HP and Temp MP equal to 50% of self Max HP and Starting MP while reducing self Max HP by 25% for rest of battle. Costs 25% of Max MP. These buffs vanish if the caster is killed.",
         conversions: [
-    { source: "MP", ratio: 1, resulting_stat: "MP" },
+    { source: "HP", ratio: 0.5, resulting_stat: "HP" },
+    { source: "MP", ratio: 0.5, resulting_stat: "Temp MP" },
+    { source: "HP", ratio: -0.25, resulting_stat: "HP" },
     ],
         
 },
@@ -12580,12 +12624,11 @@ const skill_data: Record<string, Skill> = {
             caster_levels: 30,
             healer_levels: 0
         },
-        description: "[ 1 Charge ] Give self 10 MP Regen, but lose 5% of your max HP per turn for the rest of the battle.",
-        stats: {
-    "MP Regen": 10,
-    },
+        description: "[ 1 Charge ] Give All Elements DMG equal to 50% of current MP, increase self MP Regen by 8% of your Max MP, but lose 8% of your max HP per turn for the rest of the battle.",
         conversions: [
-    { source: "HP", ratio: -0.05, resulting_stat: "HP Regen" },
+    { source: "MP", ratio: 0.5, resulting_stat: "Elemental%" },
+    { source: "MP", ratio: 0.08, resulting_stat: "MP Regen" },
+    { source: "HP", ratio: -0.08, resulting_stat: "HP Regen" },
     ],
         
 },
@@ -12632,10 +12675,11 @@ const skill_data: Record<string, Skill> = {
             caster_levels: 30,
             healer_levels: 30
         },
-        description: "[ 1 Charge ] Give party MP Regen equal to 2% of self Starting MP. Raise self MATK by 100% Healpower. Lasts 8 Turns.",
+        description: "[ 1 Charge ] Give party MP Regen equal to 1% of self Starting MP, Focus Regen equal to 100% of self Focus Regen, and raise self MATK by 75% Healpower for rest of the battle.",
         conversions: [
-    { source: "MP", ratio: 0.02, resulting_stat: "MP Regen" },
-    { source: "HEAL", ratio: 1, resulting_stat: "MATK" },
+    { source: "MP", ratio: 0.01, resulting_stat: "MP Regen" },
+    { source: "Focus Regen", ratio: 1, resulting_stat: "Focus Regen" },
+    { source: "HEAL", ratio: 0.75, resulting_stat: "MATK" },
     ],
         
 },
@@ -12681,10 +12725,10 @@ const skill_data: Record<string, Skill> = {
             caster_levels: 0,
             healer_levels: 0
         },
-        description: "[ ⧖, 4 Charges, Void ] Deals 350% ATK DMG, scales to Max Phys DMG/Pen, increases self ATK by 50% for 3 hits. Gain HP Regen equal to 25% of Max HP for 1 turn.",
+        description: "[ ⧖, Void ] Deals 350% ATK DMG, scales to Max Phys DMG/Pen, increases self Crit Damage by 250% of Negative DMG but decrease self Crit Damage by 150% Void DMG for 3 hits. Heal self for 20% of Max HP. 3 Turn CD.",
         conversions: [
-    { source: "ATK", ratio: 0.5, resulting_stat: "ATK" },
-    { source: "HP", ratio: 0.25, resulting_stat: "HP Regen" },
+    { source: "Neg%", ratio: 2.5, resulting_stat: "Crit DMG%" },
+    { source: "Void%", ratio: -1.5, resulting_stat: "Crit DMG%" },
     ],
         dmg_stats: {dmg_element: "Void",     element: "Highest Phys",     pen_element: "Highest Phys",     stat: "ATK", ratio: 3.5, }
 },
@@ -12706,9 +12750,11 @@ const skill_data: Record<string, Skill> = {
             caster_levels: 100,
             healer_levels: 0
         },
-        description: "[ ⧖ ] Increases Void Damage by 100% for 4 Turns. Costs 2% Current MP",
+        description: "[ ⧖ ] Increases Magic Damage and Crit Damage by 50% MATK Multiplier for 4 Turns, but also take MP Degen equal to 1% of Max MP for same duration. Costs 1% Current MP",
         conversions: [
-    { source: "Void%", ratio: 1, resulting_stat: "Void%" },
+    { source: "MATK%", ratio: 0.5, resulting_stat: "Magic%" },
+    { source: "MATK%", ratio: 0.5, resulting_stat: "Crit DMG%" },
+    { source: "MP", ratio: -0.01, resulting_stat: "MP Regen" },
     ],
         
 },
@@ -12730,10 +12776,10 @@ const skill_data: Record<string, Skill> = {
             caster_levels: 0,
             healer_levels: 100
         },
-        description: "[ ⧖, 3 Charges ] Give target ally 45% damage reduction but you gain 100% self DMG Penalty. Lasts 4 Turns.",
+        description: "[ ⧖, 3 Charges ] Give party 50% damage reduction and 33% Damage Multiplier but you gain 100% self DMG Penalty. Lasts 3 Turns.",
         stats: {
-    "DMG Res%": 0.45,
-    "Dmg%": -1,
+    "DMG Res%": 0.5,
+    "Dmg%": -0.67,
     },
         
 },
@@ -12781,9 +12827,10 @@ const skill_data: Record<string, Skill> = {
             caster_levels: 50,
             healer_levels: 0
         },
-        description: "[ ⧖ ] Increases self MATK by 66% for 5 Turns. Take damage equal to 15% of Max HP.",
+        description: "[ ⧖ ] Increases self MATK by 66% and Crit DMG by 33% of DEF Multiplier for 5 Turns. Take damage equal to 20% of Max HP.",
         conversions: [
     { source: "MATK", ratio: 0.66, resulting_stat: "MATK" },
+    { source: "DEF%", ratio: 0.33, resulting_stat: "Crit DMG%" },
     ],
         
 },
@@ -12805,12 +12852,13 @@ const skill_data: Record<string, Skill> = {
             caster_levels: 0,
             healer_levels: 50
         },
-        description: "[ 1 Charge ] Increases self threat bonus by 100%, increases Heal by 50%. Lasts entire battle.",
+        description: "[ 1 Charge ] Increase self threat bonus by 999%. Increases party's Crit Damage by 33% DEF Multiplier and DEF by 33% Healpower. Effects last rest of battle. These buffs vanish if the caster is killed.",
         stats: {
-    "Threat%": 1,
+    "Threat%": 9.99,
     },
         conversions: [
-    { source: "HEAL", ratio: 0.5, resulting_stat: "HEAL" },
+    { source: "DEF%", ratio: 0.33, resulting_stat: "Crit DMG%" },
+    { source: "HEAL", ratio: 0.33, resulting_stat: "DEF" },
     ],
         
 },
@@ -12832,10 +12880,13 @@ const skill_data: Record<string, Skill> = {
             caster_levels: 50,
             healer_levels: 0
         },
-        description: "[ ⧖, Void ] Deals 400% ATK + 400% MATK Damage. +33% Damage Multiplier for 3 Turns. 36 MP.",
+        description: "[ ⧖, Void ] Deals 400% ATK + 400% MATK Damage, scales to Max Elemental DMG/PEN. +33% Damage Multiplier and increase self Crit DMG by 25x MP Regen for 3 Turns. 36 MP.",
         stats: {
     "Dmg%": 0.33,
     },
+        conversions: [
+    { source: "MP Regen", ratio: 25, resulting_stat: "Crit DMG%" },
+    ],
         dmg_stats: {dmg_element: "Void",     element: "Void",     pen_element: "Void",     stat: "ATK", ratio: 400,     stat2: "MATK",     ratio2: 400, }
 },
 "Gaia's Embrace": {...defaultSkill,
@@ -12843,7 +12894,7 @@ const skill_data: Record<string, Skill> = {
             is_buff: true,
             is_attack: false,
             self_cast: false,
-            free_turn: false
+            free_turn: true
         },
         PreReq: ["Gaia's Herald"],
         sp: 5,
@@ -12856,9 +12907,11 @@ const skill_data: Record<string, Skill> = {
             caster_levels: 0,
             healer_levels: 50
         },
-        description: "[ 3 Charges ] Give party HP Regen equal to 25% of your Max HP for 5 Turns.",
+        description: "[ ⧖, 3 Charges ] Increase party Max HP and HP Regen by 10% of your Max HP for rest of battle. Increases party Power by 50% of your Healpower for 4 turns.",
         conversions: [
-    { source: "HP", ratio: 0.25, resulting_stat: "HP Regen" },
+    { source: "HP", ratio: 0.1, resulting_stat: "HP" },
+    { source: "HP", ratio: 0.1, resulting_stat: "HP Regen" },
+    { source: "HEAL", ratio: 0.5, resulting_stat: "POWER" },
     ],
         
 },
@@ -12880,9 +12933,10 @@ const skill_data: Record<string, Skill> = {
             caster_levels: 50,
             healer_levels: 50
         },
-        description: "[ ⧖ ] Give self Heal equal to 200% MATK. Lower MATK by 100%. Lasts for 4 hits.",
+        description: "[ ⧖ ] Give self Heal equal to 200% MATK. Increase self Crit DMG by 50% MATK Multiplier. Lower MATK by 100%. Lasts for 3 hits.",
         conversions: [
     { source: "MATK", ratio: 2, resulting_stat: "HEAL" },
+    { source: "MATK%", ratio: 0.5, resulting_stat: "Crit DMG%" },
     { source: "MATK", ratio: -1, resulting_stat: "MATK" },
     ],
         
@@ -12905,9 +12959,10 @@ const skill_data: Record<string, Skill> = {
             caster_levels: 50,
             healer_levels: 50
         },
-        description: "[ ⧖ ] Give self MATK equal to 200% Heal. Lower Heal by 100%. Lasts for 4 hits..",
+        description: "[ ⧖ ] Give self MATK equal to 200% Heal. Increase self Crit DMG by 50% Heal Multiplier. Lower Heal by 100%. Lasts for 3 hits.",
         conversions: [
     { source: "HEAL", ratio: 2, resulting_stat: "MATK" },
+    { source: "HEAL%", ratio: 0.5, resulting_stat: "Crit DMG%" },
     { source: "HEAL", ratio: -1, resulting_stat: "HEAL" },
     ],
         
@@ -12954,9 +13009,10 @@ const skill_data: Record<string, Skill> = {
             caster_levels: 0,
             healer_levels: 0
         },
-        description: "[ 1 Charge ] Give self Crit Damage equal to current MP. Lasts entire battle.",
+        description: "[ 1 Charge ] Give self Crit Damage equal to 4x current MP and current Focus. Lasts entire battle.",
         conversions: [
-    { source: "MP", ratio: 1, resulting_stat: "Crit DMG%" },
+    { source: "MP", ratio: 4, resulting_stat: "Crit DMG%" },
+    { source: "Focus", ratio: 1, resulting_stat: "Crit DMG%" },
     ],
         
 },
@@ -12978,10 +13034,11 @@ const skill_data: Record<string, Skill> = {
             caster_levels: 100,
             healer_levels: 0
         },
-        description: "[ 1 Charge ] Target Ally and Self takes HP Degen equal to 6% self Max HP. Gain 66% MATK. Lasts entire battle.",
+        description: "[ 1 Charge ] Increase self MATK by 66% and self Crit DMG by 3x current MP, however gain HP Degen equal to 8% self Max HP. Lasts entire battle.",
         conversions: [
     { source: "MATK", ratio: 0.66, resulting_stat: "MATK" },
-    { source: "HP", ratio: -0.06, resulting_stat: "HP Regen" },
+    { source: "MP", ratio: 3, resulting_stat: "Crit DMG%" },
+    { source: "HP", ratio: -0.08, resulting_stat: "HP Regen" },
     ],
         
 },
@@ -13085,12 +13142,12 @@ const skill_data: Record<string, Skill> = {
             caster_levels: 50,
             healer_levels: 0
         },
-        description: "[ ⧖ ] Debuff enemy Elemental Resist by 5% MATK Multiplier & gain +4% MATK stacking for entire battle. Costs 1% Current MP.",
+        description: "[ ⧖ ] Debuff enemy Elemental Resist by 6% MATK Multiplier & gain +12% MATK stacking for entire battle. Costs 1% Current MP.",
         conversions: [
-    { source: "MATK%", ratio: 0.05, resulting_stat: "Elemental Pen%" },
+    { source: "MATK%", ratio: 0.06, resulting_stat: "Elemental Pen%" },
     ],
         stack_conversions: [
-    { source: "MATK", ratio: 0.04, resulting_stat: "MATK" },
+    { source: "MATK", ratio: 0.12, resulting_stat: "MATK" },
     ],
         
 },
@@ -13114,12 +13171,12 @@ const skill_data: Record<string, Skill> = {
             caster_levels: 50,
             healer_levels: 0
         },
-        description: "[ ⧖ ] Debuff enemy Divine Resist by 5% MATK Multiplier & gain +4% MATK stacking for entire battle. Costs 1% Current MP.",
+        description: "[ ⧖ ] Debuff enemy Divine Resist by 6% MATK Multiplier & gain +12% MATK stacking for entire battle. Costs 1% Current MP.",
         conversions: [
-    { source: "MATK%", ratio: 0.05, resulting_stat: "Divine Pen%" },
+    { source: "MATK%", ratio: 0.06, resulting_stat: "Divine Pen%" },
     ],
         stack_conversions: [
-    { source: "MATK", ratio: 0.04, resulting_stat: "MATK" },
+    { source: "MATK", ratio: 0.12, resulting_stat: "MATK" },
     ],
         
 },
@@ -13168,9 +13225,10 @@ const skill_data: Record<string, Skill> = {
             caster_levels: 50,
             healer_levels: 0
         },
-        description: "[ 1 Charge ] Raise self Crit DMG by 7x your Crit Chance. Set self Crit Chance to 50%. Lasts entire battle.",
+        description: "[ 1 Charge ] Raise self Crit DMG by 9x your Crit Chance and 5x your current MP. Reduce self Crit Chance to 50% of its current value. Lasts entire battle.",
         conversions: [
-    { source: "Crit Chance%", ratio: 7, resulting_stat: "Crit DMG%" },
+    { source: "Crit Chance%", ratio: 9, resulting_stat: "Crit DMG%" },
+    { source: "MP", ratio: 5, resulting_stat: "Crit DMG%" },
     { source: "Post Crit Chance%", ratio: -0.5, resulting_stat: "Crit Chance%" },
     ],
         
@@ -13195,9 +13253,10 @@ const skill_data: Record<string, Skill> = {
         },
         description: "[ ⧖ ] Gives self DEF equal to 75% average of Heal and ATK. Raise self ATK by 75% and by 100% Heal. Lasts 9 Turns. 35 MP.",
         conversions: [
-    { source: "Post ATK", ratio: 0.375, resulting_stat: "DEF" },
-    { source: "Post HEAL", ratio: 0.375, resulting_stat: "DEF" },
+    { source: "ATK", ratio: 0.375, resulting_stat: "DEF" },
+    { source: "HEAL", ratio: 0.375, resulting_stat: "DEF" },
     { source: "ATK", ratio: 0.75, resulting_stat: "ATK" },
+    { source: "HEAL", ratio: 1, resulting_stat: "ATK" },
     ],
         
 },
@@ -13249,9 +13308,9 @@ const skill_data: Record<string, Skill> = {
             caster_levels: 50,
             healer_levels: 50
         },
-        description: "[ ⧖ ] Apply Reality Curse to enemy. Max 1 Curse per enemy. Curse reduces enemy allres (except Void) by 4% Heal Multiplier. Costs 4% Current MP.",
+        description: "[ ⧖ ] Apply Reality Curse to enemy. Max 1 Curse per enemy. Curse reduces enemy allres (except Void) by 6% Heal Multiplier. Costs 4% Current MP.",
         conversions: [
-    { source: "HEAL%", ratio: 0.04, resulting_stat: "NonVoid Pen%" },
+    { source: "HEAL%", ratio: 0.06, resulting_stat: "NonVoid Pen%" },
     ],
         
 },
@@ -13275,11 +13334,13 @@ const skill_data: Record<string, Skill> = {
             caster_levels: 50,
             healer_levels: 50
         },
-        description: "[ ⧖ ] Increase self Elemental and Holy Crit DMG by 75%. Gain 10% DEF. Lasts 2 Turns. Costs 4% Current MP. Minimum 40 MP.",
+        description: "[ ⧖ ] Increase self Elemental and Holy Crit DMG by 75% of average MATK and Heal Multipliers. Gain 10% DEF. Lasts 2 Turns. Costs 4% Current MP. Minimum 40 MP.",
         conversions: [
     { source: "DEF", ratio: 0.1, resulting_stat: "DEF" },
-    { source: "Crit DMG%", ratio: 0.75, resulting_stat: "Elemental Crit DMG%" },
-    { source: "Crit DMG%", ratio: 0.75, resulting_stat: "Holy Crit DMG%" },
+    { source: "MATK%", ratio: 0.375, resulting_stat: "Elemental Crit DMG%" },
+    { source: "HEAL%", ratio: 0.375, resulting_stat: "Elemental Crit DMG%" },
+    { source: "MATK%", ratio: 0.375, resulting_stat: "Holy Crit DMG%" },
+    { source: "HEAL%", ratio: 0.375, resulting_stat: "Holy Crit DMG%" },
     ],
         
 },
@@ -13332,6 +13393,25 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "Increase self ATK by 300% ATK stacking up to 1500%. On first cast, gain All Res equal to 25% of your average Resist but cannot no longer Crit. Effects last rest of battle. Costs 33% Max HP.",
+        conversions: [
+    { source: "Fire Res%", ratio: 0.25 / 12, resulting_stat: "All Res%" },
+    { source: "Water Res%", ratio: 0.25 / 12, resulting_stat: "All Res%" },
+    { source: "Lightning Res%", ratio: 0.25 / 12, resulting_stat: "All Res%" },
+    { source: "Wind Res%", ratio: 0.25 / 12, resulting_stat: "All Res%" },
+    { source: "Earth Res%", ratio: 0.25 / 12, resulting_stat: "All Res%" },
+    { source: "Toxic Res%", ratio: 0.25 / 12, resulting_stat: "All Res%" },
+    { source: "Slash Res%", ratio: 0.25 / 12, resulting_stat: "All Res%" },
+    { source: "Pierce Res%", ratio: 0.25 / 12, resulting_stat: "All Res%" },
+    { source: "Blunt Res%", ratio: 0.25 / 12, resulting_stat: "All Res%" },
+    { source: "Neg Res%", ratio: 0.25 / 12, resulting_stat: "All Res%" },
+    { source: "Holy Res%", ratio: 0.25 / 12, resulting_stat: "All Res%" },
+    { source: "Void Res%", ratio: 0.25 / 12, resulting_stat: "All Res%" },
+    { source: "Crit Chance%", ratio: -1, resulting_stat: "Crit Chance%" },
+    ],
+        stack_conversions: [
+    { source: "ATK", ratio: 3, resulting_stat: "ATK" },
+    ],
+        
 },
 "Shadows of Sin": {...defaultSkill,
         category: "caster",
@@ -13357,6 +13437,13 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "Increase self Crit Damage by 30% MATK Multiplier stacking up to 120%. Reduces Crit Chance by 50%. Effects last rest of battle. Costs 25% of Max MP.",
+        stats: {
+    "Crit Chance%": -0.5,
+    },
+        stack_conversions: [
+    { source: "MATK%", ratio: 0.3, resulting_stat: "Crit DMG%" },
+    ],
+        
 },
 "Divine Avatar Form": {...defaultSkill,
         category: "healer",
@@ -13382,6 +13469,11 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 100
         },
         description: "Ignore armor for Divine attacks but lose 90% ATK and MATK. Lasts rest of battle.",
+        conversions: [
+    { source: "ATK", ratio: -0.9, resulting_stat: "ATK" },
+    { source: "MATK", ratio: -0.9, resulting_stat: "MATK" },
+    ],
+        
 },
 "Strength of Bahamut": {...defaultSkill,
         category: "hybrid",
@@ -13407,6 +13499,10 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ ⧖ ] Raise self ATK by 100% of Current HP for 2 hits.",
+        conversions: [
+    { source: "HP", ratio: 1, resulting_stat: "ATK" },
+    ],
+        
 },
 "Heart of Tiamat": {...defaultSkill,
         category: "hybrid",
@@ -13432,6 +13528,11 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ ⧖ ] Raise self MATK by 70% DEF, lose 50% DEF, for rest of battle.",
+        conversions: [
+    { source: "DEF", ratio: 0.7, resulting_stat: "MATK" },
+    { source: "DEF", ratio: -0.5, resulting_stat: "DEF" },
+    ],
+        
 },
 "Asgard's Chosen": {...defaultSkill,
         category: "hybrid",
@@ -13457,6 +13558,24 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 50
         },
         description: "Increase rest of party Allres by 50% of self average Resist with self at 10% average, but reduce Self damage by 50%. 60 MP.",
+        stats: {
+    "Dmg%": -0.5,
+    },
+        conversions: [
+    { source: "Fire Res%", ratio: 0.1 / 12, resulting_stat: "All Res%" },
+    { source: "Water Res%", ratio: 0.1 / 12, resulting_stat: "All Res%" },
+    { source: "Lightning Res%", ratio: 0.1 / 12, resulting_stat: "All Res%" },
+    { source: "Wind Res%", ratio: 0.1 / 12, resulting_stat: "All Res%" },
+    { source: "Earth Res%", ratio: 0.1 / 12, resulting_stat: "All Res%" },
+    { source: "Toxic Res%", ratio: 0.1 / 12, resulting_stat: "All Res%" },
+    { source: "Slash Res%", ratio: 0.1 / 12, resulting_stat: "All Res%" },
+    { source: "Pierce Res%", ratio: 0.1 / 12, resulting_stat: "All Res%" },
+    { source: "Blunt Res%", ratio: 0.1 / 12, resulting_stat: "All Res%" },
+    { source: "Neg Res%", ratio: 0.1 / 12, resulting_stat: "All Res%" },
+    { source: "Holy Res%", ratio: 0.1 / 12, resulting_stat: "All Res%" },
+    { source: "Void Res%", ratio: 0.1 / 12, resulting_stat: "All Res%" },
+    ],
+        
 },
 "Cloak of the Reaper": {...defaultSkill,
         category: "hybrid",
@@ -13482,6 +13601,15 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "Increase self DEF by 25% of your AVG MATK+ATK and increase all self xPen by 20% for rest of battle.",
+        stats: {
+    "Phys xPen%": 0.2,
+    "Magic xPen%": 0.2,
+    },
+        conversions: [
+    { source: "ATK", ratio: 0.125, resulting_stat: "DEF" },
+    { source: "MATK", ratio: 0.125, resulting_stat: "DEF" },
+    ],
+        
 },
 "Fist of Terra": {...defaultSkill,
         category: "hybrid",
@@ -13507,6 +13635,10 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 50
         },
         description: "[ ⧖, Blunt ] Deals 150% ATK + 300% Heal DMG, scales to max Divine Damage and breaks 25% Armor. Increases self Heal by 25% ATK, stacking up to 75%, for rest of battle. 2 Turn Cooldown. 45 MP.",
+        stack_conversions: [
+    { source: "ATK", ratio: 0.25, resulting_stat: "HEAL" },
+    ],
+        
 },
 "The Goddess Descends": {...defaultSkill,
         category: "hybrid",
@@ -13532,6 +13664,19 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 50
         },
         description: "Increase self Heal by 50% MATK, stacking up to 150%. Reduce self MATK by 75%. Increase Holy damage by average Elemental Damage.",
+        conversions: [
+    { source: "MATK", ratio: -0.75, resulting_stat: "MATK" },
+    { source: "Fire%", ratio: 1 / 6, resulting_stat: "Holy%" },
+    { source: "Water%", ratio: 1 / 6, resulting_stat: "Holy%" },
+    { source: "Lightning%", ratio: 1 / 6, resulting_stat: "Holy%" },
+    { source: "Wind%", ratio: 1 / 6, resulting_stat: "Holy%" },
+    { source: "Earth%", ratio: 1 / 6, resulting_stat: "Holy%" },
+    { source: "Toxic%", ratio: 1 / 6, resulting_stat: "Holy%" },
+    ],
+        stack_conversions: [
+    { source: "MATK", ratio: 0.5, resulting_stat: "HEAL" },
+    ],
+        
 },
 "Bone Armor": {...defaultSkill,
         type: {

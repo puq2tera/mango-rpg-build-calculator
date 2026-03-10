@@ -190,7 +190,36 @@ function updateConversionSubStats(
   stackCount = 1,
 ): void {
   const buff = (sourceDict["Buff%"] ?? 0) + (targetDict["Buff%"] ?? 0)
-  const sourceValue = sourceDict[sourceStat] ?? 0
+  const getMergedStatValue = (stat: string) => (sourceDict[stat] ?? 0) + (targetDict[stat] ?? 0)
+  const highest = (stats: readonly string[]) =>
+    stats.reduce((currentHighest, stat) => Math.max(currentHighest, getMergedStatValue(stat)), 0)
+
+  const sourceValue = (() => {
+    switch (sourceStat) {
+      case "Highest Phys%":
+        return highest(["Slash%", "Pierce%", "Blunt%"])
+      case "Highest Phys Pen%":
+        return highest(["Slash Pen%", "Pierce Pen%", "Blunt Pen%"])
+      case "Highest Magic%":
+        return highest(["Fire%", "Water%", "Lightning%", "Wind%", "Earth%", "Toxic%", "Neg%", "Holy%", "Void%"])
+      case "Highest Magic Pen%":
+        return highest([
+          "Fire Pen%",
+          "Water Pen%",
+          "Lightning Pen%",
+          "Wind Pen%",
+          "Earth Pen%",
+          "Toxic Pen%",
+          "Neg Pen%",
+          "Holy Pen%",
+          "Void Pen%",
+        ])
+      case "Post Crit Chance%":
+        return getMergedStatValue("Crit Chance%")
+      default:
+        return sourceDict[sourceStat] ?? 0
+    }
+  })()
 
   const affixInfo = stat_data.StatsInfo[targetStat as keyof typeof stat_data.StatsInfo]
   const substats = affixInfo?.sub_stats
