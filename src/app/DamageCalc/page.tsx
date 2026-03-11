@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react"
 import stat_data from "../data/stat_data"
 import {
-  calculateAlternateDamage,
   calculateDamage,
   defaultDamageCalcState,
   persistDamageCalcState,
@@ -76,15 +75,6 @@ export default function DamageCalc() {
     threatCrit,
     threatAverage,
   } = calculateDamage(stats, {
-    attackPreset,
-    mainStat,
-    secondStat,
-    element,
-    penElement,
-    skillType,
-    inputs,
-  })
-  const alternateDamage = calculateAlternateDamage(stats, {
     attackPreset,
     mainStat,
     secondStat,
@@ -321,23 +311,6 @@ export default function DamageCalc() {
           <div><strong>Threat (Non-Crit):</strong> {formatNumber(threatNonCrit)}</div>
           <div><strong>Threat (Crit):</strong> {formatNumber(threatCrit)}</div>
           <div><strong>Threat Avg:</strong> {formatNumber(threatAverage)}</div>
-        </div>
-      </div>
-
-      <div className="border rounded-lg p-4 bg-slate-900/70 space-y-2">
-        <div className="space-y-1 text-center">
-          <h2 className="font-semibold text-lg">(Debug) Alternate dmg calculation order</h2>
-          <p className="text-sm text-slate-400">Pen → xDmg → Skill DMG → Global DMG → Element</p>
-        </div>
-        <div className="mx-auto inline-grid w-fit grid-cols-[max-content_max-content] gap-x-3 gap-y-1">
-          <strong className="text-right">Non-Crit:</strong>
-          <span className="text-right font-mono tabular-nums">{formatNumber(alternateDamage.nonCrit)}</span>
-          <strong className="text-right">Crit:</strong>
-          <span className="text-right font-mono tabular-nums">{formatNumber(alternateDamage.crit)}</span>
-          <strong className="text-right">Maximized Crit:</strong>
-          <span className="text-right font-mono tabular-nums">{formatNumber(alternateDamage.maxcrit)}</span>
-          <strong className="text-right">Avg:</strong>
-          <span className="text-right font-mono tabular-nums">{formatNumber(alternateDamage.average)}</span>
         </div>
       </div>
     </div>

@@ -10,10 +10,11 @@ export type ManualLevelRange = {
   defGain: number
   matkGain: number
   healGain: number
+  scalingGain: number
 }
 
 export type ManualRangeLevels = Record<ManualRangeClass, number>
-export type ManualRangeStatKey = "hpGain" | "atkGain" | "defGain" | "matkGain" | "healGain"
+export type ManualRangeStatKey = "hpGain" | "atkGain" | "defGain" | "matkGain" | "healGain" | "scalingGain"
 
 type ParsedTranscriptResult = {
   ranges: ManualLevelRange[]
@@ -29,12 +30,18 @@ type ParsedLevelUpBlock = {
   inferredClass: ManualRangeClass | null
 }
 
-const gainPatterns: Record<ManualRangeStatKey, RegExp> = {
+const gainPatterns: Record<Exclude<ManualRangeStatKey, "scalingGain">, RegExp> = {
   hpGain: /\+HP\s*([+-]?\d[\d,]*(?:\.\d+)?)/i,
   atkGain: /\+ATK\s*([+-]?\d[\d,]*(?:\.\d+)?)/i,
   defGain: /\+DEF\s*([+-]?\d[\d,]*(?:\.\d+)?)/i,
   matkGain: /\+MATK\s*([+-]?\d[\d,]*(?:\.\d+)?)/i,
   healGain: /\+Healpower\s*([+-]?\d[\d,]*(?:\.\d+)?)/i,
+}
+const scalingPatterns: Record<ManualRangeClass, RegExp> = {
+  tank: /Acquired\s*\+([+-]?\d[\d,]*(?:\.\d+)?)\s*Armor Save/i,
+  warrior: /Acquired\s*\+([+-]?\d[\d,]*(?:\.\d+)?)%\s*Overdrive Scaling/i,
+  caster: /Acquired\s*\+([+-]?\d[\d,]*(?:\.\d+)?)%\s*Crit Damage/i,
+  healer: /Acquired\s*\+([+-]?\d[\d,]*(?:\.\d+)?)\s*Armor Strike/i,
 }
 const talentPointPattern = /Talent Points?\s*([+-]?\d[\d,]*(?:\.\d+)?)/i
 const skillPointPattern = /Skill Points?\s*([+-]?\d[\d,]*(?:\.\d+)?)/i
@@ -84,6 +91,15 @@ function inferClassFromLevelUpBlock(levelUpBlock: string): ManualRangeClass | nu
   return null
 }
 
+function parseScalingGain(levelUpBlock: string, className: ManualRangeClass | null): number {
+  if (!className) {
+    return 0
+  }
+
+  const match = levelUpBlock.match(scalingPatterns[className])
+  return match ? parseWholeNumber(match[1]) : 0
+}
+
 export function isManualRangeClass(value: string): value is ManualRangeClass {
   return manualRangeClasses.includes(value as ManualRangeClass)
 }
@@ -98,6 +114,7 @@ export function createDefaultManualLevelRange(): ManualLevelRange {
     defGain: 0,
     matkGain: 0,
     healGain: 0,
+    scalingGain: 0,
   }
 }
 
@@ -124,6 +141,7 @@ export function normalizeManualLevelRange(raw: unknown): ManualLevelRange | null
     defGain: asFiniteNumber(entry.defGain, 0),
     matkGain: asFiniteNumber(entry.matkGain, 0),
     healGain: asFiniteNumber(entry.healGain, 0),
+    scalingGain: asFiniteNumber(entry.scalingGain, 0),
   }
 }
 
@@ -166,7 +184,7 @@ export function getManualRangeGain(
 function parseLevelUpBlock(levelUpBlock: string, index: number): ParsedLevelUpBlock | null {
   const totals = {} as ParsedGainTotals
 
-  for (const [key, pattern] of Object.entries(gainPatterns) as Array<[ManualRangeStatKey, RegExp]>) {
+  for (const [key, pattern] of Object.entries(gainPatterns) as Array<[Exclude<ManualRangeStatKey, "scalingGain">, RegExp]>) {
     const match = levelUpBlock.match(pattern)
     if (!match) {
       return null
@@ -174,6 +192,9 @@ function parseLevelUpBlock(levelUpBlock: string, index: number): ParsedLevelUpBl
 
     totals[key] = parseWholeNumber(match[1])
   }
+
+  const inferredClass = inferClassFromLevelUpBlock(levelUpBlock)
+  totals.scalingGain = parseScalingGain(levelUpBlock, inferredClass)
 
   const talentPointGain = parsePointGain(levelUpBlock, talentPointPattern, singleTalentPointGainPattern)
   const skillPointGain = parsePointGain(levelUpBlock, skillPointPattern, singleSkillPointGainPattern)
@@ -190,7 +211,7 @@ function parseLevelUpBlock(levelUpBlock: string, index: number): ParsedLevelUpBl
       const totalLevelMatch = levelUpBlock.match(totalLevelPattern)
       return totalLevelMatch ? parseWholeNumber(totalLevelMatch[1]) : null
     })(),
-    inferredClass: inferClassFromLevelUpBlock(levelUpBlock),
+    inferredClass,
   }
 }
 

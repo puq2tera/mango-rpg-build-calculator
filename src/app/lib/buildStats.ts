@@ -341,6 +341,28 @@ function getDefaultLevelClassOrder(snapshot: BuildSnapshot): LevelingClass[] {
   return classOrder
 }
 
+function getComputedClassScalingGain(className: LevelingClass, totalLevel: number): number {
+  const scalingStat = stat_data.ClassScalingStats[className]
+
+  switch (className) {
+    case "tank":
+      return stat_data.ClassMainStatValues[className][scalingStat]
+        + Math.floor(stat_data.ClassMainStatValues[className][`${scalingStat} Scaling`] * totalLevel)
+    case "warrior":
+      return Math.min(
+        0.155,
+        stat_data.ClassMainStatValues[className][scalingStat]
+          + stat_data.ClassMainStatValues[className][`${scalingStat} Scaling`] * totalLevel,
+      )
+    case "caster":
+      return stat_data.ClassMainStatValues[className][scalingStat]
+        + Math.floor(stat_data.ClassMainStatValues[className][`${scalingStat} Scaling`] * totalLevel)
+    case "healer":
+      return stat_data.ClassMainStatValues[className][scalingStat]
+        + (stat_data.ClassMainStatValues[className][`${scalingStat} Scaling`] * totalLevel)
+  }
+}
+
 function computeLevelStats(snapshot: BuildSnapshot): Record<string, number> {
   const statsLevels: Record<string, number> = {}
 
@@ -373,29 +395,9 @@ function computeLevelStats(snapshot: BuildSnapshot): Record<string, number> {
     }
 
     const scalingStat = stat_data.ClassScalingStats[className]
-    let scalingGain = 0
-
-    switch (className) {
-      case "tank":
-        scalingGain = stat_data.ClassMainStatValues[className][scalingStat]
-          + Math.floor(stat_data.ClassMainStatValues[className][`${scalingStat} Scaling`] * totalLevel)
-        break
-      case "warrior":
-        scalingGain = Math.min(
-          0.155,
-          stat_data.ClassMainStatValues[className][scalingStat]
-            + stat_data.ClassMainStatValues[className][`${scalingStat} Scaling`] * totalLevel,
-        )
-        break
-      case "caster":
-        scalingGain = stat_data.ClassMainStatValues[className][scalingStat]
-          + Math.floor(stat_data.ClassMainStatValues[className][`${scalingStat} Scaling`] * totalLevel)
-        break
-      case "healer":
-        scalingGain = stat_data.ClassMainStatValues[className][scalingStat]
-          + (stat_data.ClassMainStatValues[className][`${scalingStat} Scaling`] * totalLevel)
-        break
-    }
+    const scalingGain = rangeOverride && rangeOverride.scalingGain !== 0
+      ? (totalLevel === rangeOverride.endLevel ? rangeOverride.scalingGain : 0)
+      : getComputedClassScalingGain(className, totalLevel)
 
     statsLevels[scalingStat] = (statsLevels[scalingStat] ?? 0) + scalingGain
   }

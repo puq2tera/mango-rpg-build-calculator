@@ -236,24 +236,6 @@ export function calculateDamage(stats: Record<string, number>, state: DamageCalc
   return finalizeDamageResult(Math.max(0, dmg), context)
 }
 
-export function calculateAlternateDamage(stats: Record<string, number>, state: DamageCalcState): DamageCalcResult {
-  const context = buildDamageContext(stats, state)
-  const { stats: resolvedStats, element, penElement, skillType, inputs, mitigated } = context
-
-  let dmg = mitigated
-  const penResMult =
-    1
-    + (((resolvedStats[`${penElement} Pen%`] ?? 0) + (inputs.skillPen ?? 0)) / 100)
-    - ((inputs.enemyRes ?? 0) * ((inputs.resIgnore ?? 0) / 100))
-  dmg = Math.floor(dmg * penResMult)
-  dmg = Math.floor(dmg * toMult(resolvedStats[`${element} xDmg%`]))
-  dmg = Math.floor(dmg * toMult(resolvedStats[`${skillType} DMG%`]))
-  dmg = Math.floor(dmg * toMult(resolvedStats["Dmg%"]))
-  dmg *= toMult(resolvedStats[`${element}%`])
-
-  return finalizeDamageResult(Math.max(0, Math.floor(dmg)), context)
-}
-
 export function formatSignedDamageDelta(value: number | null): string {
   if (value === null || !Number.isFinite(value)) return "..."
   return `${value >= 0 ? "+" : "-"}${Math.abs(Math.trunc(value)).toLocaleString("en-US")}`

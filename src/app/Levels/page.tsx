@@ -651,7 +651,7 @@ export default function LevelsPage() {
                 />
               </label>
               <p className="text-xs text-slate-400">
-                Paste a full Guild Card or `xlevelup` transcript directly into the box to import it, like the equipment paste field.
+                Paste a `xlevelup` transcript directly into the box to import it, including class scaling lines.
               </p>
               {manualRangeImportNotice ? (
                 <div
