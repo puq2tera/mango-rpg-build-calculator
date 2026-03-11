@@ -16,7 +16,6 @@ import { BUILD_SNAPSHOT_UPDATED_EVENT } from "@/app/lib/buildEvents"
 type ClassKey = "tank" | "warrior" | "caster" | "healer"
 
 type SummaryProfile = {
-  handle: string
   raceName: string
   rebirthLevel: number
 }
@@ -101,7 +100,6 @@ const cardClass =
   "relative overflow-hidden rounded-[26px] border border-slate-700/70 bg-slate-900/72 shadow-[0_18px_80px_rgba(2,6,23,0.45)] backdrop-blur"
 
 const profileDefaults: SummaryProfile = {
-  handle: "puq2",
   raceName: "Northern Human",
   rebirthLevel: 75,
 }
@@ -910,11 +908,8 @@ function GuildCard({
       <GlowLayer />
       <div className="relative space-y-5">
         <CardHeader
-          eyebrow="Equivalent In-Game Stats"
           title="Guild Card"
-          subtitle={`Live build sync for @${summary.profile.handle}`}
         />
-
         <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
           <DetailTile label="Race" value={summary.raceName} />
           <DetailTile label="Total Levels" value={`${formatWhole(summary.totalLevels)} / 485`} />
@@ -937,34 +932,6 @@ function GuildCard({
 
         <div className="rounded-2xl border border-slate-700/70 bg-slate-950/55 px-4 py-3 text-sm text-slate-300">
           <span className="font-semibold text-slate-100">{formatWhole(summary.nextLevelExp)}</span> EXP needed for next level.
-        </div>
-      </div>
-    </section>
-  )
-}
-
-function CharacterCard({
-  summary,
-}: {
-  summary: SummaryState
-}) {
-  return (
-    <section className={`${cardClass} p-5 sm:p-6`}>
-      <GlowLayer />
-      <div className="relative space-y-5">
-        <CardHeader
-          eyebrow={`@${summary.profile.handle}'s Character Card`}
-          title="Point Summary"
-          subtitle="Calculated build point totals"
-        />
-
-        <div className="grid gap-3 sm:grid-cols-2">
-          <DetailTile label="Available Skill Points" value={formatWhole(summary.availableSkillPoints)} />
-          <DetailTile label="Used Skill Points" value={formatWhole(summary.usedSkillPoints)} />
-          <DetailTile label="Remaining Skill Points" value={formatWhole(summary.remainingSkillPoints)} />
-          <DetailTile label="Available Talent Points" value={formatWhole(summary.availableTalentPoints)} />
-          <DetailTile label="Used Talent Points" value={formatWhole(summary.usedTalentPoints)} />
-          <DetailTile label="Remaining Talent Points" value={formatWhole(summary.remainingTalentPoints)} />
         </div>
       </div>
     </section>
@@ -1073,7 +1040,6 @@ function BuffCard({
       <GlowLayer />
       <div className="relative space-y-5">
         <CardHeader
-          eyebrow={`@${summary.profile.handle}'s Skill Buffs/Debuffs`}
           title="Active Effects"
           subtitle="Marginal impact of each selected skill or tarot on the current build"
         />
@@ -1178,11 +1144,9 @@ export default function CharacterSummary() {
         <GuildCard summary={summary} />
 
         <div className="grid gap-6 xl:grid-cols-[0.92fr_1.08fr]">
-          <CharacterCard summary={summary} />
           <TerminalCard
-            eyebrow="Character Card"
-            title="Base Stats & Multipliers"
-            subtitle="Lightning does not receive shared All% correctly on the in-game charcard."
+            title="Character Card"
+            subtitle="Note: Lightning does not receive eleglobal correctly on the in-game charcard."
             mainRows={getBaseMainRows(baseStats, displayBaseStats)}
             detailRows={getBaseDetailRows(displayBaseStats)}
             typeRows={getTypeBonusRows(displayBaseStats, { maskVoidDamage: true, maskVoidPen: true })}
@@ -1191,7 +1155,6 @@ export default function CharacterSummary() {
         </div>
 
         <TerminalCard
-          eyebrow={`@${summary.profile.handle}'s Stats`}
           title="Dungeon Character Card"
           mainRows={getDungeonMainRows(summary.dungeonMainStats)}
           detailRows={getDungeonDetailRows(displayDungeonStats)}
