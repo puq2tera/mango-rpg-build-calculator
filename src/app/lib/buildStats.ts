@@ -6,18 +6,11 @@ import stat_data from "@/app/data/stat_data"
 import { talent_data } from "@/app/data/talent_data"
 import tarot_data, { type Tarot } from "@/app/data/tarot_data"
 import { normalizeArtifact } from "@/app/lib/artifactState"
-
-export type ManualLevelRange = {
-  className: string
-  startLevel: number
-  endLevel: number
-  mode: "manual" | "estimated"
-  hpGain: number
-  atkGain: number
-  defGain: number
-  matkGain: number
-  healGain: number
-}
+import {
+  getManualRangeGain,
+  normalizeManualLevelRanges,
+  type ManualLevelRange,
+} from "@/app/lib/manualLevelRanges"
 
 type EquipmentSlot = {
   name: string
@@ -134,30 +127,7 @@ const asEnabledEquipment = (value: unknown): number[] =>
     ? value.filter((entry): entry is number => typeof entry === "number" && Number.isFinite(entry))
     : []
 
-const asManualLevelRanges = (value: unknown): ManualLevelRange[] => {
-  if (!Array.isArray(value)) return []
-
-  return value
-    .filter((entry): entry is Partial<ManualLevelRange> => typeof entry === "object" && entry !== null)
-    .map((entry) => {
-      const startLevel = Math.max(1, Math.floor(asFiniteNumber(entry.startLevel, 1)))
-      const endLevel = Math.max(startLevel, Math.floor(asFiniteNumber(entry.endLevel, startLevel)))
-      const mode: ManualLevelRange["mode"] = entry.mode === "manual" ? "manual" : "estimated"
-
-      return {
-        className: typeof entry.className === "string" ? entry.className : "",
-        startLevel,
-        endLevel,
-        mode,
-        hpGain: asFiniteNumber(entry.hpGain, 0),
-        atkGain: asFiniteNumber(entry.atkGain, 0),
-        defGain: asFiniteNumber(entry.defGain, 0),
-        matkGain: asFiniteNumber(entry.matkGain, 0),
-        healGain: asFiniteNumber(entry.healGain, 0),
-      }
-    })
-    .filter((entry) => stat_data.ClassNames.includes(entry.className))
-}
+const asManualLevelRanges = (value: unknown): ManualLevelRange[] => normalizeManualLevelRanges(value)
 
 export function readBuildSnapshot(storage: Storage): BuildSnapshot {
   return {
@@ -352,11 +322,11 @@ function computeLevelStats(snapshot: BuildSnapshot): Record<string, number> {
   let lvl = 0
   const mainstatLevelGains: Record<string, number> = { ATK: 0, DEF: 0, MATK: 0, HEAL: 0 }
 
-  const findLevelRangeOverride = (className: string, classLevel: number): ManualLevelRange | null => {
+  const findLevelRangeOverride = (className: string, totalLevel: number): ManualLevelRange | null => {
     for (let i = snapshot.selectedManualLevelRanges.length - 1; i >= 0; i--) {
       const range = snapshot.selectedManualLevelRanges[i]
       if (range.className !== className) continue
-      if (classLevel < range.startLevel || classLevel > range.endLevel) continue
+      if (totalLevel < range.startLevel || totalLevel > range.endLevel) continue
       return range
     }
 
@@ -374,15 +344,14 @@ function computeLevelStats(snapshot: BuildSnapshot): Record<string, number> {
 
     for (let i = 0; i < classLevels; i++) {
       lvl++
-      const classLevel = i + 1
-      const rangeOverride = findLevelRangeOverride(className, classLevel)
+      const rangeOverride = findLevelRangeOverride(className, lvl)
 
       if (rangeOverride?.mode === "manual") {
-        hp += rangeOverride.hpGain
-        mainstatLevelGains.ATK += rangeOverride.atkGain
-        mainstatLevelGains.DEF += rangeOverride.defGain
-        mainstatLevelGains.MATK += rangeOverride.matkGain
-        mainstatLevelGains.HEAL += rangeOverride.healGain
+        hp += getManualRangeGain(rangeOverride, lvl, "hpGain")
+        mainstatLevelGains.ATK += getManualRangeGain(rangeOverride, lvl, "atkGain")
+        mainstatLevelGains.DEF += getManualRangeGain(rangeOverride, lvl, "defGain")
+        mainstatLevelGains.MATK += getManualRangeGain(rangeOverride, lvl, "matkGain")
+        mainstatLevelGains.HEAL += getManualRangeGain(rangeOverride, lvl, "healGain")
       } else {
         hp += Math.floor(hpMultiplier * (1 + 0.1 * (lvl - 1))) + 4 * lvl
         for (const stat of stat_data.Mainstats) {
