@@ -11,8 +11,14 @@ import {
   type BuildSnapshot,
   type BuildStatStages,
 } from "@/app/lib/buildStats"
+import {
+  CHARACTER_SUMMARY_VIEW_EVENT,
+  getDefaultCharacterSummaryViewState,
+  readCharacterSummaryViewState,
+  type CharacterSummaryViewChangeDetail,
+  type CharacterSummaryViewState,
+} from "@/app/lib/characterSummaryViewState"
 import { BUILD_SNAPSHOT_UPDATED_EVENT } from "@/app/lib/buildEvents"
-import { readDamageCalcState, type DamageCalcState } from "@/app/lib/damageCalc"
 
 type ClassKey = "tank" | "warrior" | "caster" | "healer"
 
@@ -26,7 +32,6 @@ type SummaryState = {
   snapshot: BuildSnapshot
   stages: BuildStatStages
   charcardStages: BuildStatStages
-  damageCalcState: DamageCalcState
   dungeonMainStats: Record<string, number>
   displayBaseStats: Record<string, number>
   displayDungeonStats: Record<string, number>
@@ -98,8 +103,28 @@ type ElementRow = {
   pen: string
 }
 
+type FinalStatsColumn = {
+  label: string
+  key: string
+  format?: "flat" | "percent"
+  headerClassName?: string
+}
+
+type FinalStatsTypeRow = {
+  label: string
+  key: string
+}
+
+type FinalStatsSourceSection = {
+  title: string
+  subtitle?: string
+  stats: Record<string, number>
+}
+
 const cardClass =
   "relative overflow-hidden rounded-[26px] border border-slate-700/70 bg-slate-900/72 shadow-[0_18px_80px_rgba(2,6,23,0.45)] backdrop-blur"
+
+const IN_GAME_STATS_GROUP_STORAGE_KEY = "characterSummary:inGameStatsOpen"
 
 const profileDefaults: SummaryProfile = {
   raceName: "Northern Human",
@@ -163,6 +188,183 @@ const dungeonDisplayElements = [
   { key: "Slash", family: "Phys" },
 ] as const
 
+const finalStatsPrimaryColumns = [
+  { label: "ATK", key: "ATK", headerClassName: "bg-rose-500/20 text-rose-100" },
+  { label: "MATK", key: "MATK", headerClassName: "bg-emerald-500/20 text-emerald-100" },
+  { label: "DEF", key: "DEF", headerClassName: "bg-sky-500/20 text-sky-100" },
+  { label: "HEAL", key: "HEAL", headerClassName: "bg-fuchsia-500/20 text-fuchsia-100" },
+  { label: "HP", key: "HP", headerClassName: "bg-emerald-500/20 text-emerald-100" },
+  { label: "MP", key: "MP", headerClassName: "bg-sky-500/20 text-sky-100" },
+  { label: "Focus", key: "Focus", headerClassName: "bg-amber-500/20 text-amber-100" },
+  { label: "MP Regen", key: "MP Regen", headerClassName: "bg-sky-500/20 text-sky-100" },
+  { label: "Focus Regen", key: "Focus Regen", headerClassName: "bg-amber-500/20 text-amber-100" },
+] satisfies readonly FinalStatsColumn[]
+
+const finalStatsBonusColumns = [
+  { label: "Crit Chance%", key: "Crit Chance%", format: "percent" },
+  { label: "Crit DMG%", key: "Crit DMG%", format: "percent" },
+  { label: "Global DMG%", key: "Dmg%", format: "percent" },
+  { label: "Heal Effect%", key: "Heal Effect%", format: "percent" },
+  { label: "Damage Res%", key: "DMG Res%", format: "percent" },
+  { label: "Global HP%", key: "HP%", format: "percent" },
+  { label: "All Res%", key: "All Res%", format: "percent" },
+  { label: "Threat%", key: "Threat%", format: "percent" },
+] satisfies readonly FinalStatsColumn[]
+
+const finalStatsClassColumns = [
+  { label: "Armor Save", key: "Armor Save" },
+  { label: "Armor Strike", key: "Armor Strike" },
+  { label: "Overdrive%", key: "Overdrive%", format: "percent" },
+] satisfies readonly FinalStatsColumn[]
+
+const finalStatsMainModifierColumns = [
+  { label: "POWER", key: "POWER" },
+  { label: "ATK%", key: "ATK%", format: "percent" },
+  { label: "DEF%", key: "DEF%", format: "percent" },
+  { label: "MATK%", key: "MATK%", format: "percent" },
+  { label: "HEAL%", key: "HEAL%", format: "percent" },
+  { label: "MAIN%", key: "MAIN%", format: "percent" },
+] satisfies readonly FinalStatsColumn[]
+
+const finalStatsArtifactGlobalColumns = [
+  { label: "Art ATK%", key: "Art_ATK%", format: "percent" },
+  { label: "Art DEF%", key: "Art_DEF%", format: "percent" },
+  { label: "Art MATK%", key: "Art_MATK%", format: "percent" },
+  { label: "Art HEAL%", key: "Art_HEAL%", format: "percent" },
+  { label: "Global ATK%", key: "Global ATK%", format: "percent" },
+  { label: "Global DEF%", key: "Global DEF%", format: "percent" },
+  { label: "Global MATK%", key: "Global MATK%", format: "percent" },
+  { label: "Global HEAL%", key: "Global HEAL%", format: "percent" },
+] satisfies readonly FinalStatsColumn[]
+
+const finalStatsFamilyColumns = [
+  { label: "All%", key: "All%", format: "percent" },
+  { label: "All Pen%", key: "All Pen%", format: "percent" },
+  { label: "Phys%", key: "Phys%", format: "percent" },
+  { label: "Phys Pen%", key: "Phys Pen%", format: "percent" },
+  { label: "Phys Res%", key: "Phys Res%", format: "percent" },
+  { label: "Phys xDmg%", key: "Phys xDmg%", format: "percent" },
+  { label: "Phys xPen%", key: "Phys xPen%", format: "percent" },
+] satisfies readonly FinalStatsColumn[]
+
+const finalStatsMagicFamilyColumns = [
+  { label: "Elemental%", key: "Elemental%", format: "percent" },
+  { label: "Elemental Pen%", key: "Elemental Pen%", format: "percent" },
+  { label: "Elemental Res%", key: "Elemental Res%", format: "percent" },
+  { label: "Elemental xDmg%", key: "Elemental xDmg%", format: "percent" },
+  { label: "Elemental xPen%", key: "Elemental xPen%", format: "percent" },
+  { label: "Divine%", key: "Divine%", format: "percent" },
+  { label: "Divine Pen%", key: "Divine Pen%", format: "percent" },
+  { label: "Divine Res%", key: "Divine Res%", format: "percent" },
+  { label: "Divine xDmg%", key: "Divine xDmg%", format: "percent" },
+  { label: "Divine xPen%", key: "Divine xPen%", format: "percent" },
+] satisfies readonly FinalStatsColumn[]
+
+const finalStatsSpecialFamilyColumns = [
+  { label: "Magic%", key: "Magic%", format: "percent" },
+  { label: "Magic xDmg%", key: "Magic xDmg%", format: "percent" },
+  { label: "Magic xPen%", key: "Magic xPen%", format: "percent" },
+  { label: "NonVoid Pen%", key: "NonVoid Pen%", format: "percent" },
+  { label: "Ele !Water Res%", key: "Elemental_Except_Water Res%", format: "percent" },
+] satisfies readonly FinalStatsColumn[]
+
+const finalStatsResourceColumns = [
+  { label: "Focus%", key: "Focus%", format: "percent" },
+  { label: "MP%", key: "MP%", format: "percent" },
+  { label: "Temp MP", key: "Temp MP" },
+  { label: "Temp HP", key: "Temp HP" },
+  { label: "HP Regen", key: "HP Regen" },
+  { label: "HP Regen%", key: "HP Regen%", format: "percent" },
+  { label: "Buff%", key: "Buff%", format: "percent" },
+  { label: "EXP Bonus", key: "EXP Bonus" },
+  { label: "Hero Points", key: "Hero Points" },
+] satisfies readonly FinalStatsColumn[]
+
+const finalStatsArmorIgnoreColumns = [
+  { label: "Blunt Armor Ignore%", key: "Blunt Armor Ignore%", format: "percent" },
+  { label: "Void Armor Ignore%", key: "Void Armor Ignore%", format: "percent" },
+  { label: "Phys Armor Ignore%", key: "Phys Armor Ignore%", format: "percent" },
+  { label: "Magic Armor Ignore%", key: "Magic Armor Ignore%", format: "percent" },
+] satisfies readonly FinalStatsColumn[]
+
+const finalStatsSkillDamageColumns = [
+  { label: "Spear DMG%", key: "Spear DMG%", format: "percent" },
+  { label: "Sword DMG%", key: "Sword DMG%", format: "percent" },
+  { label: "Bow DMG%", key: "Bow DMG%", format: "percent" },
+  { label: "Hammer DMG%", key: "Hammer DMG%", format: "percent" },
+  { label: "Fire DMG%", key: "Fire DMG%", format: "percent" },
+  { label: "Fist DMG%", key: "Fist DMG%", format: "percent" },
+  { label: "Dagger DMG%", key: "Dagger DMG%", format: "percent" },
+  { label: "Shadow Break DMG%", key: "Shadow Break DMG%", format: "percent" },
+] satisfies readonly FinalStatsColumn[]
+
+const finalStatsDotColumns = [
+  { label: "Neg DOT%", key: "Neg DOT%", format: "percent" },
+  { label: "Void DOT%", key: "Void DOT%", format: "percent" },
+  { label: "Holy DOT%", key: "Holy DOT%", format: "percent" },
+  { label: "Fire DOT%", key: "Fire DOT%", format: "percent" },
+  { label: "Toxic DOT%", key: "Toxic DOT%", format: "percent" },
+  { label: "Slash DOT%", key: "Slash DOT%", format: "percent" },
+  { label: "Pierce DOT%", key: "Pierce DOT%", format: "percent" },
+] satisfies readonly FinalStatsColumn[]
+
+const finalStatsSpecialCritColumns = [
+  { label: "Bow Crit Chance%", key: "Bow Crit Chance%", format: "percent" },
+  { label: "Bow Crit DMG%", key: "Bow Crit DMG%", format: "percent" },
+  { label: "Fist Crit DMG%", key: "Fist Crit DMG%", format: "percent" },
+  { label: "Dagger Crit DMG%", key: "Dagger Crit DMG%", format: "percent" },
+  { label: "Elemental Crit DMG%", key: "Elemental Crit DMG%", format: "percent" },
+  { label: "Holy Crit DMG%", key: "Holy Crit DMG%", format: "percent" },
+  { label: "Shadow Break Crit Chance%", key: "Shadow Break Crit Chance%", format: "percent" },
+] satisfies readonly FinalStatsColumn[]
+
+const finalStatsTypeRows = [
+  { label: "Blunt", key: "Blunt" },
+  { label: "Pierce", key: "Pierce" },
+  { label: "Slash", key: "Slash" },
+  { label: "Fire", key: "Fire" },
+  { label: "Water", key: "Water" },
+  { label: "Lightning", key: "Lightning" },
+  { label: "Wind", key: "Wind" },
+  { label: "Earth", key: "Earth" },
+  { label: "Toxic", key: "Toxic" },
+  { label: "Negative", key: "Neg" },
+  { label: "Holy", key: "Holy" },
+  { label: "Void", key: "Void" },
+] satisfies readonly FinalStatsTypeRow[]
+
+const finalStatsTypeMetrics = [
+  { key: "dmg", label: "DMG%", suffix: "%" },
+  { key: "pen", label: "PEN%", suffix: " Pen%" },
+  { key: "res", label: "RES%", suffix: " Res%" },
+  { key: "xDmg", label: "xDMG%", suffix: " xDmg%" },
+  { key: "xPen", label: "xPEN%", suffix: " xPen%" },
+] as const
+
+const explicitFinalStatsKeys = new Set<string>([
+  ...finalStatsPrimaryColumns.map((column) => column.key),
+  ...finalStatsBonusColumns.map((column) => column.key),
+  ...finalStatsClassColumns.map((column) => column.key),
+  ...finalStatsMainModifierColumns.map((column) => column.key),
+  ...finalStatsArtifactGlobalColumns.map((column) => column.key),
+  ...finalStatsFamilyColumns.map((column) => column.key),
+  ...finalStatsMagicFamilyColumns.map((column) => column.key),
+  ...finalStatsSpecialFamilyColumns.map((column) => column.key),
+  ...finalStatsResourceColumns.map((column) => column.key),
+  ...finalStatsArmorIgnoreColumns.map((column) => column.key),
+  ...finalStatsSkillDamageColumns.map((column) => column.key),
+  ...finalStatsDotColumns.map((column) => column.key),
+  ...finalStatsSpecialCritColumns.map((column) => column.key),
+])
+
+for (const row of finalStatsTypeRows) {
+  explicitFinalStatsKeys.add(`${row.key}%`)
+  explicitFinalStatsKeys.add(`${row.key} Pen%`)
+  explicitFinalStatsKeys.add(`${row.key} Res%`)
+  explicitFinalStatsKeys.add(`${row.key} xDmg%`)
+  explicitFinalStatsKeys.add(`${row.key} xPen%`)
+}
+
 function getXpToNextLevel(level: number): number {
   const normalizedLevel = Math.max(0, Math.floor(level))
 
@@ -213,6 +415,65 @@ function formatSignedPercent(value: number, digits = 0): string {
 function formatPercent(value: number, digits = 0): string {
   const formatted = digits === 0 ? formatWhole(value) : formatFixed(value, digits)
   return `${formatted}%`
+}
+
+function isZeroStat(value: number): boolean {
+  return Math.abs(value) < 0.0001
+}
+
+function countNonZeroStats(stats: Record<string, number>): number {
+  return Object.values(stats).filter((value) => !isZeroStat(value)).length
+}
+
+function getRaceStats(snapshot: BuildSnapshot): Record<string, number> {
+  if (!snapshot.selectedRace || !(snapshot.selectedRace in race_data_by_tag)) {
+    return {}
+  }
+
+  const raceStats = race_data_by_tag[snapshot.selectedRace as keyof typeof race_data_by_tag].stats
+
+  return Object.entries(raceStats).reduce<Record<string, number>>((result, [stat, value]) => {
+    if (typeof value === "number" && Number.isFinite(value) && !isZeroStat(value)) {
+      result[stat] = value
+    }
+
+    return result
+  }, {})
+}
+
+function subtractStats(
+  sourceStats: Record<string, number>,
+  statsToSubtract: Record<string, number>,
+): Record<string, number> {
+  const result: Record<string, number> = { ...sourceStats }
+
+  for (const [stat, value] of Object.entries(statsToSubtract)) {
+    const nextValue = (result[stat] ?? 0) - value
+
+    if (isZeroStat(nextValue)) {
+      delete result[stat]
+    } else {
+      result[stat] = nextValue
+    }
+  }
+
+  return result
+}
+
+function formatFinalStatsValue(value: number, format: FinalStatsColumn["format"] = "flat"): string {
+  return format === "percent" ? `${formatWhole(value)}%` : formatWhole(value)
+}
+
+function getFinalStatsColumnFormat(stat: string): FinalStatsColumn["format"] {
+  return stat.includes("%") ? "percent" : "flat"
+}
+
+function getFinalStatsCellClass(value: number): string {
+  return `rounded-xl border px-3 py-2 text-center font-mono tabular-nums ${
+    isZeroStat(value)
+      ? "border-slate-800/80 bg-slate-950/60 text-slate-600"
+      : "border-slate-700/70 bg-slate-900/90 text-slate-100"
+  }`
 }
 
 function formatEffectDelta(delta: number, stat: string, label?: string): string {
@@ -279,6 +540,83 @@ function getReadableStatLabel(stat: string): string {
     default:
       return stat.replace(/%/g, "").trim()
   }
+}
+
+function getRemainingFinalStatsColumns(stats: Record<string, number>): FinalStatsColumn[] {
+  return Object.keys(stats)
+    .filter((stat) => !explicitFinalStatsKeys.has(stat) && !isZeroStat(stats[stat] ?? 0))
+    .sort((left, right) => {
+      const leftPriority = effectPriorityIndex.get(left) ?? Number.MAX_SAFE_INTEGER
+      const rightPriority = effectPriorityIndex.get(right) ?? Number.MAX_SAFE_INTEGER
+
+      if (leftPriority !== rightPriority) {
+        return leftPriority - rightPriority
+      }
+
+      return left.localeCompare(right)
+    })
+    .map((stat) => ({
+      label: stat,
+      key: stat,
+      format: getFinalStatsColumnFormat(stat),
+    }))
+}
+
+function readStoredDisclosureState(storageKey: string, fallback: boolean): boolean {
+  if (typeof window === "undefined") {
+    return fallback
+  }
+
+  const rawValue = window.localStorage.getItem(storageKey)
+
+  if (rawValue === "true") {
+    return true
+  }
+
+  if (rawValue === "false") {
+    return false
+  }
+
+  return fallback
+}
+
+function getVisibleFinalStatsColumns(
+  columns: readonly FinalStatsColumn[],
+  stats: Record<string, number>,
+  showEmptyRowsAndColumns: boolean,
+): FinalStatsColumn[] {
+  if (showEmptyRowsAndColumns) {
+    return [...columns]
+  }
+
+  return columns.filter((column) => !isZeroStat(getStat(stats, column.key)))
+}
+
+function getVisibleFinalStatsTypeMetrics(
+  stats: Record<string, number>,
+  showEmptyRowsAndColumns: boolean,
+) {
+  if (showEmptyRowsAndColumns) {
+    return [...finalStatsTypeMetrics]
+  }
+
+  return finalStatsTypeMetrics.filter((metric) =>
+    finalStatsTypeRows.some((row) => !isZeroStat(getStat(stats, `${row.key}${metric.suffix}`))),
+  )
+}
+
+function getVisibleFinalStatsTypeRows(
+  stats: Record<string, number>,
+  metrics: readonly (typeof finalStatsTypeMetrics)[number][],
+  showEmptyRowsAndColumns: boolean,
+) {
+  if (showEmptyRowsAndColumns) {
+    return [...finalStatsTypeRows]
+  }
+
+  return finalStatsTypeRows.filter((row) =>
+    metrics.some((metric) => !isZeroStat(getStat(stats, `${row.key}${metric.suffix}`))),
+  )
 }
 
 function getRaceName(snapshot: BuildSnapshot): string {
@@ -671,7 +1009,6 @@ function buildSummaryState(storage: Storage): SummaryState {
   const snapshot = readBuildSnapshot(storage)
   const stages = computeBuildStatStages(snapshot)
   const charcardStages = computeBuildStatStages(getCharcardSnapshot(snapshot))
-  const damageCalcState = readDamageCalcState(storage)
   const dungeonMainStats = getDungeonMainStats(snapshot, stages)
   const displayBaseStats = getDisplayBaseStats(charcardStages)
   const displayDungeonStats = getDisplayDungeonStats(snapshot, stages)
@@ -686,7 +1023,6 @@ function buildSummaryState(storage: Storage): SummaryState {
     snapshot,
     stages,
     charcardStages,
-    damageCalcState,
     dungeonMainStats,
     displayBaseStats,
     displayDungeonStats,
@@ -904,22 +1240,35 @@ function StatGroup({
   title,
   subtitle,
   defaultOpen = true,
+  storageKey,
   children,
 }: {
   title: string
   subtitle?: string
   defaultOpen?: boolean
+  storageKey?: string
   children: ReactNode
 }) {
-  const [isOpen, setIsOpen] = useState(defaultOpen)
+  const [isOpen, setIsOpen] = useState(() => storageKey ? readStoredDisclosureState(storageKey, defaultOpen) : defaultOpen)
+  const toggleOpen = () => {
+    setIsOpen((current) => {
+      const nextValue = !current
+
+      if (storageKey && typeof window !== "undefined") {
+        window.localStorage.setItem(storageKey, String(nextValue))
+      }
+
+      return nextValue
+    })
+  }
 
   return (
     <section className="overflow-hidden rounded-[30px] border border-slate-800/80 bg-slate-950/35 shadow-[0_18px_60px_rgba(2,6,23,0.22)]">
-      <div className="flex flex-wrap items-center justify-between gap-4 px-5 py-4 sm:px-6">
-        <CardHeader title={title} subtitle={subtitle} />
+      <div className={`flex flex-wrap items-center justify-between gap-3 ${isOpen ? "px-5 py-4 sm:px-6" : "px-4 py-2.5 sm:px-5"}`}>
+        <CardHeader title={title} subtitle={isOpen ? subtitle : undefined} />
         <button
           type="button"
-          onClick={() => setIsOpen((current) => !current)}
+          onClick={toggleOpen}
           aria-expanded={isOpen}
           className="rounded-full border border-slate-700/80 bg-slate-900/80 px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.16em] text-slate-200 transition hover:border-sky-300/40 hover:text-sky-100"
         >
@@ -934,36 +1283,6 @@ function StatGroup({
       ) : null}
     </section>
   )
-}
-
-function getDamageCalcInputTiles(summary: SummaryState): Array<{ label: string; value: string }> {
-  const stats = summary.stages.StatsDmgReady
-  const { attackPreset, mainStat, secondStat, element, penElement, skillType, inputs } = summary.damageCalcState
-  const skillTypeValue = skillType === "N/A"
-    ? skillType
-    : `${skillType} · ${formatPercent(getStat(stats, `${skillType} DMG%`))}`
-
-  return [
-    { label: "Preset", value: attackPreset || "Custom Skill" },
-    { label: "Primary Stat", value: `${mainStat} · ${formatWhole(getStat(stats, mainStat))}` },
-    { label: "2nd Stat", value: `${secondStat} · ${formatWhole(getStat(stats, secondStat))}` },
-    {
-      label: "Element DMG / xDMG",
-      value: `${element} · ${formatPercent(getStat(stats, `${element}%`))} / ${formatPercent(getStat(stats, `${element} xDmg%`))}`,
-    },
-    { label: "Pen Element", value: `${penElement} · ${formatPercent(getStat(stats, `${penElement} Pen%`))}` },
-    { label: "Skill Type", value: skillTypeValue },
-    {
-      label: "Crit Chance / Damage",
-      value: `${formatPercent(getStat(stats, "Crit Chance%"))} / ${formatPercent(getStat(stats, "Crit DMG%"))}`,
-    },
-    { label: "Skill DMG / 2nd DMG", value: `${formatPercent(inputs.skillDmg)} / ${formatPercent(inputs.secondSkillDmg)}` },
-    { label: "Skill Crit / Crit Chance", value: `${formatPercent(inputs.skillCritDmg)} / ${formatPercent(inputs.skillCritChance)}` },
-    { label: "Skill Pen / DOT", value: `${formatPercent(inputs.skillPen)} / ${formatPercent(inputs.dot)}` },
-    { label: "Enemy Armor / Res", value: `${formatWhole(inputs.enemyArmor)} / ${formatWhole(inputs.enemyRes)}` },
-    { label: "Armor Ignore / Res Ignore", value: `${formatPercent(inputs.armorIgnore)} / ${formatPercent(inputs.resIgnore)}` },
-    { label: "Threat Def", value: formatPercent(inputs.threatDef) },
-  ]
 }
 
 function GuildCard({
@@ -1100,29 +1419,318 @@ function TerminalCard({
   )
 }
 
-function DamageCalcInputsCard({
-  summary,
+function FinalStatsValueTable({
+  columns,
+  stats,
 }: {
-  summary: SummaryState
+  columns: readonly FinalStatsColumn[]
+  stats: Record<string, number>
 }) {
-  const tiles = getDamageCalcInputTiles(summary)
+  return (
+    <div className="overflow-x-auto">
+      <table className="min-w-max table-fixed border-separate border-spacing-1 whitespace-nowrap text-sm">
+        <thead>
+          <tr className="text-center text-xs font-semibold uppercase tracking-[0.14em]">
+            {columns.map((column) => (
+              <th
+                key={column.label}
+                className={`rounded-xl px-3 py-2 ${column.headerClassName ?? "bg-slate-800/90 text-slate-100"}`}
+              >
+                {column.label}
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            {columns.map((column) => {
+              const value = getStat(stats, column.key)
+
+              return (
+                <td key={column.label} className={getFinalStatsCellClass(value)}>
+                  {formatFinalStatsValue(value, column.format)}
+                </td>
+              )
+            })}
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  )
+}
+
+function FinalStatsTableBlock({
+  title,
+  children,
+}: {
+  title: string
+  children: ReactNode
+}) {
+  return (
+    <div className="space-y-2">
+      <div className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-400">{title}</div>
+      {children}
+    </div>
+  )
+}
+
+function FinalStatsTypeTable({
+  stats,
+  rows,
+  metrics,
+}: {
+  stats: Record<string, number>
+  rows: readonly FinalStatsTypeRow[]
+  metrics: readonly (typeof finalStatsTypeMetrics)[number][]
+}) {
+  return (
+    <div className="overflow-x-auto">
+      <table className="min-w-[42rem] table-fixed border-separate border-spacing-1 whitespace-nowrap text-sm">
+        <thead>
+          <tr className="text-center text-xs font-semibold uppercase tracking-[0.14em] text-slate-100">
+            <th className="rounded-xl bg-slate-800/90 px-3 py-2 text-left">Type</th>
+            {metrics.map((metric) => (
+              <th key={metric.key} className="rounded-xl bg-slate-800/90 px-3 py-2">
+                {metric.label}
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {rows.map((row) => (
+            <tr key={row.key}>
+              <td className="rounded-xl border border-slate-700/70 bg-slate-950/45 px-3 py-2 text-left font-medium text-slate-200">
+                {row.label}
+              </td>
+              {metrics.map((metric) => {
+                const value = getStat(stats, `${row.key}${metric.suffix}`)
+
+                return (
+                  <td key={`${row.key}:${metric.key}`} className={getFinalStatsCellClass(value)}>
+                    {formatFinalStatsValue(value, "percent")}
+                  </td>
+                )
+              })}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  )
+}
+
+function FinalStatsValueBlock({
+  title,
+  columns,
+  stats,
+  showEmptyRowsAndColumns,
+}: {
+  title: string
+  columns: readonly FinalStatsColumn[]
+  stats: Record<string, number>
+  showEmptyRowsAndColumns: boolean
+}) {
+  const visibleColumns = getVisibleFinalStatsColumns(columns, stats, showEmptyRowsAndColumns)
+
+  if (visibleColumns.length === 0) {
+    return null
+  }
 
   return (
-    <section className={`${cardClass} p-5 sm:p-6`}>
-      <GlowLayer />
-      <div className="relative space-y-5">
-        <CardHeader
-          title="Damage Calc Inputs"
-          subtitle="Current calculator selections and the stat values fed into the damage formula"
-        />
+    <FinalStatsTableBlock title={title}>
+      <FinalStatsValueTable columns={visibleColumns} stats={stats} />
+    </FinalStatsTableBlock>
+  )
+}
 
-        <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
-          {tiles.map((tile) => (
-            <DetailTile key={tile.label} label={tile.label} value={tile.value} />
-          ))}
+function FinalStatsTypeBlock({
+  stats,
+  showEmptyRowsAndColumns,
+}: {
+  stats: Record<string, number>
+  showEmptyRowsAndColumns: boolean
+}) {
+  const visibleMetrics = getVisibleFinalStatsTypeMetrics(stats, showEmptyRowsAndColumns)
+  const visibleRows = getVisibleFinalStatsTypeRows(stats, visibleMetrics, showEmptyRowsAndColumns)
+
+  if (visibleMetrics.length === 0 || visibleRows.length === 0) {
+    return null
+  }
+
+  return (
+    <FinalStatsTableBlock title="Type Breakdown">
+      <FinalStatsTypeTable stats={stats} rows={visibleRows} metrics={visibleMetrics} />
+    </FinalStatsTableBlock>
+  )
+}
+
+function FinalStatsSection({
+  stats,
+  showEmptyRowsAndColumns,
+}: {
+  stats: Record<string, number>
+  showEmptyRowsAndColumns: boolean
+}) {
+  const remainingColumns = getRemainingFinalStatsColumns(stats)
+
+  return (
+    <div className="space-y-3">
+      <FinalStatsValueBlock title="Core Stats" columns={finalStatsPrimaryColumns} stats={stats} showEmptyRowsAndColumns={showEmptyRowsAndColumns} />
+      <FinalStatsValueBlock title="Core Bonuses" columns={finalStatsBonusColumns} stats={stats} showEmptyRowsAndColumns={showEmptyRowsAndColumns} />
+      <FinalStatsValueBlock title="Class Bonuses" columns={finalStatsClassColumns} stats={stats} showEmptyRowsAndColumns={showEmptyRowsAndColumns} />
+      <FinalStatsValueBlock title="Mainstat Modifiers" columns={finalStatsMainModifierColumns} stats={stats} showEmptyRowsAndColumns={showEmptyRowsAndColumns} />
+      <FinalStatsValueBlock title="Artifact And Global Modifiers" columns={finalStatsArtifactGlobalColumns} stats={stats} showEmptyRowsAndColumns={showEmptyRowsAndColumns} />
+      <FinalStatsValueBlock title="Damage Family Bonuses" columns={finalStatsFamilyColumns} stats={stats} showEmptyRowsAndColumns={showEmptyRowsAndColumns} />
+      <FinalStatsValueBlock title="Elemental And Divine Family Bonuses" columns={finalStatsMagicFamilyColumns} stats={stats} showEmptyRowsAndColumns={showEmptyRowsAndColumns} />
+      <FinalStatsValueBlock title="Magic And Special Family Bonuses" columns={finalStatsSpecialFamilyColumns} stats={stats} showEmptyRowsAndColumns={showEmptyRowsAndColumns} />
+      <FinalStatsValueBlock title="Resources And Utility" columns={finalStatsResourceColumns} stats={stats} showEmptyRowsAndColumns={showEmptyRowsAndColumns} />
+      <FinalStatsTypeBlock stats={stats} showEmptyRowsAndColumns={showEmptyRowsAndColumns} />
+      <FinalStatsValueBlock title="Armor Ignore" columns={finalStatsArmorIgnoreColumns} stats={stats} showEmptyRowsAndColumns={showEmptyRowsAndColumns} />
+      <FinalStatsValueBlock title="Skill Damage Bonuses" columns={finalStatsSkillDamageColumns} stats={stats} showEmptyRowsAndColumns={showEmptyRowsAndColumns} />
+      <FinalStatsValueBlock title="DOT Bonuses" columns={finalStatsDotColumns} stats={stats} showEmptyRowsAndColumns={showEmptyRowsAndColumns} />
+      <FinalStatsValueBlock title="Special Crit Bonuses" columns={finalStatsSpecialCritColumns} stats={stats} showEmptyRowsAndColumns={showEmptyRowsAndColumns} />
+      {remainingColumns.length > 0 ? (
+        <FinalStatsTableBlock title="Additional Stats">
+          <FinalStatsValueTable columns={remainingColumns} stats={stats} />
+        </FinalStatsTableBlock>
+      ) : null}
+    </div>
+  )
+}
+
+function FinalStatsSourceCard({
+  title,
+  subtitle,
+  stats,
+  showEmptyRowsAndColumns,
+  defaultOpen = false,
+}: {
+  title: string
+  subtitle?: string
+  stats: Record<string, number>
+  showEmptyRowsAndColumns: boolean
+  defaultOpen?: boolean
+}) {
+  const [isOpen, setIsOpen] = useState(defaultOpen)
+  const activeStatCount = countNonZeroStats(stats)
+
+  return (
+    <section className={`${cardClass} ${isOpen ? "p-5 sm:p-6" : "p-4 sm:p-4"}`}>
+      <GlowLayer />
+      <div className={`relative ${isOpen ? "space-y-4" : "space-y-0"}`}>
+        <div className="flex flex-wrap items-center justify-between gap-4">
+          <CardHeader title={title} subtitle={isOpen ? subtitle : undefined} />
+          <div className="flex items-center gap-3">
+            <div className="rounded-full border border-slate-700/80 bg-slate-950/70 px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.14em] text-slate-300">
+              {formatWhole(activeStatCount)} Active
+            </div>
+            <button
+              type="button"
+              onClick={() => setIsOpen((current) => !current)}
+              aria-expanded={isOpen}
+              className="rounded-full border border-slate-700/80 bg-slate-900/80 px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.16em] text-slate-200 transition hover:border-sky-300/40 hover:text-sky-100"
+            >
+              {isOpen ? "Hide" : "Show"}
+            </button>
+          </div>
         </div>
+
+        {isOpen ? (
+          <div className="border-t border-slate-800/70 pt-4">
+            {activeStatCount === 0 && !showEmptyRowsAndColumns ? (
+              <div className="text-sm text-slate-400">All rows and columns in this group are empty.</div>
+            ) : (
+              <FinalStatsSection stats={stats} showEmptyRowsAndColumns={showEmptyRowsAndColumns} />
+            )}
+          </div>
+        ) : null}
       </div>
     </section>
+  )
+}
+
+function getFinalStatsSourceSections(summary: SummaryState): FinalStatsSourceSection[] {
+  const raceStats = getRaceStats(summary.snapshot)
+  const talentStats = subtractStats(summary.stages.StatsTalents, raceStats)
+
+  return [
+    {
+      title: "Overall Stats",
+      subtitle: "Final totals after conversions, buffs, and tarots",
+      stats: summary.stages.StatsDmgReady,
+    },
+    {
+      title: "Talents",
+      subtitle: "Selected talents only, excluding direct race bonuses",
+      stats: talentStats,
+    },
+    {
+      title: "Buffs",
+      subtitle: "Selected skill buffs",
+      stats: summary.stages.StatsBuffs,
+    },
+    {
+      title: "Tarots",
+      subtitle: "Selected tarot effects",
+      stats: summary.stages.StatsTarots,
+    },
+    {
+      title: "Equipment",
+      subtitle: "Enabled equipment main stats and affixes",
+      stats: summary.stages.StatsEquipment,
+    },
+    {
+      title: "Artifact",
+      subtitle: "Artifact level bonuses and artifact stat modifiers",
+      stats: summary.stages.StatsArtifact,
+    },
+    {
+      title: "Runes",
+      subtitle: "Equipped rune bonuses",
+      stats: summary.stages.StatsRunes,
+    },
+    {
+      title: "Levels",
+      subtitle: "Class levels, stat points, training, and hero points",
+      stats: summary.stages.StatsLevels,
+    },
+    {
+      title: "Race",
+      subtitle: `Direct racial bonuses from ${summary.raceName}`,
+      stats: raceStats,
+    },
+    {
+      title: "Talent Conversions",
+      subtitle: "Stats added by selected talent conversions",
+      stats: summary.stages.StatsConverted,
+    },
+  ]
+}
+
+function FinalStatsBreakdownCard({
+  summary,
+  viewState,
+}: {
+  summary: SummaryState
+  viewState: CharacterSummaryViewState
+}) {
+  const sections = getFinalStatsSourceSections(summary)
+  const visibleSections = viewState.showEmptyGroups
+    ? sections
+    : sections.filter((section) => countNonZeroStats(section.stats) > 0)
+
+  return (
+    <div className="space-y-4">
+      {visibleSections.map((section) => (
+        <FinalStatsSourceCard
+          key={section.title}
+          title={section.title}
+          subtitle={section.subtitle}
+          stats={section.stats}
+          showEmptyRowsAndColumns={viewState.showEmptyRowsAndColumns}
+        />
+      ))}
+    </div>
   )
 }
 
@@ -1184,6 +1792,7 @@ function BuffCard({
 
 export default function CharacterSummary() {
   const [summary, setSummary] = useState<SummaryState | null>(null)
+  const [summaryViewState, setSummaryViewState] = useState<CharacterSummaryViewState>(getDefaultCharacterSummaryViewState)
 
   useEffect(() => {
     if (typeof window === "undefined") {
@@ -1207,7 +1816,6 @@ export default function CharacterSummary() {
     window.addEventListener("talentsUpdated", refresh)
     window.addEventListener("equipmentUpdated", refresh)
     window.addEventListener("computeDmgReadyStats", refresh)
-    window.addEventListener("damageCalcUpdated", refresh)
     document.addEventListener("visibilitychange", handleVisibilityChange)
 
     return () => {
@@ -1216,8 +1824,35 @@ export default function CharacterSummary() {
       window.removeEventListener("talentsUpdated", refresh)
       window.removeEventListener("equipmentUpdated", refresh)
       window.removeEventListener("computeDmgReadyStats", refresh)
-      window.removeEventListener("damageCalcUpdated", refresh)
       document.removeEventListener("visibilitychange", handleVisibilityChange)
+    }
+  }, [])
+
+  useEffect(() => {
+    if (typeof window === "undefined") {
+      return
+    }
+
+    const syncViewState = () => {
+      setSummaryViewState(readCharacterSummaryViewState(window.localStorage))
+    }
+
+    const handleViewStateChange = (event: Event) => {
+      const detail = (event as CustomEvent<CharacterSummaryViewChangeDetail>).detail
+
+      if (detail?.viewState) {
+        setSummaryViewState(detail.viewState)
+        return
+      }
+
+      syncViewState()
+    }
+
+    syncViewState()
+    window.addEventListener(CHARACTER_SUMMARY_VIEW_EVENT, handleViewStateChange)
+
+    return () => {
+      window.removeEventListener(CHARACTER_SUMMARY_VIEW_EVENT, handleViewStateChange)
     }
   }, [])
 
@@ -1242,6 +1877,7 @@ export default function CharacterSummary() {
         <StatGroup
           title="In game stats"
           subtitle="Current guild card, character card, dungeon card, and active effects"
+          storageKey={IN_GAME_STATS_GROUP_STORAGE_KEY}
         >
           <div className="space-y-6">
             <GuildCard summary={summary} />
@@ -1269,23 +1905,15 @@ export default function CharacterSummary() {
           </div>
         </StatGroup>
 
-        <StatGroup
-          title="Final stats"
-          subtitle="Raw final build stats plus the current damage calculator inputs"
-        >
-          <div className="grid gap-6 xl:grid-cols-[0.82fr_1.18fr]">
-            <DamageCalcInputsCard summary={summary} />
-
-            <TerminalCard
-              title="Damage Calc Stat Snapshot"
-              subtitle="Raw StatsDmgReady values after conversions, buffs, and tarots"
-              mainRows={getDungeonMainRows(summary.stages.StatsDmgReady)}
-              detailRows={getDungeonDetailRows(summary.stages.StatsDmgReady)}
-              typeRows={getTypeBonusRows(summary.stages.StatsDmgReady)}
-              elementRows={getElementRows(summary.stages.StatsDmgReady)}
+        <section className="space-y-4">
+          <div className="px-1 sm:px-2">
+            <CardHeader
+              title="Build Source Stats"
+              subtitle="Source breakdown of the current build's final stat totals"
             />
           </div>
-        </StatGroup>
+          <FinalStatsBreakdownCard summary={summary} viewState={summaryViewState} />
+        </section>
       </div>
     </div>
   )

@@ -5,6 +5,13 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import DamageWidget from "@/app/components/DamageWidget"
 import {
+  dispatchCharacterSummaryViewChange,
+  getDefaultCharacterSummaryViewState,
+  persistCharacterSummaryViewState,
+  readCharacterSummaryViewState,
+  type CharacterSummaryViewState,
+} from "@/app/lib/characterSummaryViewState"
+import {
   type AvailabilityFilter,
   type ClassFilterKey,
   type ClassFilterMode,
@@ -148,9 +155,11 @@ export default function TopNav() {
   const normalizedPathname = normalizePathname(pathname)
   const showResetUi = RESETTABLE_PATHS.has(normalizedPathname)
   const tablePage = getTableViewPageFromPathname(normalizedPathname)
+  const showSummaryControls = normalizedPathname === "/charactersummary"
   const navRef = useRef<HTMLElement | null>(null)
   const [openMenu, setOpenMenu] = useState<"filter" | "sort" | null>(null)
   const [viewState, setViewState] = useState<TableViewState>(getDefaultTableViewState)
+  const [summaryViewState, setSummaryViewState] = useState<CharacterSummaryViewState>(getDefaultCharacterSummaryViewState)
   const controlsRef = useRef<HTMLDivElement | null>(null)
   const showFilterControls = tablePage !== null
   const sortPage = isSortPage(tablePage) ? tablePage : null
@@ -185,11 +194,19 @@ export default function TopNav() {
 
     if (!tablePage) {
       setViewState(getDefaultTableViewState())
+    } else {
+      setViewState(readTableViewState(localStorage, tablePage))
+    }
+  }, [normalizedPathname, tablePage])
+
+  useEffect(() => {
+    if (!showSummaryControls) {
+      setSummaryViewState(getDefaultCharacterSummaryViewState())
       return
     }
 
-    setViewState(readTableViewState(localStorage, tablePage))
-  }, [tablePage])
+    setSummaryViewState(readCharacterSummaryViewState(localStorage))
+  }, [showSummaryControls])
 
   useEffect(() => {
     if (!openMenu) {
@@ -223,6 +240,10 @@ export default function TopNav() {
     viewState.sortMode !== "default" ||
     viewState.sortDirection !== getDefaultSortDirection("default")
   )
+  const hasCustomSummaryView = (
+    summaryViewState.showEmptyRowsAndColumns !== getDefaultCharacterSummaryViewState().showEmptyRowsAndColumns ||
+    summaryViewState.showEmptyGroups !== getDefaultCharacterSummaryViewState().showEmptyGroups
+  )
   const sortButtonLabel = hasActiveSort ? `Sort ${getDirectionArrow(viewState.sortDirection)}` : "Sort"
 
   const updateViewState = (patch: Partial<TableViewState>) => {
@@ -243,6 +264,13 @@ export default function TopNav() {
         [classKey]: mode,
       },
     })
+  }
+
+  const updateSummaryViewState = (patch: Partial<CharacterSummaryViewState>) => {
+    const nextSummaryViewState = { ...summaryViewState, ...patch }
+    setSummaryViewState(nextSummaryViewState)
+    persistCharacterSummaryViewState(localStorage, nextSummaryViewState)
+    dispatchCharacterSummaryViewChange({ viewState: nextSummaryViewState })
   }
 
   const handleSortOptionClick = (sortMode: SortMode) => {
@@ -306,6 +334,26 @@ export default function TopNav() {
                   {sortButtonLabel}
                 </button>
               ) : null}
+            </>
+          ) : null}
+
+          {showSummaryControls ? (
+            <>
+              <button
+                type="button"
+                onClick={() => updateSummaryViewState({ showEmptyRowsAndColumns: !summaryViewState.showEmptyRowsAndColumns })}
+                className={`${controlButtonClass} border-slate-700 bg-slate-950/90 ${hasCustomSummaryView ? "border-sky-500/60 text-sky-200" : "border-slate-700"}`}
+              >
+                {summaryViewState.showEmptyRowsAndColumns ? "Hide empty data" : "Show empty data"}
+              </button>
+
+              <button
+                type="button"
+                onClick={() => updateSummaryViewState({ showEmptyGroups: !summaryViewState.showEmptyGroups })}
+                className={`${controlButtonClass} border-slate-700 bg-slate-950/90 ${hasCustomSummaryView ? "border-sky-500/60 text-sky-200" : "border-slate-700"}`}
+              >
+                {summaryViewState.showEmptyGroups ? "Hide empty groups" : "Show empty groups"}
+              </button>
             </>
           ) : null}
 
