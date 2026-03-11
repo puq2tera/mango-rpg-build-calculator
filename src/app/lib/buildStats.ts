@@ -382,7 +382,7 @@ function computeLevelStats(snapshot: BuildSnapshot): Record<string, number> {
         break
       case "warrior":
         scalingGain = Math.min(
-          0.00155,
+          0.155,
           stat_data.ClassMainStatValues[className][scalingStat]
             + stat_data.ClassMainStatValues[className][`${scalingStat} Scaling`] * totalLevel,
         )

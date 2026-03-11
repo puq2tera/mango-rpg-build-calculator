@@ -342,8 +342,8 @@ const ClassMainStatValues: Record<string, Record<string, number>> = {
     "HP": 20.5,
     "MP": 1,
     "Focus": 2,
-    "Overdrive%": 0.00075,
-    "Overdrive% Scaling": 0.000002 //cap at 0.08 scaling
+    "Overdrive%": 0.075,
+    "Overdrive% Scaling": 0.0002 // caps at 0.155
   },
   "caster": {
     "ATK": 1.5,
