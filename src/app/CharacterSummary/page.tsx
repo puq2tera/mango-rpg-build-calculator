@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useState, type ReactNode } from "react"
 import { race_data_by_tag } from "@/app/data/race_data"
 import { skill_data } from "@/app/data/skill_data"
 import stat_data from "@/app/data/stat_data"
@@ -12,6 +12,7 @@ import {
   type BuildStatStages,
 } from "@/app/lib/buildStats"
 import { BUILD_SNAPSHOT_UPDATED_EVENT } from "@/app/lib/buildEvents"
+import { readDamageCalcState, type DamageCalcState } from "@/app/lib/damageCalc"
 
 type ClassKey = "tank" | "warrior" | "caster" | "healer"
 
@@ -25,6 +26,7 @@ type SummaryState = {
   snapshot: BuildSnapshot
   stages: BuildStatStages
   charcardStages: BuildStatStages
+  damageCalcState: DamageCalcState
   dungeonMainStats: Record<string, number>
   displayBaseStats: Record<string, number>
   displayDungeonStats: Record<string, number>
@@ -669,6 +671,7 @@ function buildSummaryState(storage: Storage): SummaryState {
   const snapshot = readBuildSnapshot(storage)
   const stages = computeBuildStatStages(snapshot)
   const charcardStages = computeBuildStatStages(getCharcardSnapshot(snapshot))
+  const damageCalcState = readDamageCalcState(storage)
   const dungeonMainStats = getDungeonMainStats(snapshot, stages)
   const displayBaseStats = getDisplayBaseStats(charcardStages)
   const displayDungeonStats = getDisplayDungeonStats(snapshot, stages)
@@ -683,6 +686,7 @@ function buildSummaryState(storage: Storage): SummaryState {
     snapshot,
     stages,
     charcardStages,
+    damageCalcState,
     dungeonMainStats,
     displayBaseStats,
     displayDungeonStats,
@@ -896,6 +900,72 @@ function DetailTile({
   )
 }
 
+function StatGroup({
+  title,
+  subtitle,
+  defaultOpen = true,
+  children,
+}: {
+  title: string
+  subtitle?: string
+  defaultOpen?: boolean
+  children: ReactNode
+}) {
+  const [isOpen, setIsOpen] = useState(defaultOpen)
+
+  return (
+    <section className="overflow-hidden rounded-[30px] border border-slate-800/80 bg-slate-950/35 shadow-[0_18px_60px_rgba(2,6,23,0.22)]">
+      <div className="flex flex-wrap items-center justify-between gap-4 px-5 py-4 sm:px-6">
+        <CardHeader title={title} subtitle={subtitle} />
+        <button
+          type="button"
+          onClick={() => setIsOpen((current) => !current)}
+          aria-expanded={isOpen}
+          className="rounded-full border border-slate-700/80 bg-slate-900/80 px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.16em] text-slate-200 transition hover:border-sky-300/40 hover:text-sky-100"
+        >
+          {isOpen ? "Hide" : "Show"}
+        </button>
+      </div>
+
+      {isOpen ? (
+        <div className="border-t border-slate-800/70 p-4 sm:p-6">
+          {children}
+        </div>
+      ) : null}
+    </section>
+  )
+}
+
+function getDamageCalcInputTiles(summary: SummaryState): Array<{ label: string; value: string }> {
+  const stats = summary.stages.StatsDmgReady
+  const { attackPreset, mainStat, secondStat, element, penElement, skillType, inputs } = summary.damageCalcState
+  const skillTypeValue = skillType === "N/A"
+    ? skillType
+    : `${skillType} · ${formatPercent(getStat(stats, `${skillType} DMG%`))}`
+
+  return [
+    { label: "Preset", value: attackPreset || "Custom Skill" },
+    { label: "Primary Stat", value: `${mainStat} · ${formatWhole(getStat(stats, mainStat))}` },
+    { label: "2nd Stat", value: `${secondStat} · ${formatWhole(getStat(stats, secondStat))}` },
+    {
+      label: "Element DMG / xDMG",
+      value: `${element} · ${formatPercent(getStat(stats, `${element}%`))} / ${formatPercent(getStat(stats, `${element} xDmg%`))}`,
+    },
+    { label: "Pen Element", value: `${penElement} · ${formatPercent(getStat(stats, `${penElement} Pen%`))}` },
+    { label: "Skill Type", value: skillTypeValue },
+    {
+      label: "Crit Chance / Damage",
+      value: `${formatPercent(getStat(stats, "Crit Chance%"))} / ${formatPercent(getStat(stats, "Crit DMG%"))}`,
+    },
+    { label: "Skill DMG / 2nd DMG", value: `${formatPercent(inputs.skillDmg)} / ${formatPercent(inputs.secondSkillDmg)}` },
+    { label: "Skill Crit / Crit Chance", value: `${formatPercent(inputs.skillCritDmg)} / ${formatPercent(inputs.skillCritChance)}` },
+    { label: "Skill Pen / DOT", value: `${formatPercent(inputs.skillPen)} / ${formatPercent(inputs.dot)}` },
+    { label: "Enemy Armor / Res", value: `${formatWhole(inputs.enemyArmor)} / ${formatWhole(inputs.enemyRes)}` },
+    { label: "Armor Ignore / Res Ignore", value: `${formatPercent(inputs.armorIgnore)} / ${formatPercent(inputs.resIgnore)}` },
+    { label: "Threat Def", value: formatPercent(inputs.threatDef) },
+  ]
+}
+
 function GuildCard({
   summary,
 }: {
@@ -1030,6 +1100,32 @@ function TerminalCard({
   )
 }
 
+function DamageCalcInputsCard({
+  summary,
+}: {
+  summary: SummaryState
+}) {
+  const tiles = getDamageCalcInputTiles(summary)
+
+  return (
+    <section className={`${cardClass} p-5 sm:p-6`}>
+      <GlowLayer />
+      <div className="relative space-y-5">
+        <CardHeader
+          title="Damage Calc Inputs"
+          subtitle="Current calculator selections and the stat values fed into the damage formula"
+        />
+
+        <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+          {tiles.map((tile) => (
+            <DetailTile key={tile.label} label={tile.label} value={tile.value} />
+          ))}
+        </div>
+      </div>
+    </section>
+  )
+}
+
 function BuffCard({
   summary,
 }: {
@@ -1111,6 +1207,7 @@ export default function CharacterSummary() {
     window.addEventListener("talentsUpdated", refresh)
     window.addEventListener("equipmentUpdated", refresh)
     window.addEventListener("computeDmgReadyStats", refresh)
+    window.addEventListener("damageCalcUpdated", refresh)
     document.addEventListener("visibilitychange", handleVisibilityChange)
 
     return () => {
@@ -1119,6 +1216,7 @@ export default function CharacterSummary() {
       window.removeEventListener("talentsUpdated", refresh)
       window.removeEventListener("equipmentUpdated", refresh)
       window.removeEventListener("computeDmgReadyStats", refresh)
+      window.removeEventListener("damageCalcUpdated", refresh)
       document.removeEventListener("visibilitychange", handleVisibilityChange)
     }
   }, [])
@@ -1141,28 +1239,53 @@ export default function CharacterSummary() {
   return (
     <div className="p-4 sm:p-6">
       <div className="mx-auto max-w-7xl space-y-6">
-        <GuildCard summary={summary} />
+        <StatGroup
+          title="In game stats"
+          subtitle="Current guild card, character card, dungeon card, and active effects"
+        >
+          <div className="space-y-6">
+            <GuildCard summary={summary} />
 
-        <div className="grid gap-6 xl:grid-cols-[0.92fr_1.08fr]">
-          <TerminalCard
-            title="Character Card"
-            subtitle="Note: Lightning does not receive eleglobal correctly on the in-game charcard."
-            mainRows={getBaseMainRows(baseStats, displayBaseStats)}
-            detailRows={getBaseDetailRows(displayBaseStats)}
-            typeRows={getTypeBonusRows(displayBaseStats, { maskVoidDamage: true, maskVoidPen: true })}
-            elementRows={getElementRows(displayBaseStats, { addAllDamage: true, omitAllDamageFor: ["Lightning"] })}
-          />
-        </div>
+            <div className="grid gap-6 xl:grid-cols-[0.92fr_1.08fr]">
+              <TerminalCard
+                title="Character Card"
+                subtitle="Note: Lightning does not receive eleglobal correctly on the in-game charcard."
+                mainRows={getBaseMainRows(baseStats, displayBaseStats)}
+                detailRows={getBaseDetailRows(displayBaseStats)}
+                typeRows={getTypeBonusRows(displayBaseStats, { maskVoidDamage: true, maskVoidPen: true })}
+                elementRows={getElementRows(displayBaseStats, { addAllDamage: true, omitAllDamageFor: ["Lightning"] })}
+              />
+            </div>
 
-        <TerminalCard
-          title="Dungeon Character Card"
-          mainRows={getDungeonMainRows(summary.dungeonMainStats)}
-          detailRows={getDungeonDetailRows(displayDungeonStats)}
-          typeRows={getTypeBonusRows(displayDungeonStats, { maskVoidDamage: true, maskVoidPen: true })}
-          elementRows={getElementRows(displayDungeonStats)}
-        />
+            <TerminalCard
+              title="Dungeon Character Card"
+              mainRows={getDungeonMainRows(summary.dungeonMainStats)}
+              detailRows={getDungeonDetailRows(displayDungeonStats)}
+              typeRows={getTypeBonusRows(displayDungeonStats, { maskVoidDamage: true, maskVoidPen: true })}
+              elementRows={getElementRows(displayDungeonStats)}
+            />
 
-        <BuffCard summary={summary} />
+            <BuffCard summary={summary} />
+          </div>
+        </StatGroup>
+
+        <StatGroup
+          title="Final stats"
+          subtitle="Raw final build stats plus the current damage calculator inputs"
+        >
+          <div className="grid gap-6 xl:grid-cols-[0.82fr_1.18fr]">
+            <DamageCalcInputsCard summary={summary} />
+
+            <TerminalCard
+              title="Damage Calc Stat Snapshot"
+              subtitle="Raw StatsDmgReady values after conversions, buffs, and tarots"
+              mainRows={getDungeonMainRows(summary.stages.StatsDmgReady)}
+              detailRows={getDungeonDetailRows(summary.stages.StatsDmgReady)}
+              typeRows={getTypeBonusRows(summary.stages.StatsDmgReady)}
+              elementRows={getElementRows(summary.stages.StatsDmgReady)}
+            />
+          </div>
+        </StatGroup>
       </div>
     </div>
   )

@@ -84,10 +84,6 @@ function normalizeMainStatName(value: unknown): string | null {
   return typeof value === "string" && stat_data.Mainstats.includes(value) ? value : null
 }
 
-function normalizeSkillTypeName(value: unknown): string | null {
-  return typeof value === "string" && stat_data.SkillTypes.includes(value) ? value : null
-}
-
 function toPercentValue(value: unknown): number {
   if (typeof value !== "number" || !Number.isFinite(value)) {
     return 0
