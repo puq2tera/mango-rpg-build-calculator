@@ -310,6 +310,37 @@ function computeTalentStats(snapshot: BuildSnapshot, selectedTalentNames: readon
   return stats
 }
 
+type LevelingClass = keyof typeof stat_data.ClassMainStatValues
+
+function isLevelingClass(className: string): className is LevelingClass {
+  return className in stat_data.ClassMainStatValues && className in stat_data.ClassScalingStats
+}
+
+function getManualLevelRangeOverride(ranges: readonly ManualLevelRange[], totalLevel: number): ManualLevelRange | null {
+  for (let i = ranges.length - 1; i >= 0; i--) {
+    const range = ranges[i]
+    if (totalLevel < range.startLevel || totalLevel > range.endLevel) continue
+    return range
+  }
+
+  return null
+}
+
+function getDefaultLevelClassOrder(snapshot: BuildSnapshot): LevelingClass[] {
+  const classOrder: LevelingClass[] = []
+
+  for (const classNameRaw of snapshot.selectedLevelOrder) {
+    if (!isLevelingClass(classNameRaw)) continue
+
+    const classLevels = Math.max(0, Math.floor(snapshot.selectedLevels[classNameRaw] ?? 0))
+    for (let i = 0; i < classLevels; i++) {
+      classOrder.push(classNameRaw)
+    }
+  }
+
+  return classOrder
+}
+
 function computeLevelStats(snapshot: BuildSnapshot): Record<string, number> {
   const statsLevels: Record<string, number> = {}
 
@@ -319,63 +350,54 @@ function computeLevelStats(snapshot: BuildSnapshot): Record<string, number> {
   statsLevels["Focus Regen"] = 5
 
   let hp = 50
-  let lvl = 0
   const mainstatLevelGains: Record<string, number> = { ATK: 0, DEF: 0, MATK: 0, HEAL: 0 }
+  const defaultClassOrder = getDefaultLevelClassOrder(snapshot)
 
-  const findLevelRangeOverride = (className: string, totalLevel: number): ManualLevelRange | null => {
-    for (let i = snapshot.selectedManualLevelRanges.length - 1; i >= 0; i--) {
-      const range = snapshot.selectedManualLevelRanges[i]
-      if (range.className !== className) continue
-      if (totalLevel < range.startLevel || totalLevel > range.endLevel) continue
-      return range
-    }
-
-    return null
-  }
-
-  for (const classNameRaw of snapshot.selectedLevelOrder) {
-    if (!(classNameRaw in stat_data.ClassMainStatValues) || !(classNameRaw in stat_data.ClassScalingStats)) continue
-
-    const className = classNameRaw as keyof typeof stat_data.ClassMainStatValues
+  for (const [levelIndex, fallbackClassName] of defaultClassOrder.entries()) {
+    const totalLevel = levelIndex + 1
+    const rangeOverride = getManualLevelRangeOverride(snapshot.selectedManualLevelRanges, totalLevel)
+    const className = rangeOverride?.className ?? fallbackClassName
     const hpMultiplier = stat_data.ClassMainStatValues[className].HP
-    const scalingStat = stat_data.ClassScalingStats[className]
-    let scalingValue = 0
-    const classLevels = snapshot.selectedLevels[className] ?? 0
 
-    for (let i = 0; i < classLevels; i++) {
-      lvl++
-      const rangeOverride = findLevelRangeOverride(className, lvl)
-
-      if (rangeOverride?.mode === "manual") {
-        hp += getManualRangeGain(rangeOverride, lvl, "hpGain")
-        mainstatLevelGains.ATK += getManualRangeGain(rangeOverride, lvl, "atkGain")
-        mainstatLevelGains.DEF += getManualRangeGain(rangeOverride, lvl, "defGain")
-        mainstatLevelGains.MATK += getManualRangeGain(rangeOverride, lvl, "matkGain")
-        mainstatLevelGains.HEAL += getManualRangeGain(rangeOverride, lvl, "healGain")
-      } else {
-        hp += Math.floor(hpMultiplier * (1 + 0.1 * (lvl - 1))) + 4 * lvl
-        for (const stat of stat_data.Mainstats) {
-          mainstatLevelGains[stat] = (mainstatLevelGains[stat] ?? 0) + (stat_data.ClassMainStatValues[className][stat] ?? 0)
-        }
-      }
-
-      switch (className) {
-        case "tank":
-          scalingValue += stat_data.ClassMainStatValues[className][scalingStat] + Math.floor(stat_data.ClassMainStatValues[className][`${scalingStat} Scaling`] * lvl)
-          break
-        case "warrior":
-          scalingValue += Math.min(0.00155, stat_data.ClassMainStatValues[className][scalingStat] + stat_data.ClassMainStatValues[className][`${scalingStat} Scaling`] * lvl)
-          break
-        case "caster":
-          scalingValue += stat_data.ClassMainStatValues[className][scalingStat] + Math.floor(stat_data.ClassMainStatValues[className][`${scalingStat} Scaling`] * lvl)
-          break
-        case "healer":
-          scalingValue += stat_data.ClassMainStatValues[className][scalingStat] + (stat_data.ClassMainStatValues[className][`${scalingStat} Scaling`] * lvl)
-          break
+    if (rangeOverride?.mode === "manual") {
+      hp += getManualRangeGain(rangeOverride, totalLevel, "hpGain")
+      mainstatLevelGains.ATK += getManualRangeGain(rangeOverride, totalLevel, "atkGain")
+      mainstatLevelGains.DEF += getManualRangeGain(rangeOverride, totalLevel, "defGain")
+      mainstatLevelGains.MATK += getManualRangeGain(rangeOverride, totalLevel, "matkGain")
+      mainstatLevelGains.HEAL += getManualRangeGain(rangeOverride, totalLevel, "healGain")
+    } else {
+      hp += Math.floor(hpMultiplier * (1 + 0.1 * (totalLevel - 1))) + 4 * totalLevel
+      for (const stat of stat_data.Mainstats) {
+        mainstatLevelGains[stat] = (mainstatLevelGains[stat] ?? 0) + (stat_data.ClassMainStatValues[className][stat] ?? 0)
       }
     }
 
-    statsLevels[scalingStat] = (statsLevels[scalingStat] ?? 0) + scalingValue
+    const scalingStat = stat_data.ClassScalingStats[className]
+    let scalingGain = 0
+
+    switch (className) {
+      case "tank":
+        scalingGain = stat_data.ClassMainStatValues[className][scalingStat]
+          + Math.floor(stat_data.ClassMainStatValues[className][`${scalingStat} Scaling`] * totalLevel)
+        break
+      case "warrior":
+        scalingGain = Math.min(
+          0.00155,
+          stat_data.ClassMainStatValues[className][scalingStat]
+            + stat_data.ClassMainStatValues[className][`${scalingStat} Scaling`] * totalLevel,
+        )
+        break
+      case "caster":
+        scalingGain = stat_data.ClassMainStatValues[className][scalingStat]
+          + Math.floor(stat_data.ClassMainStatValues[className][`${scalingStat} Scaling`] * totalLevel)
+        break
+      case "healer":
+        scalingGain = stat_data.ClassMainStatValues[className][scalingStat]
+          + (stat_data.ClassMainStatValues[className][`${scalingStat} Scaling`] * totalLevel)
+        break
+    }
+
+    statsLevels[scalingStat] = (statsLevels[scalingStat] ?? 0) + scalingGain
   }
 
   statsLevels.HP = hp

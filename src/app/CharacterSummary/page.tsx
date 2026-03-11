@@ -417,6 +417,17 @@ function formatPercent(value: number, digits = 0): string {
   return `${formatted}%`
 }
 
+function formatPrecisePercent(value: number, maxDigits = 6): string {
+  if (!Number.isFinite(value)) {
+    return "0%"
+  }
+
+  return `${value.toLocaleString("en-US", {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: maxDigits,
+  })}%`
+}
+
 function isZeroStat(value: number): boolean {
   return Math.abs(value) < 0.0001
 }
@@ -1139,7 +1150,7 @@ function getBaseDetailRows(baseStats: Record<string, number>): TerminalDetailRow
     },
     {
       label: "Overdrive Scaling",
-      value: formatPercent(getStat(baseStats, "Overdrive%") / 100, 1),
+      value: formatPrecisePercent(getStat(baseStats, "Overdrive%") / 100),
     },
     {
       label: "EXP Bonus",
@@ -1172,7 +1183,7 @@ function getDungeonDetailRows(stats: Record<string, number>): TerminalDetailRow[
     },
     {
       label: "Overdrive Scaling",
-      value: formatPercent(getStat(stats, "Overdrive%") / 100, 1),
+      value: formatPrecisePercent(getStat(stats, "Overdrive%") / 100),
     },
     {
       label: "HP Regen/Rate",
