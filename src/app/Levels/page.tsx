@@ -153,6 +153,56 @@ const classCellBg: Record<Cls, string> = {
   caster: "bg-sky-900/40",
   healer: "bg-fuchsia-900/40",
 }
+
+function createEmptyLevelsByClass(): LevelsByClass {
+  return { tank: 0, warrior: 0, caster: 0, healer: 0 }
+}
+
+function getDefaultLevelClassSequence(levels: LevelsByClass, classOrder: readonly Cls[]): Cls[] {
+  const sequence: Cls[] = []
+
+  for (const className of classOrder) {
+    const classLevels = Math.max(0, Math.floor(levels[className] ?? 0))
+    for (let i = 0; i < classLevels; i++) {
+      sequence.push(className)
+    }
+  }
+
+  return sequence
+}
+
+function getManualRangeOverride(ranges: readonly ManualLevelRange[], totalLevel: number): ManualLevelRange | null {
+  for (let i = ranges.length - 1; i >= 0; i--) {
+    const range = ranges[i]
+    if (totalLevel >= range.startLevel && totalLevel <= range.endLevel) {
+      return range
+    }
+  }
+
+  return null
+}
+
+function getSyncedLevelsFromManualRanges(
+  ranges: readonly ManualLevelRange[],
+  currentLevels: LevelsByClass,
+  classOrder: readonly Cls[],
+): LevelsByClass {
+  const maxTotalLevel = getManualRangeMaxTotalLevel(ranges)
+  const defaultSequence = getDefaultLevelClassSequence(currentLevels, classOrder)
+  const syncedLevels = createEmptyLevelsByClass()
+  let lastResolvedClass: Cls = defaultSequence[0] ?? classOrder[0] ?? "healer"
+
+  for (let totalLevel = 1; totalLevel <= maxTotalLevel; totalLevel++) {
+    const override = getManualRangeOverride(ranges, totalLevel)
+    const resolvedClass = override?.className ?? defaultSequence[totalLevel - 1] ?? lastResolvedClass
+
+    syncedLevels[resolvedClass] += 1
+    lastResolvedClass = resolvedClass
+  }
+
+  return syncedLevels
+}
+
 type LevelRequirementRowProps = {
   classNameKey: Cls
   levels: LevelsByClass
@@ -220,7 +270,7 @@ function LevelRequirementRow({
 }
 
 export default function LevelsPage() {
-  const [levels, setLevels] = useState<LevelsByClass>({ tank: 0, warrior: 0, caster: 0, healer: 0 })
+  const [levels, setLevels] = useState<LevelsByClass>(createEmptyLevelsByClass())
   const [statPoints, setStatPoints] = useState({ ATK: 0, DEF: 0, MATK: 0, HEAL: 0 })
   const [training, setTraining] = useState({ ATK: 0, DEF: 0, MATK: 0, HEAL: 0 })
   const [heroPoints, setHeroPoints] = useState<Record<string, number>>({})
@@ -248,7 +298,7 @@ export default function LevelsPage() {
     const storedSelectedTalents = localStorage.getItem("selectedTalents")
     const storedSelectedBuffs = localStorage.getItem("selectedBuffs")
 
-    setLevels(parseStoredJson(storedLevels, { tank: 0, warrior: 0, caster: 0, healer: 0 }))
+    setLevels(parseStoredJson(storedLevels, createEmptyLevelsByClass()))
     setStatPoints(parseStoredJson(storedStatPoints, { ATK: 0, DEF: 0, MATK: 0, HEAL: 0 }))
     setTraining(parseStoredJson(storedTraining, { ATK: 0, DEF: 0, MATK: 0, HEAL: 0 }))
     setHeroPoints(parseStoredJson(storedHeroPoints, {}))
@@ -321,6 +371,8 @@ export default function LevelsPage() {
   }
 
   const totalLevels = Object.values(levels).reduce((a, b) => a + b, 0)
+  const maxManualRangeLevel = getManualRangeMaxTotalLevel(manualLevelRanges)
+  const needsManualLevelSync = maxManualRangeLevel > totalLevels
   const availableSkillPoints = Math.ceil(totalLevels / 2)
   const availableTalentPoints = Math.floor(totalLevels / 2)
   const totalStatPoints = totalLevels
@@ -502,6 +554,15 @@ export default function LevelsPage() {
     })
   }
 
+  const syncLevelsToManualRanges = () => {
+    const syncedLevels = getSyncedLevelsFromManualRanges(manualLevelRanges, levels, classOrder)
+    setLevels(syncedLevels)
+    setManualRangeImportNotice({
+      tone: "success",
+      lines: [`Synced chosen levels to ${getManualRangeMaxTotalLevel(manualLevelRanges)} total levels from manual ranges.`],
+    })
+  }
+
   return (
     <div className="p-4 space-y-6">
       <h1 className="text-xl font-bold">Level Summary</h1>
@@ -677,6 +738,15 @@ export default function LevelsPage() {
               >
                 Add Range
               </button>
+              {needsManualLevelSync ? (
+                <button
+                  type="button"
+                  className="border border-amber-300/70 bg-amber-400 px-3 py-1 font-semibold text-slate-950 hover:bg-amber-300"
+                  onClick={syncLevelsToManualRanges}
+                >
+                  Sync levels
+                </button>
+              ) : null}
             </div>
             <div className="overflow-x-auto">
               <table className="table-fixed border text-xs md:text-sm text-center">
