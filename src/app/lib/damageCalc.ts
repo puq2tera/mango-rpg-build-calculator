@@ -127,10 +127,12 @@ export function persistDamageCalcState(storage: Storage, state: DamageCalcState)
 const toMult = (value: number | undefined): number => 1 + ((value ?? 0) / 100)
 const clamp = (value: number, minimum = 0, maximum = 1): number => Math.min(maximum, Math.max(minimum, value))
 const skillCritDamageStatsBySkillType: Record<string, string[]> = {
+  Bow: ["Bow Crit DMG%"],
   Dagger: ["Dagger Crit DMG%"],
   Fist: ["Fist Crit DMG%"],
 }
 const skillCritChanceStatsBySkillType: Record<string, string[]> = {
+  Bow: ["Bow Crit Chance%"],
   "Shadow Break": ["Shadow Break Crit Chance%"],
 }
 

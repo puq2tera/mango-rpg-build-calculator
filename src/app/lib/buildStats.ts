@@ -21,6 +21,7 @@ export type ManualLevelRange = {
 
 type EquipmentSlot = {
   name: string
+  type?: string
   affixes: { stat: string; value: number }[]
   mainstat: string
   mainstat_value: number
@@ -114,6 +115,7 @@ const asEquipmentSlots = (value: unknown): EquipmentSlot[] => {
     .filter((entry): entry is Partial<EquipmentSlot> => typeof entry === "object" && entry !== null)
     .map((entry) => ({
       name: typeof entry.name === "string" ? entry.name : "",
+      type: typeof entry.type === "string" ? entry.type : undefined,
       affixes: Array.isArray(entry.affixes)
         ? (entry.affixes as unknown[])
           .filter((affix): affix is Record<string, unknown> => typeof affix === "object" && affix !== null)
@@ -474,12 +476,7 @@ function computeEquipmentStats(snapshot: BuildSnapshot): Record<string, number> 
     for (const affix of slot.affixes) {
       if (!affix.stat) continue
       const affixInfo = stat_data.StatsInfo[affix.stat as keyof typeof stat_data.StatsInfo]
-      const substats = affixInfo?.sub_stats
-      if (substats) {
-        for (const substat of substats) {
-          stats[substat] = (stats[substat] ?? 0) + affix.value
-        }
-      } else if (affixInfo) {
+      if (affixInfo) {
         stats[affix.stat] = (stats[affix.stat] ?? 0) + affix.value
       }
     }
@@ -539,12 +536,8 @@ function computexPenStats(statsBase: Record<string, number>): Record<string, num
   return statsXPen
 }
 
-function computeConversionReadyStats(statsBase: Record<string, number>, statsXPen: Record<string, number>): Record<string, number> {
-  const statsCombined: Record<string, number> = { ...statsXPen }
-
-  for (const [stat, value] of Object.entries(statsBase)) {
-    statsCombined[stat] = (statsCombined[stat] ?? 0) + value
-  }
+function computeConversionReadyStats(statsBase: Record<string, number>): Record<string, number> {
+  const statsCombined: Record<string, number> = { ...statsBase }
 
   const statsConversionReady: Record<string, number> = { ...statsCombined }
 
@@ -671,7 +664,7 @@ export function computeBuildStatStages(
   const statsArtifact = computeArtifactStats(snapshot)
   const statsBase = combineBaseStats(statsTalents, statsEquipment, statsLevels, statsRunes, statsArtifact)
   const statsXPen = computexPenStats(statsBase)
-  const statsConversionReady = computeConversionReadyStats(statsBase, statsXPen)
+  const statsConversionReady = computeConversionReadyStats(statsBase)
   const statsConverted = computeConvertedTalentStats(statsConversionReady, selectedTalents)
   const statsBuffReady = computeBuffReadyStats(statsConversionReady, statsConverted)
   const statsBuffs = computeBuffStats(selectedBuffs, buffStacks, statsBuffReady)

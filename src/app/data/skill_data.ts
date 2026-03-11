@@ -2833,7 +2833,7 @@ const skill_data: Record<string, Skill> = {
         stats: {
     "Bow Crit DMG%": 0.15,
     },
-        dmg_stats: { dmg_element: "Pierce", element: "Pierce", pen_element: "Void", stat: "ATK", ratio: 1, crit_dmg: 0.1 },
+        dmg_stats: { dmg_element: "Pierce", element: "Pierce", pen_element: "Void", stat: "ATK", ratio: 1, skill_type: "Bow", crit_dmg: 0.1 },
 },
 "Iron Fist": {...defaultSkill,
         type: {
@@ -3084,7 +3084,7 @@ const skill_data: Record<string, Skill> = {
         stats: {
     "Bow Crit DMG%": 0.15,
     },
-        dmg_stats: { dmg_element: "Pierce", element: "Pierce", pen_element: "Void", stat: "ATK", ratio: 1.4, crit_dmg: 0.1 },
+        dmg_stats: { dmg_element: "Pierce", element: "Pierce", pen_element: "Void", stat: "ATK", ratio: 1.4, skill_type: "Bow", crit_dmg: 0.1 },
 },
 "Impact Blows": {...defaultSkill,
         type: {
@@ -3525,7 +3525,7 @@ const skill_data: Record<string, Skill> = {
         stats: {
     "Bow Crit DMG%": 0.15,
     },
-        dmg_stats: { dmg_element: "Pierce", element: "Pierce", pen_element: "Void", stat: "ATK", ratio: 1.8, crit_dmg: 0.1 },
+        dmg_stats: { dmg_element: "Pierce", element: "Pierce", pen_element: "Void", stat: "ATK", ratio: 1.8, skill_type: "Bow", crit_dmg: 0.1 },
 },
 "Fierce Strikes": {...defaultSkill,
         type: {
@@ -4026,7 +4026,7 @@ const skill_data: Record<string, Skill> = {
         stats: {
     "Bow Crit DMG%": 0.2,
     },
-        dmg_stats: { dmg_element: "Pierce", element: "Pierce", pen_element: "Void", stat: "ATK", ratio: 2.25, crit_dmg: 0.1 },
+        dmg_stats: { dmg_element: "Pierce", element: "Pierce", pen_element: "Void", stat: "ATK", ratio: 2.25, skill_type: "Bow", crit_dmg: 0.1 },
 },
 "Seven Sided Strike": {...defaultSkill,
         type: {
@@ -4511,7 +4511,7 @@ const skill_data: Record<string, Skill> = {
         stats: {
     "Bow Crit DMG%": 0.2,
     },
-        dmg_stats: { dmg_element: "Pierce", element: "Pierce", pen_element: "Void", stat: "ATK", ratio: 2.9, crit_dmg: 0.1 },
+        dmg_stats: { dmg_element: "Pierce", element: "Pierce", pen_element: "Void", stat: "ATK", ratio: 2.9, skill_type: "Bow", crit_dmg: 0.1 },
 },
 "Roaring Dragon Fist": {...defaultSkill,
         type: {

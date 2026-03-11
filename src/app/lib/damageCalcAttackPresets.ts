@@ -177,7 +177,7 @@ const rawAttackPresets: RawAttackPreset[] = Object.entries(skill_data)
       penElement: normalizeElementName(dmg.pen_element ?? dmg.dmg_element ?? dmg.element),
       mainStat: normalizeMainStatName(dmg.stat),
       secondStat: normalizeMainStatName(dmg.stat2),
-      skillType: normalizeSkillTypeName(dmg.skill_type),
+      skillType: skill.dmg_stats?.skill_type ?? "N/A",
       inputs: {
         skillDmg: isThreatOnly ? 0 : toSkillPercent(dmg.ratio),
         skillCritDmg:

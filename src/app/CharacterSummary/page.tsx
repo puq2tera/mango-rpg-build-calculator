@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react"
 import { race_data_by_tag } from "@/app/data/race_data"
 import { skill_data } from "@/app/data/skill_data"
+import stat_data from "@/app/data/stat_data"
 import tarot_data from "@/app/data/tarot_data"
 import {
   computeBuildStatStages,
@@ -24,6 +25,10 @@ type SummaryState = {
   profile: SummaryProfile
   snapshot: BuildSnapshot
   stages: BuildStatStages
+  charcardStages: BuildStatStages
+  dungeonMainStats: Record<string, number>
+  displayBaseStats: Record<string, number>
+  displayDungeonStats: Record<string, number>
   totalLevels: number
   raceName: string
   nextLevelExp: number
@@ -47,6 +52,23 @@ type ActiveEffect = {
 type EffectDelta = {
   stat: string
   delta: number
+  label?: string
+}
+
+type EffectSourceData = {
+  description: string
+  conversions?: Array<{
+    source: string
+    ratio: number
+    resulting_stat: string
+  }>
+  stack_conversions?: Array<{
+    source: string
+    ratio: number
+    resulting_stat: string
+  }>
+  stats?: Record<string, number>
+  stack_stats?: Record<string, number>
 }
 
 type TerminalMainRow = {
@@ -100,6 +122,8 @@ const effectPriority = [
   "DMG Res%",
   "Crit Chance%",
   "Crit DMG%",
+  "Bow Crit Chance%",
+  "Bow Crit DMG%",
   "Phys%",
   "Phys Pen%",
   "Elemental%",
@@ -108,6 +132,7 @@ const effectPriority = [
   "Divine Pen%",
   "Void%",
   "Void Pen%",
+  "Bow DMG%",
   "Blunt%",
   "Pierce%",
   "Slash%",
@@ -122,6 +147,21 @@ const effectPriority = [
 ] as const
 
 const effectPriorityIndex = new Map<string, number>(effectPriority.map((stat, index) => [stat, index]))
+
+const dungeonDisplayElements = [
+  { key: "Fire", family: "Elemental" },
+  { key: "Lightning", family: "Elemental" },
+  { key: "Water", family: "Elemental" },
+  { key: "Earth", family: "Elemental" },
+  { key: "Wind", family: "Elemental" },
+  { key: "Toxic", family: "Elemental" },
+  { key: "Void", family: "Void" },
+  { key: "Neg", family: "Divine" },
+  { key: "Holy", family: "Divine" },
+  { key: "Blunt", family: "Phys" },
+  { key: "Pierce", family: "Phys" },
+  { key: "Slash", family: "Phys" },
+] as const
 
 function getXpToNextLevel(level: number): number {
   const normalizedLevel = Math.max(0, Math.floor(level))
@@ -175,15 +215,19 @@ function formatPercent(value: number, digits = 0): string {
   return `${formatted}%`
 }
 
-function formatEffectDelta(delta: number, stat: string): string {
+function formatEffectDelta(delta: number, stat: string, label?: string): string {
   const digits = Math.abs(delta) < 1 && delta !== 0 ? 2 : 0
   const absolute = digits === 0 ? formatWhole(Math.abs(delta)) : formatFixed(Math.abs(delta), digits)
   const suffix = stat.includes("%") ? "%" : ""
-  return `${delta >= 0 ? "+" : "-"}${absolute}${suffix} ${getReadableStatLabel(stat)}`
+  return `${delta >= 0 ? "+" : "-"}${absolute}${suffix} ${label ?? getReadableStatLabel(stat)}`
 }
 
 function getStat(stats: Record<string, number>, key: string): number {
   return stats[key] ?? 0
+}
+
+function subtractSharedResist(totalResist: number, allResist: number): number {
+  return Math.max(0, totalResist - allResist)
 }
 
 function getReadableStatLabel(stat: string): string {
@@ -204,6 +248,10 @@ function getReadableStatLabel(stat: string): string {
       return "Crit Chance"
     case "Crit DMG%":
       return "Crit Damage"
+    case "Bow Crit Chance%":
+      return "Bow Crit Chance"
+    case "Bow Crit DMG%":
+      return "Bow Crit Damage"
     case "Threat%":
       return "Threat Modifier"
     case "Neg%":
@@ -214,10 +262,20 @@ function getReadableStatLabel(stat: string): string {
       return "Physical DMG"
     case "Elemental%":
       return "Elemental DMG"
+    case "Elemental Pen%":
+      return "Elemental Pen"
     case "Divine%":
       return "Divine DMG"
+    case "Divine Pen%":
+      return "Divine Pen"
     case "Void%":
       return "Void DMG"
+    case "Void Pen%":
+      return "Void Pen"
+    case "Bow DMG%":
+      return "Elebow"
+    case "All%":
+      return "All Damage"
     default:
       return stat.replace(/%/g, "").trim()
   }
@@ -235,15 +293,300 @@ function getUsedSkillPoints(snapshot: BuildSnapshot): number {
   return snapshot.selectedBuffs.reduce((total, skillName) => total + (skill_data[skillName]?.sp ?? 0), 0)
 }
 
-function getEffectDeltas(
-  currentStats: Record<string, number>,
-  previousStats: Record<string, number>,
-): EffectDelta[] {
-  const keys = new Set([...Object.keys(currentStats), ...Object.keys(previousStats)])
+function isTarotEquipmentSlot(slot: BuildSnapshot["equipmentSlots"][number] | undefined): boolean {
+  return slot?.type === "Tarot"
+}
+
+function getCharcardSnapshot(snapshot: BuildSnapshot): BuildSnapshot {
+  return {
+    ...snapshot,
+    enabledEquipment: snapshot.enabledEquipment.filter((index) => !isTarotEquipmentSlot(snapshot.equipmentSlots[index])),
+  }
+}
+
+function mergeStats(...sources: Record<string, number>[]): Record<string, number> {
+  const merged: Record<string, number> = {}
+
+  for (const source of sources) {
+    for (const [stat, value] of Object.entries(source)) {
+      merged[stat] = (merged[stat] ?? 0) + value
+    }
+  }
+
+  return merged
+}
+
+function addExpandedStat(target: Record<string, number>, stat: string, value: number): void {
+  if (!Number.isFinite(value) || Math.abs(value) < 0.0001) {
+    return
+  }
+
+  target[stat] = (target[stat] ?? 0) + value
+  const info = stat_data.StatsInfo[stat as keyof typeof stat_data.StatsInfo]
+  if (!info?.sub_stats) {
+    return
+  }
+
+  for (const subStat of info.sub_stats) {
+    target[subStat] = (target[subStat] ?? 0) + value
+  }
+}
+
+function getMergedDisplayStatValue(
+  sourceStats: Record<string, number>,
+  activeExpandedStats: Record<string, number>,
+  stat: string,
+): number {
+  return (sourceStats[stat] ?? 0) + (activeExpandedStats[stat] ?? 0)
+}
+
+function getHighestDisplayStatValue(
+  sourceStats: Record<string, number>,
+  activeExpandedStats: Record<string, number>,
+  stats: readonly string[],
+): number {
+  return stats.reduce(
+    (highest, stat) => Math.max(highest, getMergedDisplayStatValue(sourceStats, activeExpandedStats, stat)),
+    0,
+  )
+}
+
+function getDisplayConversionSourceValue(
+  sourceStats: Record<string, number>,
+  activeExpandedStats: Record<string, number>,
+  sourceStat: string,
+): number {
+  switch (sourceStat) {
+    case "Highest Phys%":
+      return getHighestDisplayStatValue(sourceStats, activeExpandedStats, ["Slash%", "Pierce%", "Blunt%"])
+    case "Highest Phys Pen%":
+      return getHighestDisplayStatValue(sourceStats, activeExpandedStats, ["Slash Pen%", "Pierce Pen%", "Blunt Pen%"])
+    case "Highest Magic%":
+      return getHighestDisplayStatValue(sourceStats, activeExpandedStats, [
+        "Fire%",
+        "Water%",
+        "Lightning%",
+        "Wind%",
+        "Earth%",
+        "Toxic%",
+        "Neg%",
+        "Holy%",
+        "Void%",
+      ])
+    case "Highest Magic Pen%":
+      return getHighestDisplayStatValue(sourceStats, activeExpandedStats, [
+        "Fire Pen%",
+        "Water Pen%",
+        "Lightning Pen%",
+        "Wind Pen%",
+        "Earth Pen%",
+        "Toxic Pen%",
+        "Neg Pen%",
+        "Holy Pen%",
+        "Void Pen%",
+      ])
+    case "Post Crit Chance%":
+      return getMergedDisplayStatValue(sourceStats, activeExpandedStats, "Crit Chance%")
+    default:
+      return sourceStats[sourceStat] ?? 0
+  }
+}
+
+function addDisplayEffectStat(
+  rawStats: Record<string, number>,
+  expandedStats: Record<string, number>,
+  stat: string,
+  value: number,
+): void {
+  const info = stat_data.StatsInfo[stat as keyof typeof stat_data.StatsInfo]
+  if (!info || !Number.isFinite(value) || Math.abs(value) < 0.0001) {
+    return
+  }
+
+  rawStats[stat] = (rawStats[stat] ?? 0) + value
+  addExpandedStat(expandedStats, stat, value)
+}
+
+function applyDisplayFlatEffectStat(
+  rawStats: Record<string, number>,
+  expandedStats: Record<string, number>,
+  sourceStats: Record<string, number>,
+  targetStat: string,
+  targetValue: number,
+  stackCount = 1,
+  flatStatScale = 1,
+): void {
+  const info = stat_data.StatsInfo[targetStat as keyof typeof stat_data.StatsInfo]
+  if (!info) {
+    return
+  }
+
+  const buff = getMergedDisplayStatValue(sourceStats, expandedStats, "Buff%")
+  const normalizedTargetValue = info.multi === 0.01
+    ? targetValue * flatStatScale
+    : targetValue
+  const resultValue = Math.floor(normalizedTargetValue * stackCount * (1 + buff))
+
+  addDisplayEffectStat(rawStats, expandedStats, targetStat, resultValue)
+}
+
+function applyDisplayConversionEffect(
+  rawStats: Record<string, number>,
+  expandedStats: Record<string, number>,
+  sourceStats: Record<string, number>,
+  sourceStat: string,
+  ratio: number,
+  targetStat: string,
+  stackCount = 1,
+): void {
+  const info = stat_data.StatsInfo[targetStat as keyof typeof stat_data.StatsInfo]
+  if (!info) {
+    return
+  }
+
+  const buff = getMergedDisplayStatValue(sourceStats, expandedStats, "Buff%")
+  const sourceValue = getDisplayConversionSourceValue(sourceStats, expandedStats, sourceStat)
+  const resultValue = Math.floor(sourceValue * ratio * stackCount * (1 + buff))
+
+  addDisplayEffectStat(rawStats, expandedStats, targetStat, resultValue)
+}
+
+function computeDisplayEffectStats(
+  selectedNames: readonly string[],
+  stackDict: Record<string, number>,
+  sourceStats: Record<string, number>,
+  sourceData: Record<string, EffectSourceData | undefined>,
+  flatStatScale = 1,
+): Record<string, number> {
+  const rawStats: Record<string, number> = {}
+  const expandedStats: Record<string, number> = {}
+
+  for (const name of selectedNames) {
+    const effectData = sourceData[name]
+    if (!effectData) {
+      continue
+    }
+
+    if (effectData.conversions) {
+      for (const { source, ratio, resulting_stat } of effectData.conversions) {
+        applyDisplayConversionEffect(rawStats, expandedStats, sourceStats, source, ratio, resulting_stat)
+      }
+    }
+
+    if (effectData.stack_conversions) {
+      for (const { source, ratio, resulting_stat } of effectData.stack_conversions) {
+        applyDisplayConversionEffect(
+          rawStats,
+          expandedStats,
+          sourceStats,
+          source,
+          ratio,
+          resulting_stat,
+          stackDict[name] ?? 0,
+        )
+      }
+    }
+
+    if (effectData.stats) {
+      for (const [stat, value] of Object.entries(effectData.stats)) {
+        applyDisplayFlatEffectStat(rawStats, expandedStats, sourceStats, stat, value ?? 0, 1, flatStatScale)
+      }
+    }
+
+    if (effectData.stack_stats) {
+      for (const [stat, value] of Object.entries(effectData.stack_stats)) {
+        applyDisplayFlatEffectStat(rawStats, expandedStats, sourceStats, stat, value ?? 0, stackDict[name] ?? 0, flatStatScale)
+      }
+    }
+  }
+
+  return rawStats
+}
+
+function getDisplayBaseStats(stages: BuildStatStages): Record<string, number> {
+  return mergeStats(
+    stages.StatsTalents,
+    stages.StatsLevels,
+    stages.StatsEquipment,
+    stages.StatsRunes,
+    stages.StatsArtifact,
+    stages.StatsConverted,
+  )
+}
+
+function getRawDungeonDisplayStats(snapshot: BuildSnapshot, stages: BuildStatStages): Record<string, number> {
+  const buffStats = computeDisplayEffectStats(
+    snapshot.selectedBuffs,
+    snapshot.selectedBuffStacks,
+    stages.StatsBuffReady,
+    skill_data as Record<string, EffectSourceData | undefined>,
+    100,
+  )
+  const tarotStats = computeDisplayEffectStats(
+    snapshot.selectedTarots,
+    snapshot.tarotStacks,
+    stages.StatsBuffReady,
+    tarot_data as Record<string, EffectSourceData | undefined>,
+  )
+
+  return mergeStats(getDisplayBaseStats(stages), buffStats, tarotStats)
+}
+
+function getDungeonMainStats(snapshot: BuildSnapshot, stages: BuildStatStages): Record<string, number> {
+  const dungeonMainStats = { ...stages.StatsDmgReady }
+
+  // The "Focus" buff restores current focus; it does not raise the cap shown on the dungeon card.
+  if (snapshot.selectedBuffs.includes("Focus")) {
+    dungeonMainStats.Focus = stages.StatsBuffReady.Focus ?? dungeonMainStats.Focus
+  }
+
+  return dungeonMainStats
+}
+
+function getCalculatedOutDungeonStats(rawStats: Record<string, number>): Record<string, number> {
+  const calculatedStats: Record<string, number> = { ...rawStats }
+
+  calculatedStats["All%"] = 0
+  calculatedStats["All Pen%"] = 0
+  calculatedStats["All Res%"] = 0
+  calculatedStats["Phys%"] = 0
+  calculatedStats["Phys Pen%"] = 0
+  calculatedStats["Phys Res%"] = 0
+  calculatedStats["Phys xPen%"] = 0
+  calculatedStats["Elemental%"] = 0
+  calculatedStats["Elemental Pen%"] = 0
+  calculatedStats["Elemental Res%"] = 0
+  calculatedStats["Elemental xPen%"] = 0
+  calculatedStats["Divine%"] = 0
+  calculatedStats["Divine Pen%"] = 0
+  calculatedStats["Divine Res%"] = 0
+  calculatedStats["Divine xPen%"] = 0
+  calculatedStats["Void xPen%"] = 0
+
+  for (const { key, family } of dungeonDisplayElements) {
+    const damageFamilyBonus = family === "Void" ? 0 : getStat(rawStats, `${family}%`)
+    const resistFamilyBonus = family === "Void" ? 0 : getStat(rawStats, `${family} Res%`)
+    const penFamilyBonus = family === "Void" ? 0 : getStat(rawStats, `${family} Pen%`)
+    const xPenFamilyBonus = getStat(rawStats, `${family} xPen%`)
+    const specificPen = getStat(rawStats, `${key} Pen%`) + getStat(rawStats, "All Pen%") + penFamilyBonus
+    const xPen = getStat(rawStats, `${key} xPen%`) + xPenFamilyBonus
+
+    calculatedStats[`${key}%`] = getStat(rawStats, `${key}%`) + getStat(rawStats, "All%") + damageFamilyBonus
+    calculatedStats[`${key} Res%`] = getStat(rawStats, `${key} Res%`) + getStat(rawStats, "All Res%") + resistFamilyBonus
+    calculatedStats[`${key} Pen%`] = Math.floor(specificPen * (1 + (xPen / 100)))
+  }
+
+  return calculatedStats
+}
+
+function getDisplayDungeonStats(snapshot: BuildSnapshot, stages: BuildStatStages): Record<string, number> {
+  return getCalculatedOutDungeonStats(getRawDungeonDisplayStats(snapshot, stages))
+}
+
+function getEffectDeltas(stats: Record<string, number>): EffectDelta[] {
   const result: EffectDelta[] = []
 
-  for (const key of keys) {
-    const delta = (currentStats[key] ?? 0) - (previousStats[key] ?? 0)
+  for (const [key, delta] of Object.entries(stats)) {
     if (Math.abs(delta) < 0.0001) {
       continue
     }
@@ -271,21 +614,22 @@ function getEffectDeltas(
 }
 
 function getActiveEffects(snapshot: BuildSnapshot, stages: BuildStatStages): ActiveEffect[] {
-  const currentStats = stages.StatsDmgReady
   const effects: ActiveEffect[] = []
+  const sourceStats = stages.StatsBuffReady
 
   for (const skillName of snapshot.selectedBuffs) {
     const skill = skill_data[skillName]
     if (!skill) continue
 
-    const withoutStages = computeBuildStatStages(snapshot, {
-      selectedBuffs: snapshot.selectedBuffs.filter((entry) => entry !== skillName),
-      buffStacks: snapshot.selectedBuffStacks,
-      selectedTarots: snapshot.selectedTarots,
-      tarotStacks: snapshot.tarotStacks,
-    })
-
-    const deltas = getEffectDeltas(currentStats, withoutStages.StatsDmgReady)
+    const deltas = getEffectDeltas(
+      computeDisplayEffectStats(
+        [skillName],
+        snapshot.selectedBuffStacks,
+        sourceStats,
+        skill_data as Record<string, EffectSourceData | undefined>,
+        100,
+      ),
+    )
     if (deltas.length === 0) continue
 
     effects.push({
@@ -301,14 +645,14 @@ function getActiveEffects(snapshot: BuildSnapshot, stages: BuildStatStages): Act
     const tarot = tarot_data[tarotName]
     if (!tarot) continue
 
-    const withoutStages = computeBuildStatStages(snapshot, {
-      selectedBuffs: snapshot.selectedBuffs,
-      buffStacks: snapshot.selectedBuffStacks,
-      selectedTarots: snapshot.selectedTarots.filter((entry) => entry !== tarotName),
-      tarotStacks: snapshot.tarotStacks,
-    })
-
-    const deltas = getEffectDeltas(currentStats, withoutStages.StatsDmgReady)
+    const deltas = getEffectDeltas(
+      computeDisplayEffectStats(
+        [tarotName],
+        snapshot.tarotStacks,
+        sourceStats,
+        tarot_data as Record<string, EffectSourceData | undefined>,
+      ),
+    )
     if (deltas.length === 0) continue
 
     effects.push({
@@ -326,6 +670,10 @@ function getActiveEffects(snapshot: BuildSnapshot, stages: BuildStatStages): Act
 function buildSummaryState(storage: Storage): SummaryState {
   const snapshot = readBuildSnapshot(storage)
   const stages = computeBuildStatStages(snapshot)
+  const charcardStages = computeBuildStatStages(getCharcardSnapshot(snapshot))
+  const dungeonMainStats = getDungeonMainStats(snapshot, stages)
+  const displayBaseStats = getDisplayBaseStats(charcardStages)
+  const displayDungeonStats = getDisplayDungeonStats(snapshot, stages)
   const totalLevels = classKeys.reduce((total, classKey) => total + (snapshot.selectedLevels[classKey] ?? 0), 0)
   const availableSkillPoints = Math.ceil(totalLevels / 2)
   const usedSkillPoints = getUsedSkillPoints(snapshot)
@@ -336,6 +684,10 @@ function buildSummaryState(storage: Storage): SummaryState {
     profile: profileDefaults,
     snapshot,
     stages,
+    charcardStages,
+    dungeonMainStats,
+    displayBaseStats,
+    displayDungeonStats,
     totalLevels,
     raceName: getRaceName(snapshot),
     nextLevelExp: getXpToNextLevel(totalLevels),
@@ -349,7 +701,13 @@ function buildSummaryState(storage: Storage): SummaryState {
   }
 }
 
-function getTypeBonusRows(stats: Record<string, number>): TypeBonusRow[] {
+function getTypeBonusRows(
+  stats: Record<string, number>,
+  options?: {
+    maskVoidDamage?: boolean
+    maskVoidPen?: boolean
+  },
+): TypeBonusRow[] {
   const categories = [
     { label: "PHYS", dmg: "Phys%", xDmg: "Phys xDmg%", pen: "Phys Pen%", xPen: "Phys xPen%" },
     { label: "ELE", dmg: "Elemental%", xDmg: "Elemental xDmg%", pen: "Elemental Pen%", xPen: "Elemental xPen%" },
@@ -359,14 +717,29 @@ function getTypeBonusRows(stats: Record<string, number>): TypeBonusRow[] {
 
   return categories.map((category) => ({
     label: category.label,
-    dmg: category.label === "VOID" && getStat(stats, category.dmg) === 0 ? "X" : formatWhole(getStat(stats, category.dmg)),
+    dmg: category.label === "VOID" && options?.maskVoidDamage
+      ? "X"
+      : category.label === "VOID" && getStat(stats, category.dmg) === 0
+        ? "X"
+        : formatWhole(getStat(stats, category.dmg)),
     xDmg: formatWhole(getStat(stats, category.xDmg)),
-    pen: category.label === "VOID" && getStat(stats, category.pen) === 0 ? "X" : formatWhole(getStat(stats, category.pen)),
+    pen: category.label === "VOID" && options?.maskVoidPen
+      ? "X"
+      : category.label === "VOID" && getStat(stats, category.pen) === 0
+        ? "X"
+        : formatWhole(getStat(stats, category.pen)),
     xPen: formatWhole(getStat(stats, category.xPen)),
   }))
 }
 
-function getElementRows(stats: Record<string, number>): ElementRow[] {
+function getElementRows(
+  stats: Record<string, number>,
+  options?: {
+    addAllDamage?: boolean
+    omitAllDamageFor?: string[]
+    subtractAllResist?: boolean
+  },
+): ElementRow[] {
   const elements = [
     { label: "Fire", key: "Fire" },
     { label: "Lightning", key: "Lightning" },
@@ -381,24 +754,30 @@ function getElementRows(stats: Record<string, number>): ElementRow[] {
     { label: "Pierce", key: "Pierce" },
     { label: "Slash", key: "Slash" },
   ] as const
+  const allDamage = options?.addAllDamage ? getStat(stats, "All%") : 0
+  const omitAllDamageFor = new Set(options?.omitAllDamageFor ?? [])
+  const allResist = options?.subtractAllResist ? getStat(stats, "All Res%") : 0
 
   return elements.map((element) => ({
     label: element.label,
-    dmg: formatWhole(getStat(stats, `${element.key}%`)),
-    res: formatWhole(getStat(stats, `${element.key} Res%`)),
+    dmg: formatWhole(getStat(stats, `${element.key}%`) + (omitAllDamageFor.has(element.label) ? 0 : allDamage)),
+    res: formatWhole(subtractSharedResist(getStat(stats, `${element.key} Res%`), allResist)),
     pen: formatWhole(getStat(stats, `${element.key} Pen%`)),
   }))
 }
 
-function getBaseMainRows(stats: Record<string, number>): TerminalMainRow[] {
+function getBaseMainRows(
+  valueStats: Record<string, number>,
+  modifierStats: Record<string, number>,
+): TerminalMainRow[] {
   return [
-    { label: "Health", value: `${formatWhole(getStat(stats, "HP"))} / ${formatWhole(getStat(stats, "HP"))}` },
-    { label: "Mana", value: formatWhole(getStat(stats, "MP")) },
-    { label: "Focus", value: formatWhole(getStat(stats, "Focus")) },
-    { label: "ATK", value: formatWhole(getStat(stats, "ATK")), modifier: formatSignedPercent(getStat(stats, "ATK%")) },
-    { label: "MATK", value: formatWhole(getStat(stats, "MATK")), modifier: formatSignedPercent(getStat(stats, "MATK%")) },
-    { label: "DEF", value: formatWhole(getStat(stats, "DEF")), modifier: formatSignedPercent(getStat(stats, "DEF%")) },
-    { label: "HEAL", value: formatWhole(getStat(stats, "HEAL")), modifier: formatSignedPercent(getStat(stats, "HEAL%")) },
+    { label: "Health", value: `${formatWhole(getStat(valueStats, "HP"))} / ${formatWhole(getStat(valueStats, "HP"))}` },
+    { label: "Mana", value: formatWhole(getStat(valueStats, "MP")) },
+    { label: "Focus", value: formatWhole(getStat(valueStats, "Focus")) },
+    { label: "ATK", value: formatWhole(getStat(valueStats, "ATK")), modifier: formatSignedPercent(getStat(modifierStats, "ATK%")) },
+    { label: "MATK", value: formatWhole(getStat(valueStats, "MATK")), modifier: formatSignedPercent(getStat(modifierStats, "MATK%")) },
+    { label: "DEF", value: formatWhole(getStat(valueStats, "DEF")), modifier: formatSignedPercent(getStat(modifierStats, "DEF%")) },
+    { label: "HEAL", value: formatWhole(getStat(valueStats, "HEAL")), modifier: formatSignedPercent(getStat(modifierStats, "HEAL%")) },
   ]
 }
 
@@ -524,7 +903,7 @@ function GuildCard({
 }: {
   summary: SummaryState
 }) {
-  const baseStats = summary.stages.StatsBase
+  const baseStats = summary.charcardStages.StatsBase
 
   return (
     <section className={`${cardClass} p-5 sm:p-6`}>
@@ -595,6 +974,7 @@ function CharacterCard({
 function TerminalCard({
   eyebrow,
   title,
+  subtitle,
   mainRows,
   detailRows,
   typeRows,
@@ -602,6 +982,7 @@ function TerminalCard({
 }: {
   eyebrow?: string
   title: string
+  subtitle?: string
   mainRows: TerminalMainRow[]
   detailRows: TerminalDetailRow[]
   typeRows: TypeBonusRow[]
@@ -611,7 +992,7 @@ function TerminalCard({
     <section className={`${cardClass} p-5 sm:p-6`}>
       <GlowLayer />
       <div className="relative space-y-5">
-        <CardHeader eyebrow={eyebrow} title={title} />
+        <CardHeader eyebrow={eyebrow} title={title} subtitle={subtitle} />
 
         <div className="rounded-2xl border border-slate-700/70 bg-slate-950/55 p-4 font-mono text-sm tabular-nums">
           <div className="space-y-2">
@@ -726,7 +1107,7 @@ function BuffCard({
                       key={`${effect.id}:${delta.stat}`}
                       className="rounded-full border border-slate-700/80 bg-slate-900/90 px-3 py-1.5 font-mono text-xs text-slate-100"
                     >
-                      {formatEffectDelta(delta.delta, delta.stat)}
+                      {formatEffectDelta(delta.delta, delta.stat, delta.label)}
                     </div>
                   ))}
                 </div>
@@ -787,9 +1168,9 @@ export default function CharacterSummary() {
     )
   }
 
-  const baseStats = summary.stages.StatsBase
-  const preEffectStats = summary.stages.StatsBuffReady
-  const finalStats = summary.stages.StatsDmgReady
+  const baseStats = summary.charcardStages.StatsBase
+  const displayBaseStats = summary.displayBaseStats
+  const displayDungeonStats = summary.displayDungeonStats
 
   return (
     <div className="p-4 sm:p-6">
@@ -801,20 +1182,21 @@ export default function CharacterSummary() {
           <TerminalCard
             eyebrow="Character Card"
             title="Base Stats & Multipliers"
-            mainRows={getBaseMainRows(baseStats)}
-            detailRows={getBaseDetailRows(preEffectStats)}
-            typeRows={getTypeBonusRows(preEffectStats)}
-            elementRows={getElementRows(preEffectStats)}
+            subtitle="Lightning does not receive shared All% correctly on the in-game charcard."
+            mainRows={getBaseMainRows(baseStats, displayBaseStats)}
+            detailRows={getBaseDetailRows(displayBaseStats)}
+            typeRows={getTypeBonusRows(displayBaseStats, { maskVoidDamage: true, maskVoidPen: true })}
+            elementRows={getElementRows(displayBaseStats, { addAllDamage: true, omitAllDamageFor: ["Lightning"] })}
           />
         </div>
 
         <TerminalCard
           eyebrow={`@${summary.profile.handle}'s Stats`}
           title="Dungeon Character Card"
-          mainRows={getDungeonMainRows(finalStats)}
-          detailRows={getDungeonDetailRows(finalStats)}
-          typeRows={getTypeBonusRows(finalStats)}
-          elementRows={getElementRows(finalStats)}
+          mainRows={getDungeonMainRows(summary.dungeonMainStats)}
+          detailRows={getDungeonDetailRows(displayDungeonStats)}
+          typeRows={getTypeBonusRows(displayDungeonStats, { maskVoidDamage: true, maskVoidPen: true })}
+          elementRows={getElementRows(displayDungeonStats)}
         />
 
         <BuffCard summary={summary} />

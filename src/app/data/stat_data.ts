@@ -265,6 +265,7 @@ export const StatsInfo: Record<string, StatInfoData> = {
 
   "Spear DMG%":        { multi: 0.01 },
   "Sword DMG%":        { multi: 0.01 },
+  "Bow DMG%":          { multi: 0.01 },
   "Hammer DMG%":       { multi: 0.01 },
   "Fire DMG%":         { multi: 0.01 },
   "Fist DMG%":         { multi: 0.01 },
@@ -279,6 +280,7 @@ export const StatsInfo: Record<string, StatInfoData> = {
   "Slash DOT%":  { multi: 0.01 },
   "Pierce DOT%": { multi: 0.01 },
 
+  "Bow Crit Chance%":    { multi: 0.01 },
   "Bow Crit DMG%":       { multi: 0.01 },
   "Fist Crit DMG%":      { multi: 0.01 },
   "Dagger Crit DMG%":    { multi: 0.01 },
@@ -294,7 +296,7 @@ const Mainstats = ["ATK", "DEF", "MATK", "HEAL"]
 const AllElements = ["Slash", "Pierce", "Blunt", "Fire", "Water", "Lightning", "Wind", "Earth", "Toxic", "Neg", "Holy", "Void"]
 export type Mainstats_type = "ATK" | "DEF" | "MATK" | "HEAL"
 export type AllElements_type = "Slash" | "Pierce" | "Blunt" | "Fire" | "Water" | "Lightning" | "Wind" | "Earth" | "Toxic" | "Neg" | "Holy" | "Void"
-const SkillTypes = ["N/A", "Sword", "Spear", "Hammer", "Fist", "Dagger", "Void", "Fire", "Shadow Break"]
+const SkillTypes = ["N/A", "Sword", "Spear", "Bow", "Hammer", "Fist", "Dagger", "Void", "Fire", "Shadow Break"]
 
 const Elemental = ["Fire", "Water", "Lightning", "Wind", "Earth", "Toxic"]
 const Physical = ["Slash", "Pierce", "Blunt"]
