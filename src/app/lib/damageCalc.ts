@@ -153,8 +153,8 @@ export function calculateDamage(stats: Record<string, number>, state: DamageCalc
   const mitigated = Math.max(0, Math.floor(base - (armorBlock - armorBreak)))
 
   let dmg = mitigated
-  const elemMult = toMult(stats[`${element}%`]) * toMult(stats[`${element} xDmg%`])
-  dmg = Math.floor(dmg * elemMult)
+  dmg = Math.floor(dmg * toMult(stats[`${element}%`]))
+  dmg = Math.floor(dmg * toMult(stats[`${element} xDmg%`]))
   const penResMult =
     1
     + (((stats[`${penElement} Pen%`] ?? 0) + (inputs.skillPen ?? 0)) / 100)
