@@ -140,7 +140,16 @@ function getTotalStatValue(stats: Record<string, number>, statNames: readonly st
   return statNames.reduce((sum, statName) => sum + (stats[statName] ?? 0), 0)
 }
 
-export function calculateDamage(stats: Record<string, number>, state: DamageCalcState): DamageCalcResult {
+type NormalizedDamageContext = {
+  stats: Record<string, number>
+  element: string
+  penElement: string
+  skillType: string
+  inputs: DamageCalcInputs
+  mitigated: number
+}
+
+function buildDamageContext(stats: Record<string, number>, state: DamageCalcState): NormalizedDamageContext {
   const { mainStat, secondStat, element, penElement, skillType, inputs } = normalizeDamageCalcState(state)
 
   const baseRaw =
@@ -152,18 +161,18 @@ export function calculateDamage(stats: Record<string, number>, state: DamageCalc
   const armorBreak = Math.floor(((stats["ATK"] ?? 0) + (stats["DEF"] ?? 0) + (stats["MATK"] ?? 0) + (stats["HEAL"] ?? 0)) / 4) + (stats["Armor Strike"] ?? 0)
   const mitigated = Math.max(0, Math.floor(base - (armorBlock - armorBreak)))
 
-  let dmg = mitigated
-  dmg = Math.floor(dmg * toMult(stats[`${element}%`]))
-  dmg = Math.floor(dmg * toMult(stats[`${element} xDmg%`]))
-  const penResMult =
-    1
-    + (((stats[`${penElement} Pen%`] ?? 0) + (inputs.skillPen ?? 0)) / 100)
-    - ((inputs.enemyRes ?? 0) * ((inputs.resIgnore ?? 0) / 100))
-  dmg = Math.floor(dmg * penResMult)
-  dmg = Math.floor(dmg * toMult(stats[`${skillType} DMG%`]))
-  dmg = Math.floor(dmg * toMult(stats["Dmg%"]))
+  return {
+    stats,
+    element,
+    penElement,
+    skillType,
+    inputs,
+    mitigated,
+  }
+}
 
-  const nonCrit = Math.max(0, dmg)
+function finalizeDamageResult(nonCrit: number, context: NormalizedDamageContext): DamageCalcResult {
+  const { stats, element, skillType, inputs } = context
   const skillCritDamage =
     getTotalStatValue(stats, skillCritDamageStatsBySkillType[skillType] ?? [])
     + (stat_data.Elemental.includes(element) ? (stats["Elemental Crit DMG%"] ?? 0) : 0)
@@ -207,6 +216,42 @@ export function calculateDamage(stats: Record<string, number>, state: DamageCalc
     threatCrit,
     threatAverage,
   }
+}
+
+export function calculateDamage(stats: Record<string, number>, state: DamageCalcState): DamageCalcResult {
+  const context = buildDamageContext(stats, state)
+  const { stats: resolvedStats, element, penElement, skillType, inputs, mitigated } = context
+
+  let dmg = mitigated
+  dmg = Math.floor(dmg * toMult(resolvedStats[`${element}%`]))
+  dmg = Math.floor(dmg * toMult(resolvedStats[`${element} xDmg%`]))
+  const penResMult =
+    1
+    + (((resolvedStats[`${penElement} Pen%`] ?? 0) + (inputs.skillPen ?? 0)) / 100)
+    - ((inputs.enemyRes ?? 0) * ((inputs.resIgnore ?? 0) / 100))
+  dmg = Math.floor(dmg * penResMult)
+  dmg = Math.floor(dmg * toMult(resolvedStats[`${skillType} DMG%`]))
+  dmg = Math.floor(dmg * toMult(resolvedStats["Dmg%"]))
+
+  return finalizeDamageResult(Math.max(0, dmg), context)
+}
+
+export function calculateAlternateDamage(stats: Record<string, number>, state: DamageCalcState): DamageCalcResult {
+  const context = buildDamageContext(stats, state)
+  const { stats: resolvedStats, element, penElement, skillType, inputs, mitigated } = context
+
+  let dmg = mitigated
+  const penResMult =
+    1
+    + (((resolvedStats[`${penElement} Pen%`] ?? 0) + (inputs.skillPen ?? 0)) / 100)
+    - ((inputs.enemyRes ?? 0) * ((inputs.resIgnore ?? 0) / 100))
+  dmg = Math.floor(dmg * penResMult)
+  dmg = Math.floor(dmg * toMult(resolvedStats[`${element} xDmg%`]))
+  dmg = Math.floor(dmg * toMult(resolvedStats[`${skillType} DMG%`]))
+  dmg = Math.floor(dmg * toMult(resolvedStats["Dmg%"]))
+  dmg *= toMult(resolvedStats[`${element}%`])
+
+  return finalizeDamageResult(Math.max(0, Math.floor(dmg)), context)
 }
 
 export function formatSignedDamageDelta(value: number | null): string {

@@ -359,7 +359,7 @@ function computeLevelStats(snapshot: BuildSnapshot): Record<string, number> {
     const className = rangeOverride?.className ?? fallbackClassName
     const hpMultiplier = stat_data.ClassMainStatValues[className].HP
 
-    if (rangeOverride?.mode === "manual") {
+    if (rangeOverride) {
       hp += getManualRangeGain(rangeOverride, totalLevel, "hpGain")
       mainstatLevelGains.ATK += getManualRangeGain(rangeOverride, totalLevel, "atkGain")
       mainstatLevelGains.DEF += getManualRangeGain(rangeOverride, totalLevel, "defGain")

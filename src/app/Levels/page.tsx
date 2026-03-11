@@ -34,7 +34,6 @@ import {
   parseManualLevelTranscript,
   type ManualLevelRange,
   type ManualRangeClass,
-  type ManualRangeMode,
 } from "../lib/manualLevelRanges"
 import { skill_data } from "../data/skill_data"
 import { talent_data } from "../data/talent_data"
@@ -47,6 +46,7 @@ const STORAGE_KEYS = {
   heroPoints: "SelectedHeroPoints",
   savedLevelOrder: "SelectedLevelOrder",
   manualLevelRanges: "SelectedManualLevelRanges",
+  manualLevelRangesCollapsed: "SelectedManualLevelRangesCollapsed",
   dungeonUnlocks: DUNGEON_UNLOCKS_STORAGE_KEY,
   race: "SelectedRace",
 }
@@ -62,6 +62,16 @@ function parseStoredStringArray(raw: string | null): string[] {
     return Array.isArray(parsed) ? parsed.filter((value): value is string => typeof value === "string") : []
   } catch {
     return []
+  }
+}
+
+function parseStoredBoolean(raw: string | null, fallback = false): boolean {
+  if (!raw) return fallback
+
+  try {
+    return JSON.parse(raw) === true
+  } catch {
+    return fallback
   }
 }
 
@@ -215,7 +225,7 @@ export default function LevelsPage() {
   const [training, setTraining] = useState({ ATK: 0, DEF: 0, MATK: 0, HEAL: 0 })
   const [heroPoints, setHeroPoints] = useState<Record<string, number>>({})
   const [manualLevelRanges, setManualLevelRanges] = useState<ManualLevelRange[]>([])
-  const [manualRangeImportText, setManualRangeImportText] = useState("")
+  const [manualRangesCollapsed, setManualRangesCollapsed] = useState(false)
   const [manualRangeImportNotice, setManualRangeImportNotice] = useState<ManualRangeImportNotice | null>(null)
   const [selectedDungeonUnlocks, setSelectedDungeonUnlocks] = useState<DungeonUnlockTag[]>([])
   const [selectedTalents, setSelectedTalents] = useState<string[]>([])
@@ -232,6 +242,7 @@ export default function LevelsPage() {
     const storedHeroPoints = localStorage.getItem(STORAGE_KEYS.heroPoints)
     const storedLevelOrder = localStorage.getItem(STORAGE_KEYS.savedLevelOrder)
     const storedManualLevelRanges = localStorage.getItem(STORAGE_KEYS.manualLevelRanges)
+    const storedManualLevelRangesCollapsed = localStorage.getItem(STORAGE_KEYS.manualLevelRangesCollapsed)
     const storedDungeonUnlocks = localStorage.getItem(STORAGE_KEYS.dungeonUnlocks)
     const storedRace = localStorage.getItem(STORAGE_KEYS.race)
     const storedSelectedTalents = localStorage.getItem("selectedTalents")
@@ -243,6 +254,7 @@ export default function LevelsPage() {
     setHeroPoints(parseStoredJson(storedHeroPoints, {}))
     setClassOrder(normalizeStoredClassOrder(storedLevelOrder))
     setManualLevelRanges(normalizeManualLevelRanges(parseStoredJson(storedManualLevelRanges, [])))
+    setManualRangesCollapsed(parseStoredBoolean(storedManualLevelRangesCollapsed))
     setSelectedDungeonUnlocks(parseStoredStringArray(storedDungeonUnlocks).filter(isDungeonUnlockTag))
     if (storedRace && isRaceTag(storedRace)) setSelectedRace(storedRace)
     setSelectedTalents(parseStoredStringArray(storedSelectedTalents))
@@ -286,6 +298,11 @@ export default function LevelsPage() {
     localStorage.setItem(STORAGE_KEYS.manualLevelRanges, JSON.stringify(manualLevelRanges))
     dispatchBuildSnapshotUpdated()
   }, [manualLevelRanges, loaded])
+
+  useEffect(() => {
+    if (!loaded) return
+    localStorage.setItem(STORAGE_KEYS.manualLevelRangesCollapsed, JSON.stringify(manualRangesCollapsed))
+  }, [manualRangesCollapsed, loaded])
 
   useEffect(() => {
     if (!loaded) return
@@ -424,13 +441,13 @@ export default function LevelsPage() {
     setManualLevelRanges((prev) => prev.filter((_, i) => i !== index))
   }
 
-  const importManualRangesFromText = () => {
-    const transcript = manualRangeImportText.trim()
+  const importManualRangesFromText = (rawTranscript: string) => {
+    const transcript = rawTranscript.trim()
 
     if (transcript.length === 0) {
       setManualRangeImportNotice({
         tone: "error",
-        lines: ["Paste a Guild Card and one or more `xlevelup` results before importing."],
+        lines: ["Paste a Guild Card and one or more `xlevelup` results into the import box."],
       })
       return
     }
@@ -449,7 +466,6 @@ export default function LevelsPage() {
     }
 
     setManualLevelRanges((prev) => [...prev, ...ranges])
-    setManualRangeImportText("")
     setManualRangeImportNotice({
       tone: warnings.length > 0 ? "warning" : "success",
       lines: [`Imported ${ranges.length} manual range${ranges.length === 1 ? "" : "s"}.`, ...warnings],
@@ -591,198 +607,186 @@ export default function LevelsPage() {
         </div>
       </div>
 
-      <h2 className="text-lg font-bold">Manual Levelup Ranges</h2>
-      <p className="text-sm text-slate-300">
-        Define manual ranges using total level.
-        All entered stat values are treated as totals for the whole range.
-        Imported `Level Up!` messages use the block `Total Level` as the range end and subtract the gained levels to find the start.
-        `manual` mode uses the totals you enter for that total-level range. `estimated` mode ignores the entered stat values and uses the calculator default level estimates for those levels instead.
-      </p>
-      <div className="max-w-5xl border p-3 space-y-3 bg-slate-900/60">
-        <label className="block space-y-2">
-          <span className="text-sm font-semibold text-slate-100">Paste level-up transcript</span>
-          <textarea
-            value={manualRangeImportText}
-            onChange={(e) => {
-              setManualRangeImportText(e.target.value)
-              if (manualRangeImportNotice) {
-                setManualRangeImportNotice(null)
-              }
-            }}
-            rows={10}
-            placeholder={`Guild Card\nT/W/C/H Levels\n0/0/0/2\n...\ncz xlevelup tank 3\nLevel Up!\n+HP\n113\n...`}
-            className="min-h-56 w-full border bg-slate-950 px-3 py-2 font-mono text-xs text-slate-100"
-          />
-        </label>
-        <div className="flex flex-wrap gap-2">
-          <button
-            type="button"
-            className="border px-3 py-1 bg-slate-800/85 hover:bg-slate-700/90"
-            onClick={importManualRangesFromText}
-          >
-            Import Transcript
-          </button>
-          <button
-            type="button"
-            className="border px-3 py-1 bg-slate-900/85 hover:bg-slate-800/90"
-            onClick={() => {
-              setManualRangeImportText("")
-              setManualRangeImportNotice(null)
-            }}
-          >
-            Clear Text
-          </button>
+      <section className="overflow-hidden rounded-[30px] border border-slate-800/80 bg-slate-950/35 shadow-[0_18px_60px_rgba(2,6,23,0.22)]">
+        <div className={`flex flex-wrap items-center justify-between gap-3 ${manualRangesCollapsed ? "px-4 py-2.5 sm:px-5" : "px-5 py-4 sm:px-6"}`}>
+          <div className="space-y-1">
+            <div className="text-xl font-semibold text-slate-50">Manual Levelup Ranges</div>
+            {!manualRangesCollapsed ? (
+              <div className="text-sm text-slate-400">
+                Import level-up transcripts and manage manual total-level stat override ranges.
+              </div>
+            ) : null}
+          </div>
+          <div className="flex items-center gap-3">
+            <div className="rounded-full border border-slate-700/80 bg-slate-950/70 px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.14em] text-slate-300">
+              {manualLevelRanges.length} Saved
+            </div>
+            <button
+              type="button"
+              onClick={() => setManualRangesCollapsed((prev) => !prev)}
+              aria-expanded={!manualRangesCollapsed}
+              aria-controls="manual-levelup-ranges-panel"
+              className="rounded-full border border-slate-700/80 bg-slate-900/80 px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.16em] text-slate-200 transition hover:border-sky-300/40 hover:text-sky-100"
+            >
+              {manualRangesCollapsed ? "Show" : "Hide"}
+            </button>
+          </div>
         </div>
-        {manualRangeImportNotice ? (
-          <div
-            className={`space-y-1 border px-3 py-2 text-sm ${
-              manualRangeImportNotice.tone === "error"
-                ? "border-rose-700/70 bg-rose-950/35 text-rose-100"
-                : manualRangeImportNotice.tone === "warning"
-                  ? "border-amber-700/70 bg-amber-950/30 text-amber-100"
-                  : "border-emerald-700/70 bg-emerald-950/25 text-emerald-100"
-            }`}
-          >
-            {manualRangeImportNotice.lines.map((line, index) => (
-              <div key={`${line}-${index}`}>{line}</div>
-            ))}
+
+        {!manualRangesCollapsed ? (
+          <div id="manual-levelup-ranges-panel" className="space-y-3 border-t border-slate-800/70 p-4 sm:p-6">
+            <div className="max-w-5xl border p-3 space-y-3 bg-slate-900/60">
+              <label className="block space-y-2">
+                <span className="text-sm font-semibold text-slate-100">Paste level-up transcript</span>
+                <input
+                  type="text"
+                  placeholder="Paste level-up transcript here"
+                  onPaste={(e) => {
+                    e.preventDefault()
+                    const text = e.clipboardData.getData("text")
+                    importManualRangesFromText(text)
+                    e.currentTarget.value = ""
+                  }}
+                  className="w-full border bg-slate-950 px-1 py-1 text-sm text-slate-100"
+                />
+              </label>
+              <p className="text-xs text-slate-400">
+                Paste a full Guild Card or `xlevelup` transcript directly into the box to import it, like the equipment paste field.
+              </p>
+              {manualRangeImportNotice ? (
+                <div
+                  className={`space-y-1 border px-3 py-2 text-sm ${
+                    manualRangeImportNotice.tone === "error"
+                      ? "border-rose-700/70 bg-rose-950/35 text-rose-100"
+                      : manualRangeImportNotice.tone === "warning"
+                        ? "border-amber-700/70 bg-amber-950/30 text-amber-100"
+                        : "border-emerald-700/70 bg-emerald-950/25 text-emerald-100"
+                  }`}
+                >
+                  {manualRangeImportNotice.lines.map((line, index) => (
+                    <div key={`${line}-${index}`}>{line}</div>
+                  ))}
+                </div>
+              ) : null}
+            </div>
+            <div className="flex gap-2">
+              <button
+                type="button"
+                className="border px-3 py-1 bg-slate-800/85 hover:bg-slate-700/90"
+                onClick={addManualRange}
+              >
+                Add Range
+              </button>
+            </div>
+            <div className="overflow-x-auto">
+              <table className="table-fixed border text-xs md:text-sm text-center">
+                <thead className="bg-slate-800/85">
+                  <tr>
+                    <th className="border px-2 py-1">Class</th>
+                    <th className="border px-2 py-1">Start</th>
+                    <th className="border px-2 py-1">End</th>
+                    <th className="border px-2 py-1">HP</th>
+                    <th className="border px-2 py-1">ATK</th>
+                    <th className="border px-2 py-1">DEF</th>
+                    <th className="border px-2 py-1">MATK</th>
+                    <th className="border px-2 py-1">HEAL</th>
+                    <th className="border px-2 py-1">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {manualLevelRanges.map((range, i) => (
+                    <tr key={`${range.className}-${i}`}>
+                      <td className="border px-1 py-1">
+                        <select
+                          value={range.className}
+                          onChange={(e) => updateManualRange(i, "className", e.target.value as Cls)}
+                          className="w-full border"
+                        >
+                          <option value="tank">tank</option>
+                          <option value="warrior">warrior</option>
+                          <option value="caster">caster</option>
+                          <option value="healer">healer</option>
+                        </select>
+                      </td>
+                      <td className="border px-1 py-1">
+                        <input
+                          type="number"
+                          min={1}
+                          value={range.startLevel}
+                          onChange={(e) => updateManualRange(i, "startLevel", Math.max(1, Number(e.target.value) || 1))}
+                          className="w-16 text-center border"
+                        />
+                      </td>
+                      <td className="border px-1 py-1">
+                        <input
+                          type="number"
+                          min={1}
+                          value={range.endLevel}
+                          onChange={(e) => updateManualRange(i, "endLevel", Math.max(1, Number(e.target.value) || 1))}
+                          className="w-16 text-center border"
+                        />
+                      </td>
+                      <td className="border px-1 py-1">
+                        <input
+                          type="number"
+                          value={range.hpGain}
+                          onChange={(e) => updateManualRange(i, "hpGain", Number(e.target.value) || 0)}
+                          className="w-16 text-center border"
+                        />
+                      </td>
+                      <td className="border px-1 py-1">
+                        <input
+                          type="number"
+                          value={range.atkGain}
+                          onChange={(e) => updateManualRange(i, "atkGain", Number(e.target.value) || 0)}
+                          className="w-16 text-center border"
+                        />
+                      </td>
+                      <td className="border px-1 py-1">
+                        <input
+                          type="number"
+                          value={range.defGain}
+                          onChange={(e) => updateManualRange(i, "defGain", Number(e.target.value) || 0)}
+                          className="w-16 text-center border"
+                        />
+                      </td>
+                      <td className="border px-1 py-1">
+                        <input
+                          type="number"
+                          value={range.matkGain}
+                          onChange={(e) => updateManualRange(i, "matkGain", Number(e.target.value) || 0)}
+                          className="w-16 text-center border"
+                        />
+                      </td>
+                      <td className="border px-1 py-1">
+                        <input
+                          type="number"
+                          value={range.healGain}
+                          onChange={(e) => updateManualRange(i, "healGain", Number(e.target.value) || 0)}
+                          className="w-16 text-center border"
+                        />
+                      </td>
+                      <td className="border px-1 py-1">
+                        <button
+                          type="button"
+                          className="border px-2 py-1 bg-rose-900/35 hover:bg-rose-900/45"
+                          onClick={() => removeManualRange(i)}
+                        >
+                          Remove
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <p className="text-xs text-slate-400">
+              Start and end always refer to total level.
+              Example: `10-14` means the five overall levels that ended at total level 14, even if those levels were split across different classes.
+            </p>
           </div>
         ) : null}
-      </div>
-      <div className="flex gap-2">
-        <button
-          type="button"
-          className="border px-3 py-1 bg-slate-800/85 hover:bg-slate-700/90"
-          onClick={addManualRange}
-        >
-          Add Range
-        </button>
-      </div>
-      <div className="overflow-x-auto">
-        <table className="table-fixed border text-xs md:text-sm text-center">
-          <thead className="bg-slate-800/85">
-            <tr>
-              <th className="border px-2 py-1">Class</th>
-              <th className="border px-2 py-1">Start</th>
-              <th className="border px-2 py-1">End</th>
-              <th className="border px-2 py-1">Mode</th>
-              <th className="border px-2 py-1">HP</th>
-              <th className="border px-2 py-1">ATK</th>
-              <th className="border px-2 py-1">DEF</th>
-              <th className="border px-2 py-1">MATK</th>
-              <th className="border px-2 py-1">HEAL</th>
-              <th className="border px-2 py-1">Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {manualLevelRanges.map((range, i) => {
-              const isManual = range.mode === "manual"
-              return (
-                <tr key={`${range.className}-${i}`}>
-                  <td className="border px-1 py-1">
-                    <select
-                      value={range.className}
-                      onChange={(e) => updateManualRange(i, "className", e.target.value as Cls)}
-                      className="w-full border"
-                    >
-                      <option value="tank">tank</option>
-                      <option value="warrior">warrior</option>
-                      <option value="caster">caster</option>
-                      <option value="healer">healer</option>
-                    </select>
-                  </td>
-                  <td className="border px-1 py-1">
-                    <input
-                      type="number"
-                      min={1}
-                      value={range.startLevel}
-                      onChange={(e) => updateManualRange(i, "startLevel", Math.max(1, Number(e.target.value) || 1))}
-                      className="w-16 text-center border"
-                    />
-                  </td>
-                  <td className="border px-1 py-1">
-                    <input
-                      type="number"
-                      min={1}
-                      value={range.endLevel}
-                      onChange={(e) => updateManualRange(i, "endLevel", Math.max(1, Number(e.target.value) || 1))}
-                      className="w-16 text-center border"
-                    />
-                  </td>
-                  <td className="border px-1 py-1">
-                    <select
-                      value={range.mode}
-                      onChange={(e) => updateManualRange(i, "mode", e.target.value as ManualRangeMode)}
-                      className="w-full border"
-                    >
-                      <option value="manual">manual</option>
-                      <option value="estimated">estimated</option>
-                    </select>
-                  </td>
-                  <td className="border px-1 py-1">
-                    <input
-                      type="number"
-                      value={range.hpGain}
-                      disabled={!isManual}
-                      onChange={(e) => updateManualRange(i, "hpGain", Number(e.target.value) || 0)}
-                      className="w-16 text-center border disabled:bg-slate-800/85"
-                    />
-                  </td>
-                  <td className="border px-1 py-1">
-                    <input
-                      type="number"
-                      value={range.atkGain}
-                      disabled={!isManual}
-                      onChange={(e) => updateManualRange(i, "atkGain", Number(e.target.value) || 0)}
-                      className="w-16 text-center border disabled:bg-slate-800/85"
-                    />
-                  </td>
-                  <td className="border px-1 py-1">
-                    <input
-                      type="number"
-                      value={range.defGain}
-                      disabled={!isManual}
-                      onChange={(e) => updateManualRange(i, "defGain", Number(e.target.value) || 0)}
-                      className="w-16 text-center border disabled:bg-slate-800/85"
-                    />
-                  </td>
-                  <td className="border px-1 py-1">
-                    <input
-                      type="number"
-                      value={range.matkGain}
-                      disabled={!isManual}
-                      onChange={(e) => updateManualRange(i, "matkGain", Number(e.target.value) || 0)}
-                      className="w-16 text-center border disabled:bg-slate-800/85"
-                    />
-                  </td>
-                  <td className="border px-1 py-1">
-                    <input
-                      type="number"
-                      value={range.healGain}
-                      disabled={!isManual}
-                      onChange={(e) => updateManualRange(i, "healGain", Number(e.target.value) || 0)}
-                      className="w-16 text-center border disabled:bg-slate-800/85"
-                    />
-                  </td>
-                  <td className="border px-1 py-1">
-                    <button
-                      type="button"
-                      className="border px-2 py-1 bg-rose-900/35 hover:bg-rose-900/45"
-                      onClick={() => removeManualRange(i)}
-                    >
-                      Remove
-                    </button>
-                  </td>
-                </tr>
-              )
-            })}
-          </tbody>
-        </table>
-      </div>
-      <p className="text-xs text-slate-400">
-        Start and end always refer to total level.
-        Example: `10-14` means the five overall levels that ended at total level 14, even if those levels were split across different classes.
-      </p>
+      </section>
 
       <table className="table-fixed border text-sm text-center">
         <thead className="bg-slate-800/85">

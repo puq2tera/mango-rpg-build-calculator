@@ -1,14 +1,10 @@
 export const manualRangeClasses = ["tank", "warrior", "caster", "healer"] as const
 export type ManualRangeClass = (typeof manualRangeClasses)[number]
 
-export const manualRangeModes = ["manual", "estimated"] as const
-export type ManualRangeMode = (typeof manualRangeModes)[number]
-
 export type ManualLevelRange = {
   className: ManualRangeClass
   startLevel: number
   endLevel: number
-  mode: ManualRangeMode
   hpGain: number
   atkGain: number
   defGain: number
@@ -42,6 +38,8 @@ const gainPatterns: Record<ManualRangeStatKey, RegExp> = {
 }
 const talentPointPattern = /Talent Points?\s*([+-]?\d[\d,]*(?:\.\d+)?)/i
 const skillPointPattern = /Skill Points?\s*([+-]?\d[\d,]*(?:\.\d+)?)/i
+const singleTalentPointGainPattern = /\bTalent Point gained!?/i
+const singleSkillPointGainPattern = /\bSkill Point gained!?/i
 const totalLevelPattern = /Total Level\s*([+-]?\d[\d,]*(?:\.\d+)?)/i
 const totalLevelsSnapshotPattern = /Total Levels\s*([+-]?\d[\d,]*(?:\.\d+)?)\s*\/\s*[+-]?\d[\d,]*(?:\.\d+)?/gi
 
@@ -55,6 +53,15 @@ function asFiniteNumber(value: unknown, fallback = 0): number {
 function parseWholeNumber(raw: string): number {
   const normalized = Number(raw.replaceAll(",", ""))
   return Number.isFinite(normalized) ? normalized : 0
+}
+
+function parsePointGain(levelUpBlock: string, pointPattern: RegExp, singlePointGainPattern: RegExp): number | null {
+  const match = levelUpBlock.match(pointPattern)
+  if (match) {
+    return parseWholeNumber(match[1])
+  }
+
+  return singlePointGainPattern.test(levelUpBlock) ? 1 : null
 }
 
 function inferClassFromLevelUpBlock(levelUpBlock: string): ManualRangeClass | null {
@@ -86,7 +93,6 @@ export function createDefaultManualLevelRange(): ManualLevelRange {
     className: "healer",
     startLevel: 1,
     endLevel: 1,
-    mode: "estimated",
     hpGain: 0,
     atkGain: 0,
     defGain: 0,
@@ -113,7 +119,6 @@ export function normalizeManualLevelRange(raw: unknown): ManualLevelRange | null
     className,
     startLevel,
     endLevel,
-    mode: entry.mode === "manual" ? "manual" : "estimated",
     hpGain: asFiniteNumber(entry.hpGain, 0),
     atkGain: asFiniteNumber(entry.atkGain, 0),
     defGain: asFiniteNumber(entry.defGain, 0),
@@ -151,7 +156,7 @@ export function getManualRangeGain(
   rangeLevel: number,
   statKey: ManualRangeStatKey,
 ): number {
-  if (range.mode !== "manual" || rangeLevel < range.startLevel || rangeLevel > range.endLevel) {
+  if (rangeLevel < range.startLevel || rangeLevel > range.endLevel) {
     return 0
   }
 
@@ -170,11 +175,11 @@ function parseLevelUpBlock(levelUpBlock: string, index: number): ParsedLevelUpBl
     totals[key] = parseWholeNumber(match[1])
   }
 
-  const talentPointsMatch = levelUpBlock.match(talentPointPattern)
-  const skillPointsMatch = levelUpBlock.match(skillPointPattern)
+  const talentPointGain = parsePointGain(levelUpBlock, talentPointPattern, singleTalentPointGainPattern)
+  const skillPointGain = parsePointGain(levelUpBlock, skillPointPattern, singleSkillPointGainPattern)
   const levelCount =
-    talentPointsMatch && skillPointsMatch
-      ? parseWholeNumber(talentPointsMatch[1]) + parseWholeNumber(skillPointsMatch[1])
+    talentPointGain !== null || skillPointGain !== null
+      ? (talentPointGain ?? 0) + (skillPointGain ?? 0)
       : null
 
   return {
@@ -280,7 +285,7 @@ export function parseManualLevelTranscript(
     const commandCount = command?.commandCount ?? null
 
     if (parsedLevelUp.levelCount === null && commandCount === null) {
-      warnings.push(`Skipped ${className}: the Level Up block did not include both skill and talent point gains, and no command count was available.`)
+      warnings.push(`Skipped ${className}: the Level Up block did not include any parseable skill or talent point gains, and no command count was available.`)
       continue
     }
 
@@ -291,7 +296,7 @@ export function parseManualLevelTranscript(
     }
 
     if (parsedLevelUp.levelCount === null && commandCount !== null) {
-      warnings.push(`Used the command count for ${className} because the Level Up block did not include both skill and talent point gains.`)
+      warnings.push(`Used the command count for ${className} because the Level Up block did not include any parseable skill or talent point gains.`)
     } else if (commandCount !== null && commandCount !== parsedLevelUp.levelCount) {
       warnings.push(
         `Used ${parsedLevelUp.levelCount} levels for ${className} based on skill/talent point gains instead of the command count ${commandCount}.`,
@@ -309,7 +314,6 @@ export function parseManualLevelTranscript(
       className,
       startLevel,
       endLevel,
-      mode: "manual",
       ...parsedLevelUp.totals,
     })
 
