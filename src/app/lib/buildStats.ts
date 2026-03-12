@@ -341,6 +341,14 @@ function getDefaultLevelClassOrder(snapshot: BuildSnapshot): LevelingClass[] {
   return classOrder
 }
 
+function truncateToDecimalPlaces(value: number, digits: number): number {
+  const multiplier = 10 ** digits
+  return Math.trunc(value * multiplier) / multiplier
+}
+
+const WARRIOR_TRANSCRIPT_OVERDRIVE_CARRY_PER_LEVEL = 0.0000002
+const WARRIOR_OVERDRIVE_CAP_TOTAL_LEVEL = 400
+
 function getComputedClassScalingGain(className: LevelingClass, totalLevel: number): number {
   const scalingStat = stat_data.ClassScalingStats[className]
 
@@ -351,8 +359,13 @@ function getComputedClassScalingGain(className: LevelingClass, totalLevel: numbe
     case "warrior":
       return Math.min(
         0.155,
-        stat_data.ClassMainStatValues[className][scalingStat]
-          + stat_data.ClassMainStatValues[className][`${scalingStat} Scaling`] * totalLevel,
+        // `xlevelup warrior` transcript totals match truncating each per-level
+        // overdrive gain to 4 decimals before summing the range total.
+        truncateToDecimalPlaces(
+          stat_data.ClassMainStatValues[className][scalingStat]
+            + (stat_data.ClassMainStatValues[className][`${scalingStat} Scaling`] * totalLevel),
+          4,
+        ),
       )
     case "caster":
       return stat_data.ClassMainStatValues[className][scalingStat]
@@ -361,6 +374,8 @@ function getComputedClassScalingGain(className: LevelingClass, totalLevel: numbe
       return stat_data.ClassMainStatValues[className][scalingStat]
         + (stat_data.ClassMainStatValues[className][`${scalingStat} Scaling`] * totalLevel)
   }
+
+  return 0
 }
 
 function computeLevelStats(snapshot: BuildSnapshot): Record<string, number> {
@@ -395,11 +410,31 @@ function computeLevelStats(snapshot: BuildSnapshot): Record<string, number> {
     }
 
     const scalingStat = stat_data.ClassScalingStats[className]
-    const scalingGain = rangeOverride && rangeOverride.scalingGain !== 0
+    const hasManualScalingGain = rangeOverride !== null && rangeOverride.scalingGain !== 0
+    const scalingGain = hasManualScalingGain
       ? (totalLevel === rangeOverride.endLevel ? rangeOverride.scalingGain : 0)
       : getComputedClassScalingGain(className, totalLevel)
 
     statsLevels[scalingStat] = (statsLevels[scalingStat] ?? 0) + scalingGain
+  }
+
+  const warriorTranscriptCarryLevels = snapshot.selectedManualLevelRanges.reduce((total, range) => {
+    if (range.className !== "warrior" || range.scalingGain === 0) {
+      return total
+    }
+
+    const uncappedEndLevel = Math.min(range.endLevel, WARRIOR_OVERDRIVE_CAP_TOTAL_LEVEL - 1)
+    if (uncappedEndLevel < range.startLevel) {
+      return total
+    }
+
+    return total + (uncappedEndLevel - range.startLevel + 1)
+  }, 0)
+
+  if (warriorTranscriptCarryLevels > 0) {
+    // Warrior transcript totals match the displayed 4-decimal scaling sum, but combat
+    // still lands slightly above that total until the per-level gain reaches the 0.155 cap.
+    statsLevels["Overdrive%"] += warriorTranscriptCarryLevels * WARRIOR_TRANSCRIPT_OVERDRIVE_CARRY_PER_LEVEL
   }
 
   statsLevels.HP = hp
