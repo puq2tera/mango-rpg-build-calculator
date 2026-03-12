@@ -206,9 +206,11 @@ function finalizeDamageResult(nonCrit: number, context: NormalizedDamageContext)
     + (stat_data.Elemental.includes(element) ? (stats["Elemental Crit DMG%"] ?? 0) : 0)
     + (element === "Holy" ? (stats["Holy Crit DMG%"] ?? 0) : 0)
   const totalCritDamageBonus = (stats["Crit DMG%"] ?? 0) + skillCritDamageBonus + (inputs.skillCritDmg ?? 0)
-  const critDamageMultiplier = Math.max(0, 1 + (totalCritDamageBonus / 100))
+  const damageCritDamageMultiplier = Math.max(0, totalCritDamageBonus / 100)
+  // Threat skills line up with combat logs as base 1x threat plus crit-damage bonus.
+  const threatCritDamageMultiplier = Math.max(0, 1 + (totalCritDamageBonus / 100))
 
-  const crit = Math.floor(nonCrit * critDamageMultiplier)
+  const crit = Math.floor(nonCrit * damageCritDamageMultiplier)
   const maxcrit = Math.floor(crit * ((stats["Overdrive%"] ?? 0) / 100))
 
   const skillCritChance = getTotalStatValue(stats, skillCritChanceStatsBySkillType[skillType] ?? [])
@@ -230,7 +232,7 @@ function finalizeDamageResult(nonCrit: number, context: NormalizedDamageContext)
   const threatBase = Math.floor((stats["DEF"] ?? 0) * ((inputs.threatDef ?? 0) / 100))
   const threatWithOffenseScaling = applyThreatOffenseMultipliers(threatBase, stats, element, skillType)
   const threatNonCrit = Math.floor(threatWithOffenseScaling * getThreatMultiplier(stats))
-  const threatCrit = Math.floor(threatNonCrit * critDamageMultiplier)
+  const threatCrit = Math.floor(threatNonCrit * threatCritDamageMultiplier)
   const threatMaxcrit = Math.floor(threatCrit * ((stats["Overdrive%"] ?? 0) / 100))
   const threatAverage = Math.floor(threatNonCrit * nonCritWeight + threatCrit * critWeight + threatMaxcrit * maxCritWeight)
 
