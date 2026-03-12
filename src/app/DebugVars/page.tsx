@@ -1,183 +1,839 @@
 "use client"
 
-import { useEffect, useState } from "react"
-import { talent_data, __allStatNames, __allConversionNames } from "../data/talent_data"
+import { useEffect, useMemo, useState, type ReactNode } from "react"
+import { BUILD_SNAPSHOT_UPDATED_EVENT } from "@/app/lib/buildEvents"
+import {
+  buildDebugSummary,
+  formatWhole,
+  getCalcSkillBuffs,
+  getCharacterCardData,
+  getDungeonCardData,
+  getGuildCardRows,
+  type CalcSkillBuff,
+  type LabelValueRow,
+  type SummaryState,
+  type TerminalCardData,
+} from "@/app/lib/debugComparisonSummary"
+import {
+  compareComparableValues,
+  createComparableValue,
+  getBuffEffectSignature,
+  parseBuffs,
+  parseGuildCard,
+  parseTerminalCard,
+  type ComparableValue,
+  type ParsedBuff,
+  type ParsedElementRow,
+  type ParsedLabelValueRow,
+  type ParsedTerminalCard,
+  type ParsedTerminalDetailRow,
+  type ParsedTerminalMainRow,
+  type ParsedTypeBonusRow,
+} from "@/app/lib/debugPasteParser"
 
-// interface TalentRow {
-//   name: string
-//   category: string
-//   PreReq: string
-//   Tag: string
-//   BlockedTag: string
-//   gold: number
-//   exp: number
-//   tp_spent: number
-//   total_level: number
-//   class_levels: {
-//     tank_levels: number
-//     warrior_levels: number
-//     caster_levels: number
-//     healer_levels: number
-//   }
-//   description: string
-//   stats: Record<string, number>
-//   conversions?: Array<{ source: string; ratio: number; resulting_stat: string }>
-// }
+type PasteInputs = {
+  guildCard: string
+  characterCard: string
+  dungeonStats: string
+  buffs: string
+}
 
-export default function Skills() {
-  const [selected, setSelected] = useState<string | null>(null)
-  const [stats, setStats] = useState<string | null>(null)
-  //const [filtered, setFiltered] = useState<TalentRow[]>([])
-  // const [allTalents, setAllTalents] = useState<TalentRow[]>([])
+type ComparableRow = {
+  label: string
+  calc?: ComparableValue
+  inGame?: ComparableValue
+}
+
+type BuffEffectComparable = {
+  display: string
+  signature: string
+}
+
+type ComparableBuff = {
+  name: string
+  normalizedName: string
+  effects: BuffEffectComparable[]
+}
+
+type ComparedBuff = {
+  name: string
+  calc?: ComparableBuff
+  inGame?: ComparableBuff
+  status: "match" | "different" | "missing-calc" | "missing-game"
+}
+
+const INPUT_STORAGE_KEY = "debugVars:comparisonInputs"
+
+const panelClass =
+  "rounded-[28px] border border-slate-800/80 bg-[linear-gradient(145deg,rgba(6,11,20,0.97),rgba(15,23,42,0.9))] shadow-[0_28px_90px_rgba(2,6,23,0.42)]"
+
+const textareaClass =
+  "min-h-[18rem] w-full rounded-2xl border border-slate-700/80 bg-slate-950/80 px-4 py-3 font-mono text-sm text-slate-100 shadow-inner outline-none transition placeholder:text-slate-500 focus:border-sky-300/50 focus:ring-2 focus:ring-sky-400/20"
+
+const compactCardClass =
+  "rounded-2xl border border-slate-800/80 bg-slate-950/55 px-4 py-4 shadow-[0_16px_40px_rgba(2,6,23,0.22)]"
+
+const emptyStateClass =
+  "rounded-2xl border border-dashed border-slate-700/80 bg-slate-950/40 px-4 py-10 text-center text-sm text-slate-400"
+
+const defaultInputs: PasteInputs = {
+  guildCard: "",
+  characterCard: "",
+  dungeonStats: "",
+  buffs: "",
+}
+
+function normalizeName(value: string): string {
+  return value
+    .toLowerCase()
+    .replace(/[^\p{L}\p{N}]+/gu, " ")
+    .replace(/\s+/g, " ")
+    .trim()
+}
+
+function getOrderedUnionLabels<CalcRow extends { label: string }, InGameRow extends { label: string }>(
+  calcRows: readonly CalcRow[],
+  inGameRows: readonly InGameRow[],
+): string[] {
+  const labels: string[] = []
+  const seen = new Set<string>()
+
+  for (const row of calcRows) {
+    if (seen.has(row.label)) {
+      continue
+    }
+
+    seen.add(row.label)
+    labels.push(row.label)
+  }
+
+  for (const row of inGameRows) {
+    if (seen.has(row.label)) {
+      continue
+    }
+
+    seen.add(row.label)
+    labels.push(row.label)
+  }
+
+  return labels
+}
+
+function buildLabelValueComparisonRows(
+  calcRows: readonly LabelValueRow[],
+  inGameRows: readonly ParsedLabelValueRow[],
+): ComparableRow[] {
+  const calcMap = new Map(calcRows.map((row) => [row.label, createComparableValue(row.value)]))
+  const inGameMap = new Map(inGameRows.map((row) => [row.label, row.value]))
+
+  return getOrderedUnionLabels(calcRows, inGameRows).map((label) => ({
+    label,
+    calc: calcMap.get(label),
+    inGame: inGameMap.get(label),
+  }))
+}
+
+function mainRowToComparableValue(row: { value: string; modifier?: string }): ComparableValue {
+  return createComparableValue(row.modifier ? `${row.value} | ${row.modifier}` : row.value)
+}
+
+function typeRowToComparableValue(row: { dmg: string; xDmg: string; pen: string; xPen: string }): ComparableValue {
+  return createComparableValue(`${row.dmg} | ${row.xDmg} | ${row.pen} | ${row.xPen}`)
+}
+
+function elementRowToComparableValue(row: { dmg: string; res: string; pen: string }): ComparableValue {
+  return createComparableValue(`${row.dmg} | ${row.res} | ${row.pen}`)
+}
+
+function buildMainRowComparisonRows(
+  calcRows: readonly { label: string; value: string; modifier?: string }[],
+  inGameRows: readonly ParsedTerminalMainRow[],
+): ComparableRow[] {
+  const calcMap = new Map(calcRows.map((row) => [row.label, mainRowToComparableValue(row)]))
+  const inGameMap = new Map(
+    inGameRows.map((row) => [
+      row.label,
+      createComparableValue(row.modifier ? `${row.value.display} | ${row.modifier.display}` : row.value.display),
+    ]),
+  )
+
+  return getOrderedUnionLabels(calcRows, inGameRows).map((label) => ({
+    label,
+    calc: calcMap.get(label),
+    inGame: inGameMap.get(label),
+  }))
+}
+
+function buildDetailRowComparisonRows(
+  calcRows: readonly { label: string; value: string }[],
+  inGameRows: readonly ParsedTerminalDetailRow[],
+): ComparableRow[] {
+  const calcMap = new Map(calcRows.map((row) => [row.label, createComparableValue(row.value)]))
+  const inGameMap = new Map(inGameRows.map((row) => [row.label, row.value]))
+
+  return getOrderedUnionLabels(calcRows, inGameRows).map((label) => ({
+    label,
+    calc: calcMap.get(label),
+    inGame: inGameMap.get(label),
+  }))
+}
+
+function buildTypeRowComparisonRows(
+  calcRows: readonly { label: string; dmg: string; xDmg: string; pen: string; xPen: string }[],
+  inGameRows: readonly ParsedTypeBonusRow[],
+): ComparableRow[] {
+  const calcMap = new Map(calcRows.map((row) => [row.label, typeRowToComparableValue(row)]))
+  const inGameMap = new Map(
+    inGameRows.map((row) => [
+      row.label,
+      createComparableValue(`${row.dmg.display} | ${row.xDmg.display} | ${row.pen.display} | ${row.xPen.display}`),
+    ]),
+  )
+
+  return getOrderedUnionLabels(calcRows, inGameRows).map((label) => ({
+    label,
+    calc: calcMap.get(label),
+    inGame: inGameMap.get(label),
+  }))
+}
+
+function buildElementRowComparisonRows(
+  calcRows: readonly { label: string; dmg: string; res: string; pen: string }[],
+  inGameRows: readonly ParsedElementRow[],
+): ComparableRow[] {
+  const calcMap = new Map(calcRows.map((row) => [row.label, elementRowToComparableValue(row)]))
+  const inGameMap = new Map(
+    inGameRows.map((row) => [row.label, createComparableValue(`${row.dmg.display} | ${row.res.display} | ${row.pen.display}`)]),
+  )
+
+  return getOrderedUnionLabels(calcRows, inGameRows).map((label) => ({
+    label,
+    calc: calcMap.get(label),
+    inGame: inGameMap.get(label),
+  }))
+}
+
+function getComparisonSummary(rows: readonly ComparableRow[]) {
+  return rows.reduce(
+    (summary, row) => {
+      const result = compareComparableValues(row.calc, row.inGame)
+
+      if (result.status === "match") summary.match += 1
+      if (result.status === "different") summary.different += 1
+      if (result.status === "missing-calc") summary.missingCalc += 1
+      if (result.status === "missing-game") summary.missingGame += 1
+
+      return summary
+    },
+    { match: 0, different: 0, missingCalc: 0, missingGame: 0 },
+  )
+}
+
+function getStatusClass(status: ReturnType<typeof compareComparableValues>["status"]): string {
+  switch (status) {
+    case "match":
+      return "border-emerald-500/30 bg-emerald-500/10 text-emerald-100"
+    case "different":
+      return "border-amber-500/30 bg-amber-500/10 text-amber-100"
+    case "missing-calc":
+      return "border-fuchsia-500/30 bg-fuchsia-500/10 text-fuchsia-100"
+    case "missing-game":
+      return "border-sky-500/30 bg-sky-500/10 text-sky-100"
+  }
+}
+
+function formatStatusLabel(status: ReturnType<typeof compareComparableValues>["status"]): string {
+  switch (status) {
+    case "match":
+      return "Match"
+    case "different":
+      return "Different"
+    case "missing-calc":
+      return "Missing Calc"
+    case "missing-game":
+      return "Missing In Game"
+  }
+}
+
+function ComparisonTable({
+  title,
+  subtitle,
+  rows,
+}: {
+  title: string
+  subtitle: string
+  rows: ComparableRow[]
+}) {
+  const summary = getComparisonSummary(rows)
+
+  return (
+    <section className={compactCardClass}>
+      <div className="flex flex-wrap items-start justify-between gap-4">
+        <div>
+          <div className="text-lg font-semibold text-slate-50">{title}</div>
+          <div className="mt-1 text-sm text-slate-400">{subtitle}</div>
+        </div>
+
+        <div className="flex flex-wrap gap-2 text-xs font-semibold uppercase tracking-[0.14em]">
+          <div className="rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1.5 text-emerald-100">
+            {summary.match} Match
+          </div>
+          <div className="rounded-full border border-amber-500/30 bg-amber-500/10 px-3 py-1.5 text-amber-100">
+            {summary.different} Diff
+          </div>
+          <div className="rounded-full border border-fuchsia-500/30 bg-fuchsia-500/10 px-3 py-1.5 text-fuchsia-100">
+            {summary.missingCalc} Parser Only
+          </div>
+          <div className="rounded-full border border-sky-500/30 bg-sky-500/10 px-3 py-1.5 text-sky-100">
+            {summary.missingGame} Calc Only
+          </div>
+        </div>
+      </div>
+
+      <div className="mt-4 overflow-x-auto">
+        <table className="min-w-full border-separate border-spacing-y-2 text-sm">
+          <thead>
+            <tr className="text-left text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500">
+              <th className="px-3 py-1">Field</th>
+              <th className="px-3 py-1">Calc</th>
+              <th className="px-3 py-1">In Game</th>
+              <th className="px-3 py-1">Delta</th>
+              <th className="px-3 py-1">Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map((row) => {
+              const result = compareComparableValues(row.calc, row.inGame)
+
+              return (
+                <tr key={row.label}>
+                  <td className="rounded-l-2xl border border-slate-800/80 bg-slate-950/65 px-3 py-3 font-medium text-slate-100">
+                    {row.label}
+                  </td>
+                  <td className="border-y border-slate-800/80 bg-slate-950/55 px-3 py-3 font-mono text-slate-200">
+                    {row.calc?.display ?? "—"}
+                  </td>
+                  <td className="border-y border-slate-800/80 bg-slate-950/55 px-3 py-3 font-mono text-slate-200">
+                    {row.inGame?.display ?? "—"}
+                  </td>
+                  <td className="border-y border-slate-800/80 bg-slate-950/55 px-3 py-3 font-mono text-slate-300">
+                    {result.delta ?? "—"}
+                  </td>
+                  <td className="rounded-r-2xl border border-slate-800/80 bg-slate-950/65 px-3 py-3">
+                    <div className={`inline-flex rounded-full border px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.14em] ${getStatusClass(result.status)}`}>
+                      {formatStatusLabel(result.status)}
+                    </div>
+                  </td>
+                </tr>
+              )
+            })}
+          </tbody>
+        </table>
+      </div>
+    </section>
+  )
+}
+
+function InputPanel({
+  label,
+  description,
+  placeholder,
+  value,
+  onChange,
+}: {
+  label: string
+  description: string
+  placeholder: string
+  value: string
+  onChange: (value: string) => void
+}) {
+  return (
+    <section className={compactCardClass}>
+      <div className="space-y-1">
+        <div className="text-lg font-semibold text-slate-50">{label}</div>
+        <div className="text-sm leading-6 text-slate-400">{description}</div>
+      </div>
+
+      <textarea
+        value={value}
+        onChange={(event) => onChange(event.target.value)}
+        placeholder={placeholder}
+        spellCheck={false}
+        className={`mt-4 ${textareaClass}`}
+      />
+    </section>
+  )
+}
+
+function getBuffComparisonStatus(calc?: ComparableBuff, inGame?: ComparableBuff): ComparedBuff["status"] {
+  if (!calc && !inGame) {
+    return "match"
+  }
+
+  if (!calc) {
+    return "missing-calc"
+  }
+
+  if (!inGame) {
+    return "missing-game"
+  }
+
+  const calcSignatures = [...new Set(calc.effects.map((effect) => effect.signature))].sort()
+  const inGameSignatures = [...new Set(inGame.effects.map((effect) => effect.signature))].sort()
+
+  if (
+    calcSignatures.length === inGameSignatures.length
+    && calcSignatures.every((signature, index) => signature === inGameSignatures[index])
+  ) {
+    return "match"
+  }
+
+  return "different"
+}
+
+function buildBuffComparisons(calcBuffs: readonly CalcSkillBuff[], inGameBuffs: readonly ParsedBuff[]): ComparedBuff[] {
+  const calcComparable = calcBuffs.map<ComparableBuff>((buff) => ({
+    name: buff.name,
+    normalizedName: normalizeName(buff.name),
+    effects: buff.effects.map((effect) => ({
+      display: effect.label,
+      signature: `${effect.stat}:${effect.value}`,
+    })),
+  }))
+  const inGameComparable = inGameBuffs.map<ComparableBuff>((buff) => ({
+    name: buff.name,
+    normalizedName: buff.normalizedName,
+    effects: buff.effects.map((effect) => ({
+      display: effect.display,
+      signature: getBuffEffectSignature(effect),
+    })),
+  }))
+
+  const calcMap = new Map(calcComparable.map((buff) => [buff.normalizedName, buff]))
+  const inGameMap = new Map(inGameComparable.map((buff) => [buff.normalizedName, buff]))
+  const orderedNames: string[] = []
+  const seen = new Set<string>()
+
+  for (const buff of calcComparable) {
+    if (seen.has(buff.normalizedName)) {
+      continue
+    }
+
+    seen.add(buff.normalizedName)
+    orderedNames.push(buff.normalizedName)
+  }
+
+  for (const buff of inGameComparable) {
+    if (seen.has(buff.normalizedName)) {
+      continue
+    }
+
+    seen.add(buff.normalizedName)
+    orderedNames.push(buff.normalizedName)
+  }
+
+  return orderedNames.map((normalizedName) => {
+    const calc = calcMap.get(normalizedName)
+    const inGame = inGameMap.get(normalizedName)
+
+    return {
+      name: calc?.name ?? inGame?.name ?? normalizedName,
+      calc,
+      inGame,
+      status: getBuffComparisonStatus(calc, inGame),
+    }
+  })
+}
+
+function BuffComparisonSection({
+  calcBuffs,
+  inGameBuffs,
+}: {
+  calcBuffs: readonly CalcSkillBuff[]
+  inGameBuffs: readonly ParsedBuff[]
+}) {
+  const comparedBuffs = buildBuffComparisons(calcBuffs, inGameBuffs)
+  const summary = comparedBuffs.reduce(
+    (counts, buff) => {
+      if (buff.status === "match") counts.match += 1
+      if (buff.status === "different") counts.different += 1
+      if (buff.status === "missing-calc") counts.missingCalc += 1
+      if (buff.status === "missing-game") counts.missingGame += 1
+      return counts
+    },
+    { match: 0, different: 0, missingCalc: 0, missingGame: 0 },
+  )
+
+  return (
+    <section className={compactCardClass}>
+      <div className="flex flex-wrap items-start justify-between gap-4">
+        <div>
+          <div className="text-lg font-semibold text-slate-50">Buff Comparison</div>
+          <div className="mt-1 text-sm text-slate-400">
+            Buff names are matched case-insensitively. Effect rows compare by parsed stat key and amount when possible.
+          </div>
+        </div>
+
+        <div className="flex flex-wrap gap-2 text-xs font-semibold uppercase tracking-[0.14em]">
+          <div className="rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1.5 text-emerald-100">
+            {summary.match} Match
+          </div>
+          <div className="rounded-full border border-amber-500/30 bg-amber-500/10 px-3 py-1.5 text-amber-100">
+            {summary.different} Diff
+          </div>
+          <div className="rounded-full border border-fuchsia-500/30 bg-fuchsia-500/10 px-3 py-1.5 text-fuchsia-100">
+            {summary.missingCalc} Parser Only
+          </div>
+          <div className="rounded-full border border-sky-500/30 bg-sky-500/10 px-3 py-1.5 text-sky-100">
+            {summary.missingGame} Calc Only
+          </div>
+        </div>
+      </div>
+
+      {comparedBuffs.length === 0 ? (
+        <div className="mt-4 text-sm text-slate-400">No calc buffs or pasted buffs to compare.</div>
+      ) : (
+        <div className="mt-4 grid gap-4 xl:grid-cols-2">
+          {comparedBuffs.map((buff) => (
+            <article key={buff.name} className="rounded-2xl border border-slate-800/80 bg-slate-950/55 p-4">
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                <div className="text-base font-semibold text-slate-50">{buff.name}</div>
+                <div className={`inline-flex rounded-full border px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.14em] ${getStatusClass(buff.status)}`}>
+                  {formatStatusLabel(buff.status)}
+                </div>
+              </div>
+
+              <div className="mt-4 grid gap-4 md:grid-cols-2">
+                <div>
+                  <div className="text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500">Calc</div>
+                  <div className="mt-2 flex min-h-[3rem] flex-wrap gap-2">
+                    {buff.calc?.effects.length ? (
+                      buff.calc.effects.map((effect) => (
+                        <div
+                          key={`${buff.name}:calc:${effect.signature}`}
+                          className="rounded-full border border-slate-700/80 bg-slate-900/90 px-3 py-1.5 font-mono text-xs text-slate-100"
+                        >
+                          {effect.display}
+                        </div>
+                      ))
+                    ) : (
+                      <div className="text-sm text-slate-500">—</div>
+                    )}
+                  </div>
+                </div>
+
+                <div>
+                  <div className="text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500">In Game</div>
+                  <div className="mt-2 flex min-h-[3rem] flex-wrap gap-2">
+                    {buff.inGame?.effects.length ? (
+                      buff.inGame.effects.map((effect) => (
+                        <div
+                          key={`${buff.name}:game:${effect.signature}`}
+                          className="rounded-full border border-slate-700/80 bg-slate-900/90 px-3 py-1.5 font-mono text-xs text-slate-100"
+                        >
+                          {effect.display}
+                        </div>
+                      ))
+                    ) : (
+                      <div className="text-sm text-slate-500">—</div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </article>
+          ))}
+        </div>
+      )}
+    </section>
+  )
+}
+
+function ComparisonBlock({
+  title,
+  subtitle,
+  hasInput,
+  children,
+}: {
+  title: string
+  subtitle: string
+  hasInput: boolean
+  children: ReactNode
+}) {
+  return (
+    <section className={panelClass}>
+      <div className="border-b border-slate-800/80 px-5 py-5 sm:px-6">
+        <div className="text-xl font-semibold text-slate-50">{title}</div>
+        <div className="mt-1 text-sm text-slate-400">{subtitle}</div>
+      </div>
+
+      <div className="p-4 sm:p-6">
+        {hasInput ? children : (
+          <div className={emptyStateClass}>
+            Paste the corresponding in-game output above to generate a comparison.
+          </div>
+        )}
+      </div>
+    </section>
+  )
+}
+
+function getCharacterComparisonSections(calcCard: TerminalCardData, parsedCard: ParsedTerminalCard) {
+  return [
+    {
+      title: "Main Stats",
+      subtitle: "Value rows are compared as full lines, including modifiers when present.",
+      rows: buildMainRowComparisonRows(calcCard.mainRows, parsedCard.mainRows),
+    },
+    {
+      title: "Details",
+      subtitle: "Detail lines compare the parsed displayed values, with numeric deltas when possible.",
+      rows: buildDetailRowComparisonRows(calcCard.detailRows, parsedCard.detailRows),
+    },
+    {
+      title: "Damage Types",
+      subtitle: "Each row compares DMG, xDMG, PEN, and xPEN as one grouped value.",
+      rows: buildTypeRowComparisonRows(calcCard.typeRows, parsedCard.typeRows),
+    },
+    {
+      title: "Elements",
+      subtitle: "Each row compares DMG, RES, and PEN as one grouped value.",
+      rows: buildElementRowComparisonRows(calcCard.elementRows, parsedCard.elementRows),
+    },
+  ]
+}
+
+export default function DebugVarsPage() {
+  const [summary, setSummary] = useState<SummaryState | null>(null)
+  const [inputs, setInputs] = useState<PasteInputs>(defaultInputs)
 
   useEffect(() => {
-    const raw = localStorage.getItem("selectedTalents")
-    if (!raw) return
+    if (typeof window === "undefined") {
+      return
+    }
+
     try {
-      const parsed: string[] = JSON.parse(raw)
-      console.log(parsed)
-      // const output = parsed.map(id => {
-      //   const data = talent_data[id]
-      //   return {
-      //     name: id,
-      //     category: data.category,
-      //     PreReq: Array.isArray(data.PreReq) ? data.PreReq.join(", ") : data.PreReq,
-      //     Tag: data.Tag,
-      //     BlockedTag: data.BlockedTag,
-      //     gold: data.gold,
-      //     exp: data.exp,
-      //     tp_spent: data.tp_spent,
-      //     total_level: data.total_level,
-      //     class_levels: data.class_levels,
-      //     description: data.description,
-      //     stats: data.stats,
-      //     conversions: data.conversions
-      //   }
-      // })
-      //setFiltered(output)
-    } catch (e) {
-      console.error("Failed to parse selectedTalents", e)
+      const storedInputs = JSON.parse(window.localStorage.getItem(INPUT_STORAGE_KEY) ?? "null") as Partial<PasteInputs> | null
+      if (storedInputs) {
+        setInputs({
+          guildCard: typeof storedInputs.guildCard === "string" ? storedInputs.guildCard : "",
+          characterCard: typeof storedInputs.characterCard === "string" ? storedInputs.characterCard : "",
+          dungeonStats: typeof storedInputs.dungeonStats === "string" ? storedInputs.dungeonStats : "",
+          buffs: typeof storedInputs.buffs === "string" ? storedInputs.buffs : "",
+        })
+      }
+    } catch {
+      setInputs(defaultInputs)
+    }
+
+    const refresh = () => {
+      setSummary(buildDebugSummary(window.localStorage))
+    }
+
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === "visible") {
+        refresh()
+      }
+    }
+
+    refresh()
+
+    window.addEventListener(BUILD_SNAPSHOT_UPDATED_EVENT, refresh)
+    window.addEventListener("focus", refresh)
+    window.addEventListener("talentsUpdated", refresh)
+    window.addEventListener("equipmentUpdated", refresh)
+    window.addEventListener("computeDmgReadyStats", refresh)
+    document.addEventListener("visibilitychange", handleVisibilityChange)
+
+    return () => {
+      window.removeEventListener(BUILD_SNAPSHOT_UPDATED_EVENT, refresh)
+      window.removeEventListener("focus", refresh)
+      window.removeEventListener("talentsUpdated", refresh)
+      window.removeEventListener("equipmentUpdated", refresh)
+      window.removeEventListener("computeDmgReadyStats", refresh)
+      document.removeEventListener("visibilitychange", handleVisibilityChange)
     }
   }, [])
 
   useEffect(() => {
-    const selectedTalents = localStorage.getItem("selectedTalents")
-    const computedStats = localStorage.getItem("computedStats")
-    console.log(computedStats)
-    setSelected(selectedTalents)
-    setStats(computedStats)
+    if (typeof window === "undefined") {
+      return
+    }
 
-    const output = Object.entries(talent_data).map(([id, data]) => ({
-      name: id,
-      category: data.category,
-      PreReq: Array.isArray(data.PreReq) ? data.PreReq.join(", ") : data.PreReq,
-      Tag: data.Tag,
-      BlockedTag: data.BlockedTag,
-      gold: data.gold,
-      exp: data.exp,
-      tp_spent: data.tp_spent,
-      total_level: data.total_level,
-      class_levels: data.class_levels,
-      description: data.description,
-      stats: data.stats,
-      conversions: data.conversions
-    }))
-    console.log(output)
-    // setAllTalents(output)
-  }, [])
+    window.localStorage.setItem(INPUT_STORAGE_KEY, JSON.stringify(inputs))
+  }, [inputs])
 
-  const statOnly = Array.from(__allStatNames).sort()
-  const convOnly = Array.from(__allConversionNames).sort()
-  const maxLength = Math.max(statOnly.length, convOnly.length)
+  const parsedGuildCard = useMemo(() => parseGuildCard(inputs.guildCard), [inputs.guildCard])
+  const parsedCharacterCard = useMemo(() => parseTerminalCard(inputs.characterCard), [inputs.characterCard])
+  const parsedDungeonStats = useMemo(() => parseTerminalCard(inputs.dungeonStats), [inputs.dungeonStats])
+  const parsedBuffs = useMemo(() => parseBuffs(inputs.buffs), [inputs.buffs])
+
+  const guildRows = useMemo(
+    () => (summary ? buildLabelValueComparisonRows(getGuildCardRows(summary), parsedGuildCard) : []),
+    [parsedGuildCard, summary],
+  )
+  const characterSections = useMemo(
+    () => (summary ? getCharacterComparisonSections(getCharacterCardData(summary), parsedCharacterCard) : []),
+    [parsedCharacterCard, summary],
+  )
+  const dungeonSections = useMemo(
+    () => (summary ? getCharacterComparisonSections(getDungeonCardData(summary), parsedDungeonStats) : []),
+    [parsedDungeonStats, summary],
+  )
+  const calcBuffs = useMemo(() => (summary ? getCalcSkillBuffs(summary) : []), [summary])
+
+  if (!summary) {
+    return (
+      <div className="p-4 sm:p-6">
+        <div className={`${panelClass} mx-auto max-w-7xl px-6 py-8`}>
+          <div className="text-sm text-slate-300">Loading debug comparison...</div>
+        </div>
+      </div>
+    )
+  }
+
+  const hasGuildInput = inputs.guildCard.trim().length > 0
+  const hasCharacterInput = inputs.characterCard.trim().length > 0
+  const hasDungeonInput = inputs.dungeonStats.trim().length > 0
+  const hasBuffInput = inputs.buffs.trim().length > 0
 
   return (
-    <div className="p-4 space-y-4">
-      <div>
-        <h1 className="font-bold text-lg">Selected Talents Var</h1>
-        <pre className="bg-slate-800/85 p-2 rounded whitespace-pre-wrap break-words">{selected}</pre>
-        <div>
-          <h1 className="font-bold text-lg">Talent Stats</h1>
-          <pre className="bg-slate-800/85 p-2 rounded whitespace-pre-wrap break-words">{stats}</pre>
+    <div className="min-h-[calc(100vh-var(--top-nav-height))] bg-[radial-gradient(circle_at_top_left,rgba(56,189,248,0.12),transparent_28%),radial-gradient(circle_at_bottom_right,rgba(249,115,22,0.08),transparent_32%)] p-4 sm:p-6">
+      <div className="mx-auto max-w-7xl space-y-6">
+        <section className={`${panelClass} px-5 py-6 sm:px-6`}>
+          <div className="flex flex-wrap items-start justify-between gap-6">
+            <div className="max-w-3xl space-y-3">
+              <div className="text-[11px] font-semibold uppercase tracking-[0.26em] text-sky-300">Debug Comparison</div>
+              <h1 className="text-3xl font-semibold tracking-tight text-slate-50">
+                Paste in-game cards and compare them against the current calculator build
+              </h1>
+              <p className="text-sm leading-6 text-slate-400">
+                The calculator values come from the same current build snapshot used by the rest of the app. Paste raw
+                Discord output into any box below and the comparison updates immediately.
+              </p>
+            </div>
+
+            <div className="grid min-w-[18rem] gap-3 sm:grid-cols-2 xl:grid-cols-4">
+              <div className={compactCardClass}>
+                <div className="text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-400">Race</div>
+                <div className="mt-2 text-xl font-semibold text-slate-50">{summary.raceName}</div>
+              </div>
+              <div className={compactCardClass}>
+                <div className="text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-400">Total Levels</div>
+                <div className="mt-2 text-xl font-semibold text-slate-50">{formatWhole(summary.totalLevels)}</div>
+              </div>
+              <div className={compactCardClass}>
+                <div className="text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-400">Selected Buffs</div>
+                <div className="mt-2 text-xl font-semibold text-slate-50">{formatWhole(summary.snapshot.selectedBuffs.length)}</div>
+              </div>
+              <div className={compactCardClass}>
+                <div className="text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-400">Skill / Talent</div>
+                <div className="mt-2 text-xl font-semibold text-slate-50">
+                  {formatWhole(summary.remainingSkillPoints)} / {formatWhole(summary.remainingTalentPoints)}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-4 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-slate-800/80 bg-slate-950/45 px-4 py-3 text-sm text-slate-400">
+            <div>Unmatched rows stay visible so parser gaps and unsupported fields are obvious instead of being silently dropped.</div>
+            <button
+              type="button"
+              onClick={() => setInputs(defaultInputs)}
+              className="rounded-full border border-slate-700/80 bg-slate-900/80 px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.16em] text-slate-200 transition hover:border-sky-300/40 hover:text-sky-100"
+            >
+              Clear Pasted Text
+            </button>
+          </div>
+        </section>
+
+        <div className="grid gap-6 xl:grid-cols-2">
+          <InputPanel
+            label="Guild Card"
+            description="Paste the guild card section that includes race, levels, main stats, and rebirth level."
+            placeholder={"Guild Card\nRace\nNorthern Human\nTotal Levels\n355 / 485\nT/W/C/H Levels\n50/200/5/100"}
+            value={inputs.guildCard}
+            onChange={(guildCard) => setInputs((current) => ({ ...current, guildCard }))}
+          />
+
+          <InputPanel
+            label="Character Card"
+            description="Paste the out-of-dungeon character card block, including the damage type and elements tables."
+            placeholder={"@name's Character Card\nBase Stats & Multipliers\n❤️ Health   388,949 / 388,949\n️🗡️ ATK     4,108  |  +805%"}
+            value={inputs.characterCard}
+            onChange={(characterCard) => setInputs((current) => ({ ...current, characterCard }))}
+          />
+
+          <InputPanel
+            label="Dungeon Stats"
+            description="Paste the dungeon character card block, including the damage type and elements tables."
+            placeholder={"Dungeon Character Card\n❤️ Health   388,949 / 388,949\n️🗡️ ATK     239,447\nCrit Chance/Damage | 128% / 471%"}
+            value={inputs.dungeonStats}
+            onChange={(dungeonStats) => setInputs((current) => ({ ...current, dungeonStats }))}
+          />
+
+          <InputPanel
+            label="Buffs / Debuffs"
+            description="Paste the active skill buffs/debuffs block. Buff names are compared against your selected buffs."
+            placeholder={"◘ Fervant Arrows: +45 elebow\nSide-Effect: +51,245 atk\n\n◘ Hate of the Living: +32,881 def"}
+            value={inputs.buffs}
+            onChange={(buffs) => setInputs((current) => ({ ...current, buffs }))}
+          />
         </div>
 
-        <h1 className="font-bold text-xl mt-4">Selected Talents Data</h1>
-        {/* <TalentTable data={filtered} /> */}
+        <ComparisonBlock
+          title="Guild Card Comparison"
+          subtitle="Checks the guild card values against the calculator’s current build snapshot."
+          hasInput={hasGuildInput}
+        >
+          <ComparisonTable
+            title="Guild Card Fields"
+            subtitle="Numeric rows show deltas as in-game minus calc."
+            rows={guildRows}
+          />
+        </ComparisonBlock>
 
-        <h1 className="font-bold text-xl mt-8">All Talent Stat and Conversion Names</h1>
-        <div className="overflow-x-auto">
-          <table className="min-w-fit border border-collapse text-sm">
-            <thead>
-              <tr className="bg-slate-800/85">
-                <th className="border px-2 py-1">Stat Name</th>
-                <th className="border px-2 py-1">Conversion Name</th>
-              </tr>
-            </thead>
-            <tbody>
-              {Array.from({ length: maxLength }).map((_, i) => (
-                <tr key={i} className="odd:bg-slate-900 even:bg-slate-900/60">
-                  <td className="border px-2 py-1 font-mono whitespace-nowrap">{statOnly[i] ?? ""}</td>
-                  <td className="border px-2 py-1 font-mono whitespace-nowrap">{convOnly[i] ?? ""}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+        <ComparisonBlock
+          title="Character Card Comparison"
+          subtitle="Compares the out-of-dungeon character card against the calculator’s current display values."
+          hasInput={hasCharacterInput}
+        >
+          <div className="space-y-4">
+            {characterSections.map((section) => (
+              <ComparisonTable
+                key={section.title}
+                title={section.title}
+                subtitle={section.subtitle}
+                rows={section.rows}
+              />
+            ))}
+          </div>
+        </ComparisonBlock>
 
-        <h1 className="font-bold text-xl mt-8">All Talents Data</h1>
-        {/* <TalentTable data={allTalents} /> */}
+        <ComparisonBlock
+          title="Dungeon Card Comparison"
+          subtitle="Compares the dungeon card against the calculator’s current dungeon values."
+          hasInput={hasDungeonInput}
+        >
+          <div className="space-y-4">
+            {dungeonSections.map((section) => (
+              <ComparisonTable
+                key={section.title}
+                title={section.title}
+                subtitle={section.subtitle}
+                rows={section.rows}
+              />
+            ))}
+          </div>
+        </ComparisonBlock>
+
+        <ComparisonBlock
+          title="Buff Comparison"
+          subtitle="Compares pasted buff names and parsed effect lines against the calculator’s selected skill buffs."
+          hasInput={hasBuffInput}
+        >
+          <BuffComparisonSection calcBuffs={calcBuffs} inGameBuffs={parsedBuffs} />
+        </ComparisonBlock>
       </div>
     </div>
   )
 }
-
-// function TalentTable({ data }: { data: TalentRow[] }) {
-//   return (
-//     <div className="overflow-x-auto">
-//       <table className="min-w-full border border-collapse text-sm">
-//         <thead>
-//           <tr className="bg-slate-800/85">
-//             <th className="border px-2 py-1">Name</th>
-//             <th className="border px-2 py-1">Category</th>
-//             <th className="border px-2 py-1">PreReq</th>
-//             <th className="border px-2 py-1">Tag</th>
-//             <th className="border px-2 py-1">BlockedTag</th>
-//             <th className="border px-2 py-1">Gold</th>
-//             <th className="border px-2 py-1">EXP</th>
-//             <th className="border px-2 py-1">TP</th>
-//             <th className="border px-2 py-1">Level</th>
-//             <th className="border px-2 py-1">Class Levels</th>
-//             <th className="border px-2 py-1">Description</th>
-//             <th className="border px-2 py-1">Stats</th>
-//             <th className="border px-2 py-1">Conversions</th>
-//           </tr>
-//         </thead>
-//         <tbody>
-//           {data.map((t, i) => (
-//             <tr key={i} className="odd:bg-slate-900 even:bg-slate-900/60">
-//               <td className="border px-2 py-1 whitespace-nowrap font-mono">{t.name}</td>
-//               <td className="border px-2 py-1">{t.category}</td>
-//               <td className="border px-2 py-1">{t.PreReq}</td>
-//               <td className="border px-2 py-1">{t.Tag}</td>
-//               <td className="border px-2 py-1">{t.BlockedTag}</td>
-//               <td className="border px-2 py-1 text-right">{t.gold}</td>
-//               <td className="border px-2 py-1 text-right">{t.exp}</td>
-//               <td className="border px-2 py-1 text-right">{t.tp_spent}</td>
-//               <td className="border px-2 py-1 text-right">{t.total_level}</td>
-//               <td className="border px-2 py-1 text-xs">
-//                 t:{t.class_levels.tank_levels}, w:{t.class_levels.warrior_levels},<br />
-//                 c:{t.class_levels.caster_levels}, h:{t.class_levels.healer_levels}
-//               </td>
-//               <td className="border px-2 py-1 max-w-[20rem] whitespace-pre-wrap">{t.description}</td>
-//               <td className="border px-2 py-1 font-mono text-xs">
-//                 {Object.entries(t.stats).map(([k, v]) => `${k}: ${v}`).join(", ")}
-//               </td>
-//               <td className="border px-2 py-1 font-mono text-xs whitespace-pre-wrap">
-//                 {t.conversions?.map(c => `${c.source} ⇒ ${c.ratio * 100}% ⇒ ${c.resulting_stat}`).join("\n")}
-//               </td>
-//             </tr>
-//           ))}
-//         </tbody>
-//       </table>
-//     </div>
-//   )
-// }
