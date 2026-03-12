@@ -11,6 +11,7 @@ import {
   type BuildSnapshot,
   type BuildStatStages,
 } from "@/app/lib/buildStats"
+import { getDisplayedThreatModifierPercent, isInternalThreatStat } from "@/app/lib/threat"
 import {
   CHARACTER_SUMMARY_VIEW_EVENT,
   getDefaultCharacterSummaryViewState,
@@ -495,6 +496,10 @@ function formatEffectDelta(delta: number, stat: string, label?: string): string 
 }
 
 function getStat(stats: Record<string, number>, key: string): number {
+  if (key === "Threat%") {
+    return getDisplayedThreatModifierPercent(stats)
+  }
+
   return stats[key] ?? 0
 }
 
@@ -555,7 +560,7 @@ function getReadableStatLabel(stat: string): string {
 
 function getRemainingFinalStatsColumns(stats: Record<string, number>): FinalStatsColumn[] {
   return Object.keys(stats)
-    .filter((stat) => !explicitFinalStatsKeys.has(stat) && !isZeroStat(stats[stat] ?? 0))
+    .filter((stat) => !isInternalThreatStat(stat) && !explicitFinalStatsKeys.has(stat) && !isZeroStat(stats[stat] ?? 0))
     .sort((left, right) => {
       const leftPriority = effectPriorityIndex.get(left) ?? Number.MAX_SAFE_INTEGER
       const rightPriority = effectPriorityIndex.get(right) ?? Number.MAX_SAFE_INTEGER
@@ -936,7 +941,7 @@ function getEffectDeltas(stats: Record<string, number>): EffectDelta[] {
   const result: EffectDelta[] = []
 
   for (const [key, delta] of Object.entries(stats)) {
-    if (Math.abs(delta) < 0.0001) {
+    if (isInternalThreatStat(key) || Math.abs(delta) < 0.0001) {
       continue
     }
 

@@ -73,6 +73,7 @@ export default function DamageCalc() {
     dotCrit,
     threatNonCrit,
     threatCrit,
+    threatMaxcrit,
     threatAverage,
   } = calculateDamage(stats, {
     attackPreset,
@@ -310,6 +311,7 @@ export default function DamageCalc() {
           <div><strong>DOT (Crit):</strong> {formatNumber(dotCrit)}</div>
           <div><strong>Threat (Non-Crit):</strong> {formatNumber(threatNonCrit)}</div>
           <div><strong>Threat (Crit):</strong> {formatNumber(threatCrit)}</div>
+          <div><strong>Threat (Maximized Crit):</strong> {formatNumber(threatMaxcrit)}</div>
           <div><strong>Threat Avg:</strong> {formatNumber(threatAverage)}</div>
         </div>
       </div>

@@ -10,6 +10,7 @@ import {
   type BuildSnapshot,
   type BuildStatStages,
 } from "@/app/lib/buildStats"
+import { getDisplayedThreatModifierPercent, isInternalThreatStat } from "@/app/lib/threat"
 
 type ClassKey = "tank" | "warrior" | "caster" | "healer"
 
@@ -241,6 +242,10 @@ function formatPrecisePercent(value: number, maxDigits = 6): string {
 }
 
 function getStat(stats: Record<string, number>, key: string): number {
+  if (key === "Threat%") {
+    return getDisplayedThreatModifierPercent(stats)
+  }
+
   return stats[key] ?? 0
 }
 
@@ -604,7 +609,7 @@ function getEffectDeltas(stats: Record<string, number>): EffectDelta[] {
   const result: EffectDelta[] = []
 
   for (const [key, delta] of Object.entries(stats)) {
-    if (Math.abs(delta) < 0.0001) {
+    if (isInternalThreatStat(key) || Math.abs(delta) < 0.0001) {
       continue
     }
 

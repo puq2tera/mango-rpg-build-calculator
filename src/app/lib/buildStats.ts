@@ -7,6 +7,7 @@ import { talent_data } from "@/app/data/talent_data"
 import tarot_data, { type Tarot } from "@/app/data/tarot_data"
 import { normalizeArtifact } from "@/app/lib/artifactState"
 import { readStoredStatPoints } from "@/app/lib/mainStatPoints"
+import { THREAT_BASE_STAT } from "@/app/lib/threat"
 import {
   getManualRangeGain,
   normalizeManualLevelRanges,
@@ -453,9 +454,9 @@ function computeLevelStats(snapshot: BuildSnapshot): Record<string, number> {
 
   statsLevels.Focus = 100 + (warriorLevels * stat_data.ClassMainStatValues.warrior.Focus)
   if (tankLevels >= Math.max(...Object.values(snapshot.selectedLevels), 0)) {
-    statsLevels["Threat%"] = 100 + tankLevels * 10
+    statsLevels[THREAT_BASE_STAT] = 100 + tankLevels * 10
   } else {
-    statsLevels["Threat%"] = 100 + tankLevels * 2
+    statsLevels[THREAT_BASE_STAT] = 100 + tankLevels * 2
   }
 
   for (const stat of stat_data.Mainstats) {

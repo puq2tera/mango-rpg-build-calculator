@@ -1,4 +1,5 @@
 import stat_data from "@/app/data/stat_data"
+import { getThreatMultiplier } from "@/app/lib/threat"
 
 export const DAMAGE_CALC_STORAGE_KEY = "DamageCalcState"
 const DAMAGE_CALC_SCHEMA_VERSION = 2
@@ -45,6 +46,7 @@ export type DamageCalcResult = {
   dotCrit: number
   threatNonCrit: number
   threatCrit: number
+  threatMaxcrit: number
   threatAverage: number
 }
 
@@ -152,6 +154,20 @@ function getTotalStatValue(stats: Record<string, number>, statNames: readonly st
   return statNames.reduce((sum, statName) => sum + (stats[statName] ?? 0), 0)
 }
 
+function applyThreatOffenseMultipliers(
+  baseThreat: number,
+  stats: Record<string, number>,
+  element: string,
+  skillType: string,
+): number {
+  let result = baseThreat
+  result = Math.floor(result * toMult(stats[`${element}%`]))
+  result = Math.floor(result * toMult(stats[`${element} xDmg%`]))
+  result = Math.floor(result * toMult(stats[`${skillType} DMG%`]))
+  result = Math.floor(result * toMult(stats["Dmg%"]))
+  return result
+}
+
 type NormalizedDamageContext = {
   stats: Record<string, number>
   element: string
@@ -185,13 +201,12 @@ function buildDamageContext(stats: Record<string, number>, state: DamageCalcStat
 
 function finalizeDamageResult(nonCrit: number, context: NormalizedDamageContext): DamageCalcResult {
   const { stats, element, skillType, inputs } = context
-  const skillCritDamage =
+  const skillCritDamageBonus =
     getTotalStatValue(stats, skillCritDamageStatsBySkillType[skillType] ?? [])
     + (stat_data.Elemental.includes(element) ? (stats["Elemental Crit DMG%"] ?? 0) : 0)
     + (element === "Holy" ? (stats["Holy Crit DMG%"] ?? 0) : 0)
-  const totalCritDamage = (stats["Crit DMG%"] ?? 0) + skillCritDamage
-  const skillCritDamageMultiplier = Math.max(0, toMult(inputs.skillCritDmg))
-  const critDamageMultiplier = skillCritDamageMultiplier * (totalCritDamage / 100)
+  const totalCritDamageBonus = (stats["Crit DMG%"] ?? 0) + skillCritDamageBonus + (inputs.skillCritDmg ?? 0)
+  const critDamageMultiplier = Math.max(0, 1 + (totalCritDamageBonus / 100))
 
   const crit = Math.floor(nonCrit * critDamageMultiplier)
   const maxcrit = Math.floor(crit * ((stats["Overdrive%"] ?? 0) / 100))
@@ -213,10 +228,11 @@ function finalizeDamageResult(nonCrit: number, context: NormalizedDamageContext)
   const dotCrit = Math.floor(crit * dotMult)
 
   const threatBase = Math.floor((stats["DEF"] ?? 0) * ((inputs.threatDef ?? 0) / 100))
-  const threatWithGlobalDmg = Math.floor(threatBase * toMult(stats["Dmg%"]))
-  const threatNonCrit = Math.floor(threatWithGlobalDmg * toMult(stats["Threat%"]))
+  const threatWithOffenseScaling = applyThreatOffenseMultipliers(threatBase, stats, element, skillType)
+  const threatNonCrit = Math.floor(threatWithOffenseScaling * getThreatMultiplier(stats))
   const threatCrit = Math.floor(threatNonCrit * critDamageMultiplier)
-  const threatAverage = Math.floor(threatNonCrit * nonCritWeight + threatCrit * (critWeight + maxCritWeight))
+  const threatMaxcrit = Math.floor(threatCrit * ((stats["Overdrive%"] ?? 0) / 100))
+  const threatAverage = Math.floor(threatNonCrit * nonCritWeight + threatCrit * critWeight + threatMaxcrit * maxCritWeight)
 
   return {
     nonCrit,
@@ -227,6 +243,7 @@ function finalizeDamageResult(nonCrit: number, context: NormalizedDamageContext)
     dotCrit,
     threatNonCrit,
     threatCrit,
+    threatMaxcrit,
     threatAverage,
   }
 }
