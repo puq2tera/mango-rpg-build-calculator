@@ -6,6 +6,7 @@ import stat_data from "@/app/data/stat_data"
 import { talent_data } from "@/app/data/talent_data"
 import tarot_data, { type Tarot } from "@/app/data/tarot_data"
 import { normalizeArtifact } from "@/app/lib/artifactState"
+import { readStoredStatPoints } from "@/app/lib/mainStatPoints"
 import {
   getManualRangeGain,
   normalizeManualLevelRanges,
@@ -142,7 +143,7 @@ export function readBuildSnapshot(storage: Storage): BuildSnapshot {
     })(),
     selectedLevels: asRecord(jsonParse(storage.getItem("SelectedLevels"), {})),
     selectedLevelOrder: asStringArray(jsonParse(storage.getItem("SelectedLevelOrder"), [])),
-    selectedStatPoints: asRecord(jsonParse(storage.getItem("SelectedStatPoints"), {})),
+    selectedStatPoints: readStoredStatPoints(storage),
     selectedTraining: asRecord(jsonParse(storage.getItem("SelectedTraining"), {})),
     selectedHeroPoints: asRecord(jsonParse(storage.getItem("SelectedHeroPoints"), {})),
     selectedManualLevelRanges: asManualLevelRanges(jsonParse(storage.getItem("SelectedManualLevelRanges"), [])),

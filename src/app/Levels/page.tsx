@@ -27,6 +27,14 @@ import {
 import { dispatchBuildSnapshotUpdated } from "../lib/buildEvents"
 import { calculateHeroPointAvailability } from "../lib/heroPoints"
 import {
+  classMainStatOrder,
+  createDefaultMainStatValues,
+  parseStoredMainStatValues,
+  persistStoredStatPoints,
+  readStoredStatPoints,
+  type MainStatValues,
+} from "../lib/mainStatPoints"
+import {
   createDefaultManualLevelRange,
   getManualRangeMaxTotalLevel,
   manualRangeClasses,
@@ -271,8 +279,8 @@ function LevelRequirementRow({
 
 export default function LevelsPage() {
   const [levels, setLevels] = useState<LevelsByClass>(createEmptyLevelsByClass())
-  const [statPoints, setStatPoints] = useState({ ATK: 0, DEF: 0, MATK: 0, HEAL: 0 })
-  const [training, setTraining] = useState({ ATK: 0, DEF: 0, MATK: 0, HEAL: 0 })
+  const [statPoints, setStatPoints] = useState<MainStatValues>(createDefaultMainStatValues())
+  const [training, setTraining] = useState<MainStatValues>(createDefaultMainStatValues())
   const [heroPoints, setHeroPoints] = useState<Record<string, number>>({})
   const [manualLevelRanges, setManualLevelRanges] = useState<ManualLevelRange[]>([])
   const [manualRangesCollapsed, setManualRangesCollapsed] = useState(false)
@@ -287,7 +295,6 @@ export default function LevelsPage() {
 
   useEffect(() => {
     const storedLevels = localStorage.getItem(STORAGE_KEYS.levels)
-    const storedStatPoints = localStorage.getItem(STORAGE_KEYS.statPoints)
     const storedTraining = localStorage.getItem(STORAGE_KEYS.training)
     const storedHeroPoints = localStorage.getItem(STORAGE_KEYS.heroPoints)
     const storedLevelOrder = localStorage.getItem(STORAGE_KEYS.savedLevelOrder)
@@ -299,8 +306,8 @@ export default function LevelsPage() {
     const storedSelectedBuffs = localStorage.getItem("selectedBuffs")
 
     setLevels(parseStoredJson(storedLevels, createEmptyLevelsByClass()))
-    setStatPoints(parseStoredJson(storedStatPoints, { ATK: 0, DEF: 0, MATK: 0, HEAL: 0 }))
-    setTraining(parseStoredJson(storedTraining, { ATK: 0, DEF: 0, MATK: 0, HEAL: 0 }))
+    setStatPoints(readStoredStatPoints(localStorage))
+    setTraining(parseStoredMainStatValues(storedTraining))
     setHeroPoints(parseStoredJson(storedHeroPoints, {}))
     setClassOrder(normalizeStoredClassOrder(storedLevelOrder))
     setManualLevelRanges(normalizeManualLevelRanges(parseStoredJson(storedManualLevelRanges, [])))
@@ -321,7 +328,7 @@ export default function LevelsPage() {
 
   useEffect(() => {
     if (!loaded) return
-    localStorage.setItem(STORAGE_KEYS.statPoints, JSON.stringify(statPoints))
+    persistStoredStatPoints(localStorage, statPoints)
     dispatchBuildSnapshotUpdated()
   }, [statPoints, loaded])
 
@@ -918,7 +925,7 @@ export default function LevelsPage() {
         </thead>
         <tbody>
           <tr>
-            {(["ATK", "DEF", "MATK", "HEAL"] as const).map((k) => (
+            {classMainStatOrder.map((k) => (
               <td key={k} className="border">
                 <input
                   type="number"
@@ -947,7 +954,7 @@ export default function LevelsPage() {
         </thead>
         <tbody>
           <tr>
-            {(["DEF", "ATK", "MATK", "HEAL"] as const).map((k) => (
+            {classMainStatOrder.map((k) => (
               <td key={k} className="border">
                 <input
                   type="number"
