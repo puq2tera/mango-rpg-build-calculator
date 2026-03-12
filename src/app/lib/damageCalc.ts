@@ -1,6 +1,7 @@
 import stat_data from "@/app/data/stat_data"
 
 export const DAMAGE_CALC_STORAGE_KEY = "DamageCalcState"
+const DAMAGE_CALC_SCHEMA_VERSION = 2
 
 export type DamageCalcInputs = {
   skillDmg: number
@@ -25,6 +26,7 @@ export type DamageCalcInputs = {
 }
 
 export type DamageCalcState = {
+  schemaVersion?: number
   attackPreset: string
   mainStat: string
   secondStat: string
@@ -48,7 +50,7 @@ export type DamageCalcResult = {
 
 export const defaultDamageCalcInputs: DamageCalcInputs = {
   skillDmg: 25,
-  skillCritDmg: 100,
+  skillCritDmg: 0,
   skillPen: 0,
   skillCritChance: 0,
   threatDef: 0,
@@ -69,6 +71,7 @@ export const defaultDamageCalcInputs: DamageCalcInputs = {
 }
 
 export const defaultDamageCalcState: DamageCalcState = {
+  schemaVersion: DAMAGE_CALC_SCHEMA_VERSION,
   attackPreset: "",
   mainStat: "ATK",
   secondStat: "DEF",
@@ -99,13 +102,22 @@ const isOneOf = (value: unknown, options: readonly string[]): value is string =>
 export function normalizeDamageCalcState(raw: unknown): DamageCalcState {
   const data = typeof raw === "object" && raw !== null ? raw as Partial<DamageCalcState> : {}
   const rawInputs = typeof data.inputs === "object" && data.inputs !== null ? data.inputs as Partial<DamageCalcInputs> : {}
+  const schemaVersion =
+    typeof data.schemaVersion === "number" && Number.isFinite(data.schemaVersion)
+      ? Math.trunc(data.schemaVersion)
+      : 0
 
   const inputs = damageInputKeys.reduce<DamageCalcInputs>((result, key) => {
-    result[key] = asFiniteNumber(rawInputs[key], defaultDamageCalcInputs[key])
+    const normalizedValue = asFiniteNumber(rawInputs[key], defaultDamageCalcInputs[key])
+    result[key] =
+      key === "skillCritDmg" && schemaVersion < DAMAGE_CALC_SCHEMA_VERSION && normalizedValue === 100
+        ? 0
+        : normalizedValue
     return result
   }, { ...defaultDamageCalcInputs })
 
   return {
+    schemaVersion: DAMAGE_CALC_SCHEMA_VERSION,
     attackPreset: typeof data.attackPreset === "string" ? data.attackPreset : defaultDamageCalcState.attackPreset,
     mainStat: isOneOf(data.mainStat, stat_data.Mainstats) ? data.mainStat : defaultDamageCalcState.mainStat,
     secondStat: isOneOf(data.secondStat, stat_data.Mainstats) ? data.secondStat : defaultDamageCalcState.secondStat,
@@ -178,9 +190,10 @@ function finalizeDamageResult(nonCrit: number, context: NormalizedDamageContext)
     + (stat_data.Elemental.includes(element) ? (stats["Elemental Crit DMG%"] ?? 0) : 0)
     + (element === "Holy" ? (stats["Holy Crit DMG%"] ?? 0) : 0)
   const totalCritDamage = (stats["Crit DMG%"] ?? 0) + skillCritDamage
+  const skillCritDamageMultiplier = Math.max(0, toMult(inputs.skillCritDmg))
+  const critDamageMultiplier = skillCritDamageMultiplier * (totalCritDamage / 100)
 
-  const critStage = Math.floor(nonCrit * ((inputs.skillCritDmg ?? 0) / 100))
-  const crit = Math.floor(critStage * (totalCritDamage / 100))
+  const crit = Math.floor(nonCrit * critDamageMultiplier)
   const maxcrit = Math.floor(crit * ((stats["Overdrive%"] ?? 0) / 100))
 
   const skillCritChance = getTotalStatValue(stats, skillCritChanceStatsBySkillType[skillType] ?? [])
@@ -202,7 +215,7 @@ function finalizeDamageResult(nonCrit: number, context: NormalizedDamageContext)
   const threatBase = Math.floor((stats["DEF"] ?? 0) * ((inputs.threatDef ?? 0) / 100))
   const threatWithGlobalDmg = Math.floor(threatBase * toMult(stats["Dmg%"]))
   const threatNonCrit = Math.floor(threatWithGlobalDmg * toMult(stats["Threat%"]))
-  const threatCrit = Math.floor(threatNonCrit * (totalCritDamage / 100))
+  const threatCrit = Math.floor(threatNonCrit * critDamageMultiplier)
   const threatAverage = Math.floor(threatNonCrit * nonCritWeight + threatCrit * (critWeight + maxCritWeight))
 
   return {
