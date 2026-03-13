@@ -16,14 +16,8 @@ export type DamageCalcInputs = {
   secondSkillDmg: number
   enemyArmor: number
   enemyRes: number
-  playerLevel: number
   dungeonLevel: number
   bossDefPen: number
-  baseStat: number
-  buffedStat: number
-  defense: number
-  dmgReduction: number
-  defCap: number
 }
 
 export type DamageCalcState = {
@@ -50,6 +44,20 @@ export type DamageCalcResult = {
   threatAverage: number
 }
 
+export type PlayerDamageReductionResult = {
+  bossLevel: number
+  defenseScaling: number
+  rawReductionPercent: number
+  effectiveReductionPercent: number
+  defenseCap: number
+}
+
+export type PlayerDamageReductionInputs = {
+  defense: number
+  dungeonLevel: number
+  bossDefPen: number
+}
+
 export const defaultDamageCalcInputs: DamageCalcInputs = {
   skillDmg: 25,
   skillCritDmg: 0,
@@ -62,14 +70,8 @@ export const defaultDamageCalcInputs: DamageCalcInputs = {
   secondSkillDmg: 0,
   enemyArmor: 0,
   enemyRes: 0,
-  playerLevel: 1,
   dungeonLevel: 1,
   bossDefPen: 0,
-  baseStat: 0,
-  buffedStat: 0,
-  defense: 0,
-  dmgReduction: 0,
-  defCap: 0,
 }
 
 export const defaultDamageCalcState: DamageCalcState = {
@@ -141,6 +143,10 @@ export function persistDamageCalcState(storage: Storage, state: DamageCalcState)
 const toMult = (value: number | undefined): number => 1 + ((value ?? 0) / 100)
 const clamp = (value: number, minimum = 0, maximum = 1): number => Math.min(maximum, Math.max(minimum, value))
 const toRemainingPercent = (value: number | undefined): number => 1 - clamp((value ?? 0) / 100, 0, 1)
+const DAMAGE_REDUCTION_CAP_PERCENT = 90
+const DAMAGE_REDUCTION_SCALE_PERCENT = 15
+const DEFENSE_SCALING_BASE = 12
+const DEFENSE_SCALING_DIVISOR = 15
 const skillCritDamageStatsBySkillType: Record<string, string[]> = {
   Bow: ["Bow Crit DMG%"],
   Dagger: ["Dagger Crit DMG%"],
@@ -153,6 +159,43 @@ const skillCritChanceStatsBySkillType: Record<string, string[]> = {
 
 function getTotalStatValue(stats: Record<string, number>, statNames: readonly string[]): number {
   return statNames.reduce((sum, statName) => sum + (stats[statName] ?? 0), 0)
+}
+
+export function calculatePlayerDamageReduction(
+  inputs: PlayerDamageReductionInputs,
+): PlayerDamageReductionResult {
+  const dungeonLevel = Math.max(1, Math.trunc(inputs.dungeonLevel))
+  const bossLevel = dungeonLevel
+  const defenseScaling =
+    DEFENSE_SCALING_BASE
+    + Math.floor((dungeonLevel / DEFENSE_SCALING_DIVISOR) ** (1.5 + (dungeonLevel / 1000)))
+  const defense = Math.max(0, inputs.defense)
+  const bossDefPenRatio = clamp(inputs.bossDefPen / 100, 0, 1)
+
+  if (bossDefPenRatio >= 1) {
+    return {
+      bossLevel,
+      defenseScaling,
+      rawReductionPercent: 0,
+      effectiveReductionPercent: 0,
+      defenseCap: Number.POSITIVE_INFINITY,
+    }
+  }
+
+  const rawReductionPercent =
+    (DAMAGE_REDUCTION_SCALE_PERCENT * defense * (1 - bossDefPenRatio)) / (bossLevel * defenseScaling)
+  const effectiveReductionPercent = Math.min(DAMAGE_REDUCTION_CAP_PERCENT, rawReductionPercent)
+  const defenseCap =
+    (DAMAGE_REDUCTION_CAP_PERCENT / DAMAGE_REDUCTION_SCALE_PERCENT)
+    * ((bossLevel * defenseScaling) / (1 - bossDefPenRatio))
+
+  return {
+    bossLevel,
+    defenseScaling,
+    rawReductionPercent: Math.max(0, rawReductionPercent),
+    effectiveReductionPercent: Math.max(0, effectiveReductionPercent),
+    defenseCap,
+  }
 }
 
 function applyThreatOffenseMultipliers(

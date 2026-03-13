@@ -2,7 +2,10 @@
 
 import { useEffect, useState } from "react"
 import stat_data from "../data/stat_data"
+import { BUILD_SNAPSHOT_UPDATED_EVENT } from "@/app/lib/buildEvents"
+import { computeBuildStatStages, readBuildSnapshot } from "@/app/lib/buildStats"
 import {
+  calculatePlayerDamageReduction,
   calculateDamage,
   defaultDamageCalcState,
   persistDamageCalcState,
@@ -25,15 +28,17 @@ export default function DamageCalc() {
   const [inputs, setInputs] = useState<DamageCalcInputs>(defaultDamageCalcState.inputs)
 
   useEffect(() => {
-    window.dispatchEvent(new Event("computeDmgReadyStats"))
-
-    const rawStats = localStorage.getItem("StatsDmgReady")
     const storedState = readDamageCalcState(localStorage)
+    const refreshBuildStats = () => {
+      const snapshot = readBuildSnapshot(localStorage)
+      const stages = computeBuildStatStages(snapshot)
 
-    if (rawStats) {
-      try {
-        setStats(JSON.parse(rawStats))
-      } catch {}
+      setStats(stages.StatsDmgReady)
+    }
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === "visible") {
+        refreshBuildStats()
+      }
     }
 
     setAttackPreset(storedState.attackPreset)
@@ -43,7 +48,18 @@ export default function DamageCalc() {
     setPenElement(storedState.penElement)
     setSkillType(storedState.skillType)
     setInputs(storedState.inputs)
+    refreshBuildStats()
     setIsHydrated(true)
+
+    window.addEventListener(BUILD_SNAPSHOT_UPDATED_EVENT, refreshBuildStats)
+    window.addEventListener("focus", refreshBuildStats)
+    document.addEventListener("visibilitychange", handleVisibilityChange)
+
+    return () => {
+      window.removeEventListener(BUILD_SNAPSHOT_UPDATED_EVENT, refreshBuildStats)
+      window.removeEventListener("focus", refreshBuildStats)
+      document.removeEventListener("visibilitychange", handleVisibilityChange)
+    }
   }, [])
 
   useEffect(() => {
@@ -84,8 +100,19 @@ export default function DamageCalc() {
     skillType,
     inputs,
   })
+  const playerDefense = stats.DEF ?? 0
+  const playerDamageReduction = calculatePlayerDamageReduction({
+    defense: playerDefense,
+    dungeonLevel: inputs.dungeonLevel,
+    bossDefPen: inputs.bossDefPen,
+  })
 
   const formatNumber = (value: number): string => value.toLocaleString("en-US")
+  const formatDerivedValue = (value: number, maximumFractionDigits = 2): string => (
+    Number.isFinite(value)
+      ? value.toLocaleString("en-US", { maximumFractionDigits })
+      : "Infinity"
+  )
 
   const handleChange = (field: keyof DamageCalcInputs, value: number) => {
     if (attackPresetInputKeySet.has(field)) {
@@ -261,9 +288,6 @@ export default function DamageCalc() {
         </div>
 
         <div className="space-y-1">
-          <label className="font-semibold">Player Level</label>
-          <input type="number" value={inputs.playerLevel} onChange={(e) => handleChange("playerLevel", +e.target.value)} className="w-full p-1 border rounded" />
-
           <label className="font-semibold">Dungeon Level</label>
           <input type="number" value={inputs.dungeonLevel} onChange={(e) => handleChange("dungeonLevel", +e.target.value)} className="w-full p-1 border rounded" />
 
@@ -272,22 +296,22 @@ export default function DamageCalc() {
         </div>
 
         <div className="space-y-1">
-          <label className="font-semibold">Your Defense</label>
-          <input type="number" value={inputs.defense} onChange={(e) => handleChange("defense", +e.target.value)} className="w-full p-1 border rounded" />
+          <label className="font-semibold">Defense</label>
+          <div className="w-full rounded border bg-slate-950/60 px-2 py-1 font-mono tabular-nums">
+            {formatDerivedValue(playerDefense, 0)}
+          </div>
 
           <label className="font-semibold">Damage Reduction%</label>
-          <input type="number" value={inputs.dmgReduction} onChange={(e) => handleChange("dmgReduction", +e.target.value)} className="w-full p-1 border rounded" />
+          <div className="w-full rounded border bg-slate-950/60 px-2 py-1 font-mono tabular-nums">
+            {formatDerivedValue(playerDamageReduction.effectiveReductionPercent, 3)}
+          </div>
         </div>
 
         <div className="space-y-1">
           <label className="font-semibold">Defense Cap</label>
-          <input type="number" value={inputs.defCap} onChange={(e) => handleChange("defCap", +e.target.value)} className="w-full p-1 border rounded" />
-
-          <label className="font-semibold">Effective {mainStat}</label>
-          <input type="number" value={inputs.baseStat} onChange={(e) => handleChange("baseStat", +e.target.value)} className="w-full p-1 border rounded" />
-
-          <label className="font-semibold">Total {mainStat} (buffed)</label>
-          <input type="number" value={inputs.buffedStat} onChange={(e) => handleChange("buffedStat", +e.target.value)} className="w-full p-1 border rounded" />
+          <div className="w-full rounded border bg-slate-950/60 px-2 py-1 font-mono tabular-nums">
+            {formatDerivedValue(playerDamageReduction.defenseCap, 2)}
+          </div>
         </div>
       </div>
 
