@@ -140,6 +140,7 @@ export function persistDamageCalcState(storage: Storage, state: DamageCalcState)
 
 const toMult = (value: number | undefined): number => 1 + ((value ?? 0) / 100)
 const clamp = (value: number, minimum = 0, maximum = 1): number => Math.min(maximum, Math.max(minimum, value))
+const toRemainingPercent = (value: number | undefined): number => 1 - clamp((value ?? 0) / 100, 0, 1)
 const skillCritDamageStatsBySkillType: Record<string, string[]> = {
   Bow: ["Bow Crit DMG%"],
   Dagger: ["Dagger Crit DMG%"],
@@ -185,7 +186,7 @@ function buildDamageContext(stats: Record<string, number>, state: DamageCalcStat
     + ((stats[secondStat] ?? 0) * (inputs.secondSkillDmg / 100))
   const base = Math.floor(baseRaw)
 
-  const armorBlock = Math.floor((inputs.enemyArmor ?? 0) * ((inputs.armorIgnore ?? 0) / 100))
+  const armorBlock = Math.floor((inputs.enemyArmor ?? 0) * toRemainingPercent(inputs.armorIgnore))
   const armorBreak = Math.floor(((stats["ATK"] ?? 0) + (stats["DEF"] ?? 0) + (stats["MATK"] ?? 0) + (stats["HEAL"] ?? 0)) / 4) + (stats["Armor Strike"] ?? 0)
   const mitigated = Math.max(0, Math.floor(base - (armorBlock - armorBreak)))
 
@@ -257,10 +258,9 @@ export function calculateDamage(stats: Record<string, number>, state: DamageCalc
   let dmg = mitigated
   dmg = Math.floor(dmg * toMult(resolvedStats[`${element}%`]))
   dmg = Math.floor(dmg * toMult(resolvedStats[`${element} xDmg%`]))
-  const penResMult =
-    1
-    + (((resolvedStats[`${penElement} Pen%`] ?? 0) + (inputs.skillPen ?? 0)) / 100)
-    - ((inputs.enemyRes ?? 0) * ((inputs.resIgnore ?? 0) / 100))
+  const effectiveEnemyRes = (inputs.enemyRes ?? 0) * toRemainingPercent(inputs.resIgnore)
+  const totalPenBonus = ((resolvedStats[`${penElement} Pen%`] ?? 0) + (inputs.skillPen ?? 0)) / 100
+  const penResMult = Math.max(0, 1 + totalPenBonus - (effectiveEnemyRes / 100))
   dmg = Math.floor(dmg * penResMult)
   dmg = Math.floor(dmg * toMult(resolvedStats[`${skillType} DMG%`]))
   dmg = Math.floor(dmg * toMult(resolvedStats["Dmg%"]))
