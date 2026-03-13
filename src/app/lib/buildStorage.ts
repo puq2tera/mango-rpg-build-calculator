@@ -255,6 +255,19 @@ export function deleteBuildProfile(storage: Storage, profileId: string): void {
   })
 }
 
+function getBuildKeysToRemove(storage: Storage): string[] {
+  const keysToRemove: string[] = []
+
+  for (let index = 0; index < storage.length; index += 1) {
+    const key = storage.key(index)
+    if (key && !isManagedBuildStorageKey(key)) {
+      keysToRemove.push(key)
+    }
+  }
+
+  return keysToRemove
+}
+
 export function applyBuildProfile(storage: Storage, profileId: string): StoredBuildProfile {
   const state = readBuildManagerState(storage)
   const profile = state.profiles.find((entry) => entry.id === profileId)
@@ -263,15 +276,7 @@ export function applyBuildProfile(storage: Storage, profileId: string): StoredBu
     throw new Error("Build not found.")
   }
 
-  const keysToRemove: string[] = []
-  for (let index = 0; index < storage.length; index += 1) {
-    const key = storage.key(index)
-    if (key && !isManagedBuildStorageKey(key)) {
-      keysToRemove.push(key)
-    }
-  }
-
-  for (const key of keysToRemove) {
+  for (const key of getBuildKeysToRemove(storage)) {
     storage.removeItem(key)
   }
 
@@ -286,6 +291,15 @@ export function applyBuildProfile(storage: Storage, profileId: string): StoredBu
   dispatchBuildSnapshotUpdated()
 
   return profile
+}
+
+export function clearCurrentBuildData(storage: Storage): void {
+  for (const key of getBuildKeysToRemove(storage)) {
+    storage.removeItem(key)
+  }
+
+  clearActiveBuildProfile(storage)
+  dispatchBuildSnapshotUpdated()
 }
 
 export function exportBuildProfile(profile: BuildExportSource): string {

@@ -7,6 +7,7 @@ import {
   applyBuildProfile,
   areStoredBuildDataEqual,
   captureCurrentBuildData,
+  clearCurrentBuildData,
   deleteBuildProfile,
   exportBuildProfile,
   importBuildProfile,
@@ -25,22 +26,25 @@ type FeedbackState = {
 }
 
 const cardClass =
-  "rounded-[26px] border border-slate-800/80 bg-slate-950/70 shadow-[0_24px_80px_rgba(2,6,23,0.42)] backdrop-blur"
+  "rounded-[22px] border border-slate-800/80 bg-slate-950/70 shadow-[0_20px_64px_rgba(2,6,23,0.4)] backdrop-blur"
 
 const inputClass =
-  "w-full rounded-xl border border-slate-700 bg-slate-950/80 px-3 py-2 text-sm text-slate-100 outline-none transition focus:border-sky-400/70"
+  "w-full rounded-lg border border-slate-700 bg-slate-950/80 px-3 py-2 text-sm text-slate-100 outline-none transition focus:border-sky-400/70"
 
 const compactInputClass =
   "rounded-lg border border-slate-700 bg-slate-950/80 px-2.5 py-1.5 text-xs text-slate-100 outline-none transition focus:border-sky-400/70"
 
 const compactButtonClass =
-  "rounded-lg border border-slate-700 bg-slate-950/90 px-2.5 py-1.5 text-xs font-semibold text-slate-100 transition hover:border-sky-400/50 hover:text-sky-200"
+  "rounded-lg border border-slate-700 bg-slate-950/90 px-2.5 py-1.5 text-xs font-semibold text-slate-100 transition hover:border-sky-400/50 hover:text-sky-200 disabled:cursor-not-allowed disabled:opacity-50"
 
 const compactPrimaryButtonClass =
-  "rounded-lg border border-sky-500/60 bg-sky-500/10 px-2.5 py-1.5 text-xs font-semibold text-sky-100 transition hover:bg-sky-500/15"
+  "rounded-lg border border-sky-500/60 bg-sky-500/10 px-2.5 py-1.5 text-xs font-semibold text-sky-100 transition hover:bg-sky-500/15 disabled:cursor-not-allowed disabled:opacity-50"
 
 const dangerButtonClass =
-  "rounded-xl border border-rose-500/40 bg-rose-500/10 px-3 py-2 text-sm font-semibold text-rose-100 transition hover:bg-rose-500/15"
+  "rounded-lg border border-rose-500/40 bg-rose-500/10 px-2.5 py-1.5 text-xs font-semibold text-rose-100 transition hover:bg-rose-500/15 disabled:cursor-not-allowed disabled:opacity-50"
+
+const metaPillClass =
+  "inline-flex items-center rounded-full border border-slate-700 bg-slate-950/85 px-3 py-1 text-xs font-medium text-slate-300"
 
 const feedbackClassByTone: Record<FeedbackTone, string> = {
   success: "border-emerald-500/40 bg-emerald-500/10 text-emerald-100",
@@ -106,6 +110,7 @@ export default function BuildsPage() {
   const [renameDrafts, setRenameDrafts] = useState<Record<string, string>>({})
   const [renamingProfileId, setRenamingProfileId] = useState<string | null>(null)
   const [feedback, setFeedback] = useState<FeedbackState | null>(null)
+  const [showClearDialog, setShowClearDialog] = useState(false)
 
   const syncFromStorage = () => {
     const nextViewState = readBuildManagerViewState(window.localStorage)
@@ -147,7 +152,27 @@ export default function BuildsPage() {
   }, [])
 
   const activeProfile = profiles.find((profile) => profile.id === activeBuildId) ?? null
+  const currentBuildKeyCount = Object.keys(currentData).length
+  const hasCurrentBuildData = currentBuildKeyCount > 0
   const currentBuildDirty = activeProfile ? !areStoredBuildDataEqual(activeProfile.data, currentData) : false
+  const canClearCurrentBuild = hasCurrentBuildData || activeProfile !== null
+  const currentBuildIdentityText = activeProfile
+    ? `Loaded: ${activeProfile.name}`
+    : hasCurrentBuildData
+      ? "Working from unsaved current state"
+      : "Calculator is empty"
+  const currentBuildStatusText = currentBuildDirty
+    ? "Unsaved changes against loaded build"
+    : activeProfile
+      ? "Matches loaded build"
+      : hasCurrentBuildData
+        ? "Not saved as a named build"
+        : "No saved build loaded"
+  const currentBuildStatusClass = currentBuildDirty
+    ? "rounded-full border border-amber-500/40 bg-amber-500/10 px-3 py-1 text-xs font-semibold text-amber-100"
+    : activeProfile
+      ? "rounded-full border border-emerald-500/40 bg-emerald-500/10 px-3 py-1 text-xs font-semibold text-emerald-100"
+      : "rounded-full border border-slate-700 bg-slate-900/80 px-3 py-1 text-xs font-semibold text-slate-300"
   const currentExportName = saveName.trim() || activeProfile?.name || "Current Build"
   const currentExportText = useMemo(
     () => exportBuildProfile({
@@ -257,6 +282,14 @@ export default function BuildsPage() {
     setFeedback({ tone: "info", text: `Downloaded "${filename}".` })
   }
 
+  const handleClearCurrent = () => {
+    clearCurrentBuildData(window.localStorage)
+    setSaveName("")
+    setShowClearDialog(false)
+    setFeedback({ tone: "info", text: "Cleared the current calculator state. Saved builds were left intact." })
+    syncFromStorage()
+  }
+
   const handleUploadFile = async (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]
 
@@ -284,14 +317,14 @@ export default function BuildsPage() {
 
   return (
     <div className="min-h-[calc(100vh-var(--top-nav-height))] bg-[radial-gradient(circle_at_top_left,rgba(14,165,233,0.12),transparent_30%),radial-gradient(circle_at_top_right,rgba(234,88,12,0.10),transparent_28%),linear-gradient(180deg,rgba(2,6,23,0.98),rgba(15,23,42,0.96))]">
-      <div className="mx-auto max-w-7xl px-4 py-6">
-        <section className="rounded-[30px] border border-slate-800/80 bg-[linear-gradient(135deg,rgba(7,12,20,0.97),rgba(15,23,42,0.9))] px-6 py-6 shadow-[0_40px_100px_rgba(2,6,23,0.48)]">
-          <div className="flex flex-wrap items-start justify-between gap-6">
-            <div className="max-w-3xl space-y-3">
-              <div className="text-[11px] font-semibold uppercase tracking-[0.26em] text-sky-300">
+      <div className="mx-auto max-w-6xl px-4 py-4">
+        <section className="rounded-[26px] border border-slate-800/80 bg-[linear-gradient(135deg,rgba(7,12,20,0.97),rgba(15,23,42,0.9))] px-5 py-5 shadow-[0_32px_80px_rgba(2,6,23,0.44)]">
+          <div className="flex flex-wrap items-start justify-between gap-4">
+            <div className="max-w-3xl space-y-2">
+              <div className="text-[10px] font-semibold uppercase tracking-[0.24em] text-sky-300">
                 Build Manager
               </div>
-              <h1 className="text-3xl font-semibold tracking-tight text-slate-50">
+              <h1 className="text-2xl font-semibold tracking-tight text-slate-50 sm:text-[2rem]">
                 Save, import, export, and switch local builds
               </h1>
               <p className="max-w-2xl text-sm leading-6 text-slate-400">
@@ -300,50 +333,45 @@ export default function BuildsPage() {
               </p>
             </div>
 
-            <div className="grid min-w-[18rem] gap-3 sm:grid-cols-3">
-              <div className={cardClass}>
-                <div className="px-4 py-4">
-                  <div className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-400">Saved Builds</div>
-                  <div className="mt-2 text-3xl font-semibold text-slate-50">{profiles.length}</div>
-                </div>
-              </div>
-              <div className={cardClass}>
-                <div className="px-4 py-4">
-                  <div className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-400">Current Keys</div>
-                  <div className="mt-2 text-3xl font-semibold text-slate-50">{Object.keys(currentData).length}</div>
-                </div>
-              </div>
-              <div className={cardClass}>
-                <div className="px-4 py-4">
-                  <div className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-400">Loaded Build</div>
-                  <div className="mt-2 text-lg font-semibold text-slate-50">{activeProfile?.name ?? "Unsaved current state"}</div>
-                </div>
-              </div>
+            <div className="flex max-w-full flex-wrap gap-2">
+              <span className={metaPillClass}>{profiles.length} saved build{profiles.length === 1 ? "" : "s"}</span>
+              <span className={`${metaPillClass} max-w-full`} title={currentBuildIdentityText}>
+                <span className="truncate">{currentBuildIdentityText}</span>
+              </span>
+              <span className={currentBuildStatusClass}>{currentBuildStatusText}</span>
             </div>
           </div>
 
           {feedback ? (
-            <div className={`mt-5 rounded-2xl border px-4 py-3 text-sm ${feedbackClassByTone[feedback.tone]}`}>
+            <div className={`mt-4 rounded-xl border px-4 py-3 text-sm ${feedbackClassByTone[feedback.tone]}`}>
               {feedback.text}
             </div>
           ) : null}
 
-          <div className="mt-6 grid gap-6 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)]">
-            <section className={`${cardClass} px-5 py-5`}>
-              <div className="flex flex-wrap items-start justify-between gap-4">
-                <div className="space-y-2">
-                  <h2 className="text-lg font-semibold text-slate-50">Current Build</h2>
+          <div className="mt-4 grid gap-4 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)]">
+            <section className={`${cardClass} px-4 py-4`}>
+              <div className="flex flex-wrap items-start justify-between gap-3">
+                <div className="space-y-1.5">
+                  <h2 className="text-base font-semibold text-slate-50">Current Build</h2>
                   <p className="max-w-2xl text-sm leading-6 text-slate-400">
                     Snapshot the build that is currently loaded in local storage, or export it directly as JSON.
                   </p>
                 </div>
-                <div className="rounded-full border border-slate-700 bg-slate-900/80 px-3 py-1 text-xs font-semibold text-slate-300">
-                  {currentBuildDirty ? "Unsaved changes against loaded build" : activeProfile ? "Matches loaded build" : "No saved build loaded"}
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className={currentBuildStatusClass}>{currentBuildStatusText}</span>
+                  <button
+                    type="button"
+                    onClick={() => setShowClearDialog(true)}
+                    className={dangerButtonClass}
+                    disabled={!canClearCurrentBuild}
+                  >
+                    Clear Calculator
+                  </button>
                 </div>
               </div>
 
-              <div className="mt-5 grid gap-4 md:grid-cols-[minmax(0,1fr)_auto]">
-                <label className="space-y-2">
+              <div className="mt-4 grid gap-3 md:grid-cols-[minmax(0,1fr)_auto]">
+                <label className="space-y-1.5">
                   <span className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">Build Name</span>
                   <input
                     type="text"
@@ -369,7 +397,7 @@ export default function BuildsPage() {
                     label="Copy to Clipboard"
                     copiedLabel="Export Copied"
                     text={currentExportText}
-                    className="h-fit self-end"
+                    className="h-fit"
                   />
                   <button type="button" onClick={handleDownloadCurrent} className={compactButtonClass}>
                     Download JSON
@@ -378,24 +406,27 @@ export default function BuildsPage() {
               </div>
 
               {activeProfile ? (
-                <div className="mt-4 text-sm text-slate-400">
-                  <div>
-                    Last saved {formatTimestamp(activeProfile.updatedAt)}
-                  </div>
+                <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-xs text-slate-400">
+                  <div>Last saved {formatTimestamp(activeProfile.updatedAt)}</div>
+                  <div>{currentBuildKeyCount} current key{currentBuildKeyCount === 1 ? "" : "s"}</div>
+                </div>
+              ) : hasCurrentBuildData ? (
+                <div className="mt-3 text-xs text-slate-400">
+                  {currentBuildKeyCount} current key{currentBuildKeyCount === 1 ? "" : "s"} in the unsaved calculator state.
                 </div>
               ) : null}
             </section>
 
-            <section className={`${cardClass} px-5 py-5`}>
-              <div className="space-y-2">
-                <h2 className="text-lg font-semibold text-slate-50">Import Build</h2>
+            <section className={`${cardClass} px-4 py-4`}>
+              <div className="space-y-1.5">
+                <h2 className="text-base font-semibold text-slate-50">Import Build</h2>
                 <p className="text-sm leading-6 text-slate-400">
                   Paste a previously exported build JSON blob. You can save it only, or save and load it immediately.
                 </p>
               </div>
 
-              <div className="mt-5 grid gap-4">
-                <label className="space-y-2">
+              <div className="mt-4 grid gap-3">
+                <label className="space-y-1.5">
                   <span className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">Optional Name Override</span>
                   <input
                     type="text"
@@ -406,18 +437,18 @@ export default function BuildsPage() {
                   />
                 </label>
 
-                <label className="space-y-2">
+                <label className="space-y-1.5">
                   <span className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">Build JSON</span>
                   <textarea
                     value={importText}
                     onChange={(event) => setImportText(event.target.value)}
                     rows={4}
                     placeholder={`{\n  "type": "mango-build-profile",\n  ...\n}`}
-                    className={`${inputClass} min-h-28 resize-y font-mono text-xs leading-6`}
+                    className={`${inputClass} min-h-24 resize-y font-mono text-xs leading-5`}
                   />
                 </label>
 
-                <div className="flex flex-wrap gap-3">
+                <div className="flex flex-wrap gap-2">
                   <label className={`${compactButtonClass} inline-flex cursor-pointer items-center`}>
                     Upload JSON
                     <input
@@ -439,10 +470,10 @@ export default function BuildsPage() {
           </div>
         </section>
 
-        <section className="mt-6 space-y-4">
+        <section className="mt-4 space-y-3">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
-              <h2 className="text-xl font-semibold text-slate-50">Saved Builds</h2>
+              <h2 className="text-lg font-semibold text-slate-50">Saved Builds</h2>
               <p className="mt-1 text-sm text-slate-400">
                 Loading a build swaps the app&apos;s current local storage state to that profile.
               </p>
@@ -450,36 +481,36 @@ export default function BuildsPage() {
           </div>
 
           {profiles.length === 0 ? (
-            <div className={`${cardClass} px-5 py-8 text-sm text-slate-300`}>
+            <div className={`${cardClass} px-4 py-6 text-sm text-slate-300`}>
               No saved builds yet. Save the current local storage state or import a build JSON blob to get started.
             </div>
           ) : (
-            <div className="grid gap-4">
+            <div className="grid gap-3">
               {profiles.map((profile) => {
                 const isActive = profile.id === activeBuildId
                 const renameValue = renameDrafts[profile.id] ?? profile.name
                 const isRenaming = renamingProfileId === profile.id
 
                 return (
-                  <article key={profile.id} className={`${cardClass} px-5 py-5`}>
-                    <div className="flex flex-wrap items-start justify-between gap-4">
+                  <article key={profile.id} className={`${cardClass} px-4 py-4`}>
+                    <div className="flex flex-wrap items-start justify-between gap-3">
                       <div className="min-w-0 flex-1">
                         <div className="flex flex-wrap items-center gap-2">
-                          <h3 className="text-lg font-semibold text-slate-50">{profile.name}</h3>
+                          <h3 className="text-base font-semibold text-slate-50">{profile.name}</h3>
                           {isActive ? (
                             <span className="rounded-full border border-sky-500/50 bg-sky-500/10 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-sky-200">
                               Loaded
                             </span>
                           ) : null}
                         </div>
-                        <div className="mt-2 flex flex-wrap gap-x-5 gap-y-1 text-sm text-slate-400">
+                        <div className="mt-1.5 flex flex-wrap gap-x-4 gap-y-1 text-xs text-slate-400">
                           <span>{Object.keys(profile.data).length} stored keys</span>
                           <span>Created {formatTimestamp(profile.createdAt)}</span>
                           <span>Updated {formatTimestamp(profile.updatedAt)}</span>
                         </div>
                       </div>
 
-                      <div className="flex flex-wrap items-start gap-2">
+                      <div className="flex flex-wrap items-start gap-1.5">
                         <button type="button" onClick={() => handleLoad(profile.id)} className={compactPrimaryButtonClass}>
                           Load
                         </button>
@@ -533,6 +564,47 @@ export default function BuildsPage() {
           )}
         </section>
       </div>
+
+      {showClearDialog ? (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 px-4 backdrop-blur-sm"
+          onClick={() => setShowClearDialog(false)}
+        >
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="clear-build-dialog-title"
+            className="w-full max-w-md rounded-[22px] border border-rose-500/30 bg-[linear-gradient(180deg,rgba(15,23,42,0.98),rgba(2,6,23,0.96))] p-5 shadow-[0_32px_80px_rgba(2,6,23,0.6)]"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <div className="text-[10px] font-semibold uppercase tracking-[0.24em] text-rose-300">Warning</div>
+            <h2 id="clear-build-dialog-title" className="mt-2 text-xl font-semibold text-slate-50">
+              Clear current calculator state?
+            </h2>
+            <p className="mt-3 text-sm leading-6 text-slate-300">
+              This removes the active calculator data from local storage and unloads the current build.
+            </p>
+            <p className="mt-2 text-sm leading-6 text-slate-400">
+              Saved builds in the manager will stay available and can be loaded again later.
+            </p>
+
+            {activeProfile ? (
+              <div className="mt-3 rounded-xl border border-slate-700 bg-slate-900/80 px-3 py-2 text-xs text-slate-300">
+                Saved build kept: <span className="font-semibold text-slate-100">{activeProfile.name}</span>
+              </div>
+            ) : null}
+
+            <div className="mt-5 flex justify-end gap-2">
+              <button type="button" onClick={() => setShowClearDialog(false)} className={compactButtonClass} autoFocus>
+                Cancel
+              </button>
+              <button type="button" onClick={handleClearCurrent} className={dangerButtonClass}>
+                Clear Calculator
+              </button>
+            </div>
+          </div>
+        </div>
+      ) : null}
     </div>
   )
 }
