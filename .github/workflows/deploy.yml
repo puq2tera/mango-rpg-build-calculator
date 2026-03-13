@@ -76,6 +76,11 @@ jobs:
       - name: Build with Next.js
         run: ${{ steps.detect-package-manager.outputs.runner }} next build
 
+      - name: Preserve previous Pages assets
+        env:
+          PAGES_SITE_URL: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}
+        run: ${{ steps.detect-package-manager.outputs.manager }} run preserve:pages-assets
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:

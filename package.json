@@ -4,9 +4,10 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
-    "build": "next build && next export",
+    "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "preserve:pages-assets": "node scripts/preserve-pages-assets.mjs"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",
