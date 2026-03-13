@@ -35,6 +35,7 @@ import {
 const RESETTABLE_PATHS = new Set(["/talents", "/skills", "/skills/buffs", "/equipment/tarotcards"])
 
 const navLinks = [
+  ["/Builds", "Builds"],
   ["/talents", "Talents"],
   ["/talents/TalentOverview", "Talent Overview"],
   ["/Skills", "Skills"],
