@@ -6,21 +6,20 @@ import stat_data from "@/app/data/stat_data"
 import { talent_data } from "@/app/data/talent_data"
 import tarot_data, { type Tarot } from "@/app/data/tarot_data"
 import { normalizeArtifact } from "@/app/lib/artifactState"
+import {
+  getTarotScalingValue,
+  isTarotEquipmentSlot,
+  normalizeEquipmentSlots,
+  type EquipmentSlot,
+} from "@/app/lib/equipmentSlots"
 import { readStoredStatPoints } from "@/app/lib/mainStatPoints"
+import { readStoredEffectiveTarotSelections } from "@/app/lib/tarotSelections"
 import { THREAT_BASE_STAT } from "@/app/lib/threat"
 import {
   getManualRangeGain,
   normalizeManualLevelRanges,
   type ManualLevelRange,
 } from "@/app/lib/manualLevelRanges"
-
-type EquipmentSlot = {
-  name: string
-  type?: string
-  affixes: { stat: string; value: number }[]
-  mainstat: string
-  mainstat_value: number
-}
 
 type RuneSelection = { rune: string; count: number }
 
@@ -103,27 +102,6 @@ const asRuneSelections = (value: unknown): Record<string, RuneSelection[]> => {
   }, {})
 }
 
-const asEquipmentSlots = (value: unknown): EquipmentSlot[] => {
-  if (!Array.isArray(value)) return []
-
-  return value
-    .filter((entry): entry is Partial<EquipmentSlot> => typeof entry === "object" && entry !== null)
-    .map((entry) => ({
-      name: typeof entry.name === "string" ? entry.name : "",
-      type: typeof entry.type === "string" ? entry.type : undefined,
-      affixes: Array.isArray(entry.affixes)
-        ? (entry.affixes as unknown[])
-          .filter((affix): affix is Record<string, unknown> => typeof affix === "object" && affix !== null)
-          .map((affix) => ({
-            stat: typeof affix.stat === "string" ? affix.stat : "",
-            value: asFiniteNumber(affix.value, 0),
-          }))
-        : [],
-      mainstat: typeof entry.mainstat === "string" ? entry.mainstat : "",
-      mainstat_value: asFiniteNumber(entry.mainstat_value, 0),
-    }))
-}
-
 const asEnabledEquipment = (value: unknown): number[] =>
   Array.isArray(value)
     ? value.filter((entry): entry is number => typeof entry === "number" && Number.isFinite(entry))
@@ -136,7 +114,7 @@ export function readBuildSnapshot(storage: Storage): BuildSnapshot {
     selectedTalents: asStringArray(jsonParse(storage.getItem("selectedTalents"), [])),
     selectedBuffs: asStringArray(jsonParse(storage.getItem("selectedBuffs"), [])),
     selectedBuffStacks: asRecord(jsonParse(storage.getItem("selectedBuffStacks"), {})),
-    selectedTarots: asStringArray(jsonParse(storage.getItem("selectedTarots"), [])),
+    selectedTarots: readStoredEffectiveTarotSelections(storage),
     tarotStacks: asRecord(jsonParse(storage.getItem("tarotStacks"), {})),
     selectedRace: (() => {
       const value = storage.getItem("SelectedRace")
@@ -149,7 +127,7 @@ export function readBuildSnapshot(storage: Storage): BuildSnapshot {
     selectedHeroPoints: asRecord(jsonParse(storage.getItem("SelectedHeroPoints"), {})),
     selectedManualLevelRanges: asManualLevelRanges(jsonParse(storage.getItem("SelectedManualLevelRanges"), [])),
     selectedRunes: asRuneSelections(jsonParse(storage.getItem("SelectedRunes"), {})),
-    equipmentSlots: asEquipmentSlots(jsonParse(storage.getItem("EquipmentSlots"), [])),
+    equipmentSlots: normalizeEquipmentSlots(jsonParse(storage.getItem("EquipmentSlots"), [])),
     enabledEquipment: asEnabledEquipment(jsonParse(storage.getItem("EnabledEquipment"), [])),
     artifact: normalizeArtifact(jsonParse(storage.getItem("Artifact"), null)),
   }
@@ -499,8 +477,16 @@ function computeEquipmentStats(snapshot: BuildSnapshot): Record<string, number> 
   for (const [index, slot] of snapshot.equipmentSlots.entries()) {
     if (!enabledIndices.has(index)) continue
 
-    if (slot.mainstat && slot.mainstat_value) {
+    if (!isTarotEquipmentSlot(slot) && slot.mainstat && slot.mainstat_value) {
       stats[slot.mainstat] = (stats[slot.mainstat] || 0) + slot.mainstat_value
+    }
+
+    if (slot.tarotScalingStat) {
+      const tarotScalingValue = getTarotScalingValue(slot.name, slot.tarotLevel)
+
+      if (tarotScalingValue !== null) {
+        stats[slot.tarotScalingStat] = (stats[slot.tarotScalingStat] ?? 0) + tarotScalingValue
+      }
     }
 
     for (const affix of slot.affixes) {

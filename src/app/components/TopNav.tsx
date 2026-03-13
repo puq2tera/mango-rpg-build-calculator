@@ -27,6 +27,7 @@ import {
   type SelectionFilter,
   type TableViewPage,
   type SortMode,
+  type TarotEquipmentFilter,
   type TarotTierFilter,
   type TarotTypeFilter,
   type TableViewState,
@@ -97,6 +98,11 @@ const selectionFilterOptions: Array<{ value: SelectionFilter; label: string }> =
   { value: "all", label: "All" },
   { value: "selected", label: "Selected" },
   { value: "unselected", label: "Unselected" },
+]
+
+const tarotEquipmentFilterOptions: Array<{ value: TarotEquipmentFilter; label: string }> = [
+  { value: "all", label: "All" },
+  { value: "inEquipment", label: "In Equipment" },
 ]
 
 const sortOptions = (page: TableViewPage): Array<{ value: TableViewState["sortMode"]; label: string }> => {
@@ -230,7 +236,8 @@ export default function TopNav() {
     ? (
       viewState.tarotTierFilter !== "all" ||
       viewState.tarotTypeFilter !== "all" ||
-      viewState.selectionFilter !== "all"
+      viewState.selectionFilter !== "all" ||
+      viewState.tarotEquipmentFilter !== "all"
     )
     : (
       Object.values(viewState.classFilter).some((mode) => mode !== "any") ||
@@ -474,6 +481,20 @@ export default function TopNav() {
                         type="button"
                         onClick={() => updateViewState({ selectionFilter: option.value })}
                         className={optionButtonClass(viewState.selectionFilter === option.value)}
+                      >
+                        {option.label}
+                      </button>
+                    ))}
+                  </div>
+
+                  <div className={sectionLabelClass}>Equipment</div>
+                  <div className="grid gap-1">
+                    {tarotEquipmentFilterOptions.map((option) => (
+                      <button
+                        key={option.value}
+                        type="button"
+                        onClick={() => updateViewState({ tarotEquipmentFilter: option.value })}
+                        className={optionButtonClass(viewState.tarotEquipmentFilter === option.value)}
                       >
                         {option.label}
                       </button>

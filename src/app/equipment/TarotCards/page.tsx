@@ -1,14 +1,34 @@
 "use client"
 
-import { startTransition, useEffect, useMemo, useState } from "react"
+import { startTransition, useEffect, useEffectEvent, useMemo, useRef, useState } from "react"
+import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import { OverflowTitle } from "@/app/components/OverflowTitle"
 import { InteractiveTableHeader } from "@/app/components/InteractiveTableHeader"
 import tarot_data from "@/app/data/tarot_data"
 import { computeBuildStatStages, readBuildSnapshot } from "@/app/lib/buildStats"
-import { dispatchBuildSnapshotUpdated } from "@/app/lib/buildEvents"
+import { BUILD_SNAPSHOT_UPDATED_EVENT, dispatchBuildSnapshotUpdated } from "@/app/lib/buildEvents"
 import { calculateDamage, formatSignedDamageDelta, readDamageCalcState } from "@/app/lib/damageCalc"
+import {
+  ENABLED_EQUIPMENT_STORAGE_KEY,
+  EQUIPMENT_AUTO_LINKED_TAROTS_STORAGE_KEY,
+  EQUIPMENT_SLOTS_STORAGE_KEY,
+  getAutoManagedTarotNames,
+  getEnabledEquipmentIndices,
+  getEquipmentAutoLinkedTarots,
+  getEquipmentTarotNames,
+  hasAutoLinkedTarotEquipment,
+  normalizeEquipmentSlots,
+  setAutoLinkedTarotEquipmentEnabled,
+} from "@/app/lib/equipmentSlots"
 import { useManagedColumns } from "@/app/lib/managedColumns"
 import { tarotTableColumns, type TarotColumnId } from "@/app/lib/tableColumnDefinitions"
+import { TABLE_FOCUS_QUERY_PARAM } from "@/app/lib/tableNavigation"
+import {
+  filterManualTarotSelections,
+  getEffectiveTarotSelectionSet,
+  MANUAL_TAROT_SELECTION_STORAGE_KEY,
+  readStoredManualTarotSelections,
+} from "@/app/lib/tarotSelections"
 import {
   getDefaultTableViewState,
   MANAGED_TABLE_VIEW_EVENT,
@@ -17,10 +37,24 @@ import {
   type TableViewState,
 } from "@/app/lib/tableViewState"
 
-const STORAGE_SELECTED = "selectedTarots"
+const STORAGE_SELECTED = MANUAL_TAROT_SELECTION_STORAGE_KEY
 const STORAGE_STACKS = "tarotStacks"
 const tarotNames = Object.keys(tarot_data)
 const defaultTarotOrder = new Map(tarotNames.map((name, index) => [name, index]))
+
+function areSelectionSetsEqual(left: ReadonlySet<string>, right: ReadonlySet<string>): boolean {
+  if (left.size !== right.size) {
+    return false
+  }
+
+  for (const value of left) {
+    if (!right.has(value)) {
+      return false
+    }
+  }
+
+  return true
+}
 
 function getAverageDamageClass(value: number | null | undefined): string {
   if (value === undefined) return ""
@@ -81,17 +115,75 @@ function getTarotTypeBadgeClass(isActive: boolean): string {
 export default function TarotCardsPage() {
   const [isHydrated, setIsHydrated] = useState(false)
   const [selected, setSelected] = useState<Set<string>>(new Set())
+  const [autoLinked, setAutoLinked] = useState<Set<string>>(new Set())
+  const [equipmentTarotNames, setEquipmentTarotNames] = useState<Set<string>>(new Set())
   const [stacks, setStacks] = useState<Record<string, number>>({})
   const [averageDamageChanges, setAverageDamageChanges] = useState<Record<string, number>>({})
   const [viewState, setViewState] = useState<TableViewState>(getDefaultTableViewState)
   const columnLayout = useManagedColumns("tarotColumnLayout", tarotTableColumns)
+  const pathname = usePathname()
+  const router = useRouter()
+  const searchParams = useSearchParams()
+  const focusTarot = searchParams.get(TABLE_FOCUS_QUERY_PARAM)
+  const rowRefs = useRef<Record<string, HTMLDivElement | null>>({})
+  const lastHandledFocusRef = useRef<string | null>(null)
+  const effectiveSelected = useMemo(
+    () => getEffectiveTarotSelectionSet(selected, autoLinked),
+    [autoLinked, selected],
+  )
+
+  const readStoredEquipmentSlots = () => {
+    try {
+      return normalizeEquipmentSlots(JSON.parse(localStorage.getItem(EQUIPMENT_SLOTS_STORAGE_KEY) ?? "[]"))
+    } catch {
+      return []
+    }
+  }
+
+  const refreshStoredSelections = useEffectEvent(() => {
+    const storedSlots = readStoredEquipmentSlots()
+    const enabledIndices = getEnabledEquipmentIndices(storedSlots)
+    const autoManagedTarots = getAutoManagedTarotNames(storedSlots)
+    const nextManualSelections = filterManualTarotSelections(
+      readStoredManualTarotSelections(localStorage),
+      autoManagedTarots,
+    )
+    const nextSelected = new Set(nextManualSelections)
+    const nextAutoLinked = new Set(getEquipmentAutoLinkedTarots(storedSlots, enabledIndices))
+    const nextEquipmentTarotNames = new Set(getEquipmentTarotNames(storedSlots))
+
+    localStorage.setItem(STORAGE_SELECTED, JSON.stringify(nextManualSelections))
+    setSelected((prev) => areSelectionSetsEqual(prev, nextSelected) ? prev : nextSelected)
+    setAutoLinked((prev) => areSelectionSetsEqual(prev, nextAutoLinked) ? prev : nextAutoLinked)
+    setEquipmentTarotNames((prev) => areSelectionSetsEqual(prev, nextEquipmentTarotNames) ? prev : nextEquipmentTarotNames)
+  })
+
+  const persistSyncedTarotEquipment = (nextSlots: ReturnType<typeof normalizeEquipmentSlots>) => {
+    const enabledIndices = getEnabledEquipmentIndices(nextSlots)
+    const autoManagedTarots = getAutoManagedTarotNames(nextSlots)
+    const nextManualSelections = filterManualTarotSelections(
+      readStoredManualTarotSelections(localStorage),
+      autoManagedTarots,
+    )
+    const nextSelected = new Set(nextManualSelections)
+    const nextAutoLinked = new Set(getEquipmentAutoLinkedTarots(nextSlots, enabledIndices))
+
+    localStorage.setItem(EQUIPMENT_SLOTS_STORAGE_KEY, JSON.stringify(nextSlots))
+    localStorage.setItem(ENABLED_EQUIPMENT_STORAGE_KEY, JSON.stringify(enabledIndices))
+    localStorage.setItem(
+      EQUIPMENT_AUTO_LINKED_TAROTS_STORAGE_KEY,
+      JSON.stringify(Array.from(nextAutoLinked)),
+    )
+    localStorage.setItem(STORAGE_SELECTED, JSON.stringify(nextManualSelections))
+
+    setSelected((prev) => areSelectionSetsEqual(prev, nextSelected) ? prev : nextSelected)
+    setAutoLinked((prev) => areSelectionSetsEqual(prev, nextAutoLinked) ? prev : nextAutoLinked)
+    dispatchBuildSnapshotUpdated()
+  }
 
   // Load persisted selection and stacks
   useEffect(() => {
-    try {
-      const rawSel = localStorage.getItem(STORAGE_SELECTED)
-      if (rawSel) setSelected(new Set<string>(JSON.parse(rawSel)))
-    } catch {}
+    refreshStoredSelections()
     try {
       const rawStacks = localStorage.getItem(STORAGE_STACKS)
       if (rawStacks) setStacks(JSON.parse(rawStacks))
@@ -100,6 +192,22 @@ export default function TarotCardsPage() {
     setIsHydrated(true)
   }, [])
 
+  useEffect(() => {
+    if (!isHydrated) return
+
+    const refreshAutoLinkedSelections = () => {
+      refreshStoredSelections()
+    }
+
+    window.addEventListener(BUILD_SNAPSHOT_UPDATED_EVENT, refreshAutoLinkedSelections)
+    window.addEventListener("storage", refreshAutoLinkedSelections)
+    window.addEventListener("focus", refreshAutoLinkedSelections)
+    return () => {
+      window.removeEventListener(BUILD_SNAPSHOT_UPDATED_EVENT, refreshAutoLinkedSelections)
+      window.removeEventListener("storage", refreshAutoLinkedSelections)
+      window.removeEventListener("focus", refreshAutoLinkedSelections)
+    }
+  }, [isHydrated])
 
   // Persist on change
   useEffect(() => {
@@ -125,7 +233,7 @@ export default function TarotCardsPage() {
 
     const snapshot = readBuildSnapshot(localStorage)
     const damageState = readDamageCalcState(localStorage)
-    const selectedTarotNames = Array.from(selected)
+    const selectedTarotNames = Array.from(effectiveSelected)
     const currentAverage = calculateDamage(
       computeBuildStatStages(snapshot, { selectedTarots: selectedTarotNames, tarotStacks: stacks }).StatsDmgReady,
       damageState,
@@ -175,7 +283,28 @@ export default function TarotCardsPage() {
         window.clearTimeout(timeoutId)
       }
     }
-  }, [isHydrated, selected, stacks])
+  }, [effectiveSelected, isHydrated, stacks])
+
+  useEffect(() => {
+    if (!columnLayout.isReady || !isHydrated || !focusTarot) {
+      return
+    }
+
+    const targetRow = rowRefs.current[focusTarot]
+    if (!targetRow || lastHandledFocusRef.current === focusTarot) {
+      return
+    }
+
+    lastHandledFocusRef.current = focusTarot
+
+    requestAnimationFrame(() => {
+      targetRow.scrollIntoView({ block: "center", inline: "nearest" })
+      const nextParams = new URLSearchParams(searchParams.toString())
+      nextParams.delete(TABLE_FOCUS_QUERY_PARAM)
+      const nextUrl = nextParams.size > 0 ? `${pathname}?${nextParams.toString()}` : pathname
+      router.replace(nextUrl, { scroll: false })
+    })
+  }, [columnLayout.isReady, focusTarot, isHydrated, pathname, router, searchParams, viewState])
 
   useEffect(() => {
     const handleManagedTableViewChange = (event: Event) => {
@@ -201,20 +330,29 @@ export default function TarotCardsPage() {
   // Tier counts among selected to flag constraints
   const tierCounts = useMemo(() => {
     const counts: Record<number, number> = {}
-    for (const name of selected) {
+    for (const name of effectiveSelected) {
       const t = tarot_data[name]?.tier ?? 0
       counts[t] = (counts[t] || 0) + 1
     }
     return counts
-  }, [selected])
+  }, [effectiveSelected])
 
   // Constraints: red if over limits
   const tierLimits: Record<number, number> = { 5: 1, 4: 1, 3: 2 }
 
   const toggle = (name: string) => {
+    const isCurrentlySelected = effectiveSelected.has(name)
+    const nextSelected = !isCurrentlySelected
+    const storedSlots = readStoredEquipmentSlots()
+
+    if (hasAutoLinkedTarotEquipment(storedSlots, name)) {
+      persistSyncedTarotEquipment(setAutoLinkedTarotEquipmentEnabled(storedSlots, name, nextSelected))
+      return
+    }
+
     setSelected(prev => {
       const next = new Set(prev)
-      if (next.has(name)) next.delete(name)
+      if (isCurrentlySelected) next.delete(name)
       else next.add(name)
       return next
     })
@@ -241,12 +379,16 @@ export default function TarotCardsPage() {
           return false
         }
 
-        const isSelected = selected.has(row.name)
+        const isSelected = effectiveSelected.has(row.name)
         if (viewState.selectionFilter === "selected" && !isSelected) {
           return false
         }
 
         if (viewState.selectionFilter === "unselected" && isSelected) {
+          return false
+        }
+
+        if (viewState.tarotEquipmentFilter === "inEquipment" && !equipmentTarotNames.has(row.name)) {
           return false
         }
 
@@ -274,7 +416,7 @@ export default function TarotCardsPage() {
         ? -defaultDifference
         : defaultDifference
     })
-  }, [averageDamageChanges, selected, viewState])
+  }, [averageDamageChanges, effectiveSelected, equipmentTarotNames, viewState])
 
   const tarotGridTemplateColumns = useMemo(() => (
     columnLayout.visibleColumns
@@ -365,7 +507,7 @@ export default function TarotCardsPage() {
 
         <div className="space-y-0.5">
           {rows.map((row, rowIndex) => {
-            const isSelected = selected.has(row.name)
+            const isSelected = effectiveSelected.has(row.name)
             const overLimit = (tierCounts[row.tier] ?? 0) > (tierLimits[row.tier] ?? Infinity)
             const canStack = Boolean(row.stack_stats || row.stack_conversions)
             const stackVal = stacks[row.name] ?? 0
@@ -374,6 +516,9 @@ export default function TarotCardsPage() {
             return (
               <div
                 key={row.name}
+                ref={(node) => {
+                  rowRefs.current[row.name] = node
+                }}
                 className={`grid min-w-full w-max cursor-pointer items-center px-0 py-1 transition-colors ${getTarotRowClass(rowIndex, isSelected, overLimit)}`}
                 style={{ gridTemplateColumns: tarotGridTemplateColumns }}
                 onClick={() => toggle(row.name)}
@@ -421,6 +566,7 @@ export default function TarotCardsPage() {
       </div>
       <div className="p-2 text-xs text-slate-300 border-t">
         Limits: at most 1x Tier 5, 1x Tier 4, 2x Tier 3. Tier label turns red if exceeded.
+        {autoLinked.size > 0 ? ` Auto-linked tarots from equipment stay selected here.` : ""}
       </div>
     </div>
   )

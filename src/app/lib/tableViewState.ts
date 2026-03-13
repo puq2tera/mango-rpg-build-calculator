@@ -10,6 +10,7 @@ export type SortDirection = "asc" | "desc"
 export type TarotTierFilter = "all" | "3" | "4" | "5"
 export type TarotTypeFilter = "all" | "active" | "passive"
 export type SelectionFilter = "all" | "selected" | "unselected"
+export type TarotEquipmentFilter = "all" | "inEquipment"
 
 export type TableViewState = {
   classFilter: ClassFilter
@@ -20,6 +21,7 @@ export type TableViewState = {
   tarotTierFilter: TarotTierFilter
   tarotTypeFilter: TarotTypeFilter
   selectionFilter: SelectionFilter
+  tarotEquipmentFilter: TarotEquipmentFilter
 }
 
 export type ManagedTableViewChangeDetail = {
@@ -40,6 +42,7 @@ const SORT_DIRECTIONS = new Set<SortDirection>(["asc", "desc"])
 const TAROT_TIER_FILTERS = new Set<TarotTierFilter>(["all", "3", "4", "5"])
 const TAROT_TYPE_FILTERS = new Set<TarotTypeFilter>(["all", "active", "passive"])
 const SELECTION_FILTERS = new Set<SelectionFilter>(["all", "selected", "unselected"])
+const TAROT_EQUIPMENT_FILTERS = new Set<TarotEquipmentFilter>(["all", "inEquipment"])
 
 export function normalizePathname(pathname: string): string {
   const trimmed = pathname.replace(/\/+$/, "")
@@ -78,6 +81,7 @@ export function getDefaultTableViewState(): TableViewState {
     tarotTierFilter: "all",
     tarotTypeFilter: "all",
     selectionFilter: "all",
+    tarotEquipmentFilter: "all",
   }
 }
 
@@ -160,6 +164,9 @@ export function readTableViewState(storage: Storage, page: TableViewPage): Table
       selectionFilter: SELECTION_FILTERS.has(parsed.selectionFilter as SelectionFilter)
         ? (parsed.selectionFilter as SelectionFilter)
         : fallback.selectionFilter,
+      tarotEquipmentFilter: TAROT_EQUIPMENT_FILTERS.has(parsed.tarotEquipmentFilter as TarotEquipmentFilter)
+        ? (parsed.tarotEquipmentFilter as TarotEquipmentFilter)
+        : fallback.tarotEquipmentFilter,
     }
   } catch {
     return fallback

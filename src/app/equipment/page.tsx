@@ -1,37 +1,42 @@
 "use client"
 
+import Link from "next/link"
 import { useState, useEffect } from "react"
 import { dispatchBuildSnapshotUpdated } from "@/app/lib/buildEvents"
 import { ARTIFACT_STAT_KEYS, createDefaultArtifact, normalizeArtifact, type ArtifactState } from "@/app/lib/artifactState"
+import {
+  createDefaultEquipmentSlot,
+  ENABLED_EQUIPMENT_STORAGE_KEY,
+  EQUIPMENT_SLOTS_STORAGE_KEY,
+  EQUIPMENT_AUTO_LINKED_TAROTS_STORAGE_KEY,
+  getAutoManagedTarotNames,
+  getEnabledEquipmentIndices,
+  getEquipmentAutoLinkedTarots,
+  getTarotScalingValue,
+  isKnownTarotName,
+  isTarotEquipmentSlot,
+  normalizeEquipmentSlots,
+  type EquipmentAffix as Affix,
+  type EquipmentSlot as Slot,
+} from "@/app/lib/equipmentSlots"
+import { TABLE_FOCUS_QUERY_PARAM } from "@/app/lib/tableNavigation"
+import {
+  filterManualTarotSelections,
+  MANUAL_TAROT_SELECTION_STORAGE_KEY,
+  readStoredManualTarotSelections,
+} from "@/app/lib/tarotSelections"
 import type { StatNames as StatNameType } from "../data/stat_data"
 import stat_data from "../data/stat_data"
 import rune_data from "../data/rune_data"
 import tarot_data from "../data/tarot_data"
-
-interface Affix {
-  stat: string
-  value: number
-}
 
 type RuneSelection = {
   rune: string
   count: number
 }
 
-interface Slot {
-  name: string
-  type: string
-  mainstat: string
-  mainstat_value: number
-  affixes: Affix[]
-  enabled: boolean
-}
-
-const STORAGE_KEY_SLOTS = "EquipmentSlots"
-const STORAGE_KEY_ENABLED = "EnabledEquipment"
 const STORAGE_KEY_RUNES = "SelectedRunes"
 const STORAGE_KEY_ARTIFACT = "Artifact"
-
 
 const runeTiers = ["Low", "Middle", "High", "Legacy", "Divine"] as const
 const artifactFieldOrder = [...ARTIFACT_STAT_KEYS, "Level"] as const
@@ -69,15 +74,6 @@ const getRuneEffectLabel = (selection: RuneSelection): string => {
   return formatScaledRuneEffect(rune.description, selection.count)
 }
 
-const initialSlot = (): Slot => ({
-  name: "",
-  type: "",
-  mainstat: "",
-  mainstat_value: 0,
-  affixes: Array.from({ length: 8 }, () => ({ stat: "", value: 0 })),
-  enabled: false
-})
-
 const initialRuneSelection = (): RuneSelection => ({
   rune: "",
   count: 1
@@ -96,11 +92,35 @@ export default function EquipmentPage() {
   const [slots, setSlots] = useState<Slot[]>([])
   const [selectedRunes, setSelectedRunes] = useState<Record<RuneTier, RuneSelection[]>>(emptyRuneSet())
   const [artifact, setArtifact] = useState<ArtifactState>(createDefaultArtifact)
-
   const allStatNames = Object.keys(stat_data.StatsInfo) as StatNameType[]
+
+  const refreshStoredEquipmentSlots = () => {
+    const storedSlots = localStorage.getItem(EQUIPMENT_SLOTS_STORAGE_KEY)
+    try {
+      const parsed = storedSlots ? JSON.parse(storedSlots) : Array.from({ length: 8 }, createDefaultEquipmentSlot)
+      setSlots(normalizeEquipmentSlots(parsed))
+    } catch {
+      setSlots(Array.from({ length: 8 }, createDefaultEquipmentSlot))
+    }
+  }
 
   function sanitizeToken(label: string): string {
     return label.toLowerCase().replace(/[^a-z]/g, "")
+  }
+
+  const getTarotFocusHref = (name: string): string => {
+    const query = new URLSearchParams([[TABLE_FOCUS_QUERY_PARAM, name]])
+    return `/equipment/TarotCards?${query.toString()}`
+  }
+
+  const syncManualTarotSelectionsWithAutoSlots = (nextSlots: readonly Slot[]) => {
+    const autoManagedTarots = getAutoManagedTarotNames(nextSlots)
+    const nextManualSelections = filterManualTarotSelections(
+      readStoredManualTarotSelections(localStorage),
+      autoManagedTarots,
+    )
+
+    localStorage.setItem(MANUAL_TAROT_SELECTION_STORAGE_KEY, JSON.stringify(nextManualSelections))
   }
 
   function parseAffixLine(line: string): Affix | null {
@@ -108,75 +128,73 @@ export default function EquipmentPage() {
       .replace(/^\u25D8\s*/, "") // remove leading bullet ◘
       .replace(/🖊️/g, "")
       .trim()
-    //console.log(cleaned)
     const parts = cleaned.split(/\s+/)
     if (parts.length < 2) return null
+
     const numPart = parts[0]
     const labelPart = parts.slice(1).join(" ")
-
     const token = sanitizeToken(labelPart)
-    console.log(token)
     const mapped = stat_data.inGameNames[token]
-    console.log(stat_data.inGameNames[token])
     if (!mapped) return null
 
-    return { stat: mapped, value: parseInt(numPart) }
+    return { stat: mapped, value: parseInt(numPart, 10) }
   }
 
   function parsePastedItem(text: string): Partial<Slot> | null {
-    const lines = text.split(/\r?\n/).map(l => l.trim())
-    if (!lines.some(l => l.length)) return null
+    const lines = text.split(/\r?\n/).map((line) => line.trim())
+    if (!lines.some((line) => line.length > 0)) return null
 
-    const result: Partial<Slot> = { affixes: [] }
+    const result: Partial<Slot> = {
+      affixes: [],
+      tarotScalingStat: "",
+      tarotLevel: 0,
+    }
 
-    // Name — [ i### ]
-    const nameRegex = /\[\s*i\d{3}\s*\]/i;
-    const nameLine = lines.find(l => nameRegex.test(l))
+    const equipmentNameRegex = /\[\s*i\d{3}\s*\]/i
+    const nameLine = lines.find((line) => equipmentNameRegex.test(line))
+
     if (nameLine) {
-      // Equipment :ogic
       result.name = nameLine
 
-      // Equip Type — locate marker then take next non-empty line
-      const equipIdx = lines.findIndex(l => /^equip type$/i.test(l))
-      const typeLine = lines.slice(equipIdx + 1).find(l => l.length > 0)
+      const equipIdx = lines.findIndex((line) => /^equip type$/i.test(line))
+      const typeLine = lines.slice(equipIdx + 1).find((line) => line.length > 0)
       if (typeLine) result.type = typeLine
 
-      // Main stat: line that contains +ATK/+DEF/+MATK/+HEAL, next non-empty line is value
-      const mainLabelIdx = lines.findIndex(l => /\+[ADMH]?(?:ATK|DEF|MATK|HEAL)/i.test(l))
+      const mainLabelIdx = lines.findIndex((line) => /\+[ADMH]?(?:ATK|DEF|MATK|HEAL)/i.test(line))
       if (mainLabelIdx >= 0) {
         const label = lines[mainLabelIdx].replace(/.*\+/, "").toUpperCase().replace(/[^A-Z]/g, "")
         const statMap: Record<string, Slot["mainstat"]> = { ATK: "ATK", DEF: "DEF", MATK: "MATK", HEAL: "HEAL" }
         if (statMap[label]) result.mainstat = statMap[label]
-        const valueLine = lines.slice(mainLabelIdx + 1).find(l => /\d/.test(l))
+
+        const valueLine = lines.slice(mainLabelIdx + 1).find((line) => /\d/.test(line))
         if (valueLine) {
           const val = parseInt(valueLine.replace(/[^0-9\-]/g, ""), 10)
           if (!Number.isNaN(val)) result.mainstat_value = val
         }
       }
-    }
-    else {
-      // Tarot Logic
-      const nameRegex = /⭐/i;
-      result.name = lines[lines.findIndex(l => nameRegex.test(l)) - 1].replace(/^(\s*\[[^\]]+\]\s*)+/, "").trim()
-      result.type = "Tarot"
+    } else {
+      const tarotMarkerIdx = lines.findIndex((line) => /⭐/i.test(line))
+      if (tarotMarkerIdx > 0) {
+        const tarotName = lines[tarotMarkerIdx - 1].replace(/^(\s*\[[^\]]+\]\s*)+/, "").trim()
+        result.name = tarotName
+        result.type = "Tarot"
 
-      const level: number = parseInt(((lines.find(l => /level\s*:/i.test(l)) ?? "").match(/level\s*:\s*(\d+)\s*\/\s*(\d+)/i) ?? [,"0"])[1])
+        const levelMatch = (lines.find((line) => /level\s*:/i.test(line)) ?? "")
+          .match(/level\s*:\s*(\d+)\s*\/\s*(\d+)/i)
+        result.tarotLevel = levelMatch ? parseInt(levelMatch[1], 10) : 0
 
-      const tarot_affix: string = tarot_data[result.name].stat_bonus
-      const tarot_affix_value = tarot_data[result.name].stat_base + tarot_data[result.name].stat_scale * level
-      const tarot_result: Affix = {stat: tarot_affix, value: tarot_affix_value}
-      if (tarot_result) (result.affixes ?? []).push({stat: tarot_affix, value: tarot_affix_value})
-    }
-
-    // Affixes — lines starting with the bullet (◘)
-      for (const ln of lines) {
-        if (!ln.startsWith("◘")) continue
-        const affix = parseAffixLine(ln)
-        if (affix) (result.affixes as Affix[]).push(affix)
+        if (isKnownTarotName(tarotName)) {
+          result.tarotScalingStat = tarot_data[tarotName].stat_bonus
+        }
       }
-    
+    }
 
-    // Enable the slot by default when importing
+    for (const line of lines) {
+      if (!line.startsWith("◘")) continue
+      const affix = parseAffixLine(line)
+      if (affix) (result.affixes as Affix[]).push(affix)
+    }
+
     result.enabled = true
     return result
   }
@@ -185,28 +203,37 @@ export default function EquipmentPage() {
   function pasteEquipmentIntoSlot(slotIndex: number, rawText: string) {
     const parsed = parsePastedItem(rawText)
     if (!parsed) return
-    setSlots(prev => prev.map((slot, idx) => {
+
+    setSlots((prev) => prev.map((slot, idx) => {
       if (idx !== slotIndex) return slot
+
       return {
         ...slot,
-        ...(parsed.name ? { name: parsed.name } : {}),
-        ...(parsed.type ? { type: parsed.type } : {}),
-        ...(parsed.mainstat ? { mainstat: parsed.mainstat } : {}),
-        ...(parsed.mainstat_value !== undefined ? { mainstat_value: parsed.mainstat_value! } : {}),
-        ...(parsed.affixes && (parsed.affixes as Affix[]).length > 0 ? { affixes: parsed.affixes as Affix[] } : {}),
-        ...(parsed.enabled ? { enabled: true } : {})
+        ...parsed,
+        affixes: Array.isArray(parsed.affixes) ? parsed.affixes : slot.affixes,
       }
     }))
   }
 
-  useEffect(() => {
-    const storedSlots = localStorage.getItem(STORAGE_KEY_SLOTS)
-    try {
-      const parsed = storedSlots ? JSON.parse(storedSlots) : Array.from({ length: 8 }, initialSlot)
-      setSlots(parsed)
-    } catch {
-      setSlots(Array.from({ length: 8 }, initialSlot))
+  async function importEquipmentFromClipboard(slotIndex: number) {
+    if (typeof navigator === "undefined" || !navigator.clipboard?.readText) {
+      return
     }
+
+    try {
+      const text = await navigator.clipboard.readText()
+      if (!text.trim()) {
+        return
+      }
+
+      pasteEquipmentIntoSlot(slotIndex, text)
+    } catch (error) {
+      console.warn("Clipboard import failed.", error)
+    }
+  }
+
+  useEffect(() => {
+    refreshStoredEquipmentSlots()
 
     const storedRunes = localStorage.getItem(STORAGE_KEY_RUNES)
     try {
@@ -231,10 +258,36 @@ export default function EquipmentPage() {
   }, [])
 
   useEffect(() => {
-    if (isHydrated && slots.length > 0) {
-      localStorage.setItem(STORAGE_KEY_SLOTS, JSON.stringify(slots))
-      const enabledIndices = slots.map((slot, i) => slot.enabled ? i : null).filter(i => i !== null)
-      localStorage.setItem(STORAGE_KEY_ENABLED, JSON.stringify(enabledIndices))
+    if (!isHydrated) {
+      return
+    }
+
+    const handleStorage = (event: StorageEvent) => {
+      if (event.key !== null && event.key !== EQUIPMENT_SLOTS_STORAGE_KEY) {
+        return
+      }
+
+      refreshStoredEquipmentSlots()
+    }
+
+    window.addEventListener("storage", handleStorage)
+    window.addEventListener("focus", refreshStoredEquipmentSlots)
+    return () => {
+      window.removeEventListener("storage", handleStorage)
+      window.removeEventListener("focus", refreshStoredEquipmentSlots)
+    }
+  }, [isHydrated])
+
+  useEffect(() => {
+    if (isHydrated) {
+      localStorage.setItem(EQUIPMENT_SLOTS_STORAGE_KEY, JSON.stringify(slots))
+      const enabledIndices = getEnabledEquipmentIndices(slots)
+      localStorage.setItem(ENABLED_EQUIPMENT_STORAGE_KEY, JSON.stringify(enabledIndices))
+      localStorage.setItem(
+        EQUIPMENT_AUTO_LINKED_TAROTS_STORAGE_KEY,
+        JSON.stringify(getEquipmentAutoLinkedTarots(slots, enabledIndices)),
+      )
+      syncManualTarotSelectionsWithAutoSlots(slots)
       dispatchBuildSnapshotUpdated()
     }
   }, [slots, isHydrated])
@@ -257,36 +310,53 @@ export default function EquipmentPage() {
     const updated = [...slots]
     updated[slotIndex] = {
       ...updated[slotIndex],
-      affixes: [...updated[slotIndex].affixes, { stat: "", value: 0 }]
+      affixes: [...updated[slotIndex].affixes, { stat: "", value: 0 }],
     }
     setSlots(updated)
   }
 
   const addSlot = () => {
-    setSlots([...slots, initialSlot()])
+    setSlots([...slots, createDefaultEquipmentSlot()])
+  }
+
+  const removeSlot = (index: number) => {
+    setSlots(slots.filter((_, slotIndex) => slotIndex !== index))
   }
 
   const toggleSlot = (index: number) => {
     setSlots(slots.map((slot, i) => i === index ? { ...slot, enabled: !slot.enabled } : slot))
   }
 
-  const updateSlot = (index: number, field: string, value: string | number) => {
+  const updateSlot = (index: number, field: keyof Slot | string, value: string | number | boolean) => {
     const updated = slots.map((slot, i) => {
       if (i !== index) return slot
-      const updatedSlot = { ...slot }
+
+      const updatedSlot: Slot = { ...slot }
       if (field.startsWith("affix_")) {
         const [, affixIndexStr, affixField] = field.split("_")
         const affixIndex = parseInt(affixIndexStr, 10)
         updatedSlot.affixes = [...slot.affixes]
         updatedSlot.affixes[affixIndex] = {
           ...updatedSlot.affixes[affixIndex],
-          [affixField]: value
+          [affixField]: value,
         }
-      } else {
-        if (field in updatedSlot) {
-          (updatedSlot[field as keyof Slot] as typeof value) = value
-        }
+      } else if (field in updatedSlot) {
+        ;(updatedSlot[field as keyof Slot] as Slot[keyof Slot]) = value as Slot[keyof Slot]
       }
+
+      if (
+        isTarotEquipmentSlot(updatedSlot) &&
+        isKnownTarotName(updatedSlot.name) &&
+        (!updatedSlot.tarotScalingStat || field === "name" || field === "type")
+      ) {
+        updatedSlot.tarotScalingStat = tarot_data[updatedSlot.name].stat_bonus
+      }
+
+      if (isTarotEquipmentSlot(updatedSlot)) {
+        updatedSlot.mainstat = ""
+        updatedSlot.mainstat_value = 0
+      }
+
       return updatedSlot
     })
     setSlots(updated)
@@ -431,95 +501,182 @@ export default function EquipmentPage() {
       </div>
 
       {/* Equipment Slots */}
-      <div className="grid grid-cols-[repeat(auto-fill,minmax(300px,1fr))] gap-4 mt-4 items-start">
-        {slots.map((slot, idx) => (
-          <div
-            key={idx}
-            onClick={() => toggleSlot(idx)}
-            className={`border rounded p-2 text-left cursor-pointer transition flex-shrink-0 ${
-              slot.enabled ? "bg-emerald-900/45" : "bg-slate-800/85 opacity-50"
-              // TODO: Make the slot change color if the name contains +10
-            }`}
-          >
-            <div className="grid grid-cols-2 gap-2 mb-2">
-              <h2 className="font-semibold mb-2">Slot {idx + 1}</h2>
-              {/* Paste item text directly into this box to import */}
-              <input
-                type="text"
-                placeholder="Paste equipment here"
-                onPaste={e => {
-                  e.preventDefault()
-                  const text = (e.clipboardData && e.clipboardData.getData('text')) || ''
-                  pasteEquipmentIntoSlot(idx, text)
-                  // clear the input box after import
-                  ;(e.currentTarget as HTMLInputElement).value = ''
-                }}
-                className="w-full border px-1"
-                onClick={e => e.stopPropagation()}
-              />
-            </div>
-            <div className="grid grid-cols-2 gap-2 mb-2">
-              <div>
-                <label className="block text-sm font-medium">Name</label>
-                <input
-                  value={slot.name}
-                  onChange={e => updateSlot(idx, "name", e.target.value)}
-                  className="w-full border px-1"
-                  onClick={e => e.stopPropagation()}
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium">Type</label>
-                <select
-                  value={slot.type}
-                  onChange={e => updateSlot(idx, "type", e.target.value)}
-                  className="w-full border px-1"
-                  onClick={e => e.stopPropagation()}
-                >
-                  <option value="">Select</option>
-                  {typeOptions.map(option => (
-                    <option key={option} value={option}>{option}</option>
-                  ))}
-                </select>
-              </div>
-              <div className="col-span-2">
-                <div className="flex gap-2 items-end">
-                  <select
-                    value={slot.mainstat}
-                    onChange={e => updateSlot(idx, "mainstat", e.target.value)}
-                    className="w-1/2 border px-1"
-                    onClick={e => e.stopPropagation()}
-                  >
-                    <option value="">Main Stat</option>
-                    {stat_data.Mainstats.map(option => (
-                      <option key={option} value={option}>{option}</option>
-                    ))}
-                  </select>
+      <div className="mt-4 grid grid-cols-[repeat(auto-fill,minmax(280px,1fr))] items-start gap-3">
+        {slots.map((slot, idx) => {
+          const isTarotSlot = slot.type === "Tarot" || (slot.name.length > 0 && isKnownTarotName(slot.name))
+          const tarotScalingValue = isKnownTarotName(slot.name)
+            ? getTarotScalingValue(slot.name, slot.tarotLevel)
+            : null
+
+          return (
+            <div
+              key={idx}
+              onClick={() => toggleSlot(idx)}
+              className={`flex-shrink-0 cursor-pointer rounded border p-1.5 text-left text-sm transition ${
+                slot.enabled ? "bg-emerald-900/45" : "bg-slate-800/85 opacity-50"
+                // TODO: Make the slot change color if the name contains +10
+              }`}
+            >
+              <div className="mb-1.5 grid grid-cols-2 gap-1.5">
+                <div>
+                  <div className="mb-1 flex min-h-6 items-center">
+                    <label className="block text-[11px] font-medium uppercase tracking-[0.08em] text-slate-300">Name</label>
+                  </div>
                   <input
-                    type="number"
-                    value={slot.mainstat_value}
-                    onChange={e => updateSlot(idx, "mainstat_value", +e.target.value)}
-                    className="w-1/2 border px-1"
+                    value={slot.name}
+                    onChange={e => updateSlot(idx, "name", e.target.value)}
+                    className="w-full border px-1 py-0.5"
                     onClick={e => e.stopPropagation()}
                   />
                 </div>
+                <div>
+                  <div className="mb-1 flex min-h-6 items-center justify-between gap-2">
+                    <label className="block text-[11px] font-medium uppercase tracking-[0.08em] text-slate-300">Type</label>
+                    <div className="flex items-center gap-1">
+                      <button
+                        type="button"
+                        title="Import equipment from clipboard"
+                        aria-label="Import equipment from clipboard"
+                        className="inline-flex h-6 w-6 items-center justify-center rounded border border-slate-600 bg-slate-900/70 text-slate-200 transition hover:border-sky-400 hover:bg-sky-500/10 hover:text-sky-200"
+                        onClick={async (e) => {
+                          e.stopPropagation()
+                          await importEquipmentFromClipboard(idx)
+                        }}
+                      >
+                        <svg viewBox="0 0 24 24" className="h-3 w-3 fill-none stroke-current" strokeWidth="1.9" aria-hidden="true">
+                          <path d="M9 4.75h6" strokeLinecap="round" />
+                          <path d="M9 3h6a1 1 0 0 1 1 1v1H8V4a1 1 0 0 1 1-1Z" />
+                          <path d="M7 6h10a2 2 0 0 1 2 2v10a3 3 0 0 1-3 3H8a3 3 0 0 1-3-3V8a2 2 0 0 1 2-2Z" />
+                        </svg>
+                      </button>
+                      <button
+                        type="button"
+                        title="Delete equipment"
+                        aria-label="Delete equipment"
+                        className="inline-flex h-6 w-6 items-center justify-center rounded border border-red-600 bg-red-600 text-white transition hover:border-red-500 hover:bg-red-500"
+                        onClick={e => {
+                          e.stopPropagation()
+                          removeSlot(idx)
+                        }}
+                      >
+                        <svg viewBox="0 0 24 24" className="h-3 w-3 fill-none stroke-current" strokeWidth="2.2" aria-hidden="true">
+                          <path d="M6 6l12 12M18 6 6 18" strokeLinecap="round" />
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
+                  <select
+                    value={slot.type}
+                    onChange={e => updateSlot(idx, "type", e.target.value)}
+                    className="w-full border px-1 py-0.5"
+                    onClick={e => e.stopPropagation()}
+                  >
+                    <option value="">Select</option>
+                    {typeOptions.map(option => (
+                      <option key={option} value={option}>{option}</option>
+                    ))}
+                  </select>
+                </div>
+                {!isTarotSlot ? (
+                  <div className="col-span-2">
+                    <div className="flex items-end gap-1.5">
+                      <select
+                        value={slot.mainstat}
+                        onChange={e => updateSlot(idx, "mainstat", e.target.value)}
+                        className="w-1/2 border px-1 py-0.5"
+                        onClick={e => e.stopPropagation()}
+                      >
+                        <option value="">Main Stat</option>
+                        {stat_data.Mainstats.map(option => (
+                          <option key={option} value={option}>{option}</option>
+                        ))}
+                      </select>
+                      <input
+                        type="number"
+                        value={slot.mainstat_value}
+                        onChange={e => updateSlot(idx, "mainstat_value", +e.target.value)}
+                        className="w-1/2 border px-1 py-0.5"
+                        onClick={e => e.stopPropagation()}
+                      />
+                    </div>
+                  </div>
+                ) : null}
+                {isTarotSlot ? (
+                  <div className="col-span-2 rounded border border-slate-700/80 bg-slate-950/45 p-1.5">
+                    <div className="grid grid-cols-2 gap-1.5">
+                      <div>
+                        <label className="mb-1 block text-[11px] font-medium uppercase tracking-[0.08em] text-slate-300">Scaling Stat</label>
+                        <select
+                          value={slot.tarotScalingStat}
+                          onChange={e => updateSlot(idx, "tarotScalingStat", e.target.value)}
+                          className="w-full border px-1 py-0.5"
+                          onClick={e => e.stopPropagation()}
+                        >
+                          <option value="">Select Stat</option>
+                          {allStatNames.map(option => (
+                            <option key={option} value={option}>{option}</option>
+                          ))}
+                        </select>
+                      </div>
+                      <div>
+                        <label className="mb-1 block text-[11px] font-medium uppercase tracking-[0.08em] text-slate-300">Level</label>
+                        <input
+                          type="number"
+                          min={0}
+                          value={slot.tarotLevel}
+                          onChange={e => updateSlot(idx, "tarotLevel", Math.max(0, Number(e.target.value) || 0))}
+                          className="w-full border px-1 py-0.5"
+                          onClick={e => e.stopPropagation()}
+                        />
+                      </div>
+                    </div>
+                    <div className="mt-1.5 flex items-center justify-between gap-2 text-xs">
+                        <label
+                          className="inline-flex items-center gap-2"
+                          title="Enables syncing with the tarot page"
+                          onClick={e => e.stopPropagation()}
+                        >
+                        <input
+                          type="checkbox"
+                          checked={slot.tarotAuto}
+                          title="Enables syncing with the tarot page"
+                          onChange={e => updateSlot(idx, "tarotAuto", e.target.checked)}
+                        />
+                        <span>Auto</span>
+                      </label>
+                      {isKnownTarotName(slot.name) ? (
+                        <Link
+                          href={getTarotFocusHref(slot.name)}
+                          className="text-sky-300 underline underline-offset-2 hover:text-sky-200"
+                          onClick={e => e.stopPropagation()}
+                        >
+                          Open on tarot page
+                        </Link>
+                      ) : null}
+                    </div>
+                    <p className="mt-2 text-xs text-slate-300">
+                      {slot.tarotScalingStat && tarotScalingValue !== null
+                        ? `${slot.tarotScalingStat}: +${tarotScalingValue}`
+                        : "For automatic scaling, enter a valid tarot name. Otherwise use affixes to track the stat manually."}
+                    </p>
+                  </div>
+                ) : null}
               </div>
-            </div>
-            <table className="table-fixed border border-collapse text-sm w-full">
+            <table className="w-full table-fixed border-collapse border text-xs">
               <thead>
                 <tr className="bg-slate-800/85">
-                  <th className="border px-2 py-1">Affix</th>
-                  <th className="border px-2 py-1">Value</th>
+                  <th className="border px-1.5 py-1">Affix</th>
+                  <th className="border px-1.5 py-1">Value</th>
                 </tr>
               </thead>
               <tbody>
                 {slot.affixes.map((affix, i) => (
                   <tr key={i}>
-                    <td className="border px-2 py-1">
+                    <td className="border px-1.5 py-1">
                       <select
                         value={affix.stat}
                         onChange={e => updateSlot(idx, `affix_${i}_stat`, e.target.value)}
-                        className="w-full border px-1"
+                        className="w-full border px-1 py-0.5"
                         onClick={e => e.stopPropagation()}
                       >
                         <option value="">Select</option>
@@ -528,12 +685,12 @@ export default function EquipmentPage() {
                         ))}
                       </select>
                     </td>
-                    <td className="border px-2 py-1">
+                    <td className="border px-1.5 py-1">
                       <input
                         type="number"
                         value={affix.value}
                         onChange={e => updateSlot(idx, `affix_${i}_value`, +e.target.value)}
-                        className="w-full border px-1"
+                        className="w-full border px-1 py-0.5"
                         onClick={e => e.stopPropagation()}
                       />
                     </td>
@@ -541,19 +698,20 @@ export default function EquipmentPage() {
                 ))}
               </tbody>
             </table>
-            <div className="mt-2">
+            <div className="mt-1.5">
               <button
                 onClick={e => {
                   e.stopPropagation()
                   addAffixRow(idx)
                 }}
-                className="w-full px-2 py-1 bg-sky-600 text-slate-100 rounded"
+                className="w-full rounded bg-sky-600 px-2 py-0.75 text-sm text-slate-100"
               >
                 + Add Affix
               </button>
             </div>
           </div>
-        ))}
+          )
+        })}
 
         <div className="flex items-center justify-center w-full max-w-md border-dashed border-2 border-slate-600 rounded p-4">
           <button onClick={addSlot} className="px-4 py-1 bg-sky-600 text-slate-100 rounded">Add Slot</button>
