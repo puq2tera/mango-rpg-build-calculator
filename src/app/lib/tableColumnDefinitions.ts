@@ -6,6 +6,8 @@ const parseWidth = (value: string | undefined, fallback: number): number => {
   return Number.isFinite(parsed) ? parsed : fallback
 }
 
+const CLASS_LEVEL_COLUMN_WIDTH = 64
+
 export type TalentColumnId =
   | "name"
   | "preReq"
@@ -61,10 +63,10 @@ export const talentTableColumns: readonly ManagedColumnDefinition<TalentColumnId
     defaultWidth: 110,
     minWidth: 100,
   },
-  { id: "tank", label: "T", title: "Tank", defaultWidth: 40, minWidth: 40 },
-  { id: "warrior", label: "W", title: "Warrior", defaultWidth: 40, minWidth: 40 },
-  { id: "caster", label: "C", title: "Caster", defaultWidth: 40, minWidth: 40 },
-  { id: "healer", label: "H", title: "Healer", defaultWidth: 40, minWidth: 40 },
+  { id: "tank", label: "T", title: "Tank", defaultWidth: CLASS_LEVEL_COLUMN_WIDTH, minWidth: CLASS_LEVEL_COLUMN_WIDTH },
+  { id: "warrior", label: "W", title: "Warrior", defaultWidth: CLASS_LEVEL_COLUMN_WIDTH, minWidth: CLASS_LEVEL_COLUMN_WIDTH },
+  { id: "caster", label: "C", title: "Caster", defaultWidth: CLASS_LEVEL_COLUMN_WIDTH, minWidth: CLASS_LEVEL_COLUMN_WIDTH },
+  { id: "healer", label: "H", title: "Healer", defaultWidth: CLASS_LEVEL_COLUMN_WIDTH, minWidth: CLASS_LEVEL_COLUMN_WIDTH },
   { id: "description", label: "Description", defaultWidth: parseWidth(talentColumnWidths[12], 640), minWidth: 160 },
   { id: "preReq", label: "PreReq", defaultWidth: parseWidth(talentColumnWidths[1], 220), minWidth: 120 },
   { id: "tag", label: "Tag", defaultWidth: parseWidth(talentColumnWidths[2], 120), minWidth: 80 },
@@ -79,10 +81,10 @@ export const talentTableColumns: readonly ManagedColumnDefinition<TalentColumnId
 
 export const skillTableColumns: readonly ManagedColumnDefinition<SkillColumnId>[] = [
   { id: "name", label: "Name", defaultWidth: 220, minWidth: 120 },
-  { id: "tank", label: "T", title: "Tank", defaultWidth: 56, minWidth: 40 },
-  { id: "warrior", label: "W", title: "Warrior", defaultWidth: 56, minWidth: 40 },
-  { id: "caster", label: "C", title: "Caster", defaultWidth: 56, minWidth: 40 },
-  { id: "healer", label: "H", title: "Healer", defaultWidth: 56, minWidth: 40 },
+  { id: "tank", label: "T", title: "Tank", defaultWidth: CLASS_LEVEL_COLUMN_WIDTH, minWidth: CLASS_LEVEL_COLUMN_WIDTH },
+  { id: "warrior", label: "W", title: "Warrior", defaultWidth: CLASS_LEVEL_COLUMN_WIDTH, minWidth: CLASS_LEVEL_COLUMN_WIDTH },
+  { id: "caster", label: "C", title: "Caster", defaultWidth: CLASS_LEVEL_COLUMN_WIDTH, minWidth: CLASS_LEVEL_COLUMN_WIDTH },
+  { id: "healer", label: "H", title: "Healer", defaultWidth: CLASS_LEVEL_COLUMN_WIDTH, minWidth: CLASS_LEVEL_COLUMN_WIDTH },
   { id: "description", label: "Description", defaultWidth: 720, minWidth: 180 },
   { id: "preReq", label: "PreReq", defaultWidth: 220, minWidth: 120 },
   { id: "tag", label: "Tag", defaultWidth: 140, minWidth: 80 },
@@ -111,10 +113,10 @@ export const buffTableColumns: readonly ManagedColumnDefinition<BuffColumnId>[] 
     minWidth: 100,
   },
   { id: "stack", label: "Stack", defaultWidth: 90, minWidth: 80 },
-  { id: "tank", label: "T", title: "Tank", defaultWidth: 56, minWidth: 40 },
-  { id: "warrior", label: "W", title: "Warrior", defaultWidth: 56, minWidth: 40 },
-  { id: "caster", label: "C", title: "Caster", defaultWidth: 56, minWidth: 40 },
-  { id: "healer", label: "H", title: "Healer", defaultWidth: 56, minWidth: 40 },
+  { id: "tank", label: "T", title: "Tank", defaultWidth: CLASS_LEVEL_COLUMN_WIDTH, minWidth: CLASS_LEVEL_COLUMN_WIDTH },
+  { id: "warrior", label: "W", title: "Warrior", defaultWidth: CLASS_LEVEL_COLUMN_WIDTH, minWidth: CLASS_LEVEL_COLUMN_WIDTH },
+  { id: "caster", label: "C", title: "Caster", defaultWidth: CLASS_LEVEL_COLUMN_WIDTH, minWidth: CLASS_LEVEL_COLUMN_WIDTH },
+  { id: "healer", label: "H", title: "Healer", defaultWidth: CLASS_LEVEL_COLUMN_WIDTH, minWidth: CLASS_LEVEL_COLUMN_WIDTH },
   { id: "description", label: "Description", defaultWidth: 720, minWidth: 180 },
   { id: "preReq", label: "PreReq", defaultWidth: 220, minWidth: 120 },
   { id: "tag", label: "Tag", defaultWidth: 140, minWidth: 80 },

@@ -18,6 +18,14 @@ type RequiredClassLevels = {
   healer_levels?: number | 0
 }
 
+type TalentRequirementState = {
+  prereqTokens: string[]
+  requiredClassLevels: RequiredClassLevels
+  requiredTotalLevel: number
+  requiredTalentPoints: number
+  missingRequirement: boolean
+}
+
 type TalentAvailabilityArgs = {
   talentName: string
   talent: Talent
@@ -95,6 +103,42 @@ function getSecondPrestigeUnlock(
   return null
 }
 
+function getMatchingBlockedTalentNames(
+  talentName: string,
+  blockedTag: string | undefined,
+  selectedTalents: ReadonlySet<string>,
+): string[] {
+  if (!blockedTag) {
+    return []
+  }
+
+  return Array.from(selectedTalents).filter((name) => (
+    name !== talentName &&
+    splitTagTokens(talent_data[name]?.Tag).includes(blockedTag)
+  ))
+}
+
+function getSelectedTalentTags(selectedTalents: ReadonlySet<string>): Set<string> {
+  return new Set(
+    Array.from(selectedTalents)
+      .flatMap((name) => splitTagTokens(talent_data[name]?.Tag)),
+  )
+}
+
+function getTalentSelectionIndex(selectedTalents: ReadonlySet<string>, talentName: string): number {
+  let index = 0
+
+  for (const name of selectedTalents) {
+    if (name === talentName) {
+      return index
+    }
+
+    index += 1
+  }
+
+  return Number.POSITIVE_INFINITY
+}
+
 function multiplyClassLevels(requiredClassLevels: RequiredClassLevels, multiplier: number): RequiredClassLevels {
   return {
     tank_levels: (requiredClassLevels.tank_levels ?? 0) * multiplier,
@@ -128,6 +172,116 @@ function collectExpandedPrereqTokens(
   }
 
   return Array.from(expandedTokens)
+}
+
+function buildTalentRequirementState(
+  {
+    talentName,
+    talent,
+    selectedTalents,
+    selectedRacePrereqs,
+    selectedDungeonUnlocks,
+    classLevels,
+    totalLevels,
+  }: TalentAvailabilityArgs,
+  requirementMultiplier: number,
+): TalentRequirementState {
+  const selectedTalentTags = getSelectedTalentTags(selectedTalents)
+  const basePrereqTokens = getTalentPrereqTokens(talent)
+  const secondPrestigeUnlock = getSecondPrestigeUnlock(talent, basePrereqTokens)
+  const prereqTokens = requirementMultiplier > 1 && secondPrestigeUnlock
+    ? [...basePrereqTokens, secondPrestigeUnlock]
+    : basePrereqTokens
+  const requiredClassLevels = multiplyClassLevels(talent.class_levels, requirementMultiplier)
+  const requiredTotalLevel = (talent.total_level ?? 0) * requirementMultiplier
+  const requiredTalentPoints = (talent.tp_spent ?? 0) * requirementMultiplier
+  const missingPrereq = prereqTokens.some((req) => (
+    !selectedTalents.has(req) &&
+    !selectedTalentTags.has(req) &&
+    !selectedRacePrereqs.has(req) &&
+    !selectedDungeonUnlocks.has(req)
+  ))
+  const missingClassLevel = (
+    classLevels.tank < (requiredClassLevels.tank_levels ?? 0) ||
+    classLevels.warrior < (requiredClassLevels.warrior_levels ?? 0) ||
+    classLevels.caster < (requiredClassLevels.caster_levels ?? 0) ||
+    classLevels.healer < (requiredClassLevels.healer_levels ?? 0)
+  )
+  const tpSpent = selectedTalents.size - (selectedTalents.has(talentName) ? 1 : 0)
+  const missingRequirement = (
+    totalLevels < requiredTotalLevel ||
+    tpSpent < requiredTalentPoints ||
+    missingPrereq ||
+    missingClassLevel
+  )
+
+  return {
+    prereqTokens,
+    requiredClassLevels,
+    requiredTotalLevel,
+    requiredTalentPoints,
+    missingRequirement,
+  }
+}
+
+function getResolvedPrestigeRequirementMultiplier(args: TalentAvailabilityArgs): number {
+  const { talentName, talent, selectedTalents, selectedDungeonUnlocks } = args
+  const matchingBlockedTalentNames = getMatchingBlockedTalentNames(talentName, talent.BlockedTag, selectedTalents)
+
+  if (matchingBlockedTalentNames.length === 0) {
+    return 1
+  }
+
+  const basePrereqTokens = getTalentPrereqTokens(talent)
+  const secondPrestigeUnlock = getSecondPrestigeUnlock(talent, basePrereqTokens)
+
+  if (!secondPrestigeUnlock || !selectedDungeonUnlocks.has(secondPrestigeUnlock)) {
+    return 1
+  }
+
+  const otherTalentName = matchingBlockedTalentNames[0]
+  const otherTalent = talent_data[otherTalentName]
+
+  if (!otherTalent) {
+    return 1
+  }
+
+  const pairSelectedTalents = new Set(selectedTalents)
+  pairSelectedTalents.add(otherTalentName)
+  pairSelectedTalents.add(talentName)
+
+  const pairArgs: TalentAvailabilityArgs = {
+    ...args,
+    selectedTalents: pairSelectedTalents,
+  }
+  const otherPairArgs: TalentAvailabilityArgs = {
+    ...args,
+    talentName: otherTalentName,
+    talent: otherTalent,
+    selectedTalents: pairSelectedTalents,
+  }
+  const currentAsFirst = !buildTalentRequirementState(pairArgs, 1).missingRequirement
+  const currentAsSecond = !buildTalentRequirementState(pairArgs, 2).missingRequirement
+  const otherAsFirst = !buildTalentRequirementState(otherPairArgs, 1).missingRequirement
+  const otherAsSecond = !buildTalentRequirementState(otherPairArgs, 2).missingRequirement
+  const canCurrentBeFirst = currentAsFirst && otherAsSecond
+  const canCurrentBeSecond = currentAsSecond && otherAsFirst
+
+  if (canCurrentBeFirst !== canCurrentBeSecond) {
+    return canCurrentBeSecond ? 2 : 1
+  }
+
+  if (!selectedTalents.has(talentName)) {
+    return 2
+  }
+
+  if (!selectedTalents.has(otherTalentName)) {
+    return 1
+  }
+
+  return getTalentSelectionIndex(selectedTalents, talentName) > getTalentSelectionIndex(selectedTalents, otherTalentName)
+    ? 2
+    : 1
 }
 
 export function matchesClassFilter(requiredClassLevels: RequiredClassLevels, classFilter: ClassFilter): boolean {
@@ -193,47 +347,36 @@ export function getTalentAvailabilityState({
   classLevels,
   totalLevels,
 }: TalentAvailabilityArgs) {
-  const selectedTalentTags = new Set(
-    Array.from(selectedTalents)
-      .flatMap((name) => splitTagTokens(talent_data[name]?.Tag)),
-  )
-
   const basePrereqTokens = getTalentPrereqTokens(talent)
-  const matchingBlockedTagCount = talent.BlockedTag
-    ? Array.from(selectedTalents).filter((name) => (
-      name !== talentName &&
-      splitTagTokens(talent_data[name]?.Tag).includes(talent.BlockedTag)
-    )).length
-    : 0
+  const matchingBlockedTalentNames = getMatchingBlockedTalentNames(talentName, talent.BlockedTag, selectedTalents)
+  const matchingBlockedTagCount = matchingBlockedTalentNames.length
   const secondPrestigeUnlock = getSecondPrestigeUnlock(talent, basePrereqTokens)
-  const isSecondPrestigeSelection = Boolean(secondPrestigeUnlock) && matchingBlockedTagCount > 0
-  const prereqTokens = isSecondPrestigeSelection && secondPrestigeUnlock
-    ? [...basePrereqTokens, secondPrestigeUnlock]
-    : basePrereqTokens
-  const requirementMultiplier = isSecondPrestigeSelection ? 2 : 1
-  const requiredClassLevels = multiplyClassLevels(talent.class_levels, requirementMultiplier)
-  const requiredTotalLevel = (talent.total_level ?? 0) * requirementMultiplier
-  const requiredTalentPoints = (talent.tp_spent ?? 0) * requirementMultiplier
-  const missingPrereq = prereqTokens.some((req) => (
-    !selectedTalents.has(req) &&
-    !selectedTalentTags.has(req) &&
-    !selectedRacePrereqs.has(req) &&
-    !selectedDungeonUnlocks.has(req)
-  ))
-
-  const missingClassLevel = (
-    classLevels.tank < (requiredClassLevels.tank_levels ?? 0) ||
-    classLevels.warrior < (requiredClassLevels.warrior_levels ?? 0) ||
-    classLevels.caster < (requiredClassLevels.caster_levels ?? 0) ||
-    classLevels.healer < (requiredClassLevels.healer_levels ?? 0)
-  )
-
-  const tpSpent = selectedTalents.size - (selectedTalents.has(talentName) ? 1 : 0)
-  const missingRequirement = (
-    totalLevels < requiredTotalLevel ||
-    tpSpent < requiredTalentPoints ||
-    missingPrereq ||
-    missingClassLevel
+  const requirementMultiplier = getResolvedPrestigeRequirementMultiplier({
+    talentName,
+    talent,
+    selectedTalents,
+    selectedRacePrereqs,
+    selectedDungeonUnlocks,
+    classLevels,
+    totalLevels,
+  })
+  const {
+    prereqTokens,
+    requiredClassLevels,
+    requiredTotalLevel,
+    requiredTalentPoints,
+    missingRequirement,
+  } = buildTalentRequirementState(
+    {
+      talentName,
+      talent,
+      selectedTalents,
+      selectedRacePrereqs,
+      selectedDungeonUnlocks,
+      classLevels,
+      totalLevels,
+    },
+    requirementMultiplier,
   )
   const maxSelectableTalentsInGroup = secondPrestigeUnlock && selectedDungeonUnlocks.has(secondPrestigeUnlock) ? 2 : 1
   const blockedTagConflict = Boolean(talent.BlockedTag) && matchingBlockedTagCount >= maxSelectableTalentsInGroup
