@@ -76,12 +76,40 @@ const splitTagTokens = (tag: string | undefined): string[] => {
     .filter((value) => value.length > 0)
 }
 
+const linkedSkillTooltipByTalentName = (() => {
+  const tooltipsByTalentName = new Map<string, string[]>()
+
+  for (const [skillName, skill] of Object.entries(skill_data)) {
+    const linkedTalentNames = new Set(
+      splitPrereqTokens(skill.PreReq).filter((token) => token in talent_data),
+    )
+
+    for (const talentName of linkedTalentNames) {
+      const entries = tooltipsByTalentName.get(talentName) ?? []
+
+      if (!tooltipsByTalentName.has(talentName)) {
+        tooltipsByTalentName.set(talentName, entries)
+      }
+
+      entries.push(`${skillName}\n${skill.description}`)
+    }
+  }
+
+  return new Map(
+    Array.from(tooltipsByTalentName, ([talentName, entries]) => [talentName, entries.join("\n\n")]),
+  )
+})()
+
 export function getTalentPrereqTokens(talent: Talent): string[] {
   return splitPrereqTokens(talent.PreReq)
 }
 
 export function getSkillPrereqTokens(skill: Skill): string[] {
   return splitPrereqTokens(skill.PreReq)
+}
+
+export function getTalentLinkedSkillTooltip(talentName: string): string | null {
+  return linkedSkillTooltipByTalentName.get(talentName) ?? null
 }
 
 function getSecondPrestigeUnlock(

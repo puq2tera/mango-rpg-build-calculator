@@ -10,7 +10,12 @@ import { formatSignedDamageDelta } from "@/app/lib/damageCalc"
 import type { ManagedColumn } from "@/app/lib/managedColumns"
 import { getPrereqHref } from "@/app/lib/tableNavigation"
 import { getStripedRowClass } from "@/app/lib/tableRowStyles"
-import { getSkillAvailabilityState, getTalentAvailabilityState, type ClassLevels } from "@/app/lib/tableRequirements"
+import {
+  getSkillAvailabilityState,
+  getTalentAvailabilityState,
+  getTalentLinkedSkillTooltip,
+  type ClassLevels,
+} from "@/app/lib/tableRequirements"
 
 type ToggleButtonProps = {
   talentName: string
@@ -238,6 +243,7 @@ export function ToggleButton({
         ? "selected"
         : "default"
   const rowClass = getStripedRowClass(rowIndex, rowTone)
+  const linkedSkillTooltip = getTalentLinkedSkillTooltip(talentName)
 
   const handleClick = () => {
     const nextSelected = new Set(selected)
@@ -329,11 +335,16 @@ export function ToggleButton({
       {columns.map((column) => (
         <span
           key={column.id}
+          title={column.id === "name" ? linkedSkillTooltip ?? undefined : undefined}
           className={`${column.collapsed ? "px-0" : column.id === "preReq" ? "px-2 whitespace-normal" : "px-2 whitespace-nowrap"} border-r border-slate-700 last:border-r-0 box-border overflow-hidden ${
             column.id === "avgDamageChange" ? getAverageDamageClass(averageDamageChange) : ""
           }`}
         >
-          {column.collapsed ? "" : renderOverflowValue(column.id, values[column.id] ?? "", tooltipValues[column.id])}
+          {column.collapsed
+            ? ""
+            : column.id === "name" && linkedSkillTooltip
+              ? <span className={getOverflowWrapperClass(column.id)}>{values[column.id] ?? ""}</span>
+              : renderOverflowValue(column.id, values[column.id] ?? "", tooltipValues[column.id])}
         </span>
       ))}
     </div>
