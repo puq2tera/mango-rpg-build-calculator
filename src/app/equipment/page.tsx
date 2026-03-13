@@ -398,11 +398,8 @@ export default function EquipmentPage() {
   if (!isHydrated) return <div className="p-4 text-sm text-slate-300">Loading equipment editor...</div>
 
   return (
-    <div className="p-4 space-y-8">
-      <h1 className="text-2xl font-bold">Equipment Editor</h1>
-      {/* Artifact Editor */}
-      <h1 className="text-xl font-bold">Level Summary</h1>
-
+    <div className="p-4 space-y-6">
+      <div className="text-sm font-semibold uppercase tracking-[0.12em] text-slate-300">Artifact</div>
       <table className="table-fixed border text-center text-sm">
         <thead>
           <tr>
@@ -430,27 +427,35 @@ export default function EquipmentPage() {
       </table>
 
       {/* Rune Editor */}
-      <div className="space-y-5">
+      <div className="space-y-3">
         {runeTiers.map(tier => (
-          <div key={tier} className="max-w-full">
-            <h2 className="text-base font-semibold">{tier} Tier Runes</h2>
-            <div className="mt-1 overflow-x-auto">
-              <table className="w-auto border-collapse text-xs leading-tight">
+          <div key={tier} className="max-w-full rounded border border-slate-800/80 bg-slate-950/35 p-2">
+            <div className="mb-1.5 flex items-center justify-between gap-2">
+              <h2 className="text-sm font-semibold">{tier} Tier Runes</h2>
+              <button
+                onClick={() => addRuneRow(tier)}
+                className="rounded bg-sky-600 px-2 py-0.5 text-[11px] text-slate-100"
+              >
+                + Add Rune
+              </button>
+            </div>
+            <div className="overflow-x-auto">
+              <table className="w-auto border-collapse text-[11px] leading-tight">
                 <thead>
                   <tr className="bg-slate-800/85">
-                    <th className="border px-1.5 py-1 text-left font-semibold">Rune</th>
-                    <th className="border px-1.5 py-1 text-left font-semibold">Count</th>
-                    <th className="border px-1.5 py-1 text-left font-semibold">Effect</th>
+                    <th className="border px-1.5 py-0.75 text-left font-semibold">Rune</th>
+                    <th className="border px-1.5 py-0.75 text-left font-semibold">Count</th>
+                    <th className="border px-1.5 py-0.75 text-left font-semibold">Effect</th>
                   </tr>
                 </thead>
                 <tbody>
                   {selectedRunes[tier].map((selection, idx) => (
                     <tr key={idx}>
-                      <td className="border px-1.5 py-1 align-top">
+                      <td className="border px-1.5 py-0.75 align-top">
                         <select
                           value={selection.rune}
                           onChange={e => updateRuneSelection(tier, idx, "rune", e.target.value)}
-                          className="w-[17rem] border px-1 py-0.5 text-xs leading-tight"
+                          className="w-[15rem] border px-1 py-0.5 text-[11px] leading-tight"
                         >
                           <option value="">Select Rune</option>
                           {runesByTier(tier).map(runeName => (
@@ -460,26 +465,26 @@ export default function EquipmentPage() {
                           ))}
                         </select>
                       </td>
-                      <td className="border px-1.5 py-1 align-top">
+                      <td className="border px-1.5 py-0.75 align-top">
                         <div className="flex items-center gap-1">
                           <input
                             type="number"
                             value={selection.count}
                             min={1}
                             onChange={e => updateRuneSelection(tier, idx, "count", +e.target.value)}
-                            className="w-14 border px-1 py-0.5 text-xs text-center"
+                            className="w-12 border px-1 py-0.5 text-[11px] text-center"
                           />
                           <button
                             type="button"
                             onClick={() => removeRuneRow(tier, idx)}
-                            className="px-1.5 py-0.5 bg-rose-600 text-slate-100 text-[11px] rounded"
+                            className="rounded bg-rose-600 px-1.5 py-0.5 text-[10px] text-slate-100"
                           >
                             ✕
                           </button>
                         </div>
                       </td>
-                      <td className="border px-1.5 py-1 align-top">
-                        <div className="max-w-[18rem] whitespace-normal leading-snug">
+                      <td className="border px-1.5 py-0.75 align-top">
+                        <div className="max-w-[16rem] whitespace-normal leading-snug">
                           {getRuneEffectLabel(selection)}
                         </div>
                       </td>
@@ -487,14 +492,6 @@ export default function EquipmentPage() {
                   ))}
                 </tbody>
               </table>
-            </div>
-            <div className="mt-2">
-              <button
-                onClick={() => addRuneRow(tier)}
-                className="px-2.5 py-0.5 bg-sky-600 text-slate-100 text-xs rounded"
-              >
-                + Add Rune
-              </button>
             </div>
           </div>
         ))}
