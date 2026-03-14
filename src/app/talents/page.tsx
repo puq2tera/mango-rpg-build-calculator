@@ -130,9 +130,10 @@ function TalentsPageContent() {
       const maxIndex = Math.min(index + chunkSize, talentNames.length)
       for (; index < maxIndex; index++) {
         const talentName = talentNames[index]
+        const wasSelected = selected.has(talentName)
         const toggledTalents = new Set(selectedTalentNames)
 
-        if (toggledTalents.has(talentName)) {
+        if (wasSelected) {
           toggledTalents.delete(talentName)
         } else {
           toggledTalents.add(talentName)
@@ -143,7 +144,9 @@ function TalentsPageContent() {
           damageState,
         ).average
 
-        computedChanges[talentName] = nextAverage - currentAverage
+        computedChanges[talentName] = wasSelected
+          ? currentAverage - nextAverage
+          : nextAverage - currentAverage
       }
 
       if (index < talentNames.length) {
