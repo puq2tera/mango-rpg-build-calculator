@@ -7,9 +7,15 @@ import { computeBuildStatStages, readBuildSnapshot } from "@/app/lib/buildStats"
 import {
   calculatePlayerDamageReduction,
   calculateDamage,
+  DAMAGE_CALC_CUSTOM_SKILL_SCALING_CUSTOM_SOURCE,
+  damageCalcCustomSkillScalingSources,
+  defaultDamageCalcCustomSkillScaling,
   defaultDamageCalcState,
+  getDamageCalcCustomSkillScalingSourceValue,
+  getDamageCalcEffectiveSkillDmgPercent,
   persistDamageCalcState,
   readDamageCalcState,
+  type DamageCalcCustomSkillScaling,
   type DamageCalcInputs,
 } from "@/app/lib/damageCalc"
 import { attackPresetInputKeys, getDamageCalcAttackPresets } from "@/app/lib/damageCalcAttackPresets"
@@ -25,6 +31,9 @@ export default function DamageCalc() {
   const [element, setElement] = useState(defaultDamageCalcState.element)
   const [penElement, setPenElement] = useState(defaultDamageCalcState.penElement)
   const [skillType, setSkillType] = useState(defaultDamageCalcState.skillType)
+  const [customSkillScaling, setCustomSkillScaling] = useState<DamageCalcCustomSkillScaling>(
+    defaultDamageCalcCustomSkillScaling,
+  )
   const [inputs, setInputs] = useState<DamageCalcInputs>(defaultDamageCalcState.inputs)
 
   useEffect(() => {
@@ -47,6 +56,7 @@ export default function DamageCalc() {
     setElement(storedState.element)
     setPenElement(storedState.penElement)
     setSkillType(storedState.skillType)
+    setCustomSkillScaling(storedState.customSkillScaling)
     setInputs(storedState.inputs)
     refreshBuildStats()
     setIsHydrated(true)
@@ -72,10 +82,11 @@ export default function DamageCalc() {
       element,
       penElement,
       skillType,
+      customSkillScaling,
       inputs,
     })
     window.dispatchEvent(new Event("damageCalcUpdated"))
-  }, [attackPreset, element, inputs, isHydrated, mainStat, penElement, secondStat, skillType])
+  }, [attackPreset, customSkillScaling, element, inputs, isHydrated, mainStat, penElement, secondStat, skillType])
 
   const attackPresets = getDamageCalcAttackPresets(stats)
   const selectedAttackPreset = attackPresets.find((entry) => entry.name === attackPreset) ?? null
@@ -98,6 +109,7 @@ export default function DamageCalc() {
     element,
     penElement,
     skillType,
+    customSkillScaling,
     inputs,
   })
   const playerDefense = stats.DEF ?? 0
@@ -113,6 +125,8 @@ export default function DamageCalc() {
       ? value.toLocaleString("en-US", { maximumFractionDigits })
       : "Infinity"
   )
+  const effectiveSkillDmg = getDamageCalcEffectiveSkillDmgPercent(stats, inputs, customSkillScaling)
+  const customSkillScalingSourceValue = getDamageCalcCustomSkillScalingSourceValue(stats, customSkillScaling)
 
   const handleChange = (field: keyof DamageCalcInputs, value: number) => {
     if (attackPresetInputKeySet.has(field)) {
@@ -120,6 +134,11 @@ export default function DamageCalc() {
     }
 
     setInputs((prev) => ({ ...prev, [field]: value }))
+  }
+
+  const handleCustomSkillScalingChange = (nextValue: Partial<DamageCalcCustomSkillScaling>) => {
+    setAttackPreset("")
+    setCustomSkillScaling((prev) => ({ ...prev, ...nextValue }))
   }
 
   const handleAttackPresetChange = (nextPreset: string) => {
@@ -139,6 +158,7 @@ export default function DamageCalc() {
     setElement(preset.element)
     setPenElement(preset.penElement)
     setSkillType(preset.skillType)
+    setCustomSkillScaling(defaultDamageCalcCustomSkillScaling)
     setInputs((prev) => ({ ...prev, ...preset.inputs }))
   }
 
@@ -232,7 +252,13 @@ export default function DamageCalc() {
           </select>
 
           <label className="font-semibold">Skill DMG%</label>
-          <input type="number" value={inputs.skillDmg} onChange={(e) => handleChange("skillDmg", +e.target.value)} className="w-full p-1 border rounded" />
+          <input
+            type="number"
+            value={inputs.skillDmg}
+            onChange={(e) => handleChange("skillDmg", +e.target.value)}
+            disabled={customSkillScaling.enabled}
+            className="w-full p-1 border rounded disabled:cursor-not-allowed disabled:opacity-60"
+          />
 
           <label className="font-semibold">Skill Crit DMG%</label>
           <input type="number" value={inputs.skillCritDmg} onChange={(e) => handleChange("skillCritDmg", +e.target.value)} className="w-full p-1 border rounded" />
@@ -275,6 +301,68 @@ export default function DamageCalc() {
 
           <label className="font-semibold">2nd Skill DMG%</label>
           <input type="number" value={inputs.secondSkillDmg} onChange={(e) => handleChange("secondSkillDmg", +e.target.value)} className="w-full p-1 border rounded" />
+        </div>
+
+        <div className="space-y-2">
+          <label className="inline-flex items-center gap-2 text-sm font-semibold">
+            <input
+              type="checkbox"
+              checked={customSkillScaling.enabled}
+              onChange={(e) => handleCustomSkillScalingChange({ enabled: e.target.checked })}
+            />
+            <span>Custom skill scaling</span>
+          </label>
+
+          {customSkillScaling.enabled ? (
+            <div className="space-y-2 rounded border border-slate-700 bg-slate-950/50 p-2">
+              <div className="space-y-1">
+                <label className="block text-sm font-semibold">Scaling Stat</label>
+                <select
+                  value={customSkillScaling.stat}
+                  onChange={(e) => handleCustomSkillScalingChange({ stat: e.target.value })}
+                  className="w-full p-1 border rounded"
+                >
+                  {damageCalcCustomSkillScalingSources.map((stat) => <option key={stat}>{stat}</option>)}
+                </select>
+              </div>
+
+              {customSkillScaling.stat === DAMAGE_CALC_CUSTOM_SKILL_SCALING_CUSTOM_SOURCE ? (
+                <div className="space-y-1">
+                  <label className="block text-sm font-semibold">Custom Stat Value</label>
+                  <input
+                    type="number"
+                    value={customSkillScaling.customValue}
+                    onChange={(e) => handleCustomSkillScalingChange({ customValue: +e.target.value })}
+                    className="w-full p-1 border rounded"
+                  />
+                </div>
+              ) : null}
+
+              <div className="space-y-1">
+                <label className="block text-sm font-semibold">Scaling %</label>
+                <input
+                  type="number"
+                  value={customSkillScaling.percent}
+                  onChange={(e) => handleCustomSkillScalingChange({ percent: +e.target.value })}
+                  className="w-full p-1 border rounded"
+                />
+              </div>
+
+              <div className="space-y-1">
+                <label className="block text-sm font-semibold">Resolved Stat Value</label>
+                <div className="w-full rounded border bg-slate-950/60 px-2 py-1 font-mono tabular-nums">
+                  {formatDerivedValue(customSkillScalingSourceValue, 2)}
+                </div>
+              </div>
+
+              <div className="space-y-1">
+                <label className="block text-sm font-semibold">Effective Skill DMG%</label>
+                <div className="w-full rounded border bg-slate-950/60 px-2 py-1 font-mono tabular-nums">
+                  {formatDerivedValue(effectiveSkillDmg, 2)}
+                </div>
+              </div>
+            </div>
+          ) : null}
         </div>
       </div>
 

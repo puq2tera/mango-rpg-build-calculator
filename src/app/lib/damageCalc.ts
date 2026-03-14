@@ -3,6 +3,43 @@ import { getThreatMultiplier } from "@/app/lib/threat"
 
 export const DAMAGE_CALC_STORAGE_KEY = "DamageCalcState"
 const DAMAGE_CALC_SCHEMA_VERSION = 2
+export const DAMAGE_CALC_CUSTOM_SKILL_SCALING_CUSTOM_SOURCE = "Custom"
+
+const dynamicSkillScalingSourceGroups = {
+  "Highest Phys%": ["Slash%", "Pierce%", "Blunt%"],
+  "Highest Phys Pen%": ["Slash Pen%", "Pierce Pen%", "Blunt Pen%"],
+  "Highest Magic%": ["Fire%", "Water%", "Lightning%", "Wind%", "Earth%", "Toxic%", "Neg%", "Holy%", "Void%"],
+  "Highest Magic Pen%": [
+    "Fire Pen%",
+    "Water Pen%",
+    "Lightning Pen%",
+    "Wind Pen%",
+    "Earth Pen%",
+    "Toxic Pen%",
+    "Neg Pen%",
+    "Holy Pen%",
+    "Void Pen%",
+  ],
+  "Highest Elemental%": ["Fire%", "Water%", "Lightning%", "Wind%", "Earth%", "Toxic%"],
+  "Highest Elemental Pen%": [
+    "Fire Pen%",
+    "Water Pen%",
+    "Lightning Pen%",
+    "Wind Pen%",
+    "Earth Pen%",
+    "Toxic Pen%",
+  ],
+  "Highest Divine%": ["Neg%", "Holy%", "Void%"],
+  "Highest Divine Pen%": ["Neg Pen%", "Holy Pen%", "Void Pen%"],
+} as const
+
+export const damageCalcCustomSkillScalingSources = [
+  DAMAGE_CALC_CUSTOM_SKILL_SCALING_CUSTOM_SOURCE,
+  ...Object.keys(dynamicSkillScalingSourceGroups),
+  ...Object.keys(stat_data.StatsInfo).sort((left, right) => left.localeCompare(right)),
+]
+
+const damageCalcCustomSkillScalingSourceSet = new Set(damageCalcCustomSkillScalingSources)
 
 export type DamageCalcInputs = {
   skillDmg: number
@@ -20,6 +57,13 @@ export type DamageCalcInputs = {
   bossDefPen: number
 }
 
+export type DamageCalcCustomSkillScaling = {
+  enabled: boolean
+  stat: string
+  percent: number
+  customValue: number
+}
+
 export type DamageCalcState = {
   schemaVersion?: number
   attackPreset: string
@@ -28,6 +72,7 @@ export type DamageCalcState = {
   element: string
   penElement: string
   skillType: string
+  customSkillScaling: DamageCalcCustomSkillScaling
   inputs: DamageCalcInputs
 }
 
@@ -74,6 +119,13 @@ export const defaultDamageCalcInputs: DamageCalcInputs = {
   bossDefPen: 0,
 }
 
+export const defaultDamageCalcCustomSkillScaling: DamageCalcCustomSkillScaling = {
+  enabled: false,
+  stat: "ATK",
+  percent: 100,
+  customValue: 0,
+}
+
 export const defaultDamageCalcState: DamageCalcState = {
   schemaVersion: DAMAGE_CALC_SCHEMA_VERSION,
   attackPreset: "",
@@ -82,6 +134,7 @@ export const defaultDamageCalcState: DamageCalcState = {
   element: "Blunt",
   penElement: "Blunt",
   skillType: "N/A",
+  customSkillScaling: defaultDamageCalcCustomSkillScaling,
   inputs: defaultDamageCalcInputs,
 }
 
@@ -103,9 +156,49 @@ const asFiniteNumber = (value: unknown, fallback: number): number =>
 const isOneOf = (value: unknown, options: readonly string[]): value is string =>
   typeof value === "string" && options.includes(value)
 
+const isCustomSkillScalingSource = (value: unknown): value is string =>
+  typeof value === "string" && damageCalcCustomSkillScalingSourceSet.has(value)
+
+const getHighestStatValue = (stats: Record<string, number>, statNames: readonly string[]): number =>
+  statNames.reduce((highest, statName) => Math.max(highest, stats[statName] ?? 0), 0)
+
+export function getDamageCalcCustomSkillScalingSourceValue(
+  stats: Record<string, number>,
+  customSkillScaling: DamageCalcCustomSkillScaling,
+): number {
+  if (customSkillScaling.stat === DAMAGE_CALC_CUSTOM_SKILL_SCALING_CUSTOM_SOURCE) {
+    return customSkillScaling.customValue
+  }
+
+  if (customSkillScaling.stat in dynamicSkillScalingSourceGroups) {
+    return getHighestStatValue(
+      stats,
+      dynamicSkillScalingSourceGroups[customSkillScaling.stat as keyof typeof dynamicSkillScalingSourceGroups],
+    )
+  }
+
+  return stats[customSkillScaling.stat] ?? 0
+}
+
+export function getDamageCalcEffectiveSkillDmgPercent(
+  stats: Record<string, number>,
+  inputs: DamageCalcInputs,
+  customSkillScaling: DamageCalcCustomSkillScaling,
+): number {
+  if (!customSkillScaling.enabled) {
+    return inputs.skillDmg
+  }
+
+  return getDamageCalcCustomSkillScalingSourceValue(stats, customSkillScaling) * (customSkillScaling.percent / 100)
+}
+
 export function normalizeDamageCalcState(raw: unknown): DamageCalcState {
   const data = typeof raw === "object" && raw !== null ? raw as Partial<DamageCalcState> : {}
   const rawInputs = typeof data.inputs === "object" && data.inputs !== null ? data.inputs as Partial<DamageCalcInputs> : {}
+  const rawCustomSkillScaling =
+    typeof data.customSkillScaling === "object" && data.customSkillScaling !== null
+      ? data.customSkillScaling as Partial<DamageCalcCustomSkillScaling>
+      : {}
   const schemaVersion =
     typeof data.schemaVersion === "number" && Number.isFinite(data.schemaVersion)
       ? Math.trunc(data.schemaVersion)
@@ -128,6 +221,18 @@ export function normalizeDamageCalcState(raw: unknown): DamageCalcState {
     element: isOneOf(data.element, stat_data.AllElements) ? data.element : defaultDamageCalcState.element,
     penElement: isOneOf(data.penElement, stat_data.AllElements) ? data.penElement : defaultDamageCalcState.penElement,
     skillType: isOneOf(data.skillType, stat_data.SkillTypes) ? data.skillType : defaultDamageCalcState.skillType,
+    customSkillScaling: {
+      enabled:
+        typeof rawCustomSkillScaling.enabled === "boolean"
+          ? rawCustomSkillScaling.enabled
+          : defaultDamageCalcCustomSkillScaling.enabled,
+      stat:
+        isCustomSkillScalingSource(rawCustomSkillScaling.stat)
+          ? rawCustomSkillScaling.stat
+          : defaultDamageCalcCustomSkillScaling.stat,
+      percent: asFiniteNumber(rawCustomSkillScaling.percent, defaultDamageCalcCustomSkillScaling.percent),
+      customValue: asFiniteNumber(rawCustomSkillScaling.customValue, defaultDamageCalcCustomSkillScaling.customValue),
+    },
     inputs,
   }
 }
@@ -218,14 +323,16 @@ type NormalizedDamageContext = {
   penElement: string
   skillType: string
   inputs: DamageCalcInputs
+  effectiveSkillDmg: number
   mitigated: number
 }
 
 function buildDamageContext(stats: Record<string, number>, state: DamageCalcState): NormalizedDamageContext {
-  const { mainStat, secondStat, element, penElement, skillType, inputs } = normalizeDamageCalcState(state)
+  const { mainStat, secondStat, element, penElement, skillType, customSkillScaling, inputs } = normalizeDamageCalcState(state)
+  const effectiveSkillDmg = getDamageCalcEffectiveSkillDmgPercent(stats, inputs, customSkillScaling)
 
   const baseRaw =
-    ((stats[mainStat] ?? 0) * (inputs.skillDmg / 100))
+    ((stats[mainStat] ?? 0) * (effectiveSkillDmg / 100))
     + ((stats[secondStat] ?? 0) * (inputs.secondSkillDmg / 100))
   const base = Math.floor(baseRaw)
 
@@ -239,6 +346,7 @@ function buildDamageContext(stats: Record<string, number>, state: DamageCalcStat
     penElement,
     skillType,
     inputs,
+    effectiveSkillDmg,
     mitigated,
   }
 }
