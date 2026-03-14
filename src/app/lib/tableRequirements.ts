@@ -2,6 +2,13 @@ import type { Skill } from "@/app/data/skill_data"
 import { skill_data } from "@/app/data/skill_data"
 import type { Talent } from "@/app/data/talent_data"
 import { talent_data } from "@/app/data/talent_data"
+import {
+  normalizePrereqToken,
+  resolveSkillName,
+  resolveTalentName,
+  splitPrereqTokens,
+  toNormalizedPrereqTokenSet,
+} from "@/app/lib/prereqTokens"
 import { CLASS_FILTER_KEYS, type ClassFilter } from "@/app/lib/tableViewState"
 
 export type ClassLevels = {
@@ -52,18 +59,7 @@ const secondPrestigeUnlockByPrereq = {
   DeathGodBlessing: "SpiritFragment",
 } as const
 
-const splitPrereqTokens = (preReq: Array<string> | string | undefined): string[] => {
-  if (!preReq) {
-    return []
-  }
-
-  const source = Array.isArray(preReq) ? preReq : [preReq]
-
-  return source
-    .flatMap((value) => value.split(","))
-    .map((value) => value.trim())
-    .filter((value) => value.length > 0)
-}
+const defaultSkillPrereqToken = normalizePrereqToken("Default Skill")
 
 const splitTagTokens = (tag: string | undefined): string[] => {
   if (!tag) {
@@ -81,7 +77,9 @@ const linkedSkillTooltipByTalentName = (() => {
 
   for (const [skillName, skill] of Object.entries(skill_data)) {
     const linkedTalentNames = new Set(
-      splitPrereqTokens(skill.PreReq).filter((token) => token in talent_data),
+      splitPrereqTokens(skill.PreReq)
+        .map((token) => resolveTalentName(token))
+        .filter((token): token is string => token !== null),
     )
 
     for (const talentName of linkedTalentNames) {
@@ -120,11 +118,11 @@ function getSecondPrestigeUnlock(
     return null
   }
 
-  if (prereqTokens.includes("PleiadesTrial")) {
+  if (prereqTokens.some((token) => normalizePrereqToken(token) === normalizePrereqToken("PleiadesTrial"))) {
     return secondPrestigeUnlockByPrereq.PleiadesTrial
   }
 
-  if (prereqTokens.includes("DeathGodBlessing")) {
+  if (prereqTokens.some((token) => normalizePrereqToken(token) === normalizePrereqToken("DeathGodBlessing"))) {
     return secondPrestigeUnlockByPrereq.DeathGodBlessing
   }
 
@@ -140,9 +138,12 @@ function getMatchingBlockedTalentNames(
     return []
   }
 
+  const normalizedBlockedTag = normalizePrereqToken(blockedTag)
+
   return Array.from(selectedTalents).filter((name) => (
     name !== talentName &&
-    splitTagTokens(talent_data[name]?.Tag).includes(blockedTag)
+    splitTagTokens(talent_data[name]?.Tag)
+      .some((tag) => normalizePrereqToken(tag) === normalizedBlockedTag)
   ))
 }
 
@@ -186,15 +187,19 @@ function collectExpandedPrereqTokens(
   for (const token of prereqTokens) {
     expandedTokens.add(token)
 
-    if (token in skill_data && !visitedSkills.has(token)) {
-      visitedSkills.add(token)
-      collectExpandedPrereqTokens(getSkillPrereqTokens(skill_data[token]), visitedSkills, visitedTalents)
+    const skillName = resolveSkillName(token)
+
+    if (skillName && !visitedSkills.has(skillName)) {
+      visitedSkills.add(skillName)
+      collectExpandedPrereqTokens(getSkillPrereqTokens(skill_data[skillName]), visitedSkills, visitedTalents)
         .forEach((expandedToken) => expandedTokens.add(expandedToken))
     }
 
-    if (token in talent_data && !visitedTalents.has(token)) {
-      visitedTalents.add(token)
-      collectExpandedPrereqTokens(getTalentPrereqTokens(talent_data[token]), visitedSkills, visitedTalents)
+    const talentName = resolveTalentName(token)
+
+    if (talentName && !visitedTalents.has(talentName)) {
+      visitedTalents.add(talentName)
+      collectExpandedPrereqTokens(getTalentPrereqTokens(talent_data[talentName]), visitedSkills, visitedTalents)
         .forEach((expandedToken) => expandedTokens.add(expandedToken))
     }
   }
@@ -215,6 +220,10 @@ function buildTalentRequirementState(
   requirementMultiplier: number,
 ): TalentRequirementState {
   const selectedTalentTags = getSelectedTalentTags(selectedTalents)
+  const normalizedSelectedTalents = toNormalizedPrereqTokenSet(selectedTalents)
+  const normalizedSelectedTalentTags = toNormalizedPrereqTokenSet(selectedTalentTags)
+  const normalizedSelectedRacePrereqs = toNormalizedPrereqTokenSet(selectedRacePrereqs)
+  const normalizedSelectedDungeonUnlocks = toNormalizedPrereqTokenSet(selectedDungeonUnlocks)
   const basePrereqTokens = getTalentPrereqTokens(talent)
   const secondPrestigeUnlock = getSecondPrestigeUnlock(talent, basePrereqTokens)
   const prereqTokens = requirementMultiplier > 1 && secondPrestigeUnlock
@@ -223,12 +232,16 @@ function buildTalentRequirementState(
   const requiredClassLevels = multiplyClassLevels(talent.class_levels, requirementMultiplier)
   const requiredTotalLevel = (talent.total_level ?? 0) * requirementMultiplier
   const requiredTalentPoints = (talent.tp_spent ?? 0) * requirementMultiplier
-  const missingPrereq = prereqTokens.some((req) => (
-    !selectedTalents.has(req) &&
-    !selectedTalentTags.has(req) &&
-    !selectedRacePrereqs.has(req) &&
-    !selectedDungeonUnlocks.has(req)
-  ))
+  const missingPrereq = prereqTokens.some((req) => {
+    const normalizedReq = normalizePrereqToken(req)
+
+    return (
+      !normalizedSelectedTalents.has(normalizedReq) &&
+      !normalizedSelectedTalentTags.has(normalizedReq) &&
+      !normalizedSelectedRacePrereqs.has(normalizedReq) &&
+      !normalizedSelectedDungeonUnlocks.has(normalizedReq)
+    )
+  })
   const missingClassLevel = (
     classLevels.tank < (requiredClassLevels.tank_levels ?? 0) ||
     classLevels.warrior < (requiredClassLevels.warrior_levels ?? 0) ||
@@ -353,7 +366,11 @@ export function matchesRaceFilter(
     return true
   }
 
-  const matchingRaceTokens = prereqTokens.filter((token) => allRaceTokens.has(token))
+  const normalizedSelectedRaceTokens = toNormalizedPrereqTokenSet(selectedRaceTokens)
+  const normalizedAllRaceTokens = toNormalizedPrereqTokenSet(allRaceTokens)
+  const matchingRaceTokens = prereqTokens.filter((token) => (
+    normalizedAllRaceTokens.has(normalizePrereqToken(token))
+  ))
 
   if (raceFilter === "raceSpecific") {
     return matchingRaceTokens.length > 0
@@ -363,7 +380,7 @@ export function matchesRaceFilter(
     return false
   }
 
-  return matchingRaceTokens.some((token) => selectedRaceTokens.has(token))
+  return matchingRaceTokens.some((token) => normalizedSelectedRaceTokens.has(normalizePrereqToken(token)))
 }
 
 export function getTalentAvailabilityState({
@@ -449,18 +466,29 @@ export function getSkillAvailabilityState({
     Array.from(selectedTalents)
       .flatMap((name) => splitTagTokens(talent_data[name]?.Tag)),
   )
+  const normalizedSelectedSkills = toNormalizedPrereqTokenSet(selectedSkills)
+  const normalizedSelectedSkillTags = toNormalizedPrereqTokenSet(selectedSkillTags)
+  const normalizedOtherSelectedSkillTags = toNormalizedPrereqTokenSet(otherSelectedSkillTags)
+  const normalizedSelectedTalents = toNormalizedPrereqTokenSet(selectedTalents)
+  const normalizedSelectedTalentTags = toNormalizedPrereqTokenSet(selectedTalentTags)
+  const normalizedSelectedRacePrereqs = toNormalizedPrereqTokenSet(selectedRacePrereqs)
+  const normalizedSelectedDungeonUnlocks = toNormalizedPrereqTokenSet(selectedDungeonUnlocks)
   const selectedSkillPoints = Array.from(selectedSkills).reduce((sum, name) => sum + (skill_data[name]?.sp ?? 0), 0) + trainingPointsSpent
   const spentPointsBeforeCurrent = selectedSkillPoints - (selectedSkills.has(skillName) ? (skill.sp ?? 0) : 0)
 
-  const missingPrereq = prereqTokens.some((req) => (
-    req !== "Default Skill" &&
-    !selectedSkills.has(req) &&
-    !selectedSkillTags.has(req) &&
-    !selectedTalents.has(req) &&
-    !selectedTalentTags.has(req) &&
-    !selectedRacePrereqs.has(req) &&
-    !selectedDungeonUnlocks.has(req)
-  ))
+  const missingPrereq = prereqTokens.some((req) => {
+    const normalizedReq = normalizePrereqToken(req)
+
+    return (
+      normalizedReq !== defaultSkillPrereqToken &&
+      !normalizedSelectedSkills.has(normalizedReq) &&
+      !normalizedSelectedSkillTags.has(normalizedReq) &&
+      !normalizedSelectedTalents.has(normalizedReq) &&
+      !normalizedSelectedTalentTags.has(normalizedReq) &&
+      !normalizedSelectedRacePrereqs.has(normalizedReq) &&
+      !normalizedSelectedDungeonUnlocks.has(normalizedReq)
+    )
+  })
 
   const missingClassLevel = (
     classLevels.tank < (skill.class_levels.tank_levels ?? 0) ||
@@ -472,7 +500,10 @@ export function getSkillAvailabilityState({
   const missingSkillPoints = spentPointsBeforeCurrent < (skill.sp_spent ?? 0)
   const missingRequirement = missingPrereq || missingClassLevel || missingSkillPoints
   const blockedTag = skill.BlockedTag ?? ""
-  const blockedTagConflict = blockedTag.length > 0 && otherSelectedSkillTags.has(blockedTag)
+  const blockedTagConflict = (
+    blockedTag.length > 0 &&
+    normalizedOtherSelectedSkillTags.has(normalizePrereqToken(blockedTag))
+  )
 
   return {
     prereqTokens,

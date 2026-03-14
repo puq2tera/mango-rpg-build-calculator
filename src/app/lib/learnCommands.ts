@@ -1,5 +1,6 @@
 import { skill_data } from "@/app/data/skill_data"
 import { talent_data } from "@/app/data/talent_data"
+import { resolveSkillName, resolveTalentName, splitPrereqTokens } from "@/app/lib/prereqTokens"
 
 export const TALENT_SELECTION_STORAGE_KEY = "selectedTalents"
 export const SKILL_SELECTION_STORAGE_KEY = "selectedBuffs"
@@ -48,19 +49,6 @@ const asUniqueValidNames = (value: unknown, validNames: ReadonlySet<string>): st
   }
 
   return result
-}
-
-export function splitPrereqTokens(prereq: string[] | string | undefined): string[] {
-  if (!prereq) {
-    return []
-  }
-
-  const source = Array.isArray(prereq) ? prereq : [prereq]
-
-  return source
-    .flatMap((entry) => entry.split(","))
-    .map((entry) => entry.trim())
-    .filter((entry) => entry.length > 0)
 }
 
 export function readSelectedTalents(storage: Storage): string[] {
@@ -127,7 +115,8 @@ export function getOrderedTalentNames(selectedNames: Iterable<string>): string[]
   return orderSelectedNames(
     selectedNames,
     (name) => talentOrderIndex.get(name) ?? Number.MAX_SAFE_INTEGER,
-    (name) => splitPrereqTokens(talent_data[name]?.PreReq),
+    (name) => splitPrereqTokens(talent_data[name]?.PreReq)
+      .map((token) => resolveTalentName(token) ?? token),
   )
 }
 
@@ -135,7 +124,8 @@ export function getOrderedSkillNames(selectedNames: Iterable<string>): string[] 
   return orderSelectedNames(
     selectedNames,
     (name) => skillOrderIndex.get(name) ?? Number.MAX_SAFE_INTEGER,
-    (name) => splitPrereqTokens(skill_data[name]?.PreReq),
+    (name) => splitPrereqTokens(skill_data[name]?.PreReq)
+      .map((token) => resolveSkillName(token) ?? token),
   )
 }
 

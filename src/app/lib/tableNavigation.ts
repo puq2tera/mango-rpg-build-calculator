@@ -1,5 +1,6 @@
 import { skill_data } from "@/app/data/skill_data"
 import { talent_data } from "@/app/data/talent_data"
+import { resolveSkillName, resolveTalentName } from "@/app/lib/prereqTokens"
 
 export const TABLE_FOCUS_QUERY_PARAM = "focus"
 
@@ -14,13 +15,17 @@ const defaultTableScrollPosition: TableScrollPosition = {
 }
 
 export function getPrereqHref(token: string): string | null {
-  if (token in talent_data) {
-    const query = new URLSearchParams([[TABLE_FOCUS_QUERY_PARAM, token]])
+  const talentName = resolveTalentName(token)
+
+  if (talentName && talentName in talent_data) {
+    const query = new URLSearchParams([[TABLE_FOCUS_QUERY_PARAM, talentName]])
     return `/talents?${query.toString()}`
   }
 
-  if (token in skill_data) {
-    const query = new URLSearchParams([[TABLE_FOCUS_QUERY_PARAM, token]])
+  const skillName = resolveSkillName(token)
+
+  if (skillName && skillName in skill_data) {
+    const query = new URLSearchParams([[TABLE_FOCUS_QUERY_PARAM, skillName]])
     return `/Skills?${query.toString()}`
   }
 
