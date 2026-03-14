@@ -2,9 +2,11 @@
 
 import { useEffect, useState } from "react"
 import { computeBuildStatStages, readBuildSnapshot } from "@/app/lib/buildStats"
+import { BUILD_SNAPSHOT_UPDATED_EVENT } from "@/app/lib/buildEvents"
 import {
   calculateWorldBossActions,
   defaultWorldBossUserStats,
+  getWorldBossUserStatsFromBuildStages,
   worldBossStatKeys,
   type WorldBossStatKey,
   type WorldBossUserStats,
@@ -21,43 +23,70 @@ const parseInputValue = (value: string): number => {
   return Number.isFinite(parsed) ? parsed : 0
 }
 
-const readBuildStats = (): WorldBossUserStats => {
+const loadBuildStats = (): WorldBossUserStats => {
   const snapshot = readBuildSnapshot(localStorage)
   const stages = computeBuildStatStages(snapshot)
-
-  return worldBossStatKeys.reduce<WorldBossUserStats>((result, stat) => {
-    result[stat] = stages.StatsDmgReady[stat] ?? 0
-    return result
-  }, { ...defaultWorldBossUserStats })
+  return getWorldBossUserStatsFromBuildStages(stages)
 }
 
 export default function WorldBoss() {
   const [userStats, setUserStats] = useState<WorldBossUserStats>({ ...defaultWorldBossUserStats })
+  const [syncWithBuild, setSyncWithBuild] = useState(true)
 
   useEffect(() => {
-    window.dispatchEvent(new Event("computeDmgReadyStats"))
-    const nextBuildStats = readBuildStats()
-    setUserStats(nextBuildStats)
-  }, [])
+    if (!syncWithBuild) {
+      return
+    }
+
+    const refreshFromBuild = () => {
+      setUserStats(loadBuildStats())
+    }
+
+    refreshFromBuild()
+
+    const eventNames = [
+      BUILD_SNAPSHOT_UPDATED_EVENT,
+      "talentsUpdated",
+      "equipmentUpdated",
+      "runesUpdated",
+    ]
+
+    for (const eventName of eventNames) {
+      window.addEventListener(eventName, refreshFromBuild)
+    }
+
+    return () => {
+      for (const eventName of eventNames) {
+        window.removeEventListener(eventName, refreshFromBuild)
+      }
+    }
+  }, [syncWithBuild])
 
   const handleStatChange = (stat: WorldBossStatKey, value: string) => {
+    setSyncWithBuild(false)
     setUserStats((prev) => ({
       ...prev,
       [stat]: parseInputValue(value),
     }))
   }
 
+  const handleReloadFromBuild = () => {
+    setUserStats(loadBuildStats())
+    setSyncWithBuild(true)
+  }
+
   const actionResults = calculateWorldBossActions(userStats)
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="space-y-6 p-6">
       <div className="space-y-2 text-center">
-        <h1 className="text-2xl font-bold">World Boss</h1>
       </div>
 
       <section className={cardClass}>
-        <div className="space-y-1">
-          <h2 className="font-semibold">User Stats</h2>
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div className="space-y-1">
+            <h2 className="font-semibold">Base Stats</h2>
+          </div>
         </div>
 
         <div className="mt-4 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
@@ -78,6 +107,9 @@ export default function WorldBoss() {
       <section className={cardClass}>
         <div className="space-y-1">
           <h2 className="font-semibold">Action Ranges</h2>
+          <p className="text-sm text-slate-300">
+            `Min = floor(Average x 0.9)`, `Max = floor(Average x 1.1)`, `Doctor = floor(Heal x 0.25)`.
+          </p>
         </div>
 
         <div className="mt-4 overflow-x-auto">
