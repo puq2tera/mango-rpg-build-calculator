@@ -12,6 +12,7 @@ import {
   type CharacterSummaryViewState,
 } from "@/app/lib/characterSummaryViewState"
 import {
+  type AverageDamageFilter,
   type AvailabilityFilter,
   type ClassFilterKey,
   type ClassFilterMode,
@@ -79,6 +80,12 @@ const availabilityFilterOptions: Array<{ value: AvailabilityFilter; label: strin
   { value: "all", label: "All" },
   { value: "available", label: "Available Only" },
   { value: "unavailable", label: "Unavailable Only" },
+]
+
+const averageDamageFilterOptions: Array<{ value: AverageDamageFilter; label: string }> = [
+  { value: "all", label: "All" },
+  { value: "increaseOnly", label: "Increase Only" },
+  { value: "nonIncrease", label: "No Increase" },
 ]
 
 const tarotTierFilterOptions: Array<{ value: TarotTierFilter; label: string }> = [
@@ -156,6 +163,8 @@ const getDirectionArrow = (direction: TableViewState["sortDirection"]) => direct
 const isSortPage = (page: TableViewPage | null): page is TableViewPage => page !== null
 const isSkillLikeFilterPage = (page: TableViewPage | null): page is "talents" | "skills" | "buffs" =>
   page === "talents" || page === "skills" || page === "buffs"
+const hasAverageDamageFilter = (page: TableViewPage | null): page is "talents" | "buffs" | "tarot" =>
+  page === "talents" || page === "buffs" || page === "tarot"
 
 export default function TopNav() {
   const pathname = usePathname()
@@ -171,6 +180,7 @@ export default function TopNav() {
   const showFilterControls = tablePage !== null
   const sortPage = isSortPage(tablePage) ? tablePage : null
   const showSortControls = sortPage !== null
+  const showAverageDamageFilter = hasAverageDamageFilter(tablePage)
 
   useLayoutEffect(() => {
     const nav = navRef.current
@@ -234,12 +244,14 @@ export default function TopNav() {
 
   const hasActiveFilters = tablePage === "tarot"
     ? (
+      (showAverageDamageFilter && viewState.averageDamageFilter !== "all") ||
       viewState.tarotTierFilter !== "all" ||
       viewState.tarotTypeFilter !== "all" ||
       viewState.selectionFilter !== "all" ||
       viewState.tarotEquipmentFilter !== "all"
     )
     : (
+      (showAverageDamageFilter && viewState.averageDamageFilter !== "all") ||
       Object.values(viewState.classFilter).some((mode) => mode !== "any") ||
       viewState.raceFilter !== "all" ||
       viewState.availabilityFilter !== "all"
@@ -440,6 +452,24 @@ export default function TopNav() {
                       </button>
                     ))}
                   </div>
+
+                  {showAverageDamageFilter && tablePage !== "skills" ? (
+                    <>
+                      <div className={sectionLabelClass}>Avg DMG</div>
+                      <div className="grid gap-1">
+                        {averageDamageFilterOptions.map((option) => (
+                          <button
+                            key={option.value}
+                            type="button"
+                            onClick={() => updateViewState({ averageDamageFilter: option.value })}
+                            className={optionButtonClass(viewState.averageDamageFilter === option.value)}
+                          >
+                            {option.label}
+                          </button>
+                        ))}
+                      </div>
+                    </>
+                  ) : null}
                 </>
               ) : null}
 
@@ -500,6 +530,24 @@ export default function TopNav() {
                       </button>
                     ))}
                   </div>
+
+                  {showAverageDamageFilter ? (
+                    <>
+                      <div className={sectionLabelClass}>Avg DMG</div>
+                      <div className="grid gap-1">
+                        {averageDamageFilterOptions.map((option) => (
+                          <button
+                            key={option.value}
+                            type="button"
+                            onClick={() => updateViewState({ averageDamageFilter: option.value })}
+                            className={optionButtonClass(viewState.averageDamageFilter === option.value)}
+                          >
+                            {option.label}
+                          </button>
+                        ))}
+                      </div>
+                    </>
+                  ) : null}
                 </>
               ) : null}
             </div>

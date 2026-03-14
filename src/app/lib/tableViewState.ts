@@ -5,6 +5,7 @@ export type ClassFilterMode = "any" | "required" | "optional" | "excluded"
 export type ClassFilter = Record<ClassFilterKey, ClassFilterMode>
 export type RaceFilter = "all" | "current" | "raceSpecific"
 export type AvailabilityFilter = "all" | "available" | "unavailable"
+export type AverageDamageFilter = "all" | "increaseOnly" | "nonIncrease"
 export type SortMode = "default" | "damage" | "cost" | "tier"
 export type SortDirection = "asc" | "desc"
 export type TarotTierFilter = "all" | "3" | "4" | "5"
@@ -16,6 +17,7 @@ export type TableViewState = {
   classFilter: ClassFilter
   raceFilter: RaceFilter
   availabilityFilter: AvailabilityFilter
+  averageDamageFilter: AverageDamageFilter
   sortMode: SortMode
   sortDirection: SortDirection
   tarotTierFilter: TarotTierFilter
@@ -37,6 +39,7 @@ const LEGACY_CLASS_FILTERS = new Set(["all", ...CLASS_FILTER_KEYS] as const)
 const CLASS_FILTER_MODES = new Set<ClassFilterMode>(["any", "required", "optional", "excluded"])
 const RACE_FILTERS = new Set<RaceFilter>(["all", "current", "raceSpecific"])
 const AVAILABILITY_FILTERS = new Set<AvailabilityFilter>(["all", "available", "unavailable"])
+const AVERAGE_DAMAGE_FILTERS = new Set<AverageDamageFilter>(["all", "increaseOnly", "nonIncrease"])
 const SORT_MODES = new Set<SortMode>(["default", "damage", "cost", "tier"])
 const SORT_DIRECTIONS = new Set<SortDirection>(["asc", "desc"])
 const TAROT_TIER_FILTERS = new Set<TarotTierFilter>(["all", "3", "4", "5"])
@@ -76,6 +79,7 @@ export function getDefaultTableViewState(): TableViewState {
     classFilter: getDefaultClassFilter(),
     raceFilter: "all",
     availabilityFilter: "all",
+    averageDamageFilter: "all",
     sortMode: "default",
     sortDirection: getDefaultSortDirection("default"),
     tarotTierFilter: "all",
@@ -87,6 +91,21 @@ export function getDefaultTableViewState(): TableViewState {
 
 export function getDefaultSortDirection(sortMode: SortMode): SortDirection {
   return sortMode === "default" ? "asc" : "desc"
+}
+
+export function matchesAverageDamageFilter(
+  value: number | null | undefined,
+  filter: AverageDamageFilter,
+): boolean {
+  if (filter === "all") {
+    return true
+  }
+
+  if (value === null || value === undefined || !Number.isFinite(value)) {
+    return true
+  }
+
+  return filter === "increaseOnly" ? value > 0 : value <= 0
 }
 
 export function getDefaultClassFilter(): ClassFilter {
@@ -151,6 +170,9 @@ export function readTableViewState(storage: Storage, page: TableViewPage): Table
       availabilityFilter: AVAILABILITY_FILTERS.has(parsed.availabilityFilter as AvailabilityFilter)
         ? (parsed.availabilityFilter as AvailabilityFilter)
         : fallback.availabilityFilter,
+      averageDamageFilter: AVERAGE_DAMAGE_FILTERS.has(parsed.averageDamageFilter as AverageDamageFilter)
+        ? (parsed.averageDamageFilter as AverageDamageFilter)
+        : fallback.averageDamageFilter,
       sortMode,
       sortDirection: SORT_DIRECTIONS.has(parsed.sortDirection as SortDirection)
         ? (parsed.sortDirection as SortDirection)

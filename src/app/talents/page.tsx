@@ -19,6 +19,7 @@ import { getTalentAvailabilityState, matchesClassFilter, matchesRaceFilter } fro
 import {
   getDefaultTableViewState,
   MANAGED_TABLE_VIEW_EVENT,
+  matchesAverageDamageFilter,
   readTableViewState,
   type ManagedTableViewChangeDetail,
   type TableViewState,
@@ -240,6 +241,10 @@ function TalentsPageContent() {
       }
 
       if (viewState.availabilityFilter === "unavailable" && availabilityState.isAvailable) {
+        return false
+      }
+
+      if (!matchesAverageDamageFilter(averageDamageChanges[talentName], viewState.averageDamageFilter)) {
         return false
       }
 

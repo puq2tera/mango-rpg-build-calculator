@@ -15,6 +15,7 @@ import { getSkillAvailabilityState, matchesClassFilter, matchesRaceFilter } from
 import {
   getDefaultTableViewState,
   MANAGED_TABLE_VIEW_EVENT,
+  matchesAverageDamageFilter,
   readTableViewState,
   type ManagedTableViewChangeDetail,
   type TableViewState,
@@ -159,9 +160,10 @@ export default function BuffsPage() {
       const maxIndex = Math.min(index + chunkSize, buffNames.length)
       for (; index < maxIndex; index++) {
         const buffName = buffNames[index]
+        const wasSelected = selected.has(buffName)
         const toggledBuffs = new Set(selectedBuffNames)
 
-        if (toggledBuffs.has(buffName)) {
+        if (wasSelected) {
           toggledBuffs.delete(buffName)
         } else {
           toggledBuffs.add(buffName)
@@ -172,7 +174,9 @@ export default function BuffsPage() {
           damageState,
         ).average
 
-        computedChanges[buffName] = nextAverage - currentAverage
+        computedChanges[buffName] = wasSelected
+          ? currentAverage - nextAverage
+          : nextAverage - currentAverage
       }
 
       if (index < buffNames.length) {
@@ -244,6 +248,10 @@ export default function BuffsPage() {
       }
 
       if (viewState.availabilityFilter === "unavailable" && availabilityState.isAvailable) {
+        return false
+      }
+
+      if (!matchesAverageDamageFilter(averageDamageChanges[buffName], viewState.averageDamageFilter)) {
         return false
       }
 

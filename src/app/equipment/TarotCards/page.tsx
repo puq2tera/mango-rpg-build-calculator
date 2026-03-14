@@ -1,6 +1,6 @@
 "use client"
 
-import { startTransition, useEffect, useEffectEvent, useMemo, useRef, useState } from "react"
+import { Suspense, startTransition, useEffect, useEffectEvent, useMemo, useRef, useState } from "react"
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import { OverflowTitle } from "@/app/components/OverflowTitle"
 import { InteractiveTableHeader } from "@/app/components/InteractiveTableHeader"
@@ -32,6 +32,7 @@ import {
 import {
   getDefaultTableViewState,
   MANAGED_TABLE_VIEW_EVENT,
+  matchesAverageDamageFilter,
   readTableViewState,
   type ManagedTableViewChangeDetail,
   type TableViewState,
@@ -112,7 +113,7 @@ function getTarotTypeBadgeClass(isActive: boolean): string {
     : "bg-slate-400/10 text-slate-300 ring-1 ring-inset ring-slate-400/25"
 }
 
-export default function TarotCardsPage() {
+function TarotCardsPageContent() {
   const [isHydrated, setIsHydrated] = useState(false)
   const [selected, setSelected] = useState<Set<string>>(new Set())
   const [autoLinked, setAutoLinked] = useState<Set<string>>(new Set())
@@ -249,9 +250,10 @@ export default function TarotCardsPage() {
       const maxIndex = Math.min(index + chunkSize, tarotNames.length)
       for (; index < maxIndex; index++) {
         const tarotName = tarotNames[index]
+        const wasSelected = effectiveSelected.has(tarotName)
         const toggledTarots = new Set(selectedTarotNames)
 
-        if (toggledTarots.has(tarotName)) {
+        if (wasSelected) {
           toggledTarots.delete(tarotName)
         } else {
           toggledTarots.add(tarotName)
@@ -262,7 +264,9 @@ export default function TarotCardsPage() {
           damageState,
         ).average
 
-        computedChanges[tarotName] = nextAverage - currentAverage
+        computedChanges[tarotName] = wasSelected
+          ? currentAverage - nextAverage
+          : nextAverage - currentAverage
       }
 
       if (index < tarotNames.length) {
@@ -389,6 +393,10 @@ export default function TarotCardsPage() {
         }
 
         if (viewState.tarotEquipmentFilter === "inEquipment" && !equipmentTarotNames.has(row.name)) {
+          return false
+        }
+
+        if (!matchesAverageDamageFilter(averageDamageChanges[row.name], viewState.averageDamageFilter)) {
           return false
         }
 
@@ -569,5 +577,13 @@ export default function TarotCardsPage() {
         {autoLinked.size > 0 ? ` Auto-linked tarots from equipment stay selected here.` : ""}
       </div>
     </div>
+  )
+}
+
+export default function TarotCardsPage() {
+  return (
+    <Suspense fallback={<div className="p-4">Loading...</div>}>
+      <TarotCardsPageContent />
+    </Suspense>
   )
 }
