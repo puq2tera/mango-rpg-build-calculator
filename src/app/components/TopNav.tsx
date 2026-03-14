@@ -453,7 +453,7 @@ export default function TopNav() {
                     ))}
                   </div>
 
-                  {showAverageDamageFilter && tablePage !== "skills" ? (
+                  {showAverageDamageFilter ? (
                     <>
                       <div className={sectionLabelClass}>Avg DMG</div>
                       <div className="grid gap-1">
