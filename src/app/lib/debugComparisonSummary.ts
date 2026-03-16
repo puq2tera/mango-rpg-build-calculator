@@ -697,7 +697,7 @@ export function buildDebugSummary(storage: Storage): SummaryState {
   const displayBaseStats = getDisplayBaseStats(charcardStages)
   const displayDungeonStats = getDisplayDungeonStats(snapshot, stages)
   const totalLevels = classKeys.reduce((total, classKey) => total + (snapshot.selectedLevels[classKey] ?? 0), 0)
-  const availableSkillPoints = Math.ceil(totalLevels / 2)
+  const availableSkillPoints = Math.max(0, Math.floor((totalLevels - 1) / 2))
   const usedSkillPoints = getUsedSkillPoints(snapshot)
   const availableTalentPoints = Math.floor(totalLevels / 2)
   const usedTalentPoints = snapshot.selectedTalents.length

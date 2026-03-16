@@ -380,7 +380,7 @@ export default function LevelsPage() {
   const totalLevels = Object.values(levels).reduce((a, b) => a + b, 0)
   const maxManualRangeLevel = getManualRangeMaxTotalLevel(manualLevelRanges)
   const needsManualLevelSync = maxManualRangeLevel > totalLevels
-  const availableSkillPoints = Math.ceil(totalLevels / 2)
+  const availableSkillPoints = Math.max(0, Math.floor((totalLevels - 1) / 2))
   const availableTalentPoints = Math.floor(totalLevels / 2)
   const totalStatPoints = totalLevels
   const usedStatPoints = Object.values(statPoints).reduce((a, b) => a + b, 0)
@@ -440,7 +440,7 @@ export default function LevelsPage() {
   const classLevelsNeeded = classKeys.reduce((sum, className) => sum + classLevelDeficit[className], 0)
   const requiredLevelForTalentPoints = totalTalentPointsUsed * 2
   const totalSkillPointsRequired = totalSkillPointsUsed + totalTraining
-  const requiredLevelForSkillPoints = Math.max(0, (totalSkillPointsRequired * 2) - 1)
+  const requiredLevelForSkillPoints = totalSkillPointsRequired === 0 ? 0 : (totalSkillPointsRequired * 2) + 1
   const pointBasedRequiredLevel = Math.max(requiredLevelForTalentPoints, requiredLevelForSkillPoints)
   const totalRequiredLevel = Math.max(requiredTotalLevel, pointBasedRequiredLevel)
   const totalLevelDeficit = Math.max(0, totalRequiredLevel - totalLevels)

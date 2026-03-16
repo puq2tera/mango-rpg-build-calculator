@@ -359,7 +359,7 @@ function SkillsPageContent() {
 
   const totalLevels = Object.values(classLevels).reduce((sum, value) => sum + value, 0)
   const spentSkillPoints = Array.from(selected).reduce((sum, skillName) => sum + (skill_data[skillName]?.sp ?? 0), 0) + totalTraining
-  const availableSkillPoints = Math.ceil(totalLevels / 2)
+  const availableSkillPoints = Math.max(0, Math.floor((totalLevels - 1) / 2))
   const skillPointsOverSpent = spentSkillPoints > availableSkillPoints
 
   return (
