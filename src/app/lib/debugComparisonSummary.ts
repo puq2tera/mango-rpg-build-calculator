@@ -4,6 +4,7 @@ import { race_data_by_tag } from "@/app/data/race_data"
 import { skill_data } from "@/app/data/skill_data"
 import stat_data from "@/app/data/stat_data"
 import tarot_data from "@/app/data/tarot_data"
+import { groupAdditionalStageStatEntries } from "@/app/lib/additionalStageStats"
 import {
   computeBuildStatStages,
   readBuildSnapshot,
@@ -483,6 +484,7 @@ function getDisplayBaseStats(stages: BuildStatStages): Record<string, number> {
 }
 
 function getRawDungeonDisplayStats(snapshot: BuildSnapshot, stages: BuildStatStages): Record<string, number> {
+  const additionalStageStats = groupAdditionalStageStatEntries(snapshot.additionalStageStats)
   const buffStats = computeDisplayEffectStats(
     snapshot.selectedBuffs,
     snapshot.selectedBuffStacks,
@@ -497,7 +499,13 @@ function getRawDungeonDisplayStats(snapshot: BuildSnapshot, stages: BuildStatSta
     tarot_data as Record<string, EffectSourceData | undefined>,
   )
 
-  return mergeStats(getDisplayBaseStats(stages), buffStats, tarotStats)
+  return mergeStats(
+    getDisplayBaseStats(stages),
+    buffStats,
+    additionalStageStats.buffs,
+    tarotStats,
+    additionalStageStats.tarots,
+  )
 }
 
 function getDungeonMainStats(snapshot: BuildSnapshot, stages: BuildStatStages): Record<string, number> {

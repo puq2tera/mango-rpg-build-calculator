@@ -5,6 +5,12 @@ import { skill_data, type Skill } from "@/app/data/skill_data"
 import stat_data from "@/app/data/stat_data"
 import { talent_data } from "@/app/data/talent_data"
 import tarot_data, { type Tarot } from "@/app/data/tarot_data"
+import {
+  ADDITIONAL_STAGE_STATS_STORAGE_KEY,
+  groupAdditionalStageStatEntries,
+  normalizeAdditionalStageStatEntries,
+  type AdditionalStageStatEntry,
+} from "@/app/lib/additionalStageStats"
 import { normalizeArtifact } from "@/app/lib/artifactState"
 import {
   getTarotScalingValue,
@@ -40,6 +46,7 @@ export type BuildSnapshot = {
   equipmentSlots: EquipmentSlot[]
   enabledEquipment: number[]
   artifact: Record<string, number>
+  additionalStageStats: AdditionalStageStatEntry[]
 }
 
 export type BuildStatStages = {
@@ -130,7 +137,66 @@ export function readBuildSnapshot(storage: Storage): BuildSnapshot {
     equipmentSlots: normalizeEquipmentSlots(jsonParse(storage.getItem("EquipmentSlots"), [])),
     enabledEquipment: asEnabledEquipment(jsonParse(storage.getItem("EnabledEquipment"), [])),
     artifact: normalizeArtifact(jsonParse(storage.getItem("Artifact"), null)),
+    additionalStageStats: normalizeAdditionalStageStatEntries(
+      jsonParse(storage.getItem(ADDITIONAL_STAGE_STATS_STORAGE_KEY), []),
+    ),
   }
+}
+
+function addRawStageStat(targetDict: Record<string, number>, stat: string, value: number): void {
+  if (!Number.isFinite(value) || Math.abs(value) < 0.0001) {
+    return
+  }
+
+  targetDict[stat] = (targetDict[stat] ?? 0) + value
+}
+
+function addExpandedStageStat(targetDict: Record<string, number>, stat: string, value: number): void {
+  if (!Number.isFinite(value) || Math.abs(value) < 0.0001) {
+    return
+  }
+
+  addRawStageStat(targetDict, stat, value)
+
+  const info = stat_data.StatsInfo[stat as keyof typeof stat_data.StatsInfo]
+  if (!info?.sub_stats) {
+    return
+  }
+
+  for (const subStat of info.sub_stats) {
+    addRawStageStat(targetDict, subStat, value)
+  }
+}
+
+function mergeRawStageStats(baseStats: Record<string, number>, addedStats: Record<string, number>): Record<string, number> {
+  if (Object.keys(addedStats).length === 0) {
+    return baseStats
+  }
+
+  const merged = { ...baseStats }
+
+  for (const [stat, value] of Object.entries(addedStats)) {
+    addRawStageStat(merged, stat, value)
+  }
+
+  return merged
+}
+
+function mergeExpandedStageStats(
+  baseStats: Record<string, number>,
+  addedStats: Record<string, number>,
+): Record<string, number> {
+  if (Object.keys(addedStats).length === 0) {
+    return baseStats
+  }
+
+  const merged = { ...baseStats }
+
+  for (const [stat, value] of Object.entries(addedStats)) {
+    addExpandedStageStat(merged, stat, value)
+  }
+
+  return merged
 }
 
 function updateConversionSubStats(
@@ -249,19 +315,10 @@ function updateStats(
 
 function combineBaseStats(...sources: Record<string, number>[]): Record<string, number> {
   const statsBase: Record<string, number> = {}
-  const addStat = (stat: string, value: number) => {
-    statsBase[stat] = (statsBase[stat] ?? 0) + value
-    const info = stat_data.StatsInfo[stat as keyof typeof stat_data.StatsInfo]
-    if (!info?.sub_stats) return
-
-    for (const subStat of info.sub_stats) {
-      statsBase[subStat] = (statsBase[subStat] ?? 0) + value
-    }
-  }
 
   for (const source of sources) {
     for (const [stat, value] of Object.entries(source)) {
-      addStat(stat, value)
+      addExpandedStageStat(statsBase, stat, value)
     }
   }
 
@@ -672,19 +729,32 @@ export function computeBuildStatStages(
     : snapshot.selectedTarots
   const buffStacks = overrides?.buffStacks ?? snapshot.selectedBuffStacks
   const tarotStacks = overrides?.tarotStacks ?? snapshot.tarotStacks
+  const additionalStageStats = groupAdditionalStageStatEntries(snapshot.additionalStageStats)
 
-  const statsTalents = computeTalentStats(snapshot, selectedTalents)
-  const statsLevels = computeLevelStats(snapshot)
-  const statsEquipment = computeEquipmentStats(snapshot)
-  const statsRunes = computeRuneStats(snapshot)
-  const statsArtifact = computeArtifactStats(snapshot)
+  const statsTalents = mergeRawStageStats(
+    computeTalentStats(snapshot, selectedTalents),
+    additionalStageStats.talents,
+  )
+  const statsLevels = mergeRawStageStats(computeLevelStats(snapshot), additionalStageStats.levels)
+  const statsEquipment = mergeRawStageStats(computeEquipmentStats(snapshot), additionalStageStats.equipment)
+  const statsRunes = mergeRawStageStats(computeRuneStats(snapshot), additionalStageStats.runes)
+  const statsArtifact = mergeRawStageStats(computeArtifactStats(snapshot), additionalStageStats.artifact)
   const statsBase = combineBaseStats(statsTalents, statsEquipment, statsLevels, statsRunes, statsArtifact)
   const statsXPen = computexPenStats(statsBase)
   const statsConversionReady = computeConversionReadyStats(statsBase)
-  const statsConverted = computeConvertedTalentStats(statsConversionReady, selectedTalents)
+  const statsConverted = mergeRawStageStats(
+    computeConvertedTalentStats(statsConversionReady, selectedTalents),
+    additionalStageStats.converted,
+  )
   const statsBuffReady = computeBuffReadyStats(statsConversionReady, statsConverted)
-  const statsBuffs = computeBuffStats(selectedBuffs, buffStacks, statsBuffReady)
-  const statsTarots = computeTarotStats(selectedTarots, tarotStacks, statsBuffReady)
+  const statsBuffs = mergeExpandedStageStats(
+    computeBuffStats(selectedBuffs, buffStacks, statsBuffReady),
+    additionalStageStats.buffs,
+  )
+  const statsTarots = mergeExpandedStageStats(
+    computeTarotStats(selectedTarots, tarotStacks, statsBuffReady),
+    additionalStageStats.tarots,
+  )
   const statsDmgReady = computeDmgReadyStats(statsBuffReady, statsBuffs, statsTarots)
 
   return {

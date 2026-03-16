@@ -46,6 +46,7 @@ const navLinks = [
   ["/Levels", "Levels"],
   ["/Skills/Buffs", "Buffs"],
   ["/Skills/BuffSorter", "Buff Overview"],
+  ["/StatTest", "Stat Test"],
   ["/equipment", "Equipment"],
   ["/equipment/Runewords", "Runewords"],
   ["/equipment/TarotCards", "Tarot Cards"],
