@@ -203,6 +203,14 @@ function renderOverflowValue(columnId: string, value: ReactNode, tooltipText?: s
   )
 }
 
+function LinkedSkillIcon(): ReactNode {
+  return (
+    <span aria-hidden="true" className="shrink-0 text-xs leading-none">
+      ⭐
+    </span>
+  )
+}
+
 export function ToggleButton({
   talentName,
   talent,
@@ -343,7 +351,12 @@ export function ToggleButton({
           {column.collapsed
             ? ""
             : column.id === "name" && linkedSkillTooltip
-              ? <span className={getOverflowWrapperClass(column.id)}>{values[column.id] ?? ""}</span>
+              ? (
+                <span className="flex min-w-0 items-center gap-1">
+                  <span className={getOverflowWrapperClass(column.id)}>{values[column.id] ?? ""}</span>
+                  <LinkedSkillIcon />
+                </span>
+              )
               : renderOverflowValue(column.id, values[column.id] ?? "", tooltipValues[column.id])}
         </span>
       ))}
