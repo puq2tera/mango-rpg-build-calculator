@@ -488,7 +488,8 @@ function computeLevelStats(snapshot: BuildSnapshot): Record<string, number> {
     + (healerLevels * stat_data.ClassMainStatValues.healer.MP)
 
   statsLevels.Focus = 100 + (warriorLevels * stat_data.ClassMainStatValues.warrior.Focus)
-  const threatLevelBonus = tankLevels >= Math.max(...Object.values(snapshot.selectedLevels), 0) ? tankLevels * 10 : tankLevels * 2
+  // TODO: Verify that changing level based threat gaing from 10-2 to 5-1 is accurate
+  const threatLevelBonus = tankLevels >= Math.max(...Object.values(snapshot.selectedLevels), 0) ? tankLevels * 5 : tankLevels
   statsLevels[THREAT_LEVELS_STAT] = threatLevelBonus
   statsLevels[THREAT_BASE_STAT] = 100 + threatLevelBonus
 

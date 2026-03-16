@@ -12,15 +12,19 @@ function getLegacyDisplayedThreatBonusModifierPercent(stats: Record<string, numb
   return Math.abs(threatValue) >= 100 ? threatValue : 100 + threatValue
 }
 
-export function getTotalThreatModifierPercent(stats: Record<string, number>): number {
-  if (hasOwnStat(stats, THREAT_BASE_STAT)) {
-    return (stats[THREAT_BASE_STAT] ?? 100) + (stats[THREAT_BONUS_STAT] ?? 0)
-  }
-
-  return hasOwnStat(stats, THREAT_BONUS_STAT) ? (stats[THREAT_BONUS_STAT] ?? 0) : 100
+function getThreatBasePercent(stats: Record<string, number>): number {
+  return stats[THREAT_BASE_STAT] ?? 100
 }
 
-export function getDisplayedThreatLevelModifierPercent(stats: Record<string, number>): number {
+export function getThreatLevelMultiplier(stats: Record<string, number>): number {
+  return Math.max(0, getThreatBasePercent(stats) / 100)
+}
+
+export function getThreatBonusMultiplier(stats: Record<string, number>): number {
+  return Math.max(0, getDisplayedThreatBonusModifierPercent(stats) / 100)
+}
+
+function getThreatLevelsPercent(stats: Record<string, number>): number {
   if (hasOwnStat(stats, THREAT_LEVELS_STAT)) {
     return stats[THREAT_LEVELS_STAT] ?? 0
   }
@@ -29,7 +33,19 @@ export function getDisplayedThreatLevelModifierPercent(stats: Record<string, num
     return 0
   }
 
-  return (stats[THREAT_BASE_STAT] ?? 100) - 100
+  return getThreatBasePercent(stats) - 100
+}
+
+export function getTotalThreatModifierPercent(stats: Record<string, number>): number {
+  if (hasOwnStat(stats, THREAT_BASE_STAT)) {
+    return getThreatLevelMultiplier(stats) * getThreatBonusMultiplier(stats) * 100
+  }
+
+  return hasOwnStat(stats, THREAT_BONUS_STAT) ? (stats[THREAT_BONUS_STAT] ?? 0) : 100
+}
+
+export function getDisplayedThreatLevelModifierPercent(stats: Record<string, number>): number {
+  return getThreatLevelsPercent(stats)
 }
 
 export function getDisplayedThreatBonusModifierPercent(stats: Record<string, number>): number {

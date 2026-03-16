@@ -307,10 +307,13 @@ function applyThreatOffenseMultipliers(
   baseThreat: number,
   stats: Record<string, number>,
   element: string,
+  penElement: string,
   skillType: string,
+  skillPen: number,
 ): number {
   let result = baseThreat
   result = Math.floor(result * toMult(stats[`${element}%`]))
+  result = Math.floor(result * toMult((stats[`${penElement} Pen%`] ?? 0) + skillPen))
   result = Math.floor(result * toMult(stats[`${element} xDmg%`]))
   result = Math.floor(result * toMult(stats[`${skillType} DMG%`]))
   result = Math.floor(result * toMult(stats["Dmg%"]))
@@ -352,7 +355,7 @@ function buildDamageContext(stats: Record<string, number>, state: DamageCalcStat
 }
 
 function finalizeDamageResult(nonCrit: number, context: NormalizedDamageContext): DamageCalcResult {
-  const { stats, element, skillType, inputs } = context
+  const { stats, element, penElement, skillType, inputs } = context
   const skillCritDamageBonus =
     getTotalStatValue(stats, skillCritDamageStatsBySkillType[skillType] ?? [])
     + (stat_data.Elemental.includes(element) ? (stats["Elemental Crit DMG%"] ?? 0) : 0)
@@ -382,7 +385,14 @@ function finalizeDamageResult(nonCrit: number, context: NormalizedDamageContext)
   const dotCrit = Math.floor(crit * dotMult)
 
   const threatBase = Math.floor((stats["DEF"] ?? 0) * ((inputs.threatDef ?? 0) / 100))
-  const threatWithOffenseScaling = applyThreatOffenseMultipliers(threatBase, stats, element, skillType)
+  const threatWithOffenseScaling = applyThreatOffenseMultipliers(
+    threatBase,
+    stats,
+    element,
+    penElement,
+    skillType,
+    inputs.skillPen ?? 0,
+  )
   const threatNonCrit = Math.floor(threatWithOffenseScaling * getThreatMultiplier(stats))
   const threatCrit = Math.floor(threatNonCrit * threatCritDamageMultiplier)
   const threatMaxcrit = Math.floor(threatCrit * ((stats["Overdrive%"] ?? 0) / 100))
