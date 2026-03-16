@@ -20,7 +20,7 @@ import {
 } from "@/app/lib/equipmentSlots"
 import { readStoredStatPoints } from "@/app/lib/mainStatPoints"
 import { readStoredEffectiveTarotSelections } from "@/app/lib/tarotSelections"
-import { THREAT_BASE_STAT } from "@/app/lib/threat"
+import { THREAT_BASE_STAT, THREAT_LEVELS_STAT } from "@/app/lib/threat"
 import {
   getManualRangeGain,
   normalizeManualLevelRanges,
@@ -488,11 +488,9 @@ function computeLevelStats(snapshot: BuildSnapshot): Record<string, number> {
     + (healerLevels * stat_data.ClassMainStatValues.healer.MP)
 
   statsLevels.Focus = 100 + (warriorLevels * stat_data.ClassMainStatValues.warrior.Focus)
-  if (tankLevels >= Math.max(...Object.values(snapshot.selectedLevels), 0)) {
-    statsLevels[THREAT_BASE_STAT] = 100 + tankLevels * 10
-  } else {
-    statsLevels[THREAT_BASE_STAT] = 100 + tankLevels * 2
-  }
+  const threatLevelBonus = tankLevels >= Math.max(...Object.values(snapshot.selectedLevels), 0) ? tankLevels * 10 : tankLevels * 2
+  statsLevels[THREAT_LEVELS_STAT] = threatLevelBonus
+  statsLevels[THREAT_BASE_STAT] = 100 + threatLevelBonus
 
   for (const stat of stat_data.Mainstats) {
     statsLevels[stat] = 5

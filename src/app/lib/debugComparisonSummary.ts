@@ -11,7 +11,14 @@ import {
   type BuildSnapshot,
   type BuildStatStages,
 } from "@/app/lib/buildStats"
-import { getDisplayedThreatModifierPercent, isInternalThreatStat } from "@/app/lib/threat"
+import {
+  THREAT_BONUS_DISPLAY_STAT,
+  THREAT_LEVELS_STAT,
+  getDisplayedThreatBonusModifierPercent,
+  getDisplayedThreatLevelModifierPercent,
+  getDisplayedThreatModifierPercent,
+  isInternalThreatStat,
+} from "@/app/lib/threat"
 
 type ClassKey = "tank" | "warrior" | "caster" | "healer"
 
@@ -245,6 +252,14 @@ function formatPrecisePercent(value: number, maxDigits = 6): string {
 function getStat(stats: Record<string, number>, key: string): number {
   if (key === "Threat%") {
     return getDisplayedThreatModifierPercent(stats)
+  }
+
+  if (key === THREAT_LEVELS_STAT) {
+    return getDisplayedThreatLevelModifierPercent(stats)
+  }
+
+  if (key === THREAT_BONUS_DISPLAY_STAT) {
+    return getDisplayedThreatBonusModifierPercent(stats)
   }
 
   return stats[key] ?? 0
@@ -586,6 +601,10 @@ function getReadableStatLabel(stat: string): string {
       return "Bow Crit Damage"
     case "Threat%":
       return "Threat Modifier"
+    case THREAT_LEVELS_STAT:
+      return "Threat From Levels"
+    case THREAT_BONUS_DISPLAY_STAT:
+      return "Threat Modifier"
     case "Neg%":
       return "Negative DMG"
     case "Holy%":
@@ -875,7 +894,7 @@ function getBaseDetailRows(baseStats: Record<string, number>): TerminalDetailRow
     },
     {
       label: "Threat Modifier",
-      value: formatPercent(getStat(baseStats, "Threat%")),
+      value: formatPercent(getStat(baseStats, THREAT_BONUS_DISPLAY_STAT)),
     },
   ]
 }
@@ -908,7 +927,7 @@ function getDungeonDetailRows(stats: Record<string, number>): TerminalDetailRow[
     },
     {
       label: "Threat Modifier",
-      value: formatPercent(getStat(stats, "Threat%")),
+      value: formatPercent(getStat(stats, THREAT_BONUS_DISPLAY_STAT)),
     },
   ]
 }
