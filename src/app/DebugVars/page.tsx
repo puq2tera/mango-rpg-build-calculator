@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useMemo, useState, type ReactNode } from "react"
+import { useEffect, useMemo, useState, type Dispatch, type ReactNode, type SetStateAction } from "react"
 import { BUILD_SNAPSHOT_UPDATED_EVENT } from "@/app/lib/buildEvents"
 import {
   buildDebugSummary,
@@ -68,13 +68,13 @@ const panelClass =
   "rounded-[28px] border border-slate-800/80 bg-[linear-gradient(145deg,rgba(6,11,20,0.97),rgba(15,23,42,0.9))] shadow-[0_28px_90px_rgba(2,6,23,0.42)]"
 
 const textareaClass =
-  "min-h-[18rem] w-full rounded-2xl border border-slate-700/80 bg-slate-950/80 px-4 py-3 font-mono text-sm text-slate-100 shadow-inner outline-none transition placeholder:text-slate-500 focus:border-sky-300/50 focus:ring-2 focus:ring-sky-400/20"
+  "min-h-[8.5rem] w-full rounded-xl border border-slate-700/80 bg-slate-950/80 px-3 py-2.5 font-mono text-xs text-slate-100 shadow-inner outline-none transition placeholder:text-slate-500 focus:border-sky-300/50 focus:ring-2 focus:ring-sky-400/20"
 
 const compactCardClass =
-  "rounded-2xl border border-slate-800/80 bg-slate-950/55 px-4 py-4 shadow-[0_16px_40px_rgba(2,6,23,0.22)]"
+  "rounded-2xl border border-slate-800/80 bg-slate-950/55 px-4 py-3.5 shadow-[0_16px_40px_rgba(2,6,23,0.22)]"
 
 const emptyStateClass =
-  "rounded-2xl border border-dashed border-slate-700/80 bg-slate-950/40 px-4 py-10 text-center text-sm text-slate-400"
+  "rounded-2xl border border-dashed border-slate-700/80 bg-slate-950/40 px-4 py-8 text-center text-sm text-slate-400"
 
 const defaultInputs: PasteInputs = {
   guildCard: "",
@@ -268,37 +268,37 @@ function ComparisonTable({
 
   return (
     <section className={compactCardClass}>
-      <div className="flex flex-wrap items-start justify-between gap-4">
+      <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <div className="text-lg font-semibold text-slate-50">{title}</div>
-          <div className="mt-1 text-sm text-slate-400">{subtitle}</div>
+          <div className="text-base font-semibold text-slate-50">{title}</div>
+          <div className="mt-1 text-xs leading-5 text-slate-400">{subtitle}</div>
         </div>
 
-        <div className="flex flex-wrap gap-2 text-xs font-semibold uppercase tracking-[0.14em]">
-          <div className="rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1.5 text-emerald-100">
+        <div className="flex flex-wrap gap-1.5 text-[10px] font-semibold uppercase tracking-[0.14em]">
+          <div className="rounded-full border border-emerald-500/30 bg-emerald-500/10 px-2.5 py-1 text-emerald-100">
             {summary.match} Match
           </div>
-          <div className="rounded-full border border-amber-500/30 bg-amber-500/10 px-3 py-1.5 text-amber-100">
+          <div className="rounded-full border border-amber-500/30 bg-amber-500/10 px-2.5 py-1 text-amber-100">
             {summary.different} Diff
           </div>
-          <div className="rounded-full border border-fuchsia-500/30 bg-fuchsia-500/10 px-3 py-1.5 text-fuchsia-100">
+          <div className="rounded-full border border-fuchsia-500/30 bg-fuchsia-500/10 px-2.5 py-1 text-fuchsia-100">
             {summary.missingCalc} Parser Only
           </div>
-          <div className="rounded-full border border-sky-500/30 bg-sky-500/10 px-3 py-1.5 text-sky-100">
+          <div className="rounded-full border border-sky-500/30 bg-sky-500/10 px-2.5 py-1 text-sky-100">
             {summary.missingGame} Calc Only
           </div>
         </div>
       </div>
 
-      <div className="mt-4 overflow-x-auto">
-        <table className="min-w-full border-separate border-spacing-y-2 text-sm">
+      <div className="mt-3 overflow-x-auto">
+        <table className="min-w-full border-separate border-spacing-y-1.5 text-xs">
           <thead>
             <tr className="text-left text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500">
-              <th className="px-3 py-1">Field</th>
-              <th className="px-3 py-1">Calc</th>
-              <th className="px-3 py-1">In Game</th>
-              <th className="px-3 py-1">Delta</th>
-              <th className="px-3 py-1">Status</th>
+              <th className="px-2.5 py-1">Field</th>
+              <th className="px-2.5 py-1">Calc</th>
+              <th className="px-2.5 py-1">In Game</th>
+              <th className="px-2.5 py-1">Delta</th>
+              <th className="px-2.5 py-1">Status</th>
             </tr>
           </thead>
           <tbody>
@@ -306,21 +306,21 @@ function ComparisonTable({
               const result = compareComparableValues(row.calc, row.inGame)
 
               return (
-                <tr key={row.label}>
-                  <td className="rounded-l-2xl border border-slate-800/80 bg-slate-950/65 px-3 py-3 font-medium text-slate-100">
+                <tr key={row.label} className="align-top">
+                  <td className="rounded-l-xl border border-slate-800/80 bg-slate-950/65 px-2.5 py-2 font-medium text-slate-100">
                     {row.label}
                   </td>
-                  <td className="border-y border-slate-800/80 bg-slate-950/55 px-3 py-3 font-mono text-slate-200">
+                  <td className="border-y border-slate-800/80 bg-slate-950/55 px-2.5 py-2 font-mono text-slate-200">
                     {row.calc?.display ?? "—"}
                   </td>
-                  <td className="border-y border-slate-800/80 bg-slate-950/55 px-3 py-3 font-mono text-slate-200">
+                  <td className="border-y border-slate-800/80 bg-slate-950/55 px-2.5 py-2 font-mono text-slate-200">
                     {row.inGame?.display ?? "—"}
                   </td>
-                  <td className="border-y border-slate-800/80 bg-slate-950/55 px-3 py-3 font-mono text-slate-300">
+                  <td className="border-y border-slate-800/80 bg-slate-950/55 px-2.5 py-2 font-mono text-slate-300">
                     {result.delta ?? "—"}
                   </td>
-                  <td className="rounded-r-2xl border border-slate-800/80 bg-slate-950/65 px-3 py-3">
-                    <div className={`inline-flex rounded-full border px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.14em] ${getStatusClass(result.status)}`}>
+                  <td className="rounded-r-xl border border-slate-800/80 bg-slate-950/65 px-2.5 py-2">
+                    <div className={`inline-flex rounded-full border px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.14em] ${getStatusClass(result.status)}`}>
                       {formatStatusLabel(result.status)}
                     </div>
                   </td>
@@ -334,33 +334,108 @@ function ComparisonTable({
   )
 }
 
-function InputPanel({
-  label,
-  description,
-  placeholder,
-  value,
-  onChange,
+function PasteInputTable({
+  inputs,
+  setInputs,
+  onClear,
 }: {
-  label: string
-  description: string
-  placeholder: string
-  value: string
-  onChange: (value: string) => void
+  inputs: PasteInputs
+  setInputs: Dispatch<SetStateAction<PasteInputs>>
+  onClear: () => void
 }) {
+  const rows = [
+    {
+      label: "Guild Card",
+      description: "Race, levels, main stats, and rebirth level.",
+      placeholder: "Guild Card\nRace\nNorthern Human\nTotal Levels\n355 / 485\nT/W/C/H Levels\n50/200/5/100",
+      value: inputs.guildCard,
+      update: (value: string) => setInputs((current) => ({ ...current, guildCard: value })),
+    },
+    {
+      label: "Character Card",
+      description: "Out-of-dungeon card with damage type and element tables.",
+      placeholder: "@name's Character Card\nBase Stats & Multipliers\n❤️ Health   388,949 / 388,949\n️🗡️ ATK     4,108  |  +805%",
+      value: inputs.characterCard,
+      update: (value: string) => setInputs((current) => ({ ...current, characterCard: value })),
+    },
+    {
+      label: "Dungeon Stats",
+      description: "Dungeon card with the same stat blocks and tables.",
+      placeholder: "Dungeon Character Card\n❤️ Health   388,949 / 388,949\n️🗡️ ATK     239,447\nCrit Chance/Damage | 128% / 471%",
+      value: inputs.dungeonStats,
+      update: (value: string) => setInputs((current) => ({ ...current, dungeonStats: value })),
+    },
+    {
+      label: "Buffs / Debuffs",
+      description: "Active skill buffs and debuffs compared to selected buffs.",
+      placeholder: "◘ Fervant Arrows: +45 elebow\nSide-Effect: +51,245 atk\n\n◘ Hate of the Living: +32,881 def",
+      value: inputs.buffs,
+      update: (value: string) => setInputs((current) => ({ ...current, buffs: value })),
+    },
+  ] satisfies {
+    label: string
+    description: string
+    placeholder: string
+    value: string
+    update: (value: string) => void
+  }[]
+
   return (
-    <section className={compactCardClass}>
-      <div className="space-y-1">
-        <div className="text-lg font-semibold text-slate-50">{label}</div>
-        <div className="text-sm leading-6 text-slate-400">{description}</div>
+    <section className={panelClass}>
+      <div className="flex flex-wrap items-start justify-between gap-3 border-b border-slate-800/80 px-5 py-4 sm:px-6">
+        <div>
+          <div className="text-xl font-semibold text-slate-50">Paste Inputs</div>
+          <div className="mt-1 text-sm text-slate-400">
+            Unmatched rows stay visible so parser gaps and unsupported fields are obvious.
+          </div>
+        </div>
+
+        <button
+          type="button"
+          onClick={onClear}
+          className="rounded-full border border-slate-700/80 bg-slate-900/80 px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.16em] text-slate-200 transition hover:border-sky-300/40 hover:text-sky-100"
+        >
+          Clear Pasted Text
+        </button>
       </div>
 
-      <textarea
-        value={value}
-        onChange={(event) => onChange(event.target.value)}
-        placeholder={placeholder}
-        spellCheck={false}
-        className={`mt-4 ${textareaClass}`}
-      />
+      <div className="overflow-x-auto p-4 sm:p-5">
+        <table className="min-w-full table-fixed border-separate border-spacing-0 text-sm">
+          <thead>
+            <tr className="text-left text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500">
+              <th className="w-56 px-3 py-2">Section</th>
+              <th className="px-3 py-2">Paste</th>
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map((row, index) => (
+              <tr key={row.label} className="align-top">
+                <td
+                  className={`border border-slate-800/80 bg-slate-950/55 px-3 py-3 ${
+                    index === 0 ? "rounded-tl-2xl" : ""
+                  } ${index === rows.length - 1 ? "rounded-bl-2xl" : ""}`}
+                >
+                  <div className="text-sm font-semibold text-slate-50">{row.label}</div>
+                  <div className="mt-1 text-xs leading-5 text-slate-400">{row.description}</div>
+                </td>
+                <td
+                  className={`border border-l-0 border-slate-800/80 bg-slate-950/35 px-3 py-3 ${
+                    index === 0 ? "rounded-tr-2xl" : ""
+                  } ${index === rows.length - 1 ? "rounded-br-2xl" : ""}`}
+                >
+                  <textarea
+                    value={row.value}
+                    onChange={(event) => row.update(event.target.value)}
+                    placeholder={row.placeholder}
+                    spellCheck={false}
+                    className={textareaClass}
+                  />
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </section>
   )
 }
@@ -466,52 +541,52 @@ function BuffComparisonSection({
 
   return (
     <section className={compactCardClass}>
-      <div className="flex flex-wrap items-start justify-between gap-4">
+      <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <div className="text-lg font-semibold text-slate-50">Buff Comparison</div>
-          <div className="mt-1 text-sm text-slate-400">
+          <div className="text-base font-semibold text-slate-50">Buff Comparison</div>
+          <div className="mt-1 text-xs leading-5 text-slate-400">
             Buff names are matched case-insensitively. Effect rows compare by parsed stat key and amount when possible.
           </div>
         </div>
 
-        <div className="flex flex-wrap gap-2 text-xs font-semibold uppercase tracking-[0.14em]">
-          <div className="rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1.5 text-emerald-100">
+        <div className="flex flex-wrap gap-1.5 text-[10px] font-semibold uppercase tracking-[0.14em]">
+          <div className="rounded-full border border-emerald-500/30 bg-emerald-500/10 px-2.5 py-1 text-emerald-100">
             {summary.match} Match
           </div>
-          <div className="rounded-full border border-amber-500/30 bg-amber-500/10 px-3 py-1.5 text-amber-100">
+          <div className="rounded-full border border-amber-500/30 bg-amber-500/10 px-2.5 py-1 text-amber-100">
             {summary.different} Diff
           </div>
-          <div className="rounded-full border border-fuchsia-500/30 bg-fuchsia-500/10 px-3 py-1.5 text-fuchsia-100">
+          <div className="rounded-full border border-fuchsia-500/30 bg-fuchsia-500/10 px-2.5 py-1 text-fuchsia-100">
             {summary.missingCalc} Parser Only
           </div>
-          <div className="rounded-full border border-sky-500/30 bg-sky-500/10 px-3 py-1.5 text-sky-100">
+          <div className="rounded-full border border-sky-500/30 bg-sky-500/10 px-2.5 py-1 text-sky-100">
             {summary.missingGame} Calc Only
           </div>
         </div>
       </div>
 
       {comparedBuffs.length === 0 ? (
-        <div className="mt-4 text-sm text-slate-400">No calc buffs or pasted buffs to compare.</div>
+        <div className="mt-3 text-sm text-slate-400">No calc buffs or pasted buffs to compare.</div>
       ) : (
-        <div className="mt-4 grid gap-4 xl:grid-cols-2">
+        <div className="mt-3 grid gap-3 xl:grid-cols-2 2xl:grid-cols-3">
           {comparedBuffs.map((buff) => (
-            <article key={buff.name} className="rounded-2xl border border-slate-800/80 bg-slate-950/55 p-4">
+            <article key={buff.name} className="rounded-xl border border-slate-800/80 bg-slate-950/55 p-3">
               <div className="flex flex-wrap items-center justify-between gap-3">
-                <div className="text-base font-semibold text-slate-50">{buff.name}</div>
-                <div className={`inline-flex rounded-full border px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.14em] ${getStatusClass(buff.status)}`}>
+                <div className="text-sm font-semibold text-slate-50">{buff.name}</div>
+                <div className={`inline-flex rounded-full border px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.14em] ${getStatusClass(buff.status)}`}>
                   {formatStatusLabel(buff.status)}
                 </div>
               </div>
 
-              <div className="mt-4 grid gap-4 md:grid-cols-2">
+              <div className="mt-3 grid gap-3 md:grid-cols-2">
                 <div>
                   <div className="text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500">Calc</div>
-                  <div className="mt-2 flex min-h-[3rem] flex-wrap gap-2">
+                  <div className="mt-2 flex min-h-[2.5rem] flex-wrap gap-1.5">
                     {buff.calc?.effects.length ? (
                       buff.calc.effects.map((effect) => (
                         <div
                           key={`${buff.name}:calc:${effect.signature}`}
-                          className="rounded-full border border-slate-700/80 bg-slate-900/90 px-3 py-1.5 font-mono text-xs text-slate-100"
+                          className="rounded-full border border-slate-700/80 bg-slate-900/90 px-2.5 py-1 font-mono text-[11px] text-slate-100"
                         >
                           {effect.display}
                         </div>
@@ -524,12 +599,12 @@ function BuffComparisonSection({
 
                 <div>
                   <div className="text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500">In Game</div>
-                  <div className="mt-2 flex min-h-[3rem] flex-wrap gap-2">
+                  <div className="mt-2 flex min-h-[2.5rem] flex-wrap gap-1.5">
                     {buff.inGame?.effects.length ? (
                       buff.inGame.effects.map((effect) => (
                         <div
                           key={`${buff.name}:game:${effect.signature}`}
-                          className="rounded-full border border-slate-700/80 bg-slate-900/90 px-3 py-1.5 font-mono text-xs text-slate-100"
+                          className="rounded-full border border-slate-700/80 bg-slate-900/90 px-2.5 py-1 font-mono text-[11px] text-slate-100"
                         >
                           {effect.display}
                         </div>
@@ -561,12 +636,12 @@ function ComparisonBlock({
 }) {
   return (
     <section className={panelClass}>
-      <div className="border-b border-slate-800/80 px-5 py-5 sm:px-6">
-        <div className="text-xl font-semibold text-slate-50">{title}</div>
-        <div className="mt-1 text-sm text-slate-400">{subtitle}</div>
+      <div className="border-b border-slate-800/80 px-5 py-4 sm:px-6">
+        <div className="text-lg font-semibold text-slate-50">{title}</div>
+        <div className="mt-1 text-xs leading-5 text-slate-400">{subtitle}</div>
       </div>
 
-      <div className="p-4 sm:p-6">
+      <div className="p-4 sm:p-5">
         {hasInput ? children : (
           <div className={emptyStateClass}>
             Paste the corresponding in-game output above to generate a comparison.
@@ -698,87 +773,36 @@ export default function DebugVarsPage() {
 
   return (
     <div className="min-h-[calc(100vh-var(--top-nav-height))] bg-[radial-gradient(circle_at_top_left,rgba(56,189,248,0.12),transparent_28%),radial-gradient(circle_at_bottom_right,rgba(249,115,22,0.08),transparent_32%)] p-4 sm:p-6">
-      <div className="mx-auto max-w-7xl space-y-6">
-        <section className={`${panelClass} px-5 py-6 sm:px-6`}>
-          <div className="flex flex-wrap items-start justify-between gap-6">
-            <div className="max-w-3xl space-y-3">
-              <div className="text-[11px] font-semibold uppercase tracking-[0.26em] text-sky-300">Debug Comparison</div>
-              <h1 className="text-3xl font-semibold tracking-tight text-slate-50">
-                Paste in-game cards and compare them against the current calculator build
-              </h1>
-              <p className="text-sm leading-6 text-slate-400">
-                The calculator values come from the same current build snapshot used by the rest of the app. Paste raw
-                Discord output into any box below and the comparison updates immediately.
-              </p>
-            </div>
-
-            <div className="grid min-w-[18rem] gap-3 sm:grid-cols-2 xl:grid-cols-4">
-              <div className={compactCardClass}>
-                <div className="text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-400">Race</div>
-                <div className="mt-2 text-xl font-semibold text-slate-50">{summary.raceName}</div>
-              </div>
-              <div className={compactCardClass}>
-                <div className="text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-400">Total Levels</div>
-                <div className="mt-2 text-xl font-semibold text-slate-50">{formatWhole(summary.totalLevels)}</div>
-              </div>
-              <div className={compactCardClass}>
-                <div className="text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-400">Selected Buffs</div>
-                <div className="mt-2 text-xl font-semibold text-slate-50">{formatWhole(summary.snapshot.selectedBuffs.length)}</div>
-              </div>
-              <div className={compactCardClass}>
-                <div className="text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-400">Skill / Talent</div>
-                <div className="mt-2 text-xl font-semibold text-slate-50">
-                  {formatWhole(summary.remainingSkillPoints)} / {formatWhole(summary.remainingTalentPoints)}
-                </div>
-              </div>
-            </div>
+      <div className="mx-auto max-w-7xl space-y-4">
+        <section className={`${panelClass} px-5 py-4 sm:px-6`}>
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <div className="text-[11px] font-semibold uppercase tracking-[0.26em] text-sky-300">Debug Comparison</div>
+            <div className="text-xs text-slate-400">Current calculator snapshot</div>
           </div>
 
-          <div className="mt-4 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-slate-800/80 bg-slate-950/45 px-4 py-3 text-sm text-slate-400">
-            <div>Unmatched rows stay visible so parser gaps and unsupported fields are obvious instead of being silently dropped.</div>
-            <button
-              type="button"
-              onClick={() => setInputs(defaultInputs)}
-              className="rounded-full border border-slate-700/80 bg-slate-900/80 px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.16em] text-slate-200 transition hover:border-sky-300/40 hover:text-sky-100"
-            >
-              Clear Pasted Text
-            </button>
+          <div className="mt-3 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+            <div className={compactCardClass}>
+              <div className="text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-400">Race</div>
+              <div className="mt-1.5 text-lg font-semibold text-slate-50">{summary.raceName}</div>
+            </div>
+            <div className={compactCardClass}>
+              <div className="text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-400">Total Levels</div>
+              <div className="mt-1.5 text-lg font-semibold text-slate-50">{formatWhole(summary.totalLevels)}</div>
+            </div>
+            <div className={compactCardClass}>
+              <div className="text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-400">Selected Buffs</div>
+              <div className="mt-1.5 text-lg font-semibold text-slate-50">{formatWhole(summary.snapshot.selectedBuffs.length)}</div>
+            </div>
+            <div className={compactCardClass}>
+              <div className="text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-400">Skill / Talent</div>
+              <div className="mt-1.5 text-lg font-semibold text-slate-50">
+                {formatWhole(summary.remainingSkillPoints)} / {formatWhole(summary.remainingTalentPoints)}
+              </div>
+            </div>
           </div>
         </section>
 
-        <div className="grid gap-6 xl:grid-cols-2">
-          <InputPanel
-            label="Guild Card"
-            description="Paste the guild card section that includes race, levels, main stats, and rebirth level."
-            placeholder={"Guild Card\nRace\nNorthern Human\nTotal Levels\n355 / 485\nT/W/C/H Levels\n50/200/5/100"}
-            value={inputs.guildCard}
-            onChange={(guildCard) => setInputs((current) => ({ ...current, guildCard }))}
-          />
-
-          <InputPanel
-            label="Character Card"
-            description="Paste the out-of-dungeon character card block, including the damage type and elements tables."
-            placeholder={"@name's Character Card\nBase Stats & Multipliers\n❤️ Health   388,949 / 388,949\n️🗡️ ATK     4,108  |  +805%"}
-            value={inputs.characterCard}
-            onChange={(characterCard) => setInputs((current) => ({ ...current, characterCard }))}
-          />
-
-          <InputPanel
-            label="Dungeon Stats"
-            description="Paste the dungeon character card block, including the damage type and elements tables."
-            placeholder={"Dungeon Character Card\n❤️ Health   388,949 / 388,949\n️🗡️ ATK     239,447\nCrit Chance/Damage | 128% / 471%"}
-            value={inputs.dungeonStats}
-            onChange={(dungeonStats) => setInputs((current) => ({ ...current, dungeonStats }))}
-          />
-
-          <InputPanel
-            label="Buffs / Debuffs"
-            description="Paste the active skill buffs/debuffs block. Buff names are compared against your selected buffs."
-            placeholder={"◘ Fervant Arrows: +45 elebow\nSide-Effect: +51,245 atk\n\n◘ Hate of the Living: +32,881 def"}
-            value={inputs.buffs}
-            onChange={(buffs) => setInputs((current) => ({ ...current, buffs }))}
-          />
-        </div>
+        <PasteInputTable inputs={inputs} setInputs={setInputs} onClear={() => setInputs(defaultInputs)} />
 
         <ComparisonBlock
           title="Guild Card Comparison"
@@ -797,7 +821,7 @@ export default function DebugVarsPage() {
           subtitle="Compares the out-of-dungeon character card against the calculator’s current display values."
           hasInput={hasCharacterInput}
         >
-          <div className="space-y-4">
+          <div className="grid gap-3 xl:grid-cols-2">
             {characterSections.map((section) => (
               <ComparisonTable
                 key={section.title}
@@ -811,10 +835,10 @@ export default function DebugVarsPage() {
 
         <ComparisonBlock
           title="Dungeon Card Comparison"
-          subtitle="Compares the dungeon card against the calculator’s current dungeon values."
+          subtitle="Compares the dungeon card against the calculator’s current dungeon values. Note: Overdrive Scaling is currently broken for dungeon output."
           hasInput={hasDungeonInput}
         >
-          <div className="space-y-4">
+          <div className="grid gap-3 xl:grid-cols-2">
             {dungeonSections.map((section) => (
               <ComparisonTable
                 key={section.title}

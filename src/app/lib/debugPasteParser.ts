@@ -92,7 +92,6 @@ const mainRowLabelMap = new Map<string, string>([
 const detailLabelMap = new Map<string, string>([
   ["crit chance damage", "Crit Chance/Damage"],
   ["overdrive scaling", "Overdrive Scaling"],
-  ["exp bonus", "EXP Bonus"],
   ["hp regen rate", "HP Regen/Rate"],
   ["mp focus regen", "MP/Focus Regen"],
   ["global damage", "Global Damage"],
@@ -189,7 +188,7 @@ function normalizeLookupText(value: string): string {
   return value
     .toLowerCase()
     .replace(/\*|_/g, " ")
-    .replace(/[^\p{L}\p{N}%/]+/gu, " ")
+    .replace(/[^\p{L}\p{N}%]+/gu, " ")
     .replace(/\s+/g, " ")
     .trim()
 }
@@ -478,10 +477,6 @@ function parseDetailRows(line: string): ParsedTerminalDetailRow[] {
 
     if (parts[0]) {
       rows.push({ label: "EXP Scaling", value: createComparableValue(parts[0]) })
-    }
-
-    if (parts[1]) {
-      rows.push({ label: "EXP Bonus", value: createComparableValue(parts[1]) })
     }
 
     return rows

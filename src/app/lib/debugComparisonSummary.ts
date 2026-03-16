@@ -877,10 +877,6 @@ function getBaseDetailRows(baseStats: Record<string, number>): TerminalDetailRow
       value: formatPrecisePercent(getStat(baseStats, "Overdrive%") / 100),
     },
     {
-      label: "EXP Bonus",
-      value: `+${formatWhole(getStat(baseStats, "EXP Bonus"))}`,
-    },
-    {
       label: "HP Regen/Rate",
       value: `${formatWhole(getStat(baseStats, "HP Regen"))} / ${formatPercent(getStat(baseStats, "HP Regen%"), 1)}`,
     },
