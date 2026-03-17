@@ -119,12 +119,34 @@ function getOrderedUnionLabels<CalcRow extends { label: string }, InGameRow exte
   return labels
 }
 
+const resourceCapComparisonLabels = new Set(["Mana", "Focus"])
+
+function normalizeMainResourceComparableValue(label: string, value: ComparableValue): ComparableValue {
+  if (!resourceCapComparisonLabels.has(label) || value.numericParts.length < 2) {
+    return value
+  }
+
+  const maxValue = value.numericParts[value.numericParts.length - 1]
+  if (!Number.isFinite(maxValue)) {
+    return value
+  }
+
+  return {
+    ...value,
+    numericParts: [maxValue],
+  }
+}
+
 function buildLabelValueComparisonRows(
   calcRows: readonly LabelValueRow[],
   inGameRows: readonly ParsedLabelValueRow[],
 ): ComparableRow[] {
-  const calcMap = new Map(calcRows.map((row) => [row.label, createComparableValue(row.value)]))
-  const inGameMap = new Map(inGameRows.map((row) => [row.label, row.value]))
+  const calcMap = new Map(
+    calcRows.map((row) => [row.label, normalizeMainResourceComparableValue(row.label, createComparableValue(row.value))]),
+  )
+  const inGameMap = new Map(
+    inGameRows.map((row) => [row.label, normalizeMainResourceComparableValue(row.label, row.value)]),
+  )
 
   return getOrderedUnionLabels(calcRows, inGameRows).map((label) => ({
     label,
@@ -149,11 +171,16 @@ function buildMainRowComparisonRows(
   calcRows: readonly { label: string; value: string; modifier?: string }[],
   inGameRows: readonly ParsedTerminalMainRow[],
 ): ComparableRow[] {
-  const calcMap = new Map(calcRows.map((row) => [row.label, mainRowToComparableValue(row)]))
+  const calcMap = new Map(
+    calcRows.map((row) => [row.label, normalizeMainResourceComparableValue(row.label, mainRowToComparableValue(row))]),
+  )
   const inGameMap = new Map(
     inGameRows.map((row) => [
       row.label,
-      createComparableValue(row.modifier ? `${row.value.display} | ${row.modifier.display}` : row.value.display),
+      normalizeMainResourceComparableValue(
+        row.label,
+        createComparableValue(row.modifier ? `${row.value.display} | ${row.modifier.display}` : row.value.display),
+      ),
     ]),
   )
 
@@ -656,7 +683,7 @@ function getCharacterComparisonSections(calcCard: TerminalCardData, parsedCard: 
   return [
     {
       title: "Main Stats",
-      subtitle: "Value rows are compared as full lines, including modifiers when present.",
+      subtitle: "Health compares current HP to level HP and max HP to total HP. Mana and Focus use max caps when the paste shows current / max.",
       rows: buildMainRowComparisonRows(calcCard.mainRows, parsedCard.mainRows),
     },
     {

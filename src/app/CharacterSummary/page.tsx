@@ -1152,9 +1152,13 @@ function getElementRows(
 function getBaseMainRows(
   valueStats: Record<string, number>,
   modifierStats: Record<string, number>,
+  healthCurrentStats: Record<string, number>,
 ): TerminalMainRow[] {
   return [
-    { label: "Health", value: `${formatWhole(getStat(valueStats, "HP"))} / ${formatWhole(getStat(valueStats, "HP"))}` },
+    {
+      label: "Health",
+      value: `${formatWhole(getStat(healthCurrentStats, "HP"))} / ${formatWhole(getStat(valueStats, "HP"))}`,
+    },
     { label: "Mana", value: formatWhole(getStat(valueStats, "MP")) },
     { label: "Focus", value: formatWhole(getStat(valueStats, "Focus")) },
     { label: "ATK", value: formatWhole(getStat(valueStats, "ATK")), modifier: formatSignedPercent(getStat(modifierStats, "ATK%")) },
@@ -1336,6 +1340,7 @@ function GuildCard({
   summary: SummaryState
 }) {
   const baseStats = summary.charcardStages.StatsBase
+  const levelStats = summary.charcardStages.StatsLevels
 
   return (
     <section className={`${cardClass} p-5 sm:p-6`}>
@@ -1351,7 +1356,7 @@ function GuildCard({
             label="T/W/C/H Levels"
             value={classKeys.map((classKey) => formatWhole(summary.snapshot.selectedLevels[classKey] ?? 0)).join("/")}
           />
-          <DetailTile label="Health" value={`${formatWhole(getStat(baseStats, "HP"))} / ${formatWhole(getStat(baseStats, "HP"))}`} />
+          <DetailTile label="Health" value={`${formatWhole(getStat(levelStats, "HP"))} / ${formatWhole(getStat(baseStats, "HP"))}`} />
           <DetailTile label="Mana" value={formatWhole(getStat(baseStats, "MP"))} />
           <DetailTile label="ATK" value={formatWhole(getStat(baseStats, "ATK"))} />
           <DetailTile label="DEF" value={formatWhole(getStat(baseStats, "DEF"))} />
@@ -1931,7 +1936,7 @@ export default function CharacterSummary() {
               <TerminalCard
                 title="Character Card"
                 subtitle="Note: Lightning does not receive eleglobal correctly on the in-game charcard."
-                mainRows={getBaseMainRows(baseStats, displayBaseStats)}
+                mainRows={getBaseMainRows(baseStats, displayBaseStats, summary.charcardStages.StatsLevels)}
                 detailRows={getBaseDetailRows(displayBaseStats)}
                 typeRows={getTypeBonusRows(displayBaseStats, { maskVoidDamage: true, maskVoidPen: true })}
                 elementRows={getElementRows(displayBaseStats, { addAllDamage: true, omitAllDamageFor: ["Lightning"] })}

@@ -752,6 +752,7 @@ export function buildDebugSummary(storage: Storage): SummaryState {
 
 export function getGuildCardRows(summary: SummaryState): LabelValueRow[] {
   const baseStats = summary.charcardStages.StatsBase
+  const levelStats = summary.charcardStages.StatsLevels
 
   return [
     { label: "Race", value: summary.raceName },
@@ -760,7 +761,7 @@ export function getGuildCardRows(summary: SummaryState): LabelValueRow[] {
       label: "T/W/C/H Levels",
       value: classKeys.map((classKey) => formatWhole(summary.snapshot.selectedLevels[classKey] ?? 0)).join("/"),
     },
-    { label: "Health", value: `${formatWhole(getStat(baseStats, "HP"))} / ${formatWhole(getStat(baseStats, "HP"))}` },
+    { label: "Health", value: `${formatWhole(getStat(levelStats, "HP"))} / ${formatWhole(getStat(baseStats, "HP"))}` },
     { label: "Mana", value: formatWhole(getStat(baseStats, "MP")) },
     { label: "ATK", value: formatWhole(getStat(baseStats, "ATK")) },
     { label: "DEF", value: formatWhole(getStat(baseStats, "DEF")) },
@@ -842,9 +843,13 @@ function getElementRows(
 function getBaseMainRows(
   valueStats: Record<string, number>,
   modifierStats: Record<string, number>,
+  healthCurrentStats: Record<string, number>,
 ): TerminalMainRow[] {
   return [
-    { label: "Health", value: `${formatWhole(getStat(valueStats, "HP"))} / ${formatWhole(getStat(valueStats, "HP"))}` },
+    {
+      label: "Health",
+      value: `${formatWhole(getStat(healthCurrentStats, "HP"))} / ${formatWhole(getStat(valueStats, "HP"))}`,
+    },
     { label: "Mana", value: formatWhole(getStat(valueStats, "MP")) },
     { label: "Focus", value: formatWhole(getStat(valueStats, "Focus")) },
     { label: "ATK", value: formatWhole(getStat(valueStats, "ATK")), modifier: formatSignedPercent(getStat(modifierStats, "ATK%")) },
@@ -854,9 +859,15 @@ function getBaseMainRows(
   ]
 }
 
-function getDungeonMainRows(stats: Record<string, number>): TerminalMainRow[] {
+function getDungeonMainRows(
+  stats: Record<string, number>,
+  healthCurrentStats: Record<string, number>,
+): TerminalMainRow[] {
   return [
-    { label: "Health", value: `${formatWhole(getStat(stats, "HP"))} / ${formatWhole(getStat(stats, "HP"))}` },
+    {
+      label: "Health",
+      value: `${formatWhole(getStat(healthCurrentStats, "HP"))} / ${formatWhole(getStat(stats, "HP"))}`,
+    },
     { label: "Mana", value: `${formatWhole(getStat(stats, "MP"))} / ${formatWhole(getStat(stats, "MP"))}` },
     { label: "Focus", value: `${formatWhole(getStat(stats, "Focus"))} / ${formatWhole(getStat(stats, "Focus"))}` },
     { label: "ATK", value: formatWhole(getStat(stats, "ATK")) },
@@ -933,7 +944,7 @@ export function getCharacterCardData(summary: SummaryState): TerminalCardData {
   const displayBaseStats = summary.displayBaseStats
 
   return {
-    mainRows: getBaseMainRows(baseStats, displayBaseStats),
+    mainRows: getBaseMainRows(baseStats, displayBaseStats, summary.charcardStages.StatsLevels),
     detailRows: getBaseDetailRows(displayBaseStats),
     typeRows: getTypeBonusRows(displayBaseStats, { maskVoidDamage: true, maskVoidPen: true }),
     elementRows: getElementRows(displayBaseStats, { addAllDamage: true, omitAllDamageFor: ["Lightning"] }),
@@ -942,7 +953,7 @@ export function getCharacterCardData(summary: SummaryState): TerminalCardData {
 
 export function getDungeonCardData(summary: SummaryState): TerminalCardData {
   return {
-    mainRows: getDungeonMainRows(summary.dungeonMainStats),
+    mainRows: getDungeonMainRows(summary.dungeonMainStats, summary.stages.StatsLevels),
     detailRows: getDungeonDetailRows(summary.displayDungeonStats),
     typeRows: getTypeBonusRows(summary.displayDungeonStats, { maskVoidDamage: true, maskVoidPen: true }),
     elementRows: getElementRows(summary.displayDungeonStats),
