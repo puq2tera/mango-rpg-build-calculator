@@ -7,6 +7,7 @@ import tarot_data from "@/app/data/tarot_data"
 import { groupAdditionalStageStatEntries } from "@/app/lib/additionalStageStats"
 import {
   computeBuildStatStages,
+  expandCompoundStats,
   readBuildSnapshot,
   type BuildSnapshot,
   type BuildStatStages,
@@ -184,6 +185,23 @@ const dungeonDisplayElements = [
   { key: "Blunt", family: "Phys" },
   { key: "Pierce", family: "Phys" },
   { key: "Slash", family: "Phys" },
+] as const
+
+const characterCardSeparateCompoundStats = [
+  "All%",
+  "All Res%",
+  "Phys%",
+  "Phys Pen%",
+  "Phys xDmg%",
+  "Phys xPen%",
+  "Elemental%",
+  "Elemental Pen%",
+  "Elemental xDmg%",
+  "Elemental xPen%",
+  "Divine%",
+  "Divine Pen%",
+  "Divine xDmg%",
+  "Divine xPen%",
 ] as const
 
 function getXpToNextLevel(level: number): number {
@@ -487,7 +505,7 @@ function computeDisplayEffectStats(
   return rawStats
 }
 
-function getDisplayBaseStats(stages: BuildStatStages): Record<string, number> {
+function getRawBaseDisplayStats(stages: BuildStatStages): Record<string, number> {
   return mergeStats(
     stages.StatsTalents,
     stages.StatsLevels,
@@ -496,6 +514,10 @@ function getDisplayBaseStats(stages: BuildStatStages): Record<string, number> {
     stages.StatsArtifact,
     stages.StatsConverted,
   )
+}
+
+function getDisplayBaseStats(stages: BuildStatStages): Record<string, number> {
+  return mergeStats(stages.StatsBase, expandCompoundStats(stages.StatsConverted))
 }
 
 function getRawDungeonDisplayStats(snapshot: BuildSnapshot, stages: BuildStatStages): Record<string, number> {
@@ -515,7 +537,7 @@ function getRawDungeonDisplayStats(snapshot: BuildSnapshot, stages: BuildStatSta
   )
 
   return mergeStats(
-    getDisplayBaseStats(stages),
+    getRawBaseDisplayStats(stages),
     buffStats,
     additionalStageStats.buffs,
     tarotStats,
@@ -575,6 +597,12 @@ function getCalculatedOutDungeonStats(rawStats: Record<string, number>): Record<
 
 function getDisplayDungeonStats(snapshot: BuildSnapshot, stages: BuildStatStages): Record<string, number> {
   return getCalculatedOutDungeonStats(getRawDungeonDisplayStats(snapshot, stages))
+}
+
+function getCharacterCardElementStats(rawStats: Record<string, number>): Record<string, number> {
+  return expandCompoundStats(rawStats, {
+    retainCompoundStats: characterCardSeparateCompoundStats,
+  })
 }
 
 function getReadableStatLabel(stat: string): string {
@@ -936,12 +964,17 @@ function getDungeonDetailRows(stats: Record<string, number>): TerminalDetailRow[
 export function getCharacterCardData(summary: SummaryState): TerminalCardData {
   const baseStats = summary.charcardStages.StatsBase
   const displayBaseStats = summary.displayBaseStats
+  const rawBaseCardStats = getRawBaseDisplayStats(summary.charcardStages)
+  const characterCardElementStats = getCharacterCardElementStats(rawBaseCardStats)
 
   return {
     mainRows: getBaseMainRows(baseStats, displayBaseStats, summary.charcardStages.StatsLevels),
-    detailRows: getBaseDetailRows(displayBaseStats),
-    typeRows: getTypeBonusRows(displayBaseStats, { maskVoidDamage: true, maskVoidPen: true }),
-    elementRows: getElementRows(displayBaseStats, { addAllDamage: true, omitAllDamageFor: ["Lightning"] }),
+    detailRows: getBaseDetailRows(rawBaseCardStats),
+    typeRows: getTypeBonusRows(rawBaseCardStats, { maskVoidDamage: true, maskVoidPen: true }),
+    elementRows: getElementRows(characterCardElementStats, {
+      addAllDamage: true,
+      omitAllDamageFor: ["Lightning"],
+    }),
   }
 }
 

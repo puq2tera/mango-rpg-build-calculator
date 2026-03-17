@@ -8,6 +8,7 @@ import tarot_data from "@/app/data/tarot_data"
 import { groupAdditionalStageStatEntries } from "@/app/lib/additionalStageStats"
 import {
   computeBuildStatStages,
+  expandCompoundStats,
   readBuildSnapshot,
   type BuildSnapshot,
   type BuildStatStages,
@@ -195,6 +196,23 @@ const dungeonDisplayElements = [
   { key: "Blunt", family: "Phys" },
   { key: "Pierce", family: "Phys" },
   { key: "Slash", family: "Phys" },
+] as const
+
+const characterCardSeparateCompoundStats = [
+  "All%",
+  "All Res%",
+  "Phys%",
+  "Phys Pen%",
+  "Phys xDmg%",
+  "Phys xPen%",
+  "Elemental%",
+  "Elemental Pen%",
+  "Elemental xDmg%",
+  "Elemental xPen%",
+  "Divine%",
+  "Divine Pen%",
+  "Divine xDmg%",
+  "Divine xPen%",
 ] as const
 
 const finalStatsPrimaryColumns = [
@@ -878,7 +896,7 @@ function computeDisplayEffectStats(
   return rawStats
 }
 
-function getDisplayBaseStats(stages: BuildStatStages): Record<string, number> {
+function getRawBaseDisplayStats(stages: BuildStatStages): Record<string, number> {
   return mergeStats(
     stages.StatsTalents,
     stages.StatsLevels,
@@ -887,6 +905,10 @@ function getDisplayBaseStats(stages: BuildStatStages): Record<string, number> {
     stages.StatsArtifact,
     stages.StatsConverted,
   )
+}
+
+function getDisplayBaseStats(stages: BuildStatStages): Record<string, number> {
+  return mergeStats(stages.StatsBase, expandCompoundStats(stages.StatsConverted))
 }
 
 function getRawDungeonDisplayStats(snapshot: BuildSnapshot, stages: BuildStatStages): Record<string, number> {
@@ -906,7 +928,7 @@ function getRawDungeonDisplayStats(snapshot: BuildSnapshot, stages: BuildStatSta
   )
 
   return mergeStats(
-    getDisplayBaseStats(stages),
+    getRawBaseDisplayStats(stages),
     buffStats,
     additionalStageStats.buffs,
     tarotStats,
@@ -963,6 +985,12 @@ function getCalculatedOutDungeonStats(rawStats: Record<string, number>): Record<
 
 function getDisplayDungeonStats(snapshot: BuildSnapshot, stages: BuildStatStages): Record<string, number> {
   return getCalculatedOutDungeonStats(getRawDungeonDisplayStats(snapshot, stages))
+}
+
+function getCharacterCardElementStats(rawStats: Record<string, number>): Record<string, number> {
+  return expandCompoundStats(rawStats, {
+    retainCompoundStats: characterCardSeparateCompoundStats,
+  })
 }
 
 function getEffectDeltas(stats: Record<string, number>): EffectDelta[] {
@@ -1188,10 +1216,6 @@ function getBaseDetailRows(baseStats: Record<string, number>): TerminalDetailRow
     {
       label: "Overdrive Scaling",
       value: formatPrecisePercent(getStat(baseStats, "Overdrive%") / 100),
-    },
-    {
-      label: "EXP Bonus",
-      value: `+${formatWhole(getStat(baseStats, "EXP Bonus"))}`,
     },
     {
       label: "HP Regen/Rate",
@@ -1711,7 +1735,7 @@ function getFinalStatsSourceSections(summary: SummaryState): FinalStatsSourceSec
     {
       title: "Talents",
       subtitle: "Selected talents only, excluding direct race bonuses",
-      stats: talentStats,
+      stats: expandCompoundStats(talentStats),
     },
     {
       title: "Buffs",
@@ -1726,32 +1750,32 @@ function getFinalStatsSourceSections(summary: SummaryState): FinalStatsSourceSec
     {
       title: "Equipment",
       subtitle: "Enabled equipment main stats and affixes",
-      stats: summary.stages.StatsEquipment,
+      stats: expandCompoundStats(summary.stages.StatsEquipment),
     },
     {
       title: "Artifact",
       subtitle: "Artifact level bonuses and artifact stat modifiers",
-      stats: summary.stages.StatsArtifact,
+      stats: expandCompoundStats(summary.stages.StatsArtifact),
     },
     {
       title: "Runes",
       subtitle: "Equipped rune bonuses",
-      stats: summary.stages.StatsRunes,
+      stats: expandCompoundStats(summary.stages.StatsRunes),
     },
     {
       title: "Levels",
       subtitle: "Class levels, stat points, training, and hero points",
-      stats: summary.stages.StatsLevels,
+      stats: expandCompoundStats(summary.stages.StatsLevels),
     },
     {
       title: "Race",
       subtitle: `Direct racial bonuses from ${summary.raceName}`,
-      stats: raceStats,
+      stats: expandCompoundStats(raceStats),
     },
     {
       title: "Talent Conversions",
       subtitle: "Stats added by selected talent conversions",
-      stats: summary.stages.StatsConverted,
+      stats: expandCompoundStats(summary.stages.StatsConverted),
     },
   ]
 }
@@ -1919,6 +1943,8 @@ export default function CharacterSummary() {
   const baseStats = summary.charcardStages.StatsBase
   const displayBaseStats = summary.displayBaseStats
   const displayDungeonStats = summary.displayDungeonStats
+  const rawBaseCardStats = getRawBaseDisplayStats(summary.charcardStages)
+  const characterCardElementStats = getCharacterCardElementStats(rawBaseCardStats)
 
   return (
     <div className="p-4 sm:p-6">
@@ -1936,9 +1962,12 @@ export default function CharacterSummary() {
                 title="Character Card"
                 subtitle="Note: Lightning does not receive eleglobal correctly on the in-game charcard."
                 mainRows={getBaseMainRows(baseStats, displayBaseStats, summary.charcardStages.StatsLevels)}
-                detailRows={getBaseDetailRows(displayBaseStats)}
-                typeRows={getTypeBonusRows(displayBaseStats, { maskVoidDamage: true, maskVoidPen: true })}
-                elementRows={getElementRows(displayBaseStats, { addAllDamage: true, omitAllDamageFor: ["Lightning"] })}
+                detailRows={getBaseDetailRows(rawBaseCardStats)}
+                typeRows={getTypeBonusRows(rawBaseCardStats, { maskVoidDamage: true, maskVoidPen: true })}
+                elementRows={getElementRows(characterCardElementStats, {
+                  addAllDamage: true,
+                  omitAllDamageFor: ["Lightning"],
+                })}
               />
             </div>
 

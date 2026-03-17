@@ -472,14 +472,7 @@ function parseDetailRows(line: string): ParsedTerminalDetailRow[] {
   }
 
   if (normalized.includes("exp scaling bonus")) {
-    const parts = value.split("/").map((part) => part.trim()).filter((part) => part.length > 0)
-    const rows: ParsedTerminalDetailRow[] = []
-
-    if (parts[0]) {
-      rows.push({ label: "EXP Scaling", value: createComparableValue(parts[0]) })
-    }
-
-    return rows
+    return []
   }
 
   const label = getCanonicalDetailLabel(line)

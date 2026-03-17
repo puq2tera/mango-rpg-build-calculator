@@ -233,6 +233,31 @@ function mergeExpandedStageStats(
   return merged
 }
 
+export function expandCompoundStats(
+  sourceStats: Record<string, number>,
+  options?: {
+    retainCompoundStats?: Iterable<string>
+  },
+): Record<string, number> {
+  const expanded: Record<string, number> = {}
+  const retainedCompoundStats = new Set(options?.retainCompoundStats ?? [])
+
+  for (const [stat, value] of Object.entries(sourceStats)) {
+    if (retainedCompoundStats.has(stat)) {
+      addRawStageStat(expanded, stat, value)
+      continue
+    }
+
+    if (addNonRetainedCompoundStageStat(expanded, stat, value)) {
+      continue
+    }
+
+    addExpandedStageStat(expanded, stat, value)
+  }
+
+  return expanded
+}
+
 function updateConversionSubStats(
   targetDict: Record<string, number>,
   sourceDict: Record<string, number>,
@@ -683,12 +708,13 @@ function computeConvertedTalentStats(statsConversionReady: Record<string, number
 
 function computeBuffReadyStats(statsConversionReady: Record<string, number>, statsConverted: Record<string, number>): Record<string, number> {
   const statsBuffReady: Record<string, number> = {}
+  const expandedConverted = expandCompoundStats(statsConverted)
 
   for (const [stat, value] of Object.entries(statsConversionReady)) {
     statsBuffReady[stat] = (statsBuffReady[stat] || 0) + value
   }
 
-  for (const [stat, value] of Object.entries(statsConverted)) {
+  for (const [stat, value] of Object.entries(expandedConverted)) {
     statsBuffReady[stat] = (statsBuffReady[stat] || 0) + value
   }
 
