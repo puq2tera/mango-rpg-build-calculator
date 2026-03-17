@@ -686,6 +686,8 @@ function computeConversionReadyStats(statsBase: Record<string, number>): Record<
   }
 
   statsConversionReady.HP = Math.floor(statsCombined.HP * (1 + ((statsCombined["HP%"] ?? 0) / 100)))
+  statsConversionReady.MP = Math.floor((statsCombined.MP ?? 0) * (1 + ((statsCombined["MP%"] ?? 0) / 100)))
+  statsConversionReady.Focus = Math.floor((statsCombined.Focus ?? 0) * (1 + ((statsCombined["Focus%"] ?? 0) / 100)))
 
   return statsConversionReady
 }

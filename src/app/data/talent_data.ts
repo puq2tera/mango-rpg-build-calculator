@@ -10745,10 +10745,15 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "-20% Threat Generated, +20% Global Crit Damage",
         "stats": {
-            "Crit DMG%": 20,
             "Threat%": -20
         },
-        "conversions": []
+        "conversions": [
+            {
+                "source": "Crit DMG%",
+                "ratio": 0.2,
+                "resulting_stat": "Crit DMG%"
+            }
+        ]
     },
     "Dragonslayer's Twilight": {
         "category": "warrior",
@@ -11245,11 +11250,20 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "-10% Global Crit Chance, +12% Global Crit DMG & xPhys DMG, -25% Global MATK",
         "stats": {
-            "Crit Chance%": -10,
-            "Crit DMG%": 12,
             "Global MATK%": -25
         },
-        "conversions": []
+        "conversions": [
+            {
+                "source": "Crit Chance%",
+                "ratio": -0.1,
+                "resulting_stat": "Crit Chance%"
+            },
+            {
+                "source": "Crit DMG%",
+                "ratio": 0.12,
+                "resulting_stat": "Crit DMG%"
+            }
+        ]
     },
     "Space Core of T'sanogora": {
         "category": "warrior",
@@ -11270,10 +11284,14 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% Global ATK, Conversion 10% of MP to Focus, -50% Global Elevoid",
         "stats": {
-            "Global ATK%": 20,
-            "Void%": -50
+            "Global ATK%": 20
         },
         "conversions": [
+            {
+                "source": "Void%",
+                "ratio": -0.5,
+                "resulting_stat": "Void%"
+            },
             {
                 "source": "MP",
                 "ratio": 0.1,
@@ -11300,11 +11318,16 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+2% Global ATK, +10% Global Crit Damage, +5% xPhys DMG",
         "stats": {
-            "Crit DMG%": 10,
             "Global ATK%": 2,
             "Phys xDmg%": 5
         },
-        "conversions": []
+        "conversions": [
+            {
+                "source": "Crit DMG%",
+                "ratio": 0.1,
+                "resulting_stat": "Crit DMG%"
+            }
+        ]
     },
     "Mark of Avian Sniper 1": {
         "category": "warrior",
@@ -11553,10 +11576,15 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "-50% Crit Chance, +20% Global Crit DMG",
         "stats": {
-            "Crit Chance%": -50,
-            "Crit DMG%": 20
+            "Crit Chance%": -50
         },
-        "conversions": []
+        "conversions": [
+            {
+                "source": "Crit DMG%",
+                "ratio": 0.2,
+                "resulting_stat": "Crit DMG%"
+            }
+        ]
     },
     "Samurai Titan Blessing": {
         "category": "warrior",
@@ -11603,10 +11631,15 @@ const talent_data: Record<string, Talent> = {
         "stats": {
             "Global ATK%": 100,
             "Crit Chance%": -100,
-            "Crit DMG%": -90,
             "DMG Res%": 15
         },
-        "conversions": []
+        "conversions": [
+            {
+                "source": "Crit DMG%",
+                "ratio": -0.9,
+                "resulting_stat": "Crit DMG%"
+            }
+        ]
     },
     "Arcane Study 1": {
         "category": "caster",
@@ -16435,10 +16468,15 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "-50% Global Crit Chance, +25% xMagic DMG",
         "stats": {
-            "Crit Chance%": -50,
             "Magic xDmg%": 25
         },
-        "conversions": []
+        "conversions": [
+            {
+                "source": "Crit Chance%",
+                "ratio": -0.5,
+                "resulting_stat": "Crit Chance%"
+            }
+        ]
     },
     "Space Core of Mephis'ronan": {
         "category": "caster",
@@ -16504,11 +16542,16 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+2% Global MATK, +5% xMagic Pen, +5% Global Crit DMG",
         "stats": {
-            "Crit DMG%": 5,
             "Global MATK%": 2,
             "Magic xPen%": 5
         },
-        "conversions": []
+        "conversions": [
+            {
+                "source": "Crit DMG%",
+                "ratio": 0.05,
+                "resulting_stat": "Crit DMG%"
+            }
+        ]
     },
     "Mark of Demon Herald 1": {
         "category": "caster",
@@ -25510,11 +25553,19 @@ const talent_data: Record<string, Talent> = {
         "description": "+50% MATK, +15% Penfire, +15% Global Elefire, +15% Global Fire Damage, Conversion 150% Resfire to MP",
         "stats": {
             "MATK%": 50,
-            "Fire Pen%": 15,
-            "Fire%": 15,
-            "Fire DMG%": 15
+            "Fire Pen%": 15
         },
         "conversions": [
+            {
+                "source": "Fire%",
+                "ratio": 0.15,
+                "resulting_stat": "Fire%"
+            },
+            {
+                "source": "Fire DMG%",
+                "ratio": 0.15,
+                "resulting_stat": "Fire DMG%"
+            },
             {
                 "source": "Fire Res%",
                 "ratio": 1.5,
@@ -25616,10 +25667,14 @@ const talent_data: Record<string, Talent> = {
         "description": "+30% ATK, +5% Crit Chance, +15% Global Fist Damage, +5% Global Blunt Penetration. Conversion 50% Penslash to Penblunt.",
         "stats": {
             "Crit Chance%": 5,
-            "ATK%": 30,
-            "Fist DMG%": 15
+            "ATK%": 30
         },
         "conversions": [
+            {
+                "source": "Fist DMG%",
+                "ratio": 0.15,
+                "resulting_stat": "Fist DMG%"
+            },
             {
                 "source": "Blunt Pen%",
                 "ratio": 0.05,
@@ -25652,10 +25707,14 @@ const talent_data: Record<string, Talent> = {
         "description": "+50% ATK, +5% Penslash, +15% Global Sword Damage, Conversion 110% Penfire to Penslash, 50% Elefire to Eleslash.",
         "stats": {
             "ATK%": 50,
-            "Sword DMG%": 15,
             "Slash Pen%": 5
         },
         "conversions": [
+            {
+                "source": "Sword DMG%",
+                "ratio": 0.15,
+                "resulting_stat": "Sword DMG%"
+            },
             {
                 "source": "Fire Pen%",
                 "ratio": 1.1,
@@ -26406,10 +26465,14 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+25% ATK, +20% Global Dagger Damage, Conversion 90% Elelightning to Eleslash, 90% Elelightning to Crit Damage, -100% Reduction to Elelightning",
         "stats": {
-            "ATK%": 25,
-            "Dagger DMG%": 20
+            "ATK%": 25
         },
         "conversions": [
+            {
+                "source": "Dagger DMG%",
+                "ratio": 0.2,
+                "resulting_stat": "Dagger DMG%"
+            },
             {
                 "source": "Lightning%",
                 "ratio": 0.9,
@@ -26890,10 +26953,14 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+30% ATK, +15% Global Hammer Damage, +10% Global Blunt Penetration, Conversion 120% Penearth to Penblunt",
         "stats": {
-            "ATK%": 30,
-            "Hammer DMG%": 15
+            "ATK%": 30
         },
         "conversions": [
+            {
+                "source": "Hammer DMG%",
+                "ratio": 0.15,
+                "resulting_stat": "Hammer DMG%"
+            },
             {
                 "source": "Blunt Pen%",
                 "ratio": 0.1,
@@ -27210,10 +27277,14 @@ const talent_data: Record<string, Talent> = {
         "stats": {
             "MATK%": 25,
             "Elemental Pen%": 5,
-            "Void Pen%": 5,
-            "Void%": 10
+            "Void Pen%": 5
         },
         "conversions": [
+            {
+                "source": "Void%",
+                "ratio": 0.1,
+                "resulting_stat": "Void%"
+            },
             {
                 "source": "Void%",
                 "ratio": 1,
