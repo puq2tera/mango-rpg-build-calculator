@@ -11250,6 +11250,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "-10% Global Crit Chance, +12% Global Crit DMG & xPhys DMG, -25% Global MATK",
         "stats": {
+            "Phys xDmg%": 12,
             "Global MATK%": -25
         },
         "conversions": [
