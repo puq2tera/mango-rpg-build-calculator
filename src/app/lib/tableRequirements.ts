@@ -231,7 +231,7 @@ function buildTalentRequirementState(
     : basePrereqTokens
   const requiredClassLevels = multiplyClassLevels(talent.class_levels, requirementMultiplier)
   const requiredTotalLevel = (talent.total_level ?? 0) * requirementMultiplier
-  const requiredTalentPoints = (talent.tp_spent ?? 0) * requirementMultiplier
+  const requiredTalentPoints = talent.tp_spent ?? 0
   const missingPrereq = prereqTokens.some((req) => {
     const normalizedReq = normalizePrereqToken(req)
 
