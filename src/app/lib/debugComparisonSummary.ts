@@ -516,8 +516,18 @@ function getRawBaseDisplayStats(stages: BuildStatStages): Record<string, number>
   )
 }
 
+function getRawCharacterCardDisplayStats(stages: BuildStatStages): Record<string, number> {
+  return mergeStats(
+    stages.StatsTalents,
+    stages.StatsLevels,
+    stages.StatsEquipment,
+    stages.StatsRunes,
+    stages.StatsArtifact,
+  )
+}
+
 function getDisplayBaseStats(stages: BuildStatStages): Record<string, number> {
-  return mergeStats(stages.StatsBase, expandCompoundStats(stages.StatsConverted))
+  return stages.StatsBase
 }
 
 function getRawDungeonDisplayStats(snapshot: BuildSnapshot, stages: BuildStatStages): Record<string, number> {
@@ -964,7 +974,7 @@ function getDungeonDetailRows(stats: Record<string, number>): TerminalDetailRow[
 export function getCharacterCardData(summary: SummaryState): TerminalCardData {
   const baseStats = summary.charcardStages.StatsBase
   const displayBaseStats = summary.displayBaseStats
-  const rawBaseCardStats = getRawBaseDisplayStats(summary.charcardStages)
+  const rawBaseCardStats = getRawCharacterCardDisplayStats(summary.charcardStages)
   const characterCardElementStats = getCharacterCardElementStats(rawBaseCardStats)
 
   return {
