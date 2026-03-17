@@ -234,7 +234,6 @@ const finalStatsMainModifierColumns = [
   { label: "DEF%", key: "DEF%", format: "percent" },
   { label: "MATK%", key: "MATK%", format: "percent" },
   { label: "HEAL%", key: "HEAL%", format: "percent" },
-  { label: "MAIN%", key: "MAIN%", format: "percent" },
 ] satisfies readonly FinalStatsColumn[]
 
 const finalStatsArtifactGlobalColumns = [
@@ -1170,7 +1169,7 @@ function getBaseMainRows(
 
 function getDungeonMainRows(stats: Record<string, number>): TerminalMainRow[] {
   return [
-    { label: "Health", value: `${formatWhole(getStat(stats, "HP"))} / ${formatWhole(getStat(stats, "HP"))}` },
+    { label: "Health", value: formatWhole(getStat(stats, "HP")) },
     { label: "Mana", value: `${formatWhole(getStat(stats, "MP"))} / ${formatWhole(getStat(stats, "MP"))}` },
     { label: "Focus", value: `${formatWhole(getStat(stats, "Focus"))} / ${formatWhole(getStat(stats, "Focus"))}` },
     { label: "ATK", value: formatWhole(getStat(stats, "ATK")) },

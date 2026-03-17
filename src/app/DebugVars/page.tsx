@@ -119,9 +119,14 @@ function getOrderedUnionLabels<CalcRow extends { label: string }, InGameRow exte
   return labels
 }
 
-const resourceCapComparisonLabels = new Set(["Mana", "Focus"])
+const defaultResourceCapComparisonLabels = new Set(["Mana", "Focus"])
+const dungeonResourceCapComparisonLabels = new Set(["Health", "Mana", "Focus"])
 
-function normalizeMainResourceComparableValue(label: string, value: ComparableValue): ComparableValue {
+function normalizeMainResourceComparableValue(
+  label: string,
+  value: ComparableValue,
+  resourceCapComparisonLabels = defaultResourceCapComparisonLabels,
+): ComparableValue {
   if (!resourceCapComparisonLabels.has(label) || value.numericParts.length < 2) {
     return value
   }
@@ -170,9 +175,13 @@ function elementRowToComparableValue(row: { dmg: string; res: string; pen: strin
 function buildMainRowComparisonRows(
   calcRows: readonly { label: string; value: string; modifier?: string }[],
   inGameRows: readonly ParsedTerminalMainRow[],
+  resourceCapComparisonLabels = defaultResourceCapComparisonLabels,
 ): ComparableRow[] {
   const calcMap = new Map(
-    calcRows.map((row) => [row.label, normalizeMainResourceComparableValue(row.label, mainRowToComparableValue(row))]),
+    calcRows.map((row) => [
+      row.label,
+      normalizeMainResourceComparableValue(row.label, mainRowToComparableValue(row), resourceCapComparisonLabels),
+    ]),
   )
   const inGameMap = new Map(
     inGameRows.map((row) => [
@@ -180,6 +189,7 @@ function buildMainRowComparisonRows(
       normalizeMainResourceComparableValue(
         row.label,
         createComparableValue(row.modifier ? `${row.value.display} | ${row.modifier.display}` : row.value.display),
+        resourceCapComparisonLabels,
       ),
     ]),
   )
@@ -704,6 +714,31 @@ function getCharacterComparisonSections(calcCard: TerminalCardData, parsedCard: 
   ]
 }
 
+function getDungeonComparisonSections(calcCard: TerminalCardData, parsedCard: ParsedTerminalCard) {
+  return [
+    {
+      title: "Main Stats",
+      subtitle: "Health compares against max HP only. Mana and Focus use max caps when the paste shows current / max.",
+      rows: buildMainRowComparisonRows(calcCard.mainRows, parsedCard.mainRows, dungeonResourceCapComparisonLabels),
+    },
+    {
+      title: "Details",
+      subtitle: "Detail lines compare the parsed displayed values, with numeric deltas when possible.",
+      rows: buildDetailRowComparisonRows(calcCard.detailRows, parsedCard.detailRows),
+    },
+    {
+      title: "Damage Types",
+      subtitle: "Each row compares DMG, xDMG, PEN, and xPEN as one grouped value.",
+      rows: buildTypeRowComparisonRows(calcCard.typeRows, parsedCard.typeRows),
+    },
+    {
+      title: "Elements",
+      subtitle: "Each row compares DMG, RES, and PEN as one grouped value.",
+      rows: buildElementRowComparisonRows(calcCard.elementRows, parsedCard.elementRows),
+    },
+  ]
+}
+
 export default function DebugVarsPage() {
   const [summary, setSummary] = useState<SummaryState | null>(null)
   const [inputs, setInputs] = useState<PasteInputs>(defaultInputs)
@@ -778,7 +813,7 @@ export default function DebugVarsPage() {
     [parsedCharacterCard, summary],
   )
   const dungeonSections = useMemo(
-    () => (summary ? getCharacterComparisonSections(getDungeonCardData(summary), parsedDungeonStats) : []),
+    () => (summary ? getDungeonComparisonSections(getDungeonCardData(summary), parsedDungeonStats) : []),
     [parsedDungeonStats, summary],
   )
   const calcBuffs = useMemo(() => (summary ? getCalcSkillBuffs(summary) : []), [summary])

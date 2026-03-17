@@ -859,15 +859,9 @@ function getBaseMainRows(
   ]
 }
 
-function getDungeonMainRows(
-  stats: Record<string, number>,
-  healthCurrentStats: Record<string, number>,
-): TerminalMainRow[] {
+function getDungeonMainRows(stats: Record<string, number>): TerminalMainRow[] {
   return [
-    {
-      label: "Health",
-      value: `${formatWhole(getStat(healthCurrentStats, "HP"))} / ${formatWhole(getStat(stats, "HP"))}`,
-    },
+    { label: "Health", value: formatWhole(getStat(stats, "HP")) },
     { label: "Mana", value: `${formatWhole(getStat(stats, "MP"))} / ${formatWhole(getStat(stats, "MP"))}` },
     { label: "Focus", value: `${formatWhole(getStat(stats, "Focus"))} / ${formatWhole(getStat(stats, "Focus"))}` },
     { label: "ATK", value: formatWhole(getStat(stats, "ATK")) },
@@ -953,7 +947,7 @@ export function getCharacterCardData(summary: SummaryState): TerminalCardData {
 
 export function getDungeonCardData(summary: SummaryState): TerminalCardData {
   return {
-    mainRows: getDungeonMainRows(summary.dungeonMainStats, summary.stages.StatsLevels),
+    mainRows: getDungeonMainRows(summary.dungeonMainStats),
     detailRows: getDungeonDetailRows(summary.displayDungeonStats),
     typeRows: getTypeBonusRows(summary.displayDungeonStats, { maskVoidDamage: true, maskVoidPen: true }),
     elementRows: getElementRows(summary.displayDungeonStats),

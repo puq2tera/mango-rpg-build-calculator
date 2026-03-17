@@ -151,8 +151,29 @@ function addRawStageStat(targetDict: Record<string, number>, stat: string, value
   targetDict[stat] = (targetDict[stat] ?? 0) + value
 }
 
+function addNonRetainedCompoundStageStat(targetDict: Record<string, number>, stat: string, value: number): boolean {
+  if (stat !== "MAIN%") {
+    return false
+  }
+
+  const info = stat_data.StatsInfo[stat as keyof typeof stat_data.StatsInfo]
+  if (!info?.sub_stats) {
+    return false
+  }
+
+  for (const subStat of info.sub_stats) {
+    addRawStageStat(targetDict, subStat, value)
+  }
+
+  return true
+}
+
 function addExpandedStageStat(targetDict: Record<string, number>, stat: string, value: number): void {
   if (!Number.isFinite(value) || Math.abs(value) < 0.0001) {
+    return
+  }
+
+  if (addNonRetainedCompoundStageStat(targetDict, stat, value)) {
     return
   }
 
@@ -168,14 +189,27 @@ function addExpandedStageStat(targetDict: Record<string, number>, stat: string, 
   }
 }
 
-function mergeRawStageStats(baseStats: Record<string, number>, addedStats: Record<string, number>): Record<string, number> {
-  if (Object.keys(addedStats).length === 0) {
-    return baseStats
+function normalizeRawStageStats(sourceStats: Record<string, number>): Record<string, number> {
+  const normalized: Record<string, number> = {}
+
+  for (const [stat, value] of Object.entries(sourceStats)) {
+    if (addNonRetainedCompoundStageStat(normalized, stat, value)) {
+      continue
+    }
+
+    addRawStageStat(normalized, stat, value)
   }
 
-  const merged = { ...baseStats }
+  return normalized
+}
+
+function mergeRawStageStats(baseStats: Record<string, number>, addedStats: Record<string, number>): Record<string, number> {
+  const merged = normalizeRawStageStats(baseStats)
 
   for (const [stat, value] of Object.entries(addedStats)) {
+    if (addNonRetainedCompoundStageStat(merged, stat, value)) {
+      continue
+    }
     addRawStageStat(merged, stat, value)
   }
 
