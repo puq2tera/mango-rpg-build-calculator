@@ -25617,10 +25617,14 @@ const talent_data: Record<string, Talent> = {
         "stats": {
             "Crit Chance%": 5,
             "ATK%": 30,
-            "Fist DMG%": 15,
-            "Blunt Pen%": 5
+            "Fist DMG%": 15
         },
         "conversions": [
+            {
+                "source": "Blunt Pen%",
+                "ratio": 0.05,
+                "resulting_stat": "Blunt Pen%"
+            },
             {
                 "source": "Slash Pen%",
                 "ratio": 0.5,
@@ -26442,10 +26446,14 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+30% ATK, +25% Global Pierce Penetration, Conversion 120% Penwind to Penpierce, 8% ATK Multiplier to Elepierce",
         "stats": {
-            "ATK%": 30,
-            "Pierce Pen%": 25
+            "ATK%": 30
         },
         "conversions": [
+            {
+                "source": "Pierce Pen%",
+                "ratio": 0.25,
+                "resulting_stat": "Pierce Pen%"
+            },
             {
                 "source": "Wind Pen%",
                 "ratio": 1.2,
@@ -26883,10 +26891,14 @@ const talent_data: Record<string, Talent> = {
         "description": "+30% ATK, +15% Global Hammer Damage, +10% Global Blunt Penetration, Conversion 120% Penearth to Penblunt",
         "stats": {
             "ATK%": 30,
-            "Hammer DMG%": 15,
-            "Blunt Pen%": 10
+            "Hammer DMG%": 15
         },
         "conversions": [
+            {
+                "source": "Blunt Pen%",
+                "ratio": 0.1,
+                "resulting_stat": "Blunt Pen%"
+            },
             {
                 "source": "Earth Pen%",
                 "ratio": 1.2,
