@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useState, type ReactNode } from "react"
+import { MyConversionsGrid } from "@/app/components/MyConversionsGrid"
 import { race_data_by_tag } from "@/app/data/race_data"
 import { skill_data } from "@/app/data/skill_data"
 import stat_data from "@/app/data/stat_data"
@@ -29,6 +30,7 @@ import {
   type CharacterSummaryViewState,
 } from "@/app/lib/characterSummaryViewState"
 import { BUILD_SNAPSHOT_UPDATED_EVENT } from "@/app/lib/buildEvents"
+import { getTalentConversionGroups } from "@/app/lib/talentConversionSummary"
 
 type ClassKey = "tank" | "warrior" | "caster" | "healer"
 
@@ -1873,6 +1875,34 @@ function BuffCard({
   )
 }
 
+function MyConversionsCard({
+  summary,
+}: {
+  summary: SummaryState
+}) {
+  const conversions = getTalentConversionGroups(summary.snapshot, summary.stages)
+
+  return (
+    <section className={`${cardClass} p-5 sm:p-6`}>
+      <GlowLayer />
+      <div className="relative space-y-5">
+        <CardHeader
+          title="My Conversions"
+          subtitle="Selected talent conversions shown in the same source to percent to output format as the in-game list."
+        />
+
+        {conversions.length === 0 ? (
+          <div className="rounded-2xl border border-dashed border-slate-700/80 bg-slate-950/40 px-4 py-8 text-center text-sm text-slate-400">
+            No active talent conversions are contributing to the current build.
+          </div>
+        ) : (
+          <MyConversionsGrid conversions={conversions} />
+        )}
+      </div>
+    </section>
+  )
+}
+
 export default function CharacterSummary() {
   const [summary, setSummary] = useState<SummaryState | null>(null)
   const [summaryViewState, setSummaryViewState] = useState<CharacterSummaryViewState>(getDefaultCharacterSummaryViewState)
@@ -1992,6 +2022,8 @@ export default function CharacterSummary() {
             <BuffCard summary={summary} />
           </div>
         </StatGroup>
+
+        <MyConversionsCard summary={summary} />
 
         <section className="space-y-4">
           <div className="px-1 sm:px-2">

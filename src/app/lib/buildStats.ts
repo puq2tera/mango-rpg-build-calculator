@@ -26,6 +26,7 @@ import {
   normalizeManualLevelRanges,
   type ManualLevelRange,
 } from "@/app/lib/manualLevelRanges"
+import { truncateTowardZero } from "@/app/lib/statRounding"
 
 type RuneSelection = { rune: string; count: number }
 
@@ -300,7 +301,7 @@ function updateConversionSubStats(
 
   const affixInfo = stat_data.StatsInfo[targetStat as keyof typeof stat_data.StatsInfo]
   const substats = affixInfo?.sub_stats
-  const resultValue = Math.floor(sourceValue * (ratio * stackCount) * (1 + buff))
+  const resultValue = truncateTowardZero(sourceValue * (ratio * stackCount) * (1 + buff))
 
   if (substats) {
     for (const substat of substats) {
@@ -701,7 +702,7 @@ function computeConvertedTalentStats(statsConversionReady: Record<string, number
 
     for (const { source, ratio, resulting_stat } of data.conversions) {
       const base = statsConversionReady[source] ?? 0
-      converted[resulting_stat] = Math.floor((converted[resulting_stat] || 0) + (base * ratio))
+      converted[resulting_stat] = (converted[resulting_stat] || 0) + truncateTowardZero(base * ratio)
     }
   }
 

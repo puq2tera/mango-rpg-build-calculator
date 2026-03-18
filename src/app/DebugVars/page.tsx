@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useMemo, useState, type Dispatch, type ReactNode, type SetStateAction } from "react"
+import { MyConversionsGrid } from "@/app/components/MyConversionsGrid"
 import { BUILD_SNAPSHOT_UPDATED_EVENT } from "@/app/lib/buildEvents"
 import {
   buildDebugSummary,
@@ -19,6 +20,7 @@ import {
   createComparableValue,
   getBuffEffectSignature,
   parseBuffs,
+  parseConversions,
   parseGuildCard,
   parseTerminalCard,
   type ComparableValue,
@@ -30,12 +32,17 @@ import {
   type ParsedTerminalMainRow,
   type ParsedTypeBonusRow,
 } from "@/app/lib/debugPasteParser"
+import {
+  getTalentConversionComparisonRows,
+  getTalentConversionGroups,
+} from "@/app/lib/talentConversionSummary"
 
 type PasteInputs = {
   guildCard: string
   characterCard: string
   dungeonStats: string
   buffs: string
+  conversions: string
 }
 
 type ComparableRow = {
@@ -81,6 +88,7 @@ const defaultInputs: PasteInputs = {
   characterCard: "",
   dungeonStats: "",
   buffs: "",
+  conversions: "",
 }
 
 function normalizeName(value: string): string {
@@ -409,6 +417,13 @@ function PasteInputTable({
       value: inputs.buffs,
       update: (value: string) => setInputs((current) => ({ ...current, buffs: value })),
     },
+    {
+      label: "Conversions",
+      description: "My Conversions source blocks compared by source stat token.",
+      placeholder: "◘ maxHP : 516,737\n⇒ 5% ⇒ 25,836 maxHP",
+      value: inputs.conversions,
+      update: (value: string) => setInputs((current) => ({ ...current, conversions: value })),
+    },
   ] satisfies {
     label: string
     description: string
@@ -689,6 +704,35 @@ function ComparisonBlock({
   )
 }
 
+function MyConversionsPanel({
+  summary,
+}: {
+  summary: SummaryState
+}) {
+  const conversions = getTalentConversionGroups(summary.snapshot, summary.stages)
+
+  return (
+    <section className={panelClass}>
+      <div className="border-b border-slate-800/80 px-5 py-4 sm:px-6">
+        <div className="text-lg font-semibold text-slate-50">My Conversions</div>
+        <div className="mt-1 text-xs leading-5 text-slate-400">
+          Selected talent conversions shown in the same source to percent to output format as the in-game list.
+        </div>
+      </div>
+
+      <div className="p-4 sm:p-5">
+        {conversions.length === 0 ? (
+          <div className={emptyStateClass}>
+            No active talent conversions are contributing to the current build.
+          </div>
+        ) : (
+          <MyConversionsGrid conversions={conversions} />
+        )}
+      </div>
+    </section>
+  )
+}
+
 function getCharacterComparisonSections(calcCard: TerminalCardData, parsedCard: ParsedTerminalCard) {
   return [
     {
@@ -756,6 +800,7 @@ export default function DebugVarsPage() {
           characterCard: typeof storedInputs.characterCard === "string" ? storedInputs.characterCard : "",
           dungeonStats: typeof storedInputs.dungeonStats === "string" ? storedInputs.dungeonStats : "",
           buffs: typeof storedInputs.buffs === "string" ? storedInputs.buffs : "",
+          conversions: typeof storedInputs.conversions === "string" ? storedInputs.conversions : "",
         })
       }
     } catch {
@@ -803,6 +848,7 @@ export default function DebugVarsPage() {
   const parsedCharacterCard = useMemo(() => parseTerminalCard(inputs.characterCard), [inputs.characterCard])
   const parsedDungeonStats = useMemo(() => parseTerminalCard(inputs.dungeonStats), [inputs.dungeonStats])
   const parsedBuffs = useMemo(() => parseBuffs(inputs.buffs), [inputs.buffs])
+  const parsedConversions = useMemo(() => parseConversions(inputs.conversions), [inputs.conversions])
 
   const guildRows = useMemo(
     () => (summary ? buildLabelValueComparisonRows(getGuildCardRows(summary), parsedGuildCard) : []),
@@ -817,6 +863,10 @@ export default function DebugVarsPage() {
     [parsedDungeonStats, summary],
   )
   const calcBuffs = useMemo(() => (summary ? getCalcSkillBuffs(summary) : []), [summary])
+  const conversionRows = useMemo(
+    () => (summary ? buildLabelValueComparisonRows(getTalentConversionComparisonRows(summary.snapshot, summary.stages), parsedConversions) : []),
+    [parsedConversions, summary],
+  )
 
   if (!summary) {
     return (
@@ -832,6 +882,7 @@ export default function DebugVarsPage() {
   const hasCharacterInput = inputs.characterCard.trim().length > 0
   const hasDungeonInput = inputs.dungeonStats.trim().length > 0
   const hasBuffInput = inputs.buffs.trim().length > 0
+  const hasConversionInput = inputs.conversions.trim().length > 0
 
   return (
     <div className="min-h-[calc(100vh-var(--top-nav-height))] bg-[radial-gradient(circle_at_top_left,rgba(56,189,248,0.12),transparent_28%),radial-gradient(circle_at_bottom_right,rgba(249,115,22,0.08),transparent_32%)] p-4 sm:p-6">
@@ -863,6 +914,8 @@ export default function DebugVarsPage() {
             </div>
           </div>
         </section>
+
+        <MyConversionsPanel summary={summary} />
 
         <PasteInputTable inputs={inputs} setInputs={setInputs} onClear={() => setInputs(defaultInputs)} />
 
@@ -918,6 +971,18 @@ export default function DebugVarsPage() {
           hasInput={hasBuffInput}
         >
           <BuffComparisonSection calcBuffs={calcBuffs} inGameBuffs={parsedBuffs} />
+        </ComparisonBlock>
+
+        <ComparisonBlock
+          title="Conversions Comparison"
+          subtitle="Compares pasted My Conversions blocks against the calculator’s current conversion list by source stat token."
+          hasInput={hasConversionInput}
+        >
+          <ComparisonTable
+            title="My Conversions"
+            subtitle="Each row compares the source value, conversion percent, and output value together."
+            rows={conversionRows}
+          />
         </ComparisonBlock>
       </div>
     </div>

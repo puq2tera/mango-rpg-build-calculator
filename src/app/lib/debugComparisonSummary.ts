@@ -20,6 +20,7 @@ import {
   getDisplayedThreatModifierPercent,
   isInternalThreatStat,
 } from "@/app/lib/threat"
+import { truncateTowardZero } from "@/app/lib/statRounding"
 
 type ClassKey = "tank" | "warrior" | "caster" | "healer"
 
@@ -448,7 +449,7 @@ function applyDisplayConversionEffect(
 
   const buff = getMergedDisplayStatValue(sourceStats, expandedStats, "Buff%")
   const sourceValue = getDisplayConversionSourceValue(sourceStats, expandedStats, sourceStat)
-  const resultValue = Math.floor(sourceValue * ratio * stackCount * (1 + buff))
+  const resultValue = truncateTowardZero(sourceValue * ratio * stackCount * (1 + buff))
 
   addDisplayEffectStat(rawStats, expandedStats, targetStat, resultValue)
 }

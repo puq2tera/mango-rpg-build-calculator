@@ -580,6 +580,59 @@ export function parseTerminalCard(text: string): ParsedTerminalCard {
   }
 }
 
+export function parseConversions(text: string): ParsedLabelValueRow[] {
+  const lines = getMeaningfulLines(text)
+  const rows: ParsedLabelValueRow[] = []
+
+  for (let index = 0; index < lines.length; index += 1) {
+    const currentLine = lines[index]
+    const normalizedCurrentLine = normalizeLookupText(currentLine)
+
+    if (normalizedCurrentLine.includes("my conversions")) {
+      continue
+    }
+
+    if (!currentLine.includes(":") || currentLine.includes("⇒") || currentLine.includes("=>")) {
+      continue
+    }
+
+    const sourceLabel = currentLine
+      .split(":", 2)[0]
+      .replace(/^[^\p{L}\p{N}]+/gu, "")
+      .trim()
+
+    if (sourceLabel.length === 0 || normalizedCurrentLine.includes("conversions")) {
+      continue
+    }
+
+    const groupedLines = [currentLine]
+
+    for (let nextIndex = index + 1; nextIndex < lines.length; nextIndex += 1) {
+      const nextLine = lines[nextIndex]
+      const normalizedNextLine = normalizeLookupText(nextLine)
+
+      if (normalizedNextLine.includes("my conversions")) {
+        continue
+      }
+
+      if (nextLine.includes("⇒") || nextLine.includes("=>")) {
+        groupedLines.push(nextLine.replace(/=>/g, "⇒"))
+        index = nextIndex
+        continue
+      }
+
+      break
+    }
+
+    rows.push({
+      label: sourceLabel,
+      value: createComparableValue(groupedLines.join(" | ")),
+    })
+  }
+
+  return rows
+}
+
 function parseBuffEffect(effectText: string): ParsedBuffEffect {
   const cleaned = effectText.trim()
   const match = cleaned.match(/[+-]?\d[\d,]*(?:\.\d+)?/)
