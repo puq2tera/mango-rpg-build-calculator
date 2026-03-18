@@ -3,6 +3,12 @@ import { talent_data } from "@/app/data/talent_data"
 import type { BuildSnapshot, BuildStatStages } from "@/app/lib/buildStats"
 import { truncateTowardZero } from "@/app/lib/statRounding"
 
+export type TalentConversionBreakdown = {
+  talentName: string
+  ratio: number
+  amount: number
+}
+
 export type TalentConversionRow = {
   id: string
   talentName: string
@@ -11,6 +17,8 @@ export type TalentConversionRow = {
   ratio: number
   resultingStat: string
   amount: number
+  order: number
+  breakdown: TalentConversionBreakdown[]
 }
 
 export type TalentConversionGroup = {
@@ -18,6 +26,7 @@ export type TalentConversionGroup = {
   sourceStat: string
   sourceValue: number
   rows: TalentConversionRow[]
+  order: number
 }
 
 const directInGameTokenByStat: Record<string, string> = {
@@ -96,6 +105,15 @@ const fallbackInGameTokenByStat = Object.entries(stat_data.inGameNames).reduce<R
   return result
 }, {})
 
+const syntheticResourceMultiplierMap: Record<string, {
+  sourceStat: string
+  resultingStat: string
+}> = {
+  "HP%": { sourceStat: "HP", resultingStat: "HP" },
+  "MP%": { sourceStat: "MP", resultingStat: "MP" },
+  "Focus%": { sourceStat: "Focus", resultingStat: "Focus" },
+}
+
 function formatNumber(value: number, maxDigits = 4): string {
   if (!Number.isFinite(value)) {
     return "0"
@@ -129,8 +147,7 @@ function getOutputInGameTokens(stat: string): string[] {
 
 export function formatTalentConversionValue(value: number, stat: string): string {
   const absolute = formatNumber(Math.abs(value))
-  const suffix = stat.includes("%") ? "%" : ""
-  return `${value < 0 ? "-" : ""}${absolute}${suffix}`
+  return `${value < 0 ? "-" : ""}${absolute}`
 }
 
 export function formatTalentConversionRatio(ratio: number): string {
@@ -145,39 +162,206 @@ export function getTalentConversionOutputLabel(stat: string): string {
   return getOutputInGameTokens(stat).join(", ")
 }
 
+function getMergedConversionStatValue(
+  baseStats: Record<string, number>,
+  convertedStats: Record<string, number>,
+  stat: string,
+): number {
+  return (baseStats[stat] ?? 0) + (convertedStats[stat] ?? 0)
+}
+
+function getHighestConvertedValue(
+  baseStats: Record<string, number>,
+  convertedStats: Record<string, number>,
+  stats: readonly string[],
+): number {
+  return stats.reduce(
+    (highest, stat) => Math.max(highest, getMergedConversionStatValue(baseStats, convertedStats, stat)),
+    0,
+  )
+}
+
+function getDisplayConversionSourceValue(
+  baseStats: Record<string, number>,
+  convertedStats: Record<string, number>,
+  sourceStat: string,
+): number {
+  switch (sourceStat) {
+    case "Highest Phys%":
+      return getHighestConvertedValue(baseStats, convertedStats, ["Slash%", "Pierce%", "Blunt%"])
+    case "Highest Phys Pen%":
+      return getHighestConvertedValue(baseStats, convertedStats, ["Slash Pen%", "Pierce Pen%", "Blunt Pen%"])
+    case "Highest Magic%":
+      return getHighestConvertedValue(baseStats, convertedStats, [
+        "Fire%",
+        "Water%",
+        "Lightning%",
+        "Wind%",
+        "Earth%",
+        "Toxic%",
+        "Neg%",
+        "Holy%",
+        "Void%",
+      ])
+    case "Highest Magic Pen%":
+      return getHighestConvertedValue(baseStats, convertedStats, [
+        "Fire Pen%",
+        "Water Pen%",
+        "Lightning Pen%",
+        "Wind Pen%",
+        "Earth Pen%",
+        "Toxic Pen%",
+        "Neg Pen%",
+        "Holy Pen%",
+        "Void Pen%",
+      ])
+    case "Post Crit Chance%":
+      return getMergedConversionStatValue(baseStats, convertedStats, "Crit Chance%")
+    default:
+      return baseStats[sourceStat] ?? 0
+  }
+}
+
+function addExpandedConvertedValue(
+  convertedStats: Record<string, number>,
+  stat: string,
+  value: number,
+): void {
+  const info = stat_data.StatsInfo[stat as keyof typeof stat_data.StatsInfo]
+  if (!info || !Number.isFinite(value) || Math.abs(value) < 0.0001) {
+    return
+  }
+
+  const substats = info.sub_stats
+  if (substats?.length) {
+    for (const substat of substats) {
+      convertedStats[substat] = (convertedStats[substat] ?? 0) + value
+    }
+    return
+  }
+
+  convertedStats[stat] = (convertedStats[stat] ?? 0) + value
+}
+
+function createRow(
+  id: string,
+  talentName: string,
+  sourceStat: string,
+  sourceValue: number,
+  ratio: number,
+  resultingStat: string,
+  amount: number,
+  order: number,
+  breakdown?: TalentConversionBreakdown[],
+): TalentConversionRow {
+  return {
+    id,
+    talentName,
+    sourceStat,
+    sourceValue,
+    ratio,
+    resultingStat,
+    amount,
+    order,
+    breakdown: breakdown ?? [{ talentName, ratio, amount }],
+  }
+}
+
 export function getTalentConversionRows(
   snapshot: BuildSnapshot,
   stages: BuildStatStages,
 ): TalentConversionRow[] {
   const rows: TalentConversionRow[] = []
+  const syntheticRowsByKey = new Map<string, TalentConversionRow>()
+  const convertedStats: Record<string, number> = {}
+  let order = 0
 
   for (const talentName of snapshot.selectedTalents) {
     const talent = talent_data[talentName]
-    if (!talent?.conversions?.length) {
+    if (!talent) {
       continue
     }
 
+    for (const [stat, value] of Object.entries(talent.stats ?? {})) {
+      const syntheticConfig = syntheticResourceMultiplierMap[stat]
+      const normalizedValue = value ?? 0
+      if (!syntheticConfig || !Number.isFinite(normalizedValue) || normalizedValue === 0) {
+        continue
+      }
+
+      const ratio = normalizedValue / 100
+      const sourceValue = stages.StatsBase[syntheticConfig.sourceStat] ?? 0
+      const amount = truncateTowardZero(sourceValue * ratio)
+
+      if (!Number.isFinite(amount) || amount === 0) {
+        continue
+      }
+
+      const key = `synthetic:${syntheticConfig.sourceStat}:${syntheticConfig.resultingStat}`
+      const existingSyntheticRow = syntheticRowsByKey.get(key)
+      if (existingSyntheticRow) {
+        existingSyntheticRow.ratio += ratio
+        existingSyntheticRow.amount += amount
+        existingSyntheticRow.breakdown.push({ talentName, ratio, amount })
+        continue
+      }
+
+      const syntheticRow = createRow(
+        key,
+        talentName,
+        syntheticConfig.sourceStat,
+        sourceValue,
+        ratio,
+        syntheticConfig.resultingStat,
+        amount,
+        order,
+      )
+
+      syntheticRowsByKey.set(key, syntheticRow)
+      rows.push(syntheticRow)
+      order += 1
+    }
+
     talent.conversions.forEach(({ source, ratio, resulting_stat }, index) => {
-      const sourceValue = stages.StatsConversionReady[source] ?? 0
+      const sourceValue = getDisplayConversionSourceValue(stages.StatsConversionReady, convertedStats, source)
       const amount = truncateTowardZero(sourceValue * ratio)
 
       if (!Number.isFinite(amount) || amount === 0) {
         return
       }
 
-      rows.push({
-        id: `${talentName}:${index}:${resulting_stat}`,
-        talentName,
-        sourceStat: source,
-        sourceValue,
-        ratio,
-        resultingStat: resulting_stat,
-        amount,
-      })
+      rows.push(
+        createRow(
+          `${talentName}:${index}:${resulting_stat}`,
+          talentName,
+          source,
+          sourceValue,
+          ratio,
+          resulting_stat,
+          amount,
+          order,
+        ),
+      )
+      order += 1
+      addExpandedConvertedValue(convertedStats, resulting_stat, amount)
     })
   }
 
   return rows
+}
+
+function getConversionRowPriority(row: TalentConversionRow): number {
+  const outputTokens = getOutputInGameTokens(row.resultingStat)
+
+  if (outputTokens.length > 1) {
+    return 0
+  }
+
+  if (row.resultingStat === row.sourceStat) {
+    return 1
+  }
+
+  return 2
 }
 
 export function getTalentConversionGroups(
@@ -201,6 +385,7 @@ export function getTalentConversionGroups(
       sourceStat: row.sourceStat,
       sourceValue: row.sourceValue,
       rows: [row],
+      order: row.order,
     }
 
     groupsBySource.set(key, nextGroup)
@@ -208,6 +393,18 @@ export function getTalentConversionGroups(
   }
 
   return groups
+    .sort((left, right) => left.order - right.order)
+    .map((group) => ({
+      ...group,
+      rows: [...group.rows].sort((left, right) => {
+        const priorityDifference = getConversionRowPriority(left) - getConversionRowPriority(right)
+        if (priorityDifference !== 0) {
+          return priorityDifference
+        }
+
+        return left.order - right.order
+      }),
+    }))
 }
 
 export function getTalentConversionSourceLine(group: TalentConversionGroup): string {
@@ -221,7 +418,18 @@ export function getTalentConversionOutputLine(row: TalentConversionRow): string 
 export function getTalentConversionTooltip(group: TalentConversionGroup): string {
   return [
     getTalentConversionSourceLine(group),
-    ...group.rows.map((row) => `${row.talentName}: ${getTalentConversionOutputLine(row)}`),
+    ...group.rows.flatMap((row) => {
+      if (row.breakdown.length <= 1) {
+        return [`${row.talentName}: ${getTalentConversionOutputLine(row)}`]
+      }
+
+      return [
+        ...row.breakdown.map((entry) =>
+          `${entry.talentName}: ⇒  ${formatTalentConversionRatio(entry.ratio)}  ⇒  ${formatTalentConversionValue(entry.amount, row.resultingStat)} ${getTalentConversionOutputLabel(row.resultingStat)}`,
+        ),
+        `Total: ${getTalentConversionOutputLine(row)}`,
+      ]
+    }),
   ].join("\n")
 }
 

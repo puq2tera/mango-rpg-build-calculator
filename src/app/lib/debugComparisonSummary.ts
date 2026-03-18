@@ -607,7 +607,26 @@ function getCalculatedOutDungeonStats(rawStats: Record<string, number>): Record<
 }
 
 function getDisplayDungeonStats(snapshot: BuildSnapshot, stages: BuildStatStages): Record<string, number> {
-  return getCalculatedOutDungeonStats(getRawDungeonDisplayStats(snapshot, stages))
+  const displayStats: Record<string, number> = { ...stages.StatsDmgReady }
+
+  displayStats["All%"] = 0
+  displayStats["All Pen%"] = 0
+  displayStats["All Res%"] = 0
+  displayStats["Phys%"] = 0
+  displayStats["Phys Pen%"] = 0
+  displayStats["Phys Res%"] = 0
+  displayStats["Phys xPen%"] = 0
+  displayStats["Elemental%"] = 0
+  displayStats["Elemental Pen%"] = 0
+  displayStats["Elemental Res%"] = 0
+  displayStats["Elemental xPen%"] = 0
+  displayStats["Divine%"] = 0
+  displayStats["Divine Pen%"] = 0
+  displayStats["Divine Res%"] = 0
+  displayStats["Divine xPen%"] = 0
+  displayStats["Void xPen%"] = 0
+
+  return displayStats
 }
 
 function getCharacterCardElementStats(rawStats: Record<string, number>): Record<string, number> {

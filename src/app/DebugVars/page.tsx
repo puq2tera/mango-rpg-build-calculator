@@ -709,7 +709,7 @@ function MyConversionsPanel({
 }: {
   summary: SummaryState
 }) {
-  const conversions = getTalentConversionGroups(summary.snapshot, summary.stages)
+  const conversions = getTalentConversionGroups(summary.snapshot, summary.charcardStages)
 
   return (
     <section className={panelClass}>
@@ -864,7 +864,7 @@ export default function DebugVarsPage() {
   )
   const calcBuffs = useMemo(() => (summary ? getCalcSkillBuffs(summary) : []), [summary])
   const conversionRows = useMemo(
-    () => (summary ? buildLabelValueComparisonRows(getTalentConversionComparisonRows(summary.snapshot, summary.stages), parsedConversions) : []),
+    () => (summary ? buildLabelValueComparisonRows(getTalentConversionComparisonRows(summary.snapshot, summary.charcardStages), parsedConversions) : []),
     [parsedConversions, summary],
   )
 
@@ -887,35 +887,6 @@ export default function DebugVarsPage() {
   return (
     <div className="min-h-[calc(100vh-var(--top-nav-height))] bg-[radial-gradient(circle_at_top_left,rgba(56,189,248,0.12),transparent_28%),radial-gradient(circle_at_bottom_right,rgba(249,115,22,0.08),transparent_32%)] p-4 sm:p-6">
       <div className="mx-auto max-w-7xl space-y-4">
-        <section className={`${panelClass} px-5 py-4 sm:px-6`}>
-          <div className="flex flex-wrap items-center justify-between gap-3">
-            <div className="text-[11px] font-semibold uppercase tracking-[0.26em] text-sky-300">Debug Comparison</div>
-            <div className="text-xs text-slate-400">Current calculator snapshot</div>
-          </div>
-
-          <div className="mt-3 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-            <div className={compactCardClass}>
-              <div className="text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-400">Race</div>
-              <div className="mt-1.5 text-lg font-semibold text-slate-50">{summary.raceName}</div>
-            </div>
-            <div className={compactCardClass}>
-              <div className="text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-400">Total Levels</div>
-              <div className="mt-1.5 text-lg font-semibold text-slate-50">{formatWhole(summary.totalLevels)}</div>
-            </div>
-            <div className={compactCardClass}>
-              <div className="text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-400">Selected Buffs</div>
-              <div className="mt-1.5 text-lg font-semibold text-slate-50">{formatWhole(summary.snapshot.selectedBuffs.length)}</div>
-            </div>
-            <div className={compactCardClass}>
-              <div className="text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-400">Skill / Talent</div>
-              <div className="mt-1.5 text-lg font-semibold text-slate-50">
-                {formatWhole(summary.remainingSkillPoints)} / {formatWhole(summary.remainingTalentPoints)}
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <MyConversionsPanel summary={summary} />
 
         <PasteInputTable inputs={inputs} setInputs={setInputs} onClear={() => setInputs(defaultInputs)} />
 
