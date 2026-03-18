@@ -27446,7 +27446,9 @@ const talent_data: Record<string, Talent> = {
         "description": "+40% ATK, +15% Physical Damage, Conversion 140% Penholy to Penphysical, 15% Eleholy to MP, 4500% Eleholy to ATK",
         "stats": {
             "ATK%": 40,
-            "Phys%": 15
+            "Slash%": 15,
+            "Pierce%": 15,
+            "Blunt%": 15
         },
         "conversions": [
             {

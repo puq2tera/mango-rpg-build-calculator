@@ -1,5 +1,6 @@
 import {
   createDefaultMainStatValues,
+  inferMainStatTrainingPoints,
   type MainStatKey,
   type MainStatValues,
 } from "@/app/lib/mainStatPoints"
@@ -92,8 +93,7 @@ export function getManualTrainingToken(stat: MainStatKey): string {
 }
 
 export function inferTrainingPointsFromGain(reportedGain: number): number {
-  const normalizedGain = Math.max(0, Math.floor(reportedGain))
-  return Math.max(0, Math.round((normalizedGain - 1) / 4))
+  return inferMainStatTrainingPoints(reportedGain)
 }
 
 export function getManualTrainingEffectivePoints(entry: ManualTrainingEntry): number {

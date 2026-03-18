@@ -13,6 +13,16 @@ export function createDefaultMainStatValues(): MainStatValues {
   return { ATK: 0, DEF: 0, MATK: 0, HEAL: 0 }
 }
 
+export function getMainStatTrainingGain(trainingPoints: number): number {
+  const normalizedPoints = Number.isFinite(trainingPoints) ? Math.max(0, Math.floor(trainingPoints)) : 0
+  return normalizedPoints === 0 ? 0 : 1 + (4 * normalizedPoints)
+}
+
+export function inferMainStatTrainingPoints(gain: number): number {
+  const normalizedGain = Number.isFinite(gain) ? Math.max(0, Math.floor(gain)) : 0
+  return normalizedGain === 0 ? 0 : Math.max(0, Math.round((normalizedGain - 1) / 4))
+}
+
 export function normalizeMainStatValues(value: unknown): MainStatValues {
   const normalized = createDefaultMainStatValues()
   if (typeof value !== "object" || value === null || Array.isArray(value)) {

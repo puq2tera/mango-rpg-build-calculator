@@ -5,6 +5,7 @@ import { skill_data, type Skill } from "@/app/data/skill_data"
 import stat_data from "@/app/data/stat_data"
 import { talent_data } from "@/app/data/talent_data"
 import tarot_data, { type Tarot } from "@/app/data/tarot_data"
+import { getMainStatTrainingGain } from "@/app/lib/mainStatPoints"
 import {
   ADDITIONAL_STAGE_STATS_STORAGE_KEY,
   groupAdditionalStageStatEntries,
@@ -554,9 +555,13 @@ function computeLevelStats(snapshot: BuildSnapshot): Record<string, number> {
   statsLevels[THREAT_BASE_STAT] = 100 + threatLevelBonus
 
   for (const stat of stat_data.Mainstats) {
+    const trainingPoints = snapshot.selectedTraining[stat] ?? 0
+
     statsLevels[stat] = 5
       + (snapshot.selectedStatPoints[stat] ?? 0)
-      + (4 * (snapshot.selectedTraining[stat] ?? 0))
+      // `xtraining` reports `+321` for 80 points, so training contributes
+      // a one-time base +1 in addition to the +4 per spent point.
+      + getMainStatTrainingGain(trainingPoints)
       + (mainstatLevelGains[stat] ?? 0)
   }
 

@@ -685,7 +685,12 @@ function getRaceName(snapshot: BuildSnapshot): string {
 }
 
 function getUsedSkillPoints(snapshot: BuildSnapshot): number {
-  return snapshot.selectedBuffs.reduce((total, skillName) => total + (skill_data[skillName]?.sp ?? 0), 0)
+  const selectedSkillPoints = snapshot.selectedBuffs.reduce((total, skillName) => total + (skill_data[skillName]?.sp ?? 0), 0)
+  const trainingPointsSpent = Object.values(snapshot.selectedTraining).reduce((total, value) => {
+    return total + (Number.isFinite(value) ? value : 0)
+  }, 0)
+
+  return selectedSkillPoints + trainingPointsSpent
 }
 
 function isTarotEquipmentSlot(slot: BuildSnapshot["equipmentSlots"][number] | undefined): boolean {
