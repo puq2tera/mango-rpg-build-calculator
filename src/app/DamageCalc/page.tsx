@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useMemo, useRef, useState, type KeyboardEvent } from "react"
 import stat_data from "../data/stat_data"
 import { BUILD_SNAPSHOT_UPDATED_EVENT } from "@/app/lib/buildEvents"
 import { computeBuildStatStages, readBuildSnapshot } from "@/app/lib/buildStats"
@@ -21,11 +21,22 @@ import {
 import { attackPresetInputKeys, getDamageCalcAttackPresets } from "@/app/lib/damageCalcAttackPresets"
 
 const attackPresetInputKeySet = new Set<keyof DamageCalcInputs>(attackPresetInputKeys)
+const defaultLearnedSkillNames = ["Punch", "Wait", "Focus"] as const
+const ATTACK_PRESET_LISTBOX_ID = "damage-calc-attack-presets"
+
+function normalizeSearchValue(value: string): string {
+  return value.trim().toLocaleLowerCase()
+}
 
 export default function DamageCalc() {
   const [stats, setStats] = useState<Record<string, number>>({})
+  const [learnedSkillNames, setLearnedSkillNames] = useState<string[]>([...defaultLearnedSkillNames])
   const [isHydrated, setIsHydrated] = useState(false)
   const [attackPreset, setAttackPreset] = useState(defaultDamageCalcState.attackPreset)
+  const [attackPresetInputValue, setAttackPresetInputValue] = useState("")
+  const [showLearnedOnly, setShowLearnedOnly] = useState(false)
+  const [isAttackPresetDropdownOpen, setIsAttackPresetDropdownOpen] = useState(false)
+  const [highlightedAttackPresetIndex, setHighlightedAttackPresetIndex] = useState(0)
   const [mainStat, setMainStat] = useState(defaultDamageCalcState.mainStat)
   const [secondStat, setSecondStat] = useState(defaultDamageCalcState.secondStat)
   const [element, setElement] = useState(defaultDamageCalcState.element)
@@ -35,14 +46,20 @@ export default function DamageCalc() {
     defaultDamageCalcCustomSkillScaling,
   )
   const [inputs, setInputs] = useState<DamageCalcInputs>(defaultDamageCalcState.inputs)
+  const attackPresetFieldRef = useRef<HTMLDivElement | null>(null)
 
   useEffect(() => {
     const storedState = readDamageCalcState(localStorage)
     const refreshBuildStats = () => {
       const snapshot = readBuildSnapshot(localStorage)
       const stages = computeBuildStatStages(snapshot)
+      const nextLearnedSkillNames = Array.from(new Set([
+        ...defaultLearnedSkillNames,
+        ...snapshot.selectedBuffs,
+      ]))
 
       setStats(stages.StatsDmgReady)
+      setLearnedSkillNames(nextLearnedSkillNames)
     }
     const handleVisibilityChange = () => {
       if (document.visibilityState === "visible") {
@@ -51,6 +68,7 @@ export default function DamageCalc() {
     }
 
     setAttackPreset(storedState.attackPreset)
+    setAttackPresetInputValue(storedState.attackPreset)
     setMainStat(storedState.mainStat)
     setSecondStat(storedState.secondStat)
     setElement(storedState.element)
@@ -88,8 +106,64 @@ export default function DamageCalc() {
     window.dispatchEvent(new Event("damageCalcUpdated"))
   }, [attackPreset, customSkillScaling, element, inputs, isHydrated, mainStat, penElement, secondStat, skillType])
 
+  useEffect(() => {
+    const handlePointerDown = (event: MouseEvent) => {
+      const target = event.target
+      if (!(target instanceof Node)) {
+        return
+      }
+
+      if (attackPresetFieldRef.current?.contains(target)) {
+        return
+      }
+
+      setIsAttackPresetDropdownOpen(false)
+    }
+
+    document.addEventListener("mousedown", handlePointerDown)
+    return () => {
+      document.removeEventListener("mousedown", handlePointerDown)
+    }
+  }, [])
+
   const attackPresets = getDamageCalcAttackPresets(stats)
   const selectedAttackPreset = attackPresets.find((entry) => entry.name === attackPreset) ?? null
+  const learnedSkillNameSet = new Set(learnedSkillNames)
+  const normalizedAttackPresetInputValue = normalizeSearchValue(attackPresetInputValue)
+  const normalizedSelectedAttackPreset = normalizeSearchValue(attackPreset)
+  const normalizedAttackPresetFilterValue =
+    attackPreset.length > 0 && normalizedAttackPresetInputValue === normalizedSelectedAttackPreset
+      ? ""
+      : normalizedAttackPresetInputValue
+  const filteredAttackPresets = useMemo(() => {
+    return attackPresets.filter((preset) => {
+      if (showLearnedOnly && !learnedSkillNameSet.has(preset.name)) {
+        return false
+      }
+
+      if (normalizedAttackPresetFilterValue.length === 0) {
+        return true
+      }
+
+      const searchableText = [
+        preset.name,
+        preset.description,
+        preset.note ?? "",
+      ].join("\n").toLocaleLowerCase()
+
+      return searchableText.includes(normalizedAttackPresetFilterValue)
+    })
+  }, [attackPresets, learnedSkillNameSet, normalizedAttackPresetFilterValue, showLearnedOnly])
+  const selectedPresetHiddenByFilters = selectedAttackPreset !== null && showLearnedOnly && !learnedSkillNameSet.has(selectedAttackPreset.name)
+
+  useEffect(() => {
+    if (filteredAttackPresets.length === 0) {
+      setHighlightedAttackPresetIndex(0)
+      return
+    }
+
+    setHighlightedAttackPresetIndex((current) => Math.min(current, filteredAttackPresets.length - 1))
+  }, [filteredAttackPresets])
 
   const {
     nonCrit,
@@ -128,31 +202,40 @@ export default function DamageCalc() {
   const effectiveSkillDmg = getDamageCalcEffectiveSkillDmgPercent(stats, inputs, customSkillScaling)
   const customSkillScalingSourceValue = getDamageCalcCustomSkillScalingSourceValue(stats, customSkillScaling)
 
+  const clearAttackPresetSelection = () => {
+    setAttackPreset("")
+    setAttackPresetInputValue("")
+    setIsAttackPresetDropdownOpen(false)
+  }
+
   const handleChange = (field: keyof DamageCalcInputs, value: number) => {
     if (attackPresetInputKeySet.has(field)) {
-      setAttackPreset("")
+      clearAttackPresetSelection()
     }
 
     setInputs((prev) => ({ ...prev, [field]: value }))
   }
 
   const handleCustomSkillScalingChange = (nextValue: Partial<DamageCalcCustomSkillScaling>) => {
-    setAttackPreset("")
+    clearAttackPresetSelection()
     setCustomSkillScaling((prev) => ({ ...prev, ...nextValue }))
   }
 
   const handleAttackPresetChange = (nextPreset: string) => {
-    setAttackPreset(nextPreset)
+    setAttackPresetInputValue(nextPreset)
 
     if (!nextPreset) {
+      setAttackPreset("")
       return
     }
 
     const preset = attackPresets.find((entry) => entry.name === nextPreset)
     if (!preset) {
+      setAttackPreset("")
       return
     }
 
+    setAttackPreset(nextPreset)
     setMainStat(preset.mainStat)
     setSecondStat(preset.secondStat)
     setElement(preset.element)
@@ -160,6 +243,66 @@ export default function DamageCalc() {
     setSkillType(preset.skillType)
     setCustomSkillScaling(defaultDamageCalcCustomSkillScaling)
     setInputs((prev) => ({ ...prev, ...preset.inputs }))
+    setIsAttackPresetDropdownOpen(false)
+  }
+
+  const handleAttackPresetInputChange = (nextValue: string) => {
+    setAttackPresetInputValue(nextValue)
+    setIsAttackPresetDropdownOpen(true)
+
+    if (!nextValue) {
+      setAttackPreset("")
+      return
+    }
+
+    const preset = attackPresets.find((entry) => entry.name === nextValue)
+    if (!preset) {
+      setAttackPreset("")
+      return
+    }
+
+    handleAttackPresetChange(nextValue)
+  }
+
+  const handleAttackPresetKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === "ArrowDown") {
+      event.preventDefault()
+      if (!isAttackPresetDropdownOpen) {
+        setIsAttackPresetDropdownOpen(true)
+        return
+      }
+
+      if (filteredAttackPresets.length > 0) {
+        setHighlightedAttackPresetIndex((current) => Math.min(current + 1, filteredAttackPresets.length - 1))
+      }
+      return
+    }
+
+    if (event.key === "ArrowUp") {
+      event.preventDefault()
+      if (!isAttackPresetDropdownOpen) {
+        setIsAttackPresetDropdownOpen(true)
+        return
+      }
+
+      if (filteredAttackPresets.length > 0) {
+        setHighlightedAttackPresetIndex((current) => Math.max(current - 1, 0))
+      }
+      return
+    }
+
+    if (event.key === "Enter" && isAttackPresetDropdownOpen) {
+      const highlightedPreset = filteredAttackPresets[highlightedAttackPresetIndex]
+      if (highlightedPreset) {
+        event.preventDefault()
+        handleAttackPresetChange(highlightedPreset.name)
+      }
+      return
+    }
+
+    if (event.key === "Escape") {
+      setIsAttackPresetDropdownOpen(false)
+    }
   }
 
   return (
@@ -167,24 +310,85 @@ export default function DamageCalc() {
       <h1 className="text-2xl font-bold text-center">Damage Calculator</h1>
 
       <div className="rounded-lg border bg-slate-900/60 p-4">
-        <div className="grid items-stretch gap-4 md:grid-cols-[minmax(0,18rem)_1fr]">
-          <div className="flex h-full items-center">
-            <select
-              value={attackPreset}
-              onChange={(e) => handleAttackPresetChange(e.target.value)}
-              className="w-full p-1 border rounded"
-            >
-              <option value="">Custom Skill</option>
-              {attackPresets.map((preset) => (
-                <option key={preset.name} value={preset.name}>
-                  {preset.name}
-                </option>
-              ))}
-            </select>
+        <div className="grid gap-x-4 gap-y-2 md:grid-cols-[minmax(0,18rem)_1fr]">
+          <div className="flex items-center justify-between gap-3">
+            <label className="font-semibold text-slate-100">Skill Preset</label>
+            <label className="inline-flex items-center gap-2 text-sm text-slate-300">
+              <input
+                type="checkbox"
+                checked={showLearnedOnly}
+                onChange={(e) => setShowLearnedOnly(e.target.checked)}
+              />
+              <span>Only show learned skills</span>
+            </label>
+          </div>
+
+          <div ref={attackPresetFieldRef} className="relative">
+            <div className="flex overflow-hidden rounded border bg-slate-950">
+              <input
+                type="text"
+                value={attackPresetInputValue}
+                onChange={(e) => handleAttackPresetInputChange(e.target.value)}
+                onFocus={() => setIsAttackPresetDropdownOpen(true)}
+                onKeyDown={handleAttackPresetKeyDown}
+                placeholder="Custom Skill"
+                role="combobox"
+                aria-autocomplete="list"
+                aria-expanded={isAttackPresetDropdownOpen}
+                aria-controls={ATTACK_PRESET_LISTBOX_ID}
+                className="w-full bg-transparent p-1 outline-none"
+              />
+              <button
+                type="button"
+                onClick={() => setIsAttackPresetDropdownOpen((current) => !current)}
+                aria-label={isAttackPresetDropdownOpen ? "Hide skill presets" : "Show skill presets"}
+                aria-expanded={isAttackPresetDropdownOpen}
+                aria-controls={ATTACK_PRESET_LISTBOX_ID}
+                className="border-l border-slate-700 px-2 text-slate-300 transition hover:bg-slate-800 hover:text-slate-100"
+              >
+                v
+              </button>
+            </div>
+
+            {isAttackPresetDropdownOpen ? (
+              <div
+                id={ATTACK_PRESET_LISTBOX_ID}
+                role="listbox"
+                className="absolute z-20 mt-1 max-h-64 w-full overflow-y-auto rounded border border-slate-700 bg-slate-950 shadow-[0_18px_40px_rgba(2,6,23,0.45)]"
+              >
+                {filteredAttackPresets.length > 0 ? (
+                  filteredAttackPresets.map((preset, index) => (
+                    <button
+                      key={preset.name}
+                      type="button"
+                      role="option"
+                      aria-selected={preset.name === attackPreset}
+                      onMouseDown={(event) => event.preventDefault()}
+                      onClick={() => handleAttackPresetChange(preset.name)}
+                      onMouseEnter={() => setHighlightedAttackPresetIndex(index)}
+                      className={`block w-full px-3 py-2 text-left text-sm transition ${
+                        index === highlightedAttackPresetIndex
+                          ? "bg-sky-500/20 text-sky-100"
+                          : preset.name === attackPreset
+                            ? "bg-slate-800 text-slate-100"
+                            : "text-slate-200 hover:bg-slate-800"
+                      }`}
+                    >
+                      <div className="font-medium">{preset.name}</div>
+                      <div className="truncate text-xs text-slate-400">{preset.description}</div>
+                    </button>
+                  ))
+                ) : (
+                  <div className="px-3 py-2 text-sm text-slate-400">
+                    No presets match the current filter.
+                  </div>
+                )}
+              </div>
+            ) : null}
           </div>
 
           {selectedAttackPreset ? (
-            <div className="flex h-full flex-col justify-center space-y-2">
+            <div className="flex h-full flex-col justify-center space-y-2 md:col-start-2 md:row-start-2">
               <p className="text-sm text-slate-100">{selectedAttackPreset.description}</p>
               {selectedAttackPreset.note ? (
                 <p className="text-xs uppercase tracking-[0.12em] text-slate-400">
@@ -193,7 +397,7 @@ export default function DamageCalc() {
               ) : null}
             </div>
           ) : // If an invalid skill is selected (or "Custom Skill")
-          <div className="flex h-full flex-col justify-center space-y-2">
+          <div className="flex h-full flex-col justify-center space-y-2 md:col-start-2 md:row-start-2">
             <p className="text-sm text-slate-100">{"Select a skill to autofill the fields below"}</p>
           </div>}
         </div>
@@ -205,7 +409,7 @@ export default function DamageCalc() {
           <select
             value={mainStat}
             onChange={(e) => {
-              setAttackPreset("")
+              clearAttackPresetSelection()
               setMainStat(e.target.value)
             }}
             className="w-full p-1 border rounded"
@@ -217,7 +421,7 @@ export default function DamageCalc() {
           <select
             value={element}
             onChange={(e) => {
-              setAttackPreset("")
+              clearAttackPresetSelection()
               setElement(e.target.value)
             }}
             className="w-full p-1 border rounded"
@@ -229,7 +433,7 @@ export default function DamageCalc() {
           <select
             value={penElement}
             onChange={(e) => {
-              setAttackPreset("")
+              clearAttackPresetSelection()
               setPenElement(e.target.value)
             }}
             className="w-full p-1 border rounded"
@@ -243,7 +447,7 @@ export default function DamageCalc() {
           <select
             value={skillType}
             onChange={(e) => {
-              setAttackPreset("")
+              clearAttackPresetSelection()
               setSkillType(e.target.value)
             }}
             className="w-full p-1 border rounded"
@@ -291,7 +495,7 @@ export default function DamageCalc() {
           <select
             value={secondStat}
             onChange={(e) => {
-              setAttackPreset("")
+              clearAttackPresetSelection()
               setSecondStat(e.target.value)
             }}
             className="w-full p-1 border rounded"
