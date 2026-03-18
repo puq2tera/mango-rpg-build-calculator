@@ -35,6 +35,16 @@ import {
   type MainStatValues,
 } from "../lib/mainStatPoints"
 import {
+  MANUAL_TRAINING_SECTION_ID,
+  createDefaultManualTrainingEntry,
+  getEffectiveTrainingTotalsFromEntries,
+  getManualTrainingEffectivePoints,
+  getManualTrainingToken,
+  normalizeManualTrainingEntries,
+  parseManualTrainingTranscript,
+  type ManualTrainingEntry,
+} from "../lib/manualTraining"
+import {
   createDefaultManualLevelRange,
   getManualRangeMaxTotalLevel,
   manualRangeClasses,
@@ -55,6 +65,8 @@ const STORAGE_KEYS = {
   savedLevelOrder: "SelectedLevelOrder",
   manualLevelRanges: "SelectedManualLevelRanges",
   manualLevelRangesCollapsed: "SelectedManualLevelRangesCollapsed",
+  manualTrainingEntries: "SelectedManualTrainingEntries",
+  manualTrainingCollapsed: "SelectedManualTrainingCollapsed",
   dungeonUnlocks: DUNGEON_UNLOCKS_STORAGE_KEY,
   race: "SelectedRace",
 }
@@ -285,6 +297,9 @@ export default function LevelsPage() {
   const [manualLevelRanges, setManualLevelRanges] = useState<ManualLevelRange[]>([])
   const [manualRangesCollapsed, setManualRangesCollapsed] = useState(false)
   const [manualRangeImportNotice, setManualRangeImportNotice] = useState<ManualRangeImportNotice | null>(null)
+  const [manualTrainingEntries, setManualTrainingEntries] = useState<ManualTrainingEntry[]>([])
+  const [manualTrainingCollapsed, setManualTrainingCollapsed] = useState(false)
+  const [manualTrainingImportNotice, setManualTrainingImportNotice] = useState<ManualRangeImportNotice | null>(null)
   const [selectedDungeonUnlocks, setSelectedDungeonUnlocks] = useState<DungeonUnlockTag[]>([])
   const [selectedTalents, setSelectedTalents] = useState<string[]>([])
   const [selectedBuffs, setSelectedBuffs] = useState<string[]>([])
@@ -300,6 +315,8 @@ export default function LevelsPage() {
     const storedLevelOrder = localStorage.getItem(STORAGE_KEYS.savedLevelOrder)
     const storedManualLevelRanges = localStorage.getItem(STORAGE_KEYS.manualLevelRanges)
     const storedManualLevelRangesCollapsed = localStorage.getItem(STORAGE_KEYS.manualLevelRangesCollapsed)
+    const storedManualTrainingEntries = localStorage.getItem(STORAGE_KEYS.manualTrainingEntries)
+    const storedManualTrainingCollapsed = localStorage.getItem(STORAGE_KEYS.manualTrainingCollapsed)
     const storedDungeonUnlocks = localStorage.getItem(STORAGE_KEYS.dungeonUnlocks)
     const storedRace = localStorage.getItem(STORAGE_KEYS.race)
     const storedSelectedTalents = localStorage.getItem("selectedTalents")
@@ -312,6 +329,8 @@ export default function LevelsPage() {
     setClassOrder(normalizeStoredClassOrder(storedLevelOrder))
     setManualLevelRanges(normalizeManualLevelRanges(parseStoredJson(storedManualLevelRanges, [])))
     setManualRangesCollapsed(parseStoredBoolean(storedManualLevelRangesCollapsed))
+    setManualTrainingEntries(normalizeManualTrainingEntries(parseStoredJson(storedManualTrainingEntries, [])))
+    setManualTrainingCollapsed(parseStoredBoolean(storedManualTrainingCollapsed))
     setSelectedDungeonUnlocks(parseStoredStringArray(storedDungeonUnlocks).filter(isDungeonUnlockTag))
     if (storedRace && isRaceTag(storedRace)) setSelectedRace(storedRace)
     setSelectedTalents(parseStoredStringArray(storedSelectedTalents))
@@ -363,6 +382,16 @@ export default function LevelsPage() {
 
   useEffect(() => {
     if (!loaded) return
+    localStorage.setItem(STORAGE_KEYS.manualTrainingEntries, JSON.stringify(manualTrainingEntries))
+  }, [manualTrainingEntries, loaded])
+
+  useEffect(() => {
+    if (!loaded) return
+    localStorage.setItem(STORAGE_KEYS.manualTrainingCollapsed, JSON.stringify(manualTrainingCollapsed))
+  }, [manualTrainingCollapsed, loaded])
+
+  useEffect(() => {
+    if (!loaded) return
     localStorage.setItem(STORAGE_KEYS.dungeonUnlocks, JSON.stringify(selectedDungeonUnlocks))
     dispatchBuildSnapshotUpdated()
   }, [selectedDungeonUnlocks, loaded])
@@ -386,6 +415,11 @@ export default function LevelsPage() {
   const usedStatPoints = Object.values(statPoints).reduce((a, b) => a + b, 0)
   const remainingStatPoints = totalStatPoints - usedStatPoints
   const totalTraining = Object.values(training).reduce((a, b) => a + b, 0)
+  const manualTrainingTotals = getEffectiveTrainingTotalsFromEntries(manualTrainingEntries)
+  const totalManualTraining = Object.values(manualTrainingTotals).reduce((a, b) => a + b, 0)
+  const needsManualTrainingSync = manualTrainingEntries.length > 0 && classMainStatOrder.some(
+    (key) => training[key] !== manualTrainingTotals[key],
+  )
   const { availablePoints: availableHeroPoints } = calculateHeroPointAvailability(totalLevels, selectedRace, selectedTalents)
 
   const totalHeroPoints = heroPointStats.reduce((sum, { id, cost }) => {
@@ -567,6 +601,69 @@ export default function LevelsPage() {
     setManualRangeImportNotice({
       tone: "success",
       lines: [`Synced chosen levels to ${getManualRangeMaxTotalLevel(manualLevelRanges)} total levels from manual ranges.`],
+    })
+  }
+
+  const addManualTrainingEntry = () => {
+    setManualTrainingEntries((prev) => [...prev, createDefaultManualTrainingEntry()])
+  }
+
+  const updateManualTrainingEntry = <K extends keyof ManualTrainingEntry>(
+    index: number,
+    key: K,
+    value: ManualTrainingEntry[K],
+  ) => {
+    setManualTrainingEntries((prev) =>
+      prev.map((entry, i) => {
+        if (i !== index) {
+          return entry
+        }
+
+        return { ...entry, [key]: value }
+      })
+    )
+  }
+
+  const removeManualTrainingEntry = (index: number) => {
+    setManualTrainingEntries((prev) => prev.filter((_, i) => i !== index))
+  }
+
+  const importManualTrainingFromText = (rawTranscript: string) => {
+    const transcript = rawTranscript.trim()
+
+    if (transcript.length === 0) {
+      setManualTrainingImportNotice({
+        tone: "error",
+        lines: ["Paste one or more `xtraining` results into the import box."],
+      })
+      return
+    }
+
+    const { entries, warnings } = parseManualTrainingTranscript(transcript)
+
+    if (entries.length === 0) {
+      setManualTrainingImportNotice({
+        tone: "error",
+        lines: warnings.length > 0 ? warnings : ["The pasted text did not produce any manual training rows."],
+      })
+      return
+    }
+
+    setManualTrainingEntries((prev) => [...prev, ...entries])
+    setManualTrainingImportNotice({
+      tone: warnings.length > 0 ? "warning" : "success",
+      lines: [
+        `Imported ${entries.length} manual training row${entries.length === 1 ? "" : "s"}.`,
+        ...warnings,
+      ],
+    })
+  }
+
+  const syncTrainingToManualEntries = () => {
+    setTraining(manualTrainingTotals)
+    setManualTrainingImportNotice({
+      tone: "success",
+      lines: [`Synced chosen training to ${totalManualTraining} imported point${totalManualTraining === 1 ? "" : "s"}.`],
     })
   }
 
@@ -967,6 +1064,168 @@ export default function LevelsPage() {
           </tr>
         </tbody>
       </table>
+
+      <section
+        id={MANUAL_TRAINING_SECTION_ID}
+        className="overflow-hidden rounded-[30px] border border-slate-800/80 bg-slate-950/35 shadow-[0_18px_60px_rgba(2,6,23,0.22)]"
+      >
+        <div className={`flex flex-wrap items-center justify-between gap-3 ${manualTrainingCollapsed ? "px-4 py-2.5 sm:px-5" : "px-5 py-4 sm:px-6"}`}>
+          <div className="space-y-1">
+            <div className="text-xl font-semibold text-slate-50">Manual Training</div>
+            {!manualTrainingCollapsed ? (
+              <div className="text-sm text-slate-400">
+                Import `xtraining` transcripts, keep blank command counts blank, and sync the derived totals into the calculator.
+              </div>
+            ) : null}
+          </div>
+          <div className="flex items-center gap-3">
+            <div className="rounded-full border border-slate-700/80 bg-slate-950/70 px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.14em] text-slate-300">
+              {manualTrainingEntries.length} Saved
+            </div>
+            <button
+              type="button"
+              onClick={() => setManualTrainingCollapsed((prev) => !prev)}
+              aria-expanded={!manualTrainingCollapsed}
+              aria-controls="manual-training-panel"
+              className="rounded-full border border-slate-700/80 bg-slate-900/80 px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.16em] text-slate-200 transition hover:border-sky-300/40 hover:text-sky-100"
+            >
+              {manualTrainingCollapsed ? "Show" : "Hide"}
+            </button>
+          </div>
+        </div>
+
+        {!manualTrainingCollapsed ? (
+          <div id="manual-training-panel" className="space-y-3 border-t border-slate-800/70 p-4 sm:p-6">
+            <div className="max-w-5xl border p-3 space-y-3 bg-slate-900/60">
+              <label className="block space-y-2">
+                <span className="text-sm font-semibold text-slate-100">Paste training transcript</span>
+                <input
+                  type="text"
+                  placeholder="Paste xtraining transcript here"
+                  onPaste={(e) => {
+                    e.preventDefault()
+                    const text = e.clipboardData.getData("text")
+                    importManualTrainingFromText(text)
+                    e.currentTarget.value = ""
+                  }}
+                  className="w-full border bg-slate-950 px-1 py-1 text-sm text-slate-100"
+                />
+              </label>
+              <p className="text-xs text-slate-400">
+                Blank Training cells are treated as a full-stat snapshot from the reported gain.
+                Example: `[ atk ] Training` with `+321` resolves to 80 ATK training.
+              </p>
+              {manualTrainingImportNotice ? (
+                <div
+                  className={`space-y-1 border px-3 py-2 text-sm ${
+                    manualTrainingImportNotice.tone === "error"
+                      ? "border-rose-700/70 bg-rose-950/35 text-rose-100"
+                      : manualTrainingImportNotice.tone === "warning"
+                        ? "border-amber-700/70 bg-amber-950/30 text-amber-100"
+                        : "border-emerald-700/70 bg-emerald-950/25 text-emerald-100"
+                  }`}
+                >
+                  {manualTrainingImportNotice.lines.map((line, index) => (
+                    <div key={`${line}-${index}`}>{line}</div>
+                  ))}
+                </div>
+              ) : null}
+            </div>
+            <div className="flex flex-wrap items-center gap-2">
+              <button
+                type="button"
+                className="border px-3 py-1 bg-slate-800/85 hover:bg-slate-700/90"
+                onClick={addManualTrainingEntry}
+              >
+                Add Row
+              </button>
+              {needsManualTrainingSync ? (
+                <button
+                  type="button"
+                  className="border border-sky-300/60 bg-sky-400 px-3 py-1 font-semibold text-slate-950 hover:bg-sky-300"
+                  onClick={syncTrainingToManualEntries}
+                >
+                  Sync training
+                </button>
+              ) : null}
+              <div className="text-xs text-slate-300">
+                Imported totals: {classMainStatOrder.map((key) => `${key} ${manualTrainingTotals[key]}`).join(" / ")}
+              </div>
+            </div>
+            <div className="overflow-x-auto">
+              <table className="table-fixed border text-xs md:text-sm text-center">
+                <thead className="bg-slate-800/85">
+                  <tr>
+                    <th className="border px-2 py-1">Stat</th>
+                    <th className="border px-2 py-1">Training</th>
+                    <th className="border px-2 py-1">Reported Gain</th>
+                    <th className="border px-2 py-1">Effective</th>
+                    <th className="border px-2 py-1">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {manualTrainingEntries.map((entry, index) => (
+                    <tr key={`${entry.stat}-${index}`}>
+                      <td className="border px-1 py-1">
+                        <select
+                          value={entry.stat}
+                          onChange={(e) => updateManualTrainingEntry(index, "stat", e.target.value as ManualTrainingEntry["stat"])}
+                          className="w-full border"
+                        >
+                          {classMainStatOrder.map((statKey) => (
+                            <option key={statKey} value={statKey}>{statKey}</option>
+                          ))}
+                        </select>
+                      </td>
+                      <td className="border px-1 py-1">
+                        <input
+                          type="number"
+                          min={0}
+                          value={entry.trainingPoints ?? ""}
+                          onChange={(e) => updateManualTrainingEntry(
+                            index,
+                            "trainingPoints",
+                            e.target.value === "" ? null : Math.max(0, Math.floor(Number(e.target.value) || 0)),
+                          )}
+                          placeholder={getManualTrainingToken(entry.stat)}
+                          className="w-20 text-center border"
+                        />
+                      </td>
+                      <td className="border px-1 py-1">
+                        <input
+                          type="number"
+                          min={0}
+                          value={entry.reportedGain}
+                          onChange={(e) => updateManualTrainingEntry(
+                            index,
+                            "reportedGain",
+                            Math.max(0, Math.floor(Number(e.target.value) || 0)),
+                          )}
+                          className="w-24 text-center border"
+                        />
+                      </td>
+                      <td className="border px-2 py-1">{formatWhole(getManualTrainingEffectivePoints(entry))}</td>
+                      <td className="border px-1 py-1">
+                        <button
+                          type="button"
+                          className="border px-2 py-1 bg-rose-900/35 hover:bg-rose-900/45"
+                          onClick={() => removeManualTrainingEntry(index)}
+                        >
+                          Remove
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <p className="text-xs text-slate-400">
+              A blank Training value means “this result already reflects all training for that stat.”
+              Later blank rows replace earlier totals for the same stat; numbered rows add on top.
+            </p>
+          </div>
+        ) : null}
+      </section>
 
       <h2 className="text-lg font-bold">Hero Points</h2>
 

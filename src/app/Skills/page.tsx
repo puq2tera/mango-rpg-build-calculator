@@ -1,5 +1,6 @@
 "use client"
 
+import Link from "next/link"
 import { Suspense, startTransition, useEffect, useMemo, useRef, useState } from "react"
 import { InteractiveTableHeader } from "@/app/components/InteractiveTableHeader"
 import { SkillButton } from "@/app/components/ToggleButton"
@@ -9,6 +10,7 @@ import { allRacePrereqTokens, getRacePrereqTokens, race_data_by_tag, type RaceTa
 import { computeBuildStatStages, readBuildSnapshot } from "@/app/lib/buildStats"
 import { dispatchBuildSnapshotUpdated } from "@/app/lib/buildEvents"
 import { calculateDamage, readDamageCalcState } from "@/app/lib/damageCalc"
+import { MANUAL_TRAINING_SECTION_ID } from "@/app/lib/manualTraining"
 import { useManagedColumns } from "@/app/lib/managedColumns"
 import {
   persistTableScrollPosition,
@@ -369,7 +371,15 @@ function SkillsPageContent() {
           <div className="flex flex-wrap items-center gap-4">
             <div>
               <div className="text-sm font-semibold text-slate-100">Training</div>
-              <div className="text-xs text-slate-400">Total chosen: {totalTraining}</div>
+              <div className="flex items-center gap-3 text-xs">
+                <span className="text-slate-400">Total chosen: {totalTraining}</span>
+                <Link
+                  href={`/Levels#${MANUAL_TRAINING_SECTION_ID}`}
+                  className="text-sky-300 underline decoration-sky-500/60 underline-offset-2 transition hover:text-sky-200"
+                >
+                  Manual training
+                </Link>
+              </div>
             </div>
             <div className="grid grid-cols-2 gap-2 md:grid-cols-4">
               {trainingFields.map(({ key, label }) => (
