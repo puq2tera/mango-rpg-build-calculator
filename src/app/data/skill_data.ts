@@ -3174,7 +3174,7 @@ const skill_data: Record<string, Skill> = {
         },
         description: "[ ⧖, Slash ] Deals 140% ATK DMG, +10% Crit Damage, Increase self Dagger Crit DMG by 15% for 3 Turns, 8 Focus",
         stats: {
-    "Hammer DMG%": 0.15,
+    "Dagger Crit DMG%": 0.15,
     },
         dmg_stats: { dmg_element: "Slash", element: "Slash", pen_element: "Slash", stat: "ATK", ratio: 1.4, skill_type: "Dagger", crit_dmg: 0.1 },
 },
@@ -3197,7 +3197,7 @@ const skill_data: Record<string, Skill> = {
         },
         description: "[ ⧖, Blunt ] Deals 155% ATK DMG, Increase self Hammer DMG by 15% for 3 Turns, 8 Focus",
         stats: {
-    "Dagger Crit DMG%": 0.15,
+    "Hammer DMG%": 0.15,
     },
         dmg_stats: { dmg_element: "Blunt", element: "Blunt", pen_element: "Blunt", stat: "ATK", ratio: 1.55, skill_type: "Hammer" },
 },
@@ -3615,7 +3615,7 @@ const skill_data: Record<string, Skill> = {
         },
         description: "[ ⧖, Slash ] Deals 180% ATK DMG, +10% Crit Damage, Increase self Dagger Crit DMG by 15% for 3 Turns, 8 Focus",
         stats: {
-    "Hammer DMG%": 0.15,
+    "Dagger Crit DMG%": 0.15,
     },
         dmg_stats: { dmg_element: "Slash", element: "Slash", pen_element: "Slash", stat: "ATK", ratio: 1.8, skill_type: "Dagger", crit_dmg: 0.1 },
 },
@@ -3638,7 +3638,7 @@ const skill_data: Record<string, Skill> = {
         },
         description: "[ ⧖, Blunt ] Deals 200% ATK DMG, Increase self Hammer DMG by 15% for 3 Turns, 8 Focus",
         stats: {
-    "Dagger Crit DMG%": 0.15,
+    "Hammer DMG%": 0.15,
     },
         dmg_stats: { dmg_element: "Blunt", element: "Blunt", pen_element: "Blunt", stat: "ATK", ratio: 2, skill_type: "Hammer" },
 },
