@@ -26,6 +26,7 @@ import {
 } from "../data/heropoint_data"
 import { dispatchBuildSnapshotUpdated } from "../lib/buildEvents"
 import { calculateHeroPointAvailability } from "../lib/heroPoints"
+import { readSelectedSkills } from "../lib/learnCommands"
 import {
   classMainStatOrder,
   createDefaultMainStatValues,
@@ -302,7 +303,7 @@ export default function LevelsPage() {
   const [manualTrainingImportNotice, setManualTrainingImportNotice] = useState<ManualRangeImportNotice | null>(null)
   const [selectedDungeonUnlocks, setSelectedDungeonUnlocks] = useState<DungeonUnlockTag[]>([])
   const [selectedTalents, setSelectedTalents] = useState<string[]>([])
-  const [selectedBuffs, setSelectedBuffs] = useState<string[]>([])
+  const [selectedSkills, setSelectedSkills] = useState<string[]>([])
   const [classOrder, setClassOrder] = useState<Cls[]>([...manualRangeClasses])
   const [selectedRace, setSelectedRace] = useState<RaceTag>(DEFAULT_RACE)
   const [loaded, setLoaded] = useState(false)
@@ -320,7 +321,6 @@ export default function LevelsPage() {
     const storedDungeonUnlocks = localStorage.getItem(STORAGE_KEYS.dungeonUnlocks)
     const storedRace = localStorage.getItem(STORAGE_KEYS.race)
     const storedSelectedTalents = localStorage.getItem("selectedTalents")
-    const storedSelectedBuffs = localStorage.getItem("selectedBuffs")
 
     setLevels(parseStoredJson(storedLevels, createEmptyLevelsByClass()))
     setStatPoints(readStoredStatPoints(localStorage))
@@ -334,7 +334,7 @@ export default function LevelsPage() {
     setSelectedDungeonUnlocks(parseStoredStringArray(storedDungeonUnlocks).filter(isDungeonUnlockTag))
     if (storedRace && isRaceTag(storedRace)) setSelectedRace(storedRace)
     setSelectedTalents(parseStoredStringArray(storedSelectedTalents))
-    setSelectedBuffs(parseStoredStringArray(storedSelectedBuffs))
+    setSelectedSkills(readSelectedSkills(localStorage))
 
     setLoaded(true)
   }, [])
@@ -450,8 +450,8 @@ export default function LevelsPage() {
     totalTalentPointsUsed += 1
   }
 
-  for (const buffName of selectedBuffs) {
-    const skill = skill_data[buffName]
+  for (const skillName of selectedSkills) {
+    const skill = skill_data[skillName]
     if (!skill) continue
 
     requiredLevelsByClass.tank = Math.max(requiredLevelsByClass.tank, skill.class_levels.tank_levels ?? 0)

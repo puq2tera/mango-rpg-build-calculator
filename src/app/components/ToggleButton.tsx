@@ -7,6 +7,7 @@ import type { Talent } from "../data/talent_data"
 import type { Skill } from "../data/skill_data"
 import { dispatchBuildSnapshotUpdated } from "@/app/lib/buildEvents"
 import { formatSignedDamageDelta } from "@/app/lib/damageCalc"
+import { BUFF_SELECTION_STORAGE_KEY } from "@/app/lib/learnCommands"
 import type { ManagedColumn } from "@/app/lib/managedColumns"
 import { getPrereqHref } from "@/app/lib/tableNavigation"
 import { getStripedRowClass } from "@/app/lib/tableRowStyles"
@@ -37,6 +38,7 @@ type SkillButtonProps = {
   skill: Skill
   selected: Set<string>
   setSelected: Dispatch<SetStateAction<Set<string>>>
+  availabilitySelectedSkills?: Set<string>
   selectedTalents: Set<string>
   selectedRacePrereqs: Set<string>
   selectedDungeonUnlocks: Set<string>
@@ -46,6 +48,7 @@ type SkillButtonProps = {
   averageDamageChange?: number | null
   rowIndex: number
   rowRef?: (node: HTMLDivElement | null) => void
+  selectionStorageKey?: string
   canStack?: boolean
   stackValue?: number
   onChangeStack?: (skillName: string, value: number) => void
@@ -369,6 +372,7 @@ export function SkillButton({
   skill,
   selected,
   setSelected,
+  availabilitySelectedSkills,
   selectedTalents,
   selectedRacePrereqs,
   selectedDungeonUnlocks,
@@ -378,15 +382,17 @@ export function SkillButton({
   averageDamageChange,
   rowIndex,
   rowRef,
+  selectionStorageKey = BUFF_SELECTION_STORAGE_KEY,
   canStack = false,
   stackValue = 0,
   onChangeStack,
 }: SkillButtonProps) {
   const isSelected = selected.has(skillName)
+  const selectedSkillsForAvailability = availabilitySelectedSkills ?? selected
   const { blockedTagConflict, missingRequirement, prereqTokens } = getSkillAvailabilityState({
     skillName,
     skill,
-    selectedSkills: selected,
+    selectedSkills: selectedSkillsForAvailability,
     selectedTalents,
     selectedRacePrereqs,
     selectedDungeonUnlocks,
@@ -407,7 +413,7 @@ export function SkillButton({
         console.log(`Added ${skillName}`)
       }
 
-      localStorage.setItem("selectedBuffs", JSON.stringify(Array.from(newSet)))
+      localStorage.setItem(selectionStorageKey, JSON.stringify(Array.from(newSet)))
       dispatchBuildSnapshotUpdated()
       return newSet
     })

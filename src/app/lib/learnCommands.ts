@@ -3,7 +3,8 @@ import { talent_data } from "@/app/data/talent_data"
 import { resolveSkillName, resolveTalentName, splitPrereqTokens } from "@/app/lib/prereqTokens"
 
 export const TALENT_SELECTION_STORAGE_KEY = "selectedTalents"
-export const SKILL_SELECTION_STORAGE_KEY = "selectedBuffs"
+export const BUFF_SELECTION_STORAGE_KEY = "selectedBuffs"
+export const SKILL_SELECTION_STORAGE_KEY = "selectedSkills"
 export const DEFAULT_LEARN_COMMAND_MAX_LENGTH = 300
 export const DEFAULT_TALENT_LEARN_COMMAND_PREFIX = "cz xlearntalent "
 export const DEFAULT_SKILL_LEARN_COMMAND_PREFIX = "cz xlearnskill "
@@ -18,6 +19,8 @@ const talentNames = Object.keys(talent_data)
 const skillNames = Object.keys(skill_data)
 const talentOrderIndex = new Map(talentNames.map((name, index) => [name, index]))
 const skillOrderIndex = new Map(skillNames.map((name, index) => [name, index]))
+const validTalentNames = new Set(talentNames)
+const validSkillNames = new Set(skillNames)
 
 const jsonParse = <T>(raw: string | null, fallback: T): T => {
   if (!raw) {
@@ -54,15 +57,33 @@ const asUniqueValidNames = (value: unknown, validNames: ReadonlySet<string>): st
 export function readSelectedTalents(storage: Storage): string[] {
   return asUniqueValidNames(
     jsonParse(storage.getItem(TALENT_SELECTION_STORAGE_KEY), []),
-    new Set(talentNames),
+    validTalentNames,
   )
 }
 
 export function readSelectedSkills(storage: Storage): string[] {
-  return asUniqueValidNames(
-    jsonParse(storage.getItem(SKILL_SELECTION_STORAGE_KEY), []),
-    new Set(skillNames),
+  const selectedSkillsRaw = storage.getItem(SKILL_SELECTION_STORAGE_KEY)
+  if (selectedSkillsRaw !== null) {
+    return asUniqueValidNames(
+      jsonParse(selectedSkillsRaw, []),
+      validSkillNames,
+    )
+  }
+
+  const migratedSkills = asUniqueValidNames(
+    jsonParse(storage.getItem(BUFF_SELECTION_STORAGE_KEY), []),
+    validSkillNames,
   )
+
+  if (migratedSkills.length > 0) {
+    try {
+      storage.setItem(SKILL_SELECTION_STORAGE_KEY, JSON.stringify(migratedSkills))
+    } catch {
+      // Ignore storage write failures and keep using the in-memory migrated list.
+    }
+  }
+
+  return migratedSkills
 }
 
 function orderSelectedNames(

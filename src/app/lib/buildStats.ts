@@ -27,12 +27,14 @@ import {
   normalizeManualLevelRanges,
   type ManualLevelRange,
 } from "@/app/lib/manualLevelRanges"
+import { BUFF_SELECTION_STORAGE_KEY, readSelectedSkills } from "@/app/lib/learnCommands"
 import { truncateTowardZero } from "@/app/lib/statRounding"
 
 type RuneSelection = { rune: string; count: number }
 
 export type BuildSnapshot = {
   selectedTalents: string[]
+  selectedSkills: string[]
   selectedBuffs: string[]
   selectedBuffStacks: Record<string, number>
   selectedTarots: string[]
@@ -121,7 +123,8 @@ const asManualLevelRanges = (value: unknown): ManualLevelRange[] => normalizeMan
 export function readBuildSnapshot(storage: Storage): BuildSnapshot {
   return {
     selectedTalents: asStringArray(jsonParse(storage.getItem("selectedTalents"), [])),
-    selectedBuffs: asStringArray(jsonParse(storage.getItem("selectedBuffs"), [])),
+    selectedSkills: readSelectedSkills(storage),
+    selectedBuffs: asStringArray(jsonParse(storage.getItem(BUFF_SELECTION_STORAGE_KEY), [])),
     selectedBuffStacks: asRecord(jsonParse(storage.getItem("selectedBuffStacks"), {})),
     selectedTarots: readStoredEffectiveTarotSelections(storage),
     tarotStacks: asRecord(jsonParse(storage.getItem("tarotStacks"), {})),

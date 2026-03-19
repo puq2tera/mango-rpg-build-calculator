@@ -9,6 +9,7 @@ import { allRacePrereqTokens, getRacePrereqTokens, race_data_by_tag, type RaceTa
 import { dispatchBuildSnapshotUpdated } from "@/app/lib/buildEvents"
 import { computeBuildStatStages, readBuildSnapshot } from "@/app/lib/buildStats"
 import { calculateDamage, readDamageCalcState } from "@/app/lib/damageCalc"
+import { readSelectedSkills } from "@/app/lib/learnCommands"
 import { useManagedColumns } from "@/app/lib/managedColumns"
 import { buffTableColumns } from "@/app/lib/tableColumnDefinitions"
 import { getSkillAvailabilityState, matchesClassFilter, matchesRaceFilter } from "@/app/lib/tableRequirements"
@@ -41,6 +42,7 @@ const canBuffStack = (buffName: string): boolean => {
 export default function BuffsPage() {
   const [isHydrated, setIsHydrated] = useState(false)
   const [selected, setSelected] = useState<Set<string>>(new Set())
+  const [selectedSkills, setSelectedSkills] = useState<Set<string>>(new Set())
   const [buffStacks, setBuffStacks] = useState<Record<string, number>>({})
   const [selectedTalents, setSelectedTalents] = useState<Set<string>>(new Set())
   const [selectedRacePrereqs, setSelectedRacePrereqs] = useState<Set<string>>(new Set())
@@ -68,6 +70,8 @@ export default function BuffsPage() {
     } catch {
       setSelected(new Set())
     }
+
+    setSelectedSkills(new Set(readSelectedSkills(localStorage)))
 
     try {
       const parsedStacks = storedStacks ? JSON.parse(storedStacks) : {}
@@ -231,7 +235,7 @@ export default function BuffsPage() {
       const availabilityState = getSkillAvailabilityState({
         skillName: buffName,
         skill,
-        selectedSkills: selected,
+        selectedSkills,
         selectedTalents,
         selectedRacePrereqs,
         selectedDungeonUnlocks,
@@ -286,6 +290,7 @@ export default function BuffsPage() {
     selected,
     selectedDungeonUnlocks,
     selectedRacePrereqs,
+    selectedSkills,
     selectedTalents,
     trainingPointsSpent,
     viewState,
@@ -324,6 +329,7 @@ export default function BuffsPage() {
               skill={skill_data[name]}
               selected={selected}
               setSelected={setSelected}
+              availabilitySelectedSkills={selectedSkills}
               selectedTalents={selectedTalents}
               selectedRacePrereqs={selectedRacePrereqs}
               selectedDungeonUnlocks={selectedDungeonUnlocks}

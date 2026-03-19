@@ -55,7 +55,7 @@ export default function DamageCalc() {
       const stages = computeBuildStatStages(snapshot)
       const nextLearnedSkillNames = Array.from(new Set([
         ...defaultLearnedSkillNames,
-        ...snapshot.selectedBuffs,
+        ...snapshot.selectedSkills,
       ]))
 
       setStats(stages.StatsDmgReady)

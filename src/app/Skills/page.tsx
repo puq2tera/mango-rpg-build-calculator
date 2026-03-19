@@ -10,6 +10,7 @@ import { allRacePrereqTokens, getRacePrereqTokens, race_data_by_tag, type RaceTa
 import { computeBuildStatStages, readBuildSnapshot } from "@/app/lib/buildStats"
 import { dispatchBuildSnapshotUpdated } from "@/app/lib/buildEvents"
 import { calculateDamage, readDamageCalcState } from "@/app/lib/damageCalc"
+import { readSelectedSkills, SKILL_SELECTION_STORAGE_KEY } from "@/app/lib/learnCommands"
 import { MANUAL_TRAINING_SECTION_ID } from "@/app/lib/manualTraining"
 import { useManagedColumns } from "@/app/lib/managedColumns"
 import {
@@ -28,7 +29,6 @@ import {
 } from "@/app/lib/tableViewState"
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
 
-const STORAGE_KEY = "selectedBuffs"
 const TRAINING_STORAGE_KEY = "SelectedTraining"
 const TABLE_SCROLL_STORAGE_KEY = "skillsTableScroll"
 const isRaceTag = (value: string): value is RaceTag => value in race_data_by_tag
@@ -65,7 +65,6 @@ function SkillsPageContent() {
   const lastHandledFocusRef = useRef<string | null>(null)
 
   useEffect(() => {
-    const stored = localStorage.getItem(STORAGE_KEY)
     const storedTalents = localStorage.getItem("selectedTalents")
     const storedRace = localStorage.getItem("SelectedRace")
     const storedDungeonUnlocks = localStorage.getItem(DUNGEON_UNLOCKS_STORAGE_KEY)
@@ -73,7 +72,7 @@ function SkillsPageContent() {
     const rawTraining = localStorage.getItem(TRAINING_STORAGE_KEY)
 
     try {
-      setSelected(stored ? new Set(JSON.parse(stored)) : new Set())
+      setSelected(new Set(readSelectedSkills(localStorage)))
     } catch {
       setSelected(new Set())
     }
@@ -147,9 +146,9 @@ function SkillsPageContent() {
     const snapshot = readBuildSnapshot(localStorage)
     snapshot.selectedTraining = training
     const damageState = readDamageCalcState(localStorage)
-    const selectedSkillNames = Array.from(selected)
+    const selectedBuffNames = snapshot.selectedBuffs
     const currentAverage = calculateDamage(
-      computeBuildStatStages(snapshot, { selectedBuffs: selectedSkillNames }).StatsDmgReady,
+      computeBuildStatStages(snapshot).StatsDmgReady,
       damageState,
     ).average
 
@@ -165,7 +164,7 @@ function SkillsPageContent() {
       const maxIndex = Math.min(index + chunkSize, skillNames.length)
       for (; index < maxIndex; index++) {
         const skillName = skillNames[index]
-        const toggledSkills = new Set(selectedSkillNames)
+        const toggledSkills = new Set(selectedBuffNames)
 
         if (toggledSkills.has(skillName)) {
           toggledSkills.delete(skillName)
@@ -199,7 +198,7 @@ function SkillsPageContent() {
         window.clearTimeout(timeoutId)
       }
     }
-  }, [isHydrated, selected, training])
+  }, [isHydrated, training])
 
   useEffect(() => {
     const handleManagedTableViewChange = (event: Event) => {
@@ -434,6 +433,7 @@ function SkillsPageContent() {
               }}
               selected={selected}
               setSelected={setSelected}
+              selectionStorageKey={SKILL_SELECTION_STORAGE_KEY}
               selectedTalents={selectedTalents}
               selectedRacePrereqs={selectedRacePrereqs}
               selectedDungeonUnlocks={selectedDungeonUnlocks}
