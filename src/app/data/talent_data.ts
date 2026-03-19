@@ -26954,14 +26954,10 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+30% ATK, +15% Global Hammer Damage, +10% Global Blunt Penetration, Conversion 120% Penearth to Penblunt",
         "stats": {
-            "ATK%": 30
+            "ATK%": 30,
+            "Hammer DMG%": 15
         },
         "conversions": [
-            {
-                "source": "Hammer DMG%",
-                "ratio": 0.15,
-                "resulting_stat": "Hammer DMG%"
-            },
             {
                 "source": "Blunt Pen%",
                 "ratio": 0.1,
