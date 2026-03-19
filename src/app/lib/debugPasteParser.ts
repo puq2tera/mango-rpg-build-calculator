@@ -141,7 +141,7 @@ const buffEffectAliases = new Map<string, string>([
   ["threatbonus", "Threat%"],
   ["threatmodifier", "Threat%"],
   ["threat", "Threat%"],
-  ["elebow", "Bow DMG%"],
+  ["elebow", "Bow%"],
   ["bowdmg", "Bow DMG%"],
   ["bowdamage", "Bow DMG%"],
   ["physicaldmg", "Phys%"],

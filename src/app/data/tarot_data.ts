@@ -232,7 +232,7 @@ const tarot_data: Record<string, Tarot> = {
             "Bow Crit DMG%": 66
         },
         conversions: [
-            { source: "Bow DMG%", ratio: 0.66, resulting_stat: "Bow DMG%" },
+            { source: "Combined Bow%", ratio: 0.66, resulting_stat: "Bow%" },
             { source: "HP", ratio: -0.33, resulting_stat: "HP" }
         ]
     },
@@ -568,7 +568,7 @@ const tarot_data: Record<string, Tarot> = {
             "Bow Crit DMG%": 13
         },
         conversions: [
-            { source: "Bow DMG%", ratio: 0.5, resulting_stat: "Bow DMG%" }
+            { source: "Combined Bow%", ratio: 0.5, resulting_stat: "Bow%" }
         ],
         stack_conversions: [
             { source: "Bow Crit DMG%", ratio: 1.33, resulting_stat: "Bow Crit DMG%" }
@@ -966,11 +966,11 @@ const tarot_data: Record<string, Tarot> = {
         tier: 4,
         skill_name: "Fervant Arrows",
         description: "Increase self Bow DMG by 100% of Holy DMG. Increase self ATK by 100% Healpower.",
-        stat_bonus: "Bow DMG%",
+        stat_bonus: "Pierce%",
         stat_base: 5,
         stat_scale: 1,
         conversions: [
-            { source: "Holy%", ratio: 1, resulting_stat: "Bow DMG%"},
+            { source: "Holy%", ratio: 1, resulting_stat: "Bow%"},
             { source: "HEAL", ratio: 1, resulting_stat: "ATK"},
         ]
     },
@@ -978,14 +978,14 @@ const tarot_data: Record<string, Tarot> = {
         tier: 4,
         skill_name: "Sharp Sniper",
         description: "Gain +33% Bow Crit Chance. Increase Bow DMG by 12%.",
-        stat_bonus: "Bow DMG%",
+        stat_bonus: "Pierce%",
         stat_base: 5,
         stat_scale: 1,
         stats: {
             "Bow Crit Chance%": 33
         },
         conversions: [
-            { source: "Bow DMG%", ratio: 0.12, resulting_stat: "Bow DMG%" }
+            { source: "Bow%", ratio: 0.12, resulting_stat: "Bow%" }
         ]
     },
     "Muscle Mystery Warrior": {

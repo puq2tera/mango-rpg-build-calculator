@@ -157,6 +157,7 @@ const effectPriority = [
   "Divine Pen%",
   "Void%",
   "Void Pen%",
+  "Bow%",
   "Bow DMG%",
   "Blunt%",
   "Pierce%",
@@ -686,7 +687,7 @@ function getReadableStatLabel(stat: string): string {
       return "Void DMG"
     case "Void Pen%":
       return "Void Pen"
-    case "Bow DMG%":
+    case "Bow%":
       return "Elebow"
     case "All%":
       return "All Damage"

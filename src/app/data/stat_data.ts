@@ -44,6 +44,7 @@ export const inGameNames: Record<string, StatNames> = {
   "eleslash": "Slash%",
   "elepierce": "Pierce%",
   "eleblunt": "Blunt%",
+  "elebow": "Bow%",
 
   "penslash": "Slash Pen%",
   "penpierce": "Pierce Pen%",
@@ -160,6 +161,7 @@ export const StatsInfo: Record<string, StatInfoData> = {
   "Slash%":  { multi: 0.01 },
   "Pierce%": { multi: 0.01 },
   "Blunt%":  { multi: 0.01 },
+  "Bow%":    { multi: 0.01 },
 
   "Slash Pen%":  { multi: 0.01 },
   "Pierce Pen%": { multi: 0.01 },

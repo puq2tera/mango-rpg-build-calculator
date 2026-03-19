@@ -1,5 +1,4 @@
 import stat_data from "@/app/data/stat_data"
-import { skill_data } from "@/app/data/skill_data"
 import { getThreatMultiplier } from "@/app/lib/threat"
 
 export const DAMAGE_CALC_STORAGE_KEY = "DamageCalcState"
@@ -253,7 +252,7 @@ const DAMAGE_REDUCTION_CAP_PERCENT = 90
 const DAMAGE_REDUCTION_SCALE_PERCENT = 15
 const DEFENSE_SCALING_BASE = 12
 const DEFENSE_SCALING_DIVISOR = 15
-const skillCritDamageStatsBySkillType: Record<string, string[]> = {
+const skillCritDamageMultiplierStatsBySkillType: Record<string, string[]> = {
   Bow: ["Bow Crit DMG%"],
   Dagger: ["Dagger Crit DMG%"],
   Fist: ["Fist Crit DMG%"],
@@ -279,6 +278,11 @@ function getTotalStatValue(stats: Record<string, number>, statNames: readonly st
 function getSkillTypeDamageBonus(stats: Record<string, number>, skillType: string): number {
   const statName = skillDamageStatsBySkillType[skillType]
   return statName ? (stats[statName] ?? 0) : 0
+}
+
+function getElementDamageBonus(stats: Record<string, number>, element: string, skillType: string): number {
+  let bonus = (stats[`${element}%`] ?? 0) + (stats[`${skillType}%`] ?? 0)
+  return bonus
 }
 
 export function calculatePlayerDamageReduction(
@@ -327,7 +331,7 @@ function applyThreatOffenseMultipliers(
   skillPen: number,
 ): number {
   let result = baseThreat
-  result = Math.floor(result * toMult(stats[`${element}%`]))
+  result = Math.floor(result * toMult(getElementDamageBonus(stats, element, skillType)))
   result = Math.floor(result * toMult((stats[`${penElement} Pen%`] ?? 0) + skillPen))
   result = Math.floor(result * toMult(stats[`${element} xDmg%`]))
   result = Math.floor(result * toMult(getSkillTypeDamageBonus(stats, skillType)))
@@ -372,15 +376,16 @@ function buildDamageContext(stats: Record<string, number>, state: DamageCalcStat
 function finalizeDamageResult(nonCrit: number, context: NormalizedDamageContext): DamageCalcResult {
   const { stats, element, penElement, skillType, inputs } = context
   const skillTypeCritDamageBonus =
-    getTotalStatValue(stats, skillCritDamageStatsBySkillType[skillType] ?? [])
-    + (stat_data.Elemental.includes(element) ? (stats["Elemental Crit DMG%"] ?? 0) : 0)
+    (stat_data.Elemental.includes(element) ? (stats["Elemental Crit DMG%"] ?? 0) : 0)
     + (element === "Holy" ? (stats["Holy Crit DMG%"] ?? 0) : 0)
+  const skillTypeCritDamageMultiplier =
+    toMult(getTotalStatValue(stats, skillCritDamageMultiplierStatsBySkillType[skillType] ?? []))
   const baseCritDamageBonus = (stats["Crit DMG%"] ?? 0) + skillTypeCritDamageBonus
   const damageCritDamageMultiplier = Math.max(0, (baseCritDamageBonus / 100) * toMult(inputs.skillCritDmg ?? 0))
   // Threat skills line up with combat logs as base 1x threat plus crit-damage bonus.
-  const threatCritDamageMultiplier = Math.max(0, 1 + damageCritDamageMultiplier)
+  const threatCritDamageMultiplier = Math.max(0, (1 + damageCritDamageMultiplier) * skillTypeCritDamageMultiplier)
 
-  const crit = Math.floor(nonCrit * damageCritDamageMultiplier)
+  const crit = Math.floor(Math.floor(nonCrit * damageCritDamageMultiplier) * skillTypeCritDamageMultiplier)
   const maxcrit = Math.floor(crit * ((stats["Overdrive%"] ?? 0) / 100))
 
   const skillCritChance = getTotalStatValue(stats, skillCritChanceStatsBySkillType[skillType] ?? [])
@@ -432,7 +437,7 @@ export function calculateDamage(stats: Record<string, number>, state: DamageCalc
   const { stats: resolvedStats, element, penElement, skillType, inputs, mitigated } = context
 
   let dmg = mitigated
-  dmg = Math.floor(dmg * toMult(resolvedStats[`${element}%`]))
+  dmg = Math.floor(dmg * toMult(getElementDamageBonus(resolvedStats, element, skillType)))
   dmg = Math.floor(dmg * toMult(resolvedStats[`${element} xDmg%`]))
   const effectiveEnemyRes = (inputs.enemyRes ?? 0) * toRemainingPercent(inputs.resIgnore)
   const totalPenBonus = ((resolvedStats[`${penElement} Pen%`] ?? 0) + (inputs.skillPen ?? 0)) / 100

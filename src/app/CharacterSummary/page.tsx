@@ -169,6 +169,7 @@ const effectPriority = [
   "Divine Pen%",
   "Void%",
   "Void Pen%",
+  "Bow%",
   "Bow DMG%",
   "Blunt%",
   "Pierce%",
@@ -294,6 +295,7 @@ const finalStatsSpecialFamilyColumns = [
   { label: "Magic%", key: "Magic%", format: "percent" },
   { label: "Magic xDmg%", key: "Magic xDmg%", format: "percent" },
   { label: "Magic xPen%", key: "Magic xPen%", format: "percent" },
+  { label: "Bow%", key: "Bow%", format: "percent" },
   { label: "NonVoid Pen%", key: "NonVoid Pen%", format: "percent" },
   { label: "Ele !Water Res%", key: "Elemental_Except_Water Res%", format: "percent" },
 ] satisfies readonly FinalStatsColumn[]
@@ -590,7 +592,7 @@ function getReadableStatLabel(stat: string): string {
       return "Void DMG"
     case "Void Pen%":
       return "Void Pen"
-    case "Bow DMG%":
+    case "Bow%":
       return "Elebow"
     case "All%":
       return "All Damage"
