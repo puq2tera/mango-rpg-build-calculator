@@ -57,6 +57,15 @@ export type ParsedBuff = {
   effects: ParsedBuffEffect[]
 }
 
+export type ParsedSkillMatchMetric = "dmg" | "threat"
+
+export type ParsedSkillMatchRow = {
+  sourceLine: string
+  skillLabel: string
+  metric: ParsedSkillMatchMetric
+  realValue: number
+}
+
 export type ComparedValue = {
   status: "match" | "different" | "missing-calc" | "missing-game"
   delta?: string
@@ -169,6 +178,8 @@ const buffEffectAliases = new Map<string, string>([
   ["piercepen", "Pierce Pen%"],
   ["slashpen", "Slash Pen%"],
 ])
+
+const skillMatchValuePattern = /(?:\b(expect(?:ed)?|real)\b\s*[:=]?\s*)?([+-]?\d[\d,]*(?:\.\d+)?)\s*(dmg|damage|threat)\b/ig
 
 function cleanInput(text: string): string {
   return text
@@ -707,4 +718,64 @@ export function parseBuffs(text: string): ParsedBuff[] {
   }
 
   return buffs
+}
+
+function normalizeSkillMatchMetric(value: string): ParsedSkillMatchMetric {
+  return value.toLowerCase() === "threat" ? "threat" : "dmg"
+}
+
+export function parseSkillMatches(text: string): ParsedSkillMatchRow[] {
+  const lines = getMeaningfulLines(text)
+  const rows: ParsedSkillMatchRow[] = []
+
+  for (const line of lines) {
+    const valueMatches = Array.from(line.matchAll(skillMatchValuePattern))
+      .map((match) => ({
+        kind: match[1]?.toLowerCase() ?? null,
+        realValue: Number(match[2].replace(/,/g, "")),
+        metric: normalizeSkillMatchMetric(match[3]),
+        index: match.index ?? -1,
+      }))
+      .filter((match) => match.index >= 0 && Number.isFinite(match.realValue))
+
+    if (valueMatches.length === 0) {
+      continue
+    }
+
+    const realMatches = valueMatches.filter((match) => match.kind === "real")
+    const effectiveMatches = realMatches.length > 0
+      ? realMatches
+      : valueMatches.filter((match) => match.kind !== "expect" && match.kind !== "expected")
+
+    if (effectiveMatches.length === 0) {
+      continue
+    }
+
+    const cutoffCandidates = [
+      line.search(/\bexpect(?:ed)?\b/i),
+      line.search(/\breal\b/i),
+      valueMatches[0]?.index ?? -1,
+    ].filter((index) => index >= 0)
+    const cutoff = cutoffCandidates.length > 0 ? Math.min(...cutoffCandidates) : line.length
+    const skillLabel = line
+      .slice(0, cutoff)
+      .replace(/^[^\p{L}\p{N}@]+/gu, "")
+      .replace(/[,:-]+\s*$/u, "")
+      .trim()
+
+    if (skillLabel.length === 0) {
+      continue
+    }
+
+    for (const match of effectiveMatches) {
+      rows.push({
+        sourceLine: line,
+        skillLabel,
+        metric: match.metric,
+        realValue: match.realValue,
+      })
+    }
+  }
+
+  return rows
 }

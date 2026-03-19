@@ -1,11 +1,10 @@
 "use client"
 
-import { useEffect, useMemo, useState, type Dispatch, type ReactNode, type SetStateAction } from "react"
-import { MyConversionsGrid } from "@/app/components/MyConversionsGrid"
+import { useEffect, useMemo, useRef, useState, type Dispatch, type KeyboardEvent, type ReactNode, type SetStateAction } from "react"
 import { BUILD_SNAPSHOT_UPDATED_EVENT } from "@/app/lib/buildEvents"
+import { readBuildManagerState, type StoredBuildProfile } from "@/app/lib/buildStorage"
 import {
   buildDebugSummary,
-  formatWhole,
   getCalcSkillBuffs,
   getCharacterCardData,
   getDungeonCardData,
@@ -15,6 +14,14 @@ import {
   type SummaryState,
   type TerminalCardData,
 } from "@/app/lib/debugComparisonSummary"
+import {
+  buildSavedBuildCalculatedResults,
+  calculateSavedBuildSkillResult,
+  getSavedBuildCalculatedValue,
+  savedBuildComparisonModeOptions,
+  type SavedBuildCalculatedResult,
+  type SavedBuildComparisonMode,
+} from "@/app/lib/debugSavedBuildSkillMatcher"
 import {
   compareComparableValues,
   createComparableValue,
@@ -34,7 +41,6 @@ import {
 } from "@/app/lib/debugPasteParser"
 import {
   getTalentConversionComparisonRows,
-  getTalentConversionGroups,
 } from "@/app/lib/talentConversionSummary"
 
 type PasteInputs = {
@@ -69,7 +75,18 @@ type ComparedBuff = {
   status: "match" | "different" | "missing-calc" | "missing-game"
 }
 
+type SavedBuildResultTableRow = {
+  id: string
+  buildId: string
+  skillName: string
+  mode: SavedBuildComparisonMode
+  expectedValue: string
+}
+
+type SavedBuildResultStatus = "perfect" | "close" | "off" | "incomplete"
+
 const INPUT_STORAGE_KEY = "debugVars:comparisonInputs"
+const SAVED_BUILD_RESULT_TABLE_STORAGE_KEY = "debugVars:savedBuildResultTable"
 
 const panelClass =
   "rounded-[28px] border border-slate-800/80 bg-[linear-gradient(145deg,rgba(6,11,20,0.97),rgba(15,23,42,0.9))] shadow-[0_28px_90px_rgba(2,6,23,0.42)]"
@@ -80,6 +97,15 @@ const textareaClass =
 const compactCardClass =
   "rounded-2xl border border-slate-800/80 bg-slate-950/55 px-4 py-3.5 shadow-[0_16px_40px_rgba(2,6,23,0.22)]"
 
+const compactFieldClass =
+  "w-full rounded-lg border border-slate-700/80 bg-slate-950/80 px-2.5 py-1.5 text-xs text-slate-100 outline-none transition focus:border-sky-400/70"
+
+const compactButtonClass =
+  "rounded-lg border border-slate-700/80 bg-slate-950/90 px-2.5 py-1.5 text-xs font-semibold text-slate-100 transition hover:border-sky-400/50 hover:text-sky-200 disabled:cursor-not-allowed disabled:opacity-50"
+
+const compactPrimaryButtonClass =
+  "rounded-lg border border-sky-500/50 bg-sky-500/10 px-2.5 py-1.5 text-xs font-semibold text-sky-100 transition hover:bg-sky-500/15 disabled:cursor-not-allowed disabled:opacity-50"
+
 const emptyStateClass =
   "rounded-2xl border border-dashed border-slate-700/80 bg-slate-950/40 px-4 py-8 text-center text-sm text-slate-400"
 
@@ -89,6 +115,41 @@ const defaultInputs: PasteInputs = {
   dungeonStats: "",
   buffs: "",
   conversions: "",
+}
+
+function createSavedBuildResultRow(defaultBuildId = ""): SavedBuildResultTableRow {
+  return {
+    id:
+      typeof crypto !== "undefined" && typeof crypto.randomUUID === "function"
+        ? crypto.randomUUID()
+        : `${Date.now()}-${Math.random().toString(36).slice(2, 10)}`,
+    buildId: defaultBuildId,
+    skillName: "",
+    mode: "maxcrit",
+    expectedValue: "",
+  }
+}
+
+function isSavedBuildComparisonMode(value: unknown): value is SavedBuildComparisonMode {
+  return savedBuildComparisonModeOptions.some((option) => option.key === value)
+}
+
+function normalizeSavedBuildResultRows(value: unknown): SavedBuildResultTableRow[] {
+  if (!Array.isArray(value)) {
+    return [createSavedBuildResultRow()]
+  }
+
+  const rows = value
+    .filter((entry): entry is Partial<SavedBuildResultTableRow> => typeof entry === "object" && entry !== null)
+    .map((entry) => ({
+      id: typeof entry.id === "string" && entry.id.length > 0 ? entry.id : createSavedBuildResultRow().id,
+      buildId: typeof entry.buildId === "string" ? entry.buildId : "",
+      skillName: typeof entry.skillName === "string" ? entry.skillName : "",
+      mode: isSavedBuildComparisonMode(entry.mode) ? entry.mode : "maxcrit",
+      expectedValue: typeof entry.expectedValue === "string" ? entry.expectedValue : "",
+    }))
+
+  return rows.length > 0 ? rows : [createSavedBuildResultRow()]
 }
 
 function normalizeName(value: string): string {
@@ -704,29 +765,583 @@ function ComparisonBlock({
   )
 }
 
-function MyConversionsPanel({
-  summary,
+function normalizeSearchValue(value: string): string {
+  return value.trim().toLocaleLowerCase()
+}
+
+function SavedBuildSkillCombobox({
+  rowId,
+  value,
+  options,
+  onChange,
 }: {
-  summary: SummaryState
+  rowId: string
+  value: string
+  options: SavedBuildCalculatedResult["presets"]
+  onChange: (nextValue: string) => void
 }) {
-  const conversions = getTalentConversionGroups(summary.snapshot, summary.charcardStages)
+  const [inputValue, setInputValue] = useState(value)
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false)
+  const [highlightedIndex, setHighlightedIndex] = useState(0)
+  const fieldRef = useRef<HTMLDivElement | null>(null)
+  const listboxId = `debug-vars-build-skill-listbox-${rowId}`
+  const normalizedInputValue = normalizeSearchValue(inputValue)
+  const normalizedSelectedValue = normalizeSearchValue(value)
+  const normalizedFilterValue =
+    value.length > 0 && normalizedInputValue === normalizedSelectedValue
+      ? ""
+      : normalizedInputValue
+  const filteredOptions = useMemo(() => {
+    return options.filter((option) => {
+      if (normalizedFilterValue.length === 0) {
+        return true
+      }
+
+      const searchableText = [
+        option.name,
+        option.description,
+        option.note ?? "",
+      ].join("\n").toLocaleLowerCase()
+
+      return searchableText.includes(normalizedFilterValue)
+    })
+  }, [normalizedFilterValue, options])
+
+  useEffect(() => {
+    setInputValue(value)
+  }, [value])
+
+  useEffect(() => {
+    if (filteredOptions.length === 0) {
+      setHighlightedIndex(0)
+      return
+    }
+
+    setHighlightedIndex((current) => Math.min(current, filteredOptions.length - 1))
+  }, [filteredOptions])
+
+  useEffect(() => {
+    const handlePointerDown = (event: MouseEvent) => {
+      const target = event.target
+
+      if (!(target instanceof Node)) {
+        return
+      }
+
+      if (fieldRef.current?.contains(target)) {
+        return
+      }
+
+      setIsDropdownOpen(false)
+    }
+
+    document.addEventListener("mousedown", handlePointerDown)
+    return () => {
+      document.removeEventListener("mousedown", handlePointerDown)
+    }
+  }, [])
+
+  const handleOptionSelect = (nextValue: string) => {
+    setInputValue(nextValue)
+    onChange(nextValue)
+    setIsDropdownOpen(false)
+  }
+
+  const handleInputChange = (nextValue: string) => {
+    setInputValue(nextValue)
+    setIsDropdownOpen(true)
+
+    if (!nextValue) {
+      onChange("")
+      return
+    }
+
+    const exactOption = options.find((option) => normalizeSearchValue(option.name) === normalizeSearchValue(nextValue))
+    if (!exactOption) {
+      onChange("")
+      return
+    }
+
+    handleOptionSelect(exactOption.name)
+  }
+
+  const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === "ArrowDown") {
+      event.preventDefault()
+
+      if (!isDropdownOpen) {
+        setIsDropdownOpen(true)
+        return
+      }
+
+      if (filteredOptions.length > 0) {
+        setHighlightedIndex((current) => Math.min(current + 1, filteredOptions.length - 1))
+      }
+
+      return
+    }
+
+    if (event.key === "ArrowUp") {
+      event.preventDefault()
+
+      if (!isDropdownOpen) {
+        setIsDropdownOpen(true)
+        return
+      }
+
+      if (filteredOptions.length > 0) {
+        setHighlightedIndex((current) => Math.max(current - 1, 0))
+      }
+
+      return
+    }
+
+    if (event.key === "Enter" && isDropdownOpen) {
+      const highlightedOption = filteredOptions[highlightedIndex]
+
+      if (highlightedOption) {
+        event.preventDefault()
+        handleOptionSelect(highlightedOption.name)
+      }
+
+      return
+    }
+
+    if (event.key === "Escape") {
+      setIsDropdownOpen(false)
+    }
+  }
+
+  return (
+    <div ref={fieldRef} className="relative">
+      <div className="flex overflow-hidden rounded-lg border border-slate-700/80 bg-slate-950/80">
+        <input
+          type="text"
+          value={inputValue}
+          onChange={(event) => handleInputChange(event.target.value)}
+          onFocus={() => setIsDropdownOpen(true)}
+          onKeyDown={handleKeyDown}
+          placeholder={options.length > 0 ? "Select skill" : "No skills available"}
+          role="combobox"
+          aria-autocomplete="list"
+          aria-expanded={isDropdownOpen}
+          aria-controls={listboxId}
+          disabled={options.length === 0}
+          className="w-full bg-transparent px-2.5 py-1.5 text-xs text-slate-100 outline-none placeholder:text-slate-500 disabled:cursor-not-allowed disabled:text-slate-500"
+        />
+        <button
+          type="button"
+          onClick={() => setIsDropdownOpen((current) => !current)}
+          aria-label={isDropdownOpen ? "Hide skills" : "Show skills"}
+          aria-expanded={isDropdownOpen}
+          aria-controls={listboxId}
+          disabled={options.length === 0}
+          className="border-l border-slate-700/80 px-2 text-slate-300 transition hover:bg-slate-800 hover:text-slate-100 disabled:cursor-not-allowed disabled:text-slate-600"
+        >
+          v
+        </button>
+      </div>
+
+      {isDropdownOpen ? (
+        <div
+          id={listboxId}
+          role="listbox"
+          className="absolute z-20 mt-1 max-h-64 w-full overflow-y-auto rounded-lg border border-slate-700 bg-slate-950 shadow-[0_18px_40px_rgba(2,6,23,0.45)]"
+        >
+          {filteredOptions.length > 0 ? (
+            filteredOptions.map((option, index) => (
+              <button
+                key={`${rowId}:${option.name}`}
+                type="button"
+                role="option"
+                aria-selected={option.name === value}
+                onMouseDown={(event) => event.preventDefault()}
+                onClick={() => handleOptionSelect(option.name)}
+                onMouseEnter={() => setHighlightedIndex(index)}
+                className={`block w-full px-3 py-2 text-left text-sm transition ${
+                  index === highlightedIndex
+                    ? "bg-sky-500/20 text-sky-100"
+                    : option.name === value
+                      ? "bg-slate-800 text-slate-100"
+                      : "text-slate-200 hover:bg-slate-800"
+                }`}
+              >
+                <div className="font-medium">{option.name}</div>
+                <div className="truncate text-xs text-slate-400">{option.description}</div>
+              </button>
+            ))
+          ) : (
+            <div className="px-3 py-2 text-sm text-slate-400">
+              No skills match the current filter.
+            </div>
+          )}
+        </div>
+      ) : null}
+    </div>
+  )
+}
+
+function formatComparisonNumber(value: number | null, maximumFractionDigits = 6): string {
+  if (value === null || !Number.isFinite(value)) {
+    return "—"
+  }
+
+  if (Math.abs(value - Math.round(value)) < 0.000001) {
+    return Math.round(value).toLocaleString("en-US")
+  }
+
+  return value.toLocaleString("en-US", {
+    minimumFractionDigits: 0,
+    maximumFractionDigits,
+  })
+}
+
+function formatSignedComparisonNumber(value: number | null): string {
+  if (value === null || !Number.isFinite(value)) {
+    return "—"
+  }
+
+  return `${value >= 0 ? "+" : "-"}${formatComparisonNumber(Math.abs(value))}`
+}
+
+function formatComparisonPercent(value: number | null): string {
+  return value === null ? "—" : `${formatComparisonNumber(value)}%`
+}
+
+function getSavedBuildResultStatusClass(status: SavedBuildResultStatus): string {
+  switch (status) {
+    case "perfect":
+      return "border-emerald-500/30 bg-emerald-500/10 text-emerald-100"
+    case "close":
+      return "border-sky-500/30 bg-sky-500/10 text-sky-100"
+    case "off":
+      return "border-rose-500/30 bg-rose-500/10 text-rose-100"
+    case "incomplete":
+      return "border-slate-700 bg-slate-900/80 text-slate-300"
+  }
+}
+
+function getSavedBuildResultStatusLabel(status: SavedBuildResultStatus): string {
+  switch (status) {
+    case "perfect":
+      return "Perfect"
+    case "close":
+      return "Within 0.001%"
+    case "off":
+      return "Mismatch"
+    case "incomplete":
+      return "Pending"
+  }
+}
+
+function parseExpectedComparisonValue(value: string): number | null {
+  const normalized = value.replace(/,/g, "").trim()
+
+  if (normalized.length === 0) {
+    return null
+  }
+
+  const parsed = Number(normalized)
+  return Number.isFinite(parsed) ? parsed : null
+}
+
+function getDefaultSkillNameForBuild(
+  buildId: string,
+  resultByBuildId: ReadonlyMap<string, SavedBuildCalculatedResult>,
+): string {
+  return resultByBuildId.get(buildId)?.presets[0]?.name ?? ""
+}
+
+function evaluateSavedBuildResultRow(
+  row: SavedBuildResultTableRow,
+  resultByBuildId: ReadonlyMap<string, SavedBuildCalculatedResult>,
+): {
+  calculatedValue: number | null
+  expectedValue: number | null
+  delta: number | null
+  percentDifference: number | null
+  status: SavedBuildResultStatus
+  note: string
+} {
+  if (!row.buildId) {
+    return {
+      calculatedValue: null,
+      expectedValue: null,
+      delta: null,
+      percentDifference: null,
+      status: "incomplete",
+      note: "Pick build",
+    }
+  }
+
+  const calculatedResult = resultByBuildId.get(row.buildId)
+  if (!calculatedResult) {
+    return {
+      calculatedValue: null,
+      expectedValue: null,
+      delta: null,
+      percentDifference: null,
+      status: "incomplete",
+      note: "Saved build missing",
+    }
+  }
+
+  if (!row.skillName) {
+    return {
+      calculatedValue: null,
+      expectedValue: null,
+      delta: null,
+      percentDifference: null,
+      status: "incomplete",
+      note: "Pick skill",
+    }
+  }
+
+  const skillResult = calculateSavedBuildSkillResult(calculatedResult, row.skillName)
+  if (!skillResult) {
+    return {
+      calculatedValue: null,
+      expectedValue: null,
+      delta: null,
+      percentDifference: null,
+      status: "incomplete",
+      note: "Skill missing",
+    }
+  }
+
+  const expectedValue = parseExpectedComparisonValue(row.expectedValue)
+  if (row.expectedValue.trim().length === 0) {
+    return {
+      calculatedValue: getSavedBuildCalculatedValue(skillResult, row.mode),
+      expectedValue: null,
+      delta: null,
+      percentDifference: null,
+      status: "incomplete",
+      note: "Enter expected",
+    }
+  }
+
+  if (expectedValue === null) {
+    return {
+      calculatedValue: getSavedBuildCalculatedValue(skillResult, row.mode),
+      expectedValue: null,
+      delta: null,
+      percentDifference: null,
+      status: "incomplete",
+      note: "Invalid value",
+    }
+  }
+
+  const calculatedValue = getSavedBuildCalculatedValue(skillResult, row.mode)
+  const delta = calculatedValue - expectedValue
+
+  if (Math.abs(delta) < 0.000001) {
+    return {
+      calculatedValue,
+      expectedValue,
+      delta,
+      percentDifference: 0,
+      status: "perfect",
+      note: "Exact match",
+    }
+  }
+
+  const percentDifference = expectedValue === 0
+    ? null
+    : (Math.abs(delta) / Math.abs(expectedValue)) * 100
+
+  if (percentDifference !== null && percentDifference <= 0.001) {
+    return {
+      calculatedValue,
+      expectedValue,
+      delta,
+      percentDifference,
+      status: "close",
+      note: "Within tolerance",
+    }
+  }
+
+  return {
+    calculatedValue,
+    expectedValue,
+    delta,
+    percentDifference,
+    status: "off",
+    note: percentDifference === null ? "Expected is zero" : "Outside tolerance",
+  }
+}
+
+function SavedBuildResultComparisonSection({
+  rows,
+  setRows,
+  savedBuildProfiles,
+  resultByBuildId,
+}: {
+  rows: SavedBuildResultTableRow[]
+  setRows: Dispatch<SetStateAction<SavedBuildResultTableRow[]>>
+  savedBuildProfiles: StoredBuildProfile[]
+  resultByBuildId: ReadonlyMap<string, SavedBuildCalculatedResult>
+}) {
+  const updateRow = (rowId: string, patch: Partial<SavedBuildResultTableRow>) => {
+    setRows((current) => current.map((row) => row.id === rowId ? { ...row, ...patch } : row))
+  }
+
+  const removeRow = (rowId: string) => {
+    setRows((current) => {
+      const nextRows = current.filter((row) => row.id !== rowId)
+
+      if (nextRows.length > 0) {
+        return nextRows
+      }
+
+      const defaultBuildId = savedBuildProfiles[0]?.id ?? ""
+      const fallbackRow = createSavedBuildResultRow(defaultBuildId)
+      fallbackRow.skillName = getDefaultSkillNameForBuild(defaultBuildId, resultByBuildId)
+      return [fallbackRow]
+    })
+  }
+
+  const addRow = () => {
+    const defaultBuildId = savedBuildProfiles[0]?.id ?? ""
+    const nextRow = createSavedBuildResultRow(defaultBuildId)
+    nextRow.skillName = getDefaultSkillNameForBuild(defaultBuildId, resultByBuildId)
+    setRows((current) => [...current, nextRow])
+  }
 
   return (
     <section className={panelClass}>
-      <div className="border-b border-slate-800/80 px-5 py-4 sm:px-6">
-        <div className="text-lg font-semibold text-slate-50">My Conversions</div>
-        <div className="mt-1 text-xs leading-5 text-slate-400">
-          Selected talent conversions shown in the same source to percent to output format as the in-game list.
+      <div className="flex flex-wrap items-start justify-between gap-3 border-b border-slate-800/80 px-5 py-4 sm:px-6">
+        <div>
+          <div className="text-lg font-semibold text-slate-50">Saved Build Result Match</div>
+          <div className="mt-1 text-xs leading-5 text-slate-400">
+            Compare any saved build&apos;s selected skill result to an expected number. Threat uses maximized crit threat.
+          </div>
+          <div className="mt-1 text-[11px] leading-5 text-slate-500">
+            Build, skill, stat, and expected values are saved locally so these rows can act as regression checks.
+          </div>
         </div>
+
+        <button
+          type="button"
+          onClick={addRow}
+          className={compactPrimaryButtonClass}
+          disabled={savedBuildProfiles.length === 0}
+        >
+          Add Row
+        </button>
       </div>
 
       <div className="p-4 sm:p-5">
-        {conversions.length === 0 ? (
+        {savedBuildProfiles.length === 0 ? (
           <div className={emptyStateClass}>
-            No active talent conversions are contributing to the current build.
+            No saved builds found. Save a build first, then compare one of its skill results here.
           </div>
         ) : (
-          <MyConversionsGrid conversions={conversions} />
+          <div className="overflow-x-auto">
+            <table className="min-w-full border-separate border-spacing-y-1.5 text-xs">
+              <thead>
+                <tr className="text-left text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500">
+                  <th className="px-2.5 py-1">Build</th>
+                  <th className="px-2.5 py-1">Skill</th>
+                  <th className="px-2.5 py-1">Stat</th>
+                  <th className="px-2.5 py-1">Expected</th>
+                  <th className="px-2.5 py-1">Calculated</th>
+                  <th className="px-2.5 py-1">Delta</th>
+                  <th className="px-2.5 py-1">Diff</th>
+                  <th className="px-2.5 py-1">Status</th>
+                  <th className="px-2.5 py-1"></th>
+                </tr>
+              </thead>
+              <tbody>
+                {rows.map((row) => {
+                  const evaluation = evaluateSavedBuildResultRow(row, resultByBuildId)
+                  const buildResult = row.buildId ? resultByBuildId.get(row.buildId) ?? null : null
+
+                  return (
+                    <tr key={row.id} className="align-top">
+                      <td className="rounded-l-xl border border-slate-800/80 bg-slate-950/65 px-2.5 py-2">
+                        <select
+                          value={row.buildId}
+                          onChange={(event) => {
+                            const nextBuildId = event.target.value
+                            updateRow(row.id, {
+                              buildId: nextBuildId,
+                              skillName: getDefaultSkillNameForBuild(nextBuildId, resultByBuildId),
+                            })
+                          }}
+                          className={compactFieldClass}
+                        >
+                          <option value="">Select saved build</option>
+                          {savedBuildProfiles.map((profile) => (
+                            <option key={profile.id} value={profile.id}>
+                              {profile.name}
+                            </option>
+                          ))}
+                        </select>
+                      </td>
+                      <td className="border-y border-slate-800/80 bg-slate-950/55 px-2.5 py-2">
+                        <SavedBuildSkillCombobox
+                          rowId={row.id}
+                          value={row.skillName}
+                          options={buildResult?.presets ?? []}
+                          onChange={(nextValue) => updateRow(row.id, { skillName: nextValue })}
+                        />
+                      </td>
+                      <td className="border-y border-slate-800/80 bg-slate-950/55 px-2.5 py-2">
+                        <select
+                          value={row.mode}
+                          onChange={(event) => updateRow(row.id, {
+                            mode: isSavedBuildComparisonMode(event.target.value) ? event.target.value : "maxcrit",
+                          })}
+                          className={compactFieldClass}
+                        >
+                          {savedBuildComparisonModeOptions.map((option) => (
+                            <option key={option.key} value={option.key}>
+                              {option.label}
+                            </option>
+                          ))}
+                        </select>
+                      </td>
+                      <td className="border-y border-slate-800/80 bg-slate-950/55 px-2.5 py-2">
+                        <input
+                          type="text"
+                          inputMode="decimal"
+                          value={row.expectedValue}
+                          onChange={(event) => updateRow(row.id, { expectedValue: event.target.value })}
+                          placeholder="2000"
+                          className={compactFieldClass}
+                        />
+                      </td>
+                      <td className="border-y border-slate-800/80 bg-slate-950/55 px-2.5 py-2 font-mono text-slate-200">
+                        {formatComparisonNumber(evaluation.calculatedValue)}
+                      </td>
+                      <td className="border-y border-slate-800/80 bg-slate-950/55 px-2.5 py-2 font-mono text-slate-300">
+                        {formatSignedComparisonNumber(evaluation.delta)}
+                      </td>
+                      <td className="border-y border-slate-800/80 bg-slate-950/55 px-2.5 py-2 font-mono text-slate-300">
+                        {formatComparisonPercent(evaluation.percentDifference)}
+                      </td>
+                      <td className="border-y border-slate-800/80 bg-slate-950/55 px-2.5 py-2">
+                        <div className={`inline-flex rounded-full border px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.14em] ${getSavedBuildResultStatusClass(evaluation.status)}`}>
+                          {getSavedBuildResultStatusLabel(evaluation.status)}
+                        </div>
+                        <div className="mt-1 text-[10px] text-slate-500">{evaluation.note}</div>
+                      </td>
+                      <td className="rounded-r-xl border border-slate-800/80 bg-slate-950/65 px-2.5 py-2 text-right">
+                        <button
+                          type="button"
+                          onClick={() => removeRow(row.id)}
+                          className={compactButtonClass}
+                        >
+                          Remove
+                        </button>
+                      </td>
+                    </tr>
+                  )
+                })}
+              </tbody>
+            </table>
+          </div>
         )}
       </div>
     </section>
@@ -785,7 +1400,10 @@ function getDungeonComparisonSections(calcCard: TerminalCardData, parsedCard: Pa
 
 export default function DebugVarsPage() {
   const [summary, setSummary] = useState<SummaryState | null>(null)
+  const [savedBuildProfiles, setSavedBuildProfiles] = useState<StoredBuildProfile[]>([])
   const [inputs, setInputs] = useState<PasteInputs>(defaultInputs)
+  const [savedBuildResultRows, setSavedBuildResultRows] = useState<SavedBuildResultTableRow[]>([createSavedBuildResultRow()])
+  const [hasLoadedPersistedDebugState, setHasLoadedPersistedDebugState] = useState(false)
 
   useEffect(() => {
     if (typeof window === "undefined") {
@@ -807,8 +1425,18 @@ export default function DebugVarsPage() {
       setInputs(defaultInputs)
     }
 
+    try {
+      const storedRows = JSON.parse(window.localStorage.getItem(SAVED_BUILD_RESULT_TABLE_STORAGE_KEY) ?? "null")
+      setSavedBuildResultRows(normalizeSavedBuildResultRows(storedRows))
+    } catch {
+      setSavedBuildResultRows([createSavedBuildResultRow()])
+    }
+
+    setHasLoadedPersistedDebugState(true)
+
     const refresh = () => {
       setSummary(buildDebugSummary(window.localStorage))
+      setSavedBuildProfiles(readBuildManagerState(window.localStorage).profiles)
     }
 
     const handleVisibilityChange = () => {
@@ -837,12 +1465,20 @@ export default function DebugVarsPage() {
   }, [])
 
   useEffect(() => {
-    if (typeof window === "undefined") {
+    if (typeof window === "undefined" || !hasLoadedPersistedDebugState) {
       return
     }
 
     window.localStorage.setItem(INPUT_STORAGE_KEY, JSON.stringify(inputs))
-  }, [inputs])
+  }, [hasLoadedPersistedDebugState, inputs])
+
+  useEffect(() => {
+    if (typeof window === "undefined" || !hasLoadedPersistedDebugState) {
+      return
+    }
+
+    window.localStorage.setItem(SAVED_BUILD_RESULT_TABLE_STORAGE_KEY, JSON.stringify(savedBuildResultRows))
+  }, [hasLoadedPersistedDebugState, savedBuildResultRows])
 
   const parsedGuildCard = useMemo(() => parseGuildCard(inputs.guildCard), [inputs.guildCard])
   const parsedCharacterCard = useMemo(() => parseTerminalCard(inputs.characterCard), [inputs.characterCard])
@@ -866,6 +1502,14 @@ export default function DebugVarsPage() {
   const conversionRows = useMemo(
     () => (summary ? buildLabelValueComparisonRows(getTalentConversionComparisonRows(summary.snapshot, summary.charcardStages), parsedConversions) : []),
     [parsedConversions, summary],
+  )
+  const savedBuildCalculatedResults = useMemo(
+    () => buildSavedBuildCalculatedResults(savedBuildProfiles),
+    [savedBuildProfiles],
+  )
+  const savedBuildCalculatedResultById = useMemo(
+    () => new Map(savedBuildCalculatedResults.map((result) => [result.profile.id, result])),
+    [savedBuildCalculatedResults],
   )
 
   if (!summary) {
@@ -955,6 +1599,13 @@ export default function DebugVarsPage() {
             rows={conversionRows}
           />
         </ComparisonBlock>
+
+        <SavedBuildResultComparisonSection
+          rows={savedBuildResultRows}
+          setRows={setSavedBuildResultRows}
+          savedBuildProfiles={savedBuildProfiles}
+          resultByBuildId={savedBuildCalculatedResultById}
+        />
       </div>
     </div>
   )
