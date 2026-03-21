@@ -263,6 +263,19 @@ export function expandCompoundStats(
   return expanded
 }
 
+const convertedSkillSpecificStats = new Set([
+  "Sword DMG%",
+  "Spear DMG%",
+  "Hammer DMG%",
+  "Fist DMG%",
+  "Dagger DMG%",
+  "Fire DMG%",
+  "Shadow Break DMG%",
+  "Bow Crit DMG%",
+  "Fist Crit DMG%",
+  "Dagger Crit DMG%",
+])
+
 function updateConversionSubStats(
   targetDict: Record<string, number>,
   sourceDict: Record<string, number>,
@@ -306,6 +319,7 @@ function updateConversionSubStats(
   const affixInfo = stat_data.StatsInfo[targetStat as keyof typeof stat_data.StatsInfo]
   const substats = affixInfo?.sub_stats
   const resultValue = truncateTowardZero(sourceValue * (ratio * stackCount) * (1 + buff))
+  const convertedSkillSpecificStatName = `__Converted ${targetStat}`
 
   if (substats) {
     for (const substat of substats) {
@@ -313,6 +327,10 @@ function updateConversionSubStats(
     }
   } else if (affixInfo) {
     targetDict[targetStat] = (targetDict[targetStat] ?? 0) + resultValue
+  }
+
+  if (convertedSkillSpecificStats.has(targetStat)) {
+    targetDict[convertedSkillSpecificStatName] = (targetDict[convertedSkillSpecificStatName] ?? 0) + resultValue
   }
 }
 

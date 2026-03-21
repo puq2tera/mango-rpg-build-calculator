@@ -252,7 +252,7 @@ const DAMAGE_REDUCTION_CAP_PERCENT = 90
 const DAMAGE_REDUCTION_SCALE_PERCENT = 15
 const DEFENSE_SCALING_BASE = 12
 const DEFENSE_SCALING_DIVISOR = 15
-const skillCritDamageMultiplierStatsBySkillType: Record<string, string[]> = {
+const skillCritDamageBonusStatsBySkillType: Record<string, string[]> = {
   Bow: ["Bow Crit DMG%"],
   Dagger: ["Dagger Crit DMG%"],
   Fist: ["Fist Crit DMG%"],
@@ -280,8 +280,32 @@ function getSkillTypeDamageBonus(stats: Record<string, number>, skillType: strin
   return statName ? (stats[statName] ?? 0) : 0
 }
 
+function getConvertedSkillTypeDamageBonus(stats: Record<string, number>, skillType: string): number {
+  const statName = skillDamageStatsBySkillType[skillType]
+  return statName ? (stats[`__Converted ${statName}`] ?? 0) : 0
+}
+
+function getGlobalSkillTypeDamageBonus(stats: Record<string, number>, skillType: string): number {
+  return getSkillTypeDamageBonus(stats, skillType) - getConvertedSkillTypeDamageBonus(stats, skillType)
+}
+
+function getConvertedSkillTypeCritDamageBonus(stats: Record<string, number>, skillType: string): number {
+  return (skillCritDamageBonusStatsBySkillType[skillType] ?? []).reduce(
+    (sum, statName) => sum + (stats[`__Converted ${statName}`] ?? 0),
+    0,
+  )
+}
+
+function getGlobalSkillTypeCritDamageBonus(stats: Record<string, number>, skillType: string): number {
+  return getTotalStatValue(stats, skillCritDamageBonusStatsBySkillType[skillType] ?? [])
+    - getConvertedSkillTypeCritDamageBonus(stats, skillType)
+}
+
 function getElementDamageBonus(stats: Record<string, number>, element: string, skillType: string): number {
-  let bonus = (stats[`${element}%`] ?? 0) + (stats[`${skillType}%`] ?? 0)
+  let bonus =
+    (stats[`${element}%`] ?? 0)
+    + (stats[`${skillType}%`] ?? 0)
+    + getConvertedSkillTypeDamageBonus(stats, skillType)
   return bonus
 }
 
@@ -334,7 +358,7 @@ function applyThreatOffenseMultipliers(
   result = Math.floor(result * toMult(getElementDamageBonus(stats, element, skillType)))
   result = Math.floor(result * toMult((stats[`${penElement} Pen%`] ?? 0) + skillPen))
   result = Math.floor(result * toMult(stats[`${element} xDmg%`]))
-  result = Math.floor(result * toMult(getSkillTypeDamageBonus(stats, skillType)))
+  result = Math.floor(result * toMult(getGlobalSkillTypeDamageBonus(stats, skillType)))
   result = Math.floor(result * toMult(stats["Dmg%"]))
   return result
 }
@@ -375,11 +399,10 @@ function buildDamageContext(stats: Record<string, number>, state: DamageCalcStat
 
 function finalizeDamageResult(nonCrit: number, context: NormalizedDamageContext): DamageCalcResult {
   const { stats, element, penElement, skillType, inputs } = context
-  const skillTypeCritDamageBonus =
-    (stat_data.Elemental.includes(element) ? (stats["Elemental Crit DMG%"] ?? 0) : 0)
+  const skillTypeCritDamageBonus = getConvertedSkillTypeCritDamageBonus(stats, skillType)
+    + (stat_data.Elemental.includes(element) ? (stats["Elemental Crit DMG%"] ?? 0) : 0)
     + (element === "Holy" ? (stats["Holy Crit DMG%"] ?? 0) : 0)
-  const skillTypeCritDamageMultiplier =
-    toMult(getTotalStatValue(stats, skillCritDamageMultiplierStatsBySkillType[skillType] ?? []))
+  const skillTypeCritDamageMultiplier = toMult(getGlobalSkillTypeCritDamageBonus(stats, skillType))
   const baseCritDamageBonus = (stats["Crit DMG%"] ?? 0) + skillTypeCritDamageBonus
   const damageCritDamageMultiplier = Math.max(0, (baseCritDamageBonus / 100) * toMult(inputs.skillCritDmg ?? 0))
   // Threat skills line up with combat logs as base 1x threat plus crit-damage bonus.
@@ -443,7 +466,7 @@ export function calculateDamage(stats: Record<string, number>, state: DamageCalc
   const totalPenBonus = ((resolvedStats[`${penElement} Pen%`] ?? 0) + (inputs.skillPen ?? 0)) / 100
   const penResMult = Math.max(0, 1 + totalPenBonus - (effectiveEnemyRes / 100))
   dmg = Math.floor(dmg * penResMult)
-  dmg = Math.floor(dmg * toMult(getSkillTypeDamageBonus(resolvedStats, skillType)))
+  dmg = Math.floor(dmg * toMult(getGlobalSkillTypeDamageBonus(resolvedStats, skillType)))
   dmg = Math.floor(dmg * toMult(resolvedStats["Dmg%"]))
 
   return finalizeDamageResult(Math.max(0, dmg), context)
