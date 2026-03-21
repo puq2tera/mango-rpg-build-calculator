@@ -193,7 +193,7 @@ const tarot_data: Record<string, Tarot> = {
         stat_base: 5,
         stat_scale: 1,
         conversions: [
-            { source: "Sword DMG%", ratio: 0.75, resulting_stat: "Sword DMG%" }
+            { source: "Slash%", ratio: 0.75, resulting_stat: "Sword DMG%" }
         ]
     },
     "First Strike Kill Samurai (100%)": {
@@ -205,7 +205,7 @@ const tarot_data: Record<string, Tarot> = {
         stat_base: 5,
         stat_scale: 1,
         conversions: [
-            { source: "Sword DMG%", ratio: 1, resulting_stat: "Sword DMG%" },
+            { source: "Slash%", ratio: 1, resulting_stat: "Sword DMG%" },
         ]
     },
     "First Strike Kill Samurai (150%)": {
@@ -217,7 +217,7 @@ const tarot_data: Record<string, Tarot> = {
         stat_base: 5,
         stat_scale: 1,
         conversions: [
-            { source: "Sword DMG%", ratio: 1.5, resulting_stat: "Sword DMG%" }
+            { source: "Slash%", ratio: 1.5, resulting_stat: "Sword DMG%" }
         ]
     },
     "Winged King of Annihilation": {
@@ -228,11 +228,9 @@ const tarot_data: Record<string, Tarot> = {
         stat_bonus: "Void Pen%",
         stat_base: 2,
         stat_scale: 1,
-        stats: {
-            "Bow Crit DMG%": 66
-        },
         conversions: [
-            { source: "Combined Bow%", ratio: 0.66, resulting_stat: "Bow%" },
+            { source: "Crit DMG%", ratio: 0.66, resulting_stat: "Bow Crit DMG%" },
+            { source: "Pierce%", ratio: 0.66, resulting_stat: "Bow%" },
             { source: "HP", ratio: -0.33, resulting_stat: "HP" }
         ]
     },
@@ -258,11 +256,9 @@ const tarot_data: Record<string, Tarot> = {
         stat_bonus: "Slash Pen%",
         stat_base: 5,
         stat_scale: 1,
-        stats: {
-            "Dagger Crit DMG%": 60
-        },
         conversions: [
-            { source: "Dagger DMG%", ratio: 0.2, resulting_stat: "Dagger DMG%" }
+            { source: "Crit DMG%", ratio: 0.6, resulting_stat: "Dagger Crit DMG%" },
+            { source: "Slash%", ratio: 0.2, resulting_stat: "Dagger DMG%" }
         ]
     },
     "Lady of the Einherjar": {
@@ -277,7 +273,7 @@ const tarot_data: Record<string, Tarot> = {
             "Phys Armor Ignore%": 100
         },
         conversions: [
-            { source: "Pierce%", ratio: 1.25, resulting_stat: "Pierce%" },
+            { source: "Pierce%", ratio: 1.25, resulting_stat: "Spear DMG%" },
             { source: "Pierce%", ratio: -1, resulting_stat: "Pierce%" }
         ]
     },
@@ -293,7 +289,7 @@ const tarot_data: Record<string, Tarot> = {
             "Blunt Armor Ignore%": 50
         },
         conversions: [
-            { source: "Fist DMG%", ratio: 0.5, resulting_stat: "Fist DMG%" }
+            { source: "Blunt%", ratio: 0.5, resulting_stat: "Fist DMG%" }
         ]
     },
     "Master of Dark Wisdom": {
@@ -549,10 +545,8 @@ const tarot_data: Record<string, Tarot> = {
         stat_bonus: "Slash Pen%",
         stat_base: 5,
         stat_scale: 1,
-        stats: {
-            "Sword DMG%": 120
-        },
         conversions: [
+            { source: "Slash%", ratio: 1.2, resulting_stat: "Sword DMG%" },
             { source: "ATK", ratio: 0.5, resulting_stat: "DEF" },
             { source: "ATK", ratio: -0.5, resulting_stat: "ATK" }
         ]
@@ -564,14 +558,12 @@ const tarot_data: Record<string, Tarot> = {
         stat_bonus: "Void Pen%",
         stat_base: 2,
         stat_scale: 1,
-        stats: {
-            "Bow Crit DMG%": 13
-        },
         conversions: [
-            { source: "Combined Bow%", ratio: 0.5, resulting_stat: "Bow%" }
+            { source: "Crit DMG%", ratio: 0.13, resulting_stat: "Bow Crit DMG%" },
+            { source: "Pierce%", ratio: 0.5, resulting_stat: "Bow%" }
         ],
         stack_conversions: [
-            { source: "Bow Crit DMG%", ratio: 1.33, resulting_stat: "Bow Crit DMG%" }
+            { source: "Crit DMG%", ratio: 1.33, resulting_stat: "Bow Crit DMG%" }
         ]
     },
     "Cyclone Flail Princess": {
@@ -592,12 +584,10 @@ const tarot_data: Record<string, Tarot> = {
         stat_bonus: "Slash Pen%",
         stat_base: 5,
         stat_scale: 1,
-        stats: {
-            "Dagger Crit DMG%": 60
-        },
         conversions: [
-            { source: "Dagger DMG%", ratio: 0.5, resulting_stat: "Dagger DMG%" },
-            { source: "Dagger DMG%", ratio: 0.6, resulting_stat: "Dagger DMG%" }
+            { source: "Crit DMG%", ratio: 0.6, resulting_stat: "Dagger Crit DMG%" },
+            { source: "Slash%", ratio: 0.5, resulting_stat: "Dagger DMG%" },
+            { source: "Slash%", ratio: 0.6, resulting_stat: "Dagger DMG%" }
         ]
     },
     "Crimson Worldfall": {
@@ -611,8 +601,8 @@ const tarot_data: Record<string, Tarot> = {
             "Pierce DOT%": 10
         },
         conversions: [
-            { source: "Spear DMG%", ratio: 0.35, resulting_stat: "Spear DMG%" },
-            { source: "Spear DMG%", ratio: 0.4, resulting_stat: "Spear DMG%" },
+            { source: "Pierce%", ratio: 0.35, resulting_stat: "Spear DMG%" },
+            { source: "Pierce%", ratio: 0.4, resulting_stat: "Spear DMG%" },
             { source: "Pierce Pen%", ratio: 0.4, resulting_stat: "Pierce Pen%" }
         ]
     },
@@ -623,9 +613,9 @@ const tarot_data: Record<string, Tarot> = {
         stat_bonus: "Blunt Pen%",
         stat_base: 5,
         stat_scale: 1,
-        stack_stats: {
-            "Fist DMG%": 6
-        }
+        stack_conversions: [
+            { source: "Blunt%", ratio: 0.06, resulting_stat: "Fist DMG%" }
+        ]
     },
     "Lord of the Arcane Abyss": {
         tier: 5,
@@ -941,10 +931,8 @@ const tarot_data: Record<string, Tarot> = {
         stat_bonus: "Slash%",
         stat_base: 5,
         stat_scale: 1,
-        stats: {
-            "Sword DMG%": 8
-        },
         conversions: [
+            { source: "Slash%", ratio: 0.08, resulting_stat: "Sword DMG%" },
             { source: "Slash%", ratio: 0.06, resulting_stat: "All%" }
         ]
     },
@@ -985,7 +973,7 @@ const tarot_data: Record<string, Tarot> = {
             "Bow Crit Chance%": 33
         },
         conversions: [
-            { source: "Bow%", ratio: 0.12, resulting_stat: "Bow%" }
+            { source: "Pierce%", ratio: 0.12, resulting_stat: "Bow%" }
         ]
     },
     "Muscle Mystery Warrior": {
@@ -1021,7 +1009,7 @@ const tarot_data: Record<string, Tarot> = {
         stat_base: 5,
         stat_scale: 1,
         conversions: [
-            { source: "Dagger DMG%", ratio: 1, resulting_stat: "Dagger DMG%" }
+            { source: "Slash%", ratio: 1, resulting_stat: "Dagger DMG%" }
         ]
     },
     "Ijayniya": {
@@ -1032,11 +1020,11 @@ const tarot_data: Record<string, Tarot> = {
         stat_base: 5,
         stat_scale: 1,
         stats: {
-            "Slash DOT%": 10,
-            "Dagger DMG%": 15
+            "Slash DOT%": 10
         },
         conversions: [
-            { source: "Sword DMG%", ratio: -0.5, resulting_stat: "Sword DMG%" }
+            { source: "Slash%", ratio: 0.15, resulting_stat: "Dagger DMG%" },
+            { source: "Slash%", ratio: -0.5, resulting_stat: "Sword DMG%" }
         ]
     },
     "Demigod Champion": {
@@ -1047,9 +1035,9 @@ const tarot_data: Record<string, Tarot> = {
         stat_base: 5,
         stat_scale: 1,
         conversions: [
-            { source: "Spear DMG%", ratio: -0.10, resulting_stat: "Spear DMG%" },
-            { source: "Spear DMG%", ratio: 0.05, resulting_stat: "Spear DMG%" },
-            { source: "Spear DMG%", ratio: 0.15, resulting_stat: "Spear DMG%" }
+            { source: "Pierce%", ratio: -0.10, resulting_stat: "Spear DMG%" },
+            { source: "Pierce%", ratio: 0.05, resulting_stat: "Spear DMG%" },
+            { source: "Pierce%", ratio: 0.15, resulting_stat: "Spear DMG%" }
         ]
     },
     "Elderly Lancer": {
@@ -1060,8 +1048,8 @@ const tarot_data: Record<string, Tarot> = {
         stat_base: 5,
         stat_scale: 1,
         conversions: [
-            { source: "Spear DMG%", ratio: 0.2, resulting_stat: "Spear DMG%" },
-            { source: "Spear DMG%", ratio: -0.1, resulting_stat: "Spear DMG%" }
+            { source: "Pierce%", ratio: 0.2, resulting_stat: "Spear DMG%" },
+            { source: "Pierce%", ratio: -0.1, resulting_stat: "Spear DMG%" }
         ]
     },
     "Underworld Enforcer": {
@@ -1072,8 +1060,8 @@ const tarot_data: Record<string, Tarot> = {
         stat_base: 5,
         stat_scale: 1,
         conversions: [
-            { source: "Fist DMG%", ratio: 0.16, resulting_stat: "Fist DMG%" },
-            { source: "Fist DMG%", ratio: 0.10, resulting_stat: "Fist DMG%" }
+            { source: "Blunt%", ratio: 0.16, resulting_stat: "Fist DMG%" },
+            { source: "Blunt%", ratio: 0.10, resulting_stat: "Fist DMG%" }
         ]
     },
     "The Great Khan": {

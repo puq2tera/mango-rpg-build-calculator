@@ -2830,9 +2830,9 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ ⧖, Pierce ] Deals 100% ATK DMG, Pens with Void, +10% Crit DMG, Increases self Bow Crit DMG by 15% for 3 Turns, 7 Focus",
-        stats: {
-    "Bow Crit DMG%": 0.15,
-    },
+        conversions: [
+    { source: "Crit DMG%", ratio: 0.15, resulting_stat: "Bow Crit DMG%" },
+    ],
         dmg_stats: { dmg_element: "Pierce", element: "Pierce", pen_element: "Void", stat: "ATK", ratio: 1, skill_type: "Bow", crit_dmg: 0.1 },
 },
 "Iron Fist": {...defaultSkill,
@@ -2853,9 +2853,9 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ ⧖, Blunt ] Deals 100% ATK DMG, +10% Crit DMG, Increases self Fist Crit DMG by 15% for 3 Turns, 7 Focus",
-        stats: {
-    "Fist Crit DMG%": 0.15,
-    },
+        conversions: [
+    { source: "Crit DMG%", ratio: 0.15, resulting_stat: "Fist Crit DMG%" },
+    ],
         dmg_stats: { dmg_element: "Blunt", element: "Blunt", pen_element: "Blunt", stat: "ATK", ratio: 1, skill_type: "Fist", crit_dmg: 0.1 },
 },
 "Impaling Strike": {...defaultSkill,
@@ -2876,9 +2876,9 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ ⧖, Pierce ] Deals 110% ATK DMG, Increase self Spear DMG by 15% for 3 Turns, 7 Focus",
-        stats: {
-    "Spear DMG%": 0.15,
-    },
+        conversions: [
+    { source: "Pierce%", ratio: 0.15, resulting_stat: "Spear DMG%" },
+    ],
         dmg_stats: { dmg_element: "Pierce", element: "Pierce", pen_element: "Pierce", stat: "ATK", ratio: 1.1, skill_type: "Spear" },
 },
 "Mortal Slash": {...defaultSkill,
@@ -2899,9 +2899,9 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ ⧖, Slash ] Deals 110% ATK DMG, Increase self Sword DMG by 15% for 3 Turns, 7 Focus",
-        stats: {
-    "Sword DMG%": 0.15,
-    },
+        conversions: [
+    { source: "Slash%", ratio: 0.15, resulting_stat: "Sword DMG%" },
+    ],
         dmg_stats: { dmg_element: "Slash", element: "Slash", pen_element: "Slash", stat: "ATK", ratio: 1.1, skill_type: "Sword" },
 },
 "Tremor Strike": {...defaultSkill,
@@ -2922,9 +2922,9 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ ⧖, Blunt ] Deals 110% ATK DMG, Increase self Hammer DMG by 15% for 3 Turns, 7 Focus",
-        stats: {
-    "Hammer DMG%": 0.15,
-    },
+        conversions: [
+    { source: "Blunt%", ratio: 0.15, resulting_stat: "Hammer DMG%" },
+    ],
         dmg_stats: { dmg_element: "Blunt", element: "Blunt", pen_element: "Blunt", stat: "ATK", ratio: 1.1, skill_type: "Hammer" },
 },
 "Backside Sever": {...defaultSkill,
@@ -2945,9 +2945,9 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ ⧖, Slash ] Deals 100% ATK DMG, +10% Crit Damage, Increase self Dagger Crit DMG by 15% for 3 Turns, 7 Focus",
-        stats: {
-    "Dagger Crit DMG%": 0.15,
-    },
+        conversions: [
+    { source: "Crit DMG%", ratio: 0.15, resulting_stat: "Dagger Crit DMG%" },
+    ],
         dmg_stats: { dmg_element: "Slash", element: "Slash", pen_element: "Slash", stat: "ATK", ratio: 1, skill_type: "Dagger", crit_dmg: 0.1 },
 },
 "Limit Release": {...defaultSkill,
@@ -3081,9 +3081,9 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ ⧖, Pierce ] Deals 140% ATK DMG, Pens with Void, +10% Crit DMG, Increases self Bow Crit DMG by 15% for 3 Turns, 8 Focus",
-        stats: {
-    "Bow Crit DMG%": 0.15,
-    },
+        conversions: [
+    { source: "Crit DMG%", ratio: 0.15, resulting_stat: "Bow Crit DMG%" },
+    ],
         dmg_stats: { dmg_element: "Pierce", element: "Pierce", pen_element: "Void", stat: "ATK", ratio: 1.4, skill_type: "Bow", crit_dmg: 0.1 },
 },
 "Impact Blows": {...defaultSkill,
@@ -3104,9 +3104,9 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ ⧖, Blunt ] Deals 140% ATK DMG, +10% Crit DMG, Increases self Fist Crit DMG by 15% for 3 Turns, 8 Focus",
-        stats: {
-    "Fist Crit DMG%": 0.15,
-    },
+        conversions: [
+    { source: "Crit DMG%", ratio: 0.15, resulting_stat: "Fist Crit DMG%" },
+    ],
         dmg_stats: { dmg_element: "Blunt", element: "Blunt", pen_element: "Blunt", stat: "ATK", ratio: 1.4, skill_type: "Fist", crit_dmg: 0.1 },
 },
 "Fatal Puncture": {...defaultSkill,
@@ -3127,9 +3127,9 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ ⧖, Pierce ] Deals 155% ATK DMG, Increase self Spear DMG by 15% for 3 Turns, 8 Focus",
-        stats: {
-    "Spear DMG%": 0.15,
-    },
+        conversions: [
+    { source: "Pierce%", ratio: 0.15, resulting_stat: "Spear DMG%" },
+    ],
         dmg_stats: { dmg_element: "Pierce", element: "Pierce", pen_element: "Pierce", stat: "ATK", ratio: 1.55, skill_type: "Spear" },
 },
 "Deadly Edge": {...defaultSkill,
@@ -3150,9 +3150,9 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ ⧖, Slash ] Deals 155% ATK DMG, Increase self Sword DMG by 15% for 3 Turns, 8 Focus",
-        stats: {
-    "Sword DMG%": 0.15,
-    },
+        conversions: [
+    { source: "Slash%", ratio: 0.15, resulting_stat: "Sword DMG%" },
+    ],
         dmg_stats: { dmg_element: "Slash", element: "Slash", pen_element: "Slash", stat: "ATK", ratio: 1.55, skill_type: "Sword" },
 },
 "Assassinate": {...defaultSkill,
@@ -3173,9 +3173,9 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ ⧖, Slash ] Deals 140% ATK DMG, +10% Crit Damage, Increase self Dagger Crit DMG by 15% for 3 Turns, 8 Focus",
-        stats: {
-    "Dagger Crit DMG%": 0.15,
-    },
+        conversions: [
+    { source: "Crit DMG%", ratio: 0.15, resulting_stat: "Dagger Crit DMG%" },
+    ],
         dmg_stats: { dmg_element: "Slash", element: "Slash", pen_element: "Slash", stat: "ATK", ratio: 1.4, skill_type: "Dagger", crit_dmg: 0.1 },
 },
 "Quake Smash": {...defaultSkill,
@@ -3196,9 +3196,9 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ ⧖, Blunt ] Deals 155% ATK DMG, Increase self Hammer DMG by 15% for 3 Turns, 8 Focus",
-        stats: {
-    "Hammer DMG%": 0.15,
-    },
+        conversions: [
+    { source: "Blunt%", ratio: 0.15, resulting_stat: "Hammer DMG%" },
+    ],
         dmg_stats: { dmg_element: "Blunt", element: "Blunt", pen_element: "Blunt", stat: "ATK", ratio: 1.55, skill_type: "Hammer" },
 },
 "MA Lesser Field": {...defaultSkill,
@@ -3522,9 +3522,9 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ ⧖, Pierce ] Deals 180% ATK DMG, Pens with Void, +10% Crit DMG, Increases self Bow Crit DMG by 15% for 3 Turns, 8 Focus",
-        stats: {
-    "Bow Crit DMG%": 0.15,
-    },
+        conversions: [
+    { source: "Crit DMG%", ratio: 0.15, resulting_stat: "Bow Crit DMG%" },
+    ],
         dmg_stats: { dmg_element: "Pierce", element: "Pierce", pen_element: "Void", stat: "ATK", ratio: 1.8, skill_type: "Bow", crit_dmg: 0.1 },
 },
 "Fierce Strikes": {...defaultSkill,
@@ -3545,9 +3545,9 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ ⧖, Blunt ] Deals 180% ATK DMG, +10% Crit DMG, Increases self Fist Crit DMG by 15% for 3 Turns, 8 Focus",
-        stats: {
-    "Fist Crit DMG%": 0.15,
-    },
+        conversions: [
+    { source: "Crit DMG%", ratio: 0.15, resulting_stat: "Fist Crit DMG%" },
+    ],
         dmg_stats: { dmg_element: "Blunt", element: "Blunt", pen_element: "Blunt", stat: "ATK", ratio: 1.8, skill_type: "Fist", crit_dmg: 0.1 },
 },
 "Doom Spike": {...defaultSkill,
@@ -3568,9 +3568,9 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ ⧖, Pierce ] Deals 200% ATK DMG, Increase self Spear DMG by 15% for 3 Turns, 8 Focus",
-        stats: {
-    "Spear DMG%": 0.15,
-    },
+        conversions: [
+    { source: "Pierce%", ratio: 0.15, resulting_stat: "Spear DMG%" },
+    ],
         dmg_stats: { dmg_element: "Pierce", element: "Pierce", pen_element: "Pierce", stat: "ATK", ratio: 2, skill_type: "Spear" },
 },
 "Dragon's Slice": {...defaultSkill,
@@ -3591,9 +3591,9 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ ⧖, Slash ] Deals 200% ATK DMG, Increase self Sword DMG by 15% for 3 Turns, 8 Focus",
-        stats: {
-    "Sword DMG%": 0.15,
-    },
+        conversions: [
+    { source: "Slash%", ratio: 0.15, resulting_stat: "Sword DMG%" },
+    ],
         dmg_stats: { dmg_element: "Slash", element: "Slash", pen_element: "Slash", stat: "ATK", ratio: 2, skill_type: "Sword" },
 },
 "Quicksilver Backstab": {...defaultSkill,
@@ -3614,9 +3614,9 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ ⧖, Slash ] Deals 180% ATK DMG, +10% Crit Damage, Increase self Dagger Crit DMG by 15% for 3 Turns, 8 Focus",
-        stats: {
-    "Dagger Crit DMG%": 0.15,
-    },
+        conversions: [
+    { source: "Crit DMG%", ratio: 0.15, resulting_stat: "Dagger Crit DMG%" },
+    ],
         dmg_stats: { dmg_element: "Slash", element: "Slash", pen_element: "Slash", stat: "ATK", ratio: 1.8, skill_type: "Dagger", crit_dmg: 0.1 },
 },
 "Earthbreaker": {...defaultSkill,
@@ -3637,9 +3637,9 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ ⧖, Blunt ] Deals 200% ATK DMG, Increase self Hammer DMG by 15% for 3 Turns, 8 Focus",
-        stats: {
-    "Hammer DMG%": 0.15,
-    },
+        conversions: [
+    { source: "Blunt%", ratio: 0.15, resulting_stat: "Hammer DMG%" },
+    ],
         dmg_stats: { dmg_element: "Blunt", element: "Blunt", pen_element: "Blunt", stat: "ATK", ratio: 2, skill_type: "Hammer" },
 },
 "MA Field": {...defaultSkill,
@@ -4023,9 +4023,9 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ ⧖, Pierce ] Deals 225% ATK DMG, Pens with Void, +10% Crit DMG, Increases self Bow Crit DMG by 20% for 3 Turns, 10 Focus",
-        stats: {
-    "Bow Crit DMG%": 0.2,
-    },
+        conversions: [
+    { source: "Crit DMG%", ratio: 0.2, resulting_stat: "Bow Crit DMG%" },
+    ],
         dmg_stats: { dmg_element: "Pierce", element: "Pierce", pen_element: "Void", stat: "ATK", ratio: 2.25, skill_type: "Bow", crit_dmg: 0.1 },
 },
 "Seven Sided Strike": {...defaultSkill,
@@ -4046,9 +4046,9 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ ⧖, Blunt ] Deals 225% ATK DMG, +10% Crit DMG, Increases self Fist Crit DMG by 20% for 3 Turns, 10 Focus",
-        stats: {
-    "Fist Crit DMG%": 0.2,
-    },
+        conversions: [
+    { source: "Crit DMG%", ratio: 0.2, resulting_stat: "Fist Crit DMG%" },
+    ],
         dmg_stats: { dmg_element: "Blunt", element: "Blunt", pen_element: "Blunt", stat: "ATK", ratio: 2.25, skill_type: "Fist", crit_dmg: 0.1 },
 },
 "Serpent's Fang": {...defaultSkill,
@@ -4069,9 +4069,9 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ ⧖, Pierce ] Deals 250% ATK DMG, Increase self Spear DMG by 20% for 3 Turns, 10 Focus",
-        stats: {
-    "Spear DMG%": 0.2,
-    },
+        conversions: [
+    { source: "Pierce%", ratio: 0.2, resulting_stat: "Spear DMG%" },
+    ],
         dmg_stats: { dmg_element: "Pierce", element: "Pierce", pen_element: "Pierce", stat: "ATK", ratio: 2.5, skill_type: "Spear" },
 },
 "Kensai Stroke": {...defaultSkill,
@@ -4092,9 +4092,9 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ ⧖, Slash ] Deals 250% ATK DMG, Increase self Sword DMG by 20% for 3 Turns, 10 Focus",
-        stats: {
-    "Sword DMG%": 0.2,
-    },
+        conversions: [
+    { source: "Slash%", ratio: 0.2, resulting_stat: "Sword DMG%" },
+    ],
         dmg_stats: { dmg_element: "Slash", element: "Slash", pen_element: "Slash", stat: "ATK", ratio: 2.5, skill_type: "Sword" },
 },
 "Phantom Strikes": {...defaultSkill,
@@ -4115,9 +4115,9 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ ⧖, Slash ] Deals 225% ATK DMG, +10% Crit Damage, Increase self Dagger Crit DMG by 20% for 3 Turns, 10 Focus",
-        stats: {
-    "Dagger Crit DMG%": 0.2,
-    },
+        conversions: [
+    { source: "Crit DMG%", ratio: 0.2, resulting_stat: "Dagger Crit DMG%" },
+    ],
         dmg_stats: { dmg_element: "Slash", element: "Slash", pen_element: "Slash", stat: "ATK", ratio: 2.25, skill_type: "Dagger", crit_dmg: 0.1 },
 },
 "Silver Assault": {...defaultSkill,
@@ -4138,9 +4138,9 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ ⧖, Blunt ] Deals 250% ATK DMG, Increase self Hammer DMG by 20% for 3 Turns, 10 Focus",
-        stats: {
-    "Hammer DMG%": 0.2,
-    },
+        conversions: [
+    { source: "Blunt%", ratio: 0.2, resulting_stat: "Hammer DMG%" },
+    ],
         dmg_stats: { dmg_element: "Blunt", element: "Blunt", pen_element: "Blunt", stat: "ATK", ratio: 2.5, skill_type: "Hammer" },
 },
 "Silent Movements": {...defaultSkill,
@@ -4508,9 +4508,9 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ ⧖, Pierce ] Deals 290% ATK DMG, Pens with Void, +10% Crit DMG, Increases self Bow Crit DMG by 20% for 3 Turns, 15 Focus",
-        stats: {
-    "Bow Crit DMG%": 0.2,
-    },
+        conversions: [
+    { source: "Crit DMG%", ratio: 0.2, resulting_stat: "Bow Crit DMG%" },
+    ],
         dmg_stats: { dmg_element: "Pierce", element: "Pierce", pen_element: "Void", stat: "ATK", ratio: 2.9, skill_type: "Bow", crit_dmg: 0.1 },
 },
 "Roaring Dragon Fist": {...defaultSkill,
@@ -4531,9 +4531,9 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ ⧖, Blunt ] Deals 290% ATK DMG, +10% Crit DMG, Increases self Fist Crit DMG by 20% for 3 Turns, 15 Focus",
-        stats: {
-    "Fist Crit DMG%": 0.2,
-    },
+        conversions: [
+    { source: "Crit DMG%", ratio: 0.2, resulting_stat: "Fist Crit DMG%" },
+    ],
         dmg_stats: { dmg_element: "Blunt", element: "Blunt", pen_element: "Blunt", stat: "ATK", ratio: 2.9, skill_type: "Fist", crit_dmg: 0.1 },
 },
 "Meteor Spiral Thrust": {...defaultSkill,
@@ -4554,9 +4554,9 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ ⧖, Pierce ] Deals 320% ATK DMG, Increase self Spear DMG by 20% for 3 Turns, 15 Focus",
-        stats: {
-    "Spear DMG%": 0.2,
-    },
+        conversions: [
+    { source: "Pierce%", ratio: 0.2, resulting_stat: "Spear DMG%" },
+    ],
         dmg_stats: { dmg_element: "Pierce", element: "Pierce", pen_element: "Pierce", stat: "ATK", ratio: 3.2, skill_type: "Spear" },
 },
 "Wisdom King Strike": {...defaultSkill,
@@ -4577,9 +4577,9 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ ⧖, Slash ] Deals 320% ATK DMG, Increase self Sword DMG by 20% for 3 Turns, 15 Focus",
-        stats: {
-    "Sword DMG%": 0.2,
-    },
+        conversions: [
+    { source: "Slash%", ratio: 0.2, resulting_stat: "Sword DMG%" },
+    ],
         dmg_stats: { dmg_element: "Slash", element: "Slash", pen_element: "Slash", stat: "ATK", ratio: 3.2, skill_type: "Sword" },
 },
 "Twilight Strikes": {...defaultSkill,
@@ -4600,9 +4600,9 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ ⧖, Slash ] Deals 290% ATK DMG, +10% Crit Damage, Increase self Dagger Crit DMG by 20% for 3 Turns, 15 Focus",
-        stats: {
-    "Dagger Crit DMG%": 0.2,
-    },
+        conversions: [
+    { source: "Crit DMG%", ratio: 0.2, resulting_stat: "Dagger Crit DMG%" },
+    ],
         dmg_stats: { dmg_element: "Slash", element: "Slash", pen_element: "Slash", stat: "ATK", ratio: 2.9, skill_type: "Dagger", crit_dmg: 0.1 },
 },
 "Damnation Blow": {...defaultSkill,
@@ -4623,9 +4623,9 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ ⧖, Blunt ] Deals 320% ATK DMG, Increase self Hammer DMG by 20% for 3 Turns, 15 Focus",
-        stats: {
-    "Hammer DMG%": 0.2,
-    },
+        conversions: [
+    { source: "Blunt%", ratio: 0.2, resulting_stat: "Hammer DMG%" },
+    ],
         dmg_stats: { dmg_element: "Blunt", element: "Blunt", pen_element: "Blunt", stat: "ATK", ratio: 3.2, skill_type: "Hammer" },
 },
 "Cosmic Arrow Storm": {...defaultSkill,
@@ -5054,9 +5054,9 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ ⧖, Slash ] Deals 1400% ATK DMG AOE, Cap 290% per Target. Increase self Sword DMG by 15% for 3 Turns. 30/-5 Focus",
-        stats: {
-    "Sword DMG%": 0.15,
-    },
+        conversions: [
+    { source: "Slash%", ratio: 0.15, resulting_stat: "Sword DMG%" },
+    ],
         dmg_stats: { dmg_element: "Slash", element: "Slash", pen_element: "Slash", stat: "ATK", ratio: 2.9, skill_type: "Sword" },
 },
 "Iaido Blossom": {...defaultSkill,
