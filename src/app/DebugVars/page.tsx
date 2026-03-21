@@ -1034,6 +1034,15 @@ function getSavedBuildResultStatusLabel(status: SavedBuildResultStatus): string 
   }
 }
 
+function getSavedBuildComparisonModeLabel(mode: SavedBuildComparisonMode): string {
+  return savedBuildComparisonModeOptions.find((option) => option.key === mode)?.label ?? mode
+}
+
+function formatSavedBuildResultDebugValue(value: string): string {
+  const normalized = value.replace(/\s+/g, " ").trim()
+  return normalized.length > 0 ? normalized : "—"
+}
+
 function parseExpectedComparisonValue(value: string): number | null {
   const normalized = value.replace(/,/g, "").trim()
 
@@ -1050,6 +1059,42 @@ function getDefaultSkillNameForBuild(
   resultByBuildId: ReadonlyMap<string, SavedBuildCalculatedResult>,
 ): string {
   return resultByBuildId.get(buildId)?.presets[0]?.name ?? ""
+}
+
+function buildSavedBuildResultDebugBlock(
+  rows: readonly SavedBuildResultTableRow[],
+  buildNameById: ReadonlyMap<string, string>,
+  resultByBuildId: ReadonlyMap<string, SavedBuildCalculatedResult>,
+): string {
+  const lines = [
+    "Saved Build Result Match",
+    "Row\tBuild\tBuild ID\tSkill\tStat\tExpected\tCalculated\tDelta\tDiff\tStatus\tNote",
+  ]
+
+  if (rows.length === 0) {
+    lines.push("—\t—\t—\t—\t—\t—\t—\t—\t—\tPending\tNo rows")
+    return lines.join("\n")
+  }
+
+  rows.forEach((row, index) => {
+    const evaluation = evaluateSavedBuildResultRow(row, resultByBuildId)
+
+    lines.push([
+      `${index + 1}`,
+      formatSavedBuildResultDebugValue(buildNameById.get(row.buildId) ?? ""),
+      formatSavedBuildResultDebugValue(row.buildId),
+      formatSavedBuildResultDebugValue(row.skillName),
+      getSavedBuildComparisonModeLabel(row.mode),
+      formatSavedBuildResultDebugValue(row.expectedValue),
+      formatComparisonNumber(evaluation.calculatedValue),
+      formatSignedComparisonNumber(evaluation.delta),
+      formatComparisonPercent(evaluation.percentDifference),
+      getSavedBuildResultStatusLabel(evaluation.status),
+      formatSavedBuildResultDebugValue(evaluation.note),
+    ].join("\t"))
+  })
+
+  return lines.join("\n")
 }
 
 function evaluateSavedBuildResultRow(
@@ -1182,6 +1227,31 @@ function SavedBuildResultComparisonSection({
   savedBuildProfiles: StoredBuildProfile[]
   resultByBuildId: ReadonlyMap<string, SavedBuildCalculatedResult>
 }) {
+  const [copyFeedback, setCopyFeedback] = useState<"idle" | "copied" | "failed">("idle")
+  const debugBlockRef = useRef<HTMLTextAreaElement | null>(null)
+  const buildNameById = useMemo(
+    () => new Map(savedBuildProfiles.map((profile) => [profile.id, profile.name])),
+    [savedBuildProfiles],
+  )
+  const debugBlockText = useMemo(
+    () => buildSavedBuildResultDebugBlock(rows, buildNameById, resultByBuildId),
+    [rows, buildNameById, resultByBuildId],
+  )
+
+  useEffect(() => {
+    if (copyFeedback === "idle") {
+      return
+    }
+
+    const timeoutId = window.setTimeout(() => {
+      setCopyFeedback("idle")
+    }, 2200)
+
+    return () => {
+      window.clearTimeout(timeoutId)
+    }
+  }, [copyFeedback])
+
   const updateRow = (rowId: string, patch: Partial<SavedBuildResultTableRow>) => {
     setRows((current) => current.map((row) => row.id === rowId ? { ...row, ...patch } : row))
   }
@@ -1208,6 +1278,40 @@ function SavedBuildResultComparisonSection({
     setRows((current) => [...current, nextRow])
   }
 
+  const handleCopyBlock = async () => {
+    const textarea = debugBlockRef.current
+    textarea?.focus()
+    textarea?.select()
+
+    let didCopy = false
+
+    try {
+      if (typeof navigator !== "undefined" && navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(debugBlockText)
+        didCopy = true
+      }
+    } catch {
+      didCopy = false
+    }
+
+    if (!didCopy && typeof document !== "undefined") {
+      didCopy = document.execCommand("copy")
+    }
+
+    setCopyFeedback(didCopy ? "copied" : "failed")
+  }
+
+  const copyButtonClass = copyFeedback === "copied"
+    ? "rounded-lg border border-emerald-500/50 bg-emerald-500/10 px-2.5 py-1.5 text-xs font-semibold text-emerald-100 transition"
+    : copyFeedback === "failed"
+      ? "rounded-lg border border-amber-500/50 bg-amber-500/10 px-2.5 py-1.5 text-xs font-semibold text-amber-100 transition"
+      : compactButtonClass
+  const copyButtonLabel = copyFeedback === "copied"
+    ? "Copied"
+    : copyFeedback === "failed"
+      ? "Press Ctrl/Cmd+C"
+      : "Copy Block"
+
   return (
     <section className={panelClass}>
       <div className="flex flex-wrap items-start justify-between gap-3 border-b border-slate-800/80 px-5 py-4 sm:px-6">
@@ -1221,14 +1325,24 @@ function SavedBuildResultComparisonSection({
           </div>
         </div>
 
-        <button
-          type="button"
-          onClick={addRow}
-          className={compactPrimaryButtonClass}
-          disabled={savedBuildProfiles.length === 0}
-        >
-          Add Row
-        </button>
+        <div className="flex flex-wrap items-center gap-2">
+          <button
+            type="button"
+            onClick={handleCopyBlock}
+            className={copyButtonClass}
+          >
+            {copyButtonLabel}
+          </button>
+
+          <button
+            type="button"
+            onClick={addRow}
+            className={compactPrimaryButtonClass}
+            disabled={savedBuildProfiles.length === 0}
+          >
+            Add Row
+          </button>
+        </div>
       </div>
 
       <div className="p-4 sm:p-5">
@@ -1343,6 +1457,26 @@ function SavedBuildResultComparisonSection({
             </table>
           </div>
         )}
+
+        <div className="mt-4">
+          <div className="mb-2 flex flex-wrap items-start justify-between gap-2">
+            <div>
+              <div className="text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500">Debug Copy Block</div>
+              <div className="mt-1 text-xs leading-5 text-slate-400">
+                Click into the block to select everything, or use Copy Block. Build IDs are included to make pasted debug reports more useful.
+              </div>
+            </div>
+          </div>
+
+          <textarea
+            ref={debugBlockRef}
+            readOnly
+            spellCheck={false}
+            value={debugBlockText}
+            onFocus={(event) => event.currentTarget.select()}
+            className={`${textareaClass} min-h-[10rem] text-[11px] leading-5`}
+          />
+        </div>
       </div>
     </section>
   )
