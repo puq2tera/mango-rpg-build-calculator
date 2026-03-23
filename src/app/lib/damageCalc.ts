@@ -2,7 +2,7 @@ import stat_data from "@/app/data/stat_data"
 import { getThreatMultiplier } from "@/app/lib/threat"
 
 export const DAMAGE_CALC_STORAGE_KEY = "DamageCalcState"
-const DAMAGE_CALC_SCHEMA_VERSION = 2
+const DAMAGE_CALC_SCHEMA_VERSION = 3
 export const DAMAGE_CALC_CUSTOM_SKILL_SCALING_CUSTOM_SOURCE = "Custom"
 
 const dynamicSkillScalingSourceGroups = {
@@ -47,6 +47,7 @@ export type DamageCalcInputs = {
   skillPen: number
   skillCritChance: number
   threatDef: number
+  skillThreat: number
   armorIgnore: number
   resIgnore: number
   dot: number
@@ -87,6 +88,35 @@ export type DamageCalcResult = {
   threatCrit: number
   threatMaxcrit: number
   threatAverage: number
+  threatBreakdown: ThreatBreakdownResult
+}
+
+export type ThreatOutcomeBreakdown = {
+  damageThreat: number
+  flatThreat: number
+  combinedBaseThreat: number
+  afterSkillThreat: number
+  finalThreat: number
+}
+
+export type ThreatAverageBreakdown = {
+  nonCritWeight: number
+  critWeight: number
+  maxCritWeight: number
+  finalThreat: number
+}
+
+export type ThreatBreakdownResult = {
+  skillThreatPercent: number
+  skillThreatMultiplier: number
+  totalThreatMultiplier: number
+  flatThreatBase: number
+  flatThreatCritMultiplier: number
+  overdriveMultiplier: number
+  nonCrit: ThreatOutcomeBreakdown
+  crit: ThreatOutcomeBreakdown
+  maxcrit: ThreatOutcomeBreakdown
+  average: ThreatAverageBreakdown
 }
 
 export type PlayerDamageReductionResult = {
@@ -109,6 +139,7 @@ export const defaultDamageCalcInputs: DamageCalcInputs = {
   skillPen: 0,
   skillCritChance: 0,
   threatDef: 0,
+  skillThreat: 0,
   armorIgnore: 0,
   resIgnore: 0,
   dot: 0,
@@ -384,7 +415,10 @@ function buildDamageContext(stats: Record<string, number>, state: DamageCalcStat
 
   const armorBlock = Math.floor((inputs.enemyArmor ?? 0) * toRemainingPercent(inputs.armorIgnore))
   const armorBreak = Math.floor(((stats["ATK"] ?? 0) + (stats["DEF"] ?? 0) + (stats["MATK"] ?? 0) + (stats["HEAL"] ?? 0)) / 4) + (stats["Armor Strike"] ?? 0)
-  const mitigated = Math.max(0, Math.floor(base - (armorBlock - armorBreak)))
+  // Only deal dmg if the skill itself has a dmg%
+  const mitigated = base <= 0
+    ? 0
+    : Math.max(0, Math.floor(base - (armorBlock - armorBreak)))
 
   return {
     stats,
@@ -427,18 +461,44 @@ function finalizeDamageResult(nonCrit: number, context: NormalizedDamageContext)
   const dotNonCrit = Math.floor(nonCrit * dotMult)
   const dotCrit = Math.floor(crit * dotMult)
 
-  const threatBase = Math.floor((stats["DEF"] ?? 0) * ((inputs.threatDef ?? 0) / 100))
-  const threatWithOffenseScaling = applyThreatOffenseMultipliers(
-    threatBase,
+  const flatThreatBase = Math.floor((stats["DEF"] ?? 0) * ((inputs.threatDef ?? 0) / 100))
+  const flatThreatWithOffenseScaling = applyThreatOffenseMultipliers(
+    flatThreatBase,
     stats,
     element,
     penElement,
     skillType,
     inputs.skillPen ?? 0,
   )
-  const threatNonCrit = Math.floor(threatWithOffenseScaling * getThreatMultiplier(stats))
-  const threatCrit = Math.floor(threatNonCrit * threatCritDamageMultiplier)
-  const threatMaxcrit = Math.floor(threatCrit * ((stats["Overdrive%"] ?? 0) / 100))
+  const totalThreatMultiplier = getThreatMultiplier(stats)
+  const skillThreatMultiplier = Math.max(0, toMult(inputs.skillThreat ?? 0))
+  const overdriveMultiplier = Math.max(0, (stats["Overdrive%"] ?? 0) / 100)
+  const flatThreatCrit = Math.floor(flatThreatWithOffenseScaling * threatCritDamageMultiplier)
+  const flatThreatMaxcrit = Math.floor(flatThreatCrit * overdriveMultiplier)
+
+  const buildThreatOutcome = (
+    damageThreat: number,
+    flatThreat: number,
+  ): ThreatOutcomeBreakdown => {
+    const combinedBaseThreat = damageThreat + flatThreat
+    const afterSkillThreat = Math.floor(combinedBaseThreat * skillThreatMultiplier)
+    const finalThreat = Math.floor(afterSkillThreat * totalThreatMultiplier)
+
+    return {
+      damageThreat,
+      flatThreat,
+      combinedBaseThreat,
+      afterSkillThreat,
+      finalThreat,
+    }
+  }
+
+  const threatNonCritBreakdown = buildThreatOutcome(nonCrit, flatThreatWithOffenseScaling)
+  const threatCritBreakdown = buildThreatOutcome(crit, flatThreatCrit)
+  const threatMaxcritBreakdown = buildThreatOutcome(maxcrit, flatThreatMaxcrit)
+  const threatNonCrit = threatNonCritBreakdown.finalThreat
+  const threatCrit = threatCritBreakdown.finalThreat
+  const threatMaxcrit = threatMaxcritBreakdown.finalThreat
   const threatAverage = Math.floor(threatNonCrit * nonCritWeight + threatCrit * critWeight + threatMaxcrit * maxCritWeight)
 
   return {
@@ -452,6 +512,23 @@ function finalizeDamageResult(nonCrit: number, context: NormalizedDamageContext)
     threatCrit,
     threatMaxcrit,
     threatAverage,
+    threatBreakdown: {
+      skillThreatPercent: inputs.skillThreat ?? 0,
+      skillThreatMultiplier,
+      totalThreatMultiplier,
+      flatThreatBase: flatThreatWithOffenseScaling,
+      flatThreatCritMultiplier: threatCritDamageMultiplier,
+      overdriveMultiplier,
+      nonCrit: threatNonCritBreakdown,
+      crit: threatCritBreakdown,
+      maxcrit: threatMaxcritBreakdown,
+      average: {
+        nonCritWeight,
+        critWeight,
+        maxCritWeight,
+        finalThreat: threatAverage,
+      },
+    },
   }
 }
 

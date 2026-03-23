@@ -8,6 +8,7 @@ type AttackPresetInputKey =
   | "skillPen"
   | "skillCritChance"
   | "threatDef"
+  | "skillThreat"
   | "armorIgnore"
   | "resIgnore"
   | "dot"
@@ -19,6 +20,8 @@ type RawAttackPreset = {
   damageType: string | null
   element: string | null
   penElement: string | null
+  preserveElementSelection: boolean
+  preservePenElementSelection: boolean
   mainStat: string | null
   secondStat: string | null
   skillType: string | null
@@ -34,6 +37,8 @@ export type DamageCalcAttackPreset = {
   secondStat: string
   element: string
   penElement: string
+  preserveElementSelection: boolean
+  preservePenElementSelection: boolean
   skillType: string
   inputs: Pick<DamageCalcInputs, AttackPresetInputKey>
 }
@@ -44,6 +49,7 @@ export const attackPresetInputKeys: AttackPresetInputKey[] = [
   "skillPen",
   "skillCritChance",
   "threatDef",
+  "skillThreat",
   "armorIgnore",
   "resIgnore",
   "dot",
@@ -100,6 +106,54 @@ function toSkillPercent(value: unknown): number {
   return Math.abs(value) >= 100 ? value : value * 100
 }
 
+function parseDescriptionThreatPercent(description: string): number {
+  const percentMatch = description.match(/([+-]?\d+(?:\.\d+)?)%\s*Threat(?:\s*Generated)?/i)
+
+  if (percentMatch) {
+    return Number.parseFloat(percentMatch[1])
+  }
+
+  const multiplierMatch = description.match(/\bGenerates?\s+([+-]?\d+(?:\.\d+)?)x\s*threat\b/i)
+
+  if (!multiplierMatch) {
+    return 0
+  }
+
+  const threatMultiplier = Number.parseFloat(multiplierMatch[1])
+  return Number.isFinite(threatMultiplier) ? (threatMultiplier - 1) * 100 : 0
+}
+
+function getAttackSkillThreatPercent(
+  description: string,
+  encodedThreatPercent: unknown,
+): number {
+  const normalizedEncodedThreatPercent = toPercentValue(encodedThreatPercent)
+
+  if (Math.abs(normalizedEncodedThreatPercent) > 0.0001) {
+    return normalizedEncodedThreatPercent
+  }
+
+  return parseDescriptionThreatPercent(description)
+}
+
+function parseDescriptionThreatDefPercent(description: string): number {
+  const match = description.match(/([+-]?\d+(?:\.\d+)?)%\s+\w+\s+Threat\b/i)
+  return match ? Number.parseFloat(match[1]) : 0
+}
+
+function getAttackSkillThreatDefPercent(
+  description: string,
+  encodedThreatDefPercent: unknown,
+): number {
+  const normalizedEncodedThreatDefPercent = toSkillPercent(encodedThreatDefPercent)
+
+  if (Math.abs(normalizedEncodedThreatDefPercent) > 0.0001) {
+    return normalizedEncodedThreatDefPercent
+  }
+
+  return parseDescriptionThreatDefPercent(description)
+}
+
 function resolveHighestElement(
   stats: Record<string, number>,
   source: DynamicElementSource,
@@ -144,15 +198,15 @@ function buildPresetNote(
     parts.push(`Damage: ${preset.damageType}`)
   }
 
-  if (preset.element && isDynamicElementSource(preset.element)) {
+  if (!preset.preserveElementSelection && preset.element && isDynamicElementSource(preset.element)) {
     parts.push(`Scale: ${resolvedElement} (${preset.element})`)
-  } else if (preset.element && preset.damageType && preset.element !== preset.damageType) {
+  } else if (!preset.preserveElementSelection && preset.element && preset.damageType && preset.element !== preset.damageType) {
     parts.push(`Scale: ${resolvedElement}`)
   }
 
-  if (preset.penElement && isDynamicElementSource(preset.penElement)) {
+  if (!preset.preservePenElementSelection && preset.penElement && isDynamicElementSource(preset.penElement)) {
     parts.push(`Pen: ${resolvedPenElement} (${preset.penElement})`)
-  } else if (preset.penElement && preset.penElement !== resolvedElement) {
+  } else if (!preset.preservePenElementSelection && preset.penElement && preset.penElement !== resolvedElement) {
     parts.push(`Pen: ${resolvedPenElement}`)
   }
 
@@ -164,6 +218,10 @@ const rawAttackPresets: RawAttackPreset[] = Object.entries(skill_data)
   .map(([name, skill]) => {
     const dmg = skill.dmg_stats ?? {}
     const isThreatOnly = !dmg.dmg_element && /\bthreat\b/i.test(skill.description) && !/\bdeals?\b/i.test(skill.description)
+    const skillThreat = getAttackSkillThreatPercent(skill.description, skill.stats?.["Threat%"])
+    const threatDef = getAttackSkillThreatDefPercent(skill.description, dmg.threat)
+    const preserveElementSelection = isThreatOnly
+    const preservePenElementSelection = isThreatOnly
 
     return {
       name,
@@ -171,6 +229,8 @@ const rawAttackPresets: RawAttackPreset[] = Object.entries(skill_data)
       damageType: normalizeElementName(dmg.dmg_element),
       element: normalizeElementName(dmg.element ?? dmg.dmg_element),
       penElement: normalizeElementName(dmg.pen_element ?? dmg.dmg_element ?? dmg.element),
+      preserveElementSelection,
+      preservePenElementSelection,
       mainStat: normalizeMainStatName(dmg.stat),
       secondStat: normalizeMainStatName(dmg.stat2),
       skillType: skill.dmg_stats?.skill_type ?? "N/A",
@@ -182,7 +242,8 @@ const rawAttackPresets: RawAttackPreset[] = Object.entries(skill_data)
             : defaultDamageCalcInputs.skillCritDmg,
         skillPen: toPercentValue(dmg.skill_pen),
         skillCritChance: toPercentValue(dmg.crit_chance),
-        threatDef: isThreatOnly ? toSkillPercent(dmg.ratio) : toSkillPercent(dmg.threat),
+        threatDef,
+        skillThreat,
         armorIgnore: toPercentValue(dmg.armor_ignore ?? dmg.armor_break),
         resIgnore: toPercentValue(dmg.res_ignore),
         dot: toPercentValue(dmg.dot),
@@ -206,6 +267,8 @@ export function getDamageCalcAttackPresets(stats: Record<string, number>): Damag
       secondStat: preset.secondStat ?? defaultDamageCalcState.secondStat,
       element: resolvedElement,
       penElement: resolvedPenElement,
+      preserveElementSelection: preset.preserveElementSelection,
+      preservePenElementSelection: preset.preservePenElementSelection,
       skillType: preset.skillType ?? defaultDamageCalcState.skillType,
       inputs: preset.inputs,
     }

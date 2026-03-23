@@ -17,6 +17,8 @@ import {
   readDamageCalcState,
   type DamageCalcCustomSkillScaling,
   type DamageCalcInputs,
+  type ThreatBreakdownResult,
+  type ThreatOutcomeBreakdown,
 } from "@/app/lib/damageCalc"
 import { attackPresetInputKeys, getDamageCalcAttackPresets } from "@/app/lib/damageCalcAttackPresets"
 
@@ -26,6 +28,64 @@ const ATTACK_PRESET_LISTBOX_ID = "damage-calc-attack-presets"
 
 function normalizeSearchValue(value: string): string {
   return value.trim().toLocaleLowerCase()
+}
+
+function formatSignedPercent(value: number, maximumFractionDigits = 2): string {
+  const roundedValue = Number.isFinite(value) ? value : 0
+  return `${roundedValue >= 0 ? "+" : "-"}${Math.abs(roundedValue).toLocaleString("en-US", { maximumFractionDigits })}%`
+}
+
+function formatPercent(value: number, maximumFractionDigits = 2): string {
+  return `${value.toLocaleString("en-US", { maximumFractionDigits })}%`
+}
+
+function formatMultiplier(value: number, maximumFractionDigits = 4): string {
+  return `x${value.toLocaleString("en-US", { maximumFractionDigits })}`
+}
+
+function buildThreatOutcomeTooltip(
+  label: string,
+  breakdown: ThreatOutcomeBreakdown,
+  threatBreakdown: ThreatBreakdownResult,
+): string {
+  const lines = [
+    `${label} Threat`,
+    `Damage threat: ${breakdown.damageThreat.toLocaleString("en-US")}`,
+  ]
+
+  if (threatBreakdown.flatThreatBase > 0) {
+    lines.push(`Skill threat: ${breakdown.flatThreat.toLocaleString("en-US")}`)
+
+    if (label !== "Non-Crit") {
+      lines.push(`Skill threat crit mult: ${formatMultiplier(threatBreakdown.flatThreatCritMultiplier)}`)
+    }
+
+    if (label === "Maximized Crit") {
+      lines.push(`Overdrive mult: ${formatMultiplier(threatBreakdown.overdriveMultiplier)}`)
+    }
+  }
+
+  lines.push(`Base threat total: ${breakdown.combinedBaseThreat.toLocaleString("en-US")}`)
+  lines.push(
+    `Threat bonus: ${formatSignedPercent(threatBreakdown.skillThreatPercent)} (${formatMultiplier(threatBreakdown.skillThreatMultiplier)})`,
+  )
+  lines.push(`After threat bonus: ${breakdown.afterSkillThreat.toLocaleString("en-US")}`)
+  lines.push(
+    `Character threat modifier: ${formatPercent(threatBreakdown.totalThreatMultiplier * 100)} (${formatMultiplier(threatBreakdown.totalThreatMultiplier)})`,
+  )
+  lines.push(`Final threat: ${breakdown.finalThreat.toLocaleString("en-US")}`)
+
+  return lines.join("\n")
+}
+
+function buildThreatAverageTooltip(threatBreakdown: ThreatBreakdownResult): string {
+  return [
+    "Average Threat",
+    `Non-Crit: ${threatBreakdown.nonCrit.finalThreat.toLocaleString("en-US")} @ ${formatPercent(threatBreakdown.average.nonCritWeight * 100, 3)}`,
+    `Crit: ${threatBreakdown.crit.finalThreat.toLocaleString("en-US")} @ ${formatPercent(threatBreakdown.average.critWeight * 100, 3)}`,
+    `Maximized Crit: ${threatBreakdown.maxcrit.finalThreat.toLocaleString("en-US")} @ ${formatPercent(threatBreakdown.average.maxCritWeight * 100, 3)}`,
+    `Final average threat: ${threatBreakdown.average.finalThreat.toLocaleString("en-US")}`,
+  ].join("\n")
 }
 
 export default function DamageCalc() {
@@ -126,8 +186,11 @@ export default function DamageCalc() {
     }
   }, [])
 
-  const attackPresets = getDamageCalcAttackPresets(stats)
-  const selectedAttackPreset = attackPresets.find((entry) => entry.name === attackPreset) ?? null
+  const attackPresets = useMemo(() => getDamageCalcAttackPresets(stats), [stats])
+  const selectedAttackPreset = useMemo(
+    () => attackPresets.find((entry) => entry.name === attackPreset) ?? null,
+    [attackPreset, attackPresets],
+  )
   const learnedSkillNameSet = new Set(learnedSkillNames)
   const normalizedAttackPresetInputValue = normalizeSearchValue(attackPresetInputValue)
   const normalizedSelectedAttackPreset = normalizeSearchValue(attackPreset)
@@ -165,6 +228,44 @@ export default function DamageCalc() {
     setHighlightedAttackPresetIndex((current) => Math.min(current, filteredAttackPresets.length - 1))
   }, [filteredAttackPresets])
 
+  useEffect(() => {
+    if (!selectedAttackPreset) {
+      return
+    }
+
+    setMainStat((current) => current === selectedAttackPreset.mainStat ? current : selectedAttackPreset.mainStat)
+    setSecondStat((current) => current === selectedAttackPreset.secondStat ? current : selectedAttackPreset.secondStat)
+    if (!selectedAttackPreset.preserveElementSelection) {
+      setElement((current) => current === selectedAttackPreset.element ? current : selectedAttackPreset.element)
+    }
+    if (!selectedAttackPreset.preservePenElementSelection) {
+      setPenElement((current) => current === selectedAttackPreset.penElement ? current : selectedAttackPreset.penElement)
+    }
+    setSkillType((current) => current === selectedAttackPreset.skillType ? current : selectedAttackPreset.skillType)
+    setCustomSkillScaling((current) => (
+      current.enabled === defaultDamageCalcCustomSkillScaling.enabled
+      && current.stat === defaultDamageCalcCustomSkillScaling.stat
+      && current.percent === defaultDamageCalcCustomSkillScaling.percent
+      && current.customValue === defaultDamageCalcCustomSkillScaling.customValue
+    )
+      ? current
+      : { ...defaultDamageCalcCustomSkillScaling })
+    setInputs((current) => {
+      let hasChanges = false
+      const next = { ...current }
+
+      for (const key of attackPresetInputKeys) {
+        const presetValue = selectedAttackPreset.inputs[key]
+        if (next[key] !== presetValue) {
+          next[key] = presetValue
+          hasChanges = true
+        }
+      }
+
+      return hasChanges ? next : current
+    })
+  }, [selectedAttackPreset])
+
   const {
     nonCrit,
     crit,
@@ -176,6 +277,7 @@ export default function DamageCalc() {
     threatCrit,
     threatMaxcrit,
     threatAverage,
+    threatBreakdown,
   } = calculateDamage(stats, {
     attackPreset,
     mainStat,
@@ -238,10 +340,14 @@ export default function DamageCalc() {
     setAttackPreset(nextPreset)
     setMainStat(preset.mainStat)
     setSecondStat(preset.secondStat)
-    setElement(preset.element)
-    setPenElement(preset.penElement)
+    if (!preset.preserveElementSelection) {
+      setElement(preset.element)
+    }
+    if (!preset.preservePenElementSelection) {
+      setPenElement(preset.penElement)
+    }
     setSkillType(preset.skillType)
-    setCustomSkillScaling(defaultDamageCalcCustomSkillScaling)
+    setCustomSkillScaling({ ...defaultDamageCalcCustomSkillScaling })
     setInputs((prev) => ({ ...prev, ...preset.inputs }))
     setIsAttackPresetDropdownOpen(false)
   }
@@ -475,8 +581,11 @@ export default function DamageCalc() {
           <label className="font-semibold">Crit Chance%</label>
           <input type="number" value={inputs.skillCritChance} onChange={(e) => handleChange("skillCritChance", +e.target.value)} className="w-full p-1 border rounded" />
 
-          <label className="font-semibold">Threat Def%</label>
+          <label className="font-semibold">Skill Threat%</label>
           <input type="number" value={inputs.threatDef} onChange={(e) => handleChange("threatDef", +e.target.value)} className="w-full p-1 border rounded" />
+
+          <label className="font-semibold">Threat Bonus%</label>
+          <input type="number" value={inputs.skillThreat} onChange={(e) => handleChange("skillThreat", +e.target.value)} className="w-full p-1 border rounded" />
         </div>
 
         <div className="space-y-2">
@@ -625,10 +734,42 @@ export default function DamageCalc() {
           <h2 className="font-semibold text-lg">DOT & Threat</h2>
           <div><strong>DOT (Non-Crit):</strong> {formatNumber(dotNonCrit)}</div>
           <div><strong>DOT (Crit):</strong> {formatNumber(dotCrit)}</div>
-          <div><strong>Threat (Non-Crit):</strong> {formatNumber(threatNonCrit)}</div>
-          <div><strong>Threat (Crit):</strong> {formatNumber(threatCrit)}</div>
-          <div><strong>Threat (Maximized Crit):</strong> {formatNumber(threatMaxcrit)}</div>
-          <div><strong>Threat Avg:</strong> {formatNumber(threatAverage)}</div>
+          <div>
+            <strong>Threat (Non-Crit):</strong>{" "}
+            <span
+              title={buildThreatOutcomeTooltip("Non-Crit", threatBreakdown.nonCrit, threatBreakdown)}
+              className="cursor-help font-mono tabular-nums underline decoration-dotted underline-offset-2"
+            >
+              {formatNumber(threatNonCrit)}
+            </span>
+          </div>
+          <div>
+            <strong>Threat (Crit):</strong>{" "}
+            <span
+              title={buildThreatOutcomeTooltip("Crit", threatBreakdown.crit, threatBreakdown)}
+              className="cursor-help font-mono tabular-nums underline decoration-dotted underline-offset-2"
+            >
+              {formatNumber(threatCrit)}
+            </span>
+          </div>
+          <div>
+            <strong>Threat (Maximized Crit):</strong>{" "}
+            <span
+              title={buildThreatOutcomeTooltip("Maximized Crit", threatBreakdown.maxcrit, threatBreakdown)}
+              className="cursor-help font-mono tabular-nums underline decoration-dotted underline-offset-2"
+            >
+              {formatNumber(threatMaxcrit)}
+            </span>
+          </div>
+          <div>
+            <strong>Threat Avg:</strong>{" "}
+            <span
+              title={buildThreatAverageTooltip(threatBreakdown)}
+              className="cursor-help font-mono tabular-nums underline decoration-dotted underline-offset-2"
+            >
+              {formatNumber(threatAverage)}
+            </span>
+          </div>
         </div>
       </div>
     </div>
