@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useMemo, useRef, useState, type KeyboardEvent } from "react"
+import { useEffect, useMemo, useRef, useState, type KeyboardEvent, type ReactNode } from "react"
 import stat_data from "../data/stat_data"
 import { BUILD_SNAPSHOT_UPDATED_EVENT } from "@/app/lib/buildEvents"
 import { computeBuildStatStages, readBuildSnapshot } from "@/app/lib/buildStats"
@@ -18,8 +18,11 @@ import {
   type DamageCalcCustomSkillScaling,
   type DamageCalcInputs,
   type ThreatBreakdownResult,
-  type ThreatOutcomeBreakdown,
 } from "@/app/lib/damageCalc"
+import {
+  getDisplayedThreatBonusModifierPercent,
+  getDisplayedThreatLevelModifierPercent,
+} from "@/app/lib/threat"
 import { attackPresetInputKeys, getDamageCalcAttackPresets } from "@/app/lib/damageCalcAttackPresets"
 
 const attackPresetInputKeySet = new Set<keyof DamageCalcInputs>(attackPresetInputKeys)
@@ -43,49 +46,124 @@ function formatMultiplier(value: number, maximumFractionDigits = 4): string {
   return `x${value.toLocaleString("en-US", { maximumFractionDigits })}`
 }
 
-function buildThreatOutcomeTooltip(
-  label: string,
-  breakdown: ThreatOutcomeBreakdown,
-  threatBreakdown: ThreatBreakdownResult,
-): string {
-  const lines = [
-    `${label} Threat`,
-    `Damage threat: ${breakdown.damageThreat.toLocaleString("en-US")}`,
+type ThreatTooltipRow = {
+  label: string
+  value: string
+}
+
+type ThreatTooltipValueProps = {
+  children: ReactNode
+  title: string
+  rows: ThreatTooltipRow[]
+}
+
+function ThreatTooltipValue({ children, title, rows }: ThreatTooltipValueProps) {
+  return (
+    <span
+      tabIndex={0}
+      className="group relative inline-flex cursor-help font-mono tabular-nums underline decoration-dotted underline-offset-2 outline-none"
+    >
+      <span>{children}</span>
+      <span className="pointer-events-none invisible absolute bottom-full left-1/2 z-20 mb-2 w-max min-w-[18rem] max-w-[24rem] -translate-x-1/2 rounded-lg border border-slate-700 bg-slate-950/95 px-3 py-2 text-left text-[11px] leading-4 text-slate-100 opacity-0 shadow-[0_18px_40px_rgba(2,6,23,0.55)] transition group-hover:visible group-hover:opacity-100 group-focus-visible:visible group-focus-visible:opacity-100">
+        <span className="mb-2 block text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-300">{title}</span>
+        <span className="grid grid-cols-[max-content_max-content] gap-x-3 gap-y-1">
+          {rows.map((row, index) => (
+            <span key={`${row.label}-${index}`} className="contents">
+              <span className="text-slate-400">{row.label}</span>
+              <span className="text-right text-slate-100">{row.value}</span>
+            </span>
+          ))}
+        </span>
+      </span>
+    </span>
+  )
+}
+
+function formatTooltipStatValue(value: number, maximumFractionDigits = 2): string {
+  return value.toLocaleString("en-US", { maximumFractionDigits })
+}
+
+function buildThreatBaseRows(
+  stats: Record<string, number>,
+  inputs: DamageCalcInputs,
+  element: string,
+  penElement: string,
+): ThreatTooltipRow[] {
+  const rows: ThreatTooltipRow[] = [
+    { label: "DEF", value: formatTooltipStatValue(stats["DEF"] ?? 0, 0) },
+    { label: "Skill%", value: formatTooltipStatValue(inputs.threatDef ?? 0, 2) },
+    { label: `${element}%`, value: formatTooltipStatValue(stats[`${element}%`] ?? 0, 2) },
+    { label: `${penElement} Pen%`, value: formatTooltipStatValue(stats[`${penElement} Pen%`] ?? 0, 2) },
+    {
+      label: "Talent + Buff Threat%",
+      value: formatTooltipStatValue(getDisplayedThreatBonusModifierPercent(stats), 2),
+    },
+    {
+      label: "Tank Level Threat%",
+      value: formatTooltipStatValue(getDisplayedThreatLevelModifierPercent(stats), 2),
+    },
   ]
 
-  if (threatBreakdown.flatThreatBase > 0) {
-    lines.push(`Skill threat: ${breakdown.flatThreat.toLocaleString("en-US")}`)
+  if (Math.abs(inputs.skillThreat ?? 0) > 0.0001) {
+    rows.push({ label: "Threat Bonus%", value: formatTooltipStatValue(inputs.skillThreat, 2) })
+  }
 
-    if (label !== "Non-Crit") {
-      lines.push(`Skill threat crit mult: ${formatMultiplier(threatBreakdown.flatThreatCritMultiplier)}`)
-    }
+  if (Math.abs(inputs.skillPen ?? 0) > 0.0001) {
+    rows.push({ label: "Skill Pen%", value: formatTooltipStatValue(inputs.skillPen, 2) })
+  }
 
-    if (label === "Maximized Crit") {
-      lines.push(`Overdrive mult: ${formatMultiplier(threatBreakdown.overdriveMultiplier)}`)
+  if (Math.abs(stats[`${element} xDmg%`] ?? 0) > 0.0001) {
+    rows.push({ label: `${element} xDmg%`, value: formatTooltipStatValue(stats[`${element} xDmg%`] ?? 0, 2) })
+  }
+
+  return rows
+}
+
+function buildThreatOutcomeRows(
+  label: string,
+  stats: Record<string, number>,
+  inputs: DamageCalcInputs,
+  element: string,
+  penElement: string,
+): ThreatTooltipRow[] {
+  const rows = buildThreatBaseRows(stats, inputs, element, penElement)
+
+  if (label !== "Non-Crit") {
+    rows.push({ label: "Crit DMG%", value: formatTooltipStatValue(stats["Crit DMG%"] ?? 0, 2) })
+
+    if (Math.abs(inputs.skillCritDmg ?? 0) > 0.0001) {
+      rows.push({ label: "Skill Crit DMG%", value: formatTooltipStatValue(inputs.skillCritDmg, 2) })
     }
   }
 
-  lines.push(`Base threat total: ${breakdown.combinedBaseThreat.toLocaleString("en-US")}`)
-  lines.push(
-    `Threat bonus: ${formatSignedPercent(threatBreakdown.skillThreatPercent)} (${formatMultiplier(threatBreakdown.skillThreatMultiplier)})`,
-  )
-  lines.push(`After threat bonus: ${breakdown.afterSkillThreat.toLocaleString("en-US")}`)
-  lines.push(
-    `Character threat modifier: ${formatPercent(threatBreakdown.totalThreatMultiplier * 100)} (${formatMultiplier(threatBreakdown.totalThreatMultiplier)})`,
-  )
-  lines.push(`Final threat: ${breakdown.finalThreat.toLocaleString("en-US")}`)
+  if (label === "Maximized Crit") {
+    rows.push({ label: "Overdrive", value: formatMultiplier((stats["Overdrive%"] ?? 0) / 100, 10) })
+  }
 
-  return lines.join("\n")
+  return rows
 }
 
-function buildThreatAverageTooltip(threatBreakdown: ThreatBreakdownResult): string {
-  return [
-    "Average Threat",
-    `Non-Crit: ${threatBreakdown.nonCrit.finalThreat.toLocaleString("en-US")} @ ${formatPercent(threatBreakdown.average.nonCritWeight * 100, 3)}`,
-    `Crit: ${threatBreakdown.crit.finalThreat.toLocaleString("en-US")} @ ${formatPercent(threatBreakdown.average.critWeight * 100, 3)}`,
-    `Maximized Crit: ${threatBreakdown.maxcrit.finalThreat.toLocaleString("en-US")} @ ${formatPercent(threatBreakdown.average.maxCritWeight * 100, 3)}`,
-    `Final average threat: ${threatBreakdown.average.finalThreat.toLocaleString("en-US")}`,
-  ].join("\n")
+function buildThreatAverageRows(
+  stats: Record<string, number>,
+  inputs: DamageCalcInputs,
+  element: string,
+  penElement: string,
+  threatBreakdown: ThreatBreakdownResult,
+): ThreatTooltipRow[] {
+  const rows = buildThreatBaseRows(stats, inputs, element, penElement)
+
+  rows.push({ label: "Crit DMG%", value: formatTooltipStatValue(stats["Crit DMG%"] ?? 0, 2) })
+
+  if (Math.abs(inputs.skillCritDmg ?? 0) > 0.0001) {
+    rows.push({ label: "Skill Crit DMG%", value: formatTooltipStatValue(inputs.skillCritDmg, 2) })
+  }
+
+  rows.push({ label: "Overdrive", value: formatMultiplier((stats["Overdrive%"] ?? 0) / 100, 10) })
+  rows.push({ label: "Non-Crit Weight", value: formatPercent(threatBreakdown.average.nonCritWeight * 100, 3) })
+  rows.push({ label: "Crit Weight", value: formatPercent(threatBreakdown.average.critWeight * 100, 3) })
+  rows.push({ label: "Max Crit Weight", value: formatPercent(threatBreakdown.average.maxCritWeight * 100, 3) })
+
+  return rows
 }
 
 export default function DamageCalc() {
@@ -736,39 +814,39 @@ export default function DamageCalc() {
           <div><strong>DOT (Crit):</strong> {formatNumber(dotCrit)}</div>
           <div>
             <strong>Threat (Non-Crit):</strong>{" "}
-            <span
-              title={buildThreatOutcomeTooltip("Non-Crit", threatBreakdown.nonCrit, threatBreakdown)}
-              className="cursor-help font-mono tabular-nums underline decoration-dotted underline-offset-2"
+            <ThreatTooltipValue
+              title="Non-Crit Threat Inputs"
+              rows={buildThreatOutcomeRows("Non-Crit", stats, inputs, element, penElement)}
             >
               {formatNumber(threatNonCrit)}
-            </span>
+            </ThreatTooltipValue>
           </div>
           <div>
             <strong>Threat (Crit):</strong>{" "}
-            <span
-              title={buildThreatOutcomeTooltip("Crit", threatBreakdown.crit, threatBreakdown)}
-              className="cursor-help font-mono tabular-nums underline decoration-dotted underline-offset-2"
+            <ThreatTooltipValue
+              title="Crit Threat Inputs"
+              rows={buildThreatOutcomeRows("Crit", stats, inputs, element, penElement)}
             >
               {formatNumber(threatCrit)}
-            </span>
+            </ThreatTooltipValue>
           </div>
           <div>
             <strong>Threat (Maximized Crit):</strong>{" "}
-            <span
-              title={buildThreatOutcomeTooltip("Maximized Crit", threatBreakdown.maxcrit, threatBreakdown)}
-              className="cursor-help font-mono tabular-nums underline decoration-dotted underline-offset-2"
+            <ThreatTooltipValue
+              title="Maximized Crit Threat Inputs"
+              rows={buildThreatOutcomeRows("Maximized Crit", stats, inputs, element, penElement)}
             >
               {formatNumber(threatMaxcrit)}
-            </span>
+            </ThreatTooltipValue>
           </div>
           <div>
             <strong>Threat Avg:</strong>{" "}
-            <span
-              title={buildThreatAverageTooltip(threatBreakdown)}
-              className="cursor-help font-mono tabular-nums underline decoration-dotted underline-offset-2"
+            <ThreatTooltipValue
+              title="Average Threat Inputs"
+              rows={buildThreatAverageRows(stats, inputs, element, penElement, threatBreakdown)}
             >
               {formatNumber(threatAverage)}
-            </span>
+            </ThreatTooltipValue>
           </div>
         </div>
       </div>

@@ -570,18 +570,15 @@ function computeLevelStats(snapshot: BuildSnapshot): Record<string, number> {
     + (healerLevels * stat_data.ClassMainStatValues.healer.MP)
 
   statsLevels.Focus = 100 + (warriorLevels * stat_data.ClassMainStatValues.warrior.Focus)
-  // TODO: Verify that changing level based threat gaing from 10-2 to 5-1 is accurate
-  const threatLevelBonus = tankLevels >= Math.max(...Object.values(snapshot.selectedLevels), 0) ? tankLevels * 5 : tankLevels
-  statsLevels[THREAT_LEVELS_STAT] = threatLevelBonus
-  statsLevels[THREAT_BASE_STAT] = 100 + threatLevelBonus
+  const threatLevelBonus = tankLevels >= Math.max(...Object.values(snapshot.selectedLevels), 0) ? 10 : 2
+  statsLevels[THREAT_LEVELS_STAT] = tankLevels
+  statsLevels[THREAT_BASE_STAT] = 100 + (tankLevels * threatLevelBonus)
 
   for (const stat of stat_data.Mainstats) {
     const trainingPoints = snapshot.selectedTraining[stat] ?? 0
 
     statsLevels[stat] = 5
       + (snapshot.selectedStatPoints[stat] ?? 0)
-      // `xtraining` reports `+321` for 80 points, so training contributes
-      // a one-time base +1 in addition to the +4 per spent point.
       + getMainStatTrainingGain(trainingPoints)
       + (mainstatLevelGains[stat] ?? 0)
   }

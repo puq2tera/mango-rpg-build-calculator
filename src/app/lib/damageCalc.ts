@@ -390,7 +390,6 @@ function applyThreatOffenseMultipliers(
   result = Math.floor(result * toMult((stats[`${penElement} Pen%`] ?? 0) + skillPen))
   result = Math.floor(result * toMult(stats[`${element} xDmg%`]))
   result = Math.floor(result * toMult(getGlobalSkillTypeDamageBonus(stats, skillType)))
-  result = Math.floor(result * toMult(stats["Dmg%"]))
   return result
 }
 
@@ -431,7 +430,11 @@ function buildDamageContext(stats: Record<string, number>, state: DamageCalcStat
   }
 }
 
-function finalizeDamageResult(nonCrit: number, context: NormalizedDamageContext): DamageCalcResult {
+function finalizeDamageResult(
+  nonCrit: number,
+  threatDamageNonCrit: number,
+  context: NormalizedDamageContext,
+): DamageCalcResult {
   const { stats, element, penElement, skillType, inputs } = context
   const skillTypeCritDamageBonus = getConvertedSkillTypeCritDamageBonus(stats, skillType)
     + (stat_data.Elemental.includes(element) ? (stats["Elemental Crit DMG%"] ?? 0) : 0)
@@ -439,11 +442,12 @@ function finalizeDamageResult(nonCrit: number, context: NormalizedDamageContext)
   const skillTypeCritDamageMultiplier = toMult(getGlobalSkillTypeCritDamageBonus(stats, skillType))
   const baseCritDamageBonus = (stats["Crit DMG%"] ?? 0) + skillTypeCritDamageBonus
   const damageCritDamageMultiplier = Math.max(0, (baseCritDamageBonus / 100) * toMult(inputs.skillCritDmg ?? 0))
-  // Threat skills line up with combat logs as base 1x threat plus crit-damage bonus.
-  const threatCritDamageMultiplier = Math.max(0, (1 + damageCritDamageMultiplier) * skillTypeCritDamageMultiplier)
+  const threatCritDamageMultiplier = Math.max(0, damageCritDamageMultiplier * skillTypeCritDamageMultiplier)
 
   const crit = Math.floor(Math.floor(nonCrit * damageCritDamageMultiplier) * skillTypeCritDamageMultiplier)
   const maxcrit = Math.floor(crit * ((stats["Overdrive%"] ?? 0) / 100))
+  const threatDamageCrit = Math.floor(Math.floor(threatDamageNonCrit * damageCritDamageMultiplier) * skillTypeCritDamageMultiplier)
+  const threatDamageMaxcrit = Math.floor(threatDamageCrit * ((stats["Overdrive%"] ?? 0) / 100))
 
   const skillCritChance = getTotalStatValue(stats, skillCritChanceStatsBySkillType[skillType] ?? [])
   const totalCritChance =
@@ -493,9 +497,9 @@ function finalizeDamageResult(nonCrit: number, context: NormalizedDamageContext)
     }
   }
 
-  const threatNonCritBreakdown = buildThreatOutcome(nonCrit, flatThreatWithOffenseScaling)
-  const threatCritBreakdown = buildThreatOutcome(crit, flatThreatCrit)
-  const threatMaxcritBreakdown = buildThreatOutcome(maxcrit, flatThreatMaxcrit)
+  const threatNonCritBreakdown = buildThreatOutcome(threatDamageNonCrit, flatThreatWithOffenseScaling)
+  const threatCritBreakdown = buildThreatOutcome(threatDamageCrit, flatThreatCrit)
+  const threatMaxcritBreakdown = buildThreatOutcome(threatDamageMaxcrit, flatThreatMaxcrit)
   const threatNonCrit = threatNonCritBreakdown.finalThreat
   const threatCrit = threatCritBreakdown.finalThreat
   const threatMaxcrit = threatMaxcritBreakdown.finalThreat
@@ -536,17 +540,19 @@ export function calculateDamage(stats: Record<string, number>, state: DamageCalc
   const context = buildDamageContext(stats, state)
   const { stats: resolvedStats, element, penElement, skillType, inputs, mitigated } = context
 
-  let dmg = mitigated
-  dmg = Math.floor(dmg * toMult(getElementDamageBonus(resolvedStats, element, skillType)))
-  dmg = Math.floor(dmg * toMult(resolvedStats[`${element} xDmg%`]))
+  let threatDmg = mitigated
+  threatDmg = Math.floor(threatDmg * toMult(getElementDamageBonus(resolvedStats, element, skillType)))
+  threatDmg = Math.floor(threatDmg * toMult(resolvedStats[`${element} xDmg%`]))
   const effectiveEnemyRes = (inputs.enemyRes ?? 0) * toRemainingPercent(inputs.resIgnore)
   const totalPenBonus = ((resolvedStats[`${penElement} Pen%`] ?? 0) + (inputs.skillPen ?? 0)) / 100
   const penResMult = Math.max(0, 1 + totalPenBonus - (effectiveEnemyRes / 100))
-  dmg = Math.floor(dmg * penResMult)
-  dmg = Math.floor(dmg * toMult(getGlobalSkillTypeDamageBonus(resolvedStats, skillType)))
+  threatDmg = Math.floor(threatDmg * penResMult)
+  threatDmg = Math.floor(threatDmg * toMult(getGlobalSkillTypeDamageBonus(resolvedStats, skillType)))
+
+  let dmg = threatDmg
   dmg = Math.floor(dmg * toMult(resolvedStats["Dmg%"]))
 
-  return finalizeDamageResult(Math.max(0, dmg), context)
+  return finalizeDamageResult(Math.max(0, dmg), Math.max(0, threatDmg), context)
 }
 
 export function formatSignedDamageDelta(value: number | null): string {
