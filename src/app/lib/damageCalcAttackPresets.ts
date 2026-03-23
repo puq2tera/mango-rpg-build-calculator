@@ -106,54 +106,6 @@ function toSkillPercent(value: unknown): number {
   return Math.abs(value) >= 100 ? value : value * 100
 }
 
-function parseDescriptionThreatPercent(description: string): number {
-  const percentMatch = description.match(/([+-]?\d+(?:\.\d+)?)%\s*Threat(?:\s*Generated)?/i)
-
-  if (percentMatch) {
-    return Number.parseFloat(percentMatch[1])
-  }
-
-  const multiplierMatch = description.match(/\bGenerates?\s+([+-]?\d+(?:\.\d+)?)x\s*threat\b/i)
-
-  if (!multiplierMatch) {
-    return 0
-  }
-
-  const threatMultiplier = Number.parseFloat(multiplierMatch[1])
-  return Number.isFinite(threatMultiplier) ? (threatMultiplier - 1) * 100 : 0
-}
-
-function getAttackSkillThreatPercent(
-  description: string,
-  encodedThreatPercent: unknown,
-): number {
-  const normalizedEncodedThreatPercent = toPercentValue(encodedThreatPercent)
-
-  if (Math.abs(normalizedEncodedThreatPercent) > 0.0001) {
-    return normalizedEncodedThreatPercent
-  }
-
-  return parseDescriptionThreatPercent(description)
-}
-
-function parseDescriptionThreatDefPercent(description: string): number {
-  const match = description.match(/([+-]?\d+(?:\.\d+)?)%\s+\w+\s+Threat\b/i)
-  return match ? Number.parseFloat(match[1]) : 0
-}
-
-function getAttackSkillThreatDefPercent(
-  description: string,
-  encodedThreatDefPercent: unknown,
-): number {
-  const normalizedEncodedThreatDefPercent = toSkillPercent(encodedThreatDefPercent)
-
-  if (Math.abs(normalizedEncodedThreatDefPercent) > 0.0001) {
-    return normalizedEncodedThreatDefPercent
-  }
-
-  return parseDescriptionThreatDefPercent(description)
-}
-
 function resolveHighestElement(
   stats: Record<string, number>,
   source: DynamicElementSource,
@@ -218,8 +170,6 @@ const rawAttackPresets: RawAttackPreset[] = Object.entries(skill_data)
   .map(([name, skill]) => {
     const dmg = skill.dmg_stats ?? {}
     const isThreatOnly = !dmg.dmg_element && /\bthreat\b/i.test(skill.description) && !/\bdeals?\b/i.test(skill.description)
-    const skillThreat = getAttackSkillThreatPercent(skill.description, skill.stats?.["Threat%"])
-    const threatDef = getAttackSkillThreatDefPercent(skill.description, dmg.threat)
     const preserveElementSelection = isThreatOnly
     const preservePenElementSelection = isThreatOnly
 
@@ -242,8 +192,8 @@ const rawAttackPresets: RawAttackPreset[] = Object.entries(skill_data)
             : defaultDamageCalcInputs.skillCritDmg,
         skillPen: toPercentValue(dmg.skill_pen),
         skillCritChance: toPercentValue(dmg.crit_chance),
-        threatDef,
-        skillThreat,
+        threatDef: isThreatOnly ? toSkillPercent(dmg.ratio) : toSkillPercent(dmg.threat),
+        skillThreat: defaultDamageCalcInputs.skillThreat,
         armorIgnore: toPercentValue(dmg.armor_ignore ?? dmg.armor_break),
         resIgnore: toPercentValue(dmg.res_ignore),
         dot: toPercentValue(dmg.dot),
