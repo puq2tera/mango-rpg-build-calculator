@@ -376,7 +376,7 @@ const skill_data: Record<string, Skill> = {
             caster_levels: 0,
             healer_levels: 0
         },
-        description: "[ Blunt ] Deal 65% ATK DMG, 150% DEF Threat",
+        description: "[ Blunt ] Deal 65% ATK DMG, 150% DEF Threat (NOTE: Threat is currently inaccurate)",
         dmg_stats: { dmg_element: "Blunt", element: "Void", pen_element: "Void", stat: "ATK", ratio: 0.65, threat: 1.5 },
 },
 "Blunt Sunder 1": {...defaultSkill,

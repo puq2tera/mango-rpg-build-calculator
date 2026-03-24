@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useMemo, useRef, useState, type KeyboardEvent, type ReactNode } from "react"
+import { useEffect, useMemo, useRef, useState, type InputHTMLAttributes, type KeyboardEvent, type ReactNode } from "react"
 import stat_data from "../data/stat_data"
 import { BUILD_SNAPSHOT_UPDATED_EVENT } from "@/app/lib/buildEvents"
 import { computeBuildStatStages, readBuildSnapshot } from "@/app/lib/buildStats"
@@ -54,6 +54,101 @@ type TooltipValueProps = {
   children: ReactNode
   title: string
   rows: TooltipRow[]
+}
+
+type EditableNumberInputProps = Omit<InputHTMLAttributes<HTMLInputElement>, "type" | "value" | "onChange"> & {
+  value: number
+  onValueChange: (value: number) => void
+  onRawChange?: (value: string) => void
+}
+
+const transientEditableNumberValues = new Set(["", "-", ".", "-."])
+
+function parseEditableNumber(value: string): number | null {
+  const trimmed = value.trim()
+  if (transientEditableNumberValues.has(trimmed)) {
+    return null
+  }
+
+  const parsed = Number(trimmed)
+  return Number.isFinite(parsed) ? parsed : null
+}
+
+function areEditableNumbersEqual(left: number, right: number): boolean {
+  return left === right || (left === 0 && right === 0)
+}
+
+function formatEditableNumberValue(value: number): string {
+  return Number.isFinite(value) ? String(value) : "0"
+}
+
+function EditableNumberInput({
+  value,
+  onValueChange,
+  onRawChange,
+  inputMode = "decimal",
+  ...props
+}: EditableNumberInputProps) {
+  const [draftValue, setDraftValue] = useState(() => formatEditableNumberValue(value))
+  const draftValueRef = useRef(draftValue)
+  const isFocusedRef = useRef(false)
+
+  const updateDraftValue = (nextValue: string) => {
+    draftValueRef.current = nextValue
+    setDraftValue(nextValue)
+  }
+
+  useEffect(() => {
+    if (!isFocusedRef.current) {
+      updateDraftValue(formatEditableNumberValue(value))
+      return
+    }
+
+    const parsedDraftValue = parseEditableNumber(draftValueRef.current)
+    if (parsedDraftValue !== null && areEditableNumbersEqual(parsedDraftValue, value)) {
+      return
+    }
+
+    updateDraftValue(formatEditableNumberValue(value))
+  }, [value])
+
+  return (
+    <input
+      {...props}
+      type="text"
+      inputMode={inputMode}
+      value={draftValue}
+      onFocus={(event) => {
+        isFocusedRef.current = true
+        props.onFocus?.(event)
+      }}
+      onChange={(event) => {
+        const nextValue = event.target.value
+        updateDraftValue(nextValue)
+        onRawChange?.(nextValue)
+
+        const parsedValue = parseEditableNumber(nextValue)
+        if (parsedValue !== null) {
+          onValueChange(parsedValue)
+        }
+      }}
+      onBlur={(event) => {
+        isFocusedRef.current = false
+
+        const parsedValue = parseEditableNumber(draftValueRef.current)
+        if (parsedValue === null) {
+          updateDraftValue(formatEditableNumberValue(value))
+        } else {
+          updateDraftValue(formatEditableNumberValue(parsedValue))
+          if (!areEditableNumbersEqual(parsedValue, value)) {
+            onValueChange(parsedValue)
+          }
+        }
+
+        props.onBlur?.(event)
+      }}
+    />
+  )
 }
 
 function TooltipValue({ children, title, rows }: TooltipValueProps) {
@@ -458,7 +553,7 @@ export default function DamageCalc() {
     () => attackPresets.find((entry) => entry.name === attackPreset) ?? null,
     [attackPreset, attackPresets],
   )
-  const learnedSkillNameSet = new Set(learnedSkillNames)
+  const learnedSkillNameSet = useMemo(() => new Set(learnedSkillNames), [learnedSkillNames])
   const normalizedAttackPresetInputValue = normalizeSearchValue(attackPresetInputValue)
   const normalizedSelectedAttackPreset = normalizeSearchValue(attackPreset)
   const normalizedAttackPresetFilterValue =
@@ -484,7 +579,6 @@ export default function DamageCalc() {
       return searchableText.includes(normalizedAttackPresetFilterValue)
     })
   }, [attackPresets, learnedSkillNameSet, normalizedAttackPresetFilterValue, showLearnedOnly])
-  const selectedPresetHiddenByFilters = selectedAttackPreset !== null && showLearnedOnly && !learnedSkillNameSet.has(selectedAttackPreset.name)
 
   useEffect(() => {
     if (filteredAttackPresets.length === 0) {
@@ -831,41 +925,81 @@ export default function DamageCalc() {
           </select>
 
           <label className="font-semibold">Skill DMG%</label>
-          <input
-            type="number"
+          <EditableNumberInput
             value={inputs.skillDmg}
-            onChange={(e) => handleChange("skillDmg", +e.target.value)}
+            onRawChange={clearAttackPresetSelection}
+            onValueChange={(value) => handleChange("skillDmg", value)}
             disabled={customSkillScaling.enabled}
             className="w-full p-1 border rounded disabled:cursor-not-allowed disabled:opacity-60"
           />
 
           <label className="font-semibold">Skill Crit DMG%</label>
-          <input type="number" value={inputs.skillCritDmg} onChange={(e) => handleChange("skillCritDmg", +e.target.value)} className="w-full p-1 border rounded" />
+          <EditableNumberInput
+            value={inputs.skillCritDmg}
+            onRawChange={clearAttackPresetSelection}
+            onValueChange={(value) => handleChange("skillCritDmg", value)}
+            className="w-full p-1 border rounded"
+          />
         </div>
 
         <div className="space-y-2">
           <label className="font-semibold">Skill Pen%</label>
-          <input type="number" value={inputs.skillPen} onChange={(e) => handleChange("skillPen", +e.target.value)} className="w-full p-1 border rounded" />
+          <EditableNumberInput
+            value={inputs.skillPen}
+            onRawChange={clearAttackPresetSelection}
+            onValueChange={(value) => handleChange("skillPen", value)}
+            className="w-full p-1 border rounded"
+          />
 
           <label className="font-semibold">Crit Chance%</label>
-          <input type="number" value={inputs.skillCritChance} onChange={(e) => handleChange("skillCritChance", +e.target.value)} className="w-full p-1 border rounded" />
+          <EditableNumberInput
+            value={inputs.skillCritChance}
+            onRawChange={clearAttackPresetSelection}
+            onValueChange={(value) => handleChange("skillCritChance", value)}
+            className="w-full p-1 border rounded"
+          />
 
           <label className="font-semibold">Skill Threat%</label>
-          <input type="number" value={inputs.threatDef} onChange={(e) => handleChange("threatDef", +e.target.value)} className="w-full p-1 border rounded" />
+          <EditableNumberInput
+            value={inputs.threatDef}
+            onRawChange={clearAttackPresetSelection}
+            onValueChange={(value) => handleChange("threatDef", value)}
+            className="w-full p-1 border rounded"
+          />
 
           <label className="font-semibold">Threat Bonus%</label>
-          <input type="number" value={inputs.skillThreat} onChange={(e) => handleChange("skillThreat", +e.target.value)} className="w-full p-1 border rounded" />
+          <EditableNumberInput
+            value={inputs.skillThreat}
+            onRawChange={clearAttackPresetSelection}
+            onValueChange={(value) => handleChange("skillThreat", value)}
+            className="w-full p-1 border rounded"
+          />
         </div>
 
         <div className="space-y-2">
           <label className="font-semibold">Armor Ignore%</label>
-          <input type="number" value={inputs.armorIgnore} onChange={(e) => handleChange("armorIgnore", +e.target.value)} className="w-full p-1 border rounded" />
+          <EditableNumberInput
+            value={inputs.armorIgnore}
+            onRawChange={clearAttackPresetSelection}
+            onValueChange={(value) => handleChange("armorIgnore", value)}
+            className="w-full p-1 border rounded"
+          />
 
           <label className="font-semibold">Res Ignore%</label>
-          <input type="number" value={inputs.resIgnore} onChange={(e) => handleChange("resIgnore", +e.target.value)} className="w-full p-1 border rounded" />
+          <EditableNumberInput
+            value={inputs.resIgnore}
+            onRawChange={clearAttackPresetSelection}
+            onValueChange={(value) => handleChange("resIgnore", value)}
+            className="w-full p-1 border rounded"
+          />
 
           <label className="font-semibold">DOT%</label>
-          <input type="number" value={inputs.dot} onChange={(e) => handleChange("dot", +e.target.value)} className="w-full p-1 border rounded" />
+          <EditableNumberInput
+            value={inputs.dot}
+            onRawChange={clearAttackPresetSelection}
+            onValueChange={(value) => handleChange("dot", value)}
+            className="w-full p-1 border rounded"
+          />
         </div>
 
         <div className="space-y-2">
@@ -882,7 +1016,12 @@ export default function DamageCalc() {
           </select>
 
           <label className="font-semibold">2nd Skill DMG%</label>
-          <input type="number" value={inputs.secondSkillDmg} onChange={(e) => handleChange("secondSkillDmg", +e.target.value)} className="w-full p-1 border rounded" />
+          <EditableNumberInput
+            value={inputs.secondSkillDmg}
+            onRawChange={clearAttackPresetSelection}
+            onValueChange={(value) => handleChange("secondSkillDmg", value)}
+            className="w-full p-1 border rounded"
+          />
         </div>
 
         <div className="space-y-2">
@@ -911,10 +1050,10 @@ export default function DamageCalc() {
               {customSkillScaling.stat === DAMAGE_CALC_CUSTOM_SKILL_SCALING_CUSTOM_SOURCE ? (
                 <div className="space-y-1">
                   <label className="block text-sm font-semibold">Custom Stat Value</label>
-                  <input
-                    type="number"
+                  <EditableNumberInput
                     value={customSkillScaling.customValue}
-                    onChange={(e) => handleCustomSkillScalingChange({ customValue: +e.target.value })}
+                    onRawChange={clearAttackPresetSelection}
+                    onValueChange={(value) => handleCustomSkillScalingChange({ customValue: value })}
                     className="w-full p-1 border rounded"
                   />
                 </div>
@@ -922,10 +1061,10 @@ export default function DamageCalc() {
 
               <div className="space-y-1">
                 <label className="block text-sm font-semibold">Scaling %</label>
-                <input
-                  type="number"
+                <EditableNumberInput
                   value={customSkillScaling.percent}
-                  onChange={(e) => handleCustomSkillScalingChange({ percent: +e.target.value })}
+                  onRawChange={clearAttackPresetSelection}
+                  onValueChange={(value) => handleCustomSkillScalingChange({ percent: value })}
                   className="w-full p-1 border rounded"
                 />
               </div>
@@ -951,18 +1090,34 @@ export default function DamageCalc() {
       <div className="grid grid-cols-4 gap-4 bg-slate-900/60 border rounded-lg p-4">
         <div className="space-y-1">
           <label className="font-semibold">Enemy Armor</label>
-          <input type="number" value={inputs.enemyArmor} onChange={(e) => handleChange("enemyArmor", +e.target.value)} className="w-full p-1 border rounded" />
+          <EditableNumberInput
+            value={inputs.enemyArmor}
+            onValueChange={(value) => handleChange("enemyArmor", value)}
+            className="w-full p-1 border rounded"
+          />
 
           <label className="font-semibold">Enemy Resistance</label>
-          <input type="number" value={inputs.enemyRes} onChange={(e) => handleChange("enemyRes", +e.target.value)} className="w-full p-1 border rounded" />
+          <EditableNumberInput
+            value={inputs.enemyRes}
+            onValueChange={(value) => handleChange("enemyRes", value)}
+            className="w-full p-1 border rounded"
+          />
         </div>
 
         <div className="space-y-1">
           <label className="font-semibold">Dungeon Level</label>
-          <input type="number" value={inputs.dungeonLevel} onChange={(e) => handleChange("dungeonLevel", +e.target.value)} className="w-full p-1 border rounded" />
+          <EditableNumberInput
+            value={inputs.dungeonLevel}
+            onValueChange={(value) => handleChange("dungeonLevel", value)}
+            className="w-full p-1 border rounded"
+          />
 
           <label className="font-semibold">Boss DEF Pen%</label>
-          <input type="number" value={inputs.bossDefPen} onChange={(e) => handleChange("bossDefPen", +e.target.value)} className="w-full p-1 border rounded" />
+          <EditableNumberInput
+            value={inputs.bossDefPen}
+            onValueChange={(value) => handleChange("bossDefPen", value)}
+            className="w-full p-1 border rounded"
+          />
         </div>
 
         <div className="space-y-1">
