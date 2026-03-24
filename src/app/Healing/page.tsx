@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react"
 import { computeBuildStatStages, readBuildSnapshot } from "@/app/lib/buildStats"
 import { BUILD_SNAPSHOT_UPDATED_EVENT } from "@/app/lib/buildEvents"
+import { calculateHealing } from "@/app/lib/healingCalc"
 import {
   healingBaseStats,
   healingCalcSkillPresets,
@@ -25,15 +26,13 @@ export default function HealingPage() {
   const [statSnapshot, setStatSnapshot] = useState<HealingStatSnapshot>({ effective: {}, total: {} })
   const selectedSkillPreset = healingCalcSkillPresets.find((preset) => preset.name === selectedSkill) ?? null
 
-  const calcAverageHeal = () => {
-    const baseHeal = (totalStat * (skillHealPercent / 100)) + skillFlatHeal
-    const critHeal = baseHeal * 1
-    const average = baseHeal * (1 - 1) + critHeal * 1
-    return { baseHeal, critHeal, average }
-  }
-
-  const { baseHeal, critHeal, average } = calcAverageHeal()
-  const formatHeal = (value: number) => Math.round(value).toLocaleString("en-US")
+  const { nonCrit: baseHeal, crit: critHeal, average } = calculateHealing({
+    baseStat,
+    totalStat,
+    skillHealPercent,
+    skillFlatHeal,
+  })
+  const formatHeal = (value: number) => value.toLocaleString("en-US")
 
   useEffect(() => {
     const refreshStats = () => {

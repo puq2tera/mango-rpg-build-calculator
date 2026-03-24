@@ -1484,7 +1484,7 @@ function SavedBuildResultComparisonSection({
         <div>
           <div className="text-lg font-semibold text-slate-50">Saved Build Result Match</div>
           <div className="mt-1 text-xs leading-5 text-slate-400">
-            Compare any saved build&apos;s skill damage, DOT, threat, or buff result to an expected number. Threat uses maximized crit threat.
+            Compare any saved build&apos;s skill damage, DOT, healing, threat, or buff result to an expected number. Threat uses maximized crit threat.
           </div>
           <div className="mt-1 text-[11px] leading-5 text-slate-500">
             Build, skill, stat, and expected values are saved locally so these rows can act as regression checks.
@@ -1555,6 +1555,7 @@ function SavedBuildResultComparisonSection({
                     ? getSavedBuildSkillComparisonOptions(buildResult, row.skillName)
                     : []
                   const damageComparisonOptions = comparisonOptions.filter((option) => option.source === "damage")
+                  const healingComparisonOptions = comparisonOptions.filter((option) => option.source === "healing")
                   const buffComparisonOptions = comparisonOptions.filter((option) => option.source === "buff")
                   const selectedModeValue = comparisonOptions.some((option) => option.key === row.mode)
                     ? row.mode
@@ -1619,6 +1620,15 @@ function SavedBuildResultComparisonSection({
                           {damageComparisonOptions.length > 0 ? (
                             <optgroup label="Damage">
                               {damageComparisonOptions.map((option) => (
+                                <option key={option.key} value={option.key}>
+                                  {option.label}
+                                </option>
+                              ))}
+                            </optgroup>
+                          ) : null}
+                          {healingComparisonOptions.length > 0 ? (
+                            <optgroup label="Healing">
+                              {healingComparisonOptions.map((option) => (
                                 <option key={option.key} value={option.key}>
                                   {option.label}
                                 </option>

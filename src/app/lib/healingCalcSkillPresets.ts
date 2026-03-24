@@ -12,9 +12,10 @@ export type HealingCalcSkillPreset = {
   skillHealPercent: number
   skillFlatHeal: number
   threatPercent: number
+  effectType: HealingEffectType
 }
 
-type HealingEffectType = "heal" | "tempHp" | "overheal"
+export type HealingEffectType = "heal" | "tempHp" | "overheal"
 
 type ParsedHealingEffect = {
   baseStat: HealingBaseStat
@@ -167,6 +168,7 @@ function buildHealingCalcSkillPreset(name: string, skill: Skill): HealingCalcSki
     skillHealPercent: parsedEffect.skillHealPercent,
     skillFlatHeal: parsedEffect.skillFlatHeal,
     threatPercent,
+    effectType: parsedEffect.effectType,
   }
 }
 

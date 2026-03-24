@@ -15,6 +15,12 @@ import {
   getDamageCalcAttackPresets,
   type DamageCalcAttackPreset,
 } from "@/app/lib/damageCalcAttackPresets"
+import { calculateHealing, type HealingCalcResult } from "@/app/lib/healingCalc"
+import {
+  healingCalcSkillPresets,
+  type HealingCalcSkillPreset,
+  type HealingEffectType,
+} from "@/app/lib/healingCalcSkillPresets"
 
 type SavedBuildDamageComparisonMode =
   | "nonCrit"
@@ -26,12 +32,17 @@ type SavedBuildDamageComparisonMode =
   | "dotMaxcrit"
   | "threat"
 
-export type SavedBuildComparisonMode = SavedBuildDamageComparisonMode | `buff:${string}`
+type SavedBuildHealingComparisonMode = "healNonCrit" | "healCrit" | "healAverage"
+
+export type SavedBuildComparisonMode =
+  | SavedBuildDamageComparisonMode
+  | SavedBuildHealingComparisonMode
+  | `buff:${string}`
 
 export type SavedBuildSkillComparisonOption = {
   key: SavedBuildComparisonMode
   label: string
-  source: "damage" | "buff"
+  source: "damage" | "healing" | "buff"
 }
 
 export type SavedBuildSkillOption = {
@@ -43,6 +54,7 @@ export type SavedBuildSkillOption = {
 
 export type SavedBuildSkillCalculatedResult = {
   damageResult: DamageCalcResult | null
+  healingResult: HealingCalcResult | null
   buffValues: Record<string, number>
 }
 
@@ -51,13 +63,14 @@ export type SavedBuildCalculatedResult = {
   skills: SavedBuildSkillOption[]
   skillsByName: Map<string, SavedBuildSkillOption>
   presetsByName: Map<string, DamageCalcAttackPreset>
+  healingPresetsByName: Map<string, HealingCalcSkillPreset>
   baseDamageState: ReturnType<typeof readDamageCalcState>
   snapshot: ReturnType<typeof readBuildSnapshot>
   stages: ReturnType<typeof computeBuildStatStages>
   stats: Record<string, number>
 }
 
-export const savedBuildComparisonModeOptions: Array<{
+const savedBuildDamageComparisonModeOptions: Array<{
   key: SavedBuildDamageComparisonMode
   label: string
 }> = [
@@ -71,17 +84,42 @@ export const savedBuildComparisonModeOptions: Array<{
   { key: "threat", label: "Threat" },
 ]
 
+const savedBuildHealingComparisonModeOptions: Array<{
+  key: SavedBuildHealingComparisonMode
+  label: string
+}> = [
+  { key: "healNonCrit", label: "Non-Crit" },
+  { key: "healCrit", label: "Crit" },
+  { key: "healAverage", label: "Avg" },
+]
+
+export const savedBuildComparisonModeOptions: Array<{
+  key: SavedBuildDamageComparisonMode | SavedBuildHealingComparisonMode
+  label: string
+}> = [
+  ...savedBuildDamageComparisonModeOptions,
+  ...savedBuildHealingComparisonModeOptions,
+]
+
 const savedBuildComparisonModeLabelByKey = new Map(
   savedBuildComparisonModeOptions.map((option) => [option.key, option.label]),
 )
 
 function isSavedBuildDamageComparisonMode(value: string): value is SavedBuildDamageComparisonMode {
-  return savedBuildComparisonModeLabelByKey.has(value as SavedBuildDamageComparisonMode)
+  return savedBuildDamageComparisonModeOptions.some((option) => option.key === value)
+}
+
+function isSavedBuildHealingComparisonMode(value: string): value is SavedBuildHealingComparisonMode {
+  return savedBuildHealingComparisonModeOptions.some((option) => option.key === value)
 }
 
 export function isSavedBuildComparisonMode(value: unknown): value is SavedBuildComparisonMode {
   return typeof value === "string"
-    && (isSavedBuildDamageComparisonMode(value) || (value.startsWith("buff:") && value.length > "buff:".length))
+    && (
+      isSavedBuildDamageComparisonMode(value)
+      || isSavedBuildHealingComparisonMode(value)
+      || (value.startsWith("buff:") && value.length > "buff:".length)
+    )
 }
 
 function createSavedBuildBuffComparisonMode(stat: string): SavedBuildComparisonMode {
@@ -98,9 +136,20 @@ export function getSavedBuildComparisonModeLabel(mode: SavedBuildComparisonMode)
     return buffStat
   }
 
-  return isSavedBuildDamageComparisonMode(mode)
+  return (isSavedBuildDamageComparisonMode(mode) || isSavedBuildHealingComparisonMode(mode))
     ? savedBuildComparisonModeLabelByKey.get(mode) ?? mode
     : mode
+}
+
+function getHealingEffectLabel(effectType: HealingEffectType): string {
+  switch (effectType) {
+    case "heal":
+      return "Healing"
+    case "tempHp":
+      return "Temp HP"
+    case "overheal":
+      return "Overheal"
+  }
 }
 
 function isKnownBuffResultStat(stat: unknown): stat is string {
@@ -139,25 +188,35 @@ const buffResultStatsBySkillName = new Map(
 )
 
 function buildSavedBuildSkillOptions(
-  presets: readonly DamageCalcAttackPreset[],
+  damagePresets: readonly DamageCalcAttackPreset[],
+  healingPresets: readonly HealingCalcSkillPreset[],
 ): SavedBuildSkillOption[] {
-  const presetsByName = new Map(presets.map((preset) => [preset.name, preset]))
+  const damagePresetsByName = new Map(damagePresets.map((preset) => [preset.name, preset]))
+  const healingPresetsByName = new Map(healingPresets.map((preset) => [preset.name, preset]))
 
   return Object.entries(skill_data)
     .map(([name, skill]) => {
-      const preset = presetsByName.get(name) ?? null
+      const damagePreset = damagePresetsByName.get(name) ?? null
+      const healingPreset = healingPresetsByName.get(name) ?? null
       const buffStats = buffResultStatsBySkillName.get(name) ?? []
 
-      if (!preset && buffStats.length === 0) {
+      if (!damagePreset && !healingPreset && buffStats.length === 0) {
         return null
       }
 
       const comparisonOptions: SavedBuildSkillComparisonOption[] = [
-        ...(preset
-          ? savedBuildComparisonModeOptions.map((option) => ({
+        ...(damagePreset
+          ? savedBuildDamageComparisonModeOptions.map((option) => ({
             key: option.key,
             label: option.label,
             source: "damage" as const,
+          }))
+          : []),
+        ...(healingPreset
+          ? savedBuildHealingComparisonModeOptions.map((option) => ({
+            key: option.key,
+            label: option.label,
+            source: "healing" as const,
           }))
           : []),
         ...buffStats.map((stat) => ({
@@ -167,7 +226,8 @@ function buildSavedBuildSkillOptions(
         })),
       ]
       const noteParts = [
-        preset?.note,
+        damagePreset?.note,
+        healingPreset ? `${getHealingEffectLabel(healingPreset.effectType)}: ${healingPreset.baseStat}` : null,
         buffStats.length > 0 ? `Buff: ${buffStats.join(", ")}` : null,
       ].filter((value): value is string => Boolean(value))
 
@@ -216,14 +276,15 @@ export function buildSavedBuildCalculatedResults(
     const stages = computeBuildStatStages(snapshot)
     const stats = stages.StatsDmgReady
     const baseDamageState = readDamageCalcState(storage)
-    const presets = getDamageCalcAttackPresets(stats)
-    const skills = buildSavedBuildSkillOptions(presets)
+    const damagePresets = getDamageCalcAttackPresets(stats)
+    const skills = buildSavedBuildSkillOptions(damagePresets, healingCalcSkillPresets)
 
     return {
       profile,
       skills,
       skillsByName: new Map(skills.map((skill) => [skill.name, skill])),
-      presetsByName: new Map(presets.map((preset) => [preset.name, preset])),
+      presetsByName: new Map(damagePresets.map((preset) => [preset.name, preset])),
+      healingPresetsByName: new Map(healingCalcSkillPresets.map((preset) => [preset.name, preset])),
       baseDamageState,
       snapshot,
       stages,
@@ -244,24 +305,33 @@ export function calculateSavedBuildSkillResult(
     return null
   }
 
-  const preset = build.presetsByName.get(skillName) ?? null
-  const damageResult = preset
+  const damagePreset = build.presetsByName.get(skillName) ?? null
+  const healingPreset = build.healingPresetsByName.get(skillName) ?? null
+  const damageResult = damagePreset
     ? calculateDamage(build.stats, {
       ...build.baseDamageState,
-      attackPreset: preset.name,
-      mainStat: preset.mainStat,
-      secondStat: preset.secondStat,
-      element: preset.element,
-      penElement: preset.penElement,
-      skillType: preset.skillType,
+      attackPreset: damagePreset.name,
+      mainStat: damagePreset.mainStat,
+      secondStat: damagePreset.secondStat,
+      element: damagePreset.element,
+      penElement: damagePreset.penElement,
+      skillType: damagePreset.skillType,
       customSkillScaling: {
         ...defaultDamageCalcCustomSkillScaling,
         enabled: false,
       },
       inputs: {
         ...build.baseDamageState.inputs,
-        ...preset.inputs,
+        ...damagePreset.inputs,
       },
+    })
+    : null
+  const healingResult = healingPreset
+    ? calculateHealing({
+      baseStat: healingPreset.baseStat,
+      totalStat: build.stats[healingPreset.baseStat] ?? build.stages.StatsBase[healingPreset.baseStat] ?? 0,
+      skillHealPercent: healingPreset.skillHealPercent,
+      skillFlatHeal: healingPreset.skillFlatHeal,
     })
     : null
   const buffStackOverride = options?.buffStackOverride
@@ -280,6 +350,7 @@ export function calculateSavedBuildSkillResult(
 
   return {
     damageResult,
+    healingResult,
     buffValues,
   }
 }
@@ -351,6 +422,21 @@ export function getSavedBuildCalculatedValue(
         return result.damageResult.dotMaxcrit
       case "threat":
         return result.damageResult.threatMaxcrit
+    }
+  }
+
+  if (isSavedBuildHealingComparisonMode(mode)) {
+    if (!result.healingResult) {
+      return null
+    }
+
+    switch (mode) {
+      case "healNonCrit":
+        return result.healingResult.nonCrit
+      case "healCrit":
+        return result.healingResult.crit
+      case "healAverage":
+        return result.healingResult.average
     }
   }
 
