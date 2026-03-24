@@ -11,6 +11,17 @@ export type HealingCalcInputs = {
   canCrit: boolean
 }
 
+export type HealingBreakdown = {
+  baseHealRaw: number
+  roundedBaseHeal: number
+  effectiveCritChancePercent: number
+  critMultiplier: number
+  overdriveMultiplier: number
+  nonCritWeight: number
+  critWeight: number
+  maxCritWeight: number
+}
+
 export type HealingCalcResult = {
   baseStat: HealingBaseStat
   totalStat: number
@@ -24,6 +35,7 @@ export type HealingCalcResult = {
   crit: number
   maxcrit: number
   average: number
+  breakdown: HealingBreakdown
 }
 
 function clamp(value: number, min: number, max: number): number {
@@ -40,10 +52,13 @@ export function calculateHealing({
   overdrivePercent,
   canCrit,
 }: HealingCalcInputs): HealingCalcResult {
-  const roundedHeal = Math.round((totalStat * (skillHealPercent / 100)) + skillFlatHeal)
+  const baseHealRaw = (totalStat * (skillHealPercent / 100)) + skillFlatHeal
+  const roundedHeal = Math.round(baseHealRaw)
   const normalizedCritChancePercent = Number.isFinite(critChancePercent) ? critChancePercent : 0
   const normalizedCritDamagePercent = Number.isFinite(critDamagePercent) ? critDamagePercent : 0
   const normalizedOverdrivePercent = Number.isFinite(overdrivePercent) ? overdrivePercent : 0
+  const critMultiplier = Math.max(0, normalizedCritDamagePercent / 100)
+  const overdriveMultiplier = Math.max(0, normalizedOverdrivePercent / 100)
 
   if (!canCrit) {
     return {
@@ -59,11 +74,21 @@ export function calculateHealing({
       crit: roundedHeal,
       maxcrit: roundedHeal,
       average: roundedHeal,
+      breakdown: {
+        baseHealRaw,
+        roundedBaseHeal: roundedHeal,
+        effectiveCritChancePercent: 0,
+        critMultiplier,
+        overdriveMultiplier,
+        nonCritWeight: 1,
+        critWeight: 0,
+        maxCritWeight: 0,
+      },
     }
   }
 
-  const crit = Math.floor(roundedHeal * Math.max(0, normalizedCritDamagePercent / 100))
-  const maxcrit = Math.floor(crit * Math.max(0, normalizedOverdrivePercent / 100))
+  const crit = Math.floor(roundedHeal * critMultiplier)
+  const maxcrit = Math.floor(crit * overdriveMultiplier)
   const totalCritChance = normalizedCritChancePercent / 100
   const critChance = clamp(totalCritChance, 0, 2)
   const nonCritWeight = 1 - clamp(critChance, 0, 1)
@@ -84,5 +109,15 @@ export function calculateHealing({
     crit,
     maxcrit,
     average,
+    breakdown: {
+      baseHealRaw,
+      roundedBaseHeal: roundedHeal,
+      effectiveCritChancePercent: critChance * 100,
+      critMultiplier,
+      overdriveMultiplier,
+      nonCritWeight,
+      critWeight,
+      maxCritWeight,
+    },
   }
 }

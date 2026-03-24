@@ -1,9 +1,9 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useState, type ReactNode } from "react"
 import { computeBuildStatStages, readBuildSnapshot } from "@/app/lib/buildStats"
 import { BUILD_SNAPSHOT_UPDATED_EVENT } from "@/app/lib/buildEvents"
-import { calculateHealing } from "@/app/lib/healingCalc"
+import { calculateHealing, type HealingCalcResult } from "@/app/lib/healingCalc"
 import {
   healingBaseStats,
   healingCalcSkillPresets,
@@ -13,6 +13,129 @@ import {
 type HealingStatSnapshot = {
   effective: Record<string, number>
   total: Record<string, number>
+}
+
+type TooltipRow = {
+  label: string
+  value: string
+}
+
+type TooltipValueProps = {
+  children: ReactNode
+  title: string
+  rows: TooltipRow[]
+}
+
+function TooltipValue({ children, title, rows }: TooltipValueProps) {
+  return (
+    <span
+      tabIndex={0}
+      className="group relative inline-flex cursor-help font-mono tabular-nums underline decoration-dotted underline-offset-2 outline-none"
+    >
+      <span>{children}</span>
+      <span className="pointer-events-none invisible absolute bottom-full left-1/2 z-20 mb-2 w-max min-w-[18rem] max-w-[24rem] -translate-x-1/2 rounded-lg border border-slate-700 bg-slate-950/95 px-3 py-2 text-left text-[11px] leading-4 text-slate-100 opacity-0 shadow-[0_18px_40px_rgba(2,6,23,0.55)] transition group-hover:visible group-hover:opacity-100 group-focus-visible:visible group-focus-visible:opacity-100">
+        <span className="mb-2 block text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-300">{title}</span>
+        <span className="grid grid-cols-[max-content_max-content] gap-x-3 gap-y-1">
+          {rows.map((row, index) => (
+            <span key={`${row.label}-${index}`} className="contents">
+              <span className="text-slate-400">{row.label}</span>
+              <span className="text-right text-slate-100">{row.value}</span>
+            </span>
+          ))}
+        </span>
+      </span>
+    </span>
+  )
+}
+
+function formatPercent(value: number, maximumFractionDigits = 2): string {
+  return `${value.toLocaleString("en-US", { maximumFractionDigits })}%`
+}
+
+function formatMultiplier(value: number, maximumFractionDigits = 4): string {
+  return `x${value.toLocaleString("en-US", { maximumFractionDigits })}`
+}
+
+function formatTooltipValue(value: number, maximumFractionDigits = 2): string {
+  return value.toLocaleString("en-US", { maximumFractionDigits })
+}
+
+function buildHealingBaseRows(result: HealingCalcResult): TooltipRow[] {
+  return [
+    { label: `Total ${result.baseStat}`, value: formatTooltipValue(result.totalStat, 0) },
+    { label: "Skill Heal%", value: formatPercent(result.skillHealPercent) },
+    { label: "Flat Heal", value: formatTooltipValue(result.skillFlatHeal, 0) },
+    { label: "Raw Heal", value: formatTooltipValue(result.breakdown.baseHealRaw, 2) },
+    { label: "Rounded Heal", value: formatTooltipValue(result.breakdown.roundedBaseHeal, 0) },
+  ]
+}
+
+function buildNonCritHealRows(result: HealingCalcResult): TooltipRow[] {
+  const rows = buildHealingBaseRows(result)
+
+  if (!result.canCrit) {
+    rows.push({ label: "Can Crit Heal", value: "No" })
+  }
+
+  rows.push({ label: "Non-Crit Heal", value: formatTooltipValue(result.nonCrit, 0) })
+  return rows
+}
+
+function buildCritHealRows(result: HealingCalcResult): TooltipRow[] {
+  const rows = buildHealingBaseRows(result)
+
+  if (!result.canCrit) {
+    rows.push({ label: "Can Crit Heal", value: "No" })
+    rows.push({ label: "Crit Heal", value: formatTooltipValue(result.crit, 0) })
+    return rows
+  }
+
+  rows.push({ label: "Crit DMG%", value: formatPercent(result.critDamagePercent) })
+  rows.push({ label: "Crit Multiplier", value: formatMultiplier(result.breakdown.critMultiplier) })
+  rows.push({ label: "Crit Heal", value: formatTooltipValue(result.crit, 0) })
+
+  return rows
+}
+
+function buildMaxCritHealRows(result: HealingCalcResult): TooltipRow[] {
+  const rows = buildHealingBaseRows(result)
+
+  if (!result.canCrit) {
+    rows.push({ label: "Can Crit Heal", value: "No" })
+    rows.push({ label: "Max Crit Heal", value: formatTooltipValue(result.maxcrit, 0) })
+    return rows
+  }
+
+  rows.push({ label: "Crit Heal", value: formatTooltipValue(result.crit, 0) })
+  rows.push({ label: "Overdrive%", value: formatPercent(result.overdrivePercent) })
+  rows.push({ label: "Overdrive Mult", value: formatMultiplier(result.breakdown.overdriveMultiplier) })
+  rows.push({ label: "Max Crit Heal", value: formatTooltipValue(result.maxcrit, 0) })
+
+  return rows
+}
+
+function buildAverageHealRows(result: HealingCalcResult): TooltipRow[] {
+  const rows = buildHealingBaseRows(result)
+
+  if (!result.canCrit) {
+    rows.push({ label: "Can Crit Heal", value: "No" })
+    rows.push({ label: "Average Heal", value: formatTooltipValue(result.average, 0) })
+    return rows
+  }
+
+  rows.push({ label: "Crit Chance%", value: formatPercent(result.critChancePercent) })
+  rows.push({ label: "Effective Crit%", value: formatPercent(result.breakdown.effectiveCritChancePercent) })
+  rows.push({ label: "Crit DMG%", value: formatPercent(result.critDamagePercent) })
+  rows.push({ label: "Overdrive%", value: formatPercent(result.overdrivePercent) })
+  rows.push({ label: "Non-Crit Share", value: formatPercent(result.breakdown.nonCritWeight * 100) })
+  rows.push({ label: "Crit Share", value: formatPercent(result.breakdown.critWeight * 100) })
+  rows.push({ label: "Max Crit Share", value: formatPercent(result.breakdown.maxCritWeight * 100) })
+  rows.push({ label: "Non-Crit Heal", value: formatTooltipValue(result.nonCrit, 0) })
+  rows.push({ label: "Crit Heal", value: formatTooltipValue(result.crit, 0) })
+  rows.push({ label: "Max Crit Heal", value: formatTooltipValue(result.maxcrit, 0) })
+  rows.push({ label: "Average Heal", value: formatTooltipValue(result.average, 0) })
+
+  return rows
 }
 
 export default function HealingPage() {
@@ -30,7 +153,7 @@ export default function HealingPage() {
   const [statSnapshot, setStatSnapshot] = useState<HealingStatSnapshot>({ effective: {}, total: {} })
   const selectedSkillPreset = healingCalcSkillPresets.find((preset) => preset.name === selectedSkill) ?? null
 
-  const { nonCrit: baseHeal, crit: critHeal, maxcrit: maxCritHeal, average } = calculateHealing({
+  const healingResult = calculateHealing({
     baseStat,
     totalStat,
     skillHealPercent,
@@ -40,6 +163,7 @@ export default function HealingPage() {
     overdrivePercent,
     canCrit,
   })
+  const { nonCrit: baseHeal, crit: critHeal, maxcrit: maxCritHeal, average } = healingResult
   const formatHeal = (value: number) => value.toLocaleString("en-US")
 
   useEffect(() => {
@@ -252,19 +376,35 @@ export default function HealingPage() {
       <div className="grid gap-4 rounded-lg border bg-slate-900 p-4 text-center sm:grid-cols-2 lg:grid-cols-4">
         <div className="space-y-1">
           <h2 className="font-bold">Non-Crit Heal</h2>
-          <p>{formatHeal(baseHeal)}</p>
+          <p>
+            <TooltipValue title="Non-Crit Heal Inputs" rows={buildNonCritHealRows(healingResult)}>
+              {formatHeal(baseHeal)}
+            </TooltipValue>
+          </p>
         </div>
         <div className="space-y-1">
           <h2 className="font-bold">Crit Heal</h2>
-          <p>{formatHeal(critHeal)}</p>
+          <p>
+            <TooltipValue title="Crit Heal Inputs" rows={buildCritHealRows(healingResult)}>
+              {formatHeal(critHeal)}
+            </TooltipValue>
+          </p>
         </div>
         <div className="space-y-1">
           <h2 className="font-bold">Max Crit Heal</h2>
-          <p>{formatHeal(maxCritHeal)}</p>
+          <p>
+            <TooltipValue title="Max Crit Heal Inputs" rows={buildMaxCritHealRows(healingResult)}>
+              {formatHeal(maxCritHeal)}
+            </TooltipValue>
+          </p>
         </div>
         <div className="space-y-1">
           <h2 className="font-bold">Average Heal</h2>
-          <p>{formatHeal(average)}</p>
+          <p>
+            <TooltipValue title="Average Heal Inputs" rows={buildAverageHealRows(healingResult)}>
+              {formatHeal(average)}
+            </TooltipValue>
+          </p>
         </div>
       </div>
     </div>
