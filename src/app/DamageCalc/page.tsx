@@ -16,7 +16,11 @@ import {
   persistDamageCalcState,
   readDamageCalcState,
   type DamageCalcCustomSkillScaling,
+  type DamageBaseBreakdown,
+  type DamageBreakdownResult,
+  type DamageCritBreakdown,
   type DamageCalcInputs,
+  type DotOutcomeBreakdown,
   type ThreatBreakdownResult,
 } from "@/app/lib/damageCalc"
 import {
@@ -33,11 +37,6 @@ function normalizeSearchValue(value: string): string {
   return value.trim().toLocaleLowerCase()
 }
 
-function formatSignedPercent(value: number, maximumFractionDigits = 2): string {
-  const roundedValue = Number.isFinite(value) ? value : 0
-  return `${roundedValue >= 0 ? "+" : "-"}${Math.abs(roundedValue).toLocaleString("en-US", { maximumFractionDigits })}%`
-}
-
 function formatPercent(value: number, maximumFractionDigits = 2): string {
   return `${value.toLocaleString("en-US", { maximumFractionDigits })}%`
 }
@@ -46,18 +45,18 @@ function formatMultiplier(value: number, maximumFractionDigits = 4): string {
   return `x${value.toLocaleString("en-US", { maximumFractionDigits })}`
 }
 
-type ThreatTooltipRow = {
+type TooltipRow = {
   label: string
   value: string
 }
 
-type ThreatTooltipValueProps = {
+type TooltipValueProps = {
   children: ReactNode
   title: string
-  rows: ThreatTooltipRow[]
+  rows: TooltipRow[]
 }
 
-function ThreatTooltipValue({ children, title, rows }: ThreatTooltipValueProps) {
+function TooltipValue({ children, title, rows }: TooltipValueProps) {
   return (
     <span
       tabIndex={0}
@@ -83,26 +82,214 @@ function formatTooltipStatValue(value: number, maximumFractionDigits = 2): strin
   return value.toLocaleString("en-US", { maximumFractionDigits })
 }
 
+function appendElementScalingRows(rows: TooltipRow[], baseBreakdown: DamageBaseBreakdown): void {
+  rows.push({
+    label: `${baseBreakdown.elementStatName} (Element)`,
+    value: formatTooltipStatValue(baseBreakdown.elementPercent, 2),
+  })
+
+  if (baseBreakdown.skillElementStatName) {
+    rows.push({
+      label: `${baseBreakdown.skillElementStatName} (Skill Elem)`,
+      value: formatTooltipStatValue(baseBreakdown.skillElementPercent, 2),
+    })
+  }
+
+  if (baseBreakdown.skillTypeDamageStatName && Math.abs(baseBreakdown.convertedSkillTypeDamagePercent) > 0.0001) {
+    rows.push({
+      label: `Converted ${baseBreakdown.skillTypeDamageStatName}`,
+      value: formatTooltipStatValue(baseBreakdown.convertedSkillTypeDamagePercent, 2),
+    })
+  }
+}
+
+function appendSkillTypeDamageRows(rows: TooltipRow[], baseBreakdown: DamageBaseBreakdown): void {
+  if (!baseBreakdown.skillTypeDamageStatName) {
+    return
+  }
+
+  rows.push({
+    label: `${baseBreakdown.skillTypeDamageStatName} (Skill)`,
+    value: formatTooltipStatValue(baseBreakdown.globalSkillTypeDamagePercent, 2),
+  })
+}
+
+function appendDamageCritRows(rows: TooltipRow[], critBreakdown: DamageCritBreakdown): void {
+  rows.push({ label: "Crit DMG%", value: formatTooltipStatValue(critBreakdown.baseCritDamagePercent, 2) })
+
+  if (Math.abs(critBreakdown.elementalCritDamagePercent) > 0.0001) {
+    rows.push({
+      label: "Elemental Crit DMG%",
+      value: formatTooltipStatValue(critBreakdown.elementalCritDamagePercent, 2),
+    })
+  }
+
+  if (Math.abs(critBreakdown.holyCritDamagePercent) > 0.0001) {
+    rows.push({
+      label: "Holy Crit DMG%",
+      value: formatTooltipStatValue(critBreakdown.holyCritDamagePercent, 2),
+    })
+  }
+
+  if (critBreakdown.skillTypeCritDamageStatNames.length > 0) {
+    const skillCritLabel = critBreakdown.skillTypeCritDamageStatNames.join(" + ")
+
+    rows.push({
+      label: `${skillCritLabel} (Skill Crit)`,
+      value: formatTooltipStatValue(critBreakdown.globalSkillTypeCritDamagePercent, 2),
+    })
+
+    if (Math.abs(critBreakdown.convertedSkillTypeCritDamagePercent) > 0.0001) {
+      rows.push({
+        label: `Converted ${skillCritLabel}`,
+        value: formatTooltipStatValue(critBreakdown.convertedSkillTypeCritDamagePercent, 2),
+      })
+    }
+  }
+
+  if (Math.abs(critBreakdown.skillCritDamagePercent) > 0.0001) {
+    rows.push({ label: "Skill Crit DMG%", value: formatTooltipStatValue(critBreakdown.skillCritDamagePercent, 2) })
+  }
+}
+
+function buildDamageBaseRows(baseBreakdown: DamageBaseBreakdown): TooltipRow[] {
+  const rows: TooltipRow[] = [
+    { label: baseBreakdown.mainStatName, value: formatTooltipStatValue(baseBreakdown.mainStatValue, 0) },
+    { label: "Skill%", value: formatTooltipStatValue(baseBreakdown.skillPercent, 2) },
+  ]
+
+  if (Math.abs(baseBreakdown.secondSkillPercent) > 0.0001) {
+    rows.push({ label: baseBreakdown.secondStatName, value: formatTooltipStatValue(baseBreakdown.secondStatValue, 0) })
+    rows.push({ label: "Second Skill%", value: formatTooltipStatValue(baseBreakdown.secondSkillPercent, 2) })
+  }
+
+  rows.push({ label: "Base DMG", value: formatTooltipStatValue(baseBreakdown.baseDamage, 0) })
+
+  if (
+    Math.abs(baseBreakdown.enemyArmor) > 0.0001
+    || Math.abs(baseBreakdown.armorIgnorePercent) > 0.0001
+    || Math.abs(baseBreakdown.armorBreak) > 0.0001
+  ) {
+    rows.push({ label: "Enemy Armor", value: formatTooltipStatValue(baseBreakdown.enemyArmor, 2) })
+    rows.push({ label: "Armor Ignore%", value: formatTooltipStatValue(baseBreakdown.armorIgnorePercent, 2) })
+    rows.push({ label: "Armor Block", value: formatTooltipStatValue(baseBreakdown.armorBlock, 0) })
+    rows.push({ label: "Armor Break", value: formatTooltipStatValue(baseBreakdown.armorBreak, 0) })
+  }
+
+  rows.push({ label: "Post-Armor", value: formatTooltipStatValue(baseBreakdown.mitigatedDamage, 0) })
+  appendElementScalingRows(rows, baseBreakdown)
+
+  if (Math.abs(baseBreakdown.elementXDmgPercent) > 0.0001) {
+    rows.push({
+      label: `${baseBreakdown.elementStatName.replace(/%$/, "")} xDmg%`,
+      value: formatTooltipStatValue(baseBreakdown.elementXDmgPercent, 2),
+    })
+  }
+
+  rows.push({ label: baseBreakdown.penStatName, value: formatTooltipStatValue(baseBreakdown.penPercent, 2) })
+
+  if (Math.abs(baseBreakdown.skillPenPercent) > 0.0001) {
+    rows.push({ label: "Skill Pen%", value: formatTooltipStatValue(baseBreakdown.skillPenPercent, 2) })
+  }
+
+  if (Math.abs(baseBreakdown.enemyRes) > 0.0001) {
+    rows.push({ label: "Enemy Res%", value: formatTooltipStatValue(baseBreakdown.enemyRes, 2) })
+  }
+
+  if (Math.abs(baseBreakdown.resIgnorePercent) > 0.0001) {
+    rows.push({ label: "Res Ignore%", value: formatTooltipStatValue(baseBreakdown.resIgnorePercent, 2) })
+  }
+
+  appendSkillTypeDamageRows(rows, baseBreakdown)
+
+  if (Math.abs(baseBreakdown.dmgPercent) > 0.0001) {
+    rows.push({ label: "Dmg%", value: formatTooltipStatValue(baseBreakdown.dmgPercent, 2) })
+  }
+
+  return rows
+}
+
+function buildDamageOutcomeRows(
+  label: "Non-Crit" | "Crit" | "Maximized Crit",
+  damageBreakdown: DamageBreakdownResult,
+): TooltipRow[] {
+  const rows = buildDamageBaseRows(damageBreakdown.base)
+
+  if (label !== "Non-Crit") {
+    appendDamageCritRows(rows, damageBreakdown.crit)
+  }
+
+  if (label === "Maximized Crit") {
+    rows.push({ label: "Overdrive", value: formatMultiplier(damageBreakdown.maxcrit.overdriveMultiplier, 10) })
+  }
+
+  return rows
+}
+
+function buildDamageAverageRows(damageBreakdown: DamageBreakdownResult): TooltipRow[] {
+  const rows = buildDamageBaseRows(damageBreakdown.base)
+  const averageBreakdown = damageBreakdown.average
+
+  appendDamageCritRows(rows, damageBreakdown.crit)
+  rows.push({ label: "Overdrive", value: formatMultiplier(damageBreakdown.maxcrit.overdriveMultiplier, 10) })
+  rows.push({ label: "Crit Chance%", value: formatTooltipStatValue(averageBreakdown.baseCritChancePercent, 2) })
+
+  if (averageBreakdown.skillTypeCritChanceStatNames.length > 0) {
+    rows.push({
+      label: `${averageBreakdown.skillTypeCritChanceStatNames.join(" + ")} (Skill Crit)`,
+      value: formatTooltipStatValue(averageBreakdown.skillTypeCritChancePercent, 2),
+    })
+  }
+
+  if (Math.abs(averageBreakdown.skillCritChancePercent) > 0.0001) {
+    rows.push({ label: "Skill Crit Chance%", value: formatTooltipStatValue(averageBreakdown.skillCritChancePercent, 2) })
+  }
+
+  rows.push({ label: "Total Crit Chance%", value: formatTooltipStatValue(averageBreakdown.rawCritChancePercent, 2) })
+
+  if (Math.abs(averageBreakdown.rawCritChancePercent - averageBreakdown.effectiveCritChancePercent) > 0.0001) {
+    rows.push({
+      label: "Effective Crit Chance%",
+      value: formatTooltipStatValue(averageBreakdown.effectiveCritChancePercent, 2),
+    })
+  }
+
+  rows.push({ label: "Non-Crit Weight", value: formatPercent(averageBreakdown.nonCritWeight * 100, 3) })
+  rows.push({ label: "Crit Weight", value: formatPercent(averageBreakdown.critWeight * 100, 3) })
+  rows.push({ label: "Max Crit Weight", value: formatPercent(averageBreakdown.maxCritWeight * 100, 3) })
+
+  return rows
+}
+
+function buildDotOutcomeRows(dotBreakdown: DotOutcomeBreakdown): TooltipRow[] {
+  const rows: TooltipRow[] = [
+    { label: "Base DMG", value: formatTooltipStatValue(dotBreakdown.baseDamage, 0) },
+    { label: "Skill DOT%", value: formatTooltipStatValue(dotBreakdown.skillDotPercent, 2) },
+    { label: dotBreakdown.elementDotStatName, value: formatTooltipStatValue(dotBreakdown.elementDotPercent, 2) },
+    { label: "Total DOT%", value: formatTooltipStatValue(dotBreakdown.totalDotPercent, 2) },
+  ]
+
+  if (Math.abs(dotBreakdown.totalDotPercent - dotBreakdown.effectiveDotPercent) > 0.0001) {
+    rows.push({ label: "Effective DOT%", value: formatTooltipStatValue(dotBreakdown.effectiveDotPercent, 2) })
+  }
+
+  rows.push({ label: "DOT Multiplier", value: formatMultiplier(dotBreakdown.dotMultiplier, 4) })
+
+  return rows
+}
+
 function buildThreatBaseRows(
   stats: Record<string, number>,
   inputs: DamageCalcInputs,
-  element: string,
-  penElement: string,
-): ThreatTooltipRow[] {
-  const rows: ThreatTooltipRow[] = [
+  baseBreakdown: DamageBaseBreakdown,
+): TooltipRow[] {
+  const rows: TooltipRow[] = [
     { label: "DEF", value: formatTooltipStatValue(stats["DEF"] ?? 0, 0) },
-    { label: "Skill%", value: formatTooltipStatValue(inputs.threatDef ?? 0, 2) },
-    { label: `${element}%`, value: formatTooltipStatValue(stats[`${element}%`] ?? 0, 2) },
-    { label: `${penElement} Pen%`, value: formatTooltipStatValue(stats[`${penElement} Pen%`] ?? 0, 2) },
-    {
-      label: "Talent + Buff Threat%",
-      value: formatTooltipStatValue(getDisplayedThreatBonusModifierPercent(stats), 2),
-    },
-    {
-      label: "Tank Level Threat%",
-      value: formatTooltipStatValue(getDisplayedThreatLevelModifierPercent(stats), 2),
-    },
+    { label: "Threat Skill%", value: formatTooltipStatValue(inputs.threatDef ?? 0, 2) },
   ]
+
+  appendElementScalingRows(rows, baseBreakdown)
+  rows.push({ label: baseBreakdown.penStatName, value: formatTooltipStatValue(baseBreakdown.penPercent, 2) })
 
   if (Math.abs(inputs.skillThreat ?? 0) > 0.0001) {
     rows.push({ label: "Threat Bonus%", value: formatTooltipStatValue(inputs.skillThreat, 2) })
@@ -112,32 +299,40 @@ function buildThreatBaseRows(
     rows.push({ label: "Skill Pen%", value: formatTooltipStatValue(inputs.skillPen, 2) })
   }
 
-  if (Math.abs(stats[`${element} xDmg%`] ?? 0) > 0.0001) {
-    rows.push({ label: `${element} xDmg%`, value: formatTooltipStatValue(stats[`${element} xDmg%`] ?? 0, 2) })
+  if (Math.abs(baseBreakdown.elementXDmgPercent) > 0.0001) {
+    rows.push({
+      label: `${baseBreakdown.elementStatName.replace(/%$/, "")} xDmg%`,
+      value: formatTooltipStatValue(baseBreakdown.elementXDmgPercent, 2),
+    })
   }
+
+  appendSkillTypeDamageRows(rows, baseBreakdown)
+  rows.push({
+    label: "Talent + Buff Threat%",
+    value: formatTooltipStatValue(getDisplayedThreatBonusModifierPercent(stats), 2),
+  })
+  rows.push({
+    label: "Tank Level Threat%",
+    value: formatTooltipStatValue(getDisplayedThreatLevelModifierPercent(stats), 2),
+  })
 
   return rows
 }
 
 function buildThreatOutcomeRows(
-  label: string,
+  label: "Non-Crit" | "Crit" | "Maximized Crit",
   stats: Record<string, number>,
   inputs: DamageCalcInputs,
-  element: string,
-  penElement: string,
-): ThreatTooltipRow[] {
-  const rows = buildThreatBaseRows(stats, inputs, element, penElement)
+  damageBreakdown: DamageBreakdownResult,
+): TooltipRow[] {
+  const rows = buildThreatBaseRows(stats, inputs, damageBreakdown.base)
 
   if (label !== "Non-Crit") {
-    rows.push({ label: "Crit DMG%", value: formatTooltipStatValue(stats["Crit DMG%"] ?? 0, 2) })
-
-    if (Math.abs(inputs.skillCritDmg ?? 0) > 0.0001) {
-      rows.push({ label: "Skill Crit DMG%", value: formatTooltipStatValue(inputs.skillCritDmg, 2) })
-    }
+    appendDamageCritRows(rows, damageBreakdown.crit)
   }
 
   if (label === "Maximized Crit") {
-    rows.push({ label: "Overdrive", value: formatMultiplier((stats["Overdrive%"] ?? 0) / 100, 10) })
+    rows.push({ label: "Overdrive", value: formatMultiplier(damageBreakdown.maxcrit.overdriveMultiplier, 10) })
   }
 
   return rows
@@ -146,19 +341,13 @@ function buildThreatOutcomeRows(
 function buildThreatAverageRows(
   stats: Record<string, number>,
   inputs: DamageCalcInputs,
-  element: string,
-  penElement: string,
+  damageBreakdown: DamageBreakdownResult,
   threatBreakdown: ThreatBreakdownResult,
-): ThreatTooltipRow[] {
-  const rows = buildThreatBaseRows(stats, inputs, element, penElement)
+): TooltipRow[] {
+  const rows = buildThreatBaseRows(stats, inputs, damageBreakdown.base)
 
-  rows.push({ label: "Crit DMG%", value: formatTooltipStatValue(stats["Crit DMG%"] ?? 0, 2) })
-
-  if (Math.abs(inputs.skillCritDmg ?? 0) > 0.0001) {
-    rows.push({ label: "Skill Crit DMG%", value: formatTooltipStatValue(inputs.skillCritDmg, 2) })
-  }
-
-  rows.push({ label: "Overdrive", value: formatMultiplier((stats["Overdrive%"] ?? 0) / 100, 10) })
+  appendDamageCritRows(rows, damageBreakdown.crit)
+  rows.push({ label: "Overdrive", value: formatMultiplier(damageBreakdown.maxcrit.overdriveMultiplier, 10) })
   rows.push({ label: "Non-Crit Weight", value: formatPercent(threatBreakdown.average.nonCritWeight * 100, 3) })
   rows.push({ label: "Crit Weight", value: formatPercent(threatBreakdown.average.critWeight * 100, 3) })
   rows.push({ label: "Max Crit Weight", value: formatPercent(threatBreakdown.average.maxCritWeight * 100, 3) })
@@ -355,6 +544,8 @@ export default function DamageCalc() {
     threatCrit,
     threatMaxcrit,
     threatAverage,
+    damageBreakdown,
+    dotBreakdown,
     threatBreakdown,
   } = calculateDamage(stats, {
     attackPreset,
@@ -799,54 +990,72 @@ export default function DamageCalc() {
           <h2 className="font-semibold text-lg">Damage</h2>
           <div className="mx-auto inline-grid w-fit grid-cols-[max-content_max-content] gap-x-3 gap-y-1">
             <strong className="text-right">Non-Crit:</strong>
-            <span className="text-right font-mono tabular-nums">{formatNumber(nonCrit)}</span>
+            <TooltipValue title="Non-Crit Damage Inputs" rows={buildDamageOutcomeRows("Non-Crit", damageBreakdown)}>
+              {formatNumber(nonCrit)}
+            </TooltipValue>
             <strong className="text-right">Crit:</strong>
-            <span className="text-right font-mono tabular-nums">{formatNumber(crit)}</span>
+            <TooltipValue title="Crit Damage Inputs" rows={buildDamageOutcomeRows("Crit", damageBreakdown)}>
+              {formatNumber(crit)}
+            </TooltipValue>
             <strong className="text-right">Maximized Crit:</strong>
-            <span className="text-right font-mono tabular-nums">{formatNumber(maxcrit)}</span>
+            <TooltipValue title="Maximized Crit Damage Inputs" rows={buildDamageOutcomeRows("Maximized Crit", damageBreakdown)}>
+              {formatNumber(maxcrit)}
+            </TooltipValue>
             <strong className="text-right">Avg:</strong>
-            <span className="text-right font-mono tabular-nums">{formatNumber(average)}</span>
+            <TooltipValue title="Average Damage Inputs" rows={buildDamageAverageRows(damageBreakdown)}>
+              {formatNumber(average)}
+            </TooltipValue>
           </div>
         </div>
         <div className="space-y-2">
           <h2 className="font-semibold text-lg">DOT & Threat</h2>
-          <div><strong>DOT (Non-Crit):</strong> {formatNumber(dotNonCrit)}</div>
-          <div><strong>DOT (Crit):</strong> {formatNumber(dotCrit)}</div>
+          <div>
+            <strong>DOT (Non-Crit):</strong>{" "}
+            <TooltipValue title="Non-Crit DOT Inputs" rows={buildDotOutcomeRows(dotBreakdown.nonCrit)}>
+              {formatNumber(dotNonCrit)}
+            </TooltipValue>
+          </div>
+          <div>
+            <strong>DOT (Crit):</strong>{" "}
+            <TooltipValue title="Crit DOT Inputs" rows={buildDotOutcomeRows(dotBreakdown.crit)}>
+              {formatNumber(dotCrit)}
+            </TooltipValue>
+          </div>
           <div>
             <strong>Threat (Non-Crit):</strong>{" "}
-            <ThreatTooltipValue
+            <TooltipValue
               title="Non-Crit Threat Inputs"
-              rows={buildThreatOutcomeRows("Non-Crit", stats, inputs, element, penElement)}
+              rows={buildThreatOutcomeRows("Non-Crit", stats, inputs, damageBreakdown)}
             >
               {formatNumber(threatNonCrit)}
-            </ThreatTooltipValue>
+            </TooltipValue>
           </div>
           <div>
             <strong>Threat (Crit):</strong>{" "}
-            <ThreatTooltipValue
+            <TooltipValue
               title="Crit Threat Inputs"
-              rows={buildThreatOutcomeRows("Crit", stats, inputs, element, penElement)}
+              rows={buildThreatOutcomeRows("Crit", stats, inputs, damageBreakdown)}
             >
               {formatNumber(threatCrit)}
-            </ThreatTooltipValue>
+            </TooltipValue>
           </div>
           <div>
             <strong>Threat (Maximized Crit):</strong>{" "}
-            <ThreatTooltipValue
+            <TooltipValue
               title="Maximized Crit Threat Inputs"
-              rows={buildThreatOutcomeRows("Maximized Crit", stats, inputs, element, penElement)}
+              rows={buildThreatOutcomeRows("Maximized Crit", stats, inputs, damageBreakdown)}
             >
               {formatNumber(threatMaxcrit)}
-            </ThreatTooltipValue>
+            </TooltipValue>
           </div>
           <div>
             <strong>Threat Avg:</strong>{" "}
-            <ThreatTooltipValue
+            <TooltipValue
               title="Average Threat Inputs"
-              rows={buildThreatAverageRows(stats, inputs, element, penElement, threatBreakdown)}
+              rows={buildThreatAverageRows(stats, inputs, damageBreakdown, threatBreakdown)}
             >
               {formatNumber(threatAverage)}
-            </ThreatTooltipValue>
+            </TooltipValue>
           </div>
         </div>
       </div>

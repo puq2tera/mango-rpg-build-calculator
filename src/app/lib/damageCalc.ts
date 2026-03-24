@@ -77,6 +77,99 @@ export type DamageCalcState = {
   inputs: DamageCalcInputs
 }
 
+export type DamageBaseBreakdown = {
+  mainStatName: string
+  mainStatValue: number
+  skillPercent: number
+  secondStatName: string
+  secondStatValue: number
+  secondSkillPercent: number
+  baseRaw: number
+  baseDamage: number
+  enemyArmor: number
+  armorIgnorePercent: number
+  armorBlock: number
+  armorBreak: number
+  mitigatedDamage: number
+  elementStatName: string
+  elementPercent: number
+  skillElementStatName: string | null
+  skillElementPercent: number
+  skillTypeDamageStatName: string | null
+  skillTypeDamagePercent: number
+  convertedSkillTypeDamagePercent: number
+  globalSkillTypeDamagePercent: number
+  elementBonusPercent: number
+  elementXDmgPercent: number
+  penStatName: string
+  penPercent: number
+  skillPenPercent: number
+  totalPenBonusPercent: number
+  enemyRes: number
+  resIgnorePercent: number
+  effectiveEnemyRes: number
+  penMultiplier: number
+  dmgPercent: number
+}
+
+export type DamageCritBreakdown = {
+  baseCritDamagePercent: number
+  skillTypeCritDamageStatNames: string[]
+  skillTypeCritDamagePercent: number
+  convertedSkillTypeCritDamagePercent: number
+  globalSkillTypeCritDamagePercent: number
+  elementalCritDamagePercent: number
+  holyCritDamagePercent: number
+  skillCritDamagePercent: number
+  damageCritDamageMultiplier: number
+  skillTypeCritDamageMultiplier: number
+  finalDamage: number
+}
+
+export type DamageMaxCritBreakdown = {
+  overdriveMultiplier: number
+  finalDamage: number
+}
+
+export type DamageAverageBreakdown = {
+  baseCritChancePercent: number
+  skillTypeCritChanceStatNames: string[]
+  skillTypeCritChancePercent: number
+  skillCritChancePercent: number
+  rawCritChancePercent: number
+  effectiveCritChancePercent: number
+  nonCritWeight: number
+  critWeight: number
+  maxCritWeight: number
+  finalDamage: number
+}
+
+export type DamageBreakdownResult = {
+  base: DamageBaseBreakdown
+  nonCrit: {
+    finalDamage: number
+  }
+  crit: DamageCritBreakdown
+  maxcrit: DamageMaxCritBreakdown
+  average: DamageAverageBreakdown
+}
+
+export type DotOutcomeBreakdown = {
+  baseDamage: number
+  skillDotPercent: number
+  elementDotStatName: string
+  elementDotPercent: number
+  totalDotPercent: number
+  effectiveDotPercent: number
+  dotMultiplier: number
+  finalDamage: number
+}
+
+export type DotBreakdownResult = {
+  nonCrit: DotOutcomeBreakdown
+  crit: DotOutcomeBreakdown
+}
+
 export type DamageCalcResult = {
   nonCrit: number
   crit: number
@@ -88,6 +181,8 @@ export type DamageCalcResult = {
   threatCrit: number
   threatMaxcrit: number
   threatAverage: number
+  damageBreakdown: DamageBreakdownResult
+  dotBreakdown: DotBreakdownResult
   threatBreakdown: ThreatBreakdownResult
 }
 
@@ -333,6 +428,15 @@ function getGlobalSkillTypeCritDamageBonus(stats: Record<string, number>, skillT
     - getConvertedSkillTypeCritDamageBonus(stats, skillType)
 }
 
+function getSkillTypeElementStatName(skillType: string): string | null {
+  if (skillType === "N/A") {
+    return null
+  }
+
+  const statName = `${skillType}%`
+  return statName in stat_data.StatsInfo ? statName : null
+}
+
 function getElementDamageBonus(stats: Record<string, number>, element: string, skillType: string): number {
   let bonus =
     (stats[`${element}%`] ?? 0)
@@ -396,58 +500,127 @@ function applyThreatOffenseMultipliers(
 
 type NormalizedDamageContext = {
   stats: Record<string, number>
+  mainStat: string
+  secondStat: string
   element: string
   penElement: string
   skillType: string
   inputs: DamageCalcInputs
   effectiveSkillDmg: number
-  mitigated: number
+  baseBreakdown: DamageBaseBreakdown
 }
 
 function buildDamageContext(stats: Record<string, number>, state: DamageCalcState): NormalizedDamageContext {
   const { mainStat, secondStat, element, penElement, skillType, customSkillScaling, inputs } = normalizeDamageCalcState(state)
   const effectiveSkillDmg = getDamageCalcEffectiveSkillDmgPercent(stats, inputs, customSkillScaling)
+  const mainStatValue = stats[mainStat] ?? 0
+  const secondStatValue = stats[secondStat] ?? 0
 
   const baseRaw =
-    ((stats[mainStat] ?? 0) * (effectiveSkillDmg / 100))
-    + ((stats[secondStat] ?? 0) * (inputs.secondSkillDmg / 100))
+    (mainStatValue * (effectiveSkillDmg / 100))
+    + (secondStatValue * (inputs.secondSkillDmg / 100))
   const base = Math.floor(baseRaw)
 
   const armorBlock = Math.floor((inputs.enemyArmor ?? 0) * toRemainingPercent(inputs.armorIgnore))
   const armorBreak = Math.floor(((stats["ATK"] ?? 0) + (stats["DEF"] ?? 0) + (stats["MATK"] ?? 0) + (stats["HEAL"] ?? 0)) / 4) + (stats["Armor Strike"] ?? 0)
   // Only deal dmg if the skill itself has a dmg%
-  const mitigated = base <= 0
+  const mitigatedDamage = base <= 0
     ? 0
     : Math.max(0, Math.floor(base - (armorBlock - armorBreak)))
+  const elementStatName = `${element}%`
+  const elementPercent = stats[elementStatName] ?? 0
+  const skillElementStatName = getSkillTypeElementStatName(skillType)
+  const skillElementPercent = skillElementStatName ? (stats[skillElementStatName] ?? 0) : 0
+  const skillTypeDamageStatName = skillDamageStatsBySkillType[skillType] ?? null
+  const skillTypeDamagePercent = skillTypeDamageStatName ? (stats[skillTypeDamageStatName] ?? 0) : 0
+  const convertedSkillTypeDamagePercent = getConvertedSkillTypeDamageBonus(stats, skillType)
+  const globalSkillTypeDamagePercent = getGlobalSkillTypeDamageBonus(stats, skillType)
+  const elementBonusPercent = elementPercent + skillElementPercent + convertedSkillTypeDamagePercent
+  const elementXDmgPercent = stats[`${element} xDmg%`] ?? 0
+  const penStatName = `${penElement} Pen%`
+  const penPercent = stats[penStatName] ?? 0
+  const skillPenPercent = inputs.skillPen ?? 0
+  const totalPenBonusPercent = penPercent + skillPenPercent
+  const enemyRes = inputs.enemyRes ?? 0
+  const resIgnorePercent = inputs.resIgnore ?? 0
+  const effectiveEnemyRes = enemyRes * toRemainingPercent(inputs.resIgnore)
+  const penMultiplier = Math.max(0, 1 + (totalPenBonusPercent / 100) - (effectiveEnemyRes / 100))
+  const dmgPercent = stats["Dmg%"] ?? 0
 
   return {
     stats,
+    mainStat,
+    secondStat,
     element,
     penElement,
     skillType,
     inputs,
     effectiveSkillDmg,
-    mitigated,
+    baseBreakdown: {
+      mainStatName: mainStat,
+      mainStatValue,
+      skillPercent: effectiveSkillDmg,
+      secondStatName: secondStat,
+      secondStatValue,
+      secondSkillPercent: inputs.secondSkillDmg ?? 0,
+      baseRaw,
+      baseDamage: base,
+      enemyArmor: inputs.enemyArmor ?? 0,
+      armorIgnorePercent: inputs.armorIgnore ?? 0,
+      armorBlock,
+      armorBreak,
+      mitigatedDamage,
+      elementStatName,
+      elementPercent,
+      skillElementStatName,
+      skillElementPercent,
+      skillTypeDamageStatName,
+      skillTypeDamagePercent,
+      convertedSkillTypeDamagePercent,
+      globalSkillTypeDamagePercent,
+      elementBonusPercent,
+      elementXDmgPercent,
+      penStatName,
+      penPercent,
+      skillPenPercent,
+      totalPenBonusPercent,
+      enemyRes,
+      resIgnorePercent,
+      effectiveEnemyRes,
+      penMultiplier,
+      dmgPercent,
+    },
   }
 }
 
 function finalizeDamageResult(nonCrit: number, context: NormalizedDamageContext): DamageCalcResult {
-  const { stats, element, penElement, skillType, inputs } = context
-  const skillTypeCritDamageBonus = getConvertedSkillTypeCritDamageBonus(stats, skillType)
-    + (stat_data.Elemental.includes(element) ? (stats["Elemental Crit DMG%"] ?? 0) : 0)
-    + (element === "Holy" ? (stats["Holy Crit DMG%"] ?? 0) : 0)
-  const skillTypeCritDamageMultiplier = toMult(getGlobalSkillTypeCritDamageBonus(stats, skillType))
-  const baseCritDamageBonus = (stats["Crit DMG%"] ?? 0) + skillTypeCritDamageBonus
+  const { stats, element, penElement, skillType, inputs, baseBreakdown } = context
+  const skillTypeCritDamageStatNames = skillCritDamageBonusStatsBySkillType[skillType] ?? []
+  const skillTypeCritDamagePercent = getTotalStatValue(stats, skillTypeCritDamageStatNames)
+  const convertedSkillTypeCritDamagePercent = getConvertedSkillTypeCritDamageBonus(stats, skillType)
+  const globalSkillTypeCritDamagePercent = getGlobalSkillTypeCritDamageBonus(stats, skillType)
+  const elementalCritDamagePercent = stat_data.Elemental.includes(element) ? (stats["Elemental Crit DMG%"] ?? 0) : 0
+  const holyCritDamagePercent = element === "Holy" ? (stats["Holy Crit DMG%"] ?? 0) : 0
+  const skillTypeCritDamageBonus = convertedSkillTypeCritDamagePercent
+    + elementalCritDamagePercent
+    + holyCritDamagePercent
+  const baseCritDamagePercent = stats["Crit DMG%"] ?? 0
+  const skillTypeCritDamageMultiplier = toMult(globalSkillTypeCritDamagePercent)
+  const baseCritDamageBonus = baseCritDamagePercent + skillTypeCritDamageBonus
   const damageCritDamageMultiplier = Math.max(0, (baseCritDamageBonus / 100) * toMult(inputs.skillCritDmg ?? 0))
   const threatCritDamageMultiplier = Math.max(0, damageCritDamageMultiplier * skillTypeCritDamageMultiplier)
 
   const crit = Math.floor(Math.floor(nonCrit * damageCritDamageMultiplier) * skillTypeCritDamageMultiplier)
   const maxcrit = Math.floor(crit * ((stats["Overdrive%"] ?? 0) / 100))
 
-  const skillCritChance = getTotalStatValue(stats, skillCritChanceStatsBySkillType[skillType] ?? [])
-  const totalCritChance =
-    ((stats["Crit Chance%"] ?? 0) + skillCritChance + (inputs.skillCritChance ?? 0)) * stat_data.StatsInfo["Crit Chance%"].multi
+  const skillTypeCritChanceStatNames = skillCritChanceStatsBySkillType[skillType] ?? []
+  const skillTypeCritChancePercent = getTotalStatValue(stats, skillTypeCritChanceStatNames)
+  const baseCritChancePercent = stats["Crit Chance%"] ?? 0
+  const skillCritChancePercent = inputs.skillCritChance ?? 0
+  const rawCritChancePercent = baseCritChancePercent + skillTypeCritChancePercent + skillCritChancePercent
+  const totalCritChance = rawCritChancePercent * stat_data.StatsInfo["Crit Chance%"].multi
   const critChance = clamp(totalCritChance, 0, 2)
+  const effectiveCritChancePercent = critChance * 100
 
   const nonCritWeight = 1 - clamp(critChance, 0, 1)
   const maxCritWeight = clamp(critChance - 1, 0, 1)
@@ -455,8 +628,11 @@ function finalizeDamageResult(nonCrit: number, context: NormalizedDamageContext)
 
   const average = Math.floor(nonCrit * nonCritWeight + crit * critWeight + maxcrit * maxCritWeight)
 
-  const totalDotPercent = (inputs.dot ?? 0) + (stats[`${element} DOT%`] ?? 0)
-  const dotMult = Math.max(0, totalDotPercent) / 100
+  const elementDotStatName = `${element} DOT%`
+  const elementDotPercent = stats[elementDotStatName] ?? 0
+  const totalDotPercent = (inputs.dot ?? 0) + elementDotPercent
+  const effectiveDotPercent = Math.max(0, totalDotPercent)
+  const dotMult = effectiveDotPercent / 100
   const dotNonCrit = Math.floor(nonCrit * dotMult)
   const dotCrit = Math.floor(crit * dotMult)
 
@@ -518,6 +694,63 @@ function finalizeDamageResult(nonCrit: number, context: NormalizedDamageContext)
     threatCrit,
     threatMaxcrit,
     threatAverage,
+    damageBreakdown: {
+      base: baseBreakdown,
+      nonCrit: {
+        finalDamage: nonCrit,
+      },
+      crit: {
+        baseCritDamagePercent,
+        skillTypeCritDamageStatNames,
+        skillTypeCritDamagePercent,
+        convertedSkillTypeCritDamagePercent,
+        globalSkillTypeCritDamagePercent,
+        elementalCritDamagePercent,
+        holyCritDamagePercent,
+        skillCritDamagePercent: inputs.skillCritDmg ?? 0,
+        damageCritDamageMultiplier,
+        skillTypeCritDamageMultiplier,
+        finalDamage: crit,
+      },
+      maxcrit: {
+        overdriveMultiplier,
+        finalDamage: maxcrit,
+      },
+      average: {
+        baseCritChancePercent,
+        skillTypeCritChanceStatNames,
+        skillTypeCritChancePercent,
+        skillCritChancePercent,
+        rawCritChancePercent,
+        effectiveCritChancePercent,
+        nonCritWeight,
+        critWeight,
+        maxCritWeight,
+        finalDamage: average,
+      },
+    },
+    dotBreakdown: {
+      nonCrit: {
+        baseDamage: nonCrit,
+        skillDotPercent: inputs.dot ?? 0,
+        elementDotStatName,
+        elementDotPercent,
+        totalDotPercent,
+        effectiveDotPercent,
+        dotMultiplier: dotMult,
+        finalDamage: dotNonCrit,
+      },
+      crit: {
+        baseDamage: crit,
+        skillDotPercent: inputs.dot ?? 0,
+        elementDotStatName,
+        elementDotPercent,
+        totalDotPercent,
+        effectiveDotPercent,
+        dotMultiplier: dotMult,
+        finalDamage: dotCrit,
+      },
+    },
     threatBreakdown: {
       skillThreatPercent: inputs.skillThreat ?? 0,
       skillThreatMultiplier,
@@ -541,17 +774,14 @@ function finalizeDamageResult(nonCrit: number, context: NormalizedDamageContext)
 
 export function calculateDamage(stats: Record<string, number>, state: DamageCalcState): DamageCalcResult {
   const context = buildDamageContext(stats, state)
-  const { stats: resolvedStats, element, penElement, skillType, inputs, mitigated } = context
+  const { baseBreakdown } = context
 
-  let dmg = mitigated
-  dmg = Math.floor(dmg * toMult(getElementDamageBonus(resolvedStats, element, skillType)))
-  dmg = Math.floor(dmg * toMult(resolvedStats[`${element} xDmg%`]))
-  const effectiveEnemyRes = (inputs.enemyRes ?? 0) * toRemainingPercent(inputs.resIgnore)
-  const totalPenBonus = ((resolvedStats[`${penElement} Pen%`] ?? 0) + (inputs.skillPen ?? 0)) / 100
-  const penResMult = Math.max(0, 1 + totalPenBonus - (effectiveEnemyRes / 100))
-  dmg = Math.floor(dmg * penResMult)
-  dmg = Math.floor(dmg * toMult(getGlobalSkillTypeDamageBonus(resolvedStats, skillType)))
-  dmg = Math.floor(dmg * toMult(resolvedStats["Dmg%"]))
+  let dmg = baseBreakdown.mitigatedDamage
+  dmg = Math.floor(dmg * toMult(baseBreakdown.elementBonusPercent))
+  dmg = Math.floor(dmg * toMult(baseBreakdown.elementXDmgPercent))
+  dmg = Math.floor(dmg * baseBreakdown.penMultiplier)
+  dmg = Math.floor(dmg * toMult(baseBreakdown.globalSkillTypeDamagePercent))
+  dmg = Math.floor(dmg * toMult(baseBreakdown.dmgPercent))
 
   return finalizeDamageResult(Math.max(0, dmg), context)
 }
