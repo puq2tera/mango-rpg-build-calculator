@@ -648,6 +648,7 @@ export default function DamageCalc() {
     average,
     dotNonCrit,
     dotCrit,
+    dotMaxcrit,
     threatNonCrit,
     threatCrit,
     threatMaxcrit,
@@ -1196,6 +1197,12 @@ export default function DamageCalc() {
             <strong>DOT (Crit):</strong>{" "}
             <TooltipValue title="Crit DOT Inputs" rows={buildDotOutcomeRows(dotBreakdown.crit)}>
               {formatNumber(dotCrit)}
+            </TooltipValue>
+          </div>
+          <div>
+            <strong>DOT (Maximized Crit):</strong>{" "}
+            <TooltipValue title="Maximized Crit DOT Inputs" rows={buildDotOutcomeRows(dotBreakdown.maxcrit)}>
+              {formatNumber(dotMaxcrit)}
             </TooltipValue>
           </div>
           <div>

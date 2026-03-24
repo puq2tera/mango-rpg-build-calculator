@@ -174,6 +174,7 @@ export type DotOutcomeBreakdown = {
 export type DotBreakdownResult = {
   nonCrit: DotOutcomeBreakdown
   crit: DotOutcomeBreakdown
+  maxcrit: DotOutcomeBreakdown
 }
 
 export type DamageCalcResult = {
@@ -183,6 +184,7 @@ export type DamageCalcResult = {
   average: number
   dotNonCrit: number
   dotCrit: number
+  dotMaxcrit: number
   threatNonCrit: number
   threatCrit: number
   threatMaxcrit: number
@@ -661,6 +663,7 @@ function finalizeDamageResult(nonCrit: number, context: NormalizedDamageContext)
   const dotMult = effectiveDotPercent / 100
   const dotNonCrit = Math.floor(nonCrit * dotMult)
   const dotCrit = Math.floor(crit * dotMult)
+  const dotMaxcrit = Math.floor(maxcrit * dotMult)
 
   const flatThreatBase = Math.floor((stats["DEF"] ?? 0) * ((inputs.threatDef ?? 0) / 100))
   const flatThreatWithOffenseScaling = applyThreatOffenseMultipliers(
@@ -716,6 +719,7 @@ function finalizeDamageResult(nonCrit: number, context: NormalizedDamageContext)
     average,
     dotNonCrit,
     dotCrit,
+    dotMaxcrit,
     threatNonCrit,
     threatCrit,
     threatMaxcrit,
@@ -775,6 +779,16 @@ function finalizeDamageResult(nonCrit: number, context: NormalizedDamageContext)
         effectiveDotPercent,
         dotMultiplier: dotMult,
         finalDamage: dotCrit,
+      },
+      maxcrit: {
+        baseDamage: maxcrit,
+        skillDotPercent: inputs.dot ?? 0,
+        elementDotStatName,
+        elementDotPercent,
+        totalDotPercent,
+        effectiveDotPercent,
+        dotMultiplier: dotMult,
+        finalDamage: dotMaxcrit,
       },
     },
     threatBreakdown: {

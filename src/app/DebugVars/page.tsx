@@ -1484,7 +1484,7 @@ function SavedBuildResultComparisonSection({
         <div>
           <div className="text-lg font-semibold text-slate-50">Saved Build Result Match</div>
           <div className="mt-1 text-xs leading-5 text-slate-400">
-            Compare any saved build&apos;s skill damage or buff result to an expected number. Threat uses maximized crit threat.
+            Compare any saved build&apos;s skill damage, DOT, threat, or buff result to an expected number. Threat uses maximized crit threat.
           </div>
           <div className="mt-1 text-[11px] leading-5 text-slate-500">
             Build, skill, stat, and expected values are saved locally so these rows can act as regression checks.

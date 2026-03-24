@@ -16,7 +16,15 @@ import {
   type DamageCalcAttackPreset,
 } from "@/app/lib/damageCalcAttackPresets"
 
-type SavedBuildDamageComparisonMode = "nonCrit" | "crit" | "average" | "maxcrit" | "threat"
+type SavedBuildDamageComparisonMode =
+  | "nonCrit"
+  | "crit"
+  | "average"
+  | "maxcrit"
+  | "dotNonCrit"
+  | "dotCrit"
+  | "dotMaxcrit"
+  | "threat"
 
 export type SavedBuildComparisonMode = SavedBuildDamageComparisonMode | `buff:${string}`
 
@@ -57,6 +65,9 @@ export const savedBuildComparisonModeOptions: Array<{
   { key: "crit", label: "Crit" },
   { key: "average", label: "Avg" },
   { key: "maxcrit", label: "Maximized" },
+  { key: "dotNonCrit", label: "DOT (Non-Crit)" },
+  { key: "dotCrit", label: "DOT (Crit)" },
+  { key: "dotMaxcrit", label: "DOT (Maximized Crit)" },
   { key: "threat", label: "Threat" },
 ]
 
@@ -332,6 +343,12 @@ export function getSavedBuildCalculatedValue(
         return result.damageResult.average
       case "maxcrit":
         return result.damageResult.maxcrit
+      case "dotNonCrit":
+        return result.damageResult.dotNonCrit
+      case "dotCrit":
+        return result.damageResult.dotCrit
+      case "dotMaxcrit":
+        return result.damageResult.dotMaxcrit
       case "threat":
         return result.damageResult.threatMaxcrit
     }
