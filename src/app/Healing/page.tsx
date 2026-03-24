@@ -20,17 +20,25 @@ export default function HealingPage() {
   const [baseStat, setBaseStat] = useState<HealingBaseStat>("HEAL")
   const [skillHealPercent, setSkillHealPercent] = useState(0)
   const [skillFlatHeal, setSkillFlatHeal] = useState(0)
+  const [critChancePercent, setCritChancePercent] = useState(0)
+  const [critDamagePercent, setCritDamagePercent] = useState(0)
+  const [overdrivePercent, setOverdrivePercent] = useState(0)
+  const [canCrit, setCanCrit] = useState(true)
   const [effectiveStat, setEffectiveStat] = useState(0)
   const [totalStat, setTotalStat] = useState(0)
   const [threatPercent, setThreatPercent] = useState(0)
   const [statSnapshot, setStatSnapshot] = useState<HealingStatSnapshot>({ effective: {}, total: {} })
   const selectedSkillPreset = healingCalcSkillPresets.find((preset) => preset.name === selectedSkill) ?? null
 
-  const { nonCrit: baseHeal, crit: critHeal, average } = calculateHealing({
+  const { nonCrit: baseHeal, crit: critHeal, maxcrit: maxCritHeal, average } = calculateHealing({
     baseStat,
     totalStat,
     skillHealPercent,
     skillFlatHeal,
+    critChancePercent,
+    critDamagePercent,
+    overdrivePercent,
+    canCrit,
   })
   const formatHeal = (value: number) => value.toLocaleString("en-US")
 
@@ -71,6 +79,12 @@ export default function HealingPage() {
     setTotalStat(statSnapshot.total[baseStat] ?? statSnapshot.effective[baseStat] ?? 0)
   }, [baseStat, statSnapshot])
 
+  useEffect(() => {
+    setCritChancePercent(statSnapshot.total["Crit Chance%"] ?? 0)
+    setCritDamagePercent(statSnapshot.total["Crit DMG%"] ?? 0)
+    setOverdrivePercent(statSnapshot.total["Overdrive%"] ?? 0)
+  }, [statSnapshot])
+
   const handleSkillChange = (nextSkill: string) => {
     setSelectedSkill(nextSkill)
 
@@ -88,6 +102,7 @@ export default function HealingPage() {
     setSkillHealPercent(preset.skillHealPercent)
     setSkillFlatHeal(preset.skillFlatHeal)
     setThreatPercent(preset.threatPercent)
+    setCanCrit(preset.canCrit)
   }
 
   return (
@@ -123,7 +138,7 @@ export default function HealingPage() {
         </div>
       </div>
 
-      <div className="grid grid-cols-4 gap-4 bg-slate-900/60 border rounded-lg p-4">
+      <div className="grid gap-4 rounded-lg border bg-slate-900/60 p-4 sm:grid-cols-2 lg:grid-cols-5">
         <div className="space-y-1">
           <label className="font-semibold">Base Stat</label>
           <select
@@ -174,6 +189,33 @@ export default function HealingPage() {
           />
         </div>
         <div className="space-y-1">
+          <label className="font-semibold">Crit Chance %</label>
+          <input
+            type="number"
+            value={critChancePercent}
+            onChange={e => setCritChancePercent(+e.target.value)}
+            className="w-full p-1 border rounded"
+          />
+        </div>
+        <div className="space-y-1">
+          <label className="font-semibold">Crit DMG %</label>
+          <input
+            type="number"
+            value={critDamagePercent}
+            onChange={e => setCritDamagePercent(+e.target.value)}
+            className="w-full p-1 border rounded"
+          />
+        </div>
+        <div className="space-y-1">
+          <label className="font-semibold">Overdrive %</label>
+          <input
+            type="number"
+            value={overdrivePercent}
+            onChange={e => setOverdrivePercent(+e.target.value)}
+            className="w-full p-1 border rounded"
+          />
+        </div>
+        <div className="space-y-1">
           <label className="font-semibold">Effective {baseStat}</label>
           <input
             type="number"
@@ -191,9 +233,23 @@ export default function HealingPage() {
             className="w-full p-1 border rounded"
           />
         </div>
+        <label className="space-y-1">
+          <span className="font-semibold">Can Crit Heal</span>
+          <span className="flex h-[34px] items-center rounded border px-3">
+            <input
+              type="checkbox"
+              checked={canCrit}
+              onChange={(event) => {
+                setSelectedSkill("")
+                setCanCrit(event.target.checked)
+              }}
+              className="h-4 w-4"
+            />
+          </span>
+        </label>
       </div>
 
-      <div className="grid grid-cols-3 gap-4 bg-slate-900 border rounded-lg p-4 text-center">
+      <div className="grid gap-4 rounded-lg border bg-slate-900 p-4 text-center sm:grid-cols-2 lg:grid-cols-4">
         <div className="space-y-1">
           <h2 className="font-bold">Non-Crit Heal</h2>
           <p>{formatHeal(baseHeal)}</p>
@@ -201,6 +257,10 @@ export default function HealingPage() {
         <div className="space-y-1">
           <h2 className="font-bold">Crit Heal</h2>
           <p>{formatHeal(critHeal)}</p>
+        </div>
+        <div className="space-y-1">
+          <h2 className="font-bold">Max Crit Heal</h2>
+          <p>{formatHeal(maxCritHeal)}</p>
         </div>
         <div className="space-y-1">
           <h2 className="font-bold">Average Heal</h2>

@@ -32,7 +32,7 @@ type SavedBuildDamageComparisonMode =
   | "dotMaxcrit"
   | "threat"
 
-type SavedBuildHealingComparisonMode = "healNonCrit" | "healCrit" | "healAverage"
+type SavedBuildHealingComparisonMode = "healNonCrit" | "healCrit" | "healMaxcrit" | "healAverage"
 
 export type SavedBuildComparisonMode =
   | SavedBuildDamageComparisonMode
@@ -90,6 +90,7 @@ const savedBuildHealingComparisonModeOptions: Array<{
 }> = [
   { key: "healNonCrit", label: "Non-Crit" },
   { key: "healCrit", label: "Crit" },
+  { key: "healMaxcrit", label: "Maximized" },
   { key: "healAverage", label: "Avg" },
 ]
 
@@ -228,6 +229,7 @@ function buildSavedBuildSkillOptions(
       const noteParts = [
         damagePreset?.note,
         healingPreset ? `${getHealingEffectLabel(healingPreset.effectType)}: ${healingPreset.baseStat}` : null,
+        healingPreset && !healingPreset.canCrit ? "Cannot Crit" : null,
         buffStats.length > 0 ? `Buff: ${buffStats.join(", ")}` : null,
       ].filter((value): value is string => Boolean(value))
 
@@ -332,6 +334,10 @@ export function calculateSavedBuildSkillResult(
       totalStat: build.stats[healingPreset.baseStat] ?? build.stages.StatsBase[healingPreset.baseStat] ?? 0,
       skillHealPercent: healingPreset.skillHealPercent,
       skillFlatHeal: healingPreset.skillFlatHeal,
+      critChancePercent: build.stats["Crit Chance%"] ?? 0,
+      critDamagePercent: build.stats["Crit DMG%"] ?? 0,
+      overdrivePercent: build.stats["Overdrive%"] ?? 0,
+      canCrit: healingPreset.canCrit,
     })
     : null
   const buffStackOverride = options?.buffStackOverride
@@ -435,6 +441,8 @@ export function getSavedBuildCalculatedValue(
         return result.healingResult.nonCrit
       case "healCrit":
         return result.healingResult.crit
+      case "healMaxcrit":
+        return result.healingResult.maxcrit
       case "healAverage":
         return result.healingResult.average
     }

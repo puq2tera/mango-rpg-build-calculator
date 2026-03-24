@@ -13,6 +13,7 @@ export type HealingCalcSkillPreset = {
   skillFlatHeal: number
   threatPercent: number
   effectType: HealingEffectType
+  canCrit: boolean
 }
 
 export type HealingEffectType = "heal" | "tempHp" | "overheal"
@@ -53,6 +54,10 @@ function parseAmountToken(value: string): number {
 function parseThreatPercent(description: string): number {
   const match = description.match(/([+-]?\d+(?:\.\d+)?)%\s*Threat(?: Generated)?/i)
   return match ? Number.parseFloat(match[1]) : 0
+}
+
+function parseCanCrit(description: string): boolean {
+  return !/\bcannot crit heal\b/i.test(description)
 }
 
 function parseDirectHealingEffect(description: string): ParsedHealingEffect | null {
@@ -169,6 +174,7 @@ function buildHealingCalcSkillPreset(name: string, skill: Skill): HealingCalcSki
     skillFlatHeal: parsedEffect.skillFlatHeal,
     threatPercent,
     effectType: parsedEffect.effectType,
+    canCrit: parseCanCrit(skill.description),
   }
 }
 
