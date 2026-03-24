@@ -11,6 +11,7 @@ import {
   type HealingCalcManualOverrides,
   type HealingCalcResult,
 } from "@/app/lib/healingCalc"
+import { getThreatBonusMultiplier } from "@/app/lib/threat"
 import {
   healingBaseStats,
   healingCalcSkillPresets,
@@ -77,10 +78,18 @@ function buildHealingBaseRows(result: HealingCalcResult): TooltipRow[] {
   return [
     { label: `Total ${result.baseStat}`, value: formatTooltipValue(result.totalStat, 0) },
     { label: "Skill Heal%", value: formatPercent(result.skillHealPercent) },
-    { label: "Flat Heal", value: formatTooltipValue(result.skillFlatHeal, 0) },
-    { label: "Raw Heal", value: formatTooltipValue(result.breakdown.baseHealRaw, 2) },
-    { label: "Rounded Heal", value: formatTooltipValue(result.breakdown.roundedBaseHeal, 0) },
+    { label: "Flat Heal", value: formatTooltipValue(result.breakdown.flatHeal, 0) },
+    { label: "Scaling Heal Raw", value: formatTooltipValue(result.breakdown.scalingHealRaw, 2) },
+    { label: "Scaling Heal", value: formatTooltipValue(result.breakdown.scalingHeal, 0) },
+    { label: "Final Non-Crit Heal", value: formatTooltipValue(result.nonCrit, 0) },
   ]
+}
+
+function appendThreatRows(rows: TooltipRow[], title: string, threatAmount: number, result: HealingCalcResult): void {
+  rows.push({ label: `${title} Threat`, value: formatTooltipValue(threatAmount, 0) })
+  rows.push({ label: "Threat Base Mult", value: formatMultiplier(result.threatBreakdown.baseThreatMultiplier, 0) })
+  rows.push({ label: "Threat Skill%", value: formatPercent(result.threatBreakdown.skillThreatPercent) })
+  rows.push({ label: "Threat Bonus Mult", value: formatMultiplier(result.threatBreakdown.bonusThreatMultiplier) })
 }
 
 function buildNonCritHealRows(result: HealingCalcResult): TooltipRow[] {
@@ -90,7 +99,7 @@ function buildNonCritHealRows(result: HealingCalcResult): TooltipRow[] {
     rows.push({ label: "Can Crit Heal", value: "No" })
   }
 
-  rows.push({ label: "Non-Crit Heal", value: formatTooltipValue(result.nonCrit, 0) })
+  appendThreatRows(rows, "Non-Crit", result.threatNonCrit, result)
   return rows
 }
 
@@ -100,12 +109,15 @@ function buildCritHealRows(result: HealingCalcResult): TooltipRow[] {
   if (!result.canCrit) {
     rows.push({ label: "Can Crit Heal", value: "No" })
     rows.push({ label: "Crit Heal", value: formatTooltipValue(result.crit, 0) })
+    appendThreatRows(rows, "Crit", result.threatCrit, result)
     return rows
   }
 
   rows.push({ label: "Crit DMG%", value: formatPercent(result.critDamagePercent) })
+  rows.push({ label: "Crit Bonus%", value: formatPercent(result.breakdown.critBonusPercent) })
   rows.push({ label: "Crit Multiplier", value: formatMultiplier(result.breakdown.critMultiplier) })
   rows.push({ label: "Crit Heal", value: formatTooltipValue(result.crit, 0) })
+  appendThreatRows(rows, "Crit", result.threatCrit, result)
 
   return rows
 }
@@ -116,6 +128,7 @@ function buildMaxCritHealRows(result: HealingCalcResult): TooltipRow[] {
   if (!result.canCrit) {
     rows.push({ label: "Can Crit Heal", value: "No" })
     rows.push({ label: "Max Crit Heal", value: formatTooltipValue(result.maxcrit, 0) })
+    appendThreatRows(rows, "Max Crit", result.threatMaxcrit, result)
     return rows
   }
 
@@ -123,6 +136,7 @@ function buildMaxCritHealRows(result: HealingCalcResult): TooltipRow[] {
   rows.push({ label: "Overdrive%", value: formatPercent(result.overdrivePercent) })
   rows.push({ label: "Overdrive Mult", value: formatMultiplier(result.breakdown.overdriveMultiplier) })
   rows.push({ label: "Max Crit Heal", value: formatTooltipValue(result.maxcrit, 0) })
+  appendThreatRows(rows, "Max Crit", result.threatMaxcrit, result)
 
   return rows
 }
@@ -133,6 +147,7 @@ function buildAverageHealRows(result: HealingCalcResult): TooltipRow[] {
   if (!result.canCrit) {
     rows.push({ label: "Can Crit Heal", value: "No" })
     rows.push({ label: "Average Heal", value: formatTooltipValue(result.average, 0) })
+    rows.push({ label: "Threat Avg", value: formatTooltipValue(result.threatAverage, 0) })
     return rows
   }
 
@@ -147,6 +162,7 @@ function buildAverageHealRows(result: HealingCalcResult): TooltipRow[] {
   rows.push({ label: "Crit Heal", value: formatTooltipValue(result.crit, 0) })
   rows.push({ label: "Max Crit Heal", value: formatTooltipValue(result.maxcrit, 0) })
   rows.push({ label: "Average Heal", value: formatTooltipValue(result.average, 0) })
+  rows.push({ label: "Threat Avg", value: formatTooltipValue(result.threatAverage, 0) })
 
   return rows
 }
@@ -209,6 +225,8 @@ export default function HealingPage() {
     critDamagePercent,
     overdrivePercent,
     canCrit,
+    threatPercent,
+    threatBonusMultiplier: getThreatBonusMultiplier(statSnapshot.total),
   })
   const { nonCrit: baseHeal, crit: critHeal, maxcrit: maxCritHeal, average } = healingResult
   const formatHeal = (value: number) => value.toLocaleString("en-US")

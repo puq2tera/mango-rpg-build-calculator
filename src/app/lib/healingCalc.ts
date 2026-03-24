@@ -12,17 +12,44 @@ export type HealingCalcInputs = {
   critDamagePercent: number
   overdrivePercent: number
   canCrit: boolean
+  threatPercent?: number
+  threatBonusMultiplier?: number
 }
 
 export type HealingBreakdown = {
-  baseHealRaw: number
-  roundedBaseHeal: number
+  flatHeal: number
+  scalingHealRaw: number
+  scalingHeal: number
   effectiveCritChancePercent: number
+  critBonusPercent: number
   critMultiplier: number
   overdriveMultiplier: number
   nonCritWeight: number
   critWeight: number
   maxCritWeight: number
+}
+
+export type HealingThreatOutcomeBreakdown = {
+  healAmount: number
+  baseThreat: number
+  afterSkillThreat: number
+  finalThreat: number
+}
+
+export type HealingThreatBreakdown = {
+  baseThreatMultiplier: number
+  skillThreatPercent: number
+  skillThreatMultiplier: number
+  bonusThreatMultiplier: number
+  nonCrit: HealingThreatOutcomeBreakdown
+  crit: HealingThreatOutcomeBreakdown
+  maxcrit: HealingThreatOutcomeBreakdown
+  average: {
+    nonCritWeight: number
+    critWeight: number
+    maxCritWeight: number
+    finalThreat: number
+  }
 }
 
 export type HealingCalcManualOverrides = {
@@ -62,7 +89,12 @@ export type HealingCalcResult = {
   crit: number
   maxcrit: number
   average: number
+  threatNonCrit: number
+  threatCrit: number
+  threatMaxcrit: number
+  threatAverage: number
   breakdown: HealingBreakdown
+  threatBreakdown: HealingThreatBreakdown
 }
 
 export const defaultHealingCalcManualOverrides: HealingCalcManualOverrides = {
@@ -88,6 +120,9 @@ export const defaultHealingCalcState: HealingCalcState = {
   threatPercent: 0,
   manualOverrides: defaultHealingCalcManualOverrides,
 }
+
+const HEALING_CRIT_BONUS_EFFECTIVENESS = 0.25
+const HEALING_BASE_THREAT_MULTIPLIER = 6
 
 function clamp(value: number, min: number, max: number): number {
   return Math.min(Math.max(value, min), max)
@@ -174,16 +209,40 @@ export function calculateHealing({
   critDamagePercent,
   overdrivePercent,
   canCrit,
+  threatPercent = 0,
+  threatBonusMultiplier = 1,
 }: HealingCalcInputs): HealingCalcResult {
-  const baseHealRaw = (totalStat * (skillHealPercent / 100)) + skillFlatHeal
-  const roundedHeal = Math.round(baseHealRaw)
+  const normalizedFlatHeal = Number.isFinite(skillFlatHeal) ? skillFlatHeal : 0
+  const flatHeal = Math.round(normalizedFlatHeal)
+  const scalingHealRaw = totalStat * (skillHealPercent / 100)
+  const scalingHeal = Math.round(scalingHealRaw)
+  const roundedHeal = flatHeal + scalingHeal
   const normalizedCritChancePercent = Number.isFinite(critChancePercent) ? critChancePercent : 0
   const normalizedCritDamagePercent = Number.isFinite(critDamagePercent) ? critDamagePercent : 0
   const normalizedOverdrivePercent = Number.isFinite(overdrivePercent) ? overdrivePercent : 0
-  const critMultiplier = Math.max(0, normalizedCritDamagePercent / 100)
+  const normalizedThreatPercent = Number.isFinite(threatPercent) ? threatPercent : 0
+  const normalizedThreatBonusMultiplier = Number.isFinite(threatBonusMultiplier) ? threatBonusMultiplier : 1
+  const critBonusPercent = Math.max(0, normalizedCritDamagePercent - 100)
+  const critMultiplier = 1 + ((critBonusPercent / 100) * HEALING_CRIT_BONUS_EFFECTIVENESS)
   const overdriveMultiplier = Math.max(0, normalizedOverdrivePercent / 100)
+  const skillThreatMultiplier = Math.max(0, 1 + (normalizedThreatPercent / 100))
+
+  const buildThreatOutcome = (healAmount: number): HealingThreatOutcomeBreakdown => {
+    const baseThreat = Math.floor(healAmount * HEALING_BASE_THREAT_MULTIPLIER)
+    const afterSkillThreat = Math.floor(baseThreat * skillThreatMultiplier)
+    const finalThreat = Math.floor(afterSkillThreat * Math.max(0, normalizedThreatBonusMultiplier))
+
+    return {
+      healAmount,
+      baseThreat,
+      afterSkillThreat,
+      finalThreat,
+    }
+  }
 
   if (!canCrit) {
+    const threatNonCritBreakdown = buildThreatOutcome(roundedHeal)
+
     return {
       baseStat,
       totalStat,
@@ -197,27 +256,61 @@ export function calculateHealing({
       crit: roundedHeal,
       maxcrit: roundedHeal,
       average: roundedHeal,
+      threatNonCrit: threatNonCritBreakdown.finalThreat,
+      threatCrit: threatNonCritBreakdown.finalThreat,
+      threatMaxcrit: threatNonCritBreakdown.finalThreat,
+      threatAverage: threatNonCritBreakdown.finalThreat,
       breakdown: {
-        baseHealRaw,
-        roundedBaseHeal: roundedHeal,
+        flatHeal,
+        scalingHealRaw,
+        scalingHeal,
         effectiveCritChancePercent: 0,
+        critBonusPercent,
         critMultiplier,
         overdriveMultiplier,
         nonCritWeight: 1,
         critWeight: 0,
         maxCritWeight: 0,
       },
+      threatBreakdown: {
+        baseThreatMultiplier: HEALING_BASE_THREAT_MULTIPLIER,
+        skillThreatPercent: normalizedThreatPercent,
+        skillThreatMultiplier,
+        bonusThreatMultiplier: Math.max(0, normalizedThreatBonusMultiplier),
+        nonCrit: threatNonCritBreakdown,
+        crit: threatNonCritBreakdown,
+        maxcrit: threatNonCritBreakdown,
+        average: {
+          nonCritWeight: 1,
+          critWeight: 0,
+          maxCritWeight: 0,
+          finalThreat: threatNonCritBreakdown.finalThreat,
+        },
+      },
     }
   }
 
-  const crit = Math.floor(roundedHeal * critMultiplier)
-  const maxcrit = Math.floor(crit * overdriveMultiplier)
+  const critScalingHeal = Math.floor(scalingHeal * critMultiplier)
+  const maxCritScalingHeal = Math.floor(critScalingHeal * overdriveMultiplier)
+  const crit = flatHeal + critScalingHeal
+  const maxcrit = flatHeal + maxCritScalingHeal
   const totalCritChance = normalizedCritChancePercent / 100
   const critChance = clamp(totalCritChance, 0, 2)
   const nonCritWeight = 1 - clamp(critChance, 0, 1)
   const maxCritWeight = clamp(critChance - 1, 0, 1)
   const critWeight = clamp(critChance, 0, 1) - maxCritWeight
   const average = Math.floor(roundedHeal * nonCritWeight + crit * critWeight + maxcrit * maxCritWeight)
+  const threatNonCritBreakdown = buildThreatOutcome(roundedHeal)
+  const threatCritBreakdown = buildThreatOutcome(crit)
+  const threatMaxcritBreakdown = buildThreatOutcome(maxcrit)
+  const threatNonCrit = threatNonCritBreakdown.finalThreat
+  const threatCrit = threatCritBreakdown.finalThreat
+  const threatMaxcrit = threatMaxcritBreakdown.finalThreat
+  const threatAverage = Math.floor(
+    threatNonCrit * nonCritWeight
+      + threatCrit * critWeight
+      + threatMaxcrit * maxCritWeight,
+  )
 
   return {
     baseStat,
@@ -232,15 +325,36 @@ export function calculateHealing({
     crit,
     maxcrit,
     average,
+    threatNonCrit,
+    threatCrit,
+    threatMaxcrit,
+    threatAverage,
     breakdown: {
-      baseHealRaw,
-      roundedBaseHeal: roundedHeal,
+      flatHeal,
+      scalingHealRaw,
+      scalingHeal,
       effectiveCritChancePercent: critChance * 100,
+      critBonusPercent,
       critMultiplier,
       overdriveMultiplier,
       nonCritWeight,
       critWeight,
       maxCritWeight,
+    },
+    threatBreakdown: {
+      baseThreatMultiplier: HEALING_BASE_THREAT_MULTIPLIER,
+      skillThreatPercent: normalizedThreatPercent,
+      skillThreatMultiplier,
+      bonusThreatMultiplier: Math.max(0, normalizedThreatBonusMultiplier),
+      nonCrit: threatNonCritBreakdown,
+      crit: threatCritBreakdown,
+      maxcrit: threatMaxcritBreakdown,
+      average: {
+        nonCritWeight,
+        critWeight,
+        maxCritWeight,
+        finalThreat: threatAverage,
+      },
     },
   }
 }
