@@ -1,5 +1,6 @@
 "use client"
 
+import Link from "next/link"
 import { useEffect, useState } from "react"
 import {
   DndContext,
@@ -36,22 +37,7 @@ import {
   type MainStatValues,
 } from "../lib/mainStatPoints"
 import {
-  MANUAL_TRAINING_SECTION_ID,
-  createDefaultManualTrainingEntry,
-  getEffectiveTrainingTotalsFromEntries,
-  getManualTrainingEffectivePoints,
-  getManualTrainingToken,
-  normalizeManualTrainingEntries,
-  parseManualTrainingTranscript,
-  type ManualTrainingEntry,
-} from "../lib/manualTraining"
-import {
-  createDefaultManualLevelRange,
-  getManualRangeMaxTotalLevel,
   manualRangeClasses,
-  normalizeManualLevelRanges,
-  parseManualLevelTranscript,
-  type ManualLevelRange,
   type ManualRangeClass,
 } from "../lib/manualLevelRanges"
 import { skill_data } from "../data/skill_data"
@@ -64,10 +50,6 @@ const STORAGE_KEYS = {
   training: "SelectedTraining",
   heroPoints: "SelectedHeroPoints",
   savedLevelOrder: "SelectedLevelOrder",
-  manualLevelRanges: "SelectedManualLevelRanges",
-  manualLevelRangesCollapsed: "SelectedManualLevelRangesCollapsed",
-  manualTrainingEntries: "SelectedManualTrainingEntries",
-  manualTrainingCollapsed: "SelectedManualTrainingCollapsed",
   dungeonUnlocks: DUNGEON_UNLOCKS_STORAGE_KEY,
   race: "SelectedRace",
 }
@@ -83,16 +65,6 @@ function parseStoredStringArray(raw: string | null): string[] {
     return Array.isArray(parsed) ? parsed.filter((value): value is string => typeof value === "string") : []
   } catch {
     return []
-  }
-}
-
-function parseStoredBoolean(raw: string | null, fallback = false): boolean {
-  if (!raw) return fallback
-
-  try {
-    return JSON.parse(raw) === true
-  } catch {
-    return fallback
   }
 }
 
@@ -158,11 +130,6 @@ function formatWhole(value: number): string {
   return Math.max(0, Math.round(value)).toLocaleString()
 }
 
-type ManualRangeImportNotice = {
-  tone: "success" | "warning" | "error"
-  lines: string[]
-}
-
 type Cls = ManualRangeClass
 type LevelsByClass = Record<Cls, number>
 
@@ -177,51 +144,6 @@ const classCellBg: Record<Cls, string> = {
 
 function createEmptyLevelsByClass(): LevelsByClass {
   return { tank: 0, warrior: 0, caster: 0, healer: 0 }
-}
-
-function getDefaultLevelClassSequence(levels: LevelsByClass, classOrder: readonly Cls[]): Cls[] {
-  const sequence: Cls[] = []
-
-  for (const className of classOrder) {
-    const classLevels = Math.max(0, Math.floor(levels[className] ?? 0))
-    for (let i = 0; i < classLevels; i++) {
-      sequence.push(className)
-    }
-  }
-
-  return sequence
-}
-
-function getManualRangeOverride(ranges: readonly ManualLevelRange[], totalLevel: number): ManualLevelRange | null {
-  for (let i = ranges.length - 1; i >= 0; i--) {
-    const range = ranges[i]
-    if (totalLevel >= range.startLevel && totalLevel <= range.endLevel) {
-      return range
-    }
-  }
-
-  return null
-}
-
-function getSyncedLevelsFromManualRanges(
-  ranges: readonly ManualLevelRange[],
-  currentLevels: LevelsByClass,
-  classOrder: readonly Cls[],
-): LevelsByClass {
-  const maxTotalLevel = getManualRangeMaxTotalLevel(ranges)
-  const defaultSequence = getDefaultLevelClassSequence(currentLevels, classOrder)
-  const syncedLevels = createEmptyLevelsByClass()
-  let lastResolvedClass: Cls = defaultSequence[0] ?? classOrder[0] ?? "healer"
-
-  for (let totalLevel = 1; totalLevel <= maxTotalLevel; totalLevel++) {
-    const override = getManualRangeOverride(ranges, totalLevel)
-    const resolvedClass = override?.className ?? defaultSequence[totalLevel - 1] ?? lastResolvedClass
-
-    syncedLevels[resolvedClass] += 1
-    lastResolvedClass = resolvedClass
-  }
-
-  return syncedLevels
 }
 
 type LevelRequirementRowProps = {
@@ -295,12 +217,6 @@ export default function LevelsPage() {
   const [statPoints, setStatPoints] = useState<MainStatValues>(createDefaultMainStatValues())
   const [training, setTraining] = useState<MainStatValues>(createDefaultMainStatValues())
   const [heroPoints, setHeroPoints] = useState<Record<string, number>>({})
-  const [manualLevelRanges, setManualLevelRanges] = useState<ManualLevelRange[]>([])
-  const [manualRangesCollapsed, setManualRangesCollapsed] = useState(false)
-  const [manualRangeImportNotice, setManualRangeImportNotice] = useState<ManualRangeImportNotice | null>(null)
-  const [manualTrainingEntries, setManualTrainingEntries] = useState<ManualTrainingEntry[]>([])
-  const [manualTrainingCollapsed, setManualTrainingCollapsed] = useState(false)
-  const [manualTrainingImportNotice, setManualTrainingImportNotice] = useState<ManualRangeImportNotice | null>(null)
   const [selectedDungeonUnlocks, setSelectedDungeonUnlocks] = useState<DungeonUnlockTag[]>([])
   const [selectedTalents, setSelectedTalents] = useState<string[]>([])
   const [selectedSkills, setSelectedSkills] = useState<string[]>([])
@@ -314,10 +230,6 @@ export default function LevelsPage() {
     const storedTraining = localStorage.getItem(STORAGE_KEYS.training)
     const storedHeroPoints = localStorage.getItem(STORAGE_KEYS.heroPoints)
     const storedLevelOrder = localStorage.getItem(STORAGE_KEYS.savedLevelOrder)
-    const storedManualLevelRanges = localStorage.getItem(STORAGE_KEYS.manualLevelRanges)
-    const storedManualLevelRangesCollapsed = localStorage.getItem(STORAGE_KEYS.manualLevelRangesCollapsed)
-    const storedManualTrainingEntries = localStorage.getItem(STORAGE_KEYS.manualTrainingEntries)
-    const storedManualTrainingCollapsed = localStorage.getItem(STORAGE_KEYS.manualTrainingCollapsed)
     const storedDungeonUnlocks = localStorage.getItem(STORAGE_KEYS.dungeonUnlocks)
     const storedRace = localStorage.getItem(STORAGE_KEYS.race)
     const storedSelectedTalents = localStorage.getItem("selectedTalents")
@@ -327,10 +239,6 @@ export default function LevelsPage() {
     setTraining(parseStoredMainStatValues(storedTraining))
     setHeroPoints(parseStoredJson(storedHeroPoints, {}))
     setClassOrder(normalizeStoredClassOrder(storedLevelOrder))
-    setManualLevelRanges(normalizeManualLevelRanges(parseStoredJson(storedManualLevelRanges, [])))
-    setManualRangesCollapsed(parseStoredBoolean(storedManualLevelRangesCollapsed))
-    setManualTrainingEntries(normalizeManualTrainingEntries(parseStoredJson(storedManualTrainingEntries, [])))
-    setManualTrainingCollapsed(parseStoredBoolean(storedManualTrainingCollapsed))
     setSelectedDungeonUnlocks(parseStoredStringArray(storedDungeonUnlocks).filter(isDungeonUnlockTag))
     if (storedRace && isRaceTag(storedRace)) setSelectedRace(storedRace)
     setSelectedTalents(parseStoredStringArray(storedSelectedTalents))
@@ -353,12 +261,6 @@ export default function LevelsPage() {
 
   useEffect(() => {
     if (!loaded) return
-    localStorage.setItem(STORAGE_KEYS.training, JSON.stringify(training))
-    dispatchBuildSnapshotUpdated()
-  }, [training, loaded])
-
-  useEffect(() => {
-    if (!loaded) return
     localStorage.setItem(STORAGE_KEYS.heroPoints, JSON.stringify(heroPoints))
     dispatchBuildSnapshotUpdated()
   }, [heroPoints, loaded])
@@ -368,27 +270,6 @@ export default function LevelsPage() {
     localStorage.setItem(STORAGE_KEYS.savedLevelOrder, JSON.stringify(classOrder))
     dispatchBuildSnapshotUpdated()
   }, [classOrder, loaded])
-
-  useEffect(() => {
-    if (!loaded) return
-    localStorage.setItem(STORAGE_KEYS.manualLevelRanges, JSON.stringify(manualLevelRanges))
-    dispatchBuildSnapshotUpdated()
-  }, [manualLevelRanges, loaded])
-
-  useEffect(() => {
-    if (!loaded) return
-    localStorage.setItem(STORAGE_KEYS.manualLevelRangesCollapsed, JSON.stringify(manualRangesCollapsed))
-  }, [manualRangesCollapsed, loaded])
-
-  useEffect(() => {
-    if (!loaded) return
-    localStorage.setItem(STORAGE_KEYS.manualTrainingEntries, JSON.stringify(manualTrainingEntries))
-  }, [manualTrainingEntries, loaded])
-
-  useEffect(() => {
-    if (!loaded) return
-    localStorage.setItem(STORAGE_KEYS.manualTrainingCollapsed, JSON.stringify(manualTrainingCollapsed))
-  }, [manualTrainingCollapsed, loaded])
 
   useEffect(() => {
     if (!loaded) return
@@ -407,19 +288,12 @@ export default function LevelsPage() {
   }
 
   const totalLevels = Object.values(levels).reduce((a, b) => a + b, 0)
-  const maxManualRangeLevel = getManualRangeMaxTotalLevel(manualLevelRanges)
-  const needsManualLevelSync = maxManualRangeLevel > totalLevels
   const availableSkillPoints = Math.max(0, Math.floor((totalLevels - 1) / 2))
   const availableTalentPoints = Math.floor(totalLevels / 2)
   const totalStatPoints = totalLevels
   const usedStatPoints = Object.values(statPoints).reduce((a, b) => a + b, 0)
   const remainingStatPoints = totalStatPoints - usedStatPoints
   const totalTraining = Object.values(training).reduce((a, b) => a + b, 0)
-  const manualTrainingTotals = getEffectiveTrainingTotalsFromEntries(manualTrainingEntries)
-  const totalManualTraining = Object.values(manualTrainingTotals).reduce((a, b) => a + b, 0)
-  const needsManualTrainingSync = manualTrainingEntries.length > 0 && classMainStatOrder.some(
-    (key) => training[key] !== manualTrainingTotals[key],
-  )
   const { availablePoints: availableHeroPoints } = calculateHeroPointAvailability(totalLevels, selectedRace, selectedTalents)
 
   const totalHeroPoints = heroPointStats.reduce((sum, { id, cost }) => {
@@ -513,58 +387,6 @@ export default function LevelsPage() {
     </div>
   )
 
-  const addManualRange = () => {
-    setManualLevelRanges((prev) => [...prev, createDefaultManualLevelRange()])
-  }
-
-  const updateManualRange = <K extends keyof ManualLevelRange>(
-    index: number,
-    key: K,
-    value: ManualLevelRange[K],
-  ) => {
-    setManualLevelRanges((prev) =>
-      prev.map((range, i) => {
-        if (i !== index) return range
-        return { ...range, [key]: value }
-      })
-    )
-  }
-
-  const removeManualRange = (index: number) => {
-    setManualLevelRanges((prev) => prev.filter((_, i) => i !== index))
-  }
-
-  const importManualRangesFromText = (rawTranscript: string) => {
-    const transcript = rawTranscript.trim()
-
-    if (transcript.length === 0) {
-      setManualRangeImportNotice({
-        tone: "error",
-        lines: ["Paste a Guild Card and one or more `xlevelup` results into the import box."],
-      })
-      return
-    }
-
-    const { ranges, warnings } = parseManualLevelTranscript(
-      transcript,
-      getManualRangeMaxTotalLevel(manualLevelRanges),
-    )
-
-    if (ranges.length === 0) {
-      setManualRangeImportNotice({
-        tone: "error",
-        lines: warnings.length > 0 ? warnings : ["The pasted text did not produce any ranges."],
-      })
-      return
-    }
-
-    setManualLevelRanges((prev) => [...prev, ...ranges])
-    setManualRangeImportNotice({
-      tone: warnings.length > 0 ? "warning" : "success",
-      lines: [`Imported ${ranges.length} manual range${ranges.length === 1 ? "" : "s"}.`, ...warnings],
-    })
-  }
-
   const toggleDungeonUnlock = (tag: DungeonUnlockTag) => {
     setSelectedDungeonUnlocks((prev) =>
       prev.includes(tag) ? prev.filter((entry) => entry !== tag) : [...prev, tag]
@@ -592,78 +414,6 @@ export default function LevelsPage() {
       }
 
       return arrayMove(prev, oldIndex, newIndex)
-    })
-  }
-
-  const syncLevelsToManualRanges = () => {
-    const syncedLevels = getSyncedLevelsFromManualRanges(manualLevelRanges, levels, classOrder)
-    setLevels(syncedLevels)
-    setManualRangeImportNotice({
-      tone: "success",
-      lines: [`Synced chosen levels to ${getManualRangeMaxTotalLevel(manualLevelRanges)} total levels from manual ranges.`],
-    })
-  }
-
-  const addManualTrainingEntry = () => {
-    setManualTrainingEntries((prev) => [...prev, createDefaultManualTrainingEntry()])
-  }
-
-  const updateManualTrainingEntry = <K extends keyof ManualTrainingEntry>(
-    index: number,
-    key: K,
-    value: ManualTrainingEntry[K],
-  ) => {
-    setManualTrainingEntries((prev) =>
-      prev.map((entry, i) => {
-        if (i !== index) {
-          return entry
-        }
-
-        return { ...entry, [key]: value }
-      })
-    )
-  }
-
-  const removeManualTrainingEntry = (index: number) => {
-    setManualTrainingEntries((prev) => prev.filter((_, i) => i !== index))
-  }
-
-  const importManualTrainingFromText = (rawTranscript: string) => {
-    const transcript = rawTranscript.trim()
-
-    if (transcript.length === 0) {
-      setManualTrainingImportNotice({
-        tone: "error",
-        lines: ["Paste one or more `xtraining` results into the import box."],
-      })
-      return
-    }
-
-    const { entries, warnings } = parseManualTrainingTranscript(transcript)
-
-    if (entries.length === 0) {
-      setManualTrainingImportNotice({
-        tone: "error",
-        lines: warnings.length > 0 ? warnings : ["The pasted text did not produce any manual training rows."],
-      })
-      return
-    }
-
-    setManualTrainingEntries((prev) => [...prev, ...entries])
-    setManualTrainingImportNotice({
-      tone: warnings.length > 0 ? "warning" : "success",
-      lines: [
-        `Imported ${entries.length} manual training row${entries.length === 1 ? "" : "s"}.`,
-        ...warnings,
-      ],
-    })
-  }
-
-  const syncTrainingToManualEntries = () => {
-    setTraining(manualTrainingTotals)
-    setManualTrainingImportNotice({
-      tone: "success",
-      lines: [`Synced chosen training to ${totalManualTraining} imported point${totalManualTraining === 1 ? "" : "s"}.`],
     })
   }
 
@@ -772,195 +522,6 @@ export default function LevelsPage() {
         </div>
       </div>
 
-      <section className="overflow-hidden rounded-[30px] border border-slate-800/80 bg-slate-950/35 shadow-[0_18px_60px_rgba(2,6,23,0.22)]">
-        <div className={`flex flex-wrap items-center justify-between gap-3 ${manualRangesCollapsed ? "px-4 py-2.5 sm:px-5" : "px-5 py-4 sm:px-6"}`}>
-          <div className="space-y-1">
-            <div className="text-xl font-semibold text-slate-50">Manual Levelup Ranges</div>
-            {!manualRangesCollapsed ? (
-              <div className="text-sm text-slate-400">
-                Import level-up transcripts and manage manual total-level stat override ranges.
-              </div>
-            ) : null}
-          </div>
-          <div className="flex items-center gap-3">
-            <div className="rounded-full border border-slate-700/80 bg-slate-950/70 px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.14em] text-slate-300">
-              {manualLevelRanges.length} Saved
-            </div>
-            <button
-              type="button"
-              onClick={() => setManualRangesCollapsed((prev) => !prev)}
-              aria-expanded={!manualRangesCollapsed}
-              aria-controls="manual-levelup-ranges-panel"
-              className="rounded-full border border-slate-700/80 bg-slate-900/80 px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.16em] text-slate-200 transition hover:border-sky-300/40 hover:text-sky-100"
-            >
-              {manualRangesCollapsed ? "Show" : "Hide"}
-            </button>
-          </div>
-        </div>
-
-        {!manualRangesCollapsed ? (
-          <div id="manual-levelup-ranges-panel" className="space-y-3 border-t border-slate-800/70 p-4 sm:p-6">
-            <div className="max-w-5xl border p-3 space-y-3 bg-slate-900/60">
-              <label className="block space-y-2">
-                <span className="text-sm font-semibold text-slate-100">Paste level-up transcript</span>
-                <input
-                  type="text"
-                  placeholder="Paste level-up transcript here"
-                  onPaste={(e) => {
-                    e.preventDefault()
-                    const text = e.clipboardData.getData("text")
-                    importManualRangesFromText(text)
-                    e.currentTarget.value = ""
-                  }}
-                  className="w-full border bg-slate-950 px-1 py-1 text-sm text-slate-100"
-                />
-              </label>
-              <p className="text-xs text-slate-400">
-                Paste a `xlevelup` transcript directly into the box to import it, including class scaling lines.
-              </p>
-              {manualRangeImportNotice ? (
-                <div
-                  className={`space-y-1 border px-3 py-2 text-sm ${
-                    manualRangeImportNotice.tone === "error"
-                      ? "border-rose-700/70 bg-rose-950/35 text-rose-100"
-                      : manualRangeImportNotice.tone === "warning"
-                        ? "border-amber-700/70 bg-amber-950/30 text-amber-100"
-                        : "border-emerald-700/70 bg-emerald-950/25 text-emerald-100"
-                  }`}
-                >
-                  {manualRangeImportNotice.lines.map((line, index) => (
-                    <div key={`${line}-${index}`}>{line}</div>
-                  ))}
-                </div>
-              ) : null}
-            </div>
-            <div className="flex gap-2">
-              <button
-                type="button"
-                className="border px-3 py-1 bg-slate-800/85 hover:bg-slate-700/90"
-                onClick={addManualRange}
-              >
-                Add Range
-              </button>
-              {needsManualLevelSync ? (
-                <button
-                  type="button"
-                  className="border border-amber-300/70 bg-amber-400 px-3 py-1 font-semibold text-slate-950 hover:bg-amber-300"
-                  onClick={syncLevelsToManualRanges}
-                >
-                  Sync levels
-                </button>
-              ) : null}
-            </div>
-            <div className="overflow-x-auto">
-              <table className="table-fixed border text-xs md:text-sm text-center">
-                <thead className="bg-slate-800/85">
-                  <tr>
-                    <th className="border px-2 py-1">Class</th>
-                    <th className="border px-2 py-1">Start</th>
-                    <th className="border px-2 py-1">End</th>
-                    <th className="border px-2 py-1">HP</th>
-                    <th className="border px-2 py-1">ATK</th>
-                    <th className="border px-2 py-1">DEF</th>
-                    <th className="border px-2 py-1">MATK</th>
-                    <th className="border px-2 py-1">HEAL</th>
-                    <th className="border px-2 py-1">Action</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {manualLevelRanges.map((range, i) => (
-                    <tr key={`${range.className}-${i}`}>
-                      <td className="border px-1 py-1">
-                        <select
-                          value={range.className}
-                          onChange={(e) => updateManualRange(i, "className", e.target.value as Cls)}
-                          className="w-full border"
-                        >
-                          <option value="tank">tank</option>
-                          <option value="warrior">warrior</option>
-                          <option value="caster">caster</option>
-                          <option value="healer">healer</option>
-                        </select>
-                      </td>
-                      <td className="border px-1 py-1">
-                        <input
-                          type="number"
-                          min={1}
-                          value={range.startLevel}
-                          onChange={(e) => updateManualRange(i, "startLevel", Math.max(1, Number(e.target.value) || 1))}
-                          className="w-16 text-center border"
-                        />
-                      </td>
-                      <td className="border px-1 py-1">
-                        <input
-                          type="number"
-                          min={1}
-                          value={range.endLevel}
-                          onChange={(e) => updateManualRange(i, "endLevel", Math.max(1, Number(e.target.value) || 1))}
-                          className="w-16 text-center border"
-                        />
-                      </td>
-                      <td className="border px-1 py-1">
-                        <input
-                          type="number"
-                          value={range.hpGain}
-                          onChange={(e) => updateManualRange(i, "hpGain", Number(e.target.value) || 0)}
-                          className="w-16 text-center border"
-                        />
-                      </td>
-                      <td className="border px-1 py-1">
-                        <input
-                          type="number"
-                          value={range.atkGain}
-                          onChange={(e) => updateManualRange(i, "atkGain", Number(e.target.value) || 0)}
-                          className="w-16 text-center border"
-                        />
-                      </td>
-                      <td className="border px-1 py-1">
-                        <input
-                          type="number"
-                          value={range.defGain}
-                          onChange={(e) => updateManualRange(i, "defGain", Number(e.target.value) || 0)}
-                          className="w-16 text-center border"
-                        />
-                      </td>
-                      <td className="border px-1 py-1">
-                        <input
-                          type="number"
-                          value={range.matkGain}
-                          onChange={(e) => updateManualRange(i, "matkGain", Number(e.target.value) || 0)}
-                          className="w-16 text-center border"
-                        />
-                      </td>
-                      <td className="border px-1 py-1">
-                        <input
-                          type="number"
-                          value={range.healGain}
-                          onChange={(e) => updateManualRange(i, "healGain", Number(e.target.value) || 0)}
-                          className="w-16 text-center border"
-                        />
-                      </td>
-                      <td className="border px-1 py-1">
-                        <button
-                          type="button"
-                          className="border px-2 py-1 bg-rose-900/35 hover:bg-rose-900/45"
-                          onClick={() => removeManualRange(i)}
-                        >
-                          Remove
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-            <p className="text-xs text-slate-400">
-              Start and end always refer to total level.
-              Example: `10-14` means the five overall levels that ended at total level 14, even if those levels were split across different classes.
-            </p>
-          </div>
-        ) : null}
-      </section>
 
       <table className="table-fixed border text-sm text-center">
         <thead className="bg-slate-800/85">
@@ -1035,197 +596,6 @@ export default function LevelsPage() {
           </tr>
         </tbody>
       </table>
-
-      <h2 className="text-lg font-bold">Training</h2>
-      <table className="text-center text-sm border">
-        <thead>
-          <tr>
-            <th colSpan={4} className="bg-slate-800/85 border">Total Chosen: {totalTraining}</th>
-          </tr>
-          <tr>
-            <th className="bg-emerald-800/45 border">T</th>
-            <th className="bg-rose-800/45 border">W</th>
-            <th className="bg-sky-800/45 border">C</th>
-            <th className="bg-fuchsia-800/45 border">H</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            {classMainStatOrder.map((k) => (
-              <td key={k} className="border">
-                <input
-                  type="number"
-                  value={training[k]}
-                  onChange={(e) => setTraining({ ...training, [k]: +e.target.value })}
-                  className="w-16 text-center"
-                />
-              </td>
-            ))}
-          </tr>
-        </tbody>
-      </table>
-
-      <section
-        id={MANUAL_TRAINING_SECTION_ID}
-        className="overflow-hidden rounded-[30px] border border-slate-800/80 bg-slate-950/35 shadow-[0_18px_60px_rgba(2,6,23,0.22)]"
-      >
-        <div className={`flex flex-wrap items-center justify-between gap-3 ${manualTrainingCollapsed ? "px-4 py-2.5 sm:px-5" : "px-5 py-4 sm:px-6"}`}>
-          <div className="space-y-1">
-            <div className="text-xl font-semibold text-slate-50">Manual Training</div>
-            {!manualTrainingCollapsed ? (
-              <div className="text-sm text-slate-400">
-                Import `xtraining` transcripts, keep blank command counts blank, and sync the derived totals into the calculator.
-              </div>
-            ) : null}
-          </div>
-          <div className="flex items-center gap-3">
-            <div className="rounded-full border border-slate-700/80 bg-slate-950/70 px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.14em] text-slate-300">
-              {manualTrainingEntries.length} Saved
-            </div>
-            <button
-              type="button"
-              onClick={() => setManualTrainingCollapsed((prev) => !prev)}
-              aria-expanded={!manualTrainingCollapsed}
-              aria-controls="manual-training-panel"
-              className="rounded-full border border-slate-700/80 bg-slate-900/80 px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.16em] text-slate-200 transition hover:border-sky-300/40 hover:text-sky-100"
-            >
-              {manualTrainingCollapsed ? "Show" : "Hide"}
-            </button>
-          </div>
-        </div>
-
-        {!manualTrainingCollapsed ? (
-          <div id="manual-training-panel" className="space-y-3 border-t border-slate-800/70 p-4 sm:p-6">
-            <div className="max-w-5xl border p-3 space-y-3 bg-slate-900/60">
-              <label className="block space-y-2">
-                <span className="text-sm font-semibold text-slate-100">Paste training transcript</span>
-                <input
-                  type="text"
-                  placeholder="Paste xtraining transcript here"
-                  onPaste={(e) => {
-                    e.preventDefault()
-                    const text = e.clipboardData.getData("text")
-                    importManualTrainingFromText(text)
-                    e.currentTarget.value = ""
-                  }}
-                  className="w-full border bg-slate-950 px-1 py-1 text-sm text-slate-100"
-                />
-              </label>
-              <p className="text-xs text-slate-400">
-                Blank Training cells are treated as a full-stat snapshot from the reported gain.
-                Example: `[ atk ] Training` with `+321` resolves to 80 ATK training.
-              </p>
-              {manualTrainingImportNotice ? (
-                <div
-                  className={`space-y-1 border px-3 py-2 text-sm ${
-                    manualTrainingImportNotice.tone === "error"
-                      ? "border-rose-700/70 bg-rose-950/35 text-rose-100"
-                      : manualTrainingImportNotice.tone === "warning"
-                        ? "border-amber-700/70 bg-amber-950/30 text-amber-100"
-                        : "border-emerald-700/70 bg-emerald-950/25 text-emerald-100"
-                  }`}
-                >
-                  {manualTrainingImportNotice.lines.map((line, index) => (
-                    <div key={`${line}-${index}`}>{line}</div>
-                  ))}
-                </div>
-              ) : null}
-            </div>
-            <div className="flex flex-wrap items-center gap-2">
-              <button
-                type="button"
-                className="border px-3 py-1 bg-slate-800/85 hover:bg-slate-700/90"
-                onClick={addManualTrainingEntry}
-              >
-                Add Row
-              </button>
-              {needsManualTrainingSync ? (
-                <button
-                  type="button"
-                  className="border border-sky-300/60 bg-sky-400 px-3 py-1 font-semibold text-slate-950 hover:bg-sky-300"
-                  onClick={syncTrainingToManualEntries}
-                >
-                  Sync training
-                </button>
-              ) : null}
-              <div className="text-xs text-slate-300">
-                Imported totals: {classMainStatOrder.map((key) => `${key} ${manualTrainingTotals[key]}`).join(" / ")}
-              </div>
-            </div>
-            <div className="overflow-x-auto">
-              <table className="table-fixed border text-xs md:text-sm text-center">
-                <thead className="bg-slate-800/85">
-                  <tr>
-                    <th className="border px-2 py-1">Stat</th>
-                    <th className="border px-2 py-1">Training</th>
-                    <th className="border px-2 py-1">Reported Gain</th>
-                    <th className="border px-2 py-1">Effective</th>
-                    <th className="border px-2 py-1">Action</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {manualTrainingEntries.map((entry, index) => (
-                    <tr key={`${entry.stat}-${index}`}>
-                      <td className="border px-1 py-1">
-                        <select
-                          value={entry.stat}
-                          onChange={(e) => updateManualTrainingEntry(index, "stat", e.target.value as ManualTrainingEntry["stat"])}
-                          className="w-full border"
-                        >
-                          {classMainStatOrder.map((statKey) => (
-                            <option key={statKey} value={statKey}>{statKey}</option>
-                          ))}
-                        </select>
-                      </td>
-                      <td className="border px-1 py-1">
-                        <input
-                          type="number"
-                          min={0}
-                          value={entry.trainingPoints ?? ""}
-                          onChange={(e) => updateManualTrainingEntry(
-                            index,
-                            "trainingPoints",
-                            e.target.value === "" ? null : Math.max(0, Math.floor(Number(e.target.value) || 0)),
-                          )}
-                          placeholder={getManualTrainingToken(entry.stat)}
-                          className="w-20 text-center border"
-                        />
-                      </td>
-                      <td className="border px-1 py-1">
-                        <input
-                          type="number"
-                          min={0}
-                          value={entry.reportedGain}
-                          onChange={(e) => updateManualTrainingEntry(
-                            index,
-                            "reportedGain",
-                            Math.max(0, Math.floor(Number(e.target.value) || 0)),
-                          )}
-                          className="w-24 text-center border"
-                        />
-                      </td>
-                      <td className="border px-2 py-1">{formatWhole(getManualTrainingEffectivePoints(entry))}</td>
-                      <td className="border px-1 py-1">
-                        <button
-                          type="button"
-                          className="border px-2 py-1 bg-rose-900/35 hover:bg-rose-900/45"
-                          onClick={() => removeManualTrainingEntry(index)}
-                        >
-                          Remove
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-            <p className="text-xs text-slate-400">
-              A blank Training value means “this result already reflects all training for that stat.”
-              Later blank rows replace earlier totals for the same stat; numbered rows add on top.
-            </p>
-          </div>
-        ) : null}
-      </section>
 
       <h2 className="text-lg font-bold">Hero Points</h2>
 

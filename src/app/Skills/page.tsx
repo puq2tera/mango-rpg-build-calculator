@@ -373,10 +373,10 @@ function SkillsPageContent() {
               <div className="flex items-center gap-3 text-xs">
                 <span className="text-slate-400">Total chosen: {totalTraining}</span>
                 <Link
-                  href={`/Levels#${MANUAL_TRAINING_SECTION_ID}`}
+                  href={`/StatFix#${MANUAL_TRAINING_SECTION_ID}`}
                   className="text-sky-300 underline decoration-sky-500/60 underline-offset-2 transition hover:text-sky-200"
                 >
-                  Manual training
+                  Stat Fix
                 </Link>
               </div>
             </div>

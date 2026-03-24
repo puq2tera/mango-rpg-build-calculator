@@ -1,6 +1,7 @@
 import stat_data from "@/app/data/stat_data"
 
 export const ADDITIONAL_STAGE_STATS_STORAGE_KEY = "AdditionalStageStats"
+export const STAGE_STAT_OVERRIDES_STORAGE_KEY = "StageStatOverrides"
 
 export const additionalStageStatStages = [
   "talents",
@@ -21,6 +22,8 @@ export type AdditionalStageStatEntry = {
   stat: string
   value: number
 }
+
+export type StageStatOverrideEntry = AdditionalStageStatEntry
 
 export const additionalStageStatStageOptions: Array<{ value: AdditionalStageStatStage; label: string }> = [
   { value: "equipment", label: "Equipment" },
@@ -73,6 +76,10 @@ export function normalizeAdditionalStageStatEntries(value: unknown): AdditionalS
   }, [])
 }
 
+export function normalizeStageStatOverrideEntries(value: unknown): StageStatOverrideEntry[] {
+  return normalizeAdditionalStageStatEntries(value)
+}
+
 export function createEmptyAdditionalStageStatGroups(): Record<AdditionalStageStatStage, Record<string, number>> {
   return {
     talents: {},
@@ -97,6 +104,22 @@ export function groupAdditionalStageStatEntries(
     }
 
     grouped[entry.stage][entry.stat] = (grouped[entry.stage][entry.stat] ?? 0) + entry.value
+  }
+
+  return grouped
+}
+
+export function groupStageStatOverrideEntries(
+  entries: readonly StageStatOverrideEntry[],
+): Record<AdditionalStageStatStage, Record<string, number>> {
+  const grouped = createEmptyAdditionalStageStatGroups()
+
+  for (const entry of entries) {
+    if (!isAdditionalStageStatStage(entry.stage) || !isAdditionalStageStatName(entry.stat) || !Number.isFinite(entry.value)) {
+      continue
+    }
+
+    grouped[entry.stage][entry.stat] = entry.value
   }
 
   return grouped
