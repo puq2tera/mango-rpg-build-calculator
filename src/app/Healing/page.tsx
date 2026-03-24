@@ -115,6 +115,8 @@ function buildCritHealRows(result: HealingCalcResult): TooltipRow[] {
 
   rows.push({ label: "Crit DMG%", value: formatPercent(result.critDamagePercent) })
   rows.push({ label: "Crit Bonus%", value: formatPercent(result.breakdown.critBonusPercent) })
+  rows.push({ label: "Effective Crit Bonus%", value: formatPercent(result.breakdown.effectiveCritBonusPercent) })
+  rows.push({ label: "Crit Scaling Base", value: formatTooltipValue(result.breakdown.critScalingBase, 0) })
   rows.push({ label: "Crit Multiplier", value: formatMultiplier(result.breakdown.critMultiplier) })
   rows.push({ label: "Crit Heal", value: formatTooltipValue(result.crit, 0) })
   appendThreatRows(rows, "Crit", result.threatCrit, result)
@@ -133,6 +135,7 @@ function buildMaxCritHealRows(result: HealingCalcResult): TooltipRow[] {
   }
 
   rows.push({ label: "Crit Heal", value: formatTooltipValue(result.crit, 0) })
+  rows.push({ label: "Crit Scaling Base", value: formatTooltipValue(result.breakdown.critScalingBase, 0) })
   rows.push({ label: "Overdrive%", value: formatPercent(result.overdrivePercent) })
   rows.push({ label: "Overdrive Mult", value: formatMultiplier(result.breakdown.overdriveMultiplier) })
   rows.push({ label: "Max Crit Heal", value: formatTooltipValue(result.maxcrit, 0) })

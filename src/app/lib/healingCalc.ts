@@ -1,4 +1,5 @@
 import { healingBaseStats, type HealingBaseStat } from "@/app/lib/healingCalcSkillPresets"
+import { truncateTowardZero } from "@/app/lib/statRounding"
 
 export const HEALING_CALC_STORAGE_KEY = "HealingCalcState"
 const HEALING_CALC_SCHEMA_VERSION = 1
@@ -20,8 +21,10 @@ export type HealingBreakdown = {
   flatHeal: number
   scalingHealRaw: number
   scalingHeal: number
+  critScalingBase: number
   effectiveCritChancePercent: number
   critBonusPercent: number
+  effectiveCritBonusPercent: number
   critMultiplier: number
   overdriveMultiplier: number
   nonCritWeight: number
@@ -216,6 +219,7 @@ export function calculateHealing({
   const flatHeal = Math.round(normalizedFlatHeal)
   const scalingHealRaw = totalStat * (skillHealPercent / 100)
   const scalingHeal = Math.round(scalingHealRaw)
+  const critScalingBase = truncateTowardZero(scalingHealRaw)
   const roundedHeal = flatHeal + scalingHeal
   const normalizedCritChancePercent = Number.isFinite(critChancePercent) ? critChancePercent : 0
   const normalizedCritDamagePercent = Number.isFinite(critDamagePercent) ? critDamagePercent : 0
@@ -223,7 +227,11 @@ export function calculateHealing({
   const normalizedThreatPercent = Number.isFinite(threatPercent) ? threatPercent : 0
   const normalizedThreatBonusMultiplier = Number.isFinite(threatBonusMultiplier) ? threatBonusMultiplier : 1
   const critBonusPercent = Math.max(0, normalizedCritDamagePercent - 100)
-  const critMultiplier = 1 + ((critBonusPercent / 100) * HEALING_CRIT_BONUS_EFFECTIVENESS)
+  const effectiveCritBonusPercent = Math.max(
+    0,
+    truncateTowardZero(critBonusPercent * HEALING_CRIT_BONUS_EFFECTIVENESS),
+  )
+  const critMultiplier = 1 + (effectiveCritBonusPercent / 100)
   const overdriveMultiplier = Math.max(0, normalizedOverdrivePercent / 100)
   const skillThreatMultiplier = Math.max(0, 1 + (normalizedThreatPercent / 100))
 
@@ -264,8 +272,10 @@ export function calculateHealing({
         flatHeal,
         scalingHealRaw,
         scalingHeal,
+        critScalingBase,
         effectiveCritChancePercent: 0,
         critBonusPercent,
+        effectiveCritBonusPercent,
         critMultiplier,
         overdriveMultiplier,
         nonCritWeight: 1,
@@ -290,7 +300,9 @@ export function calculateHealing({
     }
   }
 
-  const critScalingHeal = Math.floor(scalingHeal * critMultiplier)
+  // Non-crit heals display with a rounded scaling roll, but crit/max-crit combat results
+  // line up with truncating the raw scaling portion before the crit multiplier is applied.
+  const critScalingHeal = Math.floor(critScalingBase * critMultiplier)
   const maxCritScalingHeal = Math.floor(critScalingHeal * overdriveMultiplier)
   const crit = flatHeal + critScalingHeal
   const maxcrit = flatHeal + maxCritScalingHeal
@@ -333,8 +345,10 @@ export function calculateHealing({
       flatHeal,
       scalingHealRaw,
       scalingHeal,
+      critScalingBase,
       effectiveCritChancePercent: critChance * 100,
       critBonusPercent,
+      effectiveCritBonusPercent,
       critMultiplier,
       overdriveMultiplier,
       nonCritWeight,
