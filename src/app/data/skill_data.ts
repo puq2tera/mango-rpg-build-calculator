@@ -13416,6 +13416,7 @@ const skill_data: Record<string, Skill> = {
     ],
         
 },
+// Description is inaccurate to in game effect
 "Titan Form": {...defaultSkill,
         type: {
             is_buff: true,
@@ -13436,8 +13437,8 @@ const skill_data: Record<string, Skill> = {
         },
         description: "[ ⧖ ] Gives self DEF equal to 75% average of Heal and ATK. Raise self ATK by 75% and by 100% Heal. Lasts 9 Turns. 35 MP.",
         conversions: [
-    { source: "ATK", ratio: 0.375, resulting_stat: "DEF" },
-    { source: "HEAL", ratio: 0.375, resulting_stat: "DEF" },
+    { source: "ATK", ratio: 0.5, resulting_stat: "DEF" },
+    { source: "HEAL", ratio: 0.5, resulting_stat: "DEF" },
     { source: "ATK", ratio: 0.75, resulting_stat: "ATK" },
     { source: "HEAL", ratio: 1, resulting_stat: "ATK" },
     ],
