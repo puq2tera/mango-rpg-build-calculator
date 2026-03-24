@@ -190,7 +190,7 @@ function appendElementScalingRows(rows: TooltipRow[], baseBreakdown: DamageBaseB
     })
   }
 
-  if (baseBreakdown.skillTypeDamageStatName && Math.abs(baseBreakdown.convertedSkillTypeDamagePercent) > 0.0001) {
+  if (baseBreakdown.skillTypeDamageStatName && baseBreakdown.convertedSkillTypeDamagePercent !== 0) {
     rows.push({
       label: `Converted ${baseBreakdown.skillTypeDamageStatName}`,
       value: formatTooltipStatValue(baseBreakdown.convertedSkillTypeDamagePercent, 2),
@@ -212,14 +212,14 @@ function appendSkillTypeDamageRows(rows: TooltipRow[], baseBreakdown: DamageBase
 function appendDamageCritRows(rows: TooltipRow[], critBreakdown: DamageCritBreakdown): void {
   rows.push({ label: "Crit DMG%", value: formatTooltipStatValue(critBreakdown.baseCritDamagePercent, 2) })
 
-  if (Math.abs(critBreakdown.elementalCritDamagePercent) > 0.0001) {
+  if (critBreakdown.elementalCritDamagePercent !== 0) {
     rows.push({
       label: "Elemental Crit DMG%",
       value: formatTooltipStatValue(critBreakdown.elementalCritDamagePercent, 2),
     })
   }
 
-  if (Math.abs(critBreakdown.holyCritDamagePercent) > 0.0001) {
+  if (critBreakdown.holyCritDamagePercent !== 0) {
     rows.push({
       label: "Holy Crit DMG%",
       value: formatTooltipStatValue(critBreakdown.holyCritDamagePercent, 2),
@@ -234,7 +234,7 @@ function appendDamageCritRows(rows: TooltipRow[], critBreakdown: DamageCritBreak
       value: formatTooltipStatValue(critBreakdown.globalSkillTypeCritDamagePercent, 2),
     })
 
-    if (Math.abs(critBreakdown.convertedSkillTypeCritDamagePercent) > 0.0001) {
+    if (critBreakdown.convertedSkillTypeCritDamagePercent !== 0) {
       rows.push({
         label: `Converted ${skillCritLabel}`,
         value: formatTooltipStatValue(critBreakdown.convertedSkillTypeCritDamagePercent, 2),
@@ -242,7 +242,7 @@ function appendDamageCritRows(rows: TooltipRow[], critBreakdown: DamageCritBreak
     }
   }
 
-  if (Math.abs(critBreakdown.skillCritDamagePercent) > 0.0001) {
+  if (critBreakdown.skillCritDamagePercent !== 0) {
     rows.push({ label: "Skill Crit DMG%", value: formatTooltipStatValue(critBreakdown.skillCritDamagePercent, 2) })
   }
 }
@@ -253,7 +253,7 @@ function buildDamageBaseRows(baseBreakdown: DamageBaseBreakdown): TooltipRow[] {
     { label: "Skill%", value: formatTooltipStatValue(baseBreakdown.skillPercent, 2) },
   ]
 
-  if (Math.abs(baseBreakdown.secondSkillPercent) > 0.0001) {
+  if (baseBreakdown.secondSkillPercent !== 0) {
     rows.push({ label: baseBreakdown.secondStatName, value: formatTooltipStatValue(baseBreakdown.secondStatValue, 0) })
     rows.push({ label: "Second Skill%", value: formatTooltipStatValue(baseBreakdown.secondSkillPercent, 2) })
   }
@@ -261,20 +261,28 @@ function buildDamageBaseRows(baseBreakdown: DamageBaseBreakdown): TooltipRow[] {
   rows.push({ label: "Base DMG", value: formatTooltipStatValue(baseBreakdown.baseDamage, 0) })
 
   if (
-    Math.abs(baseBreakdown.enemyArmor) > 0.0001
-    || Math.abs(baseBreakdown.armorIgnorePercent) > 0.0001
-    || Math.abs(baseBreakdown.armorBreak) > 0.0001
+    baseBreakdown.enemyArmor !== 0
+    || baseBreakdown.armorIgnorePercent !== 0
+    || baseBreakdown.skillArmorBreakPercent !== 0
+    || baseBreakdown.armorBreak !== 0
   ) {
     rows.push({ label: "Enemy Armor", value: formatTooltipStatValue(baseBreakdown.enemyArmor, 2) })
     rows.push({ label: "Armor Ignore%", value: formatTooltipStatValue(baseBreakdown.armorIgnorePercent, 2) })
+    if (baseBreakdown.skillArmorBreakPercent !== 0) {
+      rows.push({ label: "Armor Break%", value: formatTooltipStatValue(baseBreakdown.skillArmorBreakPercent, 2) })
+    }
     rows.push({ label: "Armor Block", value: formatTooltipStatValue(baseBreakdown.armorBlock, 0) })
+    if (baseBreakdown.skillArmorBreakAmount !== 0) {
+      rows.push({ label: "Base Armor Break", value: formatTooltipStatValue(baseBreakdown.armorBreakBase, 0) })
+      rows.push({ label: "Skill Armor Break", value: formatTooltipStatValue(baseBreakdown.skillArmorBreakAmount, 0) })
+    }
     rows.push({ label: "Armor Break", value: formatTooltipStatValue(baseBreakdown.armorBreak, 0) })
   }
 
   rows.push({ label: "Post-Armor", value: formatTooltipStatValue(baseBreakdown.mitigatedDamage, 0) })
   appendElementScalingRows(rows, baseBreakdown)
 
-  if (Math.abs(baseBreakdown.elementXDmgPercent) > 0.0001) {
+  if (baseBreakdown.elementXDmgPercent !== 0) {
     rows.push({
       label: `${baseBreakdown.elementStatName.replace(/%$/, "")} xDmg%`,
       value: formatTooltipStatValue(baseBreakdown.elementXDmgPercent, 2),
@@ -283,21 +291,21 @@ function buildDamageBaseRows(baseBreakdown: DamageBaseBreakdown): TooltipRow[] {
 
   rows.push({ label: baseBreakdown.penStatName, value: formatTooltipStatValue(baseBreakdown.penPercent, 2) })
 
-  if (Math.abs(baseBreakdown.skillPenPercent) > 0.0001) {
+  if (baseBreakdown.skillPenPercent !== 0) {
     rows.push({ label: "Skill Pen%", value: formatTooltipStatValue(baseBreakdown.skillPenPercent, 2) })
   }
 
-  if (Math.abs(baseBreakdown.enemyRes) > 0.0001) {
+  if (baseBreakdown.enemyRes  !== 0) {
     rows.push({ label: "Enemy Res%", value: formatTooltipStatValue(baseBreakdown.enemyRes, 2) })
   }
 
-  if (Math.abs(baseBreakdown.resIgnorePercent) > 0.0001) {
+  if (baseBreakdown.resIgnorePercent  !== 0) {
     rows.push({ label: "Res Ignore%", value: formatTooltipStatValue(baseBreakdown.resIgnorePercent, 2) })
   }
 
   appendSkillTypeDamageRows(rows, baseBreakdown)
 
-  if (Math.abs(baseBreakdown.dmgPercent) > 0.0001) {
+  if (baseBreakdown.dmgPercent !== 0) {
     rows.push({ label: "Dmg%", value: formatTooltipStatValue(baseBreakdown.dmgPercent, 2) })
   }
 
@@ -336,13 +344,13 @@ function buildDamageAverageRows(damageBreakdown: DamageBreakdownResult): Tooltip
     })
   }
 
-  if (Math.abs(averageBreakdown.skillCritChancePercent) > 0.0001) {
+  if (averageBreakdown.skillCritChancePercent !== 0) {
     rows.push({ label: "Skill Crit Chance%", value: formatTooltipStatValue(averageBreakdown.skillCritChancePercent, 2) })
   }
 
   rows.push({ label: "Total Crit Chance%", value: formatTooltipStatValue(averageBreakdown.rawCritChancePercent, 2) })
 
-  if (Math.abs(averageBreakdown.rawCritChancePercent - averageBreakdown.effectiveCritChancePercent) > 0.0001) {
+  if (averageBreakdown.rawCritChancePercent !== averageBreakdown.effectiveCritChancePercent) {
     rows.push({
       label: "Effective Crit Chance%",
       value: formatTooltipStatValue(averageBreakdown.effectiveCritChancePercent, 2),
@@ -364,7 +372,7 @@ function buildDotOutcomeRows(dotBreakdown: DotOutcomeBreakdown): TooltipRow[] {
     { label: "Total DOT%", value: formatTooltipStatValue(dotBreakdown.totalDotPercent, 2) },
   ]
 
-  if (Math.abs(dotBreakdown.totalDotPercent - dotBreakdown.effectiveDotPercent) > 0.0001) {
+  if (dotBreakdown.totalDotPercent !== dotBreakdown.effectiveDotPercent) {
     rows.push({ label: "Effective DOT%", value: formatTooltipStatValue(dotBreakdown.effectiveDotPercent, 2) })
   }
 
@@ -386,15 +394,15 @@ function buildThreatBaseRows(
   appendElementScalingRows(rows, baseBreakdown)
   rows.push({ label: baseBreakdown.penStatName, value: formatTooltipStatValue(baseBreakdown.penPercent, 2) })
 
-  if (Math.abs(inputs.skillThreat ?? 0) > 0.0001) {
+  if ((inputs.skillThreat ?? 0) !== 0) {
     rows.push({ label: "Threat Bonus%", value: formatTooltipStatValue(inputs.skillThreat, 2) })
   }
 
-  if (Math.abs(inputs.skillPen ?? 0) > 0.0001) {
+  if ((inputs.skillPen ?? 0) !== 0) {
     rows.push({ label: "Skill Pen%", value: formatTooltipStatValue(inputs.skillPen, 2) })
   }
 
-  if (Math.abs(baseBreakdown.elementXDmgPercent) > 0.0001) {
+  if (baseBreakdown.elementXDmgPercent !== 0) {
     rows.push({
       label: `${baseBreakdown.elementStatName.replace(/%$/, "")} xDmg%`,
       value: formatTooltipStatValue(baseBreakdown.elementXDmgPercent, 2),
@@ -982,6 +990,14 @@ export default function DamageCalc() {
             value={inputs.armorIgnore}
             onRawChange={clearAttackPresetSelection}
             onValueChange={(value) => handleChange("armorIgnore", value)}
+            className="w-full p-1 border rounded"
+          />
+
+          <label className="font-semibold">Armor Break%</label>
+          <EditableNumberInput
+            value={inputs.skillArmorBreak}
+            onRawChange={clearAttackPresetSelection}
+            onValueChange={(value) => handleChange("skillArmorBreak", value)}
             className="w-full p-1 border rounded"
           />
 

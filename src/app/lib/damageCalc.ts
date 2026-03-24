@@ -49,6 +49,7 @@ export type DamageCalcInputs = {
   threatDef: number
   skillThreat: number
   armorIgnore: number
+  skillArmorBreak: number
   resIgnore: number
   dot: number
   secondSkillDmg: number
@@ -89,6 +90,9 @@ export type DamageBaseBreakdown = {
   enemyArmor: number
   armorIgnorePercent: number
   armorBlock: number
+  armorBreakBase: number
+  skillArmorBreakPercent: number
+  skillArmorBreakAmount: number
   armorBreak: number
   mitigatedDamage: number
   elementStatName: string
@@ -237,6 +241,7 @@ export const defaultDamageCalcInputs: DamageCalcInputs = {
   threatDef: 0,
   skillThreat: 0,
   armorIgnore: 0,
+  skillArmorBreak: 0,
   resIgnore: 0,
   dot: 0,
   secondSkillDmg: 0,
@@ -375,6 +380,7 @@ export function persistDamageCalcState(storage: Storage, state: DamageCalcState)
 const toMult = (value: number | undefined): number => 1 + ((value ?? 0) / 100)
 const clamp = (value: number, minimum = 0, maximum = 1): number => Math.min(maximum, Math.max(minimum, value))
 const toRemainingPercent = (value: number | undefined): number => 1 - clamp((value ?? 0) / 100, 0, 1)
+const DAMAGE_CALC_PLAYER_LEVEL_STAT = "__Player Level"
 const DAMAGE_REDUCTION_CAP_PERCENT = 90
 const DAMAGE_REDUCTION_SCALE_PERCENT = 15
 const DEFENSE_SCALING_BASE = 12
@@ -438,7 +444,7 @@ function getSkillTypeElementStatName(skillType: string): string | null {
 }
 
 function getElementDamageBonus(stats: Record<string, number>, element: string, skillType: string): number {
-  let bonus =
+  const bonus =
     (stats[`${element}%`] ?? 0)
     + (stats[`${skillType}%`] ?? 0)
     + getConvertedSkillTypeDamageBonus(stats, skillType)
@@ -522,7 +528,17 @@ function buildDamageContext(stats: Record<string, number>, state: DamageCalcStat
   const base = Math.floor(baseRaw)
 
   const armorBlock = Math.floor((inputs.enemyArmor ?? 0) * toRemainingPercent(inputs.armorIgnore))
-  const armorBreak = Math.floor(((stats["ATK"] ?? 0) + (stats["DEF"] ?? 0) + (stats["MATK"] ?? 0) + (stats["HEAL"] ?? 0)) / 4) + (stats["Armor Strike"] ?? 0)
+  const armorBreakBase =
+    Math.floor(((stats["ATK"] ?? 0) + (stats["DEF"] ?? 0) + (stats["MATK"] ?? 0) + (stats["HEAL"] ?? 0)) / 4)
+    + (stats["Armor Strike"] ?? 0)
+  const skillArmorBreakPercent = inputs.skillArmorBreak ?? 0
+  const rawSkillArmorBreakAmount = (inputs.enemyArmor ?? 0) * (skillArmorBreakPercent / 100)
+  const minimumSkillArmorBreak = Math.max(0, Math.floor(stats[DAMAGE_CALC_PLAYER_LEVEL_STAT] ?? 0))
+  const skillArmorBreakAmount =
+    skillArmorBreakPercent > 0
+      ? Math.max(minimumSkillArmorBreak, Math.floor(rawSkillArmorBreakAmount))
+      : Math.floor(rawSkillArmorBreakAmount)
+  const armorBreak = armorBreakBase + skillArmorBreakAmount
   // Only deal dmg if the skill itself has a dmg%
   const mitigatedDamage = base <= 0
     ? 0
@@ -568,6 +584,9 @@ function buildDamageContext(stats: Record<string, number>, state: DamageCalcStat
       enemyArmor: inputs.enemyArmor ?? 0,
       armorIgnorePercent: inputs.armorIgnore ?? 0,
       armorBlock,
+      armorBreakBase,
+      skillArmorBreakPercent,
+      skillArmorBreakAmount,
       armorBreak,
       mitigatedDamage,
       elementStatName,

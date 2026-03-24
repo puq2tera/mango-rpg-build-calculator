@@ -10,6 +10,7 @@ type AttackPresetInputKey =
   | "threatDef"
   | "skillThreat"
   | "armorIgnore"
+  | "skillArmorBreak"
   | "resIgnore"
   | "dot"
   | "secondSkillDmg"
@@ -51,6 +52,7 @@ export const attackPresetInputKeys: AttackPresetInputKey[] = [
   "threatDef",
   "skillThreat",
   "armorIgnore",
+  "skillArmorBreak",
   "resIgnore",
   "dot",
   "secondSkillDmg",
@@ -194,7 +196,8 @@ const rawAttackPresets: RawAttackPreset[] = Object.entries(skill_data)
         skillCritChance: toPercentValue(dmg.crit_chance),
         threatDef: isThreatOnly ? toSkillPercent(dmg.ratio) : toSkillPercent(dmg.threat),
         skillThreat: defaultDamageCalcInputs.skillThreat,
-        armorIgnore: toPercentValue(dmg.armor_ignore ?? dmg.armor_break),
+        armorIgnore: toPercentValue(dmg.armor_ignore),
+        skillArmorBreak: toPercentValue(dmg.armor_break),
         resIgnore: toPercentValue(dmg.res_ignore),
         dot: toPercentValue(dmg.dot),
         secondSkillDmg: isThreatOnly ? 0 : toSkillPercent(dmg.ratio2),

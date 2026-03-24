@@ -31,6 +31,7 @@ import { BUFF_SELECTION_STORAGE_KEY, readSelectedSkills } from "@/app/lib/learnC
 import { truncateTowardZero } from "@/app/lib/statRounding"
 
 type RuneSelection = { rune: string; count: number }
+const DAMAGE_CALC_PLAYER_LEVEL_STAT = "__Player Level"
 
 export type BuildSnapshot = {
   selectedTalents: string[]
@@ -841,6 +842,10 @@ export function computeBuildStatStages(
     additionalStageStats.tarots,
   )
   const statsDmgReady = computeDmgReadyStats(statsBuffReady, statsBuffs, statsTarots)
+  statsDmgReady[DAMAGE_CALC_PLAYER_LEVEL_STAT] = Object.values(snapshot.selectedLevels).reduce(
+    (total, level) => total + Math.max(0, Math.floor(level ?? 0)),
+    0,
+  )
 
   return {
     StatsTalents: statsTalents,
