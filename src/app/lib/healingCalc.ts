@@ -1,4 +1,7 @@
-import type { HealingBaseStat } from "@/app/lib/healingCalcSkillPresets"
+import { healingBaseStats, type HealingBaseStat } from "@/app/lib/healingCalcSkillPresets"
+
+export const HEALING_CALC_STORAGE_KEY = "HealingCalcState"
+const HEALING_CALC_SCHEMA_VERSION = 1
 
 export type HealingCalcInputs = {
   baseStat: HealingBaseStat
@@ -22,6 +25,30 @@ export type HealingBreakdown = {
   maxCritWeight: number
 }
 
+export type HealingCalcManualOverrides = {
+  effectiveStat: boolean
+  totalStat: boolean
+  critChancePercent: boolean
+  critDamagePercent: boolean
+  overdrivePercent: boolean
+}
+
+export type HealingCalcState = {
+  schemaVersion?: number
+  selectedSkill: string
+  baseStat: HealingBaseStat
+  skillHealPercent: number
+  skillFlatHeal: number
+  critChancePercent: number
+  critDamagePercent: number
+  overdrivePercent: number
+  canCrit: boolean
+  effectiveStat: number
+  totalStat: number
+  threatPercent: number
+  manualOverrides: HealingCalcManualOverrides
+}
+
 export type HealingCalcResult = {
   baseStat: HealingBaseStat
   totalStat: number
@@ -38,8 +65,104 @@ export type HealingCalcResult = {
   breakdown: HealingBreakdown
 }
 
+export const defaultHealingCalcManualOverrides: HealingCalcManualOverrides = {
+  effectiveStat: false,
+  totalStat: false,
+  critChancePercent: false,
+  critDamagePercent: false,
+  overdrivePercent: false,
+}
+
+export const defaultHealingCalcState: HealingCalcState = {
+  schemaVersion: HEALING_CALC_SCHEMA_VERSION,
+  selectedSkill: "",
+  baseStat: "HEAL",
+  skillHealPercent: 0,
+  skillFlatHeal: 0,
+  critChancePercent: 0,
+  critDamagePercent: 0,
+  overdrivePercent: 0,
+  canCrit: true,
+  effectiveStat: 0,
+  totalStat: 0,
+  threatPercent: 0,
+  manualOverrides: defaultHealingCalcManualOverrides,
+}
+
 function clamp(value: number, min: number, max: number): number {
   return Math.min(Math.max(value, min), max)
+}
+
+const parseStoredJson = <T>(raw: string | null, fallback: T): T => {
+  if (!raw) {
+    return fallback
+  }
+
+  try {
+    return JSON.parse(raw) as T
+  } catch {
+    return fallback
+  }
+}
+
+const asFiniteNumber = (value: unknown, fallback: number): number =>
+  typeof value === "number" && Number.isFinite(value) ? value : fallback
+
+function isHealingBaseStat(value: unknown): value is HealingBaseStat {
+  return typeof value === "string" && healingBaseStats.includes(value as HealingBaseStat)
+}
+
+export function normalizeHealingCalcState(raw: unknown): HealingCalcState {
+  const data = typeof raw === "object" && raw !== null ? raw as Partial<HealingCalcState> : {}
+  const rawManualOverrides =
+    typeof data.manualOverrides === "object" && data.manualOverrides !== null
+      ? data.manualOverrides as Partial<HealingCalcManualOverrides>
+      : {}
+
+  return {
+    schemaVersion: HEALING_CALC_SCHEMA_VERSION,
+    selectedSkill: typeof data.selectedSkill === "string" ? data.selectedSkill : defaultHealingCalcState.selectedSkill,
+    baseStat: isHealingBaseStat(data.baseStat) ? data.baseStat : defaultHealingCalcState.baseStat,
+    skillHealPercent: asFiniteNumber(data.skillHealPercent, defaultHealingCalcState.skillHealPercent),
+    skillFlatHeal: asFiniteNumber(data.skillFlatHeal, defaultHealingCalcState.skillFlatHeal),
+    critChancePercent: asFiniteNumber(data.critChancePercent, defaultHealingCalcState.critChancePercent),
+    critDamagePercent: asFiniteNumber(data.critDamagePercent, defaultHealingCalcState.critDamagePercent),
+    overdrivePercent: asFiniteNumber(data.overdrivePercent, defaultHealingCalcState.overdrivePercent),
+    canCrit: typeof data.canCrit === "boolean" ? data.canCrit : defaultHealingCalcState.canCrit,
+    effectiveStat: asFiniteNumber(data.effectiveStat, defaultHealingCalcState.effectiveStat),
+    totalStat: asFiniteNumber(data.totalStat, defaultHealingCalcState.totalStat),
+    threatPercent: asFiniteNumber(data.threatPercent, defaultHealingCalcState.threatPercent),
+    manualOverrides: {
+      effectiveStat:
+        typeof rawManualOverrides.effectiveStat === "boolean"
+          ? rawManualOverrides.effectiveStat
+          : defaultHealingCalcManualOverrides.effectiveStat,
+      totalStat:
+        typeof rawManualOverrides.totalStat === "boolean"
+          ? rawManualOverrides.totalStat
+          : defaultHealingCalcManualOverrides.totalStat,
+      critChancePercent:
+        typeof rawManualOverrides.critChancePercent === "boolean"
+          ? rawManualOverrides.critChancePercent
+          : defaultHealingCalcManualOverrides.critChancePercent,
+      critDamagePercent:
+        typeof rawManualOverrides.critDamagePercent === "boolean"
+          ? rawManualOverrides.critDamagePercent
+          : defaultHealingCalcManualOverrides.critDamagePercent,
+      overdrivePercent:
+        typeof rawManualOverrides.overdrivePercent === "boolean"
+          ? rawManualOverrides.overdrivePercent
+          : defaultHealingCalcManualOverrides.overdrivePercent,
+    },
+  }
+}
+
+export function readHealingCalcState(storage: Storage): HealingCalcState {
+  return normalizeHealingCalcState(parseStoredJson(storage.getItem(HEALING_CALC_STORAGE_KEY), defaultHealingCalcState))
+}
+
+export function persistHealingCalcState(storage: Storage, state: HealingCalcState): void {
+  storage.setItem(HEALING_CALC_STORAGE_KEY, JSON.stringify(normalizeHealingCalcState(state)))
 }
 
 export function calculateHealing({

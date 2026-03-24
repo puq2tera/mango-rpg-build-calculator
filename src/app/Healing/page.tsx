@@ -1,14 +1,27 @@
 "use client"
 
-import { useEffect, useState, type ReactNode } from "react"
+import { useEffect, useMemo, useRef, useState, type KeyboardEvent, type ReactNode } from "react"
 import { computeBuildStatStages, readBuildSnapshot } from "@/app/lib/buildStats"
 import { BUILD_SNAPSHOT_UPDATED_EVENT } from "@/app/lib/buildEvents"
-import { calculateHealing, type HealingCalcResult } from "@/app/lib/healingCalc"
+import {
+  calculateHealing,
+  defaultHealingCalcState,
+  persistHealingCalcState,
+  readHealingCalcState,
+  type HealingCalcManualOverrides,
+  type HealingCalcResult,
+} from "@/app/lib/healingCalc"
 import {
   healingBaseStats,
   healingCalcSkillPresets,
   type HealingBaseStat,
 } from "@/app/lib/healingCalcSkillPresets"
+
+const HEALING_PRESET_LISTBOX_ID = "healing-calc-skill-presets"
+
+function normalizeSearchValue(value: string): string {
+  return value.trim().toLocaleLowerCase()
+}
 
 type HealingStatSnapshot = {
   effective: Record<string, number>
@@ -139,19 +152,53 @@ function buildAverageHealRows(result: HealingCalcResult): TooltipRow[] {
 }
 
 export default function HealingPage() {
-  const [selectedSkill, setSelectedSkill] = useState("")
-  const [baseStat, setBaseStat] = useState<HealingBaseStat>("HEAL")
-  const [skillHealPercent, setSkillHealPercent] = useState(0)
-  const [skillFlatHeal, setSkillFlatHeal] = useState(0)
-  const [critChancePercent, setCritChancePercent] = useState(0)
-  const [critDamagePercent, setCritDamagePercent] = useState(0)
-  const [overdrivePercent, setOverdrivePercent] = useState(0)
-  const [canCrit, setCanCrit] = useState(true)
-  const [effectiveStat, setEffectiveStat] = useState(0)
-  const [totalStat, setTotalStat] = useState(0)
-  const [threatPercent, setThreatPercent] = useState(0)
+  const [isHydrated, setIsHydrated] = useState(false)
+  const [selectedSkill, setSelectedSkill] = useState(defaultHealingCalcState.selectedSkill)
+  const [skillInputValue, setSkillInputValue] = useState(defaultHealingCalcState.selectedSkill)
+  const [isSkillDropdownOpen, setIsSkillDropdownOpen] = useState(false)
+  const [highlightedSkillIndex, setHighlightedSkillIndex] = useState(0)
+  const [baseStat, setBaseStat] = useState<HealingBaseStat>(defaultHealingCalcState.baseStat)
+  const [skillHealPercent, setSkillHealPercent] = useState(defaultHealingCalcState.skillHealPercent)
+  const [skillFlatHeal, setSkillFlatHeal] = useState(defaultHealingCalcState.skillFlatHeal)
+  const [critChancePercent, setCritChancePercent] = useState(defaultHealingCalcState.critChancePercent)
+  const [critDamagePercent, setCritDamagePercent] = useState(defaultHealingCalcState.critDamagePercent)
+  const [overdrivePercent, setOverdrivePercent] = useState(defaultHealingCalcState.overdrivePercent)
+  const [canCrit, setCanCrit] = useState(defaultHealingCalcState.canCrit)
+  const [effectiveStat, setEffectiveStat] = useState(defaultHealingCalcState.effectiveStat)
+  const [totalStat, setTotalStat] = useState(defaultHealingCalcState.totalStat)
+  const [threatPercent, setThreatPercent] = useState(defaultHealingCalcState.threatPercent)
+  const [manualOverrides, setManualOverrides] = useState<HealingCalcManualOverrides>(
+    defaultHealingCalcState.manualOverrides,
+  )
   const [statSnapshot, setStatSnapshot] = useState<HealingStatSnapshot>({ effective: {}, total: {} })
-  const selectedSkillPreset = healingCalcSkillPresets.find((preset) => preset.name === selectedSkill) ?? null
+  const skillFieldRef = useRef<HTMLDivElement | null>(null)
+  const selectedSkillPreset = useMemo(
+    () => healingCalcSkillPresets.find((preset) => preset.name === selectedSkill) ?? null,
+    [selectedSkill],
+  )
+  const normalizedSkillInputValue = normalizeSearchValue(skillInputValue)
+  const normalizedSelectedSkill = normalizeSearchValue(selectedSkill)
+  const normalizedSkillFilterValue =
+    selectedSkill.length > 0 && normalizedSkillInputValue === normalizedSelectedSkill
+      ? ""
+      : normalizedSkillInputValue
+  const filteredSkillPresets = useMemo(() => {
+    return healingCalcSkillPresets.filter((preset) => {
+      if (normalizedSkillFilterValue.length === 0) {
+        return true
+      }
+
+      const searchableText = [
+        preset.name,
+        preset.description,
+        preset.baseStat,
+        preset.effectType,
+        preset.canCrit ? "can crit" : "cannot crit",
+      ].join("\n").toLocaleLowerCase()
+
+      return searchableText.includes(normalizedSkillFilterValue)
+    })
+  }, [normalizedSkillFilterValue])
 
   const healingResult = calculateHealing({
     baseStat,
@@ -167,6 +214,7 @@ export default function HealingPage() {
   const formatHeal = (value: number) => value.toLocaleString("en-US")
 
   useEffect(() => {
+    const storedState = readHealingCalcState(localStorage)
     const refreshStats = () => {
       const snapshot = readBuildSnapshot(localStorage)
       const stages = computeBuildStatStages(snapshot)
@@ -176,6 +224,25 @@ export default function HealingPage() {
         total: stages.StatsDmgReady,
       })
     }
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === "visible") {
+        refreshStats()
+      }
+    }
+
+    setSelectedSkill(storedState.selectedSkill)
+    setSkillInputValue(storedState.selectedSkill)
+    setBaseStat(storedState.baseStat)
+    setSkillHealPercent(storedState.skillHealPercent)
+    setSkillFlatHeal(storedState.skillFlatHeal)
+    setCritChancePercent(storedState.critChancePercent)
+    setCritDamagePercent(storedState.critDamagePercent)
+    setOverdrivePercent(storedState.overdrivePercent)
+    setCanCrit(storedState.canCrit)
+    setEffectiveStat(storedState.effectiveStat)
+    setTotalStat(storedState.totalStat)
+    setThreatPercent(storedState.threatPercent)
+    setManualOverrides(storedState.manualOverrides)
 
     window.dispatchEvent(new Event("computeDmgReadyStats"))
     refreshStats()
@@ -185,48 +252,229 @@ export default function HealingPage() {
       "talentsUpdated",
       "equipmentUpdated",
       "runesUpdated",
+      "focus",
     ]
 
     for (const eventName of eventNames) {
       window.addEventListener(eventName, refreshStats)
     }
+    document.addEventListener("visibilitychange", handleVisibilityChange)
+    setIsHydrated(true)
 
     return () => {
       for (const eventName of eventNames) {
         window.removeEventListener(eventName, refreshStats)
       }
+      document.removeEventListener("visibilitychange", handleVisibilityChange)
     }
   }, [])
 
   useEffect(() => {
-    setEffectiveStat(statSnapshot.effective[baseStat] ?? statSnapshot.total[baseStat] ?? 0)
-    setTotalStat(statSnapshot.total[baseStat] ?? statSnapshot.effective[baseStat] ?? 0)
-  }, [baseStat, statSnapshot])
+    if (!isHydrated) {
+      return
+    }
+
+    if (!manualOverrides.effectiveStat) {
+      setEffectiveStat(statSnapshot.effective[baseStat] ?? statSnapshot.total[baseStat] ?? 0)
+    }
+
+    if (!manualOverrides.totalStat) {
+      setTotalStat(statSnapshot.total[baseStat] ?? statSnapshot.effective[baseStat] ?? 0)
+    }
+  }, [baseStat, isHydrated, manualOverrides.effectiveStat, manualOverrides.totalStat, statSnapshot])
 
   useEffect(() => {
-    setCritChancePercent(statSnapshot.total["Crit Chance%"] ?? 0)
-    setCritDamagePercent(statSnapshot.total["Crit DMG%"] ?? 0)
-    setOverdrivePercent(statSnapshot.total["Overdrive%"] ?? 0)
-  }, [statSnapshot])
+    if (!isHydrated) {
+      return
+    }
+
+    if (!manualOverrides.critChancePercent) {
+      setCritChancePercent(statSnapshot.total["Crit Chance%"] ?? 0)
+    }
+
+    if (!manualOverrides.critDamagePercent) {
+      setCritDamagePercent(statSnapshot.total["Crit DMG%"] ?? 0)
+    }
+
+    if (!manualOverrides.overdrivePercent) {
+      setOverdrivePercent(statSnapshot.total["Overdrive%"] ?? 0)
+    }
+  }, [
+    isHydrated,
+    manualOverrides.critChancePercent,
+    manualOverrides.critDamagePercent,
+    manualOverrides.overdrivePercent,
+    statSnapshot,
+  ])
+
+  useEffect(() => {
+    if (!isHydrated) {
+      return
+    }
+
+    persistHealingCalcState(localStorage, {
+      selectedSkill,
+      baseStat,
+      skillHealPercent,
+      skillFlatHeal,
+      critChancePercent,
+      critDamagePercent,
+      overdrivePercent,
+      canCrit,
+      effectiveStat,
+      totalStat,
+      threatPercent,
+      manualOverrides,
+    })
+  }, [
+    baseStat,
+    canCrit,
+    critChancePercent,
+    critDamagePercent,
+    effectiveStat,
+    isHydrated,
+    manualOverrides,
+    overdrivePercent,
+    selectedSkill,
+    skillFlatHeal,
+    skillHealPercent,
+    threatPercent,
+    totalStat,
+  ])
+
+  useEffect(() => {
+    const handlePointerDown = (event: MouseEvent) => {
+      const target = event.target
+      if (!(target instanceof Node)) {
+        return
+      }
+
+      if (skillFieldRef.current?.contains(target)) {
+        return
+      }
+
+      setIsSkillDropdownOpen(false)
+    }
+
+    document.addEventListener("mousedown", handlePointerDown)
+    return () => {
+      document.removeEventListener("mousedown", handlePointerDown)
+    }
+  }, [])
+
+  useEffect(() => {
+    if (filteredSkillPresets.length === 0) {
+      setHighlightedSkillIndex(0)
+      return
+    }
+
+    setHighlightedSkillIndex((current) => Math.min(current, filteredSkillPresets.length - 1))
+  }, [filteredSkillPresets])
+
+  const clearSelectedSkill = () => {
+    setSelectedSkill("")
+    setSkillInputValue("")
+    setIsSkillDropdownOpen(false)
+  }
+
+  const resetBaseStatOverridesIfNeeded = (nextBaseStat: HealingBaseStat) => {
+    if (nextBaseStat === baseStat) {
+      return
+    }
+
+    setManualOverrides((current) => (
+      current.effectiveStat || current.totalStat
+        ? {
+          ...current,
+          effectiveStat: false,
+          totalStat: false,
+        }
+        : current
+    ))
+  }
 
   const handleSkillChange = (nextSkill: string) => {
-    setSelectedSkill(nextSkill)
+    setSkillInputValue(nextSkill)
 
     if (!nextSkill) {
+      setSelectedSkill("")
       return
     }
 
     const preset = healingCalcSkillPresets.find((entry) => entry.name === nextSkill)
 
     if (!preset) {
+      setSelectedSkill("")
       return
     }
 
+    setSelectedSkill(nextSkill)
+    resetBaseStatOverridesIfNeeded(preset.baseStat)
     setBaseStat(preset.baseStat)
     setSkillHealPercent(preset.skillHealPercent)
     setSkillFlatHeal(preset.skillFlatHeal)
     setThreatPercent(preset.threatPercent)
     setCanCrit(preset.canCrit)
+    setIsSkillDropdownOpen(false)
+  }
+
+  const handleSkillInputChange = (nextValue: string) => {
+    setSkillInputValue(nextValue)
+    setIsSkillDropdownOpen(true)
+
+    if (!nextValue) {
+      setSelectedSkill("")
+      return
+    }
+
+    const preset = healingCalcSkillPresets.find((entry) => entry.name === nextValue)
+    if (!preset) {
+      setSelectedSkill("")
+      return
+    }
+
+    handleSkillChange(nextValue)
+  }
+
+  const handleSkillKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === "ArrowDown") {
+      event.preventDefault()
+      if (!isSkillDropdownOpen) {
+        setIsSkillDropdownOpen(true)
+        return
+      }
+
+      if (filteredSkillPresets.length > 0) {
+        setHighlightedSkillIndex((current) => Math.min(current + 1, filteredSkillPresets.length - 1))
+      }
+      return
+    }
+
+    if (event.key === "ArrowUp") {
+      event.preventDefault()
+      if (!isSkillDropdownOpen) {
+        setIsSkillDropdownOpen(true)
+        return
+      }
+
+      if (filteredSkillPresets.length > 0) {
+        setHighlightedSkillIndex((current) => Math.max(current - 1, 0))
+      }
+      return
+    }
+
+    if (event.key === "Enter" && isSkillDropdownOpen) {
+      const highlightedPreset = filteredSkillPresets[highlightedSkillIndex]
+      if (highlightedPreset) {
+        event.preventDefault()
+        handleSkillChange(highlightedPreset.name)
+      }
+      return
+    }
+
+    if (event.key === "Escape") {
+      setIsSkillDropdownOpen(false)
+    }
   }
 
   return (
@@ -234,28 +482,79 @@ export default function HealingPage() {
       <h1 className="text-2xl font-bold text-center">Healing Calculator</h1>
 
       <div className="rounded-lg border bg-slate-900/60 p-4">
-        <div className="grid items-stretch gap-4 md:grid-cols-[minmax(0,18rem)_1fr]">
-          <div className="flex h-full items-center">
-            <select
-              value={selectedSkill}
-              onChange={(event) => handleSkillChange(event.target.value)}
-              className="w-full p-1 border rounded"
-            >
-              <option value="">Custom Skill</option>
-              {healingCalcSkillPresets.map((preset) => (
-                <option key={preset.name} value={preset.name}>
-                  {preset.name}
-                </option>
-              ))}
-            </select>
+        <div className="grid gap-x-4 gap-y-2 md:grid-cols-[minmax(0,18rem)_1fr]">
+          <label className="font-semibold text-slate-100">Skill Preset</label>
+
+          <div ref={skillFieldRef} className="relative">
+            <div className="flex overflow-hidden rounded border bg-slate-950">
+              <input
+                type="text"
+                value={skillInputValue}
+                onChange={(event) => handleSkillInputChange(event.target.value)}
+                onFocus={() => setIsSkillDropdownOpen(true)}
+                onKeyDown={handleSkillKeyDown}
+                placeholder="Custom Skill"
+                role="combobox"
+                aria-autocomplete="list"
+                aria-expanded={isSkillDropdownOpen}
+                aria-controls={HEALING_PRESET_LISTBOX_ID}
+                className="w-full bg-transparent p-1 outline-none"
+              />
+              <button
+                type="button"
+                onClick={() => setIsSkillDropdownOpen((current) => !current)}
+                aria-label={isSkillDropdownOpen ? "Hide healing presets" : "Show healing presets"}
+                aria-expanded={isSkillDropdownOpen}
+                aria-controls={HEALING_PRESET_LISTBOX_ID}
+                className="border-l border-slate-700 px-2 text-slate-300 transition hover:bg-slate-800 hover:text-slate-100"
+              >
+                v
+              </button>
+            </div>
+
+            {isSkillDropdownOpen ? (
+              <div
+                id={HEALING_PRESET_LISTBOX_ID}
+                role="listbox"
+                className="absolute z-20 mt-1 max-h-64 w-full overflow-y-auto rounded border border-slate-700 bg-slate-950 shadow-[0_18px_40px_rgba(2,6,23,0.45)]"
+              >
+                {filteredSkillPresets.length > 0 ? (
+                  filteredSkillPresets.map((preset, index) => (
+                    <button
+                      key={preset.name}
+                      type="button"
+                      role="option"
+                      aria-selected={preset.name === selectedSkill}
+                      onMouseDown={(event) => event.preventDefault()}
+                      onClick={() => handleSkillChange(preset.name)}
+                      onMouseEnter={() => setHighlightedSkillIndex(index)}
+                      className={`block w-full px-3 py-2 text-left text-sm transition ${
+                        index === highlightedSkillIndex
+                          ? "bg-sky-500/20 text-sky-100"
+                          : preset.name === selectedSkill
+                            ? "bg-slate-800 text-slate-100"
+                            : "text-slate-200 hover:bg-slate-800"
+                      }`}
+                    >
+                      <div className="font-medium">{preset.name}</div>
+                      <div className="truncate text-xs text-slate-400">{preset.description}</div>
+                    </button>
+                  ))
+                ) : (
+                  <div className="px-3 py-2 text-sm text-slate-400">
+                    No presets match the current filter.
+                  </div>
+                )}
+              </div>
+            ) : null}
           </div>
 
           {selectedSkillPreset ? (
-            <div className="flex h-full flex-col justify-center space-y-2">
+            <div className="flex h-full flex-col justify-center space-y-2 md:col-start-2">
               <p className="text-sm text-slate-100">{selectedSkillPreset.description}</p>
             </div>
           ) : (
-            <div className="flex h-full flex-col justify-center space-y-2">
+            <div className="flex h-full flex-col justify-center space-y-2 md:col-start-2">
               <p className="text-sm text-slate-100">Select a skill to autofill the fields below</p>
             </div>
           )}
@@ -268,8 +567,10 @@ export default function HealingPage() {
           <select
             value={baseStat}
             onChange={(event) => {
-              setSelectedSkill("")
-              setBaseStat(event.target.value as HealingBaseStat)
+              const nextBaseStat = event.target.value as HealingBaseStat
+              clearSelectedSkill()
+              resetBaseStatOverridesIfNeeded(nextBaseStat)
+              setBaseStat(nextBaseStat)
             }}
             className="w-full p-1 border rounded"
           >
@@ -282,7 +583,7 @@ export default function HealingPage() {
             type="number"
             value={skillHealPercent}
             onChange={(event) => {
-              setSelectedSkill("")
+              clearSelectedSkill()
               setSkillHealPercent(+event.target.value)
             }}
             className="w-full p-1 border rounded"
@@ -294,7 +595,7 @@ export default function HealingPage() {
             type="number"
             value={skillFlatHeal}
             onChange={(event) => {
-              setSelectedSkill("")
+              clearSelectedSkill()
               setSkillFlatHeal(+event.target.value)
             }}
             className="w-full p-1 border rounded"
@@ -306,7 +607,7 @@ export default function HealingPage() {
             type="number"
             value={threatPercent}
             onChange={(event) => {
-              setSelectedSkill("")
+              clearSelectedSkill()
               setThreatPercent(+event.target.value)
             }}
             className="w-full p-1 border rounded"
@@ -317,7 +618,17 @@ export default function HealingPage() {
           <input
             type="number"
             value={critChancePercent}
-            onChange={e => setCritChancePercent(+e.target.value)}
+            onChange={(event) => {
+              setManualOverrides((current) => (
+                current.critChancePercent
+                  ? current
+                  : {
+                    ...current,
+                    critChancePercent: true,
+                  }
+              ))
+              setCritChancePercent(+event.target.value)
+            }}
             className="w-full p-1 border rounded"
           />
         </div>
@@ -326,7 +637,17 @@ export default function HealingPage() {
           <input
             type="number"
             value={critDamagePercent}
-            onChange={e => setCritDamagePercent(+e.target.value)}
+            onChange={(event) => {
+              setManualOverrides((current) => (
+                current.critDamagePercent
+                  ? current
+                  : {
+                    ...current,
+                    critDamagePercent: true,
+                  }
+              ))
+              setCritDamagePercent(+event.target.value)
+            }}
             className="w-full p-1 border rounded"
           />
         </div>
@@ -335,7 +656,17 @@ export default function HealingPage() {
           <input
             type="number"
             value={overdrivePercent}
-            onChange={e => setOverdrivePercent(+e.target.value)}
+            onChange={(event) => {
+              setManualOverrides((current) => (
+                current.overdrivePercent
+                  ? current
+                  : {
+                    ...current,
+                    overdrivePercent: true,
+                  }
+              ))
+              setOverdrivePercent(+event.target.value)
+            }}
             className="w-full p-1 border rounded"
           />
         </div>
@@ -344,7 +675,17 @@ export default function HealingPage() {
           <input
             type="number"
             value={effectiveStat}
-            onChange={e => setEffectiveStat(+e.target.value)}
+            onChange={(event) => {
+              setManualOverrides((current) => (
+                current.effectiveStat
+                  ? current
+                  : {
+                    ...current,
+                    effectiveStat: true,
+                  }
+              ))
+              setEffectiveStat(+event.target.value)
+            }}
             className="w-full p-1 border rounded"
           />
         </div>
@@ -353,7 +694,17 @@ export default function HealingPage() {
           <input
             type="number"
             value={totalStat}
-            onChange={e => setTotalStat(+e.target.value)}
+            onChange={(event) => {
+              setManualOverrides((current) => (
+                current.totalStat
+                  ? current
+                  : {
+                    ...current,
+                    totalStat: true,
+                  }
+              ))
+              setTotalStat(+event.target.value)
+            }}
             className="w-full p-1 border rounded"
           />
         </div>
@@ -364,7 +715,7 @@ export default function HealingPage() {
               type="checkbox"
               checked={canCrit}
               onChange={(event) => {
-                setSelectedSkill("")
+                clearSelectedSkill()
                 setCanCrit(event.target.checked)
               }}
               className="h-4 w-4"
