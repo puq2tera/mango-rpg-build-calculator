@@ -10,6 +10,7 @@ import { groupAdditionalStageStatEntries } from "@/app/lib/additionalStageStats"
 import {
   computeBuildStatStages,
   expandCompoundStats,
+  getOrderedBuffPercentBeforeByName,
   readBuildSnapshot,
   type BuildSnapshot,
   type BuildStatStages,
@@ -817,17 +818,18 @@ function applyDisplayFlatEffectStat(
   targetValue: number,
   stackCount = 1,
   flatStatScale = 1,
+  buffPercentOverride?: number,
 ): void {
   const info = stat_data.StatsInfo[targetStat as keyof typeof stat_data.StatsInfo]
   if (!info) {
     return
   }
 
-  const buff = getMergedDisplayStatValue(sourceStats, expandedStats, "Buff%")
+  const buffPercent = buffPercentOverride ?? getMergedDisplayStatValue(sourceStats, expandedStats, "Buff%")
   const normalizedTargetValue = info.multi === 0.01
     ? targetValue * flatStatScale
     : targetValue
-  const resultValue = Math.floor(normalizedTargetValue * stackCount * (1 + buff))
+  const resultValue = Math.floor(normalizedTargetValue * stackCount * (1 + (buffPercent / 100)))
 
   addDisplayEffectStat(rawStats, expandedStats, targetStat, resultValue)
 }
@@ -840,15 +842,16 @@ function applyDisplayConversionEffect(
   ratio: number,
   targetStat: string,
   stackCount = 1,
+  buffPercentOverride?: number,
 ): void {
   const info = stat_data.StatsInfo[targetStat as keyof typeof stat_data.StatsInfo]
   if (!info) {
     return
   }
 
-  const buff = getMergedDisplayStatValue(sourceStats, expandedStats, "Buff%")
+  const buffPercent = buffPercentOverride ?? getMergedDisplayStatValue(sourceStats, expandedStats, "Buff%")
   const sourceValue = getDisplayConversionSourceValue(sourceStats, expandedStats, sourceStat)
-  const resultValue = Math.floor(sourceValue * ratio * stackCount * (1 + buff))
+  const resultValue = Math.floor(sourceValue * ratio * stackCount * (1 + (buffPercent / 100)))
 
   addDisplayEffectStat(rawStats, expandedStats, targetStat, resultValue)
 }
@@ -859,6 +862,7 @@ function computeDisplayEffectStats(
   sourceStats: Record<string, number>,
   sourceData: Record<string, EffectSourceData | undefined>,
   flatStatScale = 1,
+  buffPercentOverridesByName?: Record<string, number>,
 ): Record<string, number> {
   const rawStats: Record<string, number> = {}
   const expandedStats: Record<string, number> = {}
@@ -868,10 +872,20 @@ function computeDisplayEffectStats(
     if (!effectData) {
       continue
     }
+    const buffPercentOverride = buffPercentOverridesByName?.[name]
 
     if (effectData.conversions) {
       for (const { source, ratio, resulting_stat } of effectData.conversions) {
-        applyDisplayConversionEffect(rawStats, expandedStats, sourceStats, source, ratio, resulting_stat)
+        applyDisplayConversionEffect(
+          rawStats,
+          expandedStats,
+          sourceStats,
+          source,
+          ratio,
+          resulting_stat,
+          1,
+          buffPercentOverride,
+        )
       }
     }
 
@@ -885,19 +899,38 @@ function computeDisplayEffectStats(
           ratio,
           resulting_stat,
           stackDict[name] ?? 0,
+          buffPercentOverride,
         )
       }
     }
 
     if (effectData.stats) {
       for (const [stat, value] of Object.entries(effectData.stats)) {
-        applyDisplayFlatEffectStat(rawStats, expandedStats, sourceStats, stat, value ?? 0, 1, flatStatScale)
+        applyDisplayFlatEffectStat(
+          rawStats,
+          expandedStats,
+          sourceStats,
+          stat,
+          value ?? 0,
+          1,
+          flatStatScale,
+          buffPercentOverride,
+        )
       }
     }
 
     if (effectData.stack_stats) {
       for (const [stat, value] of Object.entries(effectData.stack_stats)) {
-        applyDisplayFlatEffectStat(rawStats, expandedStats, sourceStats, stat, value ?? 0, stackDict[name] ?? 0, flatStatScale)
+        applyDisplayFlatEffectStat(
+          rawStats,
+          expandedStats,
+          sourceStats,
+          stat,
+          value ?? 0,
+          stackDict[name] ?? 0,
+          flatStatScale,
+          buffPercentOverride,
+        )
       }
     }
   }
@@ -932,12 +965,20 @@ function getDisplayBaseStats(stages: BuildStatStages): Record<string, number> {
 
 function getRawDungeonDisplayStats(snapshot: BuildSnapshot, stages: BuildStatStages): Record<string, number> {
   const additionalStageStats = groupAdditionalStageStatEntries(snapshot.additionalStageStats)
+  const buffPercentOverridesByName = getOrderedBuffPercentBeforeByName(
+    snapshot.selectedBuffs,
+    snapshot.selectedBuffStacks,
+    stages.StatsBuffReady,
+    skill_data as Record<string, EffectSourceData | undefined>,
+    100,
+  )
   const buffStats = computeDisplayEffectStats(
     snapshot.selectedBuffs,
     snapshot.selectedBuffStacks,
     stages.StatsBuffReady,
     skill_data as Record<string, EffectSourceData | undefined>,
     100,
+    buffPercentOverridesByName,
   )
   const tarotStats = computeDisplayEffectStats(
     snapshot.selectedTarots,
@@ -1064,6 +1105,13 @@ function getEffectDeltas(stats: Record<string, number>): EffectDelta[] {
 function getActiveEffects(snapshot: BuildSnapshot, stages: BuildStatStages): ActiveEffect[] {
   const effects: ActiveEffect[] = []
   const sourceStats = stages.StatsBuffReady
+  const buffPercentOverridesByName = getOrderedBuffPercentBeforeByName(
+    snapshot.selectedBuffs,
+    snapshot.selectedBuffStacks,
+    sourceStats,
+    skill_data as Record<string, EffectSourceData | undefined>,
+    100,
+  )
 
   for (const skillName of snapshot.selectedBuffs) {
     const skill = skill_data[skillName]
@@ -1076,6 +1124,7 @@ function getActiveEffects(snapshot: BuildSnapshot, stages: BuildStatStages): Act
         sourceStats,
         skill_data as Record<string, EffectSourceData | undefined>,
         100,
+        { [skillName]: buffPercentOverridesByName[skillName] ?? (sourceStats["Buff%"] ?? 0) },
       ),
     )
     if (deltas.length === 0) continue

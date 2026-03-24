@@ -351,6 +351,7 @@ export function calculateSavedBuildSkillResult(
           ...build.snapshot.selectedBuffStacks,
           [skillName]: buffStackOverride,
         },
+      build.snapshot.selectedBuffs,
     )
     : {}
 

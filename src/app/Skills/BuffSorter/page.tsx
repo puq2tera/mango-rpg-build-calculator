@@ -106,8 +106,9 @@ function getBuffStatsDescription(
   skillName: string,
   sourceStats: Record<string, number>,
   buffStacks: Record<string, number>,
+  selectedBuffNames: readonly string[],
 ): string {
-  const effectStats = computeSkillDisplayEffectStats(skillName, sourceStats, buffStacks)
+  const effectStats = computeSkillDisplayEffectStats(skillName, sourceStats, buffStacks, selectedBuffNames)
   const effects = Object.entries(effectStats)
     .filter(([stat, value]) => !isInternalThreatStat(stat) && Math.abs(value) >= 0.0001)
     .sort(([leftStat, leftValue], [rightStat, rightValue]) => {
@@ -141,7 +142,12 @@ export default function BuffPriorityEditor() {
       const snapshot = readBuildSnapshot(localStorage)
       const stages = computeBuildStatStages(snapshot)
       const descriptions = snapshot.selectedBuffs.reduce<Record<string, string>>((result, buffName) => {
-        result[buffName] = getBuffStatsDescription(buffName, stages.StatsBuffReady, snapshot.selectedBuffStacks)
+        result[buffName] = getBuffStatsDescription(
+          buffName,
+          stages.StatsBuffReady,
+          snapshot.selectedBuffStacks,
+          snapshot.selectedBuffs,
+        )
         return result
       }, {})
 

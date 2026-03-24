@@ -1,10 +1,10 @@
 import { heroPointGainsByRace, heroPointStats } from "@/app/data/heropoint_data"
 import { race_data_by_tag } from "@/app/data/race_data"
 import rune_data from "@/app/data/rune_data"
-import { skill_data, type Skill } from "@/app/data/skill_data"
+import { skill_data } from "@/app/data/skill_data"
 import stat_data from "@/app/data/stat_data"
 import { talent_data } from "@/app/data/talent_data"
-import tarot_data, { type Tarot } from "@/app/data/tarot_data"
+import tarot_data from "@/app/data/tarot_data"
 import { getMainStatTrainingGain } from "@/app/lib/mainStatPoints"
 import {
   ADDITIONAL_STAGE_STATS_STORAGE_KEY,
@@ -351,8 +351,9 @@ function updateConversionSubStats(
   ratio: number,
   targetStat: string,
   stackCount = 1,
+  buffPercentOverride?: number,
 ): void {
-  const buff = (sourceDict["Buff%"] ?? 0) + (targetDict["Buff%"] ?? 0)
+  const buffPercent = buffPercentOverride ?? ((sourceDict["Buff%"] ?? 0) + (targetDict["Buff%"] ?? 0))
   const getMergedStatValue = (stat: string) => (sourceDict[stat] ?? 0) + (targetDict[stat] ?? 0)
   const highest = (stats: readonly string[]) =>
     stats.reduce((currentHighest, stat) => Math.max(currentHighest, getMergedStatValue(stat)), 0)
@@ -386,7 +387,7 @@ function updateConversionSubStats(
 
   const affixInfo = stat_data.StatsInfo[targetStat as keyof typeof stat_data.StatsInfo]
   const substats = affixInfo?.sub_stats
-  const resultValue = truncateTowardZero(sourceValue * (ratio * stackCount) * (1 + buff))
+  const resultValue = truncateTowardZero(sourceValue * (ratio * stackCount) * (1 + (buffPercent / 100)))
   const convertedSkillSpecificStatName = `__Converted ${targetStat}`
 
   if (substats) {
@@ -409,15 +410,16 @@ function updateFlatSubStats(
   targetValue: number,
   stackCount = 1,
   flatStatScale = 1,
+  buffPercentOverride?: number,
 ): void {
-  const buff = (sourceDict["Buff%"] ?? 0) + (targetDict["Buff%"] ?? 0)
+  const buffPercent = buffPercentOverride ?? ((sourceDict["Buff%"] ?? 0) + (targetDict["Buff%"] ?? 0))
 
   const affixInfo = stat_data.StatsInfo[targetStat as keyof typeof stat_data.StatsInfo]
   const substats = affixInfo?.sub_stats
   const normalizedTargetValue = affixInfo?.multi === 0.01
     ? targetValue * flatStatScale
     : targetValue
-  const resultValue = Math.floor(normalizedTargetValue * stackCount * (1 + buff))
+  const resultValue = Math.floor(normalizedTargetValue * stackCount * (1 + (buffPercent / 100)))
 
   if (substats) {
     for (const substat of substats) {
@@ -433,32 +435,62 @@ function updateStats(
   sourceDict: Record<string, number>,
   stackDict: Record<string, number>,
   sourceSkillName: string,
-  sourceSkillData?: Skill | Tarot,
+  sourceSkillData?: {
+    conversions?: Array<{
+      source: string
+      ratio: number
+      resulting_stat: string
+    }>
+    stack_conversions?: Array<{
+      source: string
+      ratio: number
+      resulting_stat: string
+    }>
+    stats?: Partial<Record<string, number>>
+    stack_stats?: Partial<Record<string, number>>
+  },
   flatStatScale = 1,
+  buffPercentOverride?: number,
 ): void {
   if (!sourceSkillData) return
 
   if (sourceSkillData.conversions) {
     for (const { source, ratio, resulting_stat } of sourceSkillData.conversions) {
-      updateConversionSubStats(targetDict, sourceDict, source, ratio, resulting_stat)
+      updateConversionSubStats(targetDict, sourceDict, source, ratio, resulting_stat, 1, buffPercentOverride)
     }
   }
 
   if (sourceSkillData.stack_conversions) {
     for (const { source, ratio, resulting_stat } of sourceSkillData.stack_conversions) {
-      updateConversionSubStats(targetDict, sourceDict, source, ratio, resulting_stat, stackDict[sourceSkillName] ?? 0)
+      updateConversionSubStats(
+        targetDict,
+        sourceDict,
+        source,
+        ratio,
+        resulting_stat,
+        stackDict[sourceSkillName] ?? 0,
+        buffPercentOverride,
+      )
     }
   }
 
   if (sourceSkillData.stats) {
     for (const [stat, statAmount] of Object.entries(sourceSkillData.stats)) {
-      updateFlatSubStats(targetDict, sourceDict, stat, statAmount ?? 0, 1, flatStatScale)
+      updateFlatSubStats(targetDict, sourceDict, stat, statAmount ?? 0, 1, flatStatScale, buffPercentOverride)
     }
   }
 
   if (sourceSkillData.stack_stats) {
     for (const [stat, statAmount] of Object.entries(sourceSkillData.stack_stats)) {
-      updateFlatSubStats(targetDict, sourceDict, stat, statAmount ?? 0, stackDict[sourceSkillName] ?? 0, flatStatScale)
+      updateFlatSubStats(
+        targetDict,
+        sourceDict,
+        stat,
+        statAmount ?? 0,
+        stackDict[sourceSkillName] ?? 0,
+        flatStatScale,
+        buffPercentOverride,
+      )
     }
   }
 }
@@ -815,15 +847,64 @@ function computeBuffReadyStats(statsConversionReady: Record<string, number>, sta
   return statsBuffReady
 }
 
+export function getOrderedBuffPercentBeforeByName(
+  selectedNames: readonly string[],
+  stackDict: Record<string, number>,
+  sourceStats: Record<string, number>,
+  sourceData: Record<string, {
+    conversions?: Array<{
+      source: string
+      ratio: number
+      resulting_stat: string
+    }>
+    stack_conversions?: Array<{
+      source: string
+      ratio: number
+      resulting_stat: string
+    }>
+    stats?: Partial<Record<string, number>>
+    stack_stats?: Partial<Record<string, number>>
+  } | undefined>,
+  flatStatScale = 1,
+): Record<string, number> {
+  const result: Record<string, number> = {}
+  let currentBuffPercent = sourceStats["Buff%"] ?? 0
+
+  for (const name of selectedNames) {
+    result[name] = currentBuffPercent
+
+    const effectStats: Record<string, number> = {}
+    updateStats(effectStats, sourceStats, stackDict, name, sourceData[name], flatStatScale, currentBuffPercent)
+    currentBuffPercent += effectStats["Buff%"] ?? 0
+  }
+
+  return result
+}
+
 function computeBuffStats(
   selectedBuffNames: readonly string[],
   buffStacks: Record<string, number>,
   statsBuffReady: Record<string, number>,
 ): Record<string, number> {
   const buffed: Record<string, number> = {}
+  const buffPercentBeforeByName = getOrderedBuffPercentBeforeByName(
+    selectedBuffNames,
+    buffStacks,
+    statsBuffReady,
+    skill_data,
+    100,
+  )
 
   for (const skillName of selectedBuffNames) {
-    updateStats(buffed, statsBuffReady, buffStacks, skillName, skill_data[skillName], 100)
+    updateStats(
+      buffed,
+      statsBuffReady,
+      buffStacks,
+      skillName,
+      skill_data[skillName],
+      100,
+      buffPercentBeforeByName[skillName],
+    )
   }
 
   return buffed
