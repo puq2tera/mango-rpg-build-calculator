@@ -10070,7 +10070,7 @@ const skill_data: Record<string, Skill> = {
         },
         description: "[ 2 Charge ] Increase group Wind Resist by 50% for 4 Turns, 12 MP",
         stats: {
-    "Water Res%": 0.5,
+    "Wind Res%": 0.5,
     },
         
 },
@@ -10093,7 +10093,7 @@ const skill_data: Record<string, Skill> = {
         },
         description: "[ 2 Charge ] Increase group Water Resist by 50% for 4 Turns, 12 MP",
         stats: {
-    "Earth Res%": 0.5,
+    "Water Res%": 0.5,
     },
         
 },
@@ -10139,7 +10139,7 @@ const skill_data: Record<string, Skill> = {
         },
         description: "[ 2 Charge ] Increase group Earth Resist by 50% for 4 Turns, 12 MP",
         stats: {
-    "Wind Res%": 0.5,
+    "Earth Res%": 0.5,
     },
         
 },
@@ -10583,7 +10583,7 @@ const skill_data: Record<string, Skill> = {
         },
         description: "[ 1 Charge ] Increase group Wind Resist by 50% for 4 Turns, 16 MP",
         stats: {
-    "Water Res%": 0.5,
+    "Wind Res%": 0.5,
     },
         
 },
@@ -10606,7 +10606,7 @@ const skill_data: Record<string, Skill> = {
         },
         description: "[ 1 Charge ] Increase group Water Resist by 50% for 4 Turns, 16 MP",
         stats: {
-    "Earth Res%": 0.5,
+    "Water Res%": 0.5,
     },
         
 },
@@ -10652,7 +10652,7 @@ const skill_data: Record<string, Skill> = {
         },
         description: "[ 1 Charge ] Increase group Earth Resist by 50% for 4 Turns, 16 MP",
         stats: {
-    "Wind Res%": 0.5,
+    "Earth Res%": 0.5,
     },
         
 },
