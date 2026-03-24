@@ -17,8 +17,12 @@ import {
 import {
   buildSavedBuildCalculatedResults,
   calculateSavedBuildSkillResult,
+  getDefaultSavedBuildSkillComparisonMode,
+  getSavedBuildComparisonModeLabel,
   getSavedBuildCalculatedValue,
-  savedBuildComparisonModeOptions,
+  getSavedBuildSkillComparisonOptions,
+  isSavedBuildComparisonMode,
+  isSavedBuildSkillComparisonModeAvailable,
   type SavedBuildCalculatedResult,
   type SavedBuildComparisonMode,
 } from "@/app/lib/debugSavedBuildSkillMatcher"
@@ -87,6 +91,7 @@ type SavedBuildResultStatus = "perfect" | "close" | "off" | "incomplete"
 
 const INPUT_STORAGE_KEY = "debugVars:comparisonInputs"
 const SAVED_BUILD_RESULT_TABLE_STORAGE_KEY = "debugVars:savedBuildResultTable"
+const PASTE_INPUTS_COLLAPSED_STORAGE_KEY = "debugVars:pasteInputsCollapsed"
 
 const panelClass =
   "rounded-[28px] border border-slate-800/80 bg-[linear-gradient(145deg,rgba(6,11,20,0.97),rgba(15,23,42,0.9))] shadow-[0_28px_90px_rgba(2,6,23,0.42)]"
@@ -130,10 +135,6 @@ function createSavedBuildResultRow(defaultBuildId = ""): SavedBuildResultTableRo
   }
 }
 
-function isSavedBuildComparisonMode(value: unknown): value is SavedBuildComparisonMode {
-  return savedBuildComparisonModeOptions.some((option) => option.key === value)
-}
-
 function normalizeSavedBuildResultRows(value: unknown): SavedBuildResultTableRow[] {
   if (!Array.isArray(value)) {
     return [createSavedBuildResultRow()]
@@ -150,6 +151,40 @@ function normalizeSavedBuildResultRows(value: unknown): SavedBuildResultTableRow
     }))
 
   return rows.length > 0 ? rows : [createSavedBuildResultRow()]
+}
+
+function getDefaultSkillNameForBuild(
+  buildId: string,
+  resultByBuildId: ReadonlyMap<string, SavedBuildCalculatedResult>,
+): string {
+  return resultByBuildId.get(buildId)?.skills[0]?.name ?? ""
+}
+
+function getDefaultComparisonModeForSkill(
+  buildId: string,
+  skillName: string,
+  resultByBuildId: ReadonlyMap<string, SavedBuildCalculatedResult>,
+): SavedBuildComparisonMode {
+  const buildResult = resultByBuildId.get(buildId)
+  return buildResult && skillName
+    ? (getDefaultSavedBuildSkillComparisonMode(buildResult, skillName) ?? "maxcrit")
+    : "maxcrit"
+}
+
+function getNextComparisonModeForSkill(
+  buildResult: SavedBuildCalculatedResult | null,
+  skillName: string,
+  currentMode: SavedBuildComparisonMode,
+): SavedBuildComparisonMode {
+  if (!buildResult || !skillName) {
+    return "maxcrit"
+  }
+
+  if (isSavedBuildSkillComparisonModeAvailable(buildResult, skillName, currentMode)) {
+    return currentMode
+  }
+
+  return getDefaultSavedBuildSkillComparisonMode(buildResult, skillName) ?? "maxcrit"
 }
 
 function normalizeName(value: string): string {
@@ -444,10 +479,14 @@ function PasteInputTable({
   inputs,
   setInputs,
   onClear,
+  isCollapsed,
+  onToggleCollapsed,
 }: {
   inputs: PasteInputs
   setInputs: Dispatch<SetStateAction<PasteInputs>>
   onClear: () => void
+  isCollapsed: boolean
+  onToggleCollapsed: () => void
 }) {
   const rows = [
     {
@@ -497,9 +536,21 @@ function PasteInputTable({
     <section className={panelClass}>
       <div className="flex flex-wrap items-start justify-between gap-3 border-b border-slate-800/80 px-5 py-4 sm:px-6">
         <div>
-          <div className="text-xl font-semibold text-slate-50">Paste Inputs</div>
+          <div className="flex flex-wrap items-center gap-2">
+            <div className="text-xl font-semibold text-slate-50">Paste Inputs</div>
+            <button
+              type="button"
+              onClick={onToggleCollapsed}
+              aria-expanded={!isCollapsed}
+              className="rounded-full border border-slate-700/80 bg-slate-900/80 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-200 transition hover:border-sky-300/40 hover:text-sky-100"
+            >
+              {isCollapsed ? "Expand" : "Collapse"}
+            </button>
+          </div>
           <div className="mt-1 text-sm text-slate-400">
-            Unmatched rows stay visible so parser gaps and unsupported fields are obvious.
+            {isCollapsed
+              ? "Expand to edit pasted sections."
+              : "Unmatched rows stay visible so parser gaps and unsupported fields are obvious."}
           </div>
         </div>
 
@@ -512,43 +563,45 @@ function PasteInputTable({
         </button>
       </div>
 
-      <div className="overflow-x-auto p-4 sm:p-5">
-        <table className="min-w-full table-fixed border-separate border-spacing-0 text-sm">
-          <thead>
-            <tr className="text-left text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500">
-              <th className="w-56 px-3 py-2">Section</th>
-              <th className="px-3 py-2">Paste</th>
-            </tr>
-          </thead>
-          <tbody>
-            {rows.map((row, index) => (
-              <tr key={row.label} className="align-top">
-                <td
-                  className={`border border-slate-800/80 bg-slate-950/55 px-3 py-3 ${
-                    index === 0 ? "rounded-tl-2xl" : ""
-                  } ${index === rows.length - 1 ? "rounded-bl-2xl" : ""}`}
-                >
-                  <div className="text-sm font-semibold text-slate-50">{row.label}</div>
-                  <div className="mt-1 text-xs leading-5 text-slate-400">{row.description}</div>
-                </td>
-                <td
-                  className={`border border-l-0 border-slate-800/80 bg-slate-950/35 px-3 py-3 ${
-                    index === 0 ? "rounded-tr-2xl" : ""
-                  } ${index === rows.length - 1 ? "rounded-br-2xl" : ""}`}
-                >
-                  <textarea
-                    value={row.value}
-                    onChange={(event) => row.update(event.target.value)}
-                    placeholder={row.placeholder}
-                    spellCheck={false}
-                    className={textareaClass}
-                  />
-                </td>
+      {isCollapsed ? null : (
+        <div className="overflow-x-auto p-4 sm:p-5">
+          <table className="min-w-full table-fixed border-separate border-spacing-0 text-sm">
+            <thead>
+              <tr className="text-left text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500">
+                <th className="w-56 px-3 py-2">Section</th>
+                <th className="px-3 py-2">Paste</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+            </thead>
+            <tbody>
+              {rows.map((row, index) => (
+                <tr key={row.label} className="align-top">
+                  <td
+                    className={`border border-slate-800/80 bg-slate-950/55 px-3 py-3 ${
+                      index === 0 ? "rounded-tl-2xl" : ""
+                    } ${index === rows.length - 1 ? "rounded-bl-2xl" : ""}`}
+                  >
+                    <div className="text-sm font-semibold text-slate-50">{row.label}</div>
+                    <div className="mt-1 text-xs leading-5 text-slate-400">{row.description}</div>
+                  </td>
+                  <td
+                    className={`border border-l-0 border-slate-800/80 bg-slate-950/35 px-3 py-3 ${
+                      index === 0 ? "rounded-tr-2xl" : ""
+                    } ${index === rows.length - 1 ? "rounded-br-2xl" : ""}`}
+                  >
+                    <textarea
+                      value={row.value}
+                      onChange={(event) => row.update(event.target.value)}
+                      placeholder={row.placeholder}
+                      spellCheck={false}
+                      className={textareaClass}
+                    />
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
     </section>
   )
 }
@@ -739,12 +792,10 @@ function BuffComparisonSection({
 function ComparisonBlock({
   title,
   subtitle,
-  hasInput,
   children,
 }: {
   title: string
   subtitle: string
-  hasInput: boolean
   children: ReactNode
 }) {
   return (
@@ -754,13 +805,7 @@ function ComparisonBlock({
         <div className="mt-1 text-xs leading-5 text-slate-400">{subtitle}</div>
       </div>
 
-      <div className="p-4 sm:p-5">
-        {hasInput ? children : (
-          <div className={emptyStateClass}>
-            Paste the corresponding in-game output above to generate a comparison.
-          </div>
-        )}
-      </div>
+      <div className="p-4 sm:p-5">{children}</div>
     </section>
   )
 }
@@ -777,7 +822,7 @@ function SavedBuildSkillCombobox({
 }: {
   rowId: string
   value: string
-  options: SavedBuildCalculatedResult["presets"]
+  options: SavedBuildCalculatedResult["skills"]
   onChange: (nextValue: string) => void
 }) {
   const [inputValue, setInputValue] = useState(value)
@@ -1034,10 +1079,6 @@ function getSavedBuildResultStatusLabel(status: SavedBuildResultStatus): string 
   }
 }
 
-function getSavedBuildComparisonModeLabel(mode: SavedBuildComparisonMode): string {
-  return savedBuildComparisonModeOptions.find((option) => option.key === mode)?.label ?? mode
-}
-
 function formatSavedBuildResultDebugValue(value: string): string {
   const normalized = value.replace(/\s+/g, " ").trim()
   return normalized.length > 0 ? normalized : "—"
@@ -1052,13 +1093,6 @@ function parseExpectedComparisonValue(value: string): number | null {
 
   const parsed = Number(normalized)
   return Number.isFinite(parsed) ? parsed : null
-}
-
-function getDefaultSkillNameForBuild(
-  buildId: string,
-  resultByBuildId: ReadonlyMap<string, SavedBuildCalculatedResult>,
-): string {
-  return resultByBuildId.get(buildId)?.presets[0]?.name ?? ""
 }
 
 function buildSavedBuildResultDebugBlock(
@@ -1154,10 +1188,45 @@ function evaluateSavedBuildResultRow(
     }
   }
 
+  const comparisonOptions = getSavedBuildSkillComparisonOptions(calculatedResult, row.skillName)
+  if (comparisonOptions.length === 0) {
+    return {
+      calculatedValue: null,
+      expectedValue: null,
+      delta: null,
+      percentDifference: null,
+      status: "incomplete",
+      note: "No stats available",
+    }
+  }
+
+  if (!comparisonOptions.some((option) => option.key === row.mode)) {
+    return {
+      calculatedValue: null,
+      expectedValue: null,
+      delta: null,
+      percentDifference: null,
+      status: "incomplete",
+      note: "Pick stat",
+    }
+  }
+
+  const calculatedValue = getSavedBuildCalculatedValue(skillResult, row.mode)
+  if (calculatedValue === null) {
+    return {
+      calculatedValue: null,
+      expectedValue: null,
+      delta: null,
+      percentDifference: null,
+      status: "incomplete",
+      note: "Result unavailable",
+    }
+  }
+
   const expectedValue = parseExpectedComparisonValue(row.expectedValue)
   if (row.expectedValue.trim().length === 0) {
     return {
-      calculatedValue: getSavedBuildCalculatedValue(skillResult, row.mode),
+      calculatedValue,
       expectedValue: null,
       delta: null,
       percentDifference: null,
@@ -1168,7 +1237,7 @@ function evaluateSavedBuildResultRow(
 
   if (expectedValue === null) {
     return {
-      calculatedValue: getSavedBuildCalculatedValue(skillResult, row.mode),
+      calculatedValue,
       expectedValue: null,
       delta: null,
       percentDifference: null,
@@ -1176,8 +1245,6 @@ function evaluateSavedBuildResultRow(
       note: "Invalid value",
     }
   }
-
-  const calculatedValue = getSavedBuildCalculatedValue(skillResult, row.mode)
   const delta = calculatedValue - expectedValue
 
   if (Math.abs(delta) < 0.000001) {
@@ -1237,6 +1304,21 @@ function SavedBuildResultComparisonSection({
     () => buildSavedBuildResultDebugBlock(rows, buildNameById, resultByBuildId),
     [rows, buildNameById, resultByBuildId],
   )
+  const statusSummary = useMemo(
+    () => rows.reduce(
+      (summary, row) => {
+        const evaluation = evaluateSavedBuildResultRow(row, resultByBuildId)
+
+        if (evaluation.status === "perfect") summary.perfect += 1
+        if (evaluation.status === "close") summary.close += 1
+        if (evaluation.status === "off") summary.off += 1
+
+        return summary
+      },
+      { perfect: 0, close: 0, off: 0 },
+    ),
+    [rows, resultByBuildId],
+  )
 
   useEffect(() => {
     if (copyFeedback === "idle") {
@@ -1267,6 +1349,7 @@ function SavedBuildResultComparisonSection({
       const defaultBuildId = savedBuildProfiles[0]?.id ?? ""
       const fallbackRow = createSavedBuildResultRow(defaultBuildId)
       fallbackRow.skillName = getDefaultSkillNameForBuild(defaultBuildId, resultByBuildId)
+      fallbackRow.mode = getDefaultComparisonModeForSkill(defaultBuildId, fallbackRow.skillName, resultByBuildId)
       return [fallbackRow]
     })
   }
@@ -1275,6 +1358,7 @@ function SavedBuildResultComparisonSection({
     const defaultBuildId = savedBuildProfiles[0]?.id ?? ""
     const nextRow = createSavedBuildResultRow(defaultBuildId)
     nextRow.skillName = getDefaultSkillNameForBuild(defaultBuildId, resultByBuildId)
+    nextRow.mode = getDefaultComparisonModeForSkill(defaultBuildId, nextRow.skillName, resultByBuildId)
     setRows((current) => [...current, nextRow])
   }
 
@@ -1318,10 +1402,21 @@ function SavedBuildResultComparisonSection({
         <div>
           <div className="text-lg font-semibold text-slate-50">Saved Build Result Match</div>
           <div className="mt-1 text-xs leading-5 text-slate-400">
-            Compare any saved build&apos;s selected skill result to an expected number. Threat uses maximized crit threat.
+            Compare any saved build&apos;s skill damage or buff result to an expected number. Threat uses maximized crit threat.
           </div>
           <div className="mt-1 text-[11px] leading-5 text-slate-500">
             Build, skill, stat, and expected values are saved locally so these rows can act as regression checks.
+          </div>
+          <div className="mt-3 flex flex-wrap gap-1.5 text-[10px] font-semibold uppercase tracking-[0.14em]">
+            <div className={`rounded-full border px-2.5 py-1 ${getSavedBuildResultStatusClass("perfect")}`}>
+              {statusSummary.perfect} Perfect
+            </div>
+            <div className={`rounded-full border px-2.5 py-1 ${getSavedBuildResultStatusClass("close")}`}>
+              {statusSummary.close} Within Tolerance
+            </div>
+            <div className={`rounded-full border px-2.5 py-1 ${getSavedBuildResultStatusClass("off")}`}>
+              {statusSummary.off} Fail
+            </div>
           </div>
         </div>
 
@@ -1370,6 +1465,14 @@ function SavedBuildResultComparisonSection({
                 {rows.map((row) => {
                   const evaluation = evaluateSavedBuildResultRow(row, resultByBuildId)
                   const buildResult = row.buildId ? resultByBuildId.get(row.buildId) ?? null : null
+                  const comparisonOptions = buildResult && row.skillName
+                    ? getSavedBuildSkillComparisonOptions(buildResult, row.skillName)
+                    : []
+                  const damageComparisonOptions = comparisonOptions.filter((option) => option.source === "damage")
+                  const buffComparisonOptions = comparisonOptions.filter((option) => option.source === "buff")
+                  const selectedModeValue = comparisonOptions.some((option) => option.key === row.mode)
+                    ? row.mode
+                    : ""
 
                   return (
                     <tr key={row.id} className="align-top">
@@ -1378,9 +1481,11 @@ function SavedBuildResultComparisonSection({
                           value={row.buildId}
                           onChange={(event) => {
                             const nextBuildId = event.target.value
+                            const nextSkillName = getDefaultSkillNameForBuild(nextBuildId, resultByBuildId)
                             updateRow(row.id, {
                               buildId: nextBuildId,
-                              skillName: getDefaultSkillNameForBuild(nextBuildId, resultByBuildId),
+                              skillName: nextSkillName,
+                              mode: getDefaultComparisonModeForSkill(nextBuildId, nextSkillName, resultByBuildId),
                             })
                           }}
                           className={compactFieldClass}
@@ -1397,23 +1502,43 @@ function SavedBuildResultComparisonSection({
                         <SavedBuildSkillCombobox
                           rowId={row.id}
                           value={row.skillName}
-                          options={buildResult?.presets ?? []}
-                          onChange={(nextValue) => updateRow(row.id, { skillName: nextValue })}
+                          options={buildResult?.skills ?? []}
+                          onChange={(nextValue) => updateRow(row.id, {
+                            skillName: nextValue,
+                            mode: getNextComparisonModeForSkill(buildResult, nextValue, row.mode),
+                          })}
                         />
                       </td>
                       <td className="border-y border-slate-800/80 bg-slate-950/55 px-2.5 py-2">
                         <select
-                          value={row.mode}
+                          value={selectedModeValue}
                           onChange={(event) => updateRow(row.id, {
                             mode: isSavedBuildComparisonMode(event.target.value) ? event.target.value : "maxcrit",
                           })}
                           className={compactFieldClass}
+                          disabled={comparisonOptions.length === 0}
                         >
-                          {savedBuildComparisonModeOptions.map((option) => (
-                            <option key={option.key} value={option.key}>
-                              {option.label}
-                            </option>
-                          ))}
+                          <option value="">
+                            {row.skillName ? "Select stat" : "Select skill first"}
+                          </option>
+                          {damageComparisonOptions.length > 0 ? (
+                            <optgroup label="Damage">
+                              {damageComparisonOptions.map((option) => (
+                                <option key={option.key} value={option.key}>
+                                  {option.label}
+                                </option>
+                              ))}
+                            </optgroup>
+                          ) : null}
+                          {buffComparisonOptions.length > 0 ? (
+                            <optgroup label="Buff">
+                              {buffComparisonOptions.map((option) => (
+                                <option key={option.key} value={option.key}>
+                                  {option.label}
+                                </option>
+                              ))}
+                            </optgroup>
+                          ) : null}
                         </select>
                       </td>
                       <td className="border-y border-slate-800/80 bg-slate-950/55 px-2.5 py-2">
@@ -1439,7 +1564,6 @@ function SavedBuildResultComparisonSection({
                         <div className={`inline-flex rounded-full border px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.14em] ${getSavedBuildResultStatusClass(evaluation.status)}`}>
                           {getSavedBuildResultStatusLabel(evaluation.status)}
                         </div>
-                        <div className="mt-1 text-[10px] text-slate-500">{evaluation.note}</div>
                       </td>
                       <td className="rounded-r-xl border border-slate-800/80 bg-slate-950/65 px-2.5 py-2 text-right">
                         <button
@@ -1537,6 +1661,7 @@ export default function DebugVarsPage() {
   const [savedBuildProfiles, setSavedBuildProfiles] = useState<StoredBuildProfile[]>([])
   const [inputs, setInputs] = useState<PasteInputs>(defaultInputs)
   const [savedBuildResultRows, setSavedBuildResultRows] = useState<SavedBuildResultTableRow[]>([createSavedBuildResultRow()])
+  const [isPasteInputsCollapsed, setIsPasteInputsCollapsed] = useState(false)
   const [hasLoadedPersistedDebugState, setHasLoadedPersistedDebugState] = useState(false)
 
   useEffect(() => {
@@ -1565,6 +1690,8 @@ export default function DebugVarsPage() {
     } catch {
       setSavedBuildResultRows([createSavedBuildResultRow()])
     }
+
+    setIsPasteInputsCollapsed(window.localStorage.getItem(PASTE_INPUTS_COLLAPSED_STORAGE_KEY) === "true")
 
     setHasLoadedPersistedDebugState(true)
 
@@ -1613,6 +1740,14 @@ export default function DebugVarsPage() {
 
     window.localStorage.setItem(SAVED_BUILD_RESULT_TABLE_STORAGE_KEY, JSON.stringify(savedBuildResultRows))
   }, [hasLoadedPersistedDebugState, savedBuildResultRows])
+
+  useEffect(() => {
+    if (typeof window === "undefined" || !hasLoadedPersistedDebugState) {
+      return
+    }
+
+    window.localStorage.setItem(PASTE_INPUTS_COLLAPSED_STORAGE_KEY, String(isPasteInputsCollapsed))
+  }, [hasLoadedPersistedDebugState, isPasteInputsCollapsed])
 
   const parsedGuildCard = useMemo(() => parseGuildCard(inputs.guildCard), [inputs.guildCard])
   const parsedCharacterCard = useMemo(() => parseTerminalCard(inputs.characterCard), [inputs.characterCard])
@@ -1666,73 +1801,84 @@ export default function DebugVarsPage() {
     <div className="min-h-[calc(100vh-var(--top-nav-height))] bg-[radial-gradient(circle_at_top_left,rgba(56,189,248,0.12),transparent_28%),radial-gradient(circle_at_bottom_right,rgba(249,115,22,0.08),transparent_32%)] p-4 sm:p-6">
       <div className="mx-auto max-w-7xl space-y-4">
 
-        <PasteInputTable inputs={inputs} setInputs={setInputs} onClear={() => setInputs(defaultInputs)} />
+        <PasteInputTable
+          inputs={inputs}
+          setInputs={setInputs}
+          onClear={() => setInputs(defaultInputs)}
+          isCollapsed={isPasteInputsCollapsed}
+          onToggleCollapsed={() => setIsPasteInputsCollapsed((current) => !current)}
+        />
 
-        <ComparisonBlock
-          title="Guild Card Comparison"
-          subtitle="Checks the guild card values against the calculator’s current build snapshot."
-          hasInput={hasGuildInput}
-        >
-          <ComparisonTable
-            title="Guild Card Fields"
-            subtitle="Numeric rows show deltas as in-game minus calc."
-            rows={guildRows}
-          />
-        </ComparisonBlock>
+        {hasGuildInput ? (
+          <ComparisonBlock
+            title="Guild Card Comparison"
+            subtitle="Checks the guild card values against the calculator’s current build snapshot."
+          >
+            <ComparisonTable
+              title="Guild Card Fields"
+              subtitle="Numeric rows show deltas as in-game minus calc."
+              rows={guildRows}
+            />
+          </ComparisonBlock>
+        ) : null}
 
-        <ComparisonBlock
-          title="Character Card Comparison"
-          subtitle="Compares the out-of-dungeon character card against the calculator’s current display values."
-          hasInput={hasCharacterInput}
-        >
-          <div className="grid gap-3 xl:grid-cols-2">
-            {characterSections.map((section) => (
-              <ComparisonTable
-                key={section.title}
-                title={section.title}
-                subtitle={section.subtitle}
-                rows={section.rows}
-              />
-            ))}
-          </div>
-        </ComparisonBlock>
+        {hasCharacterInput ? (
+          <ComparisonBlock
+            title="Character Card Comparison"
+            subtitle="Compares the out-of-dungeon character card against the calculator’s current display values."
+          >
+            <div className="grid gap-3 xl:grid-cols-2">
+              {characterSections.map((section) => (
+                <ComparisonTable
+                  key={section.title}
+                  title={section.title}
+                  subtitle={section.subtitle}
+                  rows={section.rows}
+                />
+              ))}
+            </div>
+          </ComparisonBlock>
+        ) : null}
 
-        <ComparisonBlock
-          title="Dungeon Card Comparison"
-          subtitle="Compares the dungeon card against the calculator’s current dungeon values. Note: Overdrive Scaling is currently broken for dungeon output."
-          hasInput={hasDungeonInput}
-        >
-          <div className="grid gap-3 xl:grid-cols-2">
-            {dungeonSections.map((section) => (
-              <ComparisonTable
-                key={section.title}
-                title={section.title}
-                subtitle={section.subtitle}
-                rows={section.rows}
-              />
-            ))}
-          </div>
-        </ComparisonBlock>
+        {hasDungeonInput ? (
+          <ComparisonBlock
+            title="Dungeon Card Comparison"
+            subtitle="Compares the dungeon card against the calculator’s current dungeon values. Note: Overdrive Scaling is currently broken for dungeon output."
+          >
+            <div className="grid gap-3 xl:grid-cols-2">
+              {dungeonSections.map((section) => (
+                <ComparisonTable
+                  key={section.title}
+                  title={section.title}
+                  subtitle={section.subtitle}
+                  rows={section.rows}
+                />
+              ))}
+            </div>
+          </ComparisonBlock>
+        ) : null}
 
-        <ComparisonBlock
-          title="Buff Comparison"
-          subtitle="Compares pasted buff names and parsed effect lines against the calculator’s selected skill buffs."
-          hasInput={hasBuffInput}
-        >
-          <BuffComparisonSection calcBuffs={calcBuffs} inGameBuffs={parsedBuffs} />
-        </ComparisonBlock>
+        {hasBuffInput ? (
+          <ComparisonBlock
+            title="Buff Comparison"
+            subtitle="Compares pasted buff names and parsed effect lines against the calculator’s selected skill buffs."
+          >
+            <BuffComparisonSection calcBuffs={calcBuffs} inGameBuffs={parsedBuffs} />
+          </ComparisonBlock>
+        ) : null}
 
-        <ComparisonBlock
-          title="Conversions Comparison"
-          subtitle="Compares pasted My Conversions blocks against the calculator’s current conversion list by source stat token."
-          hasInput={hasConversionInput}
-        >
-          <ComparisonTable
-            title="My Conversions"
-            subtitle="Each row compares the source value, conversion percent, and output value together."
-            rows={conversionRows}
-          />
-        </ComparisonBlock>
+        {hasConversionInput ? (
+          <ComparisonBlock
+            title="Conversions Comparison"
+            subtitle="Compares pasted My Conversions blocks against the calculator’s current conversion list by source stat token."
+          >
+            <ComparisonTable
+              title="My Conversions"
+              subtitle="Each row compares the source value, conversion percent, and output value together."
+              rows={conversionRows}
+            />
+          </ComparisonBlock>
+        ) : null}
 
         <SavedBuildResultComparisonSection
           rows={savedBuildResultRows}

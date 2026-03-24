@@ -512,6 +512,20 @@ function computeDisplayEffectStats(
   return rawStats
 }
 
+export function computeSkillDisplayEffectStats(
+  skillName: string,
+  sourceStats: Record<string, number>,
+  stackDict: Record<string, number>,
+): Record<string, number> {
+  return computeDisplayEffectStats(
+    [skillName],
+    stackDict,
+    sourceStats,
+    skill_data as Record<string, EffectSourceData | undefined>,
+    100,
+  )
+}
+
 function getRawBaseDisplayStats(stages: BuildStatStages): Record<string, number> {
   return mergeStats(
     stages.StatsTalents,
