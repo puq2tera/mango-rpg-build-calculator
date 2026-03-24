@@ -264,19 +264,25 @@ function buildDamageBaseRows(baseBreakdown: DamageBaseBreakdown): TooltipRow[] {
     baseBreakdown.enemyArmor !== 0
     || baseBreakdown.armorIgnorePercent !== 0
     || baseBreakdown.skillArmorBreakPercent !== 0
-    || baseBreakdown.armorBreak !== 0
+    || baseBreakdown.armorBreakBase !== 0
+    || baseBreakdown.skillArmorBreakAmount !== 0
   ) {
     rows.push({ label: "Enemy Armor", value: formatTooltipStatValue(baseBreakdown.enemyArmor, 2) })
     rows.push({ label: "Armor Ignore%", value: formatTooltipStatValue(baseBreakdown.armorIgnorePercent, 2) })
     if (baseBreakdown.skillArmorBreakPercent !== 0) {
       rows.push({ label: "Armor Break%", value: formatTooltipStatValue(baseBreakdown.skillArmorBreakPercent, 2) })
     }
-    rows.push({ label: "Armor Block", value: formatTooltipStatValue(baseBreakdown.armorBlock, 0) })
     if (baseBreakdown.skillArmorBreakAmount !== 0) {
-      rows.push({ label: "Base Armor Break", value: formatTooltipStatValue(baseBreakdown.armorBreakBase, 0) })
       rows.push({ label: "Skill Armor Break", value: formatTooltipStatValue(baseBreakdown.skillArmorBreakAmount, 0) })
+      rows.push({ label: "Armor After Skill Break", value: formatTooltipStatValue(baseBreakdown.armorAfterSkillBreak, 0) })
     }
-    rows.push({ label: "Armor Break", value: formatTooltipStatValue(baseBreakdown.armorBreak, 0) })
+    if (baseBreakdown.armorIgnorePercent !== 0) {
+      rows.push({ label: "Armor After Ignore", value: formatTooltipStatValue(baseBreakdown.armorBlock, 0) })
+    }
+    if (baseBreakdown.armorBreakBase !== 0) {
+      rows.push({ label: "Base Armor Break", value: formatTooltipStatValue(baseBreakdown.armorBreakBase, 0) })
+    }
+    rows.push({ label: "Effective Armor", value: formatTooltipStatValue(baseBreakdown.effectiveArmor, 0) })
   }
 
   rows.push({ label: "Post-Armor", value: formatTooltipStatValue(baseBreakdown.mitigatedDamage, 0) })

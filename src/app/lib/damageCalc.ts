@@ -1,4 +1,5 @@
 import stat_data from "@/app/data/stat_data"
+import { truncateTowardZero } from "@/app/lib/statRounding"
 import { getThreatBonusMultiplier, getThreatMultiplier } from "@/app/lib/threat"
 
 export const DAMAGE_CALC_STORAGE_KEY = "DamageCalcState"
@@ -89,11 +90,12 @@ export type DamageBaseBreakdown = {
   baseDamage: number
   enemyArmor: number
   armorIgnorePercent: number
+  armorAfterSkillBreak: number
   armorBlock: number
   armorBreakBase: number
   skillArmorBreakPercent: number
   skillArmorBreakAmount: number
-  armorBreak: number
+  effectiveArmor: number
   mitigatedDamage: number
   elementStatName: string
   elementPercent: number
@@ -527,22 +529,26 @@ function buildDamageContext(stats: Record<string, number>, state: DamageCalcStat
     + (secondStatValue * (inputs.secondSkillDmg / 100))
   const base = Math.floor(baseRaw)
 
-  const armorBlock = Math.floor((inputs.enemyArmor ?? 0) * toRemainingPercent(inputs.armorIgnore))
+  const enemyArmor = inputs.enemyArmor ?? 0
+  const armorIgnorePercent = inputs.armorIgnore ?? 0
   const armorBreakBase =
     Math.floor(((stats["ATK"] ?? 0) + (stats["DEF"] ?? 0) + (stats["MATK"] ?? 0) + (stats["HEAL"] ?? 0)) / 4)
     + (stats["Armor Strike"] ?? 0)
   const skillArmorBreakPercent = inputs.skillArmorBreak ?? 0
-  const rawSkillArmorBreakAmount = (inputs.enemyArmor ?? 0) * (skillArmorBreakPercent / 100)
+  const rawSkillArmorBreakAmount = enemyArmor * (skillArmorBreakPercent / 100)
   const minimumSkillArmorBreak = Math.max(0, Math.floor(stats[DAMAGE_CALC_PLAYER_LEVEL_STAT] ?? 0))
   const skillArmorBreakAmount =
     skillArmorBreakPercent > 0
       ? Math.max(minimumSkillArmorBreak, Math.floor(rawSkillArmorBreakAmount))
       : Math.floor(rawSkillArmorBreakAmount)
-  const armorBreak = armorBreakBase + skillArmorBreakAmount
+  const armorAfterSkillBreak = enemyArmor - skillArmorBreakAmount
+  // Skill armor break is applied before armor ignore, while the stat-based armor break remains a flat post-ignore reduction.
+  const armorBlock = truncateTowardZero(armorAfterSkillBreak * toRemainingPercent(armorIgnorePercent))
+  const effectiveArmor = armorBlock - armorBreakBase
   // Only deal dmg if the skill itself has a dmg%
   const mitigatedDamage = base <= 0
     ? 0
-    : Math.max(0, Math.floor(base - (armorBlock - armorBreak)))
+    : Math.max(0, base - effectiveArmor)
   const elementStatName = `${element}%`
   const elementPercent = stats[elementStatName] ?? 0
   const skillElementStatName = getSkillTypeElementStatName(skillType)
@@ -581,13 +587,14 @@ function buildDamageContext(stats: Record<string, number>, state: DamageCalcStat
       secondSkillPercent: inputs.secondSkillDmg ?? 0,
       baseRaw,
       baseDamage: base,
-      enemyArmor: inputs.enemyArmor ?? 0,
-      armorIgnorePercent: inputs.armorIgnore ?? 0,
+      enemyArmor,
+      armorIgnorePercent,
+      armorAfterSkillBreak,
       armorBlock,
       armorBreakBase,
       skillArmorBreakPercent,
       skillArmorBreakAmount,
-      armorBreak,
+      effectiveArmor,
       mitigatedDamage,
       elementStatName,
       elementPercent,
