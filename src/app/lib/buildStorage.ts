@@ -60,6 +60,9 @@ const DERIVED_BUILD_STORAGE_KEYS = new Set([
   "StatsTarots",
   "StatsDmgReady",
 ])
+const NON_BUILD_STORAGE_KEY_PREFIXES = [
+  "debugVars:",
+]
 
 function createProfileId(): string {
   if (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function") {
@@ -75,7 +78,7 @@ function normalizeStoredBuildData(value: unknown): StoredBuildData {
   }
 
   return Object.entries(value).reduce<StoredBuildData>((result, [key, entry]) => {
-    if (typeof entry === "string" && !isManagedBuildStorageKey(key)) {
+    if (typeof entry === "string" && shouldStoreKeyInBuildProfile(key)) {
       result[key] = entry
     }
     return result
@@ -124,6 +127,16 @@ export function isManagedBuildStorageKey(key: string): boolean {
   return key.startsWith(BUILD_MANAGER_KEY_PREFIX)
 }
 
+function isNonBuildStorageKey(key: string): boolean {
+  return NON_BUILD_STORAGE_KEY_PREFIXES.some((prefix) => key.startsWith(prefix))
+}
+
+function shouldStoreKeyInBuildProfile(key: string): boolean {
+  return !isManagedBuildStorageKey(key)
+    && !DERIVED_BUILD_STORAGE_KEYS.has(key)
+    && !isNonBuildStorageKey(key)
+}
+
 export function readBuildManagerState(storage: Storage): BuildManagerState {
   try {
     const parsed = JSON.parse(storage.getItem(BUILD_MANAGER_STORAGE_KEY) ?? "null") as Partial<BuildManagerState> | null
@@ -154,7 +167,7 @@ export function captureCurrentBuildData(storage: Storage): StoredBuildData {
 
   for (let index = 0; index < storage.length; index += 1) {
     const key = storage.key(index)
-    if (!key || isManagedBuildStorageKey(key) || DERIVED_BUILD_STORAGE_KEYS.has(key)) {
+    if (!key || !shouldStoreKeyInBuildProfile(key)) {
       continue
     }
 
@@ -260,7 +273,7 @@ function getBuildKeysToRemove(storage: Storage): string[] {
 
   for (let index = 0; index < storage.length; index += 1) {
     const key = storage.key(index)
-    if (key && !isManagedBuildStorageKey(key)) {
+    if (key && !isManagedBuildStorageKey(key) && !isNonBuildStorageKey(key)) {
       keysToRemove.push(key)
     }
   }
@@ -331,7 +344,7 @@ function tryReadDirectStringRecord(value: unknown): { valid: boolean; data: Stor
   return {
     valid: true,
     data: entries.reduce<StoredBuildData>((result, [key, entry]) => {
-      if (!isManagedBuildStorageKey(key)) {
+      if (shouldStoreKeyInBuildProfile(key)) {
         result[key] = entry
       }
       return result

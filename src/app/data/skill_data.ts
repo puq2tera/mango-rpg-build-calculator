@@ -377,7 +377,7 @@ const skill_data: Record<string, Skill> = {
             healer_levels: 0
         },
         description: "[ Blunt ] Deal 65% ATK DMG, 150% DEF Threat",
-        dmg_stats: { dmg_element: "Blunt", element: "Blunt", pen_element: "Blunt", stat: "ATK", ratio: 0.65, threat: 1.5 },
+        dmg_stats: { dmg_element: "Blunt", element: "Void", pen_element: "Void", stat: "ATK", ratio: 0.65, threat: 1.5 },
 },
 "Blunt Sunder 1": {...defaultSkill,
         category: "tank",
