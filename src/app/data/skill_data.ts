@@ -11246,8 +11246,8 @@ const skill_data: Record<string, Skill> = {
             caster_levels: 0,
             healer_levels: 100
         },
-        description: "[ Fire ] Deals 380% Heal DMG, scales to Max Divine DMG/Pen, 22 MP",
-        dmg_stats: { dmg_element: "Fire", element: "Highest Divine", pen_element: "Highest Divine", stat: "HEAL", ratio: 3.8 },
+        description: "[ Fire ] Deals 380% Heal DMG, scales to Max Divine/Toxic DMG/Pen, 22 MP",
+        dmg_stats: { dmg_element: "Fire", element: "Highest Divine/Toxic", pen_element: "Highest Divine/Toxic", stat: "HEAL", ratio: 3.8 },
 },
 "Divine Bolt": {...defaultSkill,
         category: "healer",
@@ -11272,8 +11272,8 @@ const skill_data: Record<string, Skill> = {
             caster_levels: 0,
             healer_levels: 100
         },
-        description: "[ Lightning ] Deals 380% Heal DMG, scales to Max Divine DMG/Pen, 22 MP",
-        dmg_stats: { dmg_element: "Lightning", element: "Highest Divine", pen_element: "Highest Divine", stat: "HEAL", ratio: 3.8 },
+        description: "[ Lightning ] Deals 380% Heal DMG, scales to Max Divine/Toxic DMG/Pen, 22 MP",
+        dmg_stats: { dmg_element: "Lightning", element: "Highest Divine/Toxic", pen_element: "Highest Divine/Toxic", stat: "HEAL", ratio: 3.8 },
 },
 "Divine Scar": {...defaultSkill,
         category: "healer",
@@ -11298,8 +11298,8 @@ const skill_data: Record<string, Skill> = {
             caster_levels: 0,
             healer_levels: 100
         },
-        description: "[ Wind ] Deals 380% Heal DMG, scales to Max Divine DMG/Pen, 22 MP",
-        dmg_stats: { dmg_element: "Wind", element: "Highest Divine", pen_element: "Highest Divine", stat: "HEAL", ratio: 3.8 },
+        description: "[ Wind ] Deals 380% Heal DMG, scales to Max Divine/Toxic DMG/Pen, 22 MP",
+        dmg_stats: { dmg_element: "Wind", element: "Highest Divine/Toxic", pen_element: "Highest Divine/Toxic", stat: "HEAL", ratio: 3.8 },
 },
 "Divine Wave": {...defaultSkill,
         category: "healer",
@@ -11324,8 +11324,8 @@ const skill_data: Record<string, Skill> = {
             caster_levels: 0,
             healer_levels: 100
         },
-        description: "[ Water ] Deals 380% Heal DMG, scales to Max Divine DMG/Pen, 22 MP",
-        dmg_stats: { dmg_element: "Water", element: "Highest Divine", pen_element: "Highest Divine", stat: "HEAL", ratio: 3.8 },
+        description: "[ Water ] Deals 380% Heal DMG, scales to Max Divine/Toxic DMG/Pen, 22 MP",
+        dmg_stats: { dmg_element: "Water", element: "Highest Divine/Toxic", pen_element: "Highest Divine/Toxic", stat: "HEAL", ratio: 3.8 },
 },
 "Divine Impaler": {...defaultSkill,
         category: "healer",
@@ -11350,8 +11350,8 @@ const skill_data: Record<string, Skill> = {
             caster_levels: 0,
             healer_levels: 100
         },
-        description: "[ Earth ] Deals 380% Heal DMG, scales to Max Divine DMG/Pen, 22 MP",
-        dmg_stats: { dmg_element: "Earth", element: "Highest Divine", pen_element: "Highest Divine", stat: "HEAL", ratio: 3.8 },
+        description: "[ Earth ] Deals 380% Heal DMG, scales to Max Divine/Toxic DMG/Pen, 22 MP",
+        dmg_stats: { dmg_element: "Earth", element: "Highest Divine/Toxic", pen_element: "Highest Divine/Toxic", stat: "HEAL", ratio: 3.8 },
 },
 "Divine Melt": {...defaultSkill,
         category: "healer",
@@ -11376,8 +11376,8 @@ const skill_data: Record<string, Skill> = {
             caster_levels: 0,
             healer_levels: 100
         },
-        description: "[ Toxic ] Deals 380% Heal DMG, scales to Max Divine DMG/Pen, 22 MP",
-        dmg_stats: { dmg_element: "Toxic", element: "Highest Divine", pen_element: "Highest Divine", stat: "HEAL", ratio: 3.8 },
+        description: "[ Toxic ] Deals 380% Heal DMG, scales to Max Divine/Toxic DMG/Pen, 22 MP",
+        dmg_stats: { dmg_element: "Toxic", element: "Highest Divine/Toxic", pen_element: "Highest Divine/Toxic", stat: "HEAL", ratio: 3.8 },
 },
 "Divine Crush": {...defaultSkill,
         category: "healer",
@@ -11402,8 +11402,8 @@ const skill_data: Record<string, Skill> = {
             caster_levels: 0,
             healer_levels: 100
         },
-        description: "[ Void ] Deals 380% Heal DMG, scales to Max Divine DMG/Pen, 22 MP",
-        dmg_stats: { dmg_element: "Void", element: "Highest Divine", pen_element: "Highest Divine", stat: "HEAL", ratio: 3.8 },
+        description: "[ Void ] Deals 380% Heal DMG, scales to Max Divine/Toxic DMG/Pen, 22 MP",
+        dmg_stats: { dmg_element: "Void", element: "Highest Divine/Toxic", pen_element: "Highest Divine/Toxic", stat: "HEAL", ratio: 3.8 },
 },
 "Divine Light": {...defaultSkill,
         category: "healer",
@@ -11428,8 +11428,8 @@ const skill_data: Record<string, Skill> = {
             caster_levels: 0,
             healer_levels: 100
         },
-        description: "[ Holy ] Deals 380% Heal DMG, scales to Max Divine DMG/Pen, 22 MP",
-        dmg_stats: { dmg_element: "Holy", element: "Highest Divine", pen_element: "Highest Divine", stat: "HEAL", ratio: 3.8 },
+        description: "[ Holy ] Deals 380% Heal DMG, scales to Max Divine/Toxic DMG/Pen, 22 MP",
+        dmg_stats: { dmg_element: "Holy", element: "Highest Divine/Toxic", pen_element: "Highest Divine/Toxic", stat: "HEAL", ratio: 3.8 },
 },
 "Divine Shadow": {...defaultSkill,
         category: "healer",
@@ -11454,8 +11454,8 @@ const skill_data: Record<string, Skill> = {
             caster_levels: 0,
             healer_levels: 100
         },
-        description: "[ Neg ] Deals 380% Heal DMG, scales to Max Divine DMG/Pen, 22 MP",
-        dmg_stats: { dmg_element: "Neg", element: "Highest Divine", pen_element: "Highest Divine", stat: "HEAL", ratio: 3.8 },
+        description: "[ Neg ] Deals 380% Heal DMG, scales to Max Divine/Toxic DMG/Pen, 22 MP",
+        dmg_stats: { dmg_element: "Neg", element: "Highest Divine/Toxic", pen_element: "Highest Divine/Toxic", stat: "HEAL", ratio: 3.8 },
 },
 "Flash Restoration": {...defaultSkill,
         type: {

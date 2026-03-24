@@ -62,7 +62,8 @@ const highestElementGroups = {
   "Highest Phys": ["Slash", "Pierce", "Blunt"],
   "Highest Magic": ["Fire", "Water", "Lightning", "Wind", "Earth", "Toxic", "Neg", "Holy", "Void"],
   "Highest Elemental": ["Fire", "Water", "Lightning", "Wind", "Earth", "Toxic"],
-  "Highest Divine": ["Neg", "Holy", "Void"],
+  "Highest Divine": ["Neg", "Holy"],
+  "Highest Divine/Toxic": ["Neg", "Holy", "Toxic"],
 } as const
 
 type DynamicElementSource = keyof typeof highestElementGroups
