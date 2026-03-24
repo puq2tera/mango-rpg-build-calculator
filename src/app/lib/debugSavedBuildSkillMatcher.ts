@@ -117,6 +117,10 @@ function collectSkillBuffResultStats(skill: Skill): string[] {
   return result
 }
 
+function skillSupportsBuffStacks(skill: Skill): boolean {
+  return (skill.stack_conversions?.length ?? 0) > 0 || Object.keys(skill.stack_stats ?? {}).length > 0
+}
+
 const buffResultStatsBySkillName = new Map(
   Object.entries(skill_data)
     .map(([name, skill]) => [name, collectSkillBuffResultStats(skill)] as const)
@@ -220,6 +224,9 @@ export function buildSavedBuildCalculatedResults(
 export function calculateSavedBuildSkillResult(
   build: SavedBuildCalculatedResult,
   skillName: string,
+  options?: {
+    buffStackOverride?: number | null
+  },
 ): SavedBuildSkillCalculatedResult | null {
   const skill = build.skillsByName.get(skillName)
   if (!skill) {
@@ -246,8 +253,18 @@ export function calculateSavedBuildSkillResult(
       },
     })
     : null
+  const buffStackOverride = options?.buffStackOverride
   const buffValues = skill.comparisonOptions.some((option) => option.source === "buff")
-    ? computeSkillDisplayEffectStats(skillName, build.stages.StatsBuffReady, build.snapshot.selectedBuffStacks)
+    ? computeSkillDisplayEffectStats(
+      skillName,
+      build.stages.StatsBuffReady,
+      buffStackOverride === null || buffStackOverride === undefined
+        ? build.snapshot.selectedBuffStacks
+        : {
+          ...build.snapshot.selectedBuffStacks,
+          [skillName]: buffStackOverride,
+        },
+    )
     : {}
 
   return {
@@ -261,6 +278,25 @@ export function getSavedBuildSkillComparisonOptions(
   skillName: string,
 ): SavedBuildSkillComparisonOption[] {
   return build.skillsByName.get(skillName)?.comparisonOptions ?? []
+}
+
+export function doesSavedBuildSkillSupportBuffStacks(
+  build: SavedBuildCalculatedResult,
+  skillName: string,
+): boolean {
+  if (!build.skillsByName.has(skillName)) {
+    return false
+  }
+
+  const skill = skill_data[skillName]
+  return Boolean(skill) && skillSupportsBuffStacks(skill)
+}
+
+export function getSavedBuildSkillDefaultStackCount(
+  build: SavedBuildCalculatedResult,
+  skillName: string,
+): number {
+  return build.snapshot.selectedBuffStacks[skillName] ?? 0
 }
 
 export function getDefaultSavedBuildSkillComparisonMode(

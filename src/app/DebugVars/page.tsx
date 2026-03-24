@@ -17,9 +17,11 @@ import {
 import {
   buildSavedBuildCalculatedResults,
   calculateSavedBuildSkillResult,
+  doesSavedBuildSkillSupportBuffStacks,
   getDefaultSavedBuildSkillComparisonMode,
   getSavedBuildComparisonModeLabel,
   getSavedBuildCalculatedValue,
+  getSavedBuildSkillDefaultStackCount,
   getSavedBuildSkillComparisonOptions,
   isSavedBuildComparisonMode,
   isSavedBuildSkillComparisonModeAvailable,
@@ -84,6 +86,7 @@ type SavedBuildResultTableRow = {
   buildId: string
   skillName: string
   mode: SavedBuildComparisonMode
+  stackCount: string
   expectedValue: string
 }
 
@@ -131,6 +134,7 @@ function createSavedBuildResultRow(defaultBuildId = ""): SavedBuildResultTableRo
     buildId: defaultBuildId,
     skillName: "",
     mode: "maxcrit",
+    stackCount: "",
     expectedValue: "",
   }
 }
@@ -147,6 +151,11 @@ function normalizeSavedBuildResultRows(value: unknown): SavedBuildResultTableRow
       buildId: typeof entry.buildId === "string" ? entry.buildId : "",
       skillName: typeof entry.skillName === "string" ? entry.skillName : "",
       mode: isSavedBuildComparisonMode(entry.mode) ? entry.mode : "maxcrit",
+      stackCount: typeof entry.stackCount === "string"
+        ? entry.stackCount
+        : typeof entry.stackCount === "number" && Number.isFinite(entry.stackCount)
+          ? String(Math.max(0, Math.floor(entry.stackCount)))
+          : "",
       expectedValue: typeof entry.expectedValue === "string" ? entry.expectedValue : "",
     }))
 
@@ -185,6 +194,10 @@ function getNextComparisonModeForSkill(
   }
 
   return getDefaultSavedBuildSkillComparisonMode(buildResult, skillName) ?? "maxcrit"
+}
+
+function isSavedBuildBuffMode(mode: SavedBuildComparisonMode): boolean {
+  return mode.startsWith("buff:")
 }
 
 function normalizeName(value: string): string {
@@ -1095,6 +1108,37 @@ function parseExpectedComparisonValue(value: string): number | null {
   return Number.isFinite(parsed) ? parsed : null
 }
 
+function parseStackCountOverride(value: string): {
+  value: number | null
+  isValid: boolean
+} {
+  const normalized = value.trim()
+
+  if (normalized.length === 0) {
+    return {
+      value: null,
+      isValid: true,
+    }
+  }
+
+  const parsed = Number(normalized)
+  if (!Number.isFinite(parsed) || parsed < 0) {
+    return {
+      value: null,
+      isValid: false,
+    }
+  }
+
+  return {
+    value: Math.floor(parsed),
+    isValid: true,
+  }
+}
+
+function formatSavedBuildResultStackLabel(stackCount: number, isOverride: boolean): string {
+  return isOverride ? String(stackCount) : `Saved (${stackCount})`
+}
+
 function buildSavedBuildResultDebugBlock(
   rows: readonly SavedBuildResultTableRow[],
   buildNameById: ReadonlyMap<string, string>,
@@ -1102,11 +1146,11 @@ function buildSavedBuildResultDebugBlock(
 ): string {
   const lines = [
     "Saved Build Result Match",
-    "Row\tBuild\tBuild ID\tSkill\tStat\tExpected\tCalculated\tDelta\tDiff\tStatus\tNote",
+    "Row\tBuild\tBuild ID\tSkill\tStat\tStack\tExpected\tCalculated\tDelta\tDiff\tStatus\tNote",
   ]
 
   if (rows.length === 0) {
-    lines.push("—\t—\t—\t—\t—\t—\t—\t—\t—\tPending\tNo rows")
+    lines.push("—\t—\t—\t—\t—\t—\t—\t—\t—\t—\tPending\tNo rows")
     return lines.join("\n")
   }
 
@@ -1119,6 +1163,7 @@ function buildSavedBuildResultDebugBlock(
       formatSavedBuildResultDebugValue(row.buildId),
       formatSavedBuildResultDebugValue(row.skillName),
       getSavedBuildComparisonModeLabel(row.mode),
+      formatSavedBuildResultDebugValue(evaluation.stackLabel),
       formatSavedBuildResultDebugValue(row.expectedValue),
       formatComparisonNumber(evaluation.calculatedValue),
       formatSignedComparisonNumber(evaluation.delta),
@@ -1140,6 +1185,7 @@ function evaluateSavedBuildResultRow(
   delta: number | null
   percentDifference: number | null
   status: SavedBuildResultStatus
+  stackLabel: string
   note: string
 } {
   if (!row.buildId) {
@@ -1149,6 +1195,7 @@ function evaluateSavedBuildResultRow(
       delta: null,
       percentDifference: null,
       status: "incomplete",
+      stackLabel: "—",
       note: "Pick build",
     }
   }
@@ -1161,6 +1208,7 @@ function evaluateSavedBuildResultRow(
       delta: null,
       percentDifference: null,
       status: "incomplete",
+      stackLabel: "—",
       note: "Saved build missing",
     }
   }
@@ -1172,19 +1220,8 @@ function evaluateSavedBuildResultRow(
       delta: null,
       percentDifference: null,
       status: "incomplete",
+      stackLabel: "—",
       note: "Pick skill",
-    }
-  }
-
-  const skillResult = calculateSavedBuildSkillResult(calculatedResult, row.skillName)
-  if (!skillResult) {
-    return {
-      calculatedValue: null,
-      expectedValue: null,
-      delta: null,
-      percentDifference: null,
-      status: "incomplete",
-      note: "Skill missing",
     }
   }
 
@@ -1196,6 +1233,7 @@ function evaluateSavedBuildResultRow(
       delta: null,
       percentDifference: null,
       status: "incomplete",
+      stackLabel: "—",
       note: "No stats available",
     }
   }
@@ -1207,7 +1245,45 @@ function evaluateSavedBuildResultRow(
       delta: null,
       percentDifference: null,
       status: "incomplete",
+      stackLabel: "—",
       note: "Pick stat",
+    }
+  }
+
+  const usesBuffStacks = isSavedBuildBuffMode(row.mode)
+    && doesSavedBuildSkillSupportBuffStacks(calculatedResult, row.skillName)
+  const parsedStackCountOverride = usesBuffStacks ? parseStackCountOverride(row.stackCount) : { value: null, isValid: true }
+
+  if (!parsedStackCountOverride.isValid) {
+    return {
+      calculatedValue: null,
+      expectedValue: null,
+      delta: null,
+      percentDifference: null,
+      status: "incomplete",
+      stackLabel: "—",
+      note: "Invalid stack",
+    }
+  }
+
+  const stackLabel = usesBuffStacks
+    ? formatSavedBuildResultStackLabel(
+      parsedStackCountOverride.value ?? getSavedBuildSkillDefaultStackCount(calculatedResult, row.skillName),
+      parsedStackCountOverride.value !== null,
+    )
+    : "—"
+  const skillResult = calculateSavedBuildSkillResult(calculatedResult, row.skillName, {
+    buffStackOverride: parsedStackCountOverride.value,
+  })
+  if (!skillResult) {
+    return {
+      calculatedValue: null,
+      expectedValue: null,
+      delta: null,
+      percentDifference: null,
+      status: "incomplete",
+      stackLabel,
+      note: "Skill missing",
     }
   }
 
@@ -1219,6 +1295,7 @@ function evaluateSavedBuildResultRow(
       delta: null,
       percentDifference: null,
       status: "incomplete",
+      stackLabel,
       note: "Result unavailable",
     }
   }
@@ -1231,6 +1308,7 @@ function evaluateSavedBuildResultRow(
       delta: null,
       percentDifference: null,
       status: "incomplete",
+      stackLabel,
       note: "Enter expected",
     }
   }
@@ -1242,6 +1320,7 @@ function evaluateSavedBuildResultRow(
       delta: null,
       percentDifference: null,
       status: "incomplete",
+      stackLabel,
       note: "Invalid value",
     }
   }
@@ -1254,6 +1333,7 @@ function evaluateSavedBuildResultRow(
       delta,
       percentDifference: 0,
       status: "perfect",
+      stackLabel,
       note: "Exact match",
     }
   }
@@ -1269,6 +1349,7 @@ function evaluateSavedBuildResultRow(
       delta,
       percentDifference,
       status: "close",
+      stackLabel,
       note: "Within tolerance",
     }
   }
@@ -1279,6 +1360,7 @@ function evaluateSavedBuildResultRow(
     delta,
     percentDifference,
     status: "off",
+    stackLabel,
     note: percentDifference === null ? "Expected is zero" : "Outside tolerance",
   }
 }
@@ -1407,6 +1489,9 @@ function SavedBuildResultComparisonSection({
           <div className="mt-1 text-[11px] leading-5 text-slate-500">
             Build, skill, stat, and expected values are saved locally so these rows can act as regression checks.
           </div>
+          <div className="mt-1 text-[11px] leading-5 text-slate-500">
+            Stack only applies to buff comparisons. Leave it blank to use the saved build&apos;s current stack for that skill.
+          </div>
           <div className="mt-3 flex flex-wrap gap-1.5 text-[10px] font-semibold uppercase tracking-[0.14em]">
             <div className={`rounded-full border px-2.5 py-1 ${getSavedBuildResultStatusClass("perfect")}`}>
               {statusSummary.perfect} Perfect
@@ -1453,6 +1538,7 @@ function SavedBuildResultComparisonSection({
                   <th className="px-2.5 py-1">Build</th>
                   <th className="px-2.5 py-1">Skill</th>
                   <th className="px-2.5 py-1">Stat</th>
+                  <th className="px-2.5 py-1">Stack</th>
                   <th className="px-2.5 py-1">Expected</th>
                   <th className="px-2.5 py-1">Calculated</th>
                   <th className="px-2.5 py-1">Delta</th>
@@ -1473,6 +1559,13 @@ function SavedBuildResultComparisonSection({
                   const selectedModeValue = comparisonOptions.some((option) => option.key === row.mode)
                     ? row.mode
                     : ""
+                  const supportsBuffStacks = buildResult && row.skillName
+                    ? doesSavedBuildSkillSupportBuffStacks(buildResult, row.skillName)
+                    : false
+                  const stackInputEnabled = isSavedBuildBuffMode(row.mode) && supportsBuffStacks
+                  const savedBuildStackCount = buildResult && row.skillName
+                    ? getSavedBuildSkillDefaultStackCount(buildResult, row.skillName)
+                    : 0
 
                   return (
                     <tr key={row.id} className="align-top">
@@ -1486,6 +1579,7 @@ function SavedBuildResultComparisonSection({
                               buildId: nextBuildId,
                               skillName: nextSkillName,
                               mode: getDefaultComparisonModeForSkill(nextBuildId, nextSkillName, resultByBuildId),
+                              stackCount: "",
                             })
                           }}
                           className={compactFieldClass}
@@ -1506,6 +1600,7 @@ function SavedBuildResultComparisonSection({
                           onChange={(nextValue) => updateRow(row.id, {
                             skillName: nextValue,
                             mode: getNextComparisonModeForSkill(buildResult, nextValue, row.mode),
+                            stackCount: "",
                           })}
                         />
                       </td>
@@ -1540,6 +1635,19 @@ function SavedBuildResultComparisonSection({
                             </optgroup>
                           ) : null}
                         </select>
+                      </td>
+                      <td className="border-y border-slate-800/80 bg-slate-950/55 px-2.5 py-2">
+                        <input
+                          type="number"
+                          inputMode="numeric"
+                          min={0}
+                          step={1}
+                          value={row.stackCount}
+                          onChange={(event) => updateRow(row.id, { stackCount: event.target.value })}
+                          placeholder={supportsBuffStacks ? String(savedBuildStackCount) : "—"}
+                          disabled={!stackInputEnabled}
+                          className={compactFieldClass}
+                        />
                       </td>
                       <td className="border-y border-slate-800/80 bg-slate-950/55 px-2.5 py-2">
                         <input
