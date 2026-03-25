@@ -28,6 +28,13 @@ import {
   getDisplayedThreatLevelModifierPercent,
 } from "@/app/lib/threat"
 import { attackPresetInputKeys, getDamageCalcAttackPresets } from "@/app/lib/damageCalcAttackPresets"
+import {
+  isPagePerfRun,
+  summarizeBenchmark,
+  usePagePerfBridge,
+  waitForAnimationFrames,
+  waitForCondition,
+} from "@/app/lib/pagePerf"
 
 const attackPresetInputKeySet = new Set<keyof DamageCalcInputs>(attackPresetInputKeys)
 const defaultLearnedSkillNames = ["Punch", "Wait", "Focus"] as const
@@ -483,6 +490,7 @@ export default function DamageCalc() {
   )
   const [inputs, setInputs] = useState<DamageCalcInputs>(defaultDamageCalcState.inputs)
   const attackPresetFieldRef = useRef<HTMLDivElement | null>(null)
+  const isPerfRun = isPagePerfRun()
 
   useEffect(() => {
     const storedState = readDamageCalcState(localStorage)
@@ -527,7 +535,7 @@ export default function DamageCalc() {
   }, [])
 
   useEffect(() => {
-    if (!isHydrated) return
+    if (!isHydrated || isPerfRun) return
 
     persistDamageCalcState(localStorage, {
       attackPreset,
@@ -540,7 +548,7 @@ export default function DamageCalc() {
       inputs,
     })
     window.dispatchEvent(new Event("damageCalcUpdated"))
-  }, [attackPreset, customSkillScaling, element, inputs, isHydrated, mainStat, penElement, secondStat, skillType])
+  }, [attackPreset, customSkillScaling, element, inputs, isHydrated, isPerfRun, mainStat, penElement, secondStat, skillType])
 
   useEffect(() => {
     const handlePointerDown = (event: MouseEvent) => {
@@ -681,6 +689,43 @@ export default function DamageCalc() {
   )
   const effectiveSkillDmg = getDamageCalcEffectiveSkillDmgPercent(stats, inputs, customSkillScaling)
   const customSkillScalingSourceValue = getDamageCalcCustomSkillScalingSourceValue(stats, customSkillScaling)
+  const averageRef = useRef(average)
+
+  useEffect(() => {
+    averageRef.current = average
+  }, [average])
+
+  usePagePerfBridge({
+    pageId: "damage-calc",
+    pageLabel: "Damage Calc",
+    isReady: isHydrated,
+    runBenchmarks: async () => {
+      const samplesMs: number[] = []
+      const originalSkillDmg = inputs.skillDmg
+      let nextSkillDmg = originalSkillDmg
+
+      for (let index = 0; index < 5; index += 1) {
+        const previousAverage = averageRef.current
+        nextSkillDmg += 11 + index
+
+        const startedAt = performance.now()
+        setInputs((current) => ({ ...current, skillDmg: nextSkillDmg }))
+        await waitForCondition(() => averageRef.current !== previousAverage, 3000)
+        await waitForAnimationFrames(1)
+        samplesMs.push(performance.now() - startedAt)
+      }
+
+      setInputs((current) => ({ ...current, skillDmg: originalSkillDmg }))
+
+      return [
+        summarizeBenchmark(
+          "Damage recalculation",
+          "Updates skill damage and waits for the average damage output to repaint.",
+          samplesMs,
+        ),
+      ]
+    },
+  })
 
   const clearAttackPresetSelection = () => {
     setAttackPreset("")

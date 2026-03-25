@@ -24,6 +24,12 @@ import {
   type ManagedTableViewChangeDetail,
   type TableViewState,
 } from "@/app/lib/tableViewState"
+import {
+  summarizeBenchmark,
+  usePagePerfBridge,
+  waitForAnimationFrames,
+  waitForCondition,
+} from "@/app/lib/pagePerf"
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
 
 const STORAGE_KEY = "selectedTalents"
@@ -41,6 +47,7 @@ function TalentsPageContent() {
   const [selectedDungeonUnlocks, setSelectedDungeonUnlocks] = useState<Set<string>>(new Set())
   const [classLevels, setClassLevels] = useState({ tank: 0, warrior: 0, caster: 0, healer: 0 })
   const [averageDamageChanges, setAverageDamageChanges] = useState<Record<string, number>>({})
+  const [isAverageDamageReady, setIsAverageDamageReady] = useState(false)
   const [viewState, setViewState] = useState<TableViewState>(getDefaultTableViewState)
   const columnLayout = useManagedColumns("talentColumnLayout", talentTableColumns)
   const allRaceTokens = useMemo(() => allRacePrereqTokens, [])
@@ -52,6 +59,9 @@ function TalentsPageContent() {
   const rowRefs = useRef<Record<string, HTMLDivElement | null>>({})
   const hasRestoredScrollRef = useRef(false)
   const lastHandledFocusRef = useRef<string | null>(null)
+  const averageDamageComputationIdRef = useRef(0)
+  const pendingAverageDamageComputationIdRef = useRef<number | null>(null)
+  const completedAverageDamageComputationIdRef = useRef(0)
 
   // Load selectedTalents on mount
   useEffect(() => {
@@ -110,6 +120,11 @@ function TalentsPageContent() {
 
     let cancelled = false
     let timeoutId: number | null = null
+    const computationId = averageDamageComputationIdRef.current + 1
+
+    averageDamageComputationIdRef.current = computationId
+    setIsAverageDamageReady(false)
+    pendingAverageDamageComputationIdRef.current = null
 
     setAverageDamageChanges({})
 
@@ -156,6 +171,7 @@ function TalentsPageContent() {
       }
 
       startTransition(() => {
+        pendingAverageDamageComputationIdRef.current = computationId
         setAverageDamageChanges(computedChanges)
       })
     }
@@ -169,6 +185,76 @@ function TalentsPageContent() {
       }
     }
   }, [isHydrated, selected])
+
+  useEffect(() => {
+    const pendingComputationId = pendingAverageDamageComputationIdRef.current
+
+    if (pendingComputationId === null) {
+      return
+    }
+
+    let cancelled = false
+
+    requestAnimationFrame(() => {
+      if (cancelled) {
+        return
+      }
+
+      completedAverageDamageComputationIdRef.current = pendingComputationId
+      setIsAverageDamageReady(true)
+      pendingAverageDamageComputationIdRef.current = null
+    })
+
+    return () => {
+      cancelled = true
+    }
+  }, [averageDamageChanges])
+
+  usePagePerfBridge({
+    pageId: "talents",
+    pageLabel: "Talents",
+    isReady: isHydrated && columnLayout.isReady && isAverageDamageReady,
+    runBenchmarks: async () => {
+      const benchmarkTalentName = talentNames[0]
+      const samplesMs: number[] = []
+
+      if (!benchmarkTalentName) {
+        return []
+      }
+
+      for (let index = 0; index < 4; index += 1) {
+        const previousComputationId = completedAverageDamageComputationIdRef.current
+        const startedAt = performance.now()
+
+        setSelected((currentSelected) => {
+          const nextSelected = new Set(currentSelected)
+
+          if (nextSelected.has(benchmarkTalentName)) {
+            nextSelected.delete(benchmarkTalentName)
+          } else {
+            nextSelected.add(benchmarkTalentName)
+          }
+
+          return nextSelected
+        })
+
+        await waitForCondition(
+          () => completedAverageDamageComputationIdRef.current > previousComputationId,
+          8000,
+        )
+        await waitForAnimationFrames(1)
+        samplesMs.push(performance.now() - startedAt)
+      }
+
+      return [
+        summarizeBenchmark(
+          "Talent toggle response",
+          `Toggles ${benchmarkTalentName} and waits for average-damage deltas to finish recomputing.`,
+          samplesMs,
+        ),
+      ]
+    },
+  })
 
   useEffect(() => {
     const handleManagedTableViewChange = (event: Event) => {

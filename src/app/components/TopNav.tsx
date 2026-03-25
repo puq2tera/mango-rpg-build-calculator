@@ -54,6 +54,7 @@ const navLinks = [
   ["/DamageCalc", "Damage"],
   ["/Healing", "Healing"],
   ["/WorldBoss", "World Boss"],
+  ["/Performance", "Performance"],
   ["/DebugVars", "Debug"],
 ] as const
 

@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { computeBuildStatStages, readBuildSnapshot } from "@/app/lib/buildStats"
 import { BUILD_SNAPSHOT_UPDATED_EVENT } from "@/app/lib/buildEvents"
 import {
@@ -11,6 +11,12 @@ import {
   type WorldBossStatKey,
   type WorldBossUserStats,
 } from "@/app/lib/worldBoss"
+import {
+  summarizeBenchmark,
+  usePagePerfBridge,
+  waitForAnimationFrames,
+  waitForCondition,
+} from "@/app/lib/pagePerf"
 
 const cardClass = "rounded-lg border bg-slate-900/60 p-4"
 const inputClass = "w-full rounded border bg-slate-950/70 p-2"
@@ -32,6 +38,7 @@ const loadBuildStats = (): WorldBossUserStats => {
 export default function WorldBoss() {
   const [userStats, setUserStats] = useState<WorldBossUserStats>({ ...defaultWorldBossUserStats })
   const [syncWithBuild, setSyncWithBuild] = useState(true)
+  const [isReady, setIsReady] = useState(false)
 
   useEffect(() => {
     if (!syncWithBuild) {
@@ -43,6 +50,7 @@ export default function WorldBoss() {
     }
 
     refreshFromBuild()
+    setIsReady(true)
 
     const eventNames = [
       BUILD_SNAPSHOT_UPDATED_EVENT,
@@ -70,12 +78,60 @@ export default function WorldBoss() {
     }))
   }
 
-  const handleReloadFromBuild = () => {
-    setUserStats(loadBuildStats())
-    setSyncWithBuild(true)
-  }
-
   const actionResults = calculateWorldBossActions(userStats)
+  const strikeAverageRef = useRef(actionResults[0]?.average ?? 0)
+  const userStatsRef = useRef(userStats)
+  const syncWithBuildRef = useRef(syncWithBuild)
+
+  useEffect(() => {
+    strikeAverageRef.current = actionResults[0]?.average ?? 0
+  }, [actionResults])
+
+  useEffect(() => {
+    userStatsRef.current = userStats
+  }, [userStats])
+
+  useEffect(() => {
+    syncWithBuildRef.current = syncWithBuild
+  }, [syncWithBuild])
+
+  usePagePerfBridge({
+    pageId: "world-boss",
+    pageLabel: "World Boss",
+    isReady,
+    runBenchmarks: async () => {
+      const samplesMs: number[] = []
+      const originalStats = { ...userStatsRef.current }
+      const originalSyncWithBuild = syncWithBuildRef.current
+      let nextAtk = originalStats.ATK
+
+      for (let index = 0; index < 5; index += 1) {
+        const previousAverage = strikeAverageRef.current
+        nextAtk += 175 + (index * 25)
+
+        const startedAt = performance.now()
+        setSyncWithBuild(false)
+        setUserStats((current) => ({
+          ...current,
+          ATK: nextAtk,
+        }))
+        await waitForCondition(() => strikeAverageRef.current !== previousAverage, 3000)
+        await waitForAnimationFrames(1)
+        samplesMs.push(performance.now() - startedAt)
+      }
+
+      setUserStats(originalStats)
+      setSyncWithBuild(originalSyncWithBuild)
+
+      return [
+        summarizeBenchmark(
+          "Action table refresh",
+          "Updates ATK and waits for the Strike average in the action table to repaint.",
+          samplesMs,
+        ),
+      ]
+    },
+  })
 
   return (
     <div className="space-y-6 p-6">

@@ -27,6 +27,13 @@ import {
   type ManagedTableViewChangeDetail,
   type TableViewState,
 } from "@/app/lib/tableViewState"
+import {
+  isPagePerfRun,
+  summarizeBenchmark,
+  usePagePerfBridge,
+  waitForAnimationFrames,
+  waitForCondition,
+} from "@/app/lib/pagePerf"
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
 
 const TRAINING_STORAGE_KEY = "SelectedTraining"
@@ -51,6 +58,7 @@ function SkillsPageContent() {
   const [classLevels, setClassLevels] = useState({ tank: 0, warrior: 0, caster: 0, healer: 0 })
   const [training, setTraining] = useState(defaultTraining)
   const [averageDamageChanges, setAverageDamageChanges] = useState<Record<string, number>>({})
+  const [isAverageDamageReady, setIsAverageDamageReady] = useState(false)
   const [viewState, setViewState] = useState<TableViewState>(getDefaultTableViewState)
   const columnLayout = useManagedColumns("skillColumnLayout", skillTableColumns)
   const allRaceTokens = useMemo(() => allRacePrereqTokens, [])
@@ -63,6 +71,15 @@ function SkillsPageContent() {
   const rowRefs = useRef<Record<string, HTMLDivElement | null>>({})
   const hasRestoredScrollRef = useRef(false)
   const lastHandledFocusRef = useRef<string | null>(null)
+  const trainingRef = useRef(training)
+  const averageDamageComputationIdRef = useRef(0)
+  const pendingAverageDamageComputationIdRef = useRef<number | null>(null)
+  const completedAverageDamageComputationIdRef = useRef(0)
+  const isPerfRun = isPagePerfRun()
+
+  useEffect(() => {
+    trainingRef.current = training
+  }, [training])
 
   useEffect(() => {
     const storedTalents = localStorage.getItem("selectedTalents")
@@ -126,13 +143,13 @@ function SkillsPageContent() {
   }, [])
 
   useEffect(() => {
-    if (!isHydrated) {
+    if (!isHydrated || isPerfRun) {
       return
     }
 
     localStorage.setItem(TRAINING_STORAGE_KEY, JSON.stringify(training))
     dispatchBuildSnapshotUpdated()
-  }, [isHydrated, training])
+  }, [isHydrated, isPerfRun, training])
 
   useEffect(() => {
     if (!isHydrated) {
@@ -142,6 +159,11 @@ function SkillsPageContent() {
 
     let cancelled = false
     let timeoutId: number | null = null
+    const computationId = averageDamageComputationIdRef.current + 1
+
+    averageDamageComputationIdRef.current = computationId
+    setIsAverageDamageReady(false)
+    pendingAverageDamageComputationIdRef.current = null
 
     const snapshot = readBuildSnapshot(localStorage)
     snapshot.selectedTraining = training
@@ -186,6 +208,7 @@ function SkillsPageContent() {
       }
 
       startTransition(() => {
+        pendingAverageDamageComputationIdRef.current = computationId
         setAverageDamageChanges(computedChanges)
       })
     }
@@ -199,6 +222,73 @@ function SkillsPageContent() {
       }
     }
   }, [isHydrated, training])
+
+  useEffect(() => {
+    const pendingComputationId = pendingAverageDamageComputationIdRef.current
+
+    if (pendingComputationId === null) {
+      return
+    }
+
+    let cancelled = false
+
+    requestAnimationFrame(() => {
+      if (cancelled) {
+        return
+      }
+
+      completedAverageDamageComputationIdRef.current = pendingComputationId
+      setIsAverageDamageReady(true)
+      pendingAverageDamageComputationIdRef.current = null
+    })
+
+    return () => {
+      cancelled = true
+    }
+  }, [averageDamageChanges])
+
+  usePagePerfBridge({
+    pageId: "skills",
+    pageLabel: "Skills",
+    isReady: isHydrated && columnLayout.isReady && isAverageDamageReady,
+    runBenchmarks: async () => {
+      const samplesMs: number[] = []
+      const originalTraining = { ...trainingRef.current }
+      let nextAtkTraining = originalTraining.ATK
+
+      for (let index = 0; index < 4; index += 1) {
+        const previousComputationId = completedAverageDamageComputationIdRef.current
+        nextAtkTraining += 1 + index
+
+        const startedAt = performance.now()
+        setTraining((currentTraining) => ({
+          ...currentTraining,
+          ATK: nextAtkTraining,
+        }))
+        await waitForCondition(
+          () => completedAverageDamageComputationIdRef.current > previousComputationId,
+          8000,
+        )
+        await waitForAnimationFrames(1)
+        samplesMs.push(performance.now() - startedAt)
+      }
+
+      const previousComputationId = completedAverageDamageComputationIdRef.current
+      setTraining(originalTraining)
+      await waitForCondition(
+        () => completedAverageDamageComputationIdRef.current > previousComputationId,
+        8000,
+      )
+
+      return [
+        summarizeBenchmark(
+          "Training update response",
+          "Updates warrior training and waits for average-damage deltas to finish recomputing.",
+          samplesMs,
+        ),
+      ]
+    },
+  })
 
   useEffect(() => {
     const handleManagedTableViewChange = (event: Event) => {

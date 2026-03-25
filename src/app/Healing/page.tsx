@@ -17,6 +17,13 @@ import {
   healingCalcSkillPresets,
   type HealingBaseStat,
 } from "@/app/lib/healingCalcSkillPresets"
+import {
+  isPagePerfRun,
+  summarizeBenchmark,
+  usePagePerfBridge,
+  waitForAnimationFrames,
+  waitForCondition,
+} from "@/app/lib/pagePerf"
 
 const HEALING_PRESET_LISTBOX_ID = "healing-calc-skill-presets"
 
@@ -191,6 +198,7 @@ export default function HealingPage() {
   )
   const [statSnapshot, setStatSnapshot] = useState<HealingStatSnapshot>({ effective: {}, total: {} })
   const skillFieldRef = useRef<HTMLDivElement | null>(null)
+  const isPerfRun = isPagePerfRun()
   const selectedSkillPreset = useMemo(
     () => healingCalcSkillPresets.find((preset) => preset.name === selectedSkill) ?? null,
     [selectedSkill],
@@ -233,6 +241,43 @@ export default function HealingPage() {
   })
   const { nonCrit: baseHeal, crit: critHeal, maxcrit: maxCritHeal, average } = healingResult
   const formatHeal = (value: number) => value.toLocaleString("en-US")
+  const averageRef = useRef(average)
+
+  useEffect(() => {
+    averageRef.current = average
+  }, [average])
+
+  usePagePerfBridge({
+    pageId: "healing",
+    pageLabel: "Healing",
+    isReady: isHydrated,
+    runBenchmarks: async () => {
+      const samplesMs: number[] = []
+      const originalSkillHealPercent = skillHealPercent
+      let nextSkillHealPercent = originalSkillHealPercent
+
+      for (let index = 0; index < 5; index += 1) {
+        const previousAverage = averageRef.current
+        nextSkillHealPercent += 8 + index
+
+        const startedAt = performance.now()
+        setSkillHealPercent(nextSkillHealPercent)
+        await waitForCondition(() => averageRef.current !== previousAverage, 3000)
+        await waitForAnimationFrames(1)
+        samplesMs.push(performance.now() - startedAt)
+      }
+
+      setSkillHealPercent(originalSkillHealPercent)
+
+      return [
+        summarizeBenchmark(
+          "Healing recalculation",
+          "Updates the skill heal percent and waits for the average heal output to repaint.",
+          samplesMs,
+        ),
+      ]
+    },
+  })
 
   useEffect(() => {
     const storedState = readHealingCalcState(localStorage)
@@ -329,7 +374,7 @@ export default function HealingPage() {
   ])
 
   useEffect(() => {
-    if (!isHydrated) {
+    if (!isHydrated || isPerfRun) {
       return
     }
 
@@ -361,6 +406,7 @@ export default function HealingPage() {
     skillHealPercent,
     threatPercent,
     totalStat,
+    isPerfRun,
   ])
 
   useEffect(() => {
