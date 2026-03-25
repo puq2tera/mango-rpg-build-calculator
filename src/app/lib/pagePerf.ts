@@ -1,10 +1,16 @@
 "use client"
 
-import { useEffect, useRef } from "react"
+import { useEffect, useLayoutEffect, useRef } from "react"
 
 export const PAGE_PERF_RUN_QUERY_PARAM = "__perfRun"
 export const PAGE_PERF_BRIDGE_READY_MESSAGE_TYPE = "mango:page-perf-bridge-ready"
 export const PAGE_PERF_BRIDGE_UPDATED_MESSAGE_TYPE = "mango:page-perf-bridge-updated"
+export const PAGE_PERF_RUN_EVENT = "mango:page-perf:run"
+export const PAGE_PERF_RESULT_EVENT = "mango:page-perf:result"
+export const PAGE_PERF_PAGE_ID_ATTRIBUTE = "data-mango-page-perf-page-id"
+export const PAGE_PERF_PAGE_LABEL_ATTRIBUTE = "data-mango-page-perf-page-label"
+export const PAGE_PERF_BRIDGE_ATTRIBUTE = "data-mango-page-perf-bridge"
+export const PAGE_PERF_READY_ATTRIBUTE = "data-mango-page-perf-ready"
 
 export type PagePerfBenchmarkResult = {
   name: string
@@ -28,6 +34,18 @@ export type PagePerfBridgeMessage = {
   type: typeof PAGE_PERF_BRIDGE_READY_MESSAGE_TYPE | typeof PAGE_PERF_BRIDGE_UPDATED_MESSAGE_TYPE
   pageId: string
   pageLabel: string
+}
+
+export type PagePerfRunEventDetail = {
+  requestId: string
+}
+
+export type PagePerfResultEventDetail = {
+  requestId: string
+  pageId: string
+  pageLabel: string
+  benchmarks: PagePerfBenchmarkResult[]
+  error: string | null
 }
 
 type UsePagePerfBridgeOptions = {
@@ -125,11 +143,12 @@ export function usePagePerfBridge({
     runBenchmarksRef.current = runBenchmarks
   }, [isReady, runBenchmarks])
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (!isPagePerfRun()) {
       return
     }
 
+    const root = document.documentElement
     const notifyParent = (type: PagePerfBridgeMessage["type"]) => {
       const message: PagePerfBridgeMessage = {
         type,
@@ -148,19 +167,64 @@ export function usePagePerfBridge({
     }
 
     window.__MANGO_PAGE_PERF__ = bridge
+    root.setAttribute(PAGE_PERF_PAGE_ID_ATTRIBUTE, pageId)
+    root.setAttribute(PAGE_PERF_PAGE_LABEL_ATTRIBUTE, pageLabel)
+    root.setAttribute(PAGE_PERF_BRIDGE_ATTRIBUTE, "1")
     notifyParent(PAGE_PERF_BRIDGE_READY_MESSAGE_TYPE)
 
+    const handleRun = async (event: Event) => {
+      const detail = (event as CustomEvent<PagePerfRunEventDetail>).detail
+
+      try {
+        const benchmarks = await runBenchmarksRef.current()
+        const resultDetail: PagePerfResultEventDetail = {
+          requestId: detail.requestId,
+          pageId,
+          pageLabel,
+          benchmarks,
+          error: null,
+        }
+
+        window.dispatchEvent(new CustomEvent<PagePerfResultEventDetail>(PAGE_PERF_RESULT_EVENT, {
+          detail: resultDetail,
+        }))
+      } catch (error) {
+        const resultDetail: PagePerfResultEventDetail = {
+          requestId: detail.requestId,
+          pageId,
+          pageLabel,
+          benchmarks: [],
+          error: error instanceof Error ? error.message : "Unknown benchmark failure.",
+        }
+
+        window.dispatchEvent(new CustomEvent<PagePerfResultEventDetail>(PAGE_PERF_RESULT_EVENT, {
+          detail: resultDetail,
+        }))
+      }
+    }
+
+    window.addEventListener(PAGE_PERF_RUN_EVENT, handleRun as EventListener)
+
     return () => {
+      window.removeEventListener(PAGE_PERF_RUN_EVENT, handleRun as EventListener)
+
       if (window.__MANGO_PAGE_PERF__ === bridge) {
         delete window.__MANGO_PAGE_PERF__
       }
+
+      root.removeAttribute(PAGE_PERF_PAGE_ID_ATTRIBUTE)
+      root.removeAttribute(PAGE_PERF_PAGE_LABEL_ATTRIBUTE)
+      root.removeAttribute(PAGE_PERF_BRIDGE_ATTRIBUTE)
+      root.removeAttribute(PAGE_PERF_READY_ATTRIBUTE)
     }
   }, [pageId, pageLabel])
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (!isPagePerfRun() || !window.__MANGO_PAGE_PERF__) {
       return
     }
+
+    document.documentElement.setAttribute(PAGE_PERF_READY_ATTRIBUTE, isReady ? "1" : "0")
 
     const message: PagePerfBridgeMessage = {
       type: PAGE_PERF_BRIDGE_UPDATED_MESSAGE_TYPE,

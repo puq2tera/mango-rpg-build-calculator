@@ -3,13 +3,9 @@
 import Link from "next/link"
 import { startTransition, useCallback, useEffect, useMemo, useRef, useState } from "react"
 import {
-  PAGE_PERF_BRIDGE_READY_MESSAGE_TYPE,
-  PAGE_PERF_BRIDGE_UPDATED_MESSAGE_TYPE,
   PAGE_PERF_RUN_QUERY_PARAM,
-  type PagePerfBridgeMessage,
   type PagePerfBenchmarkResult,
-  type PagePerfBridge,
-  waitForCondition,
+  summarizeBenchmark,
 } from "@/app/lib/pagePerf"
 
 type MonitoredRoute = {
@@ -59,8 +55,6 @@ type RouteMeasurement = {
 }
 
 type BaseRouteMeasurement = Pick<RouteMeasurement, "resourceSummary" | "loadSummary">
-
-const PAGE_BRIDGE_TIMEOUT_MS = process.env.NODE_ENV === "production" ? 15000 : 45000
 
 const monitoredRoutes: MonitoredRoute[] = [
   {
@@ -259,6 +253,33 @@ function waitInWindow(frameWindow: Window, delayMs: number): Promise<void> {
   })
 }
 
+function measureRepeatedBenchmark(
+  name: string,
+  description: string,
+  sampleCount: number,
+  repeatCount: number,
+  operation: (sampleIndex: number, repeatIndex: number) => number,
+): PagePerfBenchmarkResult {
+  const samplesMs: number[] = []
+  let checksum = 0
+
+  for (let sampleIndex = 0; sampleIndex < sampleCount; sampleIndex += 1) {
+    const startedAt = performance.now()
+
+    for (let repeatIndex = 0; repeatIndex < repeatCount; repeatIndex += 1) {
+      checksum += operation(sampleIndex, repeatIndex)
+    }
+
+    samplesMs.push((performance.now() - startedAt) / repeatCount)
+  }
+
+  if (checksum === Number.MIN_SAFE_INTEGER) {
+    console.info("Performance benchmark checksum", checksum)
+  }
+
+  return summarizeBenchmark(name, description, samplesMs)
+}
+
 function loadIframe(iframe: HTMLIFrameElement, src: string): Promise<void> {
   return new Promise((resolve, reject) => {
     const timeoutId = window.setTimeout(() => {
@@ -276,50 +297,205 @@ function loadIframe(iframe: HTMLIFrameElement, src: string): Promise<void> {
   })
 }
 
-async function readPageBridge(
-  frameWindow: Window,
-  route: MonitoredRoute,
-): Promise<PagePerfBridge | null> {
+async function runLocalRouteBenchmarks(route: MonitoredRoute): Promise<PagePerfBenchmarkResult[]> {
   if (!route.supportsBenchmarks) {
-    return null
+    return []
   }
 
-  if (frameWindow.__MANGO_PAGE_PERF__) {
-    return frameWindow.__MANGO_PAGE_PERF__
+  if (route.id === "talents") {
+    const [{ talent_data }, buildStatsModule, damageCalcModule] = await Promise.all([
+      import("@/app/data/talent_data"),
+      import("@/app/lib/buildStats"),
+      import("@/app/lib/damageCalc"),
+    ])
+    const snapshot = buildStatsModule.readBuildSnapshot(window.localStorage)
+    const damageState = damageCalcModule.readDamageCalcState(window.localStorage)
+    const talentNames = Object.keys(talent_data)
+
+    return [
+      measureRepeatedBenchmark(
+        "Talent delta recomputation",
+        "Recomputes the per-talent average-damage delta map using the current build snapshot.",
+        3,
+        1,
+        (sampleIndex) => {
+          const selectedTalentNames = snapshot.selectedTalents
+          const currentAverage = damageCalcModule.calculateDamage(
+            buildStatsModule.computeBuildStatStages(snapshot, { selectedTalents: selectedTalentNames }).StatsDmgReady,
+            damageState,
+          ).average
+          let checksum = currentAverage
+
+          for (let index = 0; index < talentNames.length; index += 1) {
+            const talentName = talentNames[(index + sampleIndex) % talentNames.length]
+            const toggledTalents = new Set(selectedTalentNames)
+
+            if (toggledTalents.has(talentName)) {
+              toggledTalents.delete(talentName)
+            } else {
+              toggledTalents.add(talentName)
+            }
+
+            checksum += damageCalcModule.calculateDamage(
+              buildStatsModule.computeBuildStatStages(snapshot, { selectedTalents: toggledTalents }).StatsDmgReady,
+              damageState,
+            ).average
+          }
+
+          return checksum
+        },
+      ),
+    ]
   }
 
-  await new Promise<void>((resolve, reject) => {
-    const timeoutId = window.setTimeout(() => {
-      window.removeEventListener("message", handleMessage)
-      reject(new Error(`Timed out waiting for ${route.label} to register its benchmark bridge.`))
-    }, PAGE_BRIDGE_TIMEOUT_MS)
+  if (route.id === "skills") {
+    const [{ skill_data }, buildStatsModule, damageCalcModule] = await Promise.all([
+      import("@/app/data/skill_data"),
+      import("@/app/lib/buildStats"),
+      import("@/app/lib/damageCalc"),
+    ])
+    const baseSnapshot = buildStatsModule.readBuildSnapshot(window.localStorage)
+    const damageState = damageCalcModule.readDamageCalcState(window.localStorage)
+    const skillNames = Object.keys(skill_data)
 
-    const handleMessage = (event: MessageEvent<PagePerfBridgeMessage>) => {
-      if (event.origin !== window.location.origin || event.source !== frameWindow) {
-        return
-      }
+    return [
+      measureRepeatedBenchmark(
+        "Training update recomputation",
+        "Runs the same full skill-delta recomputation path used after training changes.",
+        3,
+        1,
+        (sampleIndex) => {
+          const snapshot = {
+            ...baseSnapshot,
+            selectedTraining: {
+              ...baseSnapshot.selectedTraining,
+              ATK: (baseSnapshot.selectedTraining.ATK ?? 0) + sampleIndex + 1,
+            },
+          }
+          const selectedBuffNames = snapshot.selectedBuffs
+          const currentAverage = damageCalcModule.calculateDamage(
+            buildStatsModule.computeBuildStatStages(snapshot).StatsDmgReady,
+            damageState,
+          ).average
+          let checksum = currentAverage
 
-      if (
-        event.data?.type !== PAGE_PERF_BRIDGE_READY_MESSAGE_TYPE
-        && event.data?.type !== PAGE_PERF_BRIDGE_UPDATED_MESSAGE_TYPE
-      ) {
-        return
-      }
+          for (let index = 0; index < skillNames.length; index += 1) {
+            const skillName = skillNames[(index + sampleIndex) % skillNames.length]
+            const toggledSkills = new Set(selectedBuffNames)
 
-      if (event.data.pageId !== route.id) {
-        return
-      }
+            if (toggledSkills.has(skillName)) {
+              toggledSkills.delete(skillName)
+            } else {
+              toggledSkills.add(skillName)
+            }
 
-      window.clearTimeout(timeoutId)
-      window.removeEventListener("message", handleMessage)
-      resolve()
-    }
+            checksum += damageCalcModule.calculateDamage(
+              buildStatsModule.computeBuildStatStages(snapshot, { selectedBuffs: toggledSkills }).StatsDmgReady,
+              damageState,
+            ).average
+          }
 
-    window.addEventListener("message", handleMessage)
-  })
+          return checksum
+        },
+      ),
+    ]
+  }
 
-  await waitForCondition(() => Boolean(frameWindow.__MANGO_PAGE_PERF__), 1000)
-  return frameWindow.__MANGO_PAGE_PERF__ ?? null
+  if (route.id === "damage-calc") {
+    const [buildStatsModule, damageCalcModule] = await Promise.all([
+      import("@/app/lib/buildStats"),
+      import("@/app/lib/damageCalc"),
+    ])
+    const snapshot = buildStatsModule.readBuildSnapshot(window.localStorage)
+    const stats = buildStatsModule.computeBuildStatStages(snapshot).StatsDmgReady
+    const damageState = damageCalcModule.readDamageCalcState(window.localStorage)
+
+    return [
+      measureRepeatedBenchmark(
+        "Damage calculation update",
+        "Measures calculateDamage with varied skill-damage inputs using the current build stats.",
+        6,
+        40,
+        (sampleIndex, repeatIndex) => {
+          const result = damageCalcModule.calculateDamage(stats, {
+            ...damageState,
+            inputs: {
+              ...damageState.inputs,
+              skillDmg: damageState.inputs.skillDmg + sampleIndex + repeatIndex,
+            },
+          })
+
+          return result.average + result.crit + result.dotCrit
+        },
+      ),
+    ]
+  }
+
+  if (route.id === "healing") {
+    const [buildStatsModule, healingCalcModule, threatModule] = await Promise.all([
+      import("@/app/lib/buildStats"),
+      import("@/app/lib/healingCalc"),
+      import("@/app/lib/threat"),
+    ])
+    const snapshot = buildStatsModule.readBuildSnapshot(window.localStorage)
+    const stages = buildStatsModule.computeBuildStatStages(snapshot)
+    const healingState = healingCalcModule.readHealingCalcState(window.localStorage)
+    const threatBonusMultiplier = threatModule.getThreatBonusMultiplier(stages.StatsDmgReady)
+
+    return [
+      measureRepeatedBenchmark(
+        "Healing calculation update",
+        "Measures calculateHealing with varied skill-heal inputs using the current build stats.",
+        6,
+        60,
+        (sampleIndex, repeatIndex) => {
+          const result = healingCalcModule.calculateHealing({
+            baseStat: healingState.baseStat,
+            totalStat: healingState.totalStat,
+            skillHealPercent: healingState.skillHealPercent + sampleIndex + repeatIndex,
+            skillFlatHeal: healingState.skillFlatHeal,
+            critChancePercent: healingState.critChancePercent,
+            critDamagePercent: healingState.critDamagePercent,
+            overdrivePercent: healingState.overdrivePercent,
+            canCrit: healingState.canCrit,
+            threatPercent: healingState.threatPercent,
+            threatBonusMultiplier,
+          })
+
+          return result.average + result.crit + result.threatAverage
+        },
+      ),
+    ]
+  }
+
+  if (route.id === "world-boss") {
+    const [buildStatsModule, worldBossModule] = await Promise.all([
+      import("@/app/lib/buildStats"),
+      import("@/app/lib/worldBoss"),
+    ])
+    const snapshot = buildStatsModule.readBuildSnapshot(window.localStorage)
+    const stages = buildStatsModule.computeBuildStatStages(snapshot)
+    const baseUserStats = worldBossModule.getWorldBossUserStatsFromBuildStages(stages)
+
+    return [
+      measureRepeatedBenchmark(
+        "World Boss action refresh",
+        "Measures action-range recalculation with varied ATK values based on the current build.",
+        6,
+        120,
+        (sampleIndex, repeatIndex) => {
+          const actionResults = worldBossModule.calculateWorldBossActions({
+            ...baseUserStats,
+            ATK: baseUserStats.ATK + sampleIndex + repeatIndex,
+          })
+
+          return actionResults.reduce((sum, result) => sum + result.average, 0)
+        },
+      ),
+    ]
+  }
+
+  return []
 }
 
 async function measureRoute(
@@ -339,25 +515,13 @@ async function measureRoute(
   await waitInWindow(frameWindow, 50)
 
   const baseMeasurement = collectPerformanceData(frameWindow)
-  let bridge: PagePerfBridge | null = null
-  let readyMs: number | null = null
+  const readyMs: number | null = null
   let benchmarks: PagePerfBenchmarkResult[] = []
   let benchmarkError: string | null = null
 
-  try {
-    bridge = await readPageBridge(frameWindow, route)
-  } catch (error) {
-    benchmarkError = error instanceof Error ? error.message : "Unable to register the route benchmark bridge."
-  }
-
-  if (bridge) {
+  if (route.supportsBenchmarks) {
     try {
-      if (!bridge.isReady()) {
-        await waitForCondition(() => bridge.isReady(), PAGE_BRIDGE_TIMEOUT_MS)
-      }
-
-      readyMs = frameWindow.performance.now()
-      benchmarks = await bridge.runBenchmarks()
+      benchmarks = await runLocalRouteBenchmarks(route)
     } catch (error) {
       benchmarkError = error instanceof Error ? error.message : "Unable to run route-specific benchmarks."
     }
@@ -542,8 +706,8 @@ export default function PerformancePage() {
               <div className="space-y-2">
                 <h1 className="text-3xl font-semibold text-slate-50 sm:text-4xl">Performance</h1>
                 <p className="max-w-3xl text-sm leading-6 text-slate-300 sm:text-[15px]">
-                  This page loads representative routes in a hidden iframe, captures navigation and resource timing, and
-                  runs route-specific update benchmarks where a page exposes them.
+                  This page loads representative routes in a hidden iframe for size and navigation timing, then runs
+                  route-specific calculation benchmarks locally against your current saved build state.
                 </p>
               </div>
             </div>
@@ -610,7 +774,7 @@ export default function PerformancePage() {
           <div className="overflow-hidden rounded-[28px] border border-slate-800/80 bg-slate-950/70 shadow-[0_22px_70px_rgba(2,6,23,0.42)] backdrop-blur">
             <div className="border-b border-slate-800/80 px-5 py-4">
               <h2 className="text-lg font-semibold text-slate-50">Route Measurements</h2>
-              <p className="mt-1 text-sm text-slate-400">Encoded size is the uncached payload estimate. Transfer size shows what this run actually pulled over the wire.</p>
+              <p className="mt-1 text-sm text-slate-400">Load metrics come from iframe route loads. Benchmark timings come from local calculator-logic runs using the same current build data.</p>
             </div>
 
             <div className="overflow-x-auto">
