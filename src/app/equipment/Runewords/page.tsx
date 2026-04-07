@@ -14,12 +14,16 @@ import {
 } from "@/app/lib/runewordPlanner"
 
 const STORAGE_KEY_SELECTED_SCRIPTS = "runewordPlanner.selectedScripts"
+const STORAGE_KEY_SELECTOR_SORT = "runewordPlanner.selectorSort"
+const STORAGE_KEY_SELECTOR_SORT_DIRECTION = "runewordPlanner.selectorSortDirection"
 const STORAGE_KEY_RUNE_SORT = "runewordPlanner.runeSort"
 const STORAGE_KEY_UNSELECTED_SORT = "runewordPlanner.unselectedSort"
 const STORAGE_KEY_UNSELECTED_FILTER = "runewordPlanner.unselectedFilter"
 
 const collator = new Intl.Collator(undefined, { numeric: true, sensitivity: "base" })
 
+type SelectorSortMode = "name" | "dmg" | "effect" | "words"
+type SortDirection = "asc" | "desc"
 type RuneSortMode = "count-desc" | "count-asc" | "tier" | "name"
 type UnselectedSortMode = "missing-dmg" | "dmg" | "name" | "type"
 type UnselectedFilterMode = "all" | "scripts" | "runewords"
@@ -30,8 +34,7 @@ type SummaryRow = {
   name: string
   description: string
   stats: PlannerStatsRange
-  metaLabel: string
-  metaValue: string
+  words: string
 }
 
 type UnselectedRow = {
@@ -63,6 +66,10 @@ function formatValue(value: number): string {
 
 function serializeScriptNames(names: readonly string[]): string {
   return [...names].sort(collator.compare).join("|")
+}
+
+function getDefaultSelectorSortDirection(mode: SelectorSortMode): SortDirection {
+  return mode === "dmg" ? "desc" : "asc"
 }
 
 function serializeStats(stats: Record<string, number>): string {
@@ -100,6 +107,10 @@ function getStatChipLabel(stat: string, stats: PlannerStatsRange): string {
   return minValue === maxValue
     ? `${formatValue(minValue)} ${stat}`
     : `${formatValue(minValue)}-${formatValue(maxValue)} ${stat}`
+}
+
+function getWordsLabel(words: readonly string[]): string {
+  return words.length > 0 ? words.join(", ") : "None"
 }
 
 function SectionCard({
@@ -169,6 +180,10 @@ export default function RunewordsPage() {
   const [selectedScriptNames, setSelectedScriptNames] = useState<string[]>([])
   const [selectorQuery, setSelectorQuery] = useState("")
   const [showSelectedOnly, setShowSelectedOnly] = useState(false)
+  const [selectorSortMode, setSelectorSortMode] = useState<SelectorSortMode>("name")
+  const [selectorSortDirection, setSelectorSortDirection] = useState<SortDirection>(
+    getDefaultSelectorSortDirection("name"),
+  )
   const [unselectedQuery, setUnselectedQuery] = useState("")
   const [runeSortMode, setRuneSortMode] = useState<RuneSortMode>("count-desc")
   const [unselectedSortMode, setUnselectedSortMode] = useState<UnselectedSortMode>("missing-dmg")
@@ -199,8 +214,7 @@ export default function RunewordsPage() {
         name: script.name,
         description: script.description,
         stats: script.stats,
-        metaLabel: "Words",
-        metaValue: script.contributingRunewords.join(", "),
+        words: getWordsLabel(script.contributingRunewords),
       })),
       ...selectionSummary.formedRunewords.map((runeword) => ({
         key: `runeword:${runeword.name}`,
@@ -208,10 +222,9 @@ export default function RunewordsPage() {
         name: runeword.name,
         description: runeword.description,
         stats: runeword.stats,
-        metaLabel: "Recipe",
-        metaValue: runeword.componentWords.join(" + "),
+        words: "",
       })),
-    ],
+    ].sort((left, right) => collator.compare(left.name, right.name)),
     [selectionSummary],
   )
 
@@ -242,10 +255,11 @@ export default function RunewordsPage() {
 
   const selectorRows = useMemo(() => {
     const normalizedQuery = deferredSelectorQuery.trim().toLowerCase()
+    const selectedSet = new Set(selectedScriptNames)
 
-    return plannerScripts
+    return [...plannerScripts
       .filter((script) => {
-        if (showSelectedOnly && !selectedScriptNames.includes(script.name)) {
+        if (showSelectedOnly && !selectedSet.has(script.name)) {
           return false
         }
 
@@ -256,14 +270,56 @@ export default function RunewordsPage() {
         const searchText = `${script.name} ${script.description} ${script.contributingRunewords.join(" ")}`
           .toLowerCase()
         return searchText.includes(normalizedQuery)
-      })
+      })]
       .sort((left, right) => {
-        const leftSelected = selectedScriptNames.includes(left.name) ? 1 : 0
-        const rightSelected = selectedScriptNames.includes(right.name) ? 1 : 0
+        if (selectorSortMode === "dmg") {
+          const leftDamage = entryDamageByKey[`script:${left.name}`]
+          const rightDamage = entryDamageByKey[`script:${right.name}`]
+          const leftHasDamage = typeof leftDamage === "number" && Number.isFinite(leftDamage)
+          const rightHasDamage = typeof rightDamage === "number" && Number.isFinite(rightDamage)
 
-        return rightSelected - leftSelected || collator.compare(left.name, right.name)
+          if (leftHasDamage !== rightHasDamage) {
+            return leftHasDamage ? -1 : 1
+          }
+
+          if (leftHasDamage && rightHasDamage && leftDamage !== rightDamage) {
+            return selectorSortDirection === "asc" ? leftDamage - rightDamage : rightDamage - leftDamage
+          }
+        }
+
+        if (selectorSortMode === "effect") {
+          const descriptionDifference = collator.compare(left.description, right.description)
+
+          if (descriptionDifference !== 0) {
+            return selectorSortDirection === "asc" ? descriptionDifference : -descriptionDifference
+          }
+        }
+
+        if (selectorSortMode === "words") {
+          const wordsDifference = collator.compare(
+            getWordsLabel(left.contributingRunewords),
+            getWordsLabel(right.contributingRunewords),
+          )
+
+          if (wordsDifference !== 0) {
+            return selectorSortDirection === "asc" ? wordsDifference : -wordsDifference
+          }
+        }
+
+        const nameDifference = collator.compare(left.name, right.name)
+
+        return selectorSortMode === "name" && selectorSortDirection === "desc"
+          ? -nameDifference
+          : nameDifference
       })
-  }, [deferredSelectorQuery, selectedScriptNames, showSelectedOnly])
+  }, [
+    deferredSelectorQuery,
+    entryDamageByKey,
+    selectedScriptNames,
+    selectorSortDirection,
+    selectorSortMode,
+    showSelectedOnly,
+  ])
 
   const unselectedRowsBase = useMemo(() => {
     const selectedSet = new Set(selectedScriptNames)
@@ -371,6 +427,21 @@ export default function RunewordsPage() {
         setRuneSortMode(storedRuneSort)
       }
 
+      const storedSelectorSort = localStorage.getItem(STORAGE_KEY_SELECTOR_SORT)
+      if (
+        storedSelectorSort === "name"
+        || storedSelectorSort === "dmg"
+        || storedSelectorSort === "effect"
+        || storedSelectorSort === "words"
+      ) {
+        setSelectorSortMode(storedSelectorSort)
+      }
+
+      const storedSelectorSortDirection = localStorage.getItem(STORAGE_KEY_SELECTOR_SORT_DIRECTION)
+      if (storedSelectorSortDirection === "asc" || storedSelectorSortDirection === "desc") {
+        setSelectorSortDirection(storedSelectorSortDirection)
+      }
+
       const storedUnselectedSort = localStorage.getItem(STORAGE_KEY_UNSELECTED_SORT)
       if (
         storedUnselectedSort === "missing-dmg"
@@ -398,6 +469,16 @@ export default function RunewordsPage() {
     if (!isHydrated) return
     localStorage.setItem(STORAGE_KEY_SELECTED_SCRIPTS, JSON.stringify(selectedScriptNames))
   }, [isHydrated, selectedScriptKey, selectedScriptNames])
+
+  useEffect(() => {
+    if (!isHydrated) return
+    localStorage.setItem(STORAGE_KEY_SELECTOR_SORT, selectorSortMode)
+  }, [isHydrated, selectorSortMode])
+
+  useEffect(() => {
+    if (!isHydrated) return
+    localStorage.setItem(STORAGE_KEY_SELECTOR_SORT_DIRECTION, selectorSortDirection)
+  }, [isHydrated, selectorSortDirection])
 
   useEffect(() => {
     if (!isHydrated) return
@@ -488,11 +569,11 @@ export default function RunewordsPage() {
     }
 
     const currentSelectionDamageValue = getSelectionDamage(selectedScriptNames)
+    const nextEntryDamageByKey: Record<string, number> = {}
+    const nextCandidateDamageByKey: Record<string, number> = {}
 
     setBaseDamage(baseDamageValue)
     setSelectionDamage(currentSelectionDamageValue)
-    setEntryDamageByKey({})
-    setCandidateDamageByKey({})
 
     const tasks: Array<
       | {
@@ -506,10 +587,15 @@ export default function RunewordsPage() {
           nextSelectedNames: string[]
         }
     > = [
-      ...summaryRows.map((row) => ({
+      ...plannerScripts.map((script) => ({
         kind: "entry" as const,
-        key: row.key,
-        stats: row.stats.average,
+        key: `script:${script.name}`,
+        stats: script.stats.average,
+      })),
+      ...selectionSummary.formedRunewords.map((runeword) => ({
+        kind: "entry" as const,
+        key: `runeword:${runeword.name}`,
+        stats: runeword.stats.average,
       })),
       ...unselectedRowsBase.map((row) => ({
         kind: "candidate" as const,
@@ -524,34 +610,28 @@ export default function RunewordsPage() {
     const processChunk = () => {
       if (cancelled) return
 
-      const nextEntryDamage: Record<string, number> = {}
-      const nextCandidateDamage: Record<string, number> = {}
       const maxIndex = Math.min(index + chunkSize, tasks.length)
 
       for (; index < maxIndex; index += 1) {
         const task = tasks[index]
 
         if (task.kind === "entry") {
-          nextEntryDamage[task.key] = getDamageForStats(task.stats) - baseDamageValue
+          nextEntryDamageByKey[task.key] = getDamageForStats(task.stats) - baseDamageValue
           continue
         }
 
-        nextCandidateDamage[task.key] = getSelectionDamage(task.nextSelectedNames) - currentSelectionDamageValue
+        nextCandidateDamageByKey[task.key] = getSelectionDamage(task.nextSelectedNames) - currentSelectionDamageValue
       }
-
-      startTransition(() => {
-        if (Object.keys(nextEntryDamage).length > 0) {
-          setEntryDamageByKey((current) => ({ ...current, ...nextEntryDamage }))
-        }
-
-        if (Object.keys(nextCandidateDamage).length > 0) {
-          setCandidateDamageByKey((current) => ({ ...current, ...nextCandidateDamage }))
-        }
-      })
 
       if (index < tasks.length) {
         timeoutId = window.setTimeout(processChunk, 0)
+        return
       }
+
+      startTransition(() => {
+        setEntryDamageByKey(nextEntryDamageByKey)
+        setCandidateDamageByKey(nextCandidateDamageByKey)
+      })
     }
 
     processChunk()
@@ -562,7 +642,7 @@ export default function RunewordsPage() {
         window.clearTimeout(timeoutId)
       }
     }
-  }, [buildRevision, isHydrated, selectedScriptKey, selectedScriptNames, summaryRows, unselectedRowsBase])
+  }, [buildRevision, isHydrated, selectedScriptKey, selectedScriptNames, selectionSummary, unselectedRowsBase])
 
   const totalSelectionDamage = useMemo(() => {
     if (baseDamage === null || selectionDamage === null) {
@@ -582,6 +662,44 @@ export default function RunewordsPage() {
         return [...current, name].sort(collator.compare)
       })
     })
+  }
+
+  const handleSelectorSort = (mode: SelectorSortMode) => {
+    if (selectorSortMode === mode) {
+      setSelectorSortDirection((current) => current === "asc" ? "desc" : "asc")
+      return
+    }
+
+    setSelectorSortMode(mode)
+    setSelectorSortDirection(getDefaultSelectorSortDirection(mode))
+  }
+
+  const renderSelectorHeader = (
+    label: string,
+    mode: SelectorSortMode,
+    className: string,
+    align: "left" | "right" = "left",
+  ) => {
+    const isActive = selectorSortMode === mode
+
+    return (
+      <th
+        className={className}
+        aria-sort={isActive ? (selectorSortDirection === "asc" ? "ascending" : "descending") : "none"}
+      >
+        <button
+          type="button"
+          onClick={() => handleSelectorSort(mode)}
+          className={`flex w-full items-center gap-2 ${align === "right" ? "justify-end" : "justify-start"} font-medium text-inherit transition hover:text-slate-200`}
+          title={`Sort by ${label.toLowerCase()}`}
+        >
+          <span>{label}</span>
+          <span className={isActive ? "text-cyan-200" : "text-slate-600"}>
+            {isActive ? (selectorSortDirection === "asc" ? "↑" : "↓") : "↕"}
+          </span>
+        </button>
+      </th>
+    )
   }
 
   if (!isHydrated) {
@@ -624,7 +742,7 @@ export default function RunewordsPage() {
           <div className="space-y-6">
             <SectionCard
               title="Script Selector"
-              subtitle="Toggle scripts to test combinations. Each script shows the runewords it can help complete."
+              subtitle="Toggle scripts from the table below. Click a column header to sort by name, damage, effect, or words."
               actions={(
                 <>
                   <button
@@ -660,41 +778,76 @@ export default function RunewordsPage() {
                   {selectorRows.length} visible
                 </div>
               </div>
-              <div className="grid max-h-[58rem] gap-3 overflow-y-auto pr-1 md:grid-cols-2 2xl:grid-cols-3">
-                {selectorRows.map((script) => {
-                  const isSelected = selectedScriptNames.includes(script.name)
+              {selectorRows.length === 0 ? (
+                <div className="rounded-2xl border border-dashed border-slate-800 bg-slate-950/55 px-4 py-6 text-sm text-slate-400">
+                  No scripts match the current search and filter.
+                </div>
+              ) : (
+                <div className="max-h-[58rem] overflow-auto rounded-2xl border border-slate-800/80 bg-slate-950/35">
+                  <table className="min-w-[980px] w-full table-fixed text-left text-sm">
+                    <colgroup>
+                      <col className="w-[14rem]" />
+                      <col className="w-[9rem]" />
+                      <col className="w-[23rem]" />
+                      <col className="w-[18rem]" />
+                    </colgroup>
+                    <thead className="sticky top-0 z-10 bg-slate-950/95 text-[11px] uppercase tracking-[0.18em] text-slate-500 backdrop-blur">
+                      <tr>
+                        {renderSelectorHeader("Name", "name", "px-3 py-3")}
+                        {renderSelectorHeader("dmg", "dmg", "w-[9rem] px-3 py-3", "right")}
+                        {renderSelectorHeader("effect", "effect", "px-3 py-3")}
+                        {renderSelectorHeader("words", "words", "px-3 py-3")}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {selectorRows.map((script) => {
+                        const isSelected = selectedScriptNames.includes(script.name)
+                        const wordsLabel = getWordsLabel(script.contributingRunewords)
 
-                  return (
-                    <button
-                      key={script.name}
-                      type="button"
-                      onClick={() => toggleScript(script.name)}
-                      className={`rounded-2xl border p-3 text-left transition ${
-                        isSelected
-                          ? "border-cyan-400/55 bg-cyan-400/12 shadow-[0_20px_40px_-30px_rgba(34,211,238,0.6)]"
-                          : "border-slate-800/80 bg-slate-900/45 hover:border-slate-700/80 hover:bg-slate-900/70"
-                      }`}
-                    >
-                      <div className="flex items-center justify-between gap-3">
-                        <span className="text-sm font-semibold text-slate-50">{script.name}</span>
-                        <span
-                          className={`rounded-full px-2 py-1 text-[11px] font-medium ${
-                            isSelected
-                              ? "bg-cyan-400/18 text-cyan-100"
-                              : "bg-slate-800/80 text-slate-400"
-                          }`}
-                        >
-                          {isSelected ? "Selected" : "Select"}
-                        </span>
-                      </div>
-                      <p className="mt-2 text-sm text-slate-200">{script.description}</p>
-                      <p className="mt-2 text-xs leading-5 text-slate-400">
-                        Words: {script.contributingRunewords.length > 0 ? script.contributingRunewords.join(", ") : "None"}
-                      </p>
-                    </button>
-                  )
-                })}
-              </div>
+                        return (
+                          <tr
+                            key={script.name}
+                            tabIndex={0}
+                            aria-selected={isSelected}
+                            onClick={() => toggleScript(script.name)}
+                            onKeyDown={(event) => {
+                              if (event.key === "Enter" || event.key === " ") {
+                                event.preventDefault()
+                                toggleScript(script.name)
+                              }
+                            }}
+                            className={`cursor-pointer border-t border-slate-800/70 align-top transition focus-visible:outline-2 focus-visible:outline-cyan-400/60 ${
+                              isSelected
+                                ? "bg-cyan-400/10 hover:bg-cyan-400/14"
+                                : "hover:bg-slate-900/65"
+                            }`}
+                          >
+                            <td className="px-3 py-3 align-top">
+                              <div className="flex items-center gap-2">
+                                <span className="font-semibold text-slate-50">{script.name}</span>
+                                {isSelected ? (
+                                  <span className="rounded-full bg-cyan-400/18 px-2 py-0.5 text-[10px] font-medium uppercase tracking-[0.12em] text-cyan-100">
+                                    Selected
+                                  </span>
+                                ) : null}
+                              </div>
+                            </td>
+                            <td className="w-[9rem] px-3 py-3 text-right align-top">
+                              <div className="flex justify-end">
+                                <div className="w-[7.5rem] text-right">
+                                  <DamageValue value={entryDamageByKey[`script:${script.name}`] ?? null} />
+                                </div>
+                              </div>
+                            </td>
+                            <td className="px-3 py-3 align-top break-words text-slate-300">{script.description}</td>
+                            <td className="px-3 py-3 align-top break-words text-slate-300">{wordsLabel}</td>
+                          </tr>
+                        )
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+              )}
             </SectionCard>
 
             <div className="grid gap-6 2xl:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]">
@@ -782,7 +935,7 @@ export default function RunewordsPage() {
 
           <SectionCard
             title="Current Summary"
-            subtitle="Selected scripts and the runewords they already form. Damage values use your saved build and damage calc settings."
+            subtitle="Selected scripts and completed runewords in one table. Damage values use your saved build and damage calc settings."
             className="h-full"
           >
             <div className="grid gap-3 sm:grid-cols-3">
@@ -806,74 +959,52 @@ export default function RunewordsPage() {
               </div>
             </div>
 
-            <div className="mt-5 space-y-5">
-              <div>
-                <div className="mb-3 flex items-center justify-between gap-3">
-                  <h3 className="text-sm font-semibold text-slate-100">Selected Scripts</h3>
-                  <span className="rounded-full bg-slate-900/70 px-2 py-1 text-[11px] text-slate-300">
-                    {selectionSummary.selectedScripts.length}
-                  </span>
-                </div>
-                {selectionSummary.selectedScripts.length === 0 ? (
-                  <div className="rounded-2xl border border-dashed border-slate-800 bg-slate-950/55 px-4 py-6 text-sm text-slate-400">
-                    No scripts selected yet.
-                  </div>
-                ) : (
-                  <div className="space-y-2">
-                    {summaryRows
-                      .filter((row) => row.kind === "script")
-                      .map((row) => (
-                        <div key={row.key} className="rounded-2xl border border-slate-800/80 bg-slate-900/40 p-3">
-                          <div className="flex items-start justify-between gap-3">
-                            <div>
-                              <div className="font-medium text-slate-100">{row.name}</div>
-                              <div className="mt-1 text-xs text-slate-400">{row.description}</div>
-                            </div>
-                            <DamageValue value={entryDamageByKey[row.key] ?? null} />
-                          </div>
-                          <div className="mt-2 text-[11px] leading-5 text-slate-400">
-                            {row.metaLabel}: {row.metaValue}
-                          </div>
-                          <StatChips stats={row.stats} />
-                        </div>
-                      ))}
-                  </div>
-                )}
+            <div className="mt-5">
+              <div className="mb-3 flex items-center justify-between gap-3">
+                <h3 className="text-sm font-semibold text-slate-100">Selected Summary</h3>
+                <span className="rounded-full bg-slate-900/70 px-2 py-1 text-[11px] text-slate-300">
+                  {summaryRows.length}
+                </span>
               </div>
-
-              <div>
-                <div className="mb-3 flex items-center justify-between gap-3">
-                  <h3 className="text-sm font-semibold text-slate-100">Formed Runewords</h3>
-                  <span className="rounded-full bg-slate-900/70 px-2 py-1 text-[11px] text-slate-300">
-                    {selectionSummary.formedRunewords.length}
-                  </span>
+              {summaryRows.length === 0 ? (
+                <div className="rounded-2xl border border-dashed border-slate-800 bg-slate-950/55 px-4 py-6 text-sm text-slate-400">
+                  No scripts selected yet.
                 </div>
-                {selectionSummary.formedRunewords.length === 0 ? (
-                  <div className="rounded-2xl border border-dashed border-slate-800 bg-slate-950/55 px-4 py-6 text-sm text-slate-400">
-                    No runewords are complete with the current script set.
-                  </div>
-                ) : (
-                  <div className="space-y-2">
-                    {summaryRows
-                      .filter((row) => row.kind === "runeword")
-                      .map((row) => (
-                        <div key={row.key} className="rounded-2xl border border-slate-800/80 bg-slate-900/40 p-3">
-                          <div className="flex items-start justify-between gap-3">
-                            <div>
-                              <div className="font-medium text-slate-100">{row.name}</div>
-                              <div className="mt-1 text-xs text-slate-400">{row.description}</div>
+              ) : (
+                <div className="overflow-auto rounded-2xl border border-slate-800/80 bg-slate-950/35">
+                  <table className="min-w-[980px] w-full text-left text-sm">
+                    <thead className="bg-slate-950/95 text-[11px] uppercase tracking-[0.18em] text-slate-500">
+                      <tr>
+                        <th className="px-3 py-3 font-medium">Name</th>
+                        <th className="px-3 py-3 text-right font-medium">dmg</th>
+                        <th className="px-3 py-3 font-medium">effect</th>
+                        <th className="px-3 py-3 font-medium">words</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {summaryRows.map((row) => (
+                        <tr key={row.key} className="border-t border-slate-800/70 align-top">
+                          <td className="px-3 py-3 align-top">
+                            <div className="flex items-center gap-2">
+                              <span className="font-semibold text-slate-50">{row.name}</span>
+                              {row.kind === "runeword" ? (
+                                <span className="rounded-full bg-emerald-400/12 px-2 py-0.5 text-[10px] font-medium uppercase tracking-[0.12em] text-emerald-100">
+                                  Runeword
+                                </span>
+                              ) : null}
                             </div>
+                          </td>
+                          <td className="px-3 py-3 text-right align-top">
                             <DamageValue value={entryDamageByKey[row.key] ?? null} />
-                          </div>
-                          <div className="mt-2 text-[11px] leading-5 text-slate-400">
-                            {row.metaLabel}: {row.metaValue}
-                          </div>
-                          <StatChips stats={row.stats} />
-                        </div>
+                          </td>
+                          <td className="px-3 py-3 align-top text-slate-300">{row.description}</td>
+                          <td className="px-3 py-3 align-top text-slate-300">{row.words}</td>
+                        </tr>
                       ))}
-                  </div>
-                )}
-              </div>
+                    </tbody>
+                  </table>
+                </div>
+              )}
             </div>
           </SectionCard>
         </div>
