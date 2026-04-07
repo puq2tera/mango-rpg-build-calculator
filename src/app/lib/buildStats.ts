@@ -942,6 +942,8 @@ function computeDmgReadyStats(
   return result
 }
 
+// TODO: remove extraRawStats
+// Instead precalculate the skill and conversion % results so stats can be added without needed to recheck the full selected talents/buff/tarot/rune list
 export function computeBuildStatStages(
   snapshot: BuildSnapshot,
   overrides?: {
@@ -950,6 +952,7 @@ export function computeBuildStatStages(
     buffStacks?: Record<string, number>
     selectedTarots?: Iterable<string>
     tarotStacks?: Record<string, number>
+    extraRawStats?: Record<string, number>
   },
 ): BuildStatStages {
   const selectedTalents = overrides?.selectedTalents
@@ -963,6 +966,7 @@ export function computeBuildStatStages(
     : snapshot.selectedTarots
   const buffStacks = overrides?.buffStacks ?? snapshot.selectedBuffStacks
   const tarotStacks = overrides?.tarotStacks ?? snapshot.tarotStacks
+  const extraRawStats = overrides?.extraRawStats ?? {}
   const additionalStageStats = groupAdditionalStageStatEntries(snapshot.additionalStageStats)
   const stageStatOverrides = groupStageStatOverrideEntries(snapshot.stageStatOverrides)
 
@@ -982,8 +986,11 @@ export function computeBuildStatStages(
     additionalStageStats.equipment,
   )
   const statsRunes = mergeRawStageStats(
-    applyRawStageStatOverrides(computeRuneStats(snapshot), stageStatOverrides.runes),
-    additionalStageStats.runes,
+    mergeRawStageStats(
+      applyRawStageStatOverrides(computeRuneStats(snapshot), stageStatOverrides.runes),
+      additionalStageStats.runes,
+    ),
+    extraRawStats,
   )
   const statsArtifact = mergeRawStageStats(
     applyRawStageStatOverrides(computeArtifactStats(snapshot), stageStatOverrides.artifact),
