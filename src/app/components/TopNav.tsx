@@ -36,27 +36,62 @@ import {
 
 const RESETTABLE_PATHS = new Set(["/talents", "/skills", "/skills/buffs", "/equipment/tarotcards"])
 
-const navLinks = [
-  ["/Builds", "Builds"],
-  ["/talents", "Talents"],
-  ["/talents/TalentOverview", "Talent Overview"],
-  ["/Skills", "Skills"],
-  ["/Skills/SkillOverview", "Skill Overview"],
-  ["/CopyPaste", "Copy Paste"],
-  ["/Levels", "Levels"],
-  ["/Skills/Buffs", "Buffs"],
-  ["/Skills/BuffSorter", "Buff Overview"],
-  ["/StatFix", "Stat Fix"],
-  ["/equipment", "Equipment"],
-  ["/equipment/Runewords", "Runewords"],
-  ["/equipment/TarotCards", "Tarot Cards"],
-  ["/CharacterSummary", "Character Summary"],
-  ["/DamageCalc", "Damage"],
-  ["/Healing", "Healing"],
-  ["/WorldBoss", "World Boss"],
-  ["/Performance", "Performance"],
-  ["/DebugVars", "Debug"],
-] as const
+type NavChildLink = {
+  href: string
+  label: string
+}
+
+type NavGroup = {
+  href: string
+  label: string
+  children?: readonly NavChildLink[]
+}
+
+const navGroups: readonly NavGroup[] = [
+  {
+    href: "/Builds",
+    label: "Builds",
+    children: [
+      { href: "/CopyPaste", label: "Copy Paste" },
+      { href: "/StatFix", label: "Stat Fix" },
+      { href: "/Performance", label: "Performance" },
+      { href: "/DebugVars", label: "Debug" },
+    ],
+  },
+  {
+    href: "/talents",
+    label: "Talents",
+    children: [{ href: "/talents/TalentOverview", label: "Talent Overview" }],
+  },
+  {
+    href: "/Skills",
+    label: "Skills",
+    children: [{ href: "/Skills/SkillOverview", label: "Skill Overview" }],
+  },
+  {
+    href: "/Skills/Buffs",
+    label: "Buffs",
+    children: [{ href: "/Skills/BuffSorter", label: "Buff Overview" }],
+  },
+  { href: "/Levels", label: "Levels" },
+  {
+    href: "/equipment",
+    label: "Equipment",
+    children: [
+      { href: "/equipment/Runewords", label: "Runewords" },
+      { href: "/equipment/TarotCards", label: "Tarot Cards" },
+    ],
+  },
+  { href: "/CharacterSummary", label: "Summary" },
+  {
+    href: "/DamageCalc",
+    label: "Damage",
+    children: [
+      { href: "/Healing", label: "Healing" },
+      { href: "/WorldBoss", label: "World Boss" },
+    ],
+  },
+]
 
 const classFilterOptions: Array<{ value: ClassFilterKey; label: string }> = [
   { value: "tank", label: "Tank" },
@@ -134,10 +169,23 @@ const controlButtonClass =
   "shrink-0 rounded border px-2 py-1 text-slate-200 transition hover:bg-slate-800"
 
 const sectionLabelClass = "px-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-400"
+const navItemClass = "inline-flex items-center gap-1.5 py-1 text-sm font-medium transition-colors"
 
 const optionButtonClass = (active: boolean) => (
   `rounded px-2 py-1 text-left transition ${
     active ? "bg-sky-500/20 text-sky-200" : "text-slate-200 hover:bg-slate-800"
+  }`
+)
+
+const topLevelItemClass = (active: boolean, open: boolean) => (
+  `${navItemClass} ${active || open ? "text-sky-200" : "text-slate-100 hover:text-sky-300"}`
+)
+
+const submenuLinkClass = (active: boolean) => (
+  `block rounded-xl px-3 py-2 text-sm transition ${
+    active
+      ? "bg-sky-500/15 text-sky-100"
+      : "text-slate-200 hover:bg-slate-800/80 hover:text-sky-100"
   }`
 )
 
@@ -175,7 +223,9 @@ export default function TopNav() {
   const tablePage = getTableViewPageFromPathname(normalizedPathname)
   const showSummaryControls = normalizedPathname === "/charactersummary"
   const navRef = useRef<HTMLElement | null>(null)
+  const navLinksRef = useRef<HTMLDivElement | null>(null)
   const [openMenu, setOpenMenu] = useState<"filter" | "sort" | null>(null)
+  const [openNavGroup, setOpenNavGroup] = useState<string | null>(null)
   const [viewState, setViewState] = useState<TableViewState>(getDefaultTableViewState)
   const [summaryViewState, setSummaryViewState] = useState<CharacterSummaryViewState>(getDefaultCharacterSummaryViewState)
   const controlsRef = useRef<HTMLDivElement | null>(null)
@@ -210,6 +260,7 @@ export default function TopNav() {
 
   useEffect(() => {
     setOpenMenu(null)
+    setOpenNavGroup(null)
 
     if (!tablePage) {
       setViewState(getDefaultTableViewState())
@@ -228,13 +279,19 @@ export default function TopNav() {
   }, [showSummaryControls])
 
   useEffect(() => {
-    if (!openMenu) {
+    if (!openMenu && !openNavGroup) {
       return
     }
 
     const handlePointerDown = (event: MouseEvent) => {
-      if (!controlsRef.current?.contains(event.target as Node)) {
+      const target = event.target as Node
+
+      if (openMenu && !controlsRef.current?.contains(target)) {
         setOpenMenu(null)
+      }
+
+      if (openNavGroup && !navLinksRef.current?.contains(target)) {
+        setOpenNavGroup(null)
       }
     }
 
@@ -242,7 +299,7 @@ export default function TopNav() {
     return () => {
       window.removeEventListener("mousedown", handlePointerDown)
     }
-  }, [openMenu])
+  }, [openMenu, openNavGroup])
 
   const hasActiveFilters = tablePage === "tarot"
     ? (
@@ -305,6 +362,7 @@ export default function TopNav() {
 
   const handleResetUiClick = () => {
     setOpenMenu(null)
+    setOpenNavGroup(null)
 
     if (tablePage) {
       const defaultViewState = getDefaultTableViewState()
@@ -316,17 +374,104 @@ export default function TopNav() {
     window.dispatchEvent(new Event("resetManagedTableUi"))
   }
 
+  const isPathActive = (href: string) => normalizedPathname === normalizePathname(href)
+
+  const isGroupActive = (group: NavGroup) =>
+    isPathActive(group.href) || (group.children?.some((child) => isPathActive(child.href)) ?? false)
+
+  const handleNavLinkClick = () => {
+    setOpenMenu(null)
+    setOpenNavGroup(null)
+  }
+
+  const openNavigationGroup = (href: string) => {
+    setOpenMenu(null)
+    setOpenNavGroup(href)
+  }
+
+  const closeNavigationGroup = (href: string) => {
+    setOpenNavGroup((current) => current === href ? null : current)
+  }
+
   return (
     <nav
       ref={navRef}
       className="sticky top-0 z-50 flex items-center gap-3 border-b border-slate-700 bg-slate-950/90 px-5 py-2 text-xs shadow-lg shadow-black/30 backdrop-blur"
     >
-      <div className="flex min-w-0 flex-1 flex-wrap items-center gap-3">
-        {navLinks.map(([href, label]) => (
-          <Link key={href} href={href} className="text-slate-100 transition-colors hover:text-sky-300">
-            {label}
-          </Link>
-        ))}
+      <div ref={navLinksRef} className="flex min-w-0 flex-1 flex-wrap items-center gap-x-4 gap-y-1">
+        {navGroups.map((group) => {
+          const active = isGroupActive(group)
+          const currentPage = isPathActive(group.href)
+          const isOpen = openNavGroup === group.href
+          const hasChildren = Boolean(group.children?.length)
+
+          return (
+            <div
+              key={group.href}
+              className="relative"
+              onMouseEnter={hasChildren ? () => openNavigationGroup(group.href) : undefined}
+              onMouseLeave={hasChildren ? () => closeNavigationGroup(group.href) : undefined}
+              onFocusCapture={hasChildren ? () => openNavigationGroup(group.href) : undefined}
+              onBlurCapture={hasChildren ? (event) => {
+                const relatedTarget = event.relatedTarget
+
+                if (relatedTarget instanceof Node && event.currentTarget.contains(relatedTarget)) {
+                  return
+                }
+
+                closeNavigationGroup(group.href)
+              } : undefined}
+            >
+              <div className={topLevelItemClass(active, isOpen)}>
+                <Link
+                  href={group.href}
+                  onClick={handleNavLinkClick}
+                  aria-current={currentPage ? "page" : undefined}
+                  className="transition-colors"
+                >
+                  {group.label}
+                </Link>
+
+                {hasChildren ? (
+                  <span className="pointer-events-none inline-flex items-center text-slate-500" aria-hidden="true">
+                    <svg viewBox="0 0 12 12" className="h-3 w-3" aria-hidden="true">
+                      <path
+                        d="M2.25 4.5 6 8.25 9.75 4.5"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="1.4"
+                      />
+                    </svg>
+                  </span>
+                ) : null}
+              </div>
+
+              {hasChildren && isOpen ? (
+                <div className="absolute left-0 top-full z-50 pt-2">
+                  <div className="min-w-[13rem] max-w-[calc(100vw-2rem)] rounded-2xl border border-slate-700/80 bg-slate-950/95 p-2 shadow-2xl shadow-black/40 backdrop-blur">
+                    {group.children?.map((child) => {
+                      const childActive = isPathActive(child.href)
+
+                      return (
+                        <Link
+                          key={child.href}
+                          href={child.href}
+                          onClick={handleNavLinkClick}
+                          aria-current={childActive ? "page" : undefined}
+                          className={submenuLinkClass(childActive)}
+                        >
+                          {child.label}
+                        </Link>
+                      )
+                    })}
+                  </div>
+                </div>
+              ) : null}
+            </div>
+          )
+        })}
       </div>
 
       <div className="flex shrink-0 items-center gap-2">
@@ -337,7 +482,10 @@ export default function TopNav() {
             <>
               <button
                 type="button"
-                onClick={() => setOpenMenu((current) => current === "filter" ? null : "filter")}
+                onClick={() => {
+                  setOpenNavGroup(null)
+                  setOpenMenu((current) => current === "filter" ? null : "filter")
+                }}
                 className={`${controlButtonClass} border-slate-700 bg-slate-950/90 ${hasActiveFilters || openMenu === "filter" ? "border-sky-500/60 text-sky-200" : "border-slate-700"}`}
                 aria-haspopup="dialog"
                 aria-expanded={openMenu === "filter"}
@@ -348,7 +496,10 @@ export default function TopNav() {
               {showSortControls ? (
                 <button
                   type="button"
-                  onClick={() => setOpenMenu((current) => current === "sort" ? null : "sort")}
+                  onClick={() => {
+                    setOpenNavGroup(null)
+                    setOpenMenu((current) => current === "sort" ? null : "sort")
+                  }}
                   className={`${controlButtonClass} border-slate-700 bg-slate-950/90 ${hasActiveSort || openMenu === "sort" ? "border-sky-500/60 text-sky-200" : "border-slate-700"}`}
                   aria-haspopup="dialog"
                   aria-expanded={openMenu === "sort"}
