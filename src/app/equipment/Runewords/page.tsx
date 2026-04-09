@@ -70,10 +70,12 @@ const unselectedTableColumns: readonly ManagedColumnDefinition<UnselectedColumnI
   { id: "recipe", label: "Word Recipe", defaultWidth: 220, minWidth: 120 },
 ]
 
-const MIN_SPLIT_PERCENT = 28
-const MAX_SPLIT_PERCENT = 72
+const TOP_MIN_SPLIT_PERCENT = 28
+const TOP_MAX_SPLIT_PERCENT = 72
+const BOTTOM_MIN_SPLIT_PERCENT = 55
+const BOTTOM_MAX_SPLIT_PERCENT = 80
 const DEFAULT_TOP_SPLIT = 46
-const DEFAULT_BOTTOM_SPLIT = 50
+const DEFAULT_BOTTOM_SPLIT = 74
 
 function formatValue(value: number): string {
   if (!Number.isFinite(value)) return "-"
@@ -168,7 +170,7 @@ function PlannerSection({
   )
 }
 
-function useStoredSplitRatio(storageKey: string, defaultValue: number) {
+function useStoredSplitRatio(storageKey: string, defaultValue: number, minValue: number, maxValue: number) {
   const [value, setValue] = useState(defaultValue)
   const [isReady, setIsReady] = useState(false)
 
@@ -177,11 +179,11 @@ function useStoredSplitRatio(storageKey: string, defaultValue: number) {
     const parsedValue = storedValue === null ? Number.NaN : Number(storedValue)
     setValue(
       Number.isFinite(parsedValue)
-        ? Math.min(MAX_SPLIT_PERCENT, Math.max(MIN_SPLIT_PERCENT, parsedValue))
+        ? Math.min(maxValue, Math.max(minValue, parsedValue))
         : defaultValue,
     )
     setIsReady(true)
-  }, [defaultValue, storageKey])
+  }, [defaultValue, maxValue, minValue, storageKey])
 
   useEffect(() => {
     if (!isReady) return
@@ -291,6 +293,8 @@ function ResizableSectionPair({
   right,
   splitRatio,
   onChangeSplitRatio,
+  minSplitRatio,
+  maxSplitRatio,
   className = "",
   leftClassName = "",
   rightClassName = "",
@@ -299,6 +303,8 @@ function ResizableSectionPair({
   right: ReactNode
   splitRatio: number
   onChangeSplitRatio: (value: number) => void
+  minSplitRatio: number
+  maxSplitRatio: number
   className?: string
   leftClassName?: string
   rightClassName?: string
@@ -322,7 +328,7 @@ function ResizableSectionPair({
       if (bounds.width <= 0) return
 
       const nextRatio = ((event.clientX - bounds.left) / bounds.width) * 100
-      onChangeSplitRatio(Math.min(MAX_SPLIT_PERCENT, Math.max(MIN_SPLIT_PERCENT, nextRatio)))
+      onChangeSplitRatio(Math.min(maxSplitRatio, Math.max(minSplitRatio, nextRatio)))
     }
 
     const stopDragging = () => setIsDragging(false)
@@ -338,14 +344,14 @@ function ResizableSectionPair({
       window.removeEventListener("pointerup", stopDragging)
       window.removeEventListener("pointercancel", stopDragging)
     }
-  }, [isDragging, onChangeSplitRatio])
+  }, [isDragging, maxSplitRatio, minSplitRatio, onChangeSplitRatio])
 
   return (
     <div ref={containerRef} className={`flex flex-col gap-y-8 xl:flex-row xl:items-stretch xl:gap-y-0 ${className}`}>
       <div className={`min-w-0 xl:shrink-0 ${leftClassName}`} style={{ flexBasis: `${splitRatio}%` }}>
         {left}
       </div>
-      <div className="hidden xl:flex w-4 shrink-0 items-stretch justify-center">
+      <div className="hidden xl:flex w-2 shrink-0 items-stretch justify-center">
         <button
           type="button"
           onPointerDown={(event) => {
@@ -357,7 +363,7 @@ function ResizableSectionPair({
           title="Drag to resize sections"
         >
           <span className="absolute inset-y-0 left-1/2 w-px -translate-x-1/2 bg-slate-800/80 transition group-hover:bg-cyan-400/70" />
-          <span className="absolute inset-y-0 left-1/2 w-3 -translate-x-1/2" />
+          <span className="absolute inset-y-0 left-1/2 w-2 -translate-x-1/2" />
         </button>
       </div>
       <div className={`min-w-0 flex-1 ${rightClassName}`}>{right}</div>
@@ -401,8 +407,18 @@ function StatChips({ stats, limit = 3 }: { stats: PlannerStatsRange; limit?: num
 export default function RunewordsPage() {
   const selectorColumnLayout = useManagedColumns(STORAGE_KEY_SELECTOR_COLUMNS, selectorTableColumns)
   const unselectedColumnLayout = useManagedColumns(STORAGE_KEY_UNSELECTED_COLUMNS, unselectedTableColumns)
-  const topSplit = useStoredSplitRatio(STORAGE_KEY_TOP_SPLIT, DEFAULT_TOP_SPLIT)
-  const bottomSplit = useStoredSplitRatio(STORAGE_KEY_BOTTOM_SPLIT, DEFAULT_BOTTOM_SPLIT)
+  const topSplit = useStoredSplitRatio(
+    STORAGE_KEY_TOP_SPLIT,
+    DEFAULT_TOP_SPLIT,
+    TOP_MIN_SPLIT_PERCENT,
+    TOP_MAX_SPLIT_PERCENT,
+  )
+  const bottomSplit = useStoredSplitRatio(
+    STORAGE_KEY_BOTTOM_SPLIT,
+    DEFAULT_BOTTOM_SPLIT,
+    BOTTOM_MIN_SPLIT_PERCENT,
+    BOTTOM_MAX_SPLIT_PERCENT,
+  )
   const [isHydrated, setIsHydrated] = useState(false)
   const [selectedScriptNames, setSelectedScriptNames] = useState<string[]>([])
   const [selectorQuery, setSelectorQuery] = useState("")
@@ -945,8 +961,10 @@ export default function RunewordsPage() {
         <ResizableSectionPair
           splitRatio={topSplit.value}
           onChangeSplitRatio={topSplit.setValue}
-          leftClassName="xl:pr-6"
-          rightClassName="xl:pl-6"
+          minSplitRatio={TOP_MIN_SPLIT_PERCENT}
+          maxSplitRatio={TOP_MAX_SPLIT_PERCENT}
+          leftClassName="xl:pr-3"
+          rightClassName="xl:pl-3"
           left={(
             <PlannerSection
               title="Script Selector"
@@ -1238,8 +1256,10 @@ export default function RunewordsPage() {
           <ResizableSectionPair
             splitRatio={bottomSplit.value}
             onChangeSplitRatio={bottomSplit.setValue}
-            leftClassName="xl:pr-6"
-            rightClassName="xl:pl-6"
+            minSplitRatio={BOTTOM_MIN_SPLIT_PERCENT}
+            maxSplitRatio={BOTTOM_MAX_SPLIT_PERCENT}
+            leftClassName="xl:pr-3"
+            rightClassName="xl:pl-3"
             left={(
               <PlannerSection
             title="Current Summary"
