@@ -34,7 +34,7 @@ import {
   type TableViewState,
 } from "@/app/lib/tableViewState"
 
-const RESETTABLE_PATHS = new Set(["/talents", "/skills", "/skills/buffs", "/equipment/tarotcards"])
+const RESETTABLE_PATHS = new Set(["/talents", "/skills", "/skills/buffs", "/equipment/tarotcards", "/equipment/runewords"])
 
 type NavChildLink = {
   href: string
