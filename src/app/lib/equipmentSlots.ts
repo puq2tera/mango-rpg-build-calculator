@@ -8,6 +8,7 @@ export type EquipmentAffix = {
 export type EquipmentSlot = {
   name: string
   type: string
+  scriptGroupId: string
   mainstat: string
   mainstat_value: number
   affixes: EquipmentAffix[]
@@ -32,6 +33,7 @@ export function createDefaultEquipmentSlot(): EquipmentSlot {
   return {
     name: "",
     type: "",
+    scriptGroupId: "",
     mainstat: "",
     mainstat_value: 0,
     affixes: Array.from({ length: 8 }, () => ({ stat: "", value: 0 })),
@@ -164,6 +166,7 @@ export function normalizeEquipmentSlot(value: unknown): EquipmentSlot {
   return stripTarotMainstat(migrateTarotScalingAffix({
     name: typeof entry.name === "string" ? entry.name : "",
     type: typeof entry.type === "string" ? entry.type : "",
+    scriptGroupId: typeof entry.scriptGroupId === "string" ? entry.scriptGroupId : "",
     mainstat: typeof entry.mainstat === "string" ? entry.mainstat : "",
     mainstat_value: asFiniteNumber(entry.mainstat_value, 0),
     affixes: normalizeAffixes(entry.affixes),

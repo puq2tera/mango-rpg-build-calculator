@@ -19,6 +19,11 @@ import {
   type EquipmentAffix as Affix,
   type EquipmentSlot as Slot,
 } from "@/app/lib/equipmentSlots"
+import {
+  EQUIPMENT_SCRIPT_GROUPS_STORAGE_KEY,
+  normalizeEquipmentScriptGroups,
+  type EquipmentScriptGroup,
+} from "@/app/lib/equipmentScripts"
 import { TABLE_FOCUS_QUERY_PARAM } from "@/app/lib/tableNavigation"
 import {
   filterManualTarotSelections,
@@ -90,6 +95,7 @@ const emptyRuneSet = (): Record<RuneTier, RuneSelection[]> => {
 export default function EquipmentPage() {
   const [isHydrated, setIsHydrated] = useState(false)
   const [slots, setSlots] = useState<Slot[]>([])
+  const [equipmentScriptGroups, setEquipmentScriptGroups] = useState<EquipmentScriptGroup[]>([])
   const [selectedRunes, setSelectedRunes] = useState<Record<RuneTier, RuneSelection[]>>(emptyRuneSet())
   const [artifact, setArtifact] = useState<ArtifactState>(createDefaultArtifact)
   const allStatNames = Object.keys(stat_data.StatsInfo) as StatNameType[]
@@ -101,6 +107,16 @@ export default function EquipmentPage() {
       setSlots(normalizeEquipmentSlots(parsed))
     } catch {
       setSlots(Array.from({ length: 8 }, createDefaultEquipmentSlot))
+    }
+  }
+
+  const refreshStoredEquipmentScriptGroups = () => {
+    const storedGroups = localStorage.getItem(EQUIPMENT_SCRIPT_GROUPS_STORAGE_KEY)
+
+    try {
+      setEquipmentScriptGroups(normalizeEquipmentScriptGroups(storedGroups ? JSON.parse(storedGroups) : []))
+    } catch {
+      setEquipmentScriptGroups([])
     }
   }
 
@@ -234,6 +250,7 @@ export default function EquipmentPage() {
 
   useEffect(() => {
     refreshStoredEquipmentSlots()
+    refreshStoredEquipmentScriptGroups()
 
     const storedRunes = localStorage.getItem(STORAGE_KEY_RUNES)
     try {
@@ -263,18 +280,25 @@ export default function EquipmentPage() {
     }
 
     const handleStorage = (event: StorageEvent) => {
-      if (event.key !== null && event.key !== EQUIPMENT_SLOTS_STORAGE_KEY) {
+      if (
+        event.key !== null &&
+        event.key !== EQUIPMENT_SLOTS_STORAGE_KEY &&
+        event.key !== EQUIPMENT_SCRIPT_GROUPS_STORAGE_KEY
+      ) {
         return
       }
 
       refreshStoredEquipmentSlots()
+      refreshStoredEquipmentScriptGroups()
     }
 
     window.addEventListener("storage", handleStorage)
     window.addEventListener("focus", refreshStoredEquipmentSlots)
+    window.addEventListener("focus", refreshStoredEquipmentScriptGroups)
     return () => {
       window.removeEventListener("storage", handleStorage)
       window.removeEventListener("focus", refreshStoredEquipmentSlots)
+      window.removeEventListener("focus", refreshStoredEquipmentScriptGroups)
     }
   }, [isHydrated])
 
@@ -571,6 +595,24 @@ export default function EquipmentPage() {
                     <option value="">Select</option>
                     {typeOptions.map(option => (
                       <option key={option} value={option}>{option}</option>
+                    ))}
+                  </select>
+                </div>
+                <div className="col-span-2">
+                  <div className="mb-1 flex min-h-6 items-center">
+                    <label className="block text-[11px] font-medium uppercase tracking-[0.08em] text-slate-300">Script Group</label>
+                  </div>
+                  <select
+                    value={slot.scriptGroupId}
+                    onChange={e => updateSlot(idx, "scriptGroupId", e.target.value)}
+                    className="w-full border px-1 py-0.5"
+                    onClick={e => e.stopPropagation()}
+                  >
+                    <option value="">None</option>
+                    {equipmentScriptGroups.map((group, groupIndex) => (
+                      <option key={group.id} value={group.id}>
+                        {group.name.trim() || `Script Group ${groupIndex + 1}`}
+                      </option>
                     ))}
                   </select>
                 </div>

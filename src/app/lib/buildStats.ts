@@ -18,12 +18,19 @@ import {
 } from "@/app/lib/additionalStageStats"
 import { normalizeArtifact } from "@/app/lib/artifactState"
 import {
+  EQUIPMENT_SCRIPT_GROUPS_STORAGE_KEY,
+  buildAppliedEquipmentScriptCounts,
+  normalizeEquipmentScriptGroups,
+  type EquipmentScriptGroup,
+} from "@/app/lib/equipmentScripts"
+import {
   getTarotScalingValue,
   isTarotEquipmentSlot,
   normalizeEquipmentSlots,
   type EquipmentSlot,
 } from "@/app/lib/equipmentSlots"
 import { readStoredStatPoints } from "@/app/lib/mainStatPoints"
+import { buildAverageStatsForScriptCounts } from "@/app/lib/runewordPlanner"
 import { readStoredEffectiveTarotSelections } from "@/app/lib/tarotSelections"
 import { THREAT_BASE_STAT, THREAT_LEVELS_STAT } from "@/app/lib/threat"
 import {
@@ -54,6 +61,7 @@ export type BuildSnapshot = {
   selectedRunes: Record<string, RuneSelection[]>
   equipmentSlots: EquipmentSlot[]
   enabledEquipment: number[]
+  equipmentScriptGroups: EquipmentScriptGroup[]
   artifact: Record<string, number>
   additionalStageStats: AdditionalStageStatEntry[]
   stageStatOverrides: StageStatOverrideEntry[]
@@ -147,6 +155,9 @@ export function readBuildSnapshot(storage: Storage): BuildSnapshot {
     selectedRunes: asRuneSelections(jsonParse(storage.getItem("SelectedRunes"), {})),
     equipmentSlots: normalizeEquipmentSlots(jsonParse(storage.getItem("EquipmentSlots"), [])),
     enabledEquipment: asEnabledEquipment(jsonParse(storage.getItem("EnabledEquipment"), [])),
+    equipmentScriptGroups: normalizeEquipmentScriptGroups(
+      jsonParse(storage.getItem(EQUIPMENT_SCRIPT_GROUPS_STORAGE_KEY), []),
+    ),
     artifact: normalizeArtifact(jsonParse(storage.getItem("Artifact"), null)),
     additionalStageStats: normalizeAdditionalStageStatEntries(
       jsonParse(storage.getItem(ADDITIONAL_STAGE_STATS_STORAGE_KEY), []),
@@ -739,6 +750,17 @@ function computeEquipmentStats(snapshot: BuildSnapshot): Record<string, number> 
     if (slot.name.includes("+10")) {
       stats["Dmg%"] = (stats["Dmg%"] ?? 0) + 1
     }
+  }
+
+  const enabledSlots = snapshot.equipmentSlots.map((slot, index) => ({
+    enabled: enabledIndices.has(index),
+    scriptGroupId: slot.scriptGroupId,
+  }))
+  const appliedScriptCounts = buildAppliedEquipmentScriptCounts(snapshot.equipmentScriptGroups, enabledSlots)
+  const appliedScriptStats = buildAverageStatsForScriptCounts(appliedScriptCounts)
+
+  for (const [stat, value] of Object.entries(appliedScriptStats)) {
+    stats[stat] = (stats[stat] ?? 0) + value
   }
 
   return stats

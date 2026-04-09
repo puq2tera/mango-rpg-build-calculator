@@ -1,9 +1,18 @@
 "use client"
 
 import { Fragment, startTransition, useDeferredValue, useEffect, useEffectEvent, useMemo, useRef, useState, type ReactNode } from "react"
-import { BUILD_SNAPSHOT_UPDATED_EVENT } from "@/app/lib/buildEvents"
+import { BUILD_SNAPSHOT_UPDATED_EVENT, dispatchBuildSnapshotUpdated } from "@/app/lib/buildEvents"
 import { computeBuildStatStages, readBuildSnapshot } from "@/app/lib/buildStats"
 import { calculateDamage, formatSignedDamageDelta, readDamageCalcState } from "@/app/lib/damageCalc"
+import {
+  DEFAULT_EQUIPMENT_SCRIPT_GROUP_SCRIPT_SLOTS,
+  EQUIPMENT_SCRIPT_GROUPS_STORAGE_KEY,
+  createDefaultEquipmentScriptGroup,
+  getEquipmentScriptGroupFinalCount,
+  getEquipmentScriptGroupUsageCounts,
+  normalizeEquipmentScriptGroups,
+  type EquipmentScriptGroup,
+} from "@/app/lib/equipmentScripts"
 import { useManagedColumns, type ManagedColumn, type ManagedColumnDefinition } from "@/app/lib/managedColumns"
 import {
   buildRuneRequirements,
@@ -139,6 +148,14 @@ function getStatChipLabel(stat: string, stats: PlannerStatsRange): string {
 
 function getWordsLabel(words: readonly string[]): string {
   return words.length > 0 ? words.join(", ") : "None"
+}
+
+function createEquipmentScriptGroupId(): string {
+  if (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function") {
+    return crypto.randomUUID()
+  }
+
+  return `script-group-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`
 }
 
 function PlannerSection({
@@ -420,6 +437,7 @@ export default function RunewordsPage() {
     BOTTOM_MAX_SPLIT_PERCENT,
   )
   const [isHydrated, setIsHydrated] = useState(false)
+  const [equipmentScriptGroups, setEquipmentScriptGroups] = useState<EquipmentScriptGroup[]>([])
   const [selectedScriptNames, setSelectedScriptNames] = useState<string[]>([])
   const [selectorQuery, setSelectorQuery] = useState("")
   const [showSelectedOnly, setShowSelectedOnly] = useState(false)
@@ -453,6 +471,27 @@ export default function RunewordsPage() {
     [selectionSummary],
   )
   const selectedScriptNameSet = useMemo(() => new Set(selectedScriptNames), [selectedScriptKey, selectedScriptNames])
+  const equipmentSnapshot = useMemo(() => {
+    if (!isHydrated) {
+      return null
+    }
+
+    return readBuildSnapshot(localStorage)
+  }, [buildRevision, isHydrated])
+  const equipmentScriptUsageCounts = useMemo(() => {
+    if (!equipmentSnapshot) {
+      return {}
+    }
+
+    const enabledEquipment = new Set(equipmentSnapshot.enabledEquipment)
+    return getEquipmentScriptGroupUsageCounts(
+      equipmentSnapshot.equipmentScriptGroups,
+      equipmentSnapshot.equipmentSlots.map((slot, index) => ({
+        enabled: enabledEquipment.has(index),
+        scriptGroupId: slot.scriptGroupId,
+      })),
+    )
+  }, [equipmentSnapshot])
 
   const summaryRows = useMemo<SummaryRow[]>(
     () => [
@@ -655,6 +694,11 @@ export default function RunewordsPage() {
 
   useEffect(() => {
     try {
+      const storedEquipmentScriptGroups = JSON.parse(
+        localStorage.getItem(EQUIPMENT_SCRIPT_GROUPS_STORAGE_KEY) ?? "[]",
+      ) as unknown
+      setEquipmentScriptGroups(normalizeEquipmentScriptGroups(storedEquipmentScriptGroups))
+
       const storedSelectedScripts = JSON.parse(localStorage.getItem(STORAGE_KEY_SELECTED_SCRIPTS) ?? "[]") as unknown
       if (Array.isArray(storedSelectedScripts)) {
         setSelectedScriptNames(
@@ -717,6 +761,12 @@ export default function RunewordsPage() {
     if (!isHydrated) return
     localStorage.setItem(STORAGE_KEY_SELECTED_SCRIPTS, JSON.stringify(selectedScriptNames))
   }, [isHydrated, selectedScriptKey, selectedScriptNames])
+
+  useEffect(() => {
+    if (!isHydrated) return
+    localStorage.setItem(EQUIPMENT_SCRIPT_GROUPS_STORAGE_KEY, JSON.stringify(equipmentScriptGroups))
+    dispatchBuildSnapshotUpdated()
+  }, [equipmentScriptGroups, isHydrated])
 
   useEffect(() => {
     if (!isHydrated) return
@@ -945,6 +995,33 @@ export default function RunewordsPage() {
     setSelectorSortDirection(getDefaultSelectorSortDirection(mode))
   }
 
+  const addEquipmentScriptGroup = () => {
+    setEquipmentScriptGroups((current) => [
+      ...current,
+      createDefaultEquipmentScriptGroup(createEquipmentScriptGroupId()),
+    ])
+  }
+
+  const removeEquipmentScriptGroup = (id: string) => {
+    setEquipmentScriptGroups((current) => current.filter((group) => group.id !== id))
+  }
+
+  const addEquipmentScriptRow = (id: string) => {
+    updateEquipmentScriptGroup(id, (current) => ({
+      ...current,
+      scripts: [...current.scripts, ""],
+    }))
+  }
+
+  const updateEquipmentScriptGroup = (
+    id: string,
+    updater: (group: EquipmentScriptGroup) => EquipmentScriptGroup,
+  ) => {
+    setEquipmentScriptGroups((current) =>
+      current.map((group) => group.id === id ? updater(group) : group),
+    )
+  }
+
   if (
     !isHydrated ||
     !selectorColumnLayout.isReady ||
@@ -958,7 +1035,133 @@ export default function RunewordsPage() {
   return (
     <div className="min-h-[calc(100vh-var(--top-nav-height))] bg-[radial-gradient(circle_at_top_left,rgba(59,130,246,0.16),transparent_30%),radial-gradient(circle_at_top_right,rgba(16,185,129,0.1),transparent_22%),radial-gradient(circle_at_bottom_left,rgba(249,115,22,0.1),transparent_26%)]">
       <div className="w-full px-4 py-6">
+        <PlannerSection
+          title="Equipment Script Application"
+          subtitle="Create named script groups for equipment. Equipment slots can select a group name to auto-apply its scripts, or you can switch a group to manual count."
+          actions={(
+            <button
+              type="button"
+              onClick={addEquipmentScriptGroup}
+              className="rounded-full border border-slate-700/80 bg-slate-900/70 px-3 py-1.5 text-xs font-medium text-slate-300 hover:bg-slate-800/80"
+            >
+              Add Script Group
+            </button>
+          )}
+        >
+          {equipmentScriptGroups.length === 0 ? (
+            <div className="rounded-2xl border border-dashed border-slate-800 bg-slate-950/55 px-4 py-6 text-sm text-slate-400">
+              Add a script group to start defining equipment-applied scripts.
+            </div>
+          ) : (
+            <div className="grid grid-cols-[repeat(auto-fill,minmax(280px,1fr))] items-start gap-3">
+              {equipmentScriptGroups.map((group, groupIndex) => {
+                const timesApplied = getEquipmentScriptGroupFinalCount(group, equipmentScriptUsageCounts)
+
+                return (
+                  <div key={group.id} className="rounded border border-slate-700/80 bg-slate-900/35 p-1.5 text-sm">
+                    <div className="grid grid-cols-[minmax(0,1fr)_5.5rem_auto_auto] items-center gap-1.5">
+                        <label className="block text-center text-[11px] font-medium uppercase tracking-[0.08em] text-slate-300">Name</label>
+                        <label className="block text-center text-[11px] font-medium uppercase tracking-[0.08em] text-slate-300">Count</label>
+                        <label
+                          className="inline-flex h-6 w-6 items-center justify-center rounded border border-slate-700/80 bg-slate-900/70 text-slate-300"
+                          title="Manual mode lets you enter the apply count directly instead of using the number of equipped slots assigned to this group."
+                        >
+                          <input
+                            type="checkbox"
+                            checked={group.manualCountEnabled}
+                            onChange={(event) => updateEquipmentScriptGroup(group.id, (current) => ({
+                              ...current,
+                              manualCountEnabled: event.target.checked,
+                            }))}
+                            className="h-3.5 w-3.5 accent-cyan-400"
+                          />
+                        </label>
+                        <button
+                          type="button"
+                          onClick={() => removeEquipmentScriptGroup(group.id)}
+                          className="inline-flex h-6 w-6 items-center justify-center rounded border border-red-600 bg-red-600 text-white transition hover:border-red-500 hover:bg-red-500"
+                          aria-label={`Remove ${group.name || `Script Group ${groupIndex + 1}`}`}
+                          title="Remove script group"
+                        >
+                          <svg viewBox="0 0 24 24" className="h-3 w-3 fill-none stroke-current" strokeWidth="2.2" aria-hidden="true">
+                            <path d="M6 6l12 12M18 6 6 18" strokeLinecap="round" />
+                          </svg>
+                        </button>
+                        <input
+                          type="text"
+                          value={group.name}
+                          onChange={(event) => updateEquipmentScriptGroup(group.id, (current) => ({
+                            ...current,
+                            name: event.target.value,
+                          }))}
+                          placeholder={`Script Group ${groupIndex + 1}`}
+                          className="w-full border border-slate-700/80 bg-slate-950/70 px-1 py-0.5"
+                        />
+                        {group.manualCountEnabled ? (
+                          <input
+                            type="number"
+                            min={0}
+                            value={group.manualCount}
+                            onChange={(event) => updateEquipmentScriptGroup(group.id, (current) => ({
+                              ...current,
+                              manualCount: Math.max(0, Number(event.target.value) || 0),
+                            }))}
+                            className="w-full border border-slate-700/80 bg-slate-950/70 px-1 py-0.5 text-right font-mono"
+                          />
+                        ) : (
+                          <div className="flex min-h-[26px] items-center justify-end border border-slate-700/80 bg-slate-950/45 px-1 py-0.5 text-right font-mono text-slate-200">
+                            {timesApplied}
+                          </div>
+                        )}
+                        <div />
+                        <div />
+                    </div>
+
+                    <div className="mt-1.5 space-y-1.5">
+                      {group.scripts.map((scriptName, index) => (
+                        <div key={`${group.id}:script-${index}`} className="grid grid-cols-[4.75rem_minmax(0,1fr)] items-center gap-1.5">
+                          <label className="block text-[11px] font-medium uppercase tracking-[0.08em] text-slate-300">{`Script ${index + 1}`}</label>
+                          <select
+                            value={scriptName}
+                            onChange={(event) => updateEquipmentScriptGroup(group.id, (current) => {
+                              const nextScripts = [...current.scripts]
+                              nextScripts[index] = event.target.value
+                              return {
+                                ...current,
+                                scripts: nextScripts,
+                              }
+                            })}
+                            className="w-full border border-slate-700/80 bg-slate-950/70 px-1 py-0.5"
+                          >
+                            <option value="">Select script</option>
+                            {plannerScripts.map((script) => (
+                              <option key={script.name} value={script.name}>
+                                {script.name}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+                      ))}
+                    </div>
+
+                    <div className="mt-1.5">
+                      <button
+                        type="button"
+                        onClick={() => addEquipmentScriptRow(group.id)}
+                        className="w-full rounded border border-slate-700/80 bg-slate-900/70 px-2 py-1 text-xs font-medium text-slate-300 hover:bg-slate-800/80"
+                      >
+                        Add Row
+                      </button>
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+          )}
+        </PlannerSection>
+
         <ResizableSectionPair
+          className="mt-8"
           splitRatio={topSplit.value}
           onChangeSplitRatio={topSplit.setValue}
           minSplitRatio={TOP_MIN_SPLIT_PERCENT}

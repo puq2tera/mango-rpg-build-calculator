@@ -139,6 +139,64 @@ export function getMissingScriptsForRuneword(runewordName: string, selectedScrip
   return runeword.componentWords.filter((componentWord) => !selected.has(componentWord))
 }
 
+export function getScriptCounts(selectedScriptNames: Iterable<string>): Record<string, number> {
+  const counts: Record<string, number> = {}
+
+  for (const name of selectedScriptNames) {
+    if (!plannerScriptsByName[name]) continue
+    counts[name] = (counts[name] ?? 0) + 1
+  }
+
+  return counts
+}
+
+export function getFormedRunewordCounts(scriptCounts: Readonly<Record<string, number>>): Record<string, number> {
+  const counts: Record<string, number> = {}
+
+  for (const runewordName of plannerRunewordNames) {
+    const runeword = plannerRunewordsByName[runewordName]
+    const formedCount = Math.min(...runeword.componentWords.map((componentWord) => scriptCounts[componentWord] ?? 0))
+
+    if (formedCount > 0) {
+      counts[runewordName] = formedCount
+    }
+  }
+
+  return counts
+}
+
+function buildAverageStatTotalsForCounts<T extends Pick<PlannerEntry, "stats"> & { name: string }>(
+  entriesByName: Readonly<Record<string, T>>,
+  counts: Readonly<Record<string, number>>,
+): Record<string, number> {
+  const totals: Record<string, number> = {}
+
+  for (const [name, count] of Object.entries(counts)) {
+    if (!Number.isFinite(count) || count <= 0) continue
+
+    const entry = entriesByName[name]
+    if (!entry) continue
+
+    for (const [stat, value] of Object.entries(entry.stats.average)) {
+      totals[stat] = (totals[stat] ?? 0) + value * count
+    }
+  }
+
+  return totals
+}
+
+export function buildAverageStatsForScriptCounts(scriptCounts: Readonly<Record<string, number>>): Record<string, number> {
+  const runewordCounts = getFormedRunewordCounts(scriptCounts)
+  const totals = buildAverageStatTotalsForCounts(plannerScriptsByName, scriptCounts)
+  const runewordTotals = buildAverageStatTotalsForCounts(plannerRunewordsByName, runewordCounts)
+
+  for (const [stat, value] of Object.entries(runewordTotals)) {
+    totals[stat] = (totals[stat] ?? 0) + value
+  }
+
+  return totals
+}
+
 export function buildAverageStatTotals(entries: Iterable<Pick<PlannerEntry, "stats">>): Record<string, number> {
   const totals: Record<string, number> = {}
 
