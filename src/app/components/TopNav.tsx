@@ -71,7 +71,10 @@ const navGroups: readonly NavGroup[] = [
   {
     href: "/Skills/Buffs",
     label: "Buffs",
-    children: [{ href: "/Skills/BuffSorter", label: "Buff Overview" }],
+    children: [
+      { href: "/Skills/BuffSorter", label: "Buff Overview" },
+      { href: "/equipment/TarotCards", label: "Tarot Cards" },
+    ],
   },
   { href: "/Levels", label: "Levels" },
   {
