@@ -32,7 +32,7 @@ export default function SkillOverview() {
 
   return (
     <div className="min-h-[calc(100vh-var(--top-nav-height))] bg-[radial-gradient(circle_at_top_right,rgba(59,130,246,0.14),transparent_30%),radial-gradient(circle_at_bottom_left,rgba(16,185,129,0.08),transparent_24%)]">
-      <div className="mx-auto max-w-7xl px-4 py-6">
+      <div className="w-full px-4 py-6">
         <div className="space-y-6">
           <LearnCommandOutput
             title="Skill Learn Commands"

@@ -696,7 +696,7 @@ export default function PerformancePage() {
 
   return (
     <div className="min-h-[calc(100vh-var(--top-nav-height))] px-4 py-6 sm:px-6 lg:px-8">
-      <div className="mx-auto flex w-full max-w-7xl flex-col gap-6">
+      <div className="flex w-full flex-col gap-6">
         <section className="rounded-[28px] border border-slate-800/80 bg-slate-950/70 p-6 shadow-[0_22px_70px_rgba(2,6,23,0.42)] backdrop-blur">
           <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
             <div className="max-w-3xl space-y-3">

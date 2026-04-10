@@ -32,7 +32,7 @@ export default function TalentOverview() {
 
   return (
     <div className="min-h-[calc(100vh-var(--top-nav-height))] bg-[radial-gradient(circle_at_top_left,rgba(56,189,248,0.11),transparent_30%),radial-gradient(circle_at_bottom_right,rgba(249,115,22,0.08),transparent_26%)]">
-      <div className="mx-auto max-w-7xl px-4 py-6">
+      <div className="w-full px-4 py-6">
         <div className="space-y-6">
           <LearnCommandOutput
             title="Talent Learn Commands"

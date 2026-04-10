@@ -2047,7 +2047,7 @@ export default function CharacterSummary() {
   if (!summary) {
     return (
       <div className="p-6">
-        <div className={`${cardClass} mx-auto max-w-7xl p-6`}>
+        <div className={`${cardClass} p-6`}>
           <GlowLayer />
           <div className="relative text-sm text-slate-300">Loading character summary...</div>
         </div>
@@ -2063,7 +2063,7 @@ export default function CharacterSummary() {
 
   return (
     <div className="p-4 sm:p-6">
-      <div className="mx-auto max-w-7xl space-y-6">
+      <div className="space-y-6">
         <StatGroup
           title="In game stats"
           subtitle="Current guild card, character card, dungeon card, and active effects"

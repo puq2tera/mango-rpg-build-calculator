@@ -317,7 +317,7 @@ export default function BuildsPage() {
 
   return (
     <div className="min-h-[calc(100vh-var(--top-nav-height))] bg-[radial-gradient(circle_at_top_left,rgba(14,165,233,0.12),transparent_30%),radial-gradient(circle_at_top_right,rgba(234,88,12,0.10),transparent_28%),linear-gradient(180deg,rgba(2,6,23,0.98),rgba(15,23,42,0.96))]">
-      <div className="mx-auto max-w-6xl px-4 py-4">
+      <div className="w-full px-4 py-4">
         <section className="rounded-[26px] border border-slate-800/80 bg-[linear-gradient(135deg,rgba(7,12,20,0.97),rgba(15,23,42,0.9))] px-5 py-5 shadow-[0_32px_80px_rgba(2,6,23,0.44)]">
           <div className="flex flex-wrap items-start justify-between gap-4">
             <div className="max-w-3xl space-y-2">
@@ -370,7 +370,7 @@ export default function BuildsPage() {
                 </div>
               </div>
 
-              <div className="mt-4 grid gap-3 md:grid-cols-[minmax(0,1fr)_auto]">
+              <div className="mt-4 grid gap-3 md:grid-cols-[minmax(0,1.45fr)_auto]">
                 <label className="space-y-1.5">
                   <span className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">Build Name</span>
                   <input

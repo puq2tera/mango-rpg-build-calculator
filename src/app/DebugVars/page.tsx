@@ -1902,7 +1902,7 @@ export default function DebugVarsPage() {
   if (!summary) {
     return (
       <div className="p-4 sm:p-6">
-        <div className={`${panelClass} mx-auto max-w-7xl px-6 py-8`}>
+        <div className={`${panelClass} px-6 py-8`}>
           <div className="text-sm text-slate-300">Loading debug comparison...</div>
         </div>
       </div>
@@ -1917,7 +1917,7 @@ export default function DebugVarsPage() {
 
   return (
     <div className="min-h-[calc(100vh-var(--top-nav-height))] bg-[radial-gradient(circle_at_top_left,rgba(56,189,248,0.12),transparent_28%),radial-gradient(circle_at_bottom_right,rgba(249,115,22,0.08),transparent_32%)] p-4 sm:p-6">
-      <div className="mx-auto max-w-7xl space-y-4">
+      <div className="space-y-4">
 
         <PasteInputTable
           inputs={inputs}

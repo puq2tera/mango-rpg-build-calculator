@@ -49,7 +49,7 @@ export default function CopyPastePage() {
 
   return (
     <div className="min-h-[calc(100vh-var(--top-nav-height))] bg-[radial-gradient(circle_at_top_left,rgba(14,165,233,0.12),transparent_32%),radial-gradient(circle_at_top_right,rgba(249,115,22,0.10),transparent_28%)]">
-      <div className="mx-auto max-w-7xl px-4 py-6">
+      <div className="w-full px-4 py-6">
         <section className="rounded-[28px] border border-slate-800/80 bg-[linear-gradient(135deg,rgba(7,12,20,0.96),rgba(15,23,42,0.88))] px-6 py-6 shadow-[0_40px_100px_rgba(2,6,23,0.45)]">
           <div className="flex flex-wrap items-start justify-between gap-6">
             <div className="max-w-3xl space-y-3">
