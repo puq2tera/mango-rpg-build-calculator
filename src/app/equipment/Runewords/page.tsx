@@ -440,7 +440,8 @@ export default function RunewordsPage() {
   const [equipmentScriptGroups, setEquipmentScriptGroups] = useState<EquipmentScriptGroup[]>([])
   const [selectedScriptNames, setSelectedScriptNames] = useState<string[]>([])
   const [selectorQuery, setSelectorQuery] = useState("")
-  const [showSelectedOnly, setShowSelectedOnly] = useState(false)
+  const [selectorCopyTarget, setSelectorCopyTarget] = useState("")
+  const [selectorLoadSource, setSelectorLoadSource] = useState("")
   const [selectorSortMode, setSelectorSortMode] = useState<SelectorSortMode>("name")
   const [selectorSortDirection, setSelectorSortDirection] = useState<SortDirection>(
     getDefaultSelectorSortDirection("name"),
@@ -542,14 +543,9 @@ export default function RunewordsPage() {
 
   const selectorRows = useMemo(() => {
     const normalizedQuery = deferredSelectorQuery.trim().toLowerCase()
-    const selectedSet = new Set(selectedScriptNames)
 
     return [...plannerScripts
       .filter((script) => {
-        if (showSelectedOnly && !selectedSet.has(script.name)) {
-          return false
-        }
-
         if (!normalizedQuery) {
           return true
         }
@@ -602,10 +598,8 @@ export default function RunewordsPage() {
   }, [
     deferredSelectorQuery,
     entryDamageByKey,
-    selectedScriptNames,
     selectorSortDirection,
     selectorSortMode,
-    showSelectedOnly,
   ])
 
   const unselectedRowsBase = useMemo(() => {
@@ -801,7 +795,8 @@ export default function RunewordsPage() {
       bottomSplit.reset()
       setSelectorQuery("")
       setUnselectedQuery("")
-      setShowSelectedOnly(false)
+      setSelectorCopyTarget("")
+      setSelectorLoadSource("")
       setSelectorSortMode("name")
       setSelectorSortDirection(getDefaultSelectorSortDirection("name"))
       setRuneSortMode("count-desc")
@@ -995,6 +990,51 @@ export default function RunewordsPage() {
     setSelectorSortDirection(getDefaultSelectorSortDirection(mode))
   }
 
+  const copySelectedScriptsToGroup = (id: string) => {
+    if (!id || selectedScriptNames.length === 0) {
+      setSelectorCopyTarget("")
+      return
+    }
+
+    if (id === "__new__") {
+      const nextGroup = createDefaultEquipmentScriptGroup(createEquipmentScriptGroupId())
+      nextGroup.scripts = Array.from(
+        { length: Math.max(DEFAULT_EQUIPMENT_SCRIPT_GROUP_SCRIPT_SLOTS, selectedScriptNames.length) },
+        (_, index) => selectedScriptNames[index] ?? "",
+      )
+      setEquipmentScriptGroups((current) => [...current, nextGroup])
+      setSelectorCopyTarget("")
+      return
+    }
+
+    updateEquipmentScriptGroup(id, (current) => ({
+      ...current,
+      scripts: Array.from(
+        { length: Math.max(DEFAULT_EQUIPMENT_SCRIPT_GROUP_SCRIPT_SLOTS, selectedScriptNames.length) },
+        (_, index) => selectedScriptNames[index] ?? "",
+      ),
+    }))
+    setSelectorCopyTarget("")
+  }
+
+  const loadScriptsFromGroup = (id: string) => {
+    if (!id) {
+      setSelectorLoadSource("")
+      return
+    }
+
+    const group = equipmentScriptGroups.find((entry) => entry.id === id)
+    if (!group) {
+      setSelectorLoadSource("")
+      return
+    }
+
+    setSelectedScriptNames(
+      Array.from(new Set(group.scripts.filter((scriptName) => scriptName.length > 0))).sort(collator.compare),
+    )
+    setSelectorLoadSource("")
+  }
+
   const addEquipmentScriptGroup = () => {
     setEquipmentScriptGroups((current) => [
       ...current,
@@ -1059,27 +1099,13 @@ export default function RunewordsPage() {
 
                 return (
                   <div key={group.id} className="rounded border border-slate-700/80 bg-slate-900/35 p-1.5 text-sm">
-                    <div className="grid grid-cols-[minmax(0,1fr)_5.5rem_auto_auto] items-center gap-1.5">
+                    <div className="grid grid-cols-[minmax(0,1fr)_minmax(5.5rem,0.8fr)_1.75rem] items-center gap-1.5">
                         <label className="block text-center text-[11px] font-medium uppercase tracking-[0.08em] text-slate-300">Name</label>
                         <label className="block text-center text-[11px] font-medium uppercase tracking-[0.08em] text-slate-300">Count</label>
-                        <label
-                          className="inline-flex h-6 w-6 items-center justify-center rounded border border-slate-700/80 bg-slate-900/70 text-slate-300"
-                          title="Manual mode lets you enter the apply count directly instead of using the number of equipped slots assigned to this group."
-                        >
-                          <input
-                            type="checkbox"
-                            checked={group.manualCountEnabled}
-                            onChange={(event) => updateEquipmentScriptGroup(group.id, (current) => ({
-                              ...current,
-                              manualCountEnabled: event.target.checked,
-                            }))}
-                            className="h-3.5 w-3.5 accent-cyan-400"
-                          />
-                        </label>
                         <button
                           type="button"
                           onClick={() => removeEquipmentScriptGroup(group.id)}
-                          className="inline-flex h-6 w-6 items-center justify-center rounded border border-red-600 bg-red-600 text-white transition hover:border-red-500 hover:bg-red-500"
+                          className="inline-flex h-6 w-6 justify-self-end items-center justify-center rounded border border-red-600 bg-red-600 text-white transition hover:border-red-500 hover:bg-red-500"
                           aria-label={`Remove ${group.name || `Script Group ${groupIndex + 1}`}`}
                           title="Remove script group"
                         >
@@ -1095,7 +1121,7 @@ export default function RunewordsPage() {
                             name: event.target.value,
                           }))}
                           placeholder={`Script Group ${groupIndex + 1}`}
-                          className="w-full border border-slate-700/80 bg-slate-950/70 px-1 py-0.5"
+                          className="w-full border border-slate-700/80 bg-slate-950/90 px-1 py-0.5"
                         />
                         {group.manualCountEnabled ? (
                           <input
@@ -1109,13 +1135,25 @@ export default function RunewordsPage() {
                             className="w-full border border-slate-700/80 bg-slate-950/70 px-1 py-0.5 text-right font-mono"
                           />
                         ) : (
-                          <div className="flex min-h-[26px] items-center justify-end border border-slate-700/80 bg-slate-950/45 px-1 py-0.5 text-right font-mono text-slate-200">
+                          <div className="flex min-h-[26px] items-center justify-end border border-slate-700/80 bg-slate-800/65 px-1 py-0.5 text-right font-mono text-slate-300">
                             {timesApplied}
                           </div>
                         )}
-                        <div />
-                        <div />
-                    </div>
+                        <label
+                          className="inline-flex h-6 w-6 justify-self-end items-center justify-center self-center rounded border border-slate-700/80 bg-slate-900/70 text-slate-300"
+                          title="Manual mode lets you enter the apply count directly instead of using the number of equipped slots assigned to this group."
+                        >
+                          <input
+                            type="checkbox"
+                            checked={group.manualCountEnabled}
+                            onChange={(event) => updateEquipmentScriptGroup(group.id, (current) => ({
+                              ...current,
+                              manualCountEnabled: event.target.checked,
+                            }))}
+                            className="h-3.5 w-3.5 accent-cyan-400"
+                          />
+                        </label>
+                      </div>
 
                     <div className="mt-1.5 space-y-1.5">
                       {group.scripts.map((scriptName, index) => (
@@ -1161,13 +1199,13 @@ export default function RunewordsPage() {
         </PlannerSection>
 
         <ResizableSectionPair
-          className="mt-8"
+          className="mt-8 -mx-4"
           splitRatio={topSplit.value}
           onChangeSplitRatio={topSplit.setValue}
           minSplitRatio={TOP_MIN_SPLIT_PERCENT}
           maxSplitRatio={TOP_MAX_SPLIT_PERCENT}
-          leftClassName="xl:pr-3"
-          rightClassName="xl:pl-3"
+          leftClassName="xl:pr-1"
+          rightClassName="xl:pl-1"
           left={(
             <PlannerSection
               title="Script Selector"
@@ -1175,17 +1213,50 @@ export default function RunewordsPage() {
               bodyClassName="flex min-h-0 flex-1 flex-col"
               actions={(
                 <>
-                  <button
-                    type="button"
-                    onClick={() => setShowSelectedOnly((current) => !current)}
-                    className={`rounded-full border px-3 py-1.5 text-xs font-medium ${
-                      showSelectedOnly
-                        ? "border-cyan-400/60 bg-cyan-400/12 text-cyan-100"
-                        : "border-slate-700/80 bg-slate-900/70 text-slate-300"
-                    }`}
+                  <input
+                    type="text"
+                    value={selectorQuery}
+                    onChange={(event) => setSelectorQuery(event.target.value)}
+                    placeholder="Search script, stat, or runeword"
+                    className="w-full rounded-xl border border-slate-700/80 bg-slate-900/75 px-3 py-2 text-sm sm:w-[18rem] xl:w-[20rem]"
+                  />
+                  <select
+                    value={selectorCopyTarget}
+                    onChange={(event) => {
+                      const targetId = event.target.value
+                      setSelectorCopyTarget(targetId)
+                      copySelectedScriptsToGroup(targetId)
+                    }}
+                    disabled={equipmentScriptGroups.length === 0 || selectedScriptNames.length === 0}
+                    className="rounded-full border border-slate-700/80 bg-slate-900/70 px-3 py-1.5 text-xs font-medium text-slate-300 disabled:cursor-not-allowed disabled:text-slate-600"
+                    aria-label="Copy selected scripts to equipment script group"
                   >
-                    {showSelectedOnly ? "Showing selected" : "Show selected only"}
-                  </button>
+                    <option value="">Copy to group</option>
+                    <option value="__new__">New</option>
+                    {equipmentScriptGroups.map((group, groupIndex) => (
+                      <option key={group.id} value={group.id}>
+                        {group.name.trim() || `Script Group ${groupIndex + 1}`}
+                      </option>
+                    ))}
+                  </select>
+                  <select
+                    value={selectorLoadSource}
+                    onChange={(event) => {
+                      const sourceId = event.target.value
+                      setSelectorLoadSource(sourceId)
+                      loadScriptsFromGroup(sourceId)
+                    }}
+                    disabled={equipmentScriptGroups.length === 0}
+                    className="rounded-full border border-slate-700/80 bg-slate-900/70 px-3 py-1.5 text-xs font-medium text-slate-300 disabled:cursor-not-allowed disabled:text-slate-600"
+                    aria-label="Load selected scripts from equipment script group"
+                  >
+                    <option value="">Load from group</option>
+                    {equipmentScriptGroups.map((group, groupIndex) => (
+                      <option key={group.id} value={group.id}>
+                        {group.name.trim() || `Script Group ${groupIndex + 1}`}
+                      </option>
+                    ))}
+                  </select>
                   <button
                     type="button"
                     onClick={() => setSelectedScriptNames([])}
@@ -1196,31 +1267,6 @@ export default function RunewordsPage() {
                 </>
               )}
             >
-              <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center">
-                <div className="relative w-full">
-                  <input
-                    type="text"
-                    value={selectorQuery}
-                    onChange={(event) => setSelectorQuery(event.target.value)}
-                    placeholder="Search script, stat, or runeword"
-                    className="w-full rounded-xl border border-slate-700/80 bg-slate-900/75 px-3 py-2 pr-9 text-sm"
-                  />
-                  {selectorQuery ? (
-                    <button
-                      type="button"
-                      onClick={() => setSelectorQuery("")}
-                      className="absolute right-2 top-1/2 -translate-y-1/2 rounded-full px-1.5 py-0.5 text-xs text-slate-400 transition hover:bg-slate-800 hover:text-slate-200"
-                      aria-label="Clear selector search"
-                      title="Clear search"
-                    >
-                      x
-                    </button>
-                  ) : null}
-                </div>
-                <div className="shrink-0 rounded-full border border-slate-700/80 bg-slate-900/70 px-3 py-2 text-xs text-slate-300">
-                  {selectorRows.length} visible
-                </div>
-              </div>
               {selectorRows.length === 0 ? (
                 <div className="rounded-2xl border border-dashed border-slate-800 bg-slate-950/55 px-4 py-6 text-sm text-slate-400">
                   No scripts match the current search and filter.
