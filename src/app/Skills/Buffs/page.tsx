@@ -144,8 +144,6 @@ export default function BuffsPage() {
     let cancelled = false
     let timeoutId: number | null = null
 
-    setAverageDamageChanges({})
-
     const snapshot = readBuildSnapshot(localStorage)
     const damageState = readDamageCalcState(localStorage)
     const selectedBuffNames = Array.from(selected)

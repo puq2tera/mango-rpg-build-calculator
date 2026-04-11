@@ -126,8 +126,6 @@ function TalentsPageContent() {
     setIsAverageDamageReady(false)
     pendingAverageDamageComputationIdRef.current = null
 
-    setAverageDamageChanges({})
-
     const snapshot = readBuildSnapshot(localStorage)
     const damageState = readDamageCalcState(localStorage)
     const selectedTalentNames = Array.from(selected)
