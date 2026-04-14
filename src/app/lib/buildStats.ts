@@ -529,6 +529,11 @@ type EffectPipelineCache = {
   outputsBeforeByName: NamedStageStats
 }
 
+type EffectPipelineDeltaResult = {
+  outputsDelta: Record<string, number>
+  outputsBeforeByName: NamedStageStats
+}
+
 function applyConversionResultValue(targetDict: Record<string, number>, targetStat: string, resultValue: number): void {
   if (!Number.isFinite(resultValue) || Math.abs(resultValue) < 0.0001) {
     return
@@ -785,10 +790,34 @@ function computeEffectDeltaStats(
   sourceData: Record<string, EffectSourceData | undefined>,
   pipelineCache: Pick<EffectPipelineCache, "percentBeforeByName" | "outputsBeforeByName">,
 ): Record<string, number> {
+  return applyEffectPipelineDelta(
+    selectedNames,
+    stackDict,
+    sourceStats,
+    sourceDelta,
+    sourceData,
+    pipelineCache,
+  ).outputsDelta
+}
+
+function applyEffectPipelineDelta(
+  selectedNames: readonly string[],
+  stackDict: Record<string, number>,
+  sourceStats: Record<string, number>,
+  sourceDelta: Record<string, number>,
+  sourceData: Record<string, EffectSourceData | undefined>,
+  pipelineCache: Pick<EffectPipelineCache, "percentBeforeByName" | "outputsBeforeByName">,
+): EffectPipelineDeltaResult {
   const outputsDelta: Record<string, number> = {}
+  const outputsBeforeByName: NamedStageStats = {}
 
   for (const name of selectedNames) {
     const effectSourceData = sourceData[name]
+    outputsBeforeByName[name] = mergeRawStageStats(
+      pipelineCache.outputsBeforeByName[name] ?? {},
+      outputsDelta,
+    )
+
     if (!effectSourceData) {
       continue
     }
@@ -833,7 +862,10 @@ function computeEffectDeltaStats(
     }
   }
 
-  return outputsDelta
+  return {
+    outputsDelta,
+    outputsBeforeByName,
+  }
 }
 
 function combineBaseStats(...sources: Record<string, number>[]): Record<string, number> {
@@ -1489,6 +1521,102 @@ export function computeTalentToggledDmgReadyStatsDelta(
   )
 
   return statsDmgReadyDelta
+}
+
+export function applyTalentToggleToBuildStatDeltaCache(
+  cache: BuildStatDeltaCache,
+  talentName: string,
+  wasSelected: boolean,
+  nextSelectedTalents: Iterable<string>,
+): {
+  cache: BuildStatDeltaCache
+  statsDmgReadyDelta: Record<string, number>
+} {
+  const statsTalentDelta = scaleStageStats(cache.stages.StatsTalentStats[talentName] ?? {}, wasSelected ? -1 : 1)
+  const conversionPercentDelta = scaleConversionPercentMap(
+    cache.stages.StatsTalentConversionPercents[talentName] ?? {},
+    wasSelected ? -1 : 1,
+  )
+  const statsBaseDelta = combineBaseStats(statsTalentDelta)
+  const statsBase = mergeRawStageStats(cache.stages.StatsBase, statsBaseDelta)
+  const statsXPen = computexPenStats(statsBase)
+  const statsConversionReadyDelta = computeConversionReadyDelta(
+    cache.stages.StatsBase,
+    cache.stages.StatsConversionReady,
+    statsBaseDelta,
+  )
+  const statsConversionReady = mergeRawStageStats(cache.stages.StatsConversionReady, statsConversionReadyDelta)
+  const statsConversionPercents = mergeConversionPercentMaps(cache.stages.StatsConversionPercents, conversionPercentDelta)
+  const statsConvertedDelta = computeConversionDeltaFromMaps(
+    cache.stages.StatsConversionReady,
+    statsConversionReadyDelta,
+    cache.stages.StatsConversionPercents,
+    conversionPercentDelta,
+  )
+  const statsConverted = mergeRawStageStats(cache.stages.StatsConverted, statsConvertedDelta)
+  const statsBuffReadyDelta = mergeRawStageStats(
+    statsConversionReadyDelta,
+    expandCompoundStats(statsConvertedDelta),
+  )
+  const statsBuffReady = mergeRawStageStats(cache.stages.StatsBuffReady, statsBuffReadyDelta)
+  const buffPipelineDelta = applyEffectPipelineDelta(
+    cache.snapshot.selectedBuffs,
+    cache.snapshot.selectedBuffStacks,
+    cache.stages.StatsBuffReady,
+    statsBuffReadyDelta,
+    skill_data,
+    {
+      percentBeforeByName: cache.stages.StatsBuffPercents,
+      outputsBeforeByName: cache.stages.StatsBuffOutputsBeforeByName,
+    },
+  )
+  const statsBuffs = mergeRawStageStats(cache.stages.StatsBuffs, buffPipelineDelta.outputsDelta)
+  const tarotPipelineDelta = applyEffectPipelineDelta(
+    cache.snapshot.selectedTarots,
+    cache.snapshot.tarotStacks,
+    cache.stages.StatsBuffReady,
+    statsBuffReadyDelta,
+    tarot_data,
+    {
+      percentBeforeByName: cache.stages.StatsTarotPercents,
+      outputsBeforeByName: cache.stages.StatsTarotOutputsBeforeByName,
+    },
+  )
+  const statsTarots = mergeRawStageStats(cache.stages.StatsTarots, tarotPipelineDelta.outputsDelta)
+  const statsDmgReadyDelta = mergeRawStageStats(
+    mergeRawStageStats(statsBuffReadyDelta, buffPipelineDelta.outputsDelta),
+    tarotPipelineDelta.outputsDelta,
+  )
+  const statsDmgReady = attachPlayerLevelStat(
+    mergeRawStageStats(cache.stages.StatsDmgReady, statsDmgReadyDelta),
+    cache.stages,
+  )
+
+  return {
+    cache: {
+      ...cache,
+      snapshot: {
+        ...cache.snapshot,
+        selectedTalents: Array.from(new Set(nextSelectedTalents)),
+      },
+      stages: {
+        ...cache.stages,
+        StatsTalents: mergeRawStageStats(cache.stages.StatsTalents, statsTalentDelta),
+        StatsConversionPercents: statsConversionPercents,
+        StatsBase: statsBase,
+        StatsXPen: statsXPen,
+        StatsConversionReady: statsConversionReady,
+        StatsConverted: statsConverted,
+        StatsBuffReady: statsBuffReady,
+        StatsBuffOutputsBeforeByName: buffPipelineDelta.outputsBeforeByName,
+        StatsBuffs: statsBuffs,
+        StatsTarotOutputsBeforeByName: tarotPipelineDelta.outputsBeforeByName,
+        StatsTarots: statsTarots,
+        StatsDmgReady: statsDmgReady,
+      },
+    },
+    statsDmgReadyDelta,
+  }
 }
 
 export function computeTalentToggledDmgReadyStats(

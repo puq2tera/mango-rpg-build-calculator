@@ -7,6 +7,7 @@ import { DUNGEON_UNLOCKS_STORAGE_KEY, isDungeonUnlockTag } from "@/app/data/dung
 import { talent_data } from "@/app/data/talent_data"
 import { allRacePrereqTokens, getRacePrereqTokens, race_data_by_tag, type RaceTag } from "@/app/data/race_data"
 import {
+  applyTalentToggleToBuildStatDeltaCache,
   computeBuildStatStages,
   computeTalentToggledDmgReadyStatsDelta,
   prepareBuildStatDeltaCache,
@@ -48,6 +49,36 @@ const isRaceTag = (value: string): value is RaceTag => value in race_data_by_tag
 const talentNames = Object.keys(talent_data)
 const defaultTalentOrder = new Map(talentNames.map((name, index) => [name, index]))
 
+function getSingleTalentToggle(
+  previousSelectedTalents: readonly string[],
+  nextSelectedTalents: readonly string[],
+): { talentName: string; wasSelected: boolean } | null {
+  const previousSet = new Set(previousSelectedTalents)
+  const nextSet = new Set(nextSelectedTalents)
+  const removedTalents = previousSelectedTalents.filter((talentName) => !nextSet.has(talentName))
+  const addedTalents = nextSelectedTalents.filter((talentName) => !previousSet.has(talentName))
+
+  if ((removedTalents.length + addedTalents.length) !== 1) {
+    return null
+  }
+
+  if (removedTalents.length === 1) {
+    return {
+      talentName: removedTalents[0],
+      wasSelected: true,
+    }
+  }
+
+  if (addedTalents.length === 1) {
+    return {
+      talentName: addedTalents[0],
+      wasSelected: false,
+    }
+  }
+
+  return null
+}
+
 function TalentsPageContent() {
   const [isHydrated, setIsHydrated] = useState(false)
   const [totalLevels, setTotalLevels] = useState(0)
@@ -71,6 +102,8 @@ function TalentsPageContent() {
   const averageDamageComputationIdRef = useRef(0)
   const pendingAverageDamageComputationIdRef = useRef<number | null>(null)
   const completedAverageDamageComputationIdRef = useRef(0)
+  const buildStatCacheRef = useRef<ReturnType<typeof prepareBuildStatDeltaCache> | null>(null)
+  const averageDamageCacheRef = useRef<ReturnType<typeof prepareAverageDamageDeltaCache> | null>(null)
 
   // Load selectedTalents on mount
   useEffect(() => {
@@ -136,47 +169,82 @@ function TalentsPageContent() {
     pendingAverageDamageComputationIdRef.current = null
 
     const selectedTalentNames = Array.from(selected)
-    const snapshot = readBuildSnapshot(localStorage)
-    snapshot.selectedTalents = selectedTalentNames
     const damageState = readDamageCalcState(localStorage)
-    const stages = computeBuildStatStages(snapshot, { selectedTalents: selectedTalentNames })
-    const deltaCache = prepareBuildStatDeltaCache(snapshot, stages)
-    const averageDamageCache = prepareAverageDamageDeltaCache(stages.StatsDmgReady, damageState)
-    const currentAverage = averageDamageCache.values.average
 
-    const computedChanges: Record<string, number> = {}
-    let index = 0
-    const chunkSize = 20
-
-    const computeChunk = () => {
-      if (cancelled) return
-
-      const maxIndex = Math.min(index + chunkSize, talentNames.length)
-      for (; index < maxIndex; index++) {
-        const talentName = talentNames[index]
-        const wasSelected = selected.has(talentName)
-        const nextAverage = calculateAverageDamageWithStatsDelta(
-          averageDamageCache,
-          computeTalentToggledDmgReadyStatsDelta(deltaCache, talentName, wasSelected),
-        )
-
-        computedChanges[talentName] = wasSelected
-          ? currentAverage - nextAverage
-          : nextAverage - currentAverage
-      }
-
-      if (index < talentNames.length) {
-        timeoutId = window.setTimeout(computeChunk, 0)
+    timeoutId = window.setTimeout(() => {
+      if (cancelled) {
         return
       }
 
-      startTransition(() => {
-        pendingAverageDamageComputationIdRef.current = computationId
-        setAverageDamageChanges(computedChanges)
-      })
-    }
+      const previousBuildStatCache = buildStatCacheRef.current
+      const previousAverageDamageCache = averageDamageCacheRef.current
+      const toggledTalent = previousBuildStatCache
+        ? getSingleTalentToggle(previousBuildStatCache.snapshot.selectedTalents, selectedTalentNames)
+        : null
 
-    timeoutId = window.setTimeout(computeChunk, 0)
+      let deltaCache: ReturnType<typeof prepareBuildStatDeltaCache>
+      let averageDamageCache: ReturnType<typeof prepareAverageDamageDeltaCache>
+
+      if (previousBuildStatCache && previousAverageDamageCache && toggledTalent) {
+        const result = applyTalentToggleToBuildStatDeltaCache(
+          previousBuildStatCache,
+          toggledTalent.talentName,
+          toggledTalent.wasSelected,
+          selectedTalentNames,
+        )
+
+        deltaCache = result.cache
+        averageDamageCache = prepareAverageDamageDeltaCache(deltaCache.stages.StatsDmgReady, damageState)
+      } else {
+        const snapshot = readBuildSnapshot(localStorage)
+        snapshot.selectedTalents = selectedTalentNames
+        const stages = computeBuildStatStages(snapshot, { selectedTalents: selectedTalentNames })
+        deltaCache = prepareBuildStatDeltaCache(snapshot, stages)
+        averageDamageCache = prepareAverageDamageDeltaCache(stages.StatsDmgReady, damageState)
+      }
+
+      if (cancelled) {
+        return
+      }
+
+      buildStatCacheRef.current = deltaCache
+      averageDamageCacheRef.current = averageDamageCache
+
+      const currentAverage = averageDamageCache.values.average
+      const computedChanges: Record<string, number> = {}
+      let index = 0
+      const chunkSize = 20
+
+      const computeChunk = () => {
+        if (cancelled) return
+
+        const maxIndex = Math.min(index + chunkSize, talentNames.length)
+        for (; index < maxIndex; index++) {
+          const talentName = talentNames[index]
+          const wasSelected = selected.has(talentName)
+          const nextAverage = calculateAverageDamageWithStatsDelta(
+            averageDamageCache,
+            computeTalentToggledDmgReadyStatsDelta(deltaCache, talentName, wasSelected),
+          )
+
+          computedChanges[talentName] = wasSelected
+            ? currentAverage - nextAverage
+            : nextAverage - currentAverage
+        }
+
+        if (index < talentNames.length) {
+          timeoutId = window.setTimeout(computeChunk, 0)
+          return
+        }
+
+        startTransition(() => {
+          pendingAverageDamageComputationIdRef.current = computationId
+          setAverageDamageChanges(computedChanges)
+        })
+      }
+
+      timeoutId = window.setTimeout(computeChunk, 0)
+    }, 0)
 
     return () => {
       cancelled = true

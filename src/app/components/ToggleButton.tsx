@@ -257,20 +257,21 @@ export function ToggleButton({
   const linkedSkillTooltip = getTalentLinkedSkillTooltip(talentName)
 
   const handleClick = () => {
-    const nextSelected = new Set(selected)
-    if (nextSelected.has(talentName)) {
-      nextSelected.delete(talentName)
-      console.log(`Removed ${talentName}`)
-    } else {
-      nextSelected.add(talentName)
-      console.log(`Added ${talentName}`)
-    }
+    setSelected((currentSelected) => {
+      const nextSelected = new Set(currentSelected)
 
-    setSelected(nextSelected)
-    // Update selectedTalents
-    localStorage.setItem("selectedTalents", JSON.stringify(Array.from(nextSelected)))
-    dispatchBuildSnapshotUpdated()
-    window.dispatchEvent(new Event("talentsUpdated"))
+      if (nextSelected.has(talentName)) {
+        nextSelected.delete(talentName)
+        console.log(`Removed ${talentName}`)
+      } else {
+        nextSelected.add(talentName)
+        console.log(`Added ${talentName}`)
+      }
+
+      localStorage.setItem("selectedTalents", JSON.stringify(Array.from(nextSelected)))
+      window.dispatchEvent(new Event("talentsUpdated"))
+      return nextSelected
+    })
   }
 
   const values: Record<string, ReactNode> = {
