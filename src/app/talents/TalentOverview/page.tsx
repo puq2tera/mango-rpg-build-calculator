@@ -37,7 +37,6 @@ export default function TalentOverview() {
           <LearnCommandOutput
             title="Talent Learn Commands"
             subtitle="Commands use the current selected talent list and are split at 300 characters."
-            orderedNames={orderedTalentNames}
             batches={commandBatches}
             maxLength={DEFAULT_LEARN_COMMAND_MAX_LENGTH}
             emptyMessage="No talents are selected."

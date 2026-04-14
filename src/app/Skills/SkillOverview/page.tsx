@@ -37,7 +37,6 @@ export default function SkillOverview() {
           <LearnCommandOutput
             title="Skill Learn Commands"
             subtitle="Commands use the current selected skill list and are split at 300 characters."
-            orderedNames={orderedSkillNames}
             batches={commandBatches}
             maxLength={DEFAULT_LEARN_COMMAND_MAX_LENGTH}
             emptyMessage="No skills are selected."
