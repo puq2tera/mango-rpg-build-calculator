@@ -60,7 +60,10 @@ const DERIVED_BUILD_STORAGE_KEYS = new Set([
   "StatsConverted",
   "StatsBuffReady",
   "StatsBuffPercents",
+  "StatsBuffOutputsBeforeByName",
   "StatsBuffs",
+  "StatsTarotPercents",
+  "StatsTarotOutputsBeforeByName",
   "StatsTarots",
   "StatsDmgReady",
 ])

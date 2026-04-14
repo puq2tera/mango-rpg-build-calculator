@@ -508,16 +508,140 @@ function applyThreatOffenseMultipliers(
   return result
 }
 
-type NormalizedDamageContext = {
+export type NormalizedDamageContext = {
   stats: Record<string, number>
   mainStat: string
   secondStat: string
   element: string
   penElement: string
   skillType: string
+  customSkillScaling: DamageCalcCustomSkillScaling
   inputs: DamageCalcInputs
   effectiveSkillDmg: number
   baseBreakdown: DamageBaseBreakdown
+}
+
+export type PreparedAverageDamageDeltaCache = {
+  stats: Record<string, number>
+  context: NormalizedDamageContext
+  skillTypeCritDamageStatNames: string[]
+  convertedSkillTypeCritDamageStatNames: string[]
+  skillTypeCritChanceStatNames: string[]
+  customSkillScalingSourceStatNames: string[]
+  baseDependencies: Set<string>
+  offenseDependencies: Set<string>
+  critDamageDependencies: Set<string>
+  critChanceDependencies: Set<string>
+  maxCritDependencies: Set<string>
+  values: {
+    nonCrit: number
+    crit: number
+    maxcrit: number
+    average: number
+    damageCritDamageMultiplier: number
+    skillTypeCritDamageMultiplier: number
+    overdriveMultiplier: number
+    nonCritWeight: number
+    critWeight: number
+    maxCritWeight: number
+  }
+}
+
+function addDependencyStat(target: Set<string>, statName: string | null | undefined): void {
+  if (statName) {
+    target.add(statName)
+  }
+}
+
+function addDependencyStats(target: Set<string>, statNames: readonly string[]): void {
+  for (const statName of statNames) {
+    target.add(statName)
+  }
+}
+
+function hasMeaningfulStatDelta(statsDelta: Record<string, number>): boolean {
+  return Object.values(statsDelta).some((value) => Number.isFinite(value) && Math.abs(value) >= 0.0001)
+}
+
+function hasAnyDependencyDelta(statsDelta: Record<string, number>, dependencies: ReadonlySet<string>): boolean {
+  for (const statName of dependencies) {
+    const value = statsDelta[statName]
+    if (Number.isFinite(value) && Math.abs(value) >= 0.0001) {
+      return true
+    }
+  }
+
+  return false
+}
+
+function getAdjustedStatValue(
+  stats: Record<string, number>,
+  statsDelta: Record<string, number>,
+  statName: string,
+): number {
+  return (stats[statName] ?? 0) + (statsDelta[statName] ?? 0)
+}
+
+function getAdjustedHighestStatValue(
+  stats: Record<string, number>,
+  statsDelta: Record<string, number>,
+  statNames: readonly string[],
+): number {
+  return statNames.reduce((highest, statName) => Math.max(highest, getAdjustedStatValue(stats, statsDelta, statName)), 0)
+}
+
+function getAdjustedTotalStatValue(
+  stats: Record<string, number>,
+  statsDelta: Record<string, number>,
+  statNames: readonly string[],
+): number {
+  return statNames.reduce((sum, statName) => sum + getAdjustedStatValue(stats, statsDelta, statName), 0)
+}
+
+function getDamageCalcCustomSkillScalingSourceStatNames(customSkillScaling: DamageCalcCustomSkillScaling): string[] {
+  if (customSkillScaling.stat === DAMAGE_CALC_CUSTOM_SKILL_SCALING_CUSTOM_SOURCE) {
+    return []
+  }
+
+  if (customSkillScaling.stat in dynamicSkillScalingSourceGroups) {
+    return [...dynamicSkillScalingSourceGroups[customSkillScaling.stat as keyof typeof dynamicSkillScalingSourceGroups]]
+  }
+
+  return [customSkillScaling.stat]
+}
+
+function getAdjustedDamageCalcCustomSkillScalingSourceValue(
+  stats: Record<string, number>,
+  statsDelta: Record<string, number>,
+  customSkillScaling: DamageCalcCustomSkillScaling,
+): number {
+  if (customSkillScaling.stat === DAMAGE_CALC_CUSTOM_SKILL_SCALING_CUSTOM_SOURCE) {
+    return customSkillScaling.customValue
+  }
+
+  if (customSkillScaling.stat in dynamicSkillScalingSourceGroups) {
+    return getAdjustedHighestStatValue(
+      stats,
+      statsDelta,
+      dynamicSkillScalingSourceGroups[customSkillScaling.stat as keyof typeof dynamicSkillScalingSourceGroups],
+    )
+  }
+
+  return getAdjustedStatValue(stats, statsDelta, customSkillScaling.stat)
+}
+
+function getAdjustedEffectiveSkillDmgPercent(
+  stats: Record<string, number>,
+  statsDelta: Record<string, number>,
+  inputs: DamageCalcInputs,
+  customSkillScaling: DamageCalcCustomSkillScaling,
+): number {
+  if (!customSkillScaling.enabled) {
+    return inputs.skillDmg
+  }
+
+  return getAdjustedDamageCalcCustomSkillScalingSourceValue(stats, statsDelta, customSkillScaling)
+    * (customSkillScaling.percent / 100)
 }
 
 function buildDamageContext(stats: Record<string, number>, state: DamageCalcState): NormalizedDamageContext {
@@ -578,6 +702,7 @@ function buildDamageContext(stats: Record<string, number>, state: DamageCalcStat
     element,
     penElement,
     skillType,
+    customSkillScaling,
     inputs,
     effectiveSkillDmg,
     baseBreakdown: {
@@ -619,6 +744,246 @@ function buildDamageContext(stats: Record<string, number>, state: DamageCalcStat
       dmgPercent,
     },
   }
+}
+
+function calculateNonCritDamage(baseBreakdown: DamageBaseBreakdown): number {
+  let dmg = baseBreakdown.mitigatedDamage
+  dmg = Math.floor(dmg * toMult(baseBreakdown.elementBonusPercent))
+  dmg = Math.floor(dmg * toMult(baseBreakdown.elementXDmgPercent))
+  dmg = Math.floor(dmg * baseBreakdown.penMultiplier)
+  dmg = Math.floor(dmg * toMult(baseBreakdown.globalSkillTypeDamagePercent))
+  dmg = Math.floor(dmg * toMult(baseBreakdown.dmgPercent))
+
+  return Math.max(0, dmg)
+}
+
+export function prepareAverageDamageDeltaCache(
+  stats: Record<string, number>,
+  state: DamageCalcState,
+): PreparedAverageDamageDeltaCache {
+  const context = buildDamageContext(stats, state)
+  const nonCrit = calculateNonCritDamage(context.baseBreakdown)
+  const result = finalizeDamageResult(nonCrit, context)
+  const skillTypeCritDamageStatNames = [...(skillCritDamageBonusStatsBySkillType[context.skillType] ?? [])]
+  const convertedSkillTypeCritDamageStatNames = skillTypeCritDamageStatNames.map((statName) => `__Converted ${statName}`)
+  const skillTypeCritChanceStatNames = [...(skillCritChanceStatsBySkillType[context.skillType] ?? [])]
+  const customSkillScalingSourceStatNames = getDamageCalcCustomSkillScalingSourceStatNames(context.customSkillScaling)
+  const baseDependencies = new Set<string>([
+    context.mainStat,
+    context.secondStat,
+    "ATK",
+    "DEF",
+    "MATK",
+    "HEAL",
+    "Armor Strike",
+    DAMAGE_CALC_PLAYER_LEVEL_STAT,
+  ])
+  const offenseDependencies = new Set<string>(["Dmg%", `${context.element} xDmg%`])
+  const critDamageDependencies = new Set<string>(["Crit DMG%"])
+  const critChanceDependencies = new Set<string>(["Crit Chance%"])
+  const maxCritDependencies = new Set<string>(["Overdrive%"])
+
+  addDependencyStats(baseDependencies, customSkillScalingSourceStatNames)
+  addDependencyStat(offenseDependencies, context.baseBreakdown.elementStatName)
+  addDependencyStat(offenseDependencies, context.baseBreakdown.skillElementStatName)
+  addDependencyStat(offenseDependencies, context.baseBreakdown.skillTypeDamageStatName)
+  addDependencyStat(offenseDependencies, context.baseBreakdown.penStatName)
+  if (context.baseBreakdown.skillTypeDamageStatName) {
+    offenseDependencies.add(`__Converted ${context.baseBreakdown.skillTypeDamageStatName}`)
+  }
+  addDependencyStats(critDamageDependencies, skillTypeCritDamageStatNames)
+  addDependencyStats(critDamageDependencies, convertedSkillTypeCritDamageStatNames)
+  if (stat_data.Elemental.includes(context.element)) {
+    critDamageDependencies.add("Elemental Crit DMG%")
+  }
+  if (context.element === "Holy") {
+    critDamageDependencies.add("Holy Crit DMG%")
+  }
+  addDependencyStats(critChanceDependencies, skillTypeCritChanceStatNames)
+
+  return {
+    stats,
+    context,
+    skillTypeCritDamageStatNames,
+    convertedSkillTypeCritDamageStatNames,
+    skillTypeCritChanceStatNames,
+    customSkillScalingSourceStatNames,
+    baseDependencies,
+    offenseDependencies,
+    critDamageDependencies,
+    critChanceDependencies,
+    maxCritDependencies,
+    values: {
+      nonCrit: result.nonCrit,
+      crit: result.crit,
+      maxcrit: result.maxcrit,
+      average: result.average,
+      damageCritDamageMultiplier: result.damageBreakdown.crit.damageCritDamageMultiplier,
+      skillTypeCritDamageMultiplier: result.damageBreakdown.crit.skillTypeCritDamageMultiplier,
+      overdriveMultiplier: result.damageBreakdown.maxcrit.overdriveMultiplier,
+      nonCritWeight: result.damageBreakdown.average.nonCritWeight,
+      critWeight: result.damageBreakdown.average.critWeight,
+      maxCritWeight: result.damageBreakdown.average.maxCritWeight,
+    },
+  }
+}
+
+export function calculateAverageDamageWithStatsDelta(
+  cache: PreparedAverageDamageDeltaCache,
+  statsDelta: Record<string, number>,
+): number {
+  if (!hasMeaningfulStatDelta(statsDelta)) {
+    return cache.values.average
+  }
+
+  const { stats, context } = cache
+  const { baseBreakdown, inputs, customSkillScaling } = context
+  const baseChanged = hasAnyDependencyDelta(statsDelta, cache.baseDependencies)
+  const offenseInputChanged = hasAnyDependencyDelta(statsDelta, cache.offenseDependencies)
+  const critDamageInputChanged = hasAnyDependencyDelta(statsDelta, cache.critDamageDependencies)
+  const critChanceInputChanged = hasAnyDependencyDelta(statsDelta, cache.critChanceDependencies)
+  const maxCritInputChanged = hasAnyDependencyDelta(statsDelta, cache.maxCritDependencies)
+
+  if (!baseChanged && !offenseInputChanged && !critDamageInputChanged && !critChanceInputChanged && !maxCritInputChanged) {
+    return cache.values.average
+  }
+
+  let mitigatedDamage = baseBreakdown.mitigatedDamage
+  if (baseChanged) {
+    const effectiveSkillDmg = getAdjustedEffectiveSkillDmgPercent(stats, statsDelta, inputs, customSkillScaling)
+    const mainStatValue = getAdjustedStatValue(stats, statsDelta, context.mainStat)
+    const secondStatValue = getAdjustedStatValue(stats, statsDelta, context.secondStat)
+    const baseRaw =
+      (mainStatValue * (effectiveSkillDmg / 100))
+      + (secondStatValue * ((inputs.secondSkillDmg ?? 0) / 100))
+    const baseDamage = Math.floor(baseRaw)
+    const armorBreakBase =
+      Math.floor((
+        getAdjustedStatValue(stats, statsDelta, "ATK")
+        + getAdjustedStatValue(stats, statsDelta, "DEF")
+        + getAdjustedStatValue(stats, statsDelta, "MATK")
+        + getAdjustedStatValue(stats, statsDelta, "HEAL")
+      ) / 4)
+      + getAdjustedStatValue(stats, statsDelta, "Armor Strike")
+    const rawSkillArmorBreakAmount = (inputs.enemyArmor ?? 0) * ((inputs.skillArmorBreak ?? 0) / 100)
+    const minimumSkillArmorBreak = Math.max(
+      0,
+      Math.floor(getAdjustedStatValue(stats, statsDelta, DAMAGE_CALC_PLAYER_LEVEL_STAT)),
+    )
+    const skillArmorBreakAmount =
+      (inputs.skillArmorBreak ?? 0) > 0
+        ? Math.max(minimumSkillArmorBreak, Math.floor(rawSkillArmorBreakAmount))
+        : Math.floor(rawSkillArmorBreakAmount)
+    const armorAfterSkillBreak = (inputs.enemyArmor ?? 0) - skillArmorBreakAmount
+    const armorBlock = truncateTowardZero(armorAfterSkillBreak * toRemainingPercent(inputs.armorIgnore))
+    const effectiveArmor = armorBlock - armorBreakBase
+
+    mitigatedDamage = baseDamage <= 0
+      ? 0
+      : Math.max(0, baseDamage - effectiveArmor)
+  }
+
+  let elementBonusPercent = baseBreakdown.elementBonusPercent
+  let elementXDmgPercent = baseBreakdown.elementXDmgPercent
+  let penMultiplier = baseBreakdown.penMultiplier
+  let globalSkillTypeDamagePercent = baseBreakdown.globalSkillTypeDamagePercent
+  let dmgPercent = baseBreakdown.dmgPercent
+  if (offenseInputChanged) {
+    const elementPercent = getAdjustedStatValue(stats, statsDelta, baseBreakdown.elementStatName)
+    const skillElementPercent = baseBreakdown.skillElementStatName
+      ? getAdjustedStatValue(stats, statsDelta, baseBreakdown.skillElementStatName)
+      : 0
+    const skillTypeDamagePercent = baseBreakdown.skillTypeDamageStatName
+      ? getAdjustedStatValue(stats, statsDelta, baseBreakdown.skillTypeDamageStatName)
+      : 0
+    const convertedSkillTypeDamagePercent = baseBreakdown.skillTypeDamageStatName
+      ? getAdjustedStatValue(stats, statsDelta, `__Converted ${baseBreakdown.skillTypeDamageStatName}`)
+      : 0
+    const penPercent = getAdjustedStatValue(stats, statsDelta, baseBreakdown.penStatName)
+
+    elementBonusPercent = elementPercent + skillElementPercent + convertedSkillTypeDamagePercent
+    elementXDmgPercent = getAdjustedStatValue(stats, statsDelta, `${context.element} xDmg%`)
+    penMultiplier = Math.max(
+      0,
+      1 + (((penPercent + (inputs.skillPen ?? 0)) / 100) - (baseBreakdown.effectiveEnemyRes / 100)),
+    )
+    globalSkillTypeDamagePercent = skillTypeDamagePercent - convertedSkillTypeDamagePercent
+    dmgPercent = getAdjustedStatValue(stats, statsDelta, "Dmg%")
+  }
+
+  const nonCritChanged = baseChanged || offenseInputChanged
+  const nonCrit = nonCritChanged
+    ? calculateNonCritDamage({
+      ...baseBreakdown,
+      mitigatedDamage,
+      elementBonusPercent,
+      elementXDmgPercent,
+      penMultiplier,
+      globalSkillTypeDamagePercent,
+      dmgPercent,
+    })
+    : cache.values.nonCrit
+
+  let damageCritDamageMultiplier = cache.values.damageCritDamageMultiplier
+  let skillTypeCritDamageMultiplier = cache.values.skillTypeCritDamageMultiplier
+  if (critDamageInputChanged) {
+    const skillTypeCritDamagePercent = getAdjustedTotalStatValue(
+      stats,
+      statsDelta,
+      cache.skillTypeCritDamageStatNames,
+    )
+    const convertedSkillTypeCritDamagePercent = getAdjustedTotalStatValue(
+      stats,
+      statsDelta,
+      cache.convertedSkillTypeCritDamageStatNames,
+    )
+    const globalSkillTypeCritDamagePercent = skillTypeCritDamagePercent - convertedSkillTypeCritDamagePercent
+    const elementalCritDamagePercent =
+      stat_data.Elemental.includes(context.element)
+        ? getAdjustedStatValue(stats, statsDelta, "Elemental Crit DMG%")
+        : 0
+    const holyCritDamagePercent =
+      context.element === "Holy"
+        ? getAdjustedStatValue(stats, statsDelta, "Holy Crit DMG%")
+        : 0
+    const baseCritDamagePercent = getAdjustedStatValue(stats, statsDelta, "Crit DMG%")
+    const skillTypeCritDamageBonus =
+      convertedSkillTypeCritDamagePercent
+      + elementalCritDamagePercent
+      + holyCritDamagePercent
+    const baseCritDamageBonus = baseCritDamagePercent + skillTypeCritDamageBonus
+
+    damageCritDamageMultiplier = Math.max(0, (baseCritDamageBonus / 100) * toMult(inputs.skillCritDmg ?? 0))
+    skillTypeCritDamageMultiplier = toMult(globalSkillTypeCritDamagePercent)
+  }
+
+  const crit = (nonCritChanged || critDamageInputChanged)
+    ? Math.floor(Math.floor(nonCrit * damageCritDamageMultiplier) * skillTypeCritDamageMultiplier)
+    : cache.values.crit
+
+  const overdriveMultiplier = maxCritInputChanged
+    ? Math.max(0, getAdjustedStatValue(stats, statsDelta, "Overdrive%") / 100)
+    : cache.values.overdriveMultiplier
+  const maxcrit = (nonCritChanged || critDamageInputChanged || maxCritInputChanged)
+    ? Math.floor(crit * overdriveMultiplier)
+    : cache.values.maxcrit
+
+  let nonCritWeight = cache.values.nonCritWeight
+  let critWeight = cache.values.critWeight
+  let maxCritWeight = cache.values.maxCritWeight
+  if (critChanceInputChanged) {
+    const skillTypeCritChancePercent = getAdjustedTotalStatValue(stats, statsDelta, cache.skillTypeCritChanceStatNames)
+    const baseCritChancePercent = getAdjustedStatValue(stats, statsDelta, "Crit Chance%")
+    const rawCritChancePercent = baseCritChancePercent + skillTypeCritChancePercent + (inputs.skillCritChance ?? 0)
+    const totalCritChance = rawCritChancePercent * stat_data.StatsInfo["Crit Chance%"].multi
+    const critChance = clamp(totalCritChance, 0, 2)
+
+    nonCritWeight = 1 - clamp(critChance, 0, 1)
+    maxCritWeight = clamp(critChance - 1, 0, 1)
+    critWeight = clamp(critChance, 0, 1) - maxCritWeight
+  }
+
+  return Math.floor(nonCrit * nonCritWeight + crit * critWeight + maxcrit * maxCritWeight)
 }
 
 function finalizeDamageResult(nonCrit: number, context: NormalizedDamageContext): DamageCalcResult {
@@ -814,16 +1179,7 @@ function finalizeDamageResult(nonCrit: number, context: NormalizedDamageContext)
 
 export function calculateDamage(stats: Record<string, number>, state: DamageCalcState): DamageCalcResult {
   const context = buildDamageContext(stats, state)
-  const { baseBreakdown } = context
-
-  let dmg = baseBreakdown.mitigatedDamage
-  dmg = Math.floor(dmg * toMult(baseBreakdown.elementBonusPercent))
-  dmg = Math.floor(dmg * toMult(baseBreakdown.elementXDmgPercent))
-  dmg = Math.floor(dmg * baseBreakdown.penMultiplier)
-  dmg = Math.floor(dmg * toMult(baseBreakdown.globalSkillTypeDamagePercent))
-  dmg = Math.floor(dmg * toMult(baseBreakdown.dmgPercent))
-
-  return finalizeDamageResult(Math.max(0, dmg), context)
+  return finalizeDamageResult(calculateNonCritDamage(context.baseBreakdown), context)
 }
 
 export function formatSignedDamageDelta(value: number | null): string {

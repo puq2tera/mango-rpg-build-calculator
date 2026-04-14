@@ -322,17 +322,18 @@ async function runLocalRouteBenchmarks(route: MonitoredRoute): Promise<PagePerfB
           const selectedTalentNames = snapshot.selectedTalents
           const stages = buildStatsModule.computeBuildStatStages(snapshot, { selectedTalents: selectedTalentNames })
           const deltaCache = buildStatsModule.prepareBuildStatDeltaCache(snapshot, stages)
-          const currentAverage = damageCalcModule.calculateDamage(stages.StatsDmgReady, damageState).average
+          const averageDamageCache = damageCalcModule.prepareAverageDamageDeltaCache(stages.StatsDmgReady, damageState)
+          const currentAverage = averageDamageCache.values.average
           let checksum = currentAverage
 
           for (let index = 0; index < talentNames.length; index += 1) {
             const talentName = talentNames[(index + sampleIndex) % talentNames.length]
             const wasSelected = selectedTalentNames.includes(talentName)
 
-            checksum += damageCalcModule.calculateDamage(
-              buildStatsModule.computeTalentToggledDmgReadyStats(deltaCache, talentName, wasSelected),
-              damageState,
-            ).average
+            checksum += damageCalcModule.calculateAverageDamageWithStatsDelta(
+              averageDamageCache,
+              buildStatsModule.computeTalentToggledDmgReadyStatsDelta(deltaCache, talentName, wasSelected),
+            )
           }
 
           return checksum

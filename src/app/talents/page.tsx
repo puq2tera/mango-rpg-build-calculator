@@ -8,11 +8,15 @@ import { talent_data } from "@/app/data/talent_data"
 import { allRacePrereqTokens, getRacePrereqTokens, race_data_by_tag, type RaceTag } from "@/app/data/race_data"
 import {
   computeBuildStatStages,
-  computeTalentToggledDmgReadyStats,
+  computeTalentToggledDmgReadyStatsDelta,
   prepareBuildStatDeltaCache,
   readBuildSnapshot,
 } from "@/app/lib/buildStats"
-import { calculateDamage, readDamageCalcState } from "@/app/lib/damageCalc"
+import {
+  calculateAverageDamageWithStatsDelta,
+  prepareAverageDamageDeltaCache,
+  readDamageCalcState,
+} from "@/app/lib/damageCalc"
 import { useManagedColumns } from "@/app/lib/managedColumns"
 import {
   persistTableScrollPosition,
@@ -137,7 +141,8 @@ function TalentsPageContent() {
     const damageState = readDamageCalcState(localStorage)
     const stages = computeBuildStatStages(snapshot, { selectedTalents: selectedTalentNames })
     const deltaCache = prepareBuildStatDeltaCache(snapshot, stages)
-    const currentAverage = calculateDamage(stages.StatsDmgReady, damageState).average
+    const averageDamageCache = prepareAverageDamageDeltaCache(stages.StatsDmgReady, damageState)
+    const currentAverage = averageDamageCache.values.average
 
     const computedChanges: Record<string, number> = {}
     let index = 0
@@ -150,10 +155,10 @@ function TalentsPageContent() {
       for (; index < maxIndex; index++) {
         const talentName = talentNames[index]
         const wasSelected = selected.has(talentName)
-        const nextAverage = calculateDamage(
-          computeTalentToggledDmgReadyStats(deltaCache, talentName, wasSelected),
-          damageState,
-        ).average
+        const nextAverage = calculateAverageDamageWithStatsDelta(
+          averageDamageCache,
+          computeTalentToggledDmgReadyStatsDelta(deltaCache, talentName, wasSelected),
+        )
 
         computedChanges[talentName] = wasSelected
           ? currentAverage - nextAverage

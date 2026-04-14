@@ -70,6 +70,20 @@ export type BuildSnapshot = {
 export type NamedStageStats = Record<string, Record<string, number>>
 export type ConversionPercentMap = Record<string, Record<string, number>>
 export type NamedConversionPercentMap = Record<string, ConversionPercentMap>
+type EffectSourceData = {
+  conversions?: Array<{
+    source: string
+    ratio: number
+    resulting_stat: string
+  }>
+  stack_conversions?: Array<{
+    source: string
+    ratio: number
+    resulting_stat: string
+  }>
+  stats?: Partial<Record<string, number>>
+  stack_stats?: Partial<Record<string, number>>
+}
 
 export type BuildStatStages = {
   StatsTalents: Record<string, number>
@@ -86,7 +100,10 @@ export type BuildStatStages = {
   StatsConverted: Record<string, number>
   StatsBuffReady: Record<string, number>
   StatsBuffPercents: Record<string, number>
+  StatsBuffOutputsBeforeByName: NamedStageStats
   StatsBuffs: Record<string, number>
+  StatsTarotPercents: Record<string, number>
+  StatsTarotOutputsBeforeByName: NamedStageStats
   StatsTarots: Record<string, number>
   StatsDmgReady: Record<string, number>
 }
@@ -506,6 +523,109 @@ const convertedSkillSpecificStats = new Set([
   "Dagger Crit DMG%",
 ])
 
+type EffectPipelineCache = {
+  outputs: Record<string, number>
+  percentBeforeByName: Record<string, number>
+  outputsBeforeByName: NamedStageStats
+}
+
+function applyConversionResultValue(targetDict: Record<string, number>, targetStat: string, resultValue: number): void {
+  if (!Number.isFinite(resultValue) || Math.abs(resultValue) < 0.0001) {
+    return
+  }
+
+  const affixInfo = stat_data.StatsInfo[targetStat as keyof typeof stat_data.StatsInfo]
+  const substats = affixInfo?.sub_stats
+
+  if (substats) {
+    for (const substat of substats) {
+      addRawStageStat(targetDict, substat, resultValue)
+    }
+  } else if (affixInfo) {
+    addRawStageStat(targetDict, targetStat, resultValue)
+  }
+
+  if (convertedSkillSpecificStats.has(targetStat)) {
+    addRawStageStat(targetDict, `__Converted ${targetStat}`, resultValue)
+  }
+}
+
+function applyFlatResultValue(targetDict: Record<string, number>, targetStat: string, resultValue: number): void {
+  if (!Number.isFinite(resultValue) || Math.abs(resultValue) < 0.0001) {
+    return
+  }
+
+  const affixInfo = stat_data.StatsInfo[targetStat as keyof typeof stat_data.StatsInfo]
+  const substats = affixInfo?.sub_stats
+
+  if (substats) {
+    for (const substat of substats) {
+      addRawStageStat(targetDict, substat, resultValue)
+    }
+  } else if (affixInfo) {
+    addRawStageStat(targetDict, targetStat, resultValue)
+  }
+}
+
+function getMergedEffectStatValue(
+  sourceStats: Record<string, number>,
+  outputsBefore: Record<string, number>,
+  sourceDelta: Record<string, number>,
+  outputsDeltaBefore: Record<string, number>,
+  stat: string,
+): { base: number; next: number } {
+  const base = (sourceStats[stat] ?? 0) + (outputsBefore[stat] ?? 0)
+  return {
+    base,
+    next: base + (sourceDelta[stat] ?? 0) + (outputsDeltaBefore[stat] ?? 0),
+  }
+}
+
+function getEffectSourceValues(
+  sourceStat: string,
+  sourceStats: Record<string, number>,
+  outputsBefore: Record<string, number>,
+  sourceDelta: Record<string, number>,
+  outputsDeltaBefore: Record<string, number>,
+): { base: number; next: number } {
+  const highest = (stats: readonly string[]) => stats.reduce(
+    (currentHighest, stat) => {
+      const value = getMergedEffectStatValue(sourceStats, outputsBefore, sourceDelta, outputsDeltaBefore, stat)
+      return {
+        base: Math.max(currentHighest.base, value.base),
+        next: Math.max(currentHighest.next, value.next),
+      }
+    },
+    { base: Number.NEGATIVE_INFINITY, next: Number.NEGATIVE_INFINITY },
+  )
+
+  switch (sourceStat) {
+    case "Highest Phys%":
+      return highest(["Slash%", "Pierce%", "Blunt%"])
+    case "Highest Phys Pen%":
+      return highest(["Slash Pen%", "Pierce Pen%", "Blunt Pen%"])
+    case "Highest Magic%":
+      return highest(["Fire%", "Water%", "Lightning%", "Wind%", "Earth%", "Toxic%", "Neg%", "Holy%", "Void%"])
+    case "Highest Magic Pen%":
+      return highest([
+        "Fire Pen%",
+        "Water Pen%",
+        "Lightning Pen%",
+        "Wind Pen%",
+        "Earth Pen%",
+        "Toxic Pen%",
+        "Neg Pen%",
+        "Holy Pen%",
+        "Void Pen%",
+      ])
+    case "Post Crit Chance%":
+      return getMergedEffectStatValue(sourceStats, outputsBefore, sourceDelta, outputsDeltaBefore, "Crit Chance%")
+    default: {
+      return getMergedEffectStatValue(sourceStats, outputsBefore, sourceDelta, outputsDeltaBefore, sourceStat)
+    }
+  }
+}
+
 function updateConversionSubStats(
   targetDict: Record<string, number>,
   sourceDict: Record<string, number>,
@@ -547,22 +667,8 @@ function updateConversionSubStats(
     }
   })()
 
-  const affixInfo = stat_data.StatsInfo[targetStat as keyof typeof stat_data.StatsInfo]
-  const substats = affixInfo?.sub_stats
   const resultValue = truncateTowardZero(sourceValue * (ratio * stackCount) * (1 + (buffPercent / 100)))
-  const convertedSkillSpecificStatName = `__Converted ${targetStat}`
-
-  if (substats) {
-    for (const substat of substats) {
-      targetDict[substat] = (targetDict[substat] ?? 0) + resultValue
-    }
-  } else if (affixInfo) {
-    targetDict[targetStat] = (targetDict[targetStat] ?? 0) + resultValue
-  }
-
-  if (convertedSkillSpecificStats.has(targetStat)) {
-    targetDict[convertedSkillSpecificStatName] = (targetDict[convertedSkillSpecificStatName] ?? 0) + resultValue
-  }
+  applyConversionResultValue(targetDict, targetStat, resultValue)
 }
 
 function updateFlatSubStats(
@@ -575,21 +681,12 @@ function updateFlatSubStats(
   buffPercentOverride?: number,
 ): void {
   const buffPercent = buffPercentOverride ?? ((sourceDict["Buff%"] ?? 0) + (targetDict["Buff%"] ?? 0))
-
   const affixInfo = stat_data.StatsInfo[targetStat as keyof typeof stat_data.StatsInfo]
-  const substats = affixInfo?.sub_stats
   const normalizedTargetValue = affixInfo?.multi === 0.01
     ? targetValue * flatStatScale
     : targetValue
   const resultValue = Math.floor(normalizedTargetValue * stackCount * (1 + (buffPercent / 100)))
-
-  if (substats) {
-    for (const substat of substats) {
-      targetDict[substat] = (targetDict[substat] ?? 0) + resultValue
-    }
-  } else if (affixInfo) {
-    targetDict[targetStat] = (targetDict[targetStat] ?? 0) + resultValue
-  }
+  applyFlatResultValue(targetDict, targetStat, resultValue)
 }
 
 function updateStats(
@@ -597,20 +694,7 @@ function updateStats(
   sourceDict: Record<string, number>,
   stackDict: Record<string, number>,
   sourceSkillName: string,
-  sourceSkillData?: {
-    conversions?: Array<{
-      source: string
-      ratio: number
-      resulting_stat: string
-    }>
-    stack_conversions?: Array<{
-      source: string
-      ratio: number
-      resulting_stat: string
-    }>
-    stats?: Partial<Record<string, number>>
-    stack_stats?: Partial<Record<string, number>>
-  },
+  sourceSkillData?: EffectSourceData,
   flatStatScale = 1,
   buffPercentOverride?: number,
 ): void {
@@ -655,6 +739,101 @@ function updateStats(
       )
     }
   }
+}
+
+function buildEffectPipelineCache(
+  selectedNames: readonly string[],
+  stackDict: Record<string, number>,
+  sourceStats: Record<string, number>,
+  sourceData: Record<string, EffectSourceData | undefined>,
+  flatStatScale = 1,
+  fixedPercentsByName?: Record<string, number>,
+): EffectPipelineCache {
+  const outputs: Record<string, number> = {}
+  const percentBeforeByName: Record<string, number> = {}
+  const outputsBeforeByName: NamedStageStats = {}
+  let currentBuffPercent = sourceStats["Buff%"] ?? 0
+
+  for (const name of selectedNames) {
+    outputsBeforeByName[name] = { ...outputs }
+
+    const effectPercent = fixedPercentsByName?.[name] ?? currentBuffPercent
+    percentBeforeByName[name] = effectPercent
+
+    const effectStats: Record<string, number> = {}
+    updateStats(effectStats, sourceStats, stackDict, name, sourceData[name], flatStatScale, effectPercent)
+
+    for (const [stat, value] of Object.entries(effectStats)) {
+      addRawStageStat(outputs, stat, value)
+    }
+
+    currentBuffPercent += effectStats["Buff%"] ?? 0
+  }
+
+  return {
+    outputs,
+    percentBeforeByName,
+    outputsBeforeByName,
+  }
+}
+
+function computeEffectDeltaStats(
+  selectedNames: readonly string[],
+  stackDict: Record<string, number>,
+  sourceStats: Record<string, number>,
+  sourceDelta: Record<string, number>,
+  sourceData: Record<string, EffectSourceData | undefined>,
+  pipelineCache: Pick<EffectPipelineCache, "percentBeforeByName" | "outputsBeforeByName">,
+): Record<string, number> {
+  const outputsDelta: Record<string, number> = {}
+
+  for (const name of selectedNames) {
+    const effectSourceData = sourceData[name]
+    if (!effectSourceData) {
+      continue
+    }
+
+    const effectPercent = pipelineCache.percentBeforeByName[name] ?? (sourceStats["Buff%"] ?? 0)
+    const outputsBefore = pipelineCache.outputsBeforeByName[name] ?? {}
+    const effectDelta: Record<string, number> = {}
+
+    for (const { source, ratio, resulting_stat } of effectSourceData.conversions ?? []) {
+      const values = getEffectSourceValues(source, sourceStats, outputsBefore, sourceDelta, outputsDelta)
+      if (values.base === values.next) {
+        continue
+      }
+
+      const multiplier = ratio * (1 + (effectPercent / 100))
+      const deltaValue =
+        truncateTowardZero(values.next * multiplier) - truncateTowardZero(values.base * multiplier)
+
+      applyConversionResultValue(effectDelta, resulting_stat, deltaValue)
+    }
+
+    for (const { source, ratio, resulting_stat } of effectSourceData.stack_conversions ?? []) {
+      const stackCount = stackDict[name] ?? 0
+      if (stackCount === 0) {
+        continue
+      }
+
+      const values = getEffectSourceValues(source, sourceStats, outputsBefore, sourceDelta, outputsDelta)
+      if (values.base === values.next) {
+        continue
+      }
+
+      const multiplier = ratio * stackCount * (1 + (effectPercent / 100))
+      const deltaValue =
+        truncateTowardZero(values.next * multiplier) - truncateTowardZero(values.base * multiplier)
+
+      applyConversionResultValue(effectDelta, resulting_stat, deltaValue)
+    }
+
+    for (const [stat, value] of Object.entries(effectDelta)) {
+      addRawStageStat(outputsDelta, stat, value)
+    }
+  }
+
+  return outputsDelta
 }
 
 function combineBaseStats(...sources: Record<string, number>[]): Record<string, number> {
@@ -989,6 +1168,68 @@ function computeConversionReadyStats(statsBase: Record<string, number>): Record<
   return statsConversionReady
 }
 
+function computeConversionReadyDelta(
+  statsBase: Record<string, number>,
+  statsConversionReady: Record<string, number>,
+  statsBaseDelta: Record<string, number>,
+): Record<string, number> {
+  const statsConversionReadyDelta: Record<string, number> = { ...statsBaseDelta }
+
+  for (const stat of stat_data.Mainstats) {
+    const baseDelta = statsBaseDelta[stat] ?? 0
+    const multiplierDelta = statsBaseDelta[`${stat}%`] ?? 0
+    const globalMultiplierDelta = statsBaseDelta[`Global ${stat}%`] ?? 0
+    const artifactMultiplierDelta = statsBaseDelta[`Art_${stat}%`] ?? 0
+
+    if (baseDelta === 0 && multiplierDelta === 0 && globalMultiplierDelta === 0 && artifactMultiplierDelta === 0) {
+      continue
+    }
+
+    const nextValue = Math.floor(
+      ((statsBase[stat] ?? 0) + baseDelta)
+      * (1 + (((statsBase[`${stat}%`] ?? 0) + multiplierDelta) / 100))
+      * (1 + (((statsBase[`Global ${stat}%`] ?? 0) + globalMultiplierDelta) / 100))
+      * (1 + (((statsBase[`Art_${stat}%`] ?? 0) + artifactMultiplierDelta) / 100)),
+    )
+
+    statsConversionReadyDelta[stat] = nextValue - (statsConversionReady[stat] ?? 0)
+  }
+
+  for (const stat of stat_data.AllElements) {
+    const penDelta = statsBaseDelta[`${stat} Pen%`] ?? 0
+    const xPenDelta = statsBaseDelta[`${stat} xPen%`] ?? 0
+
+    if (penDelta === 0 && xPenDelta === 0) {
+      continue
+    }
+
+    const nextValue = Math.floor(
+      ((statsBase[`${stat} Pen%`] ?? 0) + penDelta)
+      * (1 + (((statsBase[`${stat} xPen%`] ?? 0) + xPenDelta) / 100)),
+    )
+
+    statsConversionReadyDelta[`${stat} Pen%`] = nextValue - (statsConversionReady[`${stat} Pen%`] ?? 0)
+  }
+
+  for (const stat of ["HP", "MP", "Focus"] as const) {
+    const baseDelta = statsBaseDelta[stat] ?? 0
+    const multiplierDelta = statsBaseDelta[`${stat}%`] ?? 0
+
+    if (baseDelta === 0 && multiplierDelta === 0) {
+      continue
+    }
+
+    const nextValue = Math.floor(
+      ((statsBase[stat] ?? 0) + baseDelta)
+      * (1 + (((statsBase[`${stat}%`] ?? 0) + multiplierDelta) / 100)),
+    )
+
+    statsConversionReadyDelta[stat] = nextValue - (statsConversionReady[stat] ?? 0)
+  }
+
+  return statsConversionReadyDelta
+}
+
 function buildSelectedTalentConversionPercents(selectedTalentNames: readonly string[]): ConversionPercentMap {
   let selectedConversionPercents: ConversionPercentMap = {}
 
@@ -1000,6 +1241,40 @@ function buildSelectedTalentConversionPercents(selectedTalentNames: readonly str
   }
 
   return selectedConversionPercents
+}
+
+function computeConversionDeltaFromMaps(
+  sourceStats: Record<string, number>,
+  sourceDelta: Record<string, number>,
+  baseConversionPercents: ConversionPercentMap,
+  conversionPercentDelta: ConversionPercentMap = {},
+): Record<string, number> {
+  const convertedDelta: Record<string, number> = {}
+  const affectedSources = new Set<string>([
+    ...Object.keys(sourceDelta),
+    ...Object.keys(conversionPercentDelta),
+  ])
+
+  for (const source of affectedSources) {
+    const baseSourceValue = sourceStats[source] ?? 0
+    const nextSourceValue = baseSourceValue + (sourceDelta[source] ?? 0)
+    const baseTargets = baseConversionPercents[source] ?? {}
+    const ratioDeltaTargets = conversionPercentDelta[source] ?? {}
+    const affectedTargets = new Set<string>([
+      ...Object.keys(baseTargets),
+      ...Object.keys(ratioDeltaTargets),
+    ])
+
+    for (const resultingStat of affectedTargets) {
+      const baseRatio = baseTargets[resultingStat] ?? 0
+      const nextRatio = baseRatio + (ratioDeltaTargets[resultingStat] ?? 0)
+      const baseValue = baseRatio === 0 ? 0 : truncateTowardZero(baseSourceValue * baseRatio)
+      const nextValue = nextRatio === 0 ? 0 : truncateTowardZero(nextSourceValue * nextRatio)
+      addRawStageStat(convertedDelta, resultingStat, nextValue - baseValue)
+    }
+  }
+
+  return convertedDelta
 }
 
 function computeConvertedStatsFromPercents(
@@ -1042,34 +1317,10 @@ export function getOrderedBuffPercentBeforeByName(
   selectedNames: readonly string[],
   stackDict: Record<string, number>,
   sourceStats: Record<string, number>,
-  sourceData: Record<string, {
-    conversions?: Array<{
-      source: string
-      ratio: number
-      resulting_stat: string
-    }>
-    stack_conversions?: Array<{
-      source: string
-      ratio: number
-      resulting_stat: string
-    }>
-    stats?: Partial<Record<string, number>>
-    stack_stats?: Partial<Record<string, number>>
-  } | undefined>,
+  sourceData: Record<string, EffectSourceData | undefined>,
   flatStatScale = 1,
 ): Record<string, number> {
-  const result: Record<string, number> = {}
-  let currentBuffPercent = sourceStats["Buff%"] ?? 0
-
-  for (const name of selectedNames) {
-    result[name] = currentBuffPercent
-
-    const effectStats: Record<string, number> = {}
-    updateStats(effectStats, sourceStats, stackDict, name, sourceData[name], flatStatScale, currentBuffPercent)
-    currentBuffPercent += effectStats["Buff%"] ?? 0
-  }
-
-  return result
+  return buildEffectPipelineCache(selectedNames, stackDict, sourceStats, sourceData, flatStatScale).percentBeforeByName
 }
 
 function computeBuffStats(
@@ -1078,42 +1329,30 @@ function computeBuffStats(
   statsBuffReady: Record<string, number>,
   buffPercentBeforeByName?: Record<string, number>,
 ): Record<string, number> {
-  const buffed: Record<string, number> = {}
-  const orderedBuffPercents = buffPercentBeforeByName ?? getOrderedBuffPercentBeforeByName(
+  return buildEffectPipelineCache(
     selectedBuffNames,
     buffStacks,
     statsBuffReady,
     skill_data,
     100,
-  )
-
-  for (const skillName of selectedBuffNames) {
-    updateStats(
-      buffed,
-      statsBuffReady,
-      buffStacks,
-      skillName,
-      skill_data[skillName],
-      100,
-      orderedBuffPercents[skillName],
-    )
-  }
-
-  return buffed
+    buffPercentBeforeByName,
+  ).outputs
 }
 
 function computeTarotStats(
   selectedTarots: readonly string[],
   tarotStacks: Record<string, number>,
   statsBuffReady: Record<string, number>,
+  tarotPercentBeforeByName?: Record<string, number>,
 ): Record<string, number> {
-  const tarotBuff: Record<string, number> = {}
-
-  for (const tarotName of selectedTarots) {
-    updateStats(tarotBuff, statsBuffReady, tarotStacks, tarotName, tarot_data[tarotName])
-  }
-
-  return tarotBuff
+  return buildEffectPipelineCache(
+    selectedTarots,
+    tarotStacks,
+    statsBuffReady,
+    tarot_data,
+    1,
+    tarotPercentBeforeByName,
+  ).outputs
 }
 
 function computeDmgReadyStats(
@@ -1196,7 +1435,7 @@ export function prepareBuildStatDeltaCache(
   }
 }
 
-export function computeTalentToggledDmgReadyStats(
+export function computeTalentToggledDmgReadyStatsDelta(
   cache: BuildStatDeltaCache,
   talentName: string,
   wasSelected: boolean,
@@ -1206,38 +1445,61 @@ export function computeTalentToggledDmgReadyStats(
     cache.stages.StatsTalentConversionPercents[talentName] ?? {},
     wasSelected ? -1 : 1,
   )
-  const statsTalents = mergeRawStageStats(cache.stages.StatsTalents, statsTalentDelta)
-  const statsBase = combineBaseStats(
-    statsTalents,
-    cache.stages.StatsEquipment,
-    cache.stages.StatsLevels,
-    cache.stages.StatsRunes,
-    cache.stages.StatsArtifact,
+  const statsBaseDelta = combineBaseStats(statsTalentDelta)
+  const statsConversionReadyDelta = computeConversionReadyDelta(
+    cache.stages.StatsBase,
+    cache.stages.StatsConversionReady,
+    statsBaseDelta,
   )
-  const statsConversionReady = computeConversionReadyStats(statsBase)
-  const statsConversionPercents = mergeConversionPercentMaps(cache.stages.StatsConversionPercents, conversionPercentDelta)
-  const statsConverted = mergeRawStageStats(
-    applyRawStageStatOverrides(
-      computeConvertedStatsFromPercents(statsConversionReady, statsConversionPercents),
-      cache.stageStatOverrides.converted,
-    ),
-    cache.additionalStageStats.converted,
+  const statsConvertedDelta = computeConversionDeltaFromMaps(
+    cache.stages.StatsConversionReady,
+    statsConversionReadyDelta,
+    cache.stages.StatsConversionPercents,
+    conversionPercentDelta,
   )
-  const statsBuffReady = computeBuffReadyStats(statsConversionReady, statsConverted)
-  const statsBuffs = computeAdjustedBuffStats(
+  const statsBuffReadyDelta = mergeRawStageStats(
+    statsConversionReadyDelta,
+    expandCompoundStats(statsConvertedDelta),
+  )
+  const statsBuffsDelta = computeEffectDeltaStats(
     cache.snapshot.selectedBuffs,
     cache.snapshot.selectedBuffStacks,
-    statsBuffReady,
-    cache,
+    cache.stages.StatsBuffReady,
+    statsBuffReadyDelta,
+    skill_data,
+    {
+      percentBeforeByName: cache.stages.StatsBuffPercents,
+      outputsBeforeByName: cache.stages.StatsBuffOutputsBeforeByName,
+    },
   )
-  const statsTarots = computeAdjustedTarotStats(
+  const statsTarotsDelta = computeEffectDeltaStats(
     cache.snapshot.selectedTarots,
     cache.snapshot.tarotStacks,
-    statsBuffReady,
-    cache,
+    cache.stages.StatsBuffReady,
+    statsBuffReadyDelta,
+    tarot_data,
+    {
+      percentBeforeByName: cache.stages.StatsTarotPercents,
+      outputsBeforeByName: cache.stages.StatsTarotOutputsBeforeByName,
+    },
+  )
+  const statsDmgReadyDelta = mergeRawStageStats(
+    mergeRawStageStats(statsBuffReadyDelta, statsBuffsDelta),
+    statsTarotsDelta,
   )
 
-  return attachPlayerLevelStat(computeDmgReadyStats(statsBuffReady, statsBuffs, statsTarots), cache.stages)
+  return statsDmgReadyDelta
+}
+
+export function computeTalentToggledDmgReadyStats(
+  cache: BuildStatDeltaCache,
+  talentName: string,
+  wasSelected: boolean,
+): Record<string, number> {
+  return attachPlayerLevelStat(
+    mergeRawStageStats(cache.stages.StatsDmgReady, computeTalentToggledDmgReadyStatsDelta(cache, talentName, wasSelected)),
+    cache.stages,
+  )
 }
 
 export function computeBuffSelectionDmgReadyStats(
@@ -1334,23 +1596,31 @@ export function computeBuildStatStages(
     additionalStageStats.converted,
   )
   const statsBuffReady = computeBuffReadyStats(statsConversionReady, statsConverted)
-  const statsBuffPercents = getOrderedBuffPercentBeforeByName(
+  const buffPipelineCache = buildEffectPipelineCache(
     selectedBuffs,
     buffStacks,
     statsBuffReady,
     skill_data,
     100,
   )
+  const statsBuffPercents = buffPipelineCache.percentBeforeByName
   const statsBuffs = mergeExpandedStageStats(
     applyExpandedStageStatOverrides(
-      computeBuffStats(selectedBuffs, buffStacks, statsBuffReady, statsBuffPercents),
+      buffPipelineCache.outputs,
       stageStatOverrides.buffs,
     ),
     additionalStageStats.buffs,
   )
+  const tarotPipelineCache = buildEffectPipelineCache(
+    selectedTarots,
+    tarotStacks,
+    statsBuffReady,
+    tarot_data,
+  )
+  const statsTarotPercents = tarotPipelineCache.percentBeforeByName
   const statsTarots = mergeExpandedStageStats(
     applyExpandedStageStatOverrides(
-      computeTarotStats(selectedTarots, tarotStacks, statsBuffReady),
+      tarotPipelineCache.outputs,
       stageStatOverrides.tarots,
     ),
     additionalStageStats.tarots,
@@ -1376,7 +1646,10 @@ export function computeBuildStatStages(
     StatsConverted: statsConverted,
     StatsBuffReady: statsBuffReady,
     StatsBuffPercents: statsBuffPercents,
+    StatsBuffOutputsBeforeByName: buffPipelineCache.outputsBeforeByName,
     StatsBuffs: statsBuffs,
+    StatsTarotPercents: statsTarotPercents,
+    StatsTarotOutputsBeforeByName: tarotPipelineCache.outputsBeforeByName,
     StatsTarots: statsTarots,
     StatsDmgReady: statsDmgReady,
   }
