@@ -41,6 +41,7 @@ import {
   type ManualRangeClass,
 } from "../lib/manualLevelRanges"
 import { skill_data } from "../data/skill_data"
+import stat_data from "../data/stat_data"
 import { talent_data } from "../data/talent_data"
 import race_data, { race_data_by_tag, type RaceTag } from "../data/race_data"
 
@@ -130,6 +131,13 @@ function formatWhole(value: number): string {
   return Math.max(0, Math.round(value)).toLocaleString()
 }
 
+function formatPreciseNumber(value: number, maximumFractionDigits = 4): string {
+  return value.toLocaleString("en-US", {
+    minimumFractionDigits: 0,
+    maximumFractionDigits,
+  })
+}
+
 type Cls = ManualRangeClass
 type LevelsByClass = Record<Cls, number>
 
@@ -151,6 +159,7 @@ type LevelRequirementRowProps = {
   levels: LevelsByClass
   requiredLevelsByClass: LevelsByClass
   classLevelDeficit: LevelsByClass
+  classBonusSummary: string
   onLevelChange: (className: Cls, value: number) => void
 }
 
@@ -159,6 +168,7 @@ function LevelRequirementRow({
   levels,
   requiredLevelsByClass,
   classLevelDeficit,
+  classBonusSummary,
   onLevelChange,
 }: LevelRequirementRowProps) {
   const {
@@ -208,8 +218,41 @@ function LevelRequirementRow({
       </td>
       <td className="border px-2 py-1">{requiredLevelsByClass[classNameKey]}</td>
       <td className="border px-2 py-1">{classLevelDeficit[classNameKey]}</td>
+      <td className="border px-2 py-1 text-left">{classBonusSummary}</td>
     </tr>
   )
+}
+
+function truncateToDecimalPlaces(value: number, digits: number): number {
+  const multiplier = 10 ** digits
+  return Math.trunc(value * multiplier) / multiplier
+}
+
+function getComputedClassScalingGain(className: Cls, totalLevel: number): number {
+  const scalingStat = stat_data.ClassScalingStats[className]
+  const classValues = stat_data.ClassMainStatValues[className]
+
+  switch (className) {
+    case "tank":
+    case "caster":
+      return classValues[scalingStat] + Math.floor(classValues[`${scalingStat} Scaling`] * totalLevel)
+    case "warrior":
+      return Math.min(
+        0.155,
+        truncateToDecimalPlaces(classValues[scalingStat] + (classValues[`${scalingStat} Scaling`] * totalLevel), 4),
+      )
+    case "healer":
+      return classValues[scalingStat] + (classValues[`${scalingStat} Scaling`] * totalLevel)
+  }
+}
+
+function formatClassBonusSummary(className: Cls, value: number): string {
+  const statName = stat_data.ClassScalingStats[className]
+  const valueText = statName.endsWith("%")
+    ? `${formatPreciseNumber(value)}%`
+    : formatPreciseNumber(value)
+
+  return `${statName}: ${valueText}`
 }
 
 export default function LevelsPage() {
@@ -222,6 +265,7 @@ export default function LevelsPage() {
   const [selectedSkills, setSelectedSkills] = useState<string[]>([])
   const [classOrder, setClassOrder] = useState<Cls[]>([...manualRangeClasses])
   const [selectedRace, setSelectedRace] = useState<RaceTag>(DEFAULT_RACE)
+  const [showDungeonUnlocks, setShowDungeonUnlocks] = useState(false)
   const [loaded, setLoaded] = useState(false)
   const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 4 } }))
 
@@ -349,15 +393,14 @@ export default function LevelsPage() {
   const requiredLevelForTalentPoints = totalTalentPointsUsed * 2
   const totalSkillPointsRequired = totalSkillPointsUsed + totalTraining
   const requiredLevelForSkillPoints = totalSkillPointsRequired === 0 ? 0 : (totalSkillPointsRequired * 2) + 1
+  const requiredIsekaiForTalentPoints = Math.max(0, Math.ceil((requiredLevelForTalentPoints - 110) / 5))
+  const requiredIsekaiForSkillPoints = Math.max(0, Math.ceil((requiredLevelForSkillPoints - 110) / 5))
   const pointBasedRequiredLevel = Math.max(requiredLevelForTalentPoints, requiredLevelForSkillPoints)
   const totalRequiredLevel = Math.max(requiredTotalLevel, pointBasedRequiredLevel)
   const totalLevelDeficit = Math.max(0, totalRequiredLevel - totalLevels)
   const levelsNeeded = Math.max(totalLevelDeficit, classLevelsNeeded)
   const targetTotalLevels = totalLevels + levelsNeeded
   const requiredIsekaiLevel = Math.max(0, Math.ceil((targetTotalLevels - 110) / 5))
-
-  const skillPointDeficit = Math.max(0, totalSkillPointsRequired - availableSkillPoints)
-  const talentPointDeficit = Math.max(0, totalTalentPointsUsed - availableTalentPoints)
 
   const totalExpForLevels = cumulativeLevelExpCost(targetTotalLevels)
   const totalGoldForTraining = totalTraining * TRAINING_GOLD_PER_POINT
@@ -373,6 +416,21 @@ export default function LevelsPage() {
 
   const selectedRaceData = race_data_by_tag[selectedRace]
   const selectedRaceHeroPointGains = heroPointGainsByRace[selectedRace]
+  const classBonusTotals: Record<Cls, number> = {
+    tank: 0,
+    warrior: 0,
+    caster: 0,
+    healer: 0,
+  }
+
+  let runningTotalLevel = 0
+  for (const className of classOrder) {
+    const classLevels = Math.max(0, Math.floor(levels[className] ?? 0))
+    for (let index = 0; index < classLevels; index++) {
+      runningTotalLevel += 1
+      classBonusTotals[className] += getComputedClassScalingGain(className, runningTotalLevel)
+    }
+  }
 
   const renderHeroPointInput = ({ id, cost }: HeroPointStat) => (
     <div key={id} className={`border ${costClass(cost)}`}>
@@ -419,59 +477,83 @@ export default function LevelsPage() {
 
   return (
     <div className="p-4 space-y-6">
-      <h1 className="text-xl font-bold">Level Summary</h1>
-
-      <h2 className="text-lg font-bold">Race</h2>
-      <div className="max-w-3xl border p-3 space-y-2 bg-slate-900/60">
-        <div className="flex flex-col gap-2 md:flex-row md:items-center">
-          <label htmlFor="race-select" className="font-semibold">Selected Race</label>
-          <select
-            id="race-select"
-            value={selectedRace}
-            onChange={(e) => {
-              if (isRaceTag(e.target.value)) setSelectedRace(e.target.value)
-            }}
-            className="border px-2 py-1 bg-slate-900"
-          >
-            {race_data.map((race) => (
-              <option key={race.tag} value={race.tag}>{race.name}</option>
-            ))}
-          </select>
-          <span className="text-xs text-slate-300">Tag: {selectedRaceData.tag}</span>
-        </div>
-        <p className="text-sm text-slate-200">{selectedRaceData.description}</p>
+      <div className="flex flex-col gap-2 lg:flex-row lg:items-center">
+        <label htmlFor="race-select" className="font-semibold whitespace-nowrap">Selected Race</label>
+        <select
+          id="race-select"
+          value={selectedRace}
+          onChange={(e) => {
+            if (isRaceTag(e.target.value)) setSelectedRace(e.target.value)
+          }}
+          className="border px-2 py-1 bg-slate-900 lg:min-w-56"
+        >
+          {race_data.map((race) => (
+            <option key={race.tag} value={race.tag}>{race.name}</option>
+          ))}
+        </select>
+        <p className="text-sm text-slate-200 lg:min-w-0">{selectedRaceData.description}</p>
       </div>
 
-      <h2 className="text-lg font-bold">Dungeon Unlocks</h2>
-      <div className="max-w-6xl border p-3 space-y-3 bg-slate-900/60">
-        <div className="text-sm text-slate-300">
-          Selected: {selectedDungeonUnlocks.length} / {dungeonUnlockTags.length}
-        </div>
-        <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 xl:grid-cols-3">
-          {dungeonUnlockTags.map((tag) => {
-            const checked = selectedDungeonUnlockSet.has(tag)
-            const tooltip = dungeonUnlockTooltips[tag]
-            return (
-              <label
-                key={tag}
-                title={tooltip}
-                className={`flex cursor-pointer items-center gap-3 border px-3 py-2 transition ${
-                  checked
-                    ? "border-amber-700/70 bg-amber-900/30"
-                    : "border-slate-700 bg-slate-900/40 hover:bg-slate-800/65"
-                }`}
-              >
-                <input
-                  type="checkbox"
-                  checked={checked}
-                  onChange={() => toggleDungeonUnlock(tag)}
-                  className="h-4 w-4"
-                />
-                <span className="font-mono text-sm">{tag}</span>
-              </label>
-            )
-          })}
-        </div>
+      <div className="max-w-6xl border bg-slate-900/60">
+        <button
+          type="button"
+          onClick={() => setShowDungeonUnlocks((prev) => !prev)}
+          className="flex w-full items-center justify-between gap-3 px-3 py-3 text-left"
+          aria-expanded={showDungeonUnlocks}
+        >
+          <span className="text-lg font-bold">Dungeon Unlocks</span>
+          <span className="text-lg text-slate-300" aria-hidden="true">{showDungeonUnlocks ? "▾" : "▸"}</span>
+        </button>
+        {showDungeonUnlocks && (
+          <div className="space-y-3 border-t border-slate-700 px-3 py-3">
+            <div className="flex flex-col gap-2 text-sm text-slate-300 sm:flex-row sm:items-center sm:justify-between">
+              <span>
+                Selected: {selectedDungeonUnlocks.length} / {dungeonUnlockTags.length}
+              </span>
+              <div className="flex gap-2">
+                <button
+                  type="button"
+                  onClick={() => setSelectedDungeonUnlocks([...dungeonUnlockTags])}
+                  className="rounded border border-slate-500 px-2 py-1 text-slate-100 transition hover:bg-slate-800"
+                >
+                  Select All
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setSelectedDungeonUnlocks([])}
+                  className="rounded border border-slate-500 px-2 py-1 text-slate-100 transition hover:bg-slate-800"
+                >
+                  Deselect All
+                </button>
+              </div>
+            </div>
+            <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 xl:grid-cols-3">
+              {dungeonUnlockTags.map((tag) => {
+                const checked = selectedDungeonUnlockSet.has(tag)
+                const tooltip = dungeonUnlockTooltips[tag]
+                return (
+                  <label
+                    key={tag}
+                    title={tooltip}
+                    className={`flex cursor-pointer items-center gap-3 border px-3 py-2 transition ${
+                      checked
+                        ? "border-amber-700/70 bg-amber-900/30"
+                        : "border-slate-700 bg-slate-900/40 hover:bg-slate-800/65"
+                    }`}
+                  >
+                    <input
+                      type="checkbox"
+                      checked={checked}
+                      onChange={() => toggleDungeonUnlock(tag)}
+                      className="h-4 w-4"
+                    />
+                    <span className="font-mono text-sm">{tag}</span>
+                  </label>
+                )
+              })}
+            </div>
+          </div>
+        )}
       </div>
 
       <div className="space-y-2">
@@ -479,6 +561,13 @@ export default function LevelsPage() {
         <p className="text-sm text-slate-300">
           Set chosen class levels directly in this table. Drag rows by the handle to reorder the class list.
           The calculator applies class levels in the same top-to-bottom order shown here.
+        </p>
+        <p className="text-sm text-slate-300">
+          Base stats and HP from levels may be inaccurate due to RNG. You can input the exact values in{" "}
+          <Link href="/StatFix" className="text-sky-300 underline underline-offset-2 hover:text-sky-200">
+            Stat Fix
+          </Link>
+          .
         </p>
         <div className="overflow-x-auto">
           <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleClassOrderDragEnd}>
@@ -489,6 +578,7 @@ export default function LevelsPage() {
                   <th>Chosen</th>
                   <th>Required</th>
                   <th>Needed</th>
+                  <th>Bonus Stat</th>
                 </tr>
               </thead>
               <SortableContext items={classOrder} strategy={verticalListSortingStrategy}>
@@ -500,6 +590,7 @@ export default function LevelsPage() {
                       levels={levels}
                       requiredLevelsByClass={requiredLevelsByClass}
                       classLevelDeficit={classLevelDeficit}
+                      classBonusSummary={formatClassBonusSummary(classKey, classBonusTotals[classKey])}
                       onLevelChange={handleLevelChange}
                     />
                   ))}
@@ -507,12 +598,12 @@ export default function LevelsPage() {
               </SortableContext>
               <tbody>
                 <tr>
-                  <th colSpan={2} className="border px-2 py-1">Total Levels</th>
+                  <th colSpan={3} className="border px-2 py-1">Total Levels</th>
                   <th className="border px-2 py-1">Levels Needed</th>
                   <th className="border px-2 py-1">Isekai Level Required</th>
                 </tr>
                 <tr>
-                  <td colSpan={2} className="border px-2 py-1">{totalLevels}</td>
+                  <td colSpan={3} className="border px-2 py-1">{totalLevels}</td>
                   <td className="border px-2 py-1">{levelsNeeded}</td>
                   <td className="border px-2 py-1">{requiredIsekaiLevel}</td>
                 </tr>
@@ -529,7 +620,7 @@ export default function LevelsPage() {
             <th>Point Type</th>
             <th>Used</th>
             <th>Available</th>
-            <th>Needed</th>
+            <th>Isekai Required</th>
           </tr>
         </thead>
         <tbody>
@@ -537,13 +628,13 @@ export default function LevelsPage() {
             <td className="border px-2 py-1">Skill Points</td>
             <td className="border px-2 py-1">{totalSkillPointsRequired}</td>
             <td className="border px-2 py-1">{availableSkillPoints}</td>
-            <td className="border px-2 py-1">{skillPointDeficit}</td>
+            <td className="border px-2 py-1">{requiredIsekaiForSkillPoints}</td>
           </tr>
           <tr>
             <td className="border px-2 py-1">Talent Points</td>
             <td className="border px-2 py-1">{totalTalentPointsUsed}</td>
             <td className="border px-2 py-1">{availableTalentPoints}</td>
-            <td className="border px-2 py-1">{talentPointDeficit}</td>
+            <td className="border px-2 py-1">{requiredIsekaiForTalentPoints}</td>
           </tr>
         </tbody>
       </table>
@@ -560,6 +651,13 @@ export default function LevelsPage() {
       </table>
 
       <h2 className="text-lg font-bold">Stat Points</h2>
+      <p className="text-sm text-slate-300">
+        Base stat point values may be inaccurate due to RNG. You can input the exact values in{" "}
+        <Link href="/StatFix" className="text-sky-300 underline underline-offset-2 hover:text-sky-200">
+          Stat Fix
+        </Link>
+        .
+      </p>
       <table className="text-center text-sm border">
         <thead>
           <tr>
@@ -599,22 +697,31 @@ export default function LevelsPage() {
 
       <h2 className="text-lg font-bold">Hero Points</h2>
 
-      <table className="text-center text-sm border mb-2">
-        <thead>
-          <tr>
-            <th className="bg-amber-900/40 border">Chosen</th>
-            <th className="bg-amber-900/40 border">Available</th>
-            <th className="bg-amber-900/40 border">Remaining</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td className="border px-2 py-1">{totalHeroPoints}</td>
-            <td className="border px-2 py-1">{availableHeroPoints}</td>
-            <td className="border px-2 py-1">{remainingHeroPoints}</td>
-          </tr>
-        </tbody>
-      </table>
+      <div className="mb-2 flex flex-col gap-4 lg:flex-row lg:items-start">
+        <table className="text-center text-sm border">
+          <thead>
+            <tr>
+              <th className="bg-amber-900/40 border">Chosen</th>
+              <th className="bg-amber-900/40 border">Available</th>
+              <th className="bg-amber-900/40 border">Remaining</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td className="border px-2 py-1">{totalHeroPoints}</td>
+              <td className="border px-2 py-1">{availableHeroPoints}</td>
+              <td className="border px-2 py-1">{remainingHeroPoints}</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div className="w-40 border text-sm">
+          <div className="bg-slate-700/90 text-center font-bold">Key</div>
+          <div className="bg-emerald-900/45 px-2">1 point</div>
+          <div className="bg-amber-800/50 px-2">2 points</div>
+          <div className="bg-rose-800/55 px-2">3 points</div>
+        </div>
+      </div>
 
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
         <div>
@@ -638,12 +745,6 @@ export default function LevelsPage() {
         </div>
       </div>
 
-      <div className="w-40 border mt-4 text-sm">
-        <div className="bg-slate-700/90 text-center font-bold">Key</div>
-        <div className="bg-emerald-900/45 px-2">1 point</div>
-        <div className="bg-amber-800/50 px-2">2 points</div>
-        <div className="bg-rose-800/55 px-2">3 points</div>
-      </div>
     </div>
   )
 }
