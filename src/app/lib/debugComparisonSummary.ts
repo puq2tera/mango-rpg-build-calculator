@@ -259,15 +259,20 @@ function formatPercent(value: number, digits = 0): string {
   return `${formatted}%`
 }
 
-function formatPrecisePercent(value: number, maxDigits = 6): string {
+function formatCharacterCardOverdriveScalingPercent(value: number): string {
   if (!Number.isFinite(value)) {
     return "0%"
   }
 
-  return `${value.toLocaleString("en-US", {
-    minimumFractionDigits: 0,
-    maximumFractionDigits: maxDigits,
-  })}%`
+  return `${formatFixed(value, 5)}%`
+}
+
+function formatDungeonOverdriveScalingPercent(value: number): string {
+  if (!Number.isFinite(value)) {
+    return "0%"
+  }
+
+  return `${String(value / 100)}%`
 }
 
 function getStat(stats: Record<string, number>, key: string): number {
@@ -1017,7 +1022,7 @@ function getBaseDetailRows(baseStats: Record<string, number>): TerminalDetailRow
     },
     {
       label: "Overdrive Scaling",
-      value: formatPrecisePercent(getStat(baseStats, "Overdrive%") / 100),
+      value: formatCharacterCardOverdriveScalingPercent(getStat(baseStats, "Overdrive%")),
     },
     {
       label: "HP Regen/Rate",
@@ -1046,7 +1051,7 @@ function getDungeonDetailRows(stats: Record<string, number>): TerminalDetailRow[
     },
     {
       label: "Overdrive Scaling",
-      value: formatPrecisePercent(getStat(stats, "Overdrive%") / 100),
+      value: formatDungeonOverdriveScalingPercent(getStat(stats, "Overdrive%")),
     },
     {
       label: "HP Regen/Rate",

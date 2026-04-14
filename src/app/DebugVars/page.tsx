@@ -1961,7 +1961,7 @@ export default function DebugVarsPage() {
         {hasDungeonInput ? (
           <ComparisonBlock
             title="Dungeon Card Comparison"
-            subtitle="Compares the dungeon card against the calculator’s current dungeon values. Note: Overdrive Scaling is currently broken for dungeon output."
+            subtitle="Compares the dungeon card against the calculator’s current dungeon values."
           >
             <div className="grid gap-3 xl:grid-cols-2">
               {dungeonSections.map((section) => (

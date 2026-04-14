@@ -449,15 +449,20 @@ function formatPercent(value: number, digits = 0): string {
   return `${formatted}%`
 }
 
-function formatPrecisePercent(value: number, maxDigits = 6): string {
+function formatCharacterCardOverdriveScalingPercent(value: number): string {
   if (!Number.isFinite(value)) {
     return "0%"
   }
 
-  return `${value.toLocaleString("en-US", {
-    minimumFractionDigits: 0,
-    maximumFractionDigits: maxDigits,
-  })}%`
+  return `${formatFixed(value, 5)}%`
+}
+
+function formatDungeonOverdriveScalingPercent(value: number): string {
+  if (!Number.isFinite(value)) {
+    return "0%"
+  }
+
+  return `${String(value / 100)}%`
 }
 
 function isZeroStat(value: number): boolean {
@@ -1283,7 +1288,7 @@ function getBaseDetailRows(baseStats: Record<string, number>): TerminalDetailRow
     },
     {
       label: "Overdrive Scaling",
-      value: formatPrecisePercent(getStat(baseStats, "Overdrive%") / 100),
+      value: formatCharacterCardOverdriveScalingPercent(getStat(baseStats, "Overdrive%")),
     },
     {
       label: "HP Regen/Rate",
@@ -1312,7 +1317,7 @@ function getDungeonDetailRows(stats: Record<string, number>): TerminalDetailRow[
     },
     {
       label: "Overdrive Scaling",
-      value: formatPrecisePercent(getStat(stats, "Overdrive%") / 100),
+      value: formatDungeonOverdriveScalingPercent(getStat(stats, "Overdrive%")),
     },
     {
       label: "HP Regen/Rate",
@@ -2008,13 +2013,11 @@ export default function CharacterSummary() {
 
             <TerminalCard
               title="Character Card"
-              subtitle="Note: Lightning does not receive eleglobal correctly on the in-game charcard."
               mainRows={getBaseMainRows(baseStats, displayBaseStats, summary.charcardStages.StatsLevels)}
               detailRows={getBaseDetailRows(rawBaseCardStats)}
               typeRows={getTypeBonusRows(rawBaseCardStats, { maskVoidDamage: true, maskVoidPen: true })}
               elementRows={getElementRows(characterCardElementStats, {
                 addAllDamage: true,
-                omitAllDamageFor: ["Lightning"],
               })}
             />
 
