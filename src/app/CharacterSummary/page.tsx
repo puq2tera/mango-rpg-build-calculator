@@ -136,8 +136,7 @@ type FinalStatsSourceSection = {
 
 const cardClass =
   "relative overflow-hidden rounded-[26px] border border-slate-700/70 bg-slate-900/72 shadow-[0_18px_80px_rgba(2,6,23,0.45)] backdrop-blur"
-
-const IN_GAME_STATS_GROUP_STORAGE_KEY = "characterSummary:inGameStatsOpen"
+const compactCardClass = `${cardClass} w-fit max-w-full self-start`
 
 const profileDefaults: SummaryProfile = {
   raceName: "Northern Human",
@@ -620,24 +619,6 @@ function getRemainingFinalStatsColumns(stats: Record<string, number>): FinalStat
       key: stat,
       format: getFinalStatsColumnFormat(stat),
     }))
-}
-
-function readStoredDisclosureState(storageKey: string, fallback: boolean): boolean {
-  if (typeof window === "undefined") {
-    return fallback
-  }
-
-  const rawValue = window.localStorage.getItem(storageKey)
-
-  if (rawValue === "true") {
-    return true
-  }
-
-  if (rawValue === "false") {
-    return false
-  }
-
-  return fallback
 }
 
 function getVisibleFinalStatsColumns(
@@ -1395,55 +1376,6 @@ function DetailTile({
   )
 }
 
-function StatGroup({
-  title,
-  subtitle,
-  defaultOpen = true,
-  storageKey,
-  children,
-}: {
-  title: string
-  subtitle?: string
-  defaultOpen?: boolean
-  storageKey?: string
-  children: ReactNode
-}) {
-  const [isOpen, setIsOpen] = useState(() => storageKey ? readStoredDisclosureState(storageKey, defaultOpen) : defaultOpen)
-  const toggleOpen = () => {
-    setIsOpen((current) => {
-      const nextValue = !current
-
-      if (storageKey && typeof window !== "undefined") {
-        window.localStorage.setItem(storageKey, String(nextValue))
-      }
-
-      return nextValue
-    })
-  }
-
-  return (
-    <section className="overflow-hidden rounded-[30px] border border-slate-800/80 bg-slate-950/35 shadow-[0_18px_60px_rgba(2,6,23,0.22)]">
-      <div className={`flex flex-wrap items-center justify-between gap-3 ${isOpen ? "px-5 py-4 sm:px-6" : "px-4 py-2.5 sm:px-5"}`}>
-        <CardHeader title={title} subtitle={isOpen ? subtitle : undefined} />
-        <button
-          type="button"
-          onClick={toggleOpen}
-          aria-expanded={isOpen}
-          className="rounded-full border border-slate-700/80 bg-slate-900/80 px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.16em] text-slate-200 transition hover:border-sky-300/40 hover:text-sky-100"
-        >
-          {isOpen ? "Hide" : "Show"}
-        </button>
-      </div>
-
-      {isOpen ? (
-        <div className="border-t border-slate-800/70 p-4 sm:p-6">
-          {children}
-        </div>
-      ) : null}
-    </section>
-  )
-}
-
 function GuildCard({
   summary,
 }: {
@@ -1453,7 +1385,7 @@ function GuildCard({
   const levelStats = summary.charcardStages.StatsLevels
 
   return (
-    <section className={`${cardClass} p-5 sm:p-6`}>
+    <section className={`${compactCardClass} p-5 sm:p-6`}>
       <GlowLayer />
       <div className="relative space-y-5">
         <CardHeader
@@ -1505,9 +1437,9 @@ function TerminalCard({
   elementRows: ElementRow[]
 }) {
   return (
-    <section className={`${cardClass} p-5 sm:p-6`}>
+    <section className={`${compactCardClass} p-5 sm:p-6`}>
       <GlowLayer />
-      <div className="relative space-y-5">
+      <div className="relative max-w-full space-y-5">
         <CardHeader eyebrow={eyebrow} title={title} subtitle={subtitle} />
 
         <div className="rounded-2xl border border-slate-700/70 bg-slate-950/55 p-4 font-mono text-sm tabular-nums">
@@ -1900,9 +1832,9 @@ function BuffCard({
   summary: SummaryState
 }) {
   return (
-    <section className={`${cardClass} p-5 sm:p-6`}>
+    <section className={`${compactCardClass} p-5 sm:p-6`}>
       <GlowLayer />
-      <div className="relative space-y-5">
+      <div className="relative max-w-full space-y-5">
         <CardHeader
           title="Active Effects"
           subtitle="Marginal impact of each selected skill or tarot on the current build"
@@ -2064,27 +1996,27 @@ export default function CharacterSummary() {
   return (
     <div className="p-4 sm:p-6">
       <div className="space-y-6">
-        <StatGroup
-          title="In game stats"
-          subtitle="Current guild card, character card, dungeon card, and active effects"
-          storageKey={IN_GAME_STATS_GROUP_STORAGE_KEY}
-        >
-          <div className="space-y-6">
+        <section className="space-y-4">
+          <div className="px-1 sm:px-2">
+            <CardHeader
+              title="In game stats"
+              subtitle="Current guild card, character card, dungeon card, and active effects"
+            />
+          </div>
+          <div className="flex flex-wrap items-start gap-6">
             <GuildCard summary={summary} />
 
-            <div className="grid gap-6 xl:grid-cols-[0.92fr_1.08fr]">
-              <TerminalCard
-                title="Character Card"
-                subtitle="Note: Lightning does not receive eleglobal correctly on the in-game charcard."
-                mainRows={getBaseMainRows(baseStats, displayBaseStats, summary.charcardStages.StatsLevels)}
-                detailRows={getBaseDetailRows(rawBaseCardStats)}
-                typeRows={getTypeBonusRows(rawBaseCardStats, { maskVoidDamage: true, maskVoidPen: true })}
-                elementRows={getElementRows(characterCardElementStats, {
-                  addAllDamage: true,
-                  omitAllDamageFor: ["Lightning"],
-                })}
-              />
-            </div>
+            <TerminalCard
+              title="Character Card"
+              subtitle="Note: Lightning does not receive eleglobal correctly on the in-game charcard."
+              mainRows={getBaseMainRows(baseStats, displayBaseStats, summary.charcardStages.StatsLevels)}
+              detailRows={getBaseDetailRows(rawBaseCardStats)}
+              typeRows={getTypeBonusRows(rawBaseCardStats, { maskVoidDamage: true, maskVoidPen: true })}
+              elementRows={getElementRows(characterCardElementStats, {
+                addAllDamage: true,
+                omitAllDamageFor: ["Lightning"],
+              })}
+            />
 
             <TerminalCard
               title="Dungeon Character Card"
@@ -2096,7 +2028,7 @@ export default function CharacterSummary() {
 
             <BuffCard summary={summary} />
           </div>
-        </StatGroup>
+        </section>
 
         <MyConversionsCard summary={summary} />
 
