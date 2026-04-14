@@ -7,7 +7,12 @@ import { SkillButton } from "@/app/components/ToggleButton"
 import { DUNGEON_UNLOCKS_STORAGE_KEY, isDungeonUnlockTag } from "@/app/data/dungeon_unlocks"
 import { skill_data } from "@/app/data/skill_data"
 import { allRacePrereqTokens, getRacePrereqTokens, race_data_by_tag, type RaceTag } from "@/app/data/race_data"
-import { computeBuildStatStages, readBuildSnapshot } from "@/app/lib/buildStats"
+import {
+  computeBuildStatStages,
+  computeBuffSelectionDmgReadyStats,
+  prepareBuildStatDeltaCache,
+  readBuildSnapshot,
+} from "@/app/lib/buildStats"
 import { dispatchBuildSnapshotUpdated } from "@/app/lib/buildEvents"
 import { calculateDamage, readDamageCalcState } from "@/app/lib/damageCalc"
 import { readSelectedSkills, SKILL_SELECTION_STORAGE_KEY } from "@/app/lib/learnCommands"
@@ -169,10 +174,9 @@ function SkillsPageContent() {
     snapshot.selectedTraining = training
     const damageState = readDamageCalcState(localStorage)
     const selectedBuffNames = snapshot.selectedBuffs
-    const currentAverage = calculateDamage(
-      computeBuildStatStages(snapshot).StatsDmgReady,
-      damageState,
-    ).average
+    const stages = computeBuildStatStages(snapshot)
+    const deltaCache = prepareBuildStatDeltaCache(snapshot, stages)
+    const currentAverage = calculateDamage(stages.StatsDmgReady, damageState).average
 
     const computedChanges: Record<string, number> = {}
     let index = 0
@@ -195,7 +199,7 @@ function SkillsPageContent() {
         }
 
         const nextAverage = calculateDamage(
-          computeBuildStatStages(snapshot, { selectedBuffs: toggledSkills }).StatsDmgReady,
+          computeBuffSelectionDmgReadyStats(deltaCache, toggledSkills),
           damageState,
         ).average
 

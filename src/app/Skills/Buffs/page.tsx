@@ -7,7 +7,12 @@ import { DUNGEON_UNLOCKS_STORAGE_KEY, isDungeonUnlockTag } from "@/app/data/dung
 import { skill_data } from "@/app/data/skill_data"
 import { allRacePrereqTokens, getRacePrereqTokens, race_data_by_tag, type RaceTag } from "@/app/data/race_data"
 import { dispatchBuildSnapshotUpdated } from "@/app/lib/buildEvents"
-import { computeBuildStatStages, readBuildSnapshot } from "@/app/lib/buildStats"
+import {
+  computeBuildStatStages,
+  computeBuffSelectionDmgReadyStats,
+  prepareBuildStatDeltaCache,
+  readBuildSnapshot,
+} from "@/app/lib/buildStats"
 import { calculateDamage, readDamageCalcState } from "@/app/lib/damageCalc"
 import { readSelectedSkills } from "@/app/lib/learnCommands"
 import { useManagedColumns } from "@/app/lib/managedColumns"
@@ -144,13 +149,14 @@ export default function BuffsPage() {
     let cancelled = false
     let timeoutId: number | null = null
 
-    const snapshot = readBuildSnapshot(localStorage)
-    const damageState = readDamageCalcState(localStorage)
     const selectedBuffNames = Array.from(selected)
-    const currentAverage = calculateDamage(
-      computeBuildStatStages(snapshot, { selectedBuffs: selectedBuffNames, buffStacks }).StatsDmgReady,
-      damageState,
-    ).average
+    const snapshot = readBuildSnapshot(localStorage)
+    snapshot.selectedBuffs = selectedBuffNames
+    snapshot.selectedBuffStacks = buffStacks
+    const damageState = readDamageCalcState(localStorage)
+    const stages = computeBuildStatStages(snapshot, { selectedBuffs: selectedBuffNames, buffStacks })
+    const deltaCache = prepareBuildStatDeltaCache(snapshot, stages)
+    const currentAverage = calculateDamage(stages.StatsDmgReady, damageState).average
 
     const computedChanges: Record<string, number> = {}
     let index = 0
@@ -163,16 +169,12 @@ export default function BuffsPage() {
       for (; index < maxIndex; index++) {
         const buffName = buffNames[index]
         const wasSelected = selected.has(buffName)
-        const toggledBuffs = new Set(selectedBuffNames)
-
-        if (wasSelected) {
-          toggledBuffs.delete(buffName)
-        } else {
-          toggledBuffs.add(buffName)
-        }
-
         const nextAverage = calculateDamage(
-          computeBuildStatStages(snapshot, { selectedBuffs: toggledBuffs, buffStacks }).StatsDmgReady,
+          computeBuffSelectionDmgReadyStats(
+            deltaCache,
+            wasSelected ? selectedBuffNames.filter((name) => name !== buffName) : [...selectedBuffNames, buffName],
+            buffStacks,
+          ),
           damageState,
         ).average
 

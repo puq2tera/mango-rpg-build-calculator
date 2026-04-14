@@ -67,8 +67,15 @@ export type BuildSnapshot = {
   stageStatOverrides: StageStatOverrideEntry[]
 }
 
+export type NamedStageStats = Record<string, Record<string, number>>
+export type ConversionPercentMap = Record<string, Record<string, number>>
+export type NamedConversionPercentMap = Record<string, ConversionPercentMap>
+
 export type BuildStatStages = {
   StatsTalents: Record<string, number>
+  StatsTalentStats: NamedStageStats
+  StatsTalentConversionPercents: NamedConversionPercentMap
+  StatsConversionPercents: ConversionPercentMap
   StatsLevels: Record<string, number>
   StatsEquipment: Record<string, number>
   StatsRunes: Record<string, number>
@@ -78,6 +85,7 @@ export type BuildStatStages = {
   StatsConversionReady: Record<string, number>
   StatsConverted: Record<string, number>
   StatsBuffReady: Record<string, number>
+  StatsBuffPercents: Record<string, number>
   StatsBuffs: Record<string, number>
   StatsTarots: Record<string, number>
   StatsDmgReady: Record<string, number>
@@ -317,6 +325,99 @@ function applyExpandedStageStatOverrides(
   return merged
 }
 
+function scaleStageStats(sourceStats: Record<string, number>, multiplier: number): Record<string, number> {
+  if (multiplier === 1) {
+    return sourceStats
+  }
+
+  if (multiplier === 0) {
+    return {}
+  }
+
+  const scaled: Record<string, number> = {}
+
+  for (const [stat, value] of Object.entries(sourceStats)) {
+    addRawStageStat(scaled, stat, value * multiplier)
+  }
+
+  return scaled
+}
+
+function addConversionPercent(
+  targetMap: ConversionPercentMap,
+  sourceStat: string,
+  resultingStat: string,
+  ratio: number,
+): void {
+  if (!Number.isFinite(ratio) || Math.abs(ratio) < 0.0000001) {
+    return
+  }
+
+  const sourceEntry = targetMap[sourceStat] ?? {}
+  const nextRatio = (sourceEntry[resultingStat] ?? 0) + ratio
+
+  if (Math.abs(nextRatio) < 0.0000001) {
+    delete sourceEntry[resultingStat]
+  } else {
+    sourceEntry[resultingStat] = nextRatio
+  }
+
+  if (Object.keys(sourceEntry).length === 0) {
+    delete targetMap[sourceStat]
+    return
+  }
+
+  targetMap[sourceStat] = sourceEntry
+}
+
+function cloneConversionPercentMap(sourceMap: ConversionPercentMap): ConversionPercentMap {
+  return Object.entries(sourceMap).reduce<ConversionPercentMap>((result, [sourceStat, resultingStats]) => {
+    if (Object.keys(resultingStats).length > 0) {
+      result[sourceStat] = { ...resultingStats }
+    }
+    return result
+  }, {})
+}
+
+function mergeConversionPercentMaps(
+  baseMap: ConversionPercentMap,
+  addedMap: ConversionPercentMap,
+): ConversionPercentMap {
+  if (Object.keys(addedMap).length === 0) {
+    return baseMap
+  }
+
+  const merged = cloneConversionPercentMap(baseMap)
+
+  for (const [sourceStat, resultingStats] of Object.entries(addedMap)) {
+    for (const [resultingStat, ratio] of Object.entries(resultingStats)) {
+      addConversionPercent(merged, sourceStat, resultingStat, ratio)
+    }
+  }
+
+  return merged
+}
+
+function scaleConversionPercentMap(sourceMap: ConversionPercentMap, multiplier: number): ConversionPercentMap {
+  if (multiplier === 1) {
+    return sourceMap
+  }
+
+  if (multiplier === 0) {
+    return {}
+  }
+
+  const scaled: ConversionPercentMap = {}
+
+  for (const [sourceStat, resultingStats] of Object.entries(sourceMap)) {
+    for (const [resultingStat, ratio] of Object.entries(resultingStats)) {
+      addConversionPercent(scaled, sourceStat, resultingStat, ratio * multiplier)
+    }
+  }
+
+  return scaled
+}
+
 export function expandCompoundStats(
   sourceStats: Record<string, number>,
   options?: {
@@ -341,6 +442,56 @@ export function expandCompoundStats(
 
   return expanded
 }
+
+function buildTalentConversionPercentMap(
+  conversions: Array<{
+    source: string
+    ratio: number
+    resulting_stat: string
+  }> | undefined,
+): ConversionPercentMap {
+  const result: ConversionPercentMap = {}
+
+  for (const { source, ratio, resulting_stat } of conversions ?? []) {
+    addConversionPercent(result, source, resulting_stat, ratio)
+  }
+
+  return result
+}
+
+function buildTalentStageStatsByName(): NamedStageStats {
+  return Object.entries(talent_data).reduce<NamedStageStats>((result, [name, data]) => {
+    const normalizedStats = normalizeRawStageStats(
+      Object.entries(data.stats ?? {}).reduce<Record<string, number>>((stats, [stat, value]) => {
+        if (typeof value === "number" && Number.isFinite(value)) {
+          stats[stat] = value
+        }
+        return stats
+      }, {}),
+    )
+
+    if (Object.keys(normalizedStats).length > 0) {
+      result[name] = normalizedStats
+    }
+
+    return result
+  }, {})
+}
+
+function buildTalentConversionPercentsByName(): NamedConversionPercentMap {
+  return Object.entries(talent_data).reduce<NamedConversionPercentMap>((result, [name, data]) => {
+    const conversionPercents = buildTalentConversionPercentMap(data.conversions)
+
+    if (Object.keys(conversionPercents).length > 0) {
+      result[name] = conversionPercents
+    }
+
+    return result
+  }, {})
+}
+
+const allTalentStageStatsByName = buildTalentStageStatsByName()
+const allTalentConversionPercentsByName = buildTalentConversionPercentsByName()
 
 const convertedSkillSpecificStats = new Set([
   "Sword DMG%",
@@ -522,11 +673,11 @@ function computeTalentStats(snapshot: BuildSnapshot, selectedTalentNames: readon
   const stats: Record<string, number> = {}
 
   for (const name of selectedTalentNames) {
-    const data = talent_data[name]
-    if (!data) continue
+    const talentStats = allTalentStageStatsByName[name]
+    if (!talentStats) continue
 
-    for (const [stat, value] of Object.entries(data.stats)) {
-      stats[stat] = (stats[stat] ?? 0) + (value ?? 0)
+    for (const [stat, value] of Object.entries(talentStats)) {
+      stats[stat] = (stats[stat] ?? 0) + value
     }
   }
 
@@ -838,16 +989,34 @@ function computeConversionReadyStats(statsBase: Record<string, number>): Record<
   return statsConversionReady
 }
 
-function computeConvertedTalentStats(statsConversionReady: Record<string, number>, selectedTalentNames: readonly string[]): Record<string, number> {
-  const converted: Record<string, number> = {}
+function buildSelectedTalentConversionPercents(selectedTalentNames: readonly string[]): ConversionPercentMap {
+  let selectedConversionPercents: ConversionPercentMap = {}
 
   for (const name of selectedTalentNames) {
-    const data = talent_data[name]
-    if (!data || !Array.isArray(data.conversions)) continue
+    selectedConversionPercents = mergeConversionPercentMaps(
+      selectedConversionPercents,
+      allTalentConversionPercentsByName[name] ?? {},
+    )
+  }
 
-    for (const { source, ratio, resulting_stat } of data.conversions) {
-      const base = statsConversionReady[source] ?? 0
-      converted[resulting_stat] = (converted[resulting_stat] || 0) + truncateTowardZero(base * ratio)
+  return selectedConversionPercents
+}
+
+function computeConvertedStatsFromPercents(
+  statsConversionReady: Record<string, number>,
+  conversionPercents: ConversionPercentMap,
+): Record<string, number> {
+  const converted: Record<string, number> = {}
+
+  for (const [source, resultingStats] of Object.entries(conversionPercents)) {
+    const base = statsConversionReady[source] ?? 0
+
+    if (!Number.isFinite(base) || Math.abs(base) < 0.0001) {
+      continue
+    }
+
+    for (const [resultingStat, ratio] of Object.entries(resultingStats)) {
+      converted[resultingStat] = (converted[resultingStat] || 0) + truncateTowardZero(base * ratio)
     }
   }
 
@@ -907,9 +1076,10 @@ function computeBuffStats(
   selectedBuffNames: readonly string[],
   buffStacks: Record<string, number>,
   statsBuffReady: Record<string, number>,
+  buffPercentBeforeByName?: Record<string, number>,
 ): Record<string, number> {
   const buffed: Record<string, number> = {}
-  const buffPercentBeforeByName = getOrderedBuffPercentBeforeByName(
+  const orderedBuffPercents = buffPercentBeforeByName ?? getOrderedBuffPercentBeforeByName(
     selectedBuffNames,
     buffStacks,
     statsBuffReady,
@@ -925,7 +1095,7 @@ function computeBuffStats(
       skillName,
       skill_data[skillName],
       100,
-      buffPercentBeforeByName[skillName],
+      orderedBuffPercents[skillName],
     )
   }
 
@@ -964,8 +1134,140 @@ function computeDmgReadyStats(
   return result
 }
 
-// TODO: remove extraRawStats
-// Instead precalculate the skill and conversion % results so stats can be added without needed to recheck the full selected talents/buff/tarot/rune list
+export type BuildStatDeltaCache = {
+  snapshot: BuildSnapshot
+  stages: BuildStatStages
+  additionalStageStats: ReturnType<typeof groupAdditionalStageStatEntries>
+  stageStatOverrides: ReturnType<typeof groupStageStatOverrideEntries>
+}
+
+function attachPlayerLevelStat(statsDmgReady: Record<string, number>, stages: BuildStatStages): Record<string, number> {
+  statsDmgReady[DAMAGE_CALC_PLAYER_LEVEL_STAT] = stages.StatsDmgReady[DAMAGE_CALC_PLAYER_LEVEL_STAT] ?? 0
+  return statsDmgReady
+}
+
+function computeAdjustedBuffStats(
+  selectedBuffs: readonly string[],
+  buffStacks: Record<string, number>,
+  statsBuffReady: Record<string, number>,
+  cache: BuildStatDeltaCache,
+): Record<string, number> {
+  const buffPercents = getOrderedBuffPercentBeforeByName(
+    selectedBuffs,
+    buffStacks,
+    statsBuffReady,
+    skill_data,
+    100,
+  )
+
+  return mergeExpandedStageStats(
+    applyExpandedStageStatOverrides(
+      computeBuffStats(selectedBuffs, buffStacks, statsBuffReady, buffPercents),
+      cache.stageStatOverrides.buffs,
+    ),
+    cache.additionalStageStats.buffs,
+  )
+}
+
+function computeAdjustedTarotStats(
+  selectedTarots: readonly string[],
+  tarotStacks: Record<string, number>,
+  statsBuffReady: Record<string, number>,
+  cache: BuildStatDeltaCache,
+): Record<string, number> {
+  return mergeExpandedStageStats(
+    applyExpandedStageStatOverrides(
+      computeTarotStats(selectedTarots, tarotStacks, statsBuffReady),
+      cache.stageStatOverrides.tarots,
+    ),
+    cache.additionalStageStats.tarots,
+  )
+}
+
+export function prepareBuildStatDeltaCache(
+  snapshot: BuildSnapshot,
+  stages: BuildStatStages = computeBuildStatStages(snapshot),
+): BuildStatDeltaCache {
+  return {
+    snapshot,
+    stages,
+    additionalStageStats: groupAdditionalStageStatEntries(snapshot.additionalStageStats),
+    stageStatOverrides: groupStageStatOverrideEntries(snapshot.stageStatOverrides),
+  }
+}
+
+export function computeTalentToggledDmgReadyStats(
+  cache: BuildStatDeltaCache,
+  talentName: string,
+  wasSelected: boolean,
+): Record<string, number> {
+  const statsTalentDelta = scaleStageStats(cache.stages.StatsTalentStats[talentName] ?? {}, wasSelected ? -1 : 1)
+  const conversionPercentDelta = scaleConversionPercentMap(
+    cache.stages.StatsTalentConversionPercents[talentName] ?? {},
+    wasSelected ? -1 : 1,
+  )
+  const statsTalents = mergeRawStageStats(cache.stages.StatsTalents, statsTalentDelta)
+  const statsBase = combineBaseStats(
+    statsTalents,
+    cache.stages.StatsEquipment,
+    cache.stages.StatsLevels,
+    cache.stages.StatsRunes,
+    cache.stages.StatsArtifact,
+  )
+  const statsConversionReady = computeConversionReadyStats(statsBase)
+  const statsConversionPercents = mergeConversionPercentMaps(cache.stages.StatsConversionPercents, conversionPercentDelta)
+  const statsConverted = mergeRawStageStats(
+    applyRawStageStatOverrides(
+      computeConvertedStatsFromPercents(statsConversionReady, statsConversionPercents),
+      cache.stageStatOverrides.converted,
+    ),
+    cache.additionalStageStats.converted,
+  )
+  const statsBuffReady = computeBuffReadyStats(statsConversionReady, statsConverted)
+  const statsBuffs = computeAdjustedBuffStats(
+    cache.snapshot.selectedBuffs,
+    cache.snapshot.selectedBuffStacks,
+    statsBuffReady,
+    cache,
+  )
+  const statsTarots = computeAdjustedTarotStats(
+    cache.snapshot.selectedTarots,
+    cache.snapshot.tarotStacks,
+    statsBuffReady,
+    cache,
+  )
+
+  return attachPlayerLevelStat(computeDmgReadyStats(statsBuffReady, statsBuffs, statsTarots), cache.stages)
+}
+
+export function computeBuffSelectionDmgReadyStats(
+  cache: BuildStatDeltaCache,
+  selectedBuffs: Iterable<string>,
+  buffStacks: Record<string, number> = cache.snapshot.selectedBuffStacks,
+): Record<string, number> {
+  const nextSelectedBuffs = Array.from(new Set(selectedBuffs))
+  const statsBuffs = computeAdjustedBuffStats(nextSelectedBuffs, buffStacks, cache.stages.StatsBuffReady, cache)
+
+  return attachPlayerLevelStat(
+    computeDmgReadyStats(cache.stages.StatsBuffReady, statsBuffs, cache.stages.StatsTarots),
+    cache.stages,
+  )
+}
+
+export function computeTarotSelectionDmgReadyStats(
+  cache: BuildStatDeltaCache,
+  selectedTarots: Iterable<string>,
+  tarotStacks: Record<string, number> = cache.snapshot.tarotStacks,
+): Record<string, number> {
+  const nextSelectedTarots = Array.from(new Set(selectedTarots))
+  const statsTarots = computeAdjustedTarotStats(nextSelectedTarots, tarotStacks, cache.stages.StatsBuffReady, cache)
+
+  return attachPlayerLevelStat(
+    computeDmgReadyStats(cache.stages.StatsBuffReady, cache.stages.StatsBuffs, statsTarots),
+    cache.stages,
+  )
+}
+
 export function computeBuildStatStages(
   snapshot: BuildSnapshot,
   overrides?: {
@@ -991,6 +1293,9 @@ export function computeBuildStatStages(
   const extraRawStats = overrides?.extraRawStats ?? {}
   const additionalStageStats = groupAdditionalStageStatEntries(snapshot.additionalStageStats)
   const stageStatOverrides = groupStageStatOverrideEntries(snapshot.stageStatOverrides)
+  const statsTalentStats = allTalentStageStatsByName
+  const statsTalentConversionPercents = allTalentConversionPercentsByName
+  const statsConversionPercents = buildSelectedTalentConversionPercents(selectedTalents)
 
   const statsTalents = mergeRawStageStats(
     applyRawStageStatOverrides(
@@ -1023,15 +1328,22 @@ export function computeBuildStatStages(
   const statsConversionReady = computeConversionReadyStats(statsBase)
   const statsConverted = mergeRawStageStats(
     applyRawStageStatOverrides(
-      computeConvertedTalentStats(statsConversionReady, selectedTalents),
+      computeConvertedStatsFromPercents(statsConversionReady, statsConversionPercents),
       stageStatOverrides.converted,
     ),
     additionalStageStats.converted,
   )
   const statsBuffReady = computeBuffReadyStats(statsConversionReady, statsConverted)
+  const statsBuffPercents = getOrderedBuffPercentBeforeByName(
+    selectedBuffs,
+    buffStacks,
+    statsBuffReady,
+    skill_data,
+    100,
+  )
   const statsBuffs = mergeExpandedStageStats(
     applyExpandedStageStatOverrides(
-      computeBuffStats(selectedBuffs, buffStacks, statsBuffReady),
+      computeBuffStats(selectedBuffs, buffStacks, statsBuffReady, statsBuffPercents),
       stageStatOverrides.buffs,
     ),
     additionalStageStats.buffs,
@@ -1051,6 +1363,9 @@ export function computeBuildStatStages(
 
   return {
     StatsTalents: statsTalents,
+    StatsTalentStats: statsTalentStats,
+    StatsTalentConversionPercents: statsTalentConversionPercents,
+    StatsConversionPercents: statsConversionPercents,
     StatsLevels: statsLevels,
     StatsEquipment: statsEquipment,
     StatsRunes: statsRunes,
@@ -1060,6 +1375,7 @@ export function computeBuildStatStages(
     StatsConversionReady: statsConversionReady,
     StatsConverted: statsConverted,
     StatsBuffReady: statsBuffReady,
+    StatsBuffPercents: statsBuffPercents,
     StatsBuffs: statsBuffs,
     StatsTarots: statsTarots,
     StatsDmgReady: statsDmgReady,

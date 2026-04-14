@@ -320,24 +320,17 @@ async function runLocalRouteBenchmarks(route: MonitoredRoute): Promise<PagePerfB
         1,
         (sampleIndex) => {
           const selectedTalentNames = snapshot.selectedTalents
-          const currentAverage = damageCalcModule.calculateDamage(
-            buildStatsModule.computeBuildStatStages(snapshot, { selectedTalents: selectedTalentNames }).StatsDmgReady,
-            damageState,
-          ).average
+          const stages = buildStatsModule.computeBuildStatStages(snapshot, { selectedTalents: selectedTalentNames })
+          const deltaCache = buildStatsModule.prepareBuildStatDeltaCache(snapshot, stages)
+          const currentAverage = damageCalcModule.calculateDamage(stages.StatsDmgReady, damageState).average
           let checksum = currentAverage
 
           for (let index = 0; index < talentNames.length; index += 1) {
             const talentName = talentNames[(index + sampleIndex) % talentNames.length]
-            const toggledTalents = new Set(selectedTalentNames)
-
-            if (toggledTalents.has(talentName)) {
-              toggledTalents.delete(talentName)
-            } else {
-              toggledTalents.add(talentName)
-            }
+            const wasSelected = selectedTalentNames.includes(talentName)
 
             checksum += damageCalcModule.calculateDamage(
-              buildStatsModule.computeBuildStatStages(snapshot, { selectedTalents: toggledTalents }).StatsDmgReady,
+              buildStatsModule.computeTalentToggledDmgReadyStats(deltaCache, talentName, wasSelected),
               damageState,
             ).average
           }
@@ -373,10 +366,9 @@ async function runLocalRouteBenchmarks(route: MonitoredRoute): Promise<PagePerfB
             },
           }
           const selectedBuffNames = snapshot.selectedBuffs
-          const currentAverage = damageCalcModule.calculateDamage(
-            buildStatsModule.computeBuildStatStages(snapshot).StatsDmgReady,
-            damageState,
-          ).average
+          const stages = buildStatsModule.computeBuildStatStages(snapshot)
+          const deltaCache = buildStatsModule.prepareBuildStatDeltaCache(snapshot, stages)
+          const currentAverage = damageCalcModule.calculateDamage(stages.StatsDmgReady, damageState).average
           let checksum = currentAverage
 
           for (let index = 0; index < skillNames.length; index += 1) {
@@ -390,7 +382,7 @@ async function runLocalRouteBenchmarks(route: MonitoredRoute): Promise<PagePerfB
             }
 
             checksum += damageCalcModule.calculateDamage(
-              buildStatsModule.computeBuildStatStages(snapshot, { selectedBuffs: toggledSkills }).StatsDmgReady,
+              buildStatsModule.computeBuffSelectionDmgReadyStats(deltaCache, toggledSkills),
               damageState,
             ).average
           }

@@ -5,7 +5,12 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import { OverflowTitle } from "@/app/components/OverflowTitle"
 import { InteractiveTableHeader } from "@/app/components/InteractiveTableHeader"
 import tarot_data from "@/app/data/tarot_data"
-import { computeBuildStatStages, readBuildSnapshot } from "@/app/lib/buildStats"
+import {
+  computeBuildStatStages,
+  computeTarotSelectionDmgReadyStats,
+  prepareBuildStatDeltaCache,
+  readBuildSnapshot,
+} from "@/app/lib/buildStats"
 import { BUILD_SNAPSHOT_UPDATED_EVENT, dispatchBuildSnapshotUpdated } from "@/app/lib/buildEvents"
 import { calculateDamage, formatSignedDamageDelta, readDamageCalcState } from "@/app/lib/damageCalc"
 import {
@@ -230,13 +235,14 @@ function TarotCardsPageContent() {
     let cancelled = false
     let timeoutId: number | null = null
 
-    const snapshot = readBuildSnapshot(localStorage)
-    const damageState = readDamageCalcState(localStorage)
     const selectedTarotNames = Array.from(effectiveSelected)
-    const currentAverage = calculateDamage(
-      computeBuildStatStages(snapshot, { selectedTarots: selectedTarotNames, tarotStacks: stacks }).StatsDmgReady,
-      damageState,
-    ).average
+    const snapshot = readBuildSnapshot(localStorage)
+    snapshot.selectedTarots = selectedTarotNames
+    snapshot.tarotStacks = stacks
+    const damageState = readDamageCalcState(localStorage)
+    const stages = computeBuildStatStages(snapshot, { selectedTarots: selectedTarotNames, tarotStacks: stacks })
+    const deltaCache = prepareBuildStatDeltaCache(snapshot, stages)
+    const currentAverage = calculateDamage(stages.StatsDmgReady, damageState).average
 
     const computedChanges: Record<string, number> = {}
     let index = 0
@@ -249,16 +255,12 @@ function TarotCardsPageContent() {
       for (; index < maxIndex; index++) {
         const tarotName = tarotNames[index]
         const wasSelected = effectiveSelected.has(tarotName)
-        const toggledTarots = new Set(selectedTarotNames)
-
-        if (wasSelected) {
-          toggledTarots.delete(tarotName)
-        } else {
-          toggledTarots.add(tarotName)
-        }
-
         const nextAverage = calculateDamage(
-          computeBuildStatStages(snapshot, { selectedTarots: toggledTarots, tarotStacks: stacks }).StatsDmgReady,
+          computeTarotSelectionDmgReadyStats(
+            deltaCache,
+            wasSelected ? selectedTarotNames.filter((name) => name !== tarotName) : [...selectedTarotNames, tarotName],
+            stacks,
+          ),
           damageState,
         ).average
 

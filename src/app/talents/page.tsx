@@ -6,7 +6,12 @@ import { ToggleButton } from "@/app/components/ToggleButton"
 import { DUNGEON_UNLOCKS_STORAGE_KEY, isDungeonUnlockTag } from "@/app/data/dungeon_unlocks"
 import { talent_data } from "@/app/data/talent_data"
 import { allRacePrereqTokens, getRacePrereqTokens, race_data_by_tag, type RaceTag } from "@/app/data/race_data"
-import { computeBuildStatStages, readBuildSnapshot } from "@/app/lib/buildStats"
+import {
+  computeBuildStatStages,
+  computeTalentToggledDmgReadyStats,
+  prepareBuildStatDeltaCache,
+  readBuildSnapshot,
+} from "@/app/lib/buildStats"
 import { calculateDamage, readDamageCalcState } from "@/app/lib/damageCalc"
 import { useManagedColumns } from "@/app/lib/managedColumns"
 import {
@@ -126,13 +131,13 @@ function TalentsPageContent() {
     setIsAverageDamageReady(false)
     pendingAverageDamageComputationIdRef.current = null
 
-    const snapshot = readBuildSnapshot(localStorage)
-    const damageState = readDamageCalcState(localStorage)
     const selectedTalentNames = Array.from(selected)
-    const currentAverage = calculateDamage(
-      computeBuildStatStages(snapshot, { selectedTalents: selectedTalentNames }).StatsDmgReady,
-      damageState,
-    ).average
+    const snapshot = readBuildSnapshot(localStorage)
+    snapshot.selectedTalents = selectedTalentNames
+    const damageState = readDamageCalcState(localStorage)
+    const stages = computeBuildStatStages(snapshot, { selectedTalents: selectedTalentNames })
+    const deltaCache = prepareBuildStatDeltaCache(snapshot, stages)
+    const currentAverage = calculateDamage(stages.StatsDmgReady, damageState).average
 
     const computedChanges: Record<string, number> = {}
     let index = 0
@@ -145,16 +150,8 @@ function TalentsPageContent() {
       for (; index < maxIndex; index++) {
         const talentName = talentNames[index]
         const wasSelected = selected.has(talentName)
-        const toggledTalents = new Set(selectedTalentNames)
-
-        if (wasSelected) {
-          toggledTalents.delete(talentName)
-        } else {
-          toggledTalents.add(talentName)
-        }
-
         const nextAverage = calculateDamage(
-          computeBuildStatStages(snapshot, { selectedTalents: toggledTalents }).StatsDmgReady,
+          computeTalentToggledDmgReadyStats(deltaCache, talentName, wasSelected),
           damageState,
         ).average
 

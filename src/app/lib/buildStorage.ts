@@ -47,6 +47,9 @@ export type BuildExportSource = {
 const BUILD_MANAGER_KEY_PREFIX = "buildManager:"
 const DERIVED_BUILD_STORAGE_KEYS = new Set([
   "StatsTalents",
+  "StatsTalentStats",
+  "StatsTalentConversionPercents",
+  "StatsConversionPercents",
   "StatsLevels",
   "StatsEquipment",
   "StatsRunes",
@@ -56,6 +59,7 @@ const DERIVED_BUILD_STORAGE_KEYS = new Set([
   "StatsConversionReady",
   "StatsConverted",
   "StatsBuffReady",
+  "StatsBuffPercents",
   "StatsBuffs",
   "StatsTarots",
   "StatsDmgReady",
