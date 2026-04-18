@@ -53,6 +53,7 @@ const navGroups: readonly NavGroup[] = [
     label: "Builds",
     children: [
       { href: "/CopyPaste", label: "Copy Paste" },
+      { href: "/InGameImport", label: "In-Game Import" },
       { href: "/StatFix", label: "Stat Fix" },
       { href: "/Performance", label: "Performance" },
       { href: "/DebugVars", label: "Debug" },
