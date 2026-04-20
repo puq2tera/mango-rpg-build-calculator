@@ -332,8 +332,8 @@ export default function LevelsPage() {
   }
 
   const totalLevels = Object.values(levels).reduce((a, b) => a + b, 0)
-  const availableSkillPoints = Math.max(0, Math.floor((totalLevels - 1) / 2))
-  const availableTalentPoints = Math.floor(totalLevels / 2)
+  const availableSkillPoints = Math.max(0, Math.ceil(totalLevels / 2))
+  const availableTalentPoints = Math.max(0, Math.floor(totalLevels / 2))
   const totalStatPoints = totalLevels
   const usedStatPoints = Object.values(statPoints).reduce((a, b) => a + b, 0)
   const remainingStatPoints = totalStatPoints - usedStatPoints
@@ -392,7 +392,9 @@ export default function LevelsPage() {
   const classLevelsNeeded = classKeys.reduce((sum, className) => sum + classLevelDeficit[className], 0)
   const requiredLevelForTalentPoints = totalTalentPointsUsed * 2
   const totalSkillPointsRequired = totalSkillPointsUsed + totalTraining
-  const requiredLevelForSkillPoints = totalSkillPointsRequired === 0 ? 0 : (totalSkillPointsRequired * 2) + 1
+  const remainingSkillPoints = availableSkillPoints - totalSkillPointsRequired
+  const remainingTalentPoints = availableTalentPoints - totalTalentPointsUsed
+  const requiredLevelForSkillPoints = totalSkillPointsRequired === 0 ? 0 : Math.max(1, (totalSkillPointsRequired * 2) - 1)
   const requiredIsekaiForTalentPoints = Math.max(0, Math.ceil((requiredLevelForTalentPoints - 110) / 5))
   const requiredIsekaiForSkillPoints = Math.max(0, Math.ceil((requiredLevelForSkillPoints - 110) / 5))
   const pointBasedRequiredLevel = Math.max(requiredLevelForTalentPoints, requiredLevelForSkillPoints)
@@ -618,22 +620,25 @@ export default function LevelsPage() {
         <thead className="bg-slate-800/85">
           <tr>
             <th>Point Type</th>
-            <th>Used</th>
             <th>Available</th>
+            <th>Used</th>
+            <th>Remaining</th>
             <th>Isekai Required</th>
           </tr>
         </thead>
         <tbody>
           <tr>
             <td className="border px-2 py-1">Skill Points</td>
-            <td className="border px-2 py-1">{totalSkillPointsRequired}</td>
             <td className="border px-2 py-1">{availableSkillPoints}</td>
+            <td className="border px-2 py-1">{totalSkillPointsRequired}</td>
+            <td className="border px-2 py-1">{remainingSkillPoints}</td>
             <td className="border px-2 py-1">{requiredIsekaiForSkillPoints}</td>
           </tr>
           <tr>
             <td className="border px-2 py-1">Talent Points</td>
-            <td className="border px-2 py-1">{totalTalentPointsUsed}</td>
             <td className="border px-2 py-1">{availableTalentPoints}</td>
+            <td className="border px-2 py-1">{totalTalentPointsUsed}</td>
+            <td className="border px-2 py-1">{remainingTalentPoints}</td>
             <td className="border px-2 py-1">{requiredIsekaiForTalentPoints}</td>
           </tr>
         </tbody>

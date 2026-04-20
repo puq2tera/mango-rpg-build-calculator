@@ -236,7 +236,7 @@ function getOrderedUnionLabels<CalcRow extends { label: string }, InGameRow exte
   return labels
 }
 
-const defaultResourceCapComparisonLabels = new Set(["Mana", "Focus"])
+const defaultResourceCapComparisonLabels = new Set(["Health", "Mana", "Focus"])
 const dungeonResourceCapComparisonLabels = new Set(["Health", "Mana", "Focus"])
 
 function normalizeMainResourceComparableValue(
@@ -1728,7 +1728,7 @@ function getCharacterComparisonSections(calcCard: TerminalCardData, parsedCard: 
   return [
     {
       title: "Main Stats",
-      subtitle: "Health compares current HP to level HP and max HP to total HP. Mana and Focus use max caps when the paste shows current / max.",
+      subtitle: "Health, Mana, and Focus use max caps when the paste shows current / max.",
       rows: buildMainRowComparisonRows(calcCard.mainRows, parsedCard.mainRows),
     },
     {

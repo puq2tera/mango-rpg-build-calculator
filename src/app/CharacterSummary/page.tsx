@@ -1158,7 +1158,7 @@ function buildSummaryState(storage: Storage): SummaryState {
   const displayBaseStats = getDisplayBaseStats(charcardStages)
   const displayDungeonStats = getDisplayDungeonStats(snapshot, stages)
   const totalLevels = classKeys.reduce((total, classKey) => total + (snapshot.selectedLevels[classKey] ?? 0), 0)
-  const availableSkillPoints = Math.max(0, Math.floor((totalLevels - 1) / 2))
+  const availableSkillPoints = Math.max(0, Math.ceil(totalLevels / 2))
   const usedSkillPoints = getUsedSkillPoints(snapshot)
   const availableTalentPoints = Math.floor(totalLevels / 2)
   const usedTalentPoints = snapshot.selectedTalents.length
@@ -1252,12 +1252,11 @@ function getElementRows(
 function getBaseMainRows(
   valueStats: Record<string, number>,
   modifierStats: Record<string, number>,
-  healthCurrentStats: Record<string, number>,
 ): TerminalMainRow[] {
   return [
     {
       label: "Health",
-      value: `${formatWhole(getStat(healthCurrentStats, "HP"))} / ${formatWhole(getStat(valueStats, "HP"))}`,
+      value: formatWhole(getStat(valueStats, "HP")),
     },
     { label: "Mana", value: formatWhole(getStat(valueStats, "MP")) },
     { label: "Focus", value: formatWhole(getStat(valueStats, "Focus")) },
@@ -1387,7 +1386,6 @@ function GuildCard({
   summary: SummaryState
 }) {
   const baseStats = summary.charcardStages.StatsBase
-  const levelStats = summary.charcardStages.StatsLevels
 
   return (
     <section className={`${compactCardClass} p-5 sm:p-6`}>
@@ -1403,7 +1401,7 @@ function GuildCard({
             label="T/W/C/H Levels"
             value={classKeys.map((classKey) => formatWhole(summary.snapshot.selectedLevels[classKey] ?? 0)).join("/")}
           />
-          <DetailTile label="Health" value={`${formatWhole(getStat(levelStats, "HP"))} / ${formatWhole(getStat(baseStats, "HP"))}`} />
+          <DetailTile label="Health" value={formatWhole(getStat(baseStats, "HP"))} />
           <DetailTile label="Mana" value={formatWhole(getStat(baseStats, "MP"))} />
           <DetailTile label="ATK" value={formatWhole(getStat(baseStats, "ATK"))} />
           <DetailTile label="DEF" value={formatWhole(getStat(baseStats, "DEF"))} />
@@ -2013,7 +2011,7 @@ export default function CharacterSummary() {
 
             <TerminalCard
               title="Character Card"
-              mainRows={getBaseMainRows(baseStats, displayBaseStats, summary.charcardStages.StatsLevels)}
+              mainRows={getBaseMainRows(baseStats, displayBaseStats)}
               detailRows={getBaseDetailRows(rawBaseCardStats)}
               typeRows={getTypeBonusRows(rawBaseCardStats, { maskVoidDamage: true, maskVoidPen: true })}
               elementRows={getElementRows(characterCardElementStats, {
