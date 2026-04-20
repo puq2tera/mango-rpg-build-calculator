@@ -32,9 +32,10 @@ export function calculateHeroPointAvailability(
 ): HeroPointAvailability {
   const normalizedLevels = Number.isFinite(totalLevels) ? Math.max(0, Math.floor(totalLevels)) : 0
   const levelsAboveThreshold = Math.max(0, normalizedLevels - HERO_POINT_START_LEVEL)
-  const baseScaling = Math.ceil(levelsAboveThreshold / 2)
-  // Humanoids keep the shared every-other-level gain and also get +1 hero point per level above 100.
-  const humanScaling = isHumanRace(selectedRace) ? levelsAboveThreshold : 0
+  // Spreadsheet formula:
+  // MAX(0, (lvlTOTAL - 100) + IF(human, CEILING((lvlTOTAL - 100) / 2), 0) + talent bonus)
+  const baseScaling = levelsAboveThreshold
+  const humanScaling = isHumanRace(selectedRace) ? Math.ceil(levelsAboveThreshold / 2) : 0
   const talentBonus = getTalentHeroPointBonus(selectedTalentNames)
 
   return {
