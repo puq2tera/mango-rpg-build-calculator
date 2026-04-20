@@ -37,6 +37,13 @@ const gainPatterns: Record<Exclude<ManualRangeStatKey, "scalingGain">, RegExp> =
   matkGain: /\+MATK\s*([+-]?\d[\d,]*(?:\.\d+)?)/i,
   healGain: /\+Healpower\s*([+-]?\d[\d,]*(?:\.\d+)?)/i,
 }
+const gainLabelPatterns: Record<Exclude<ManualRangeStatKey, "scalingGain">, RegExp> = {
+  hpGain: /^\+HP\b/i,
+  atkGain: /^\+ATK\b/i,
+  defGain: /^\+DEF\b/i,
+  matkGain: /^\+MATK\b/i,
+  healGain: /^\+Healpower\b/i,
+}
 const scalingPatterns: Record<ManualRangeClass, RegExp> = {
   tank: /Acquired\s*\+([+-]?\d[\d,]*(?:\.\d+)?)\s*Armor Save/i,
   warrior: /Acquired\s*\+([+-]?\d[\d,]*(?:\.\d+)?)%\s*Overdrive Scaling/i,
@@ -62,10 +69,62 @@ function parseWholeNumber(raw: string): number {
   return Number.isFinite(normalized) ? normalized : 0
 }
 
-function parsePointGain(levelUpBlock: string, pointPattern: RegExp, singlePointGainPattern: RegExp): number | null {
+function getMeaningfulLines(text: string): string[] {
+  return text
+    .replace(/\r\n?/g, "\n")
+    .split("\n")
+    .map((line) => line.trim())
+    .filter((line) => line.length > 0)
+}
+
+function findNumericValueNearLabel(
+  lines: readonly string[],
+  labelPattern: RegExp,
+): number | null {
+  for (let index = 0; index < lines.length; index += 1) {
+    const line = lines[index]
+    if (!labelPattern.test(line)) {
+      continue
+    }
+
+    const inlineMatch = line.match(/([+-]?\d[\d,]*(?:\.\d+)?)/)
+    if (inlineMatch) {
+      return parseWholeNumber(inlineMatch[1])
+    }
+
+    for (let cursor = index + 1; cursor < Math.min(lines.length, index + 4); cursor += 1) {
+      const candidate = lines[cursor]
+      if (/^image$/i.test(candidate)) {
+        continue
+      }
+
+      const numericMatch = candidate.match(/([+-]?\d[\d,]*(?:\.\d+)?)/)
+      if (numericMatch) {
+        return parseWholeNumber(numericMatch[1])
+      }
+
+      break
+    }
+  }
+
+  return null
+}
+
+function parsePointGain(
+  levelUpBlock: string,
+  lines: readonly string[],
+  pointPattern: RegExp,
+  labelPattern: RegExp,
+  singlePointGainPattern: RegExp,
+): number | null {
   const match = levelUpBlock.match(pointPattern)
   if (match) {
     return parseWholeNumber(match[1])
+  }
+
+  const multilineValue = findNumericValueNearLabel(lines, labelPattern)
+  if (multilineValue !== null) {
+    return multilineValue
   }
 
   return singlePointGainPattern.test(levelUpBlock) ? 1 : null
@@ -89,6 +148,23 @@ function inferClassFromLevelUpBlock(levelUpBlock: string): ManualRangeClass | nu
   }
 
   return null
+}
+
+function inferClassFromMainStatTotals(totals: ParsedGainTotals): ManualRangeClass | null {
+  const candidates: Array<{ className: ManualRangeClass; value: number }> = [
+    { className: "warrior", value: totals.atkGain },
+    { className: "tank", value: totals.defGain },
+    { className: "caster", value: totals.matkGain },
+    { className: "healer", value: totals.healGain },
+  ]
+
+  const highestValue = Math.max(...candidates.map(({ value }) => value))
+  if (highestValue <= 0) {
+    return null
+  }
+
+  const highestCandidates = candidates.filter(({ value }) => value === highestValue)
+  return highestCandidates.length === 1 ? highestCandidates[0].className : null
 }
 
 function parseScalingGain(levelUpBlock: string, className: ManualRangeClass | null): number {
@@ -182,22 +258,37 @@ export function getManualRangeGain(
 }
 
 function parseLevelUpBlock(levelUpBlock: string, index: number): ParsedLevelUpBlock | null {
+  const lines = getMeaningfulLines(levelUpBlock)
   const totals = {} as ParsedGainTotals
 
   for (const [key, pattern] of Object.entries(gainPatterns) as Array<[Exclude<ManualRangeStatKey, "scalingGain">, RegExp]>) {
     const match = levelUpBlock.match(pattern)
-    if (!match) {
+    const multilineValue = match ? null : findNumericValueNearLabel(lines, gainLabelPatterns[key])
+
+    if (!match && multilineValue === null) {
       return null
     }
 
-    totals[key] = parseWholeNumber(match[1])
+    totals[key] = match ? parseWholeNumber(match[1]) : multilineValue ?? 0
   }
 
-  const inferredClass = inferClassFromLevelUpBlock(levelUpBlock)
+  const inferredClass = inferClassFromLevelUpBlock(levelUpBlock) ?? inferClassFromMainStatTotals(totals)
   totals.scalingGain = parseScalingGain(levelUpBlock, inferredClass)
 
-  const talentPointGain = parsePointGain(levelUpBlock, talentPointPattern, singleTalentPointGainPattern)
-  const skillPointGain = parsePointGain(levelUpBlock, skillPointPattern, singleSkillPointGainPattern)
+  const talentPointGain = parsePointGain(
+    levelUpBlock,
+    lines,
+    talentPointPattern,
+    /talent points?/i,
+    singleTalentPointGainPattern,
+  )
+  const skillPointGain = parsePointGain(
+    levelUpBlock,
+    lines,
+    skillPointPattern,
+    /skill points?/i,
+    singleSkillPointGainPattern,
+  )
   const levelCount =
     talentPointGain !== null || skillPointGain !== null
       ? (talentPointGain ?? 0) + (skillPointGain ?? 0)
@@ -209,7 +300,11 @@ function parseLevelUpBlock(levelUpBlock: string, index: number): ParsedLevelUpBl
     levelCount,
     totalLevel: (() => {
       const totalLevelMatch = levelUpBlock.match(totalLevelPattern)
-      return totalLevelMatch ? parseWholeNumber(totalLevelMatch[1]) : null
+      if (totalLevelMatch) {
+        return parseWholeNumber(totalLevelMatch[1])
+      }
+
+      return findNumericValueNearLabel(lines, /total level/i)
     })(),
     inferredClass,
   }

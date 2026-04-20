@@ -35,6 +35,7 @@ import {
 } from "@/app/lib/mainStatPoints"
 import {
   getManualRangeGain,
+  getManualRangeMaxTotalLevel,
   getManualRangeSpan,
   normalizeManualLevelRanges,
   parseManualLevelTranscript,
@@ -103,6 +104,7 @@ export type ParsedInGameNameList = {
   foundNames: string[]
   namesToApply: string[] | null
   pageCoverage: ParsedTranscriptPageCoverage | null
+  learnCommandCount: number
   warnings: string[]
 }
 
@@ -163,6 +165,10 @@ export type ParsedInGameImport = {
   warnings: string[]
 }
 
+export type ParseInGameImportOptions = {
+  fallbackManualLevelTotal?: number
+}
+
 export type AppliedInGameImport = {
   updatedSections: string[]
 }
@@ -214,12 +220,121 @@ const talentNameByNormalizedKey = new Map<string, string>(
   Object.keys(talent_data).map((name) => [normalizeDenseText(name), name]),
 )
 
+type RaceLookupEntry = {
+  normalizedKey: string
+  tag: RaceTag
+}
+
+const raceLookupEntries: readonly RaceLookupEntry[] = race_data.flatMap((race) => ([
+  { normalizedKey: normalizeDenseText(race.name), tag: race.tag },
+  { normalizedKey: normalizeDenseText(race.tag), tag: race.tag },
+]))
+
 const raceTagByNormalizedKey = new Map<string, RaceTag>(
-  race_data.flatMap((race) => ([
-    [normalizeDenseText(race.name), race.tag],
-    [normalizeDenseText(race.tag), race.tag],
-  ])),
+  raceLookupEntries.map(({ normalizedKey, tag }) => [normalizedKey, tag]),
 )
+
+function collectRaceTagsFromLabel(value: string): RaceTag[] {
+  const normalizedValue = normalizeDenseText(value)
+  const matches = raceLookupEntries
+    .filter(({ normalizedKey }) => (
+      normalizedValue === normalizedKey
+      || normalizedValue.startsWith(normalizedKey)
+    ))
+    .sort((left, right) => right.normalizedKey.length - left.normalizedKey.length)
+
+  return Array.from(new Set(matches.map(({ tag }) => tag)))
+}
+
+function buildRaceTagByNormalizedRacialTalentKey(): Map<string, RaceTag> {
+  const racialTalentEntries = Object.entries(talent_data)
+    .filter(([, entry]) => entry.category === "racial")
+    .map(([name, entry]) => ({
+      name,
+      prereqs: Array.isArray(entry.PreReq)
+        ? entry.PreReq.filter((prereq): prereq is string => typeof prereq === "string")
+        : [],
+    }))
+  const racialTalentNames = new Set(racialTalentEntries.map(({ name }) => name))
+  const adjacency = new Map<string, Set<string>>()
+
+  const ensureNode = (name: string) => {
+    if (!adjacency.has(name)) {
+      adjacency.set(name, new Set())
+    }
+  }
+
+  for (const { name, prereqs } of racialTalentEntries) {
+    ensureNode(name)
+
+    for (const prereq of prereqs) {
+      if (!racialTalentNames.has(prereq)) {
+        continue
+      }
+
+      ensureNode(prereq)
+      adjacency.get(name)?.add(prereq)
+      adjacency.get(prereq)?.add(name)
+    }
+  }
+
+  const visited = new Set<string>()
+  const mappedRaceTags = new Map<string, RaceTag>()
+
+  for (const { name } of racialTalentEntries) {
+    if (visited.has(name)) {
+      continue
+    }
+
+    const stack = [name]
+    const component: string[] = []
+
+    while (stack.length > 0) {
+      const current = stack.pop()
+      if (!current || visited.has(current)) {
+        continue
+      }
+
+      visited.add(current)
+      component.push(current)
+
+      for (const neighbor of adjacency.get(current) ?? []) {
+        if (!visited.has(neighbor)) {
+          stack.push(neighbor)
+        }
+      }
+    }
+
+    const inferredTags = Array.from(new Set(component.flatMap((entryName) => collectRaceTagsFromLabel(entryName))))
+    if (inferredTags.length !== 1) {
+      continue
+    }
+
+    for (const entryName of component) {
+      mappedRaceTags.set(normalizeDenseText(entryName), inferredTags[0])
+    }
+  }
+
+  return mappedRaceTags
+}
+
+const raceTagByNormalizedRacialTalentKey = buildRaceTagByNormalizedRacialTalentKey()
+
+function resolveGuildCardRaceTag(raceValue: string): RaceTag | null {
+  const normalizedRaceValue = normalizeDenseText(raceValue)
+  const directRaceTag = raceTagByNormalizedKey.get(normalizedRaceValue)
+  if (directRaceTag) {
+    return directRaceTag
+  }
+
+  const racialTalentRaceTag = raceTagByNormalizedRacialTalentKey.get(normalizedRaceValue)
+  if (racialTalentRaceTag) {
+    return racialTalentRaceTag
+  }
+
+  const inferredTags = collectRaceTagsFromLabel(raceValue)
+  return inferredTags.length === 1 ? inferredTags[0] : null
+}
 
 const equipmentTypeByNormalizedKey = new Map<string, typeof equipmentTypeOptions[number]>(
   equipmentTypeOptions.map((type) => [normalizeDenseText(type), type]),
@@ -343,11 +458,15 @@ function getMissingPages(totalPages: number, foundPages: readonly number[]): num
 }
 
 function isSkillBlock(block: string): boolean {
-  return /\bskill list\b/i.test(block) || /\bskillpage\b/i.test(block)
+  return /\bskill list\b/i.test(block)
+    || /\bskillpage\b/i.test(block)
+    || /\bcz\s+x?learnskill\b/i.test(block)
 }
 
 function isTalentBlock(block: string): boolean {
-  return /\btalent list\b/i.test(block) || /\btalentpage\b/i.test(block)
+  return /\btalent list\b/i.test(block)
+    || /\btalentpage\b/i.test(block)
+    || /\bcz\s+x?learntalent\b/i.test(block)
 }
 
 function isGuildCardBlock(block: string): boolean {
@@ -941,11 +1060,15 @@ function parseNameListFromBlocks(blocks: readonly string[], kind: PageImportKind
   const unknownNames = new Set<string>()
   const foundNames = new Set<string>()
   const foundPages = new Set<number>()
+  let learnCommandCount = 0
   let totalPages: number | null = null
 
   const lookup = kind === "skill" ? skillNameByNormalizedKey : talentNameByNormalizedKey
   const orderNames = kind === "skill" ? getOrderedSkillNames : getOrderedTalentNames
   const label = kind === "skill" ? "skill" : "talent"
+  const learnCommandRegex = kind === "skill"
+    ? /\bcz\s+x?learnskill\b\s+(.+)$/i
+    : /\bcz\s+x?learntalent\b\s+(.+)$/i
 
   for (const block of blocks) {
     const pageMatch = block.match(/\bPage\s+(\d+)\s*\/\s*(\d+)/i)
@@ -967,6 +1090,28 @@ function parseNameListFromBlocks(blocks: readonly string[], kind: PageImportKind
     }
 
     for (const line of getMeaningfulLines(block)) {
+      const learnCommandMatch = line.match(learnCommandRegex)
+      if (learnCommandMatch) {
+        const rawNames = learnCommandMatch[1]
+          .split(/\s*\/\s*/)
+          .map((entry) => entry.trim())
+          .filter((entry) => entry.length > 0)
+
+        if (rawNames.length > 0) {
+          learnCommandCount += 1
+        }
+
+        for (const rawName of rawNames) {
+          const canonicalName = lookup.get(normalizeDenseText(rawName))
+          if (canonicalName) {
+            foundNames.add(canonicalName)
+            continue
+          }
+
+          unknownNames.add(rawName)
+        }
+      }
+
       const lineMatch = line.match(/^◘\s*(.+?)\s*:/)
       if (!lineMatch) {
         continue
@@ -1006,7 +1151,7 @@ function parseNameListFromBlocks(blocks: readonly string[], kind: PageImportKind
   }
 
   if (blocks.length > 0 && orderedNames.length === 0) {
-    warnings.push(`No known ${label} names were found in the pasted ${label} pages.`)
+    warnings.push(`No known ${label} names were found in the pasted ${label} pages or learn commands.`)
   }
 
   for (const unknownName of unknownNames) {
@@ -1017,6 +1162,7 @@ function parseNameListFromBlocks(blocks: readonly string[], kind: PageImportKind
     foundNames: orderedNames,
     namesToApply: orderedNames.length > 0 && (!coverage || coverage.complete) ? orderedNames : null,
     pageCoverage: coverage,
+    learnCommandCount,
     warnings,
   }
 }
@@ -1040,7 +1186,7 @@ function parseGuildCardImport(block: string | null): ParsedGuildCardImport {
   const classLevelsValue = findValueAfterLabel(lines, (line) => line.includes("t w c h levels"))
   const skillTalentPointValue = findValueAfterLabel(lines, (line) => line.includes("skill talent points"))
 
-  const raceTag = raceValue ? (raceTagByNormalizedKey.get(normalizeDenseText(raceValue)) ?? null) : null
+  const raceTag = raceValue ? resolveGuildCardRaceTag(raceValue) : null
   if (raceValue && !raceTag) {
     warnings.push(`Unrecognized race "${raceValue}".`)
   }
@@ -1710,7 +1856,10 @@ function detectInGameImportInputs(rawText: string): InGameImportInputs {
   }
 }
 
-export function parseInGameImportInputs(inputs: InGameImportInputs): ParsedInGameImport {
+export function parseInGameImportInputs(
+  inputs: InGameImportInputs,
+  options: ParseInGameImportOptions = {},
+): ParsedInGameImport {
   const skillBlocks = splitTranscriptBlocks(inputs.skills).filter((block) => isSkillBlock(block) || block.length > 0)
   const talentBlocks = splitTranscriptBlocks(inputs.talents).filter((block) => isTalentBlock(block) || block.length > 0)
   const equipmentBlocks = splitTranscriptBlocks(inputs.equipment).filter((block) => block.length > 0)
@@ -1724,8 +1873,9 @@ export function parseInGameImportInputs(inputs: InGameImportInputs): ParsedInGam
   const statCard = parseStatCardImport(inputs.statCard.trim() || null)
   const artifact = parseArtifactImport(inputs.artifact.trim() || null)
   const tarots = parseTarotImport(inputs.tarots.trim() || null)
+  const fallbackManualLevelTotal = Math.max(0, Math.floor(options.fallbackManualLevelTotal ?? 0))
   const { ranges: manualLevelRanges, warnings: manualLevelWarnings } = hasLevelTranscript
-    ? parseManualLevelTranscript(preprocessLevelTranscript(inputs.levelUps))
+    ? parseManualLevelTranscript(preprocessLevelTranscript(inputs.levelUps), fallbackManualLevelTotal)
     : { ranges: [], warnings: [] }
   const { entries: manualTrainingEntries, warnings: trainingWarnings } = hasTrainingTranscript
     ? parseManualTrainingTranscript(preprocessTrainingTranscript(inputs.training))
@@ -1776,8 +1926,14 @@ export function parseInGameImportInputs(inputs: InGameImportInputs): ParsedInGam
   }
 }
 
-export function parseInGameImport(rawText: string): ParsedInGameImport {
-  return parseInGameImportInputs(detectInGameImportInputs(rawText))
+export function parseInGameImport(rawText: string, options: ParseInGameImportOptions = {}): ParsedInGameImport {
+  return parseInGameImportInputs(detectInGameImportInputs(rawText), options)
+}
+
+export function getStoredManualLevelFallbackTotal(storage: Storage): number {
+  return getManualRangeMaxTotalLevel(
+    normalizeManualLevelRanges(jsonParse(storage.getItem(MANUAL_LEVEL_RANGES_STORAGE_KEY), [])),
+  )
 }
 
 export function buildInGameImportCoverageRows(parsed: ParsedInGameImport): InGameImportCoverageRow[] {
@@ -1838,7 +1994,7 @@ export function buildInGameImportCoverageRows(parsed: ParsedInGameImport): InGam
   }
 
   if (parsed.guildCard.totalLevels !== null && parsed.guildCard.availableTalentPoints !== null) {
-    const expectedTalentPoints = Math.floor(parsed.guildCard.totalLevels / 2)
+    const expectedTalentPoints = Math.ceil(parsed.guildCard.totalLevels / 2)
     const spentTalentPoints = parsed.talents.foundNames.length
     const accountedTalentPoints = spentTalentPoints + parsed.guildCard.availableTalentPoints
     const gap = expectedTalentPoints - accountedTalentPoints
@@ -1850,13 +2006,17 @@ export function buildInGameImportCoverageRows(parsed: ParsedInGameImport): InGam
       accountedTalentPoints.toLocaleString("en-US"),
       formatSignedGap(gap),
       talentPageCommand,
-      `${spentTalentPoints} spent from pasted talents + ${parsed.guildCard.availableTalentPoints} left on the Guild Card.`,
+      gap > 0
+        ? `${spentTalentPoints} spent from pasted talents + ${parsed.guildCard.availableTalentPoints} left on the Guild Card. ${gap} more talent${gap === 1 ? "" : "s"} still missing.`
+        : gap < 0
+          ? `${spentTalentPoints} spent from pasted talents + ${parsed.guildCard.availableTalentPoints} left on the Guild Card. Over by ${Math.abs(gap)} talent${Math.abs(gap) === 1 ? "" : "s"}.`
+          : `${spentTalentPoints} spent from pasted talents + ${parsed.guildCard.availableTalentPoints} left on the Guild Card.`,
     ))
   } else {
     rows.push(createCoverageRow(
       "Talent Points",
       "needs-source",
-      parsed.guildCard.totalLevels !== null ? Math.floor(parsed.guildCard.totalLevels / 2).toLocaleString("en-US") : "Need Guild Card",
+      parsed.guildCard.totalLevels !== null ? Math.ceil(parsed.guildCard.totalLevels / 2).toLocaleString("en-US") : "Need Guild Card",
       parsed.talents.foundNames.length.toLocaleString("en-US"),
       "Unknown",
       parsed.guildCard.totalLevels === null ? "cz gc" : talentPageCommand,

@@ -25,6 +25,7 @@ import {
   type EquipmentImportTargetKey,
   type TarotImportRowKey,
   getHeroPointAccountingGap,
+  getStoredManualLevelFallbackTotal,
   getMissingClassLevelsByImportedRanges,
   getSkillPointAccountingGap,
   hasReadyInGameImport,
@@ -121,7 +122,7 @@ const CLEAR_EXISTING_BUILD_STORAGE_KEYS = [
   ADDITIONAL_STAGE_STATS_STORAGE_KEY,
   STAGE_STAT_OVERRIDES_STORAGE_KEY,
 ] as const
-const searchCommandSectionKeys = new Set<keyof InGameImportPageInputs>(["levelUps", "training", "heroTraining"])
+const searchCommandSectionKeys = new Set<keyof InGameImportPageInputs>(["skills", "talents", "levelUps", "training", "heroTraining"])
 const equipmentCommandSlotOrder: readonly EquipmentImportRowConfig[] = [
   { label: "Helm", commandType: "Helm", importTarget: "Helm" },
   { label: "Armor", commandType: "Armor", importTarget: "Armor" },
@@ -199,19 +200,30 @@ Low : 9
     minHeightClass: "min-h-[14rem]",
   },
   {
+    key: "training",
+    title: "Training",
+    subtitle: "Optional. Adds imported `training` or `xtraining` results onto current training.",
+    command: "cz xtraining",
+    placeholder: `cz xtraining
+Training Complete!
+[ atk ] Training
++4`,
+    minHeightClass: "min-h-[12rem]",
+  },
+  {
     key: "skills",
     title: "Skill Pages",
-    subtitle: "Paste each `skillpage` result into its matching page row.",
+    subtitle: "Paste each `skillpage` result into its matching page row, or paste `learnskill` / `xlearnskill` commands into any row.",
     command: "cz skillpage 1",
-    placeholder: "Paste a `skillpage` result into the matching row below.",
+    placeholder: "Paste a `skillpage` result or `learnskill` / `xlearnskill` command into a row below.",
     minHeightClass: "min-h-[14rem]",
   },
   {
     key: "talents",
     title: "Talent Pages",
-    subtitle: "Paste each `talentpage` result into its matching page row.",
+    subtitle: "Paste each `talentpage` result into its matching page row, or paste `learntalent` / `xlearntalent` commands into any row.",
     command: "cz talentpage 1",
-    placeholder: "Paste a `talentpage` result into the matching row below.",
+    placeholder: "Paste a `talentpage` result or `learntalent` / `xlearntalent` command into a row below.",
     minHeightClass: "min-h-[14rem]",
   },
   {
@@ -225,17 +237,6 @@ Total Level
 270
 +HP
 6,491`,
-    minHeightClass: "min-h-[12rem]",
-  },
-  {
-    key: "training",
-    title: "Training",
-    subtitle: "Optional. Adds imported `training` or `xtraining` results onto current training.",
-    command: "cz xtraining",
-    placeholder: `cz xtraining
-Training Complete!
-[ atk ] Training
-+4`,
     minHeightClass: "min-h-[12rem]",
   },
   {
@@ -346,6 +347,30 @@ function normalizeSearchAuthor(value: string): string {
   }
 
   return trimmedValue.replace(/^@/, "")
+}
+
+function normalizeSearchDate(value: string): string {
+  const trimmedValue = value.trim()
+  const match = trimmedValue.match(/^(\d{4})-(\d{2})-(\d{2})$/)
+  if (!match) {
+    return trimmedValue
+  }
+
+  const year = Number(match[1])
+  const monthIndex = Number(match[2]) - 1
+  const day = Number(match[3])
+  const parsedDate = new Date(Date.UTC(year, monthIndex, day))
+  if (
+    Number.isNaN(parsedDate.getTime())
+    || parsedDate.getUTCFullYear() !== year
+    || parsedDate.getUTCMonth() !== monthIndex
+    || parsedDate.getUTCDate() !== day
+  ) {
+    return trimmedValue
+  }
+
+  parsedDate.setUTCDate(parsedDate.getUTCDate() - 1)
+  return parsedDate.toISOString().slice(0, 10)
 }
 
 function splitStoredBlocks(value: string): string[] {
@@ -541,20 +566,44 @@ function formatPageCoverage(coverage: ParsedTranscriptPageCoverage | null): stri
   return `${coverage.foundPages.length}/${coverage.totalPages} pages`
 }
 
-function buildAuthorSearchCommand(searchAuthor: string, command: string): string | null {
+function buildAuthorSearchCommand(searchAuthor: string, searchDate: string, command: string): string | null {
   const normalizedSearchAuthor = normalizeSearchAuthor(searchAuthor)
+  const normalizedSearchDate = normalizeSearchDate(searchDate)
 
   if (normalizedSearchAuthor.length === 0) {
     return null
   }
 
-  return `from: ${normalizedSearchAuthor} ${command}`
+  return normalizedSearchDate.length > 0
+    ? `from: ${normalizedSearchAuthor} after: ${normalizedSearchDate} ${command}`
+    : `from: ${normalizedSearchAuthor} ${command}`
 }
 
-function getLevelUpSearchCommands(searchAuthor: string): SectionCommandDisplay[] {
+function getLevelUpSearchCommands(searchAuthor: string, searchDate: string): SectionCommandDisplay[] {
   return ["cz xlevelup", "cz levelup"].map((command) => ({
     label: command,
-    copyText: buildAuthorSearchCommand(searchAuthor, command),
+    copyText: buildAuthorSearchCommand(searchAuthor, searchDate, command),
+  }))
+}
+
+function getSkillLearnSearchCommands(searchAuthor: string, searchDate: string): SectionCommandDisplay[] {
+  return ["cz learnskill", "cz xlearnskill"].map((command) => ({
+    label: command,
+    copyText: buildAuthorSearchCommand(searchAuthor, searchDate, command),
+  }))
+}
+
+function getTalentLearnSearchCommands(searchAuthor: string, searchDate: string): SectionCommandDisplay[] {
+  return ["cz learntalent", "cz xlearntalent"].map((command) => ({
+    label: command,
+    copyText: buildAuthorSearchCommand(searchAuthor, searchDate, command),
+  }))
+}
+
+function getUtilitySearchCommands(searchAuthor: string): SectionCommandDisplay[] {
+  return ["cz isekai", "cz respec", "cz respecvoucher"].map((command) => ({
+    label: command,
+    copyText: buildAuthorSearchCommand(searchAuthor, "", command),
   }))
 }
 
@@ -582,6 +631,10 @@ function summarizeHeroBreakdown(deltas: Record<string, number>): string {
   }
 
   return parts.length <= 4 ? parts.join(", ") : `${parts.slice(0, 4).join(", ")}, +${parts.length - 4} more`
+}
+
+function formatPointCount(value: number, label: string): string {
+  return `${value.toLocaleString("en-US")} ${label} point${value === 1 ? "" : "s"}`
 }
 
 function formatClassLevelCounts(levels: ClassLevelCounts): string {
@@ -623,14 +676,57 @@ function summarizeImportedTarotNames(names: readonly string[]): string {
 }
 
 function getSectionSummaries(parsed: ParsedInGameImport): Record<keyof InGameImportPageInputs, SectionSummary> {
-  const skillSummary: SectionSummary = parsed.skills.foundNames.length === 0 && !parsed.skills.pageCoverage
-    ? { tone: "empty", text: "No skill pages pasted yet." }
+  const skillLearnCommandSummary: SectionSummary | null = parsed.skills.learnCommandCount > 0
+    && parsed.skills.pageCoverage === null
+    && parsed.skills.foundNames.length > 0
+    ? {
+        tone: parsed.skills.namesToApply ? "ready" : "partial",
+        text: parsed.guildCard.availableSkillPoints !== null
+          ? `${parsed.skills.foundNames.length} skills found from learn commands. Covers ${formatPointCount(countSkillPointCost(parsed.skills.foundNames), "skill")} spent; ${formatPointCount(parsed.guildCard.availableSkillPoints, "skill")} remain on the Guild Card.`
+          : `${parsed.skills.foundNames.length} skills found from learn commands. Covers ${formatPointCount(countSkillPointCost(parsed.skills.foundNames), "skill")} spent. Paste a Guild Card to see remaining skill points.`,
+      }
+    : null
+  const skillSummary: SectionSummary = parsed.skills.foundNames.length === 0 && !parsed.skills.pageCoverage && parsed.skills.learnCommandCount === 0
+    ? { tone: "empty", text: "No skill pages or learn commands pasted yet." }
+    : skillLearnCommandSummary
+      ? skillLearnCommandSummary
     : parsed.skills.namesToApply
       ? { tone: "ready", text: `${parsed.skills.foundNames.length} skills found, ${formatPageCoverage(parsed.skills.pageCoverage)}.` }
       : { tone: "partial", text: `${parsed.skills.foundNames.length} skills found, ${formatPageCoverage(parsed.skills.pageCoverage)}. Paste every page into its matching row.` }
 
-  const talentSummary: SectionSummary = parsed.talents.foundNames.length === 0 && !parsed.talents.pageCoverage
-    ? { tone: "empty", text: "No talent pages pasted yet." }
+  const talentLearnCommandSummary: SectionSummary | null = parsed.talents.learnCommandCount > 0
+    && parsed.talents.pageCoverage === null
+    && parsed.talents.foundNames.length > 0
+    ? (() => {
+        if (parsed.guildCard.totalLevels === null || parsed.guildCard.availableTalentPoints === null) {
+          return {
+            tone: "ready",
+            text: `${parsed.talents.foundNames.length} talents found from learn commands. Paste a Guild Card to see how many talents should exist.`,
+          }
+        }
+
+        const expectedTalentPoints = Math.ceil(parsed.guildCard.totalLevels / 2)
+        const existingTalentCount = Math.max(0, expectedTalentPoints - parsed.guildCard.availableTalentPoints)
+        const missingTalentCount = Math.max(0, existingTalentCount - parsed.talents.foundNames.length)
+        const extraTalentCount = Math.max(0, parsed.talents.foundNames.length - existingTalentCount)
+
+        if (extraTalentCount > 0) {
+          return {
+            tone: "partial",
+            text: `${parsed.talents.foundNames.length} talents found from learn commands. Missing 0 talents. ${existingTalentCount} talents exist. Found ${extraTalentCount} extra talent${extraTalentCount === 1 ? "" : "s"} beyond that count.`,
+          }
+        }
+
+        return {
+          tone: missingTalentCount === 0 ? "ready" : "partial",
+          text: `${parsed.talents.foundNames.length} talents found from learn commands. Missing ${missingTalentCount} talent${missingTalentCount === 1 ? "" : "s"}. ${existingTalentCount} talent${existingTalentCount === 1 ? "" : "s"} exist.`,
+        }
+      })()
+    : null
+  const talentSummary: SectionSummary = parsed.talents.foundNames.length === 0 && !parsed.talents.pageCoverage && parsed.talents.learnCommandCount === 0
+    ? { tone: "empty", text: "No talent pages or learn commands pasted yet." }
+    : talentLearnCommandSummary
+      ? talentLearnCommandSummary
     : parsed.talents.namesToApply
       ? { tone: "ready", text: `${parsed.talents.foundNames.length} talents found, ${formatPageCoverage(parsed.talents.pageCoverage)}.` }
       : { tone: "partial", text: `${parsed.talents.foundNames.length} talents found, ${formatPageCoverage(parsed.talents.pageCoverage)}. Paste every page into its matching row.` }
@@ -818,6 +914,7 @@ function getSectionSummaries(parsed: ParsedInGameImport): Record<keyof InGameImp
 function getSectionCommandDisplay(
   section: ImportSectionConfig,
   searchAuthor: string,
+  searchDate: string,
 ): SectionCommandDisplay {
   switch (section.key) {
     case "skills":
@@ -842,11 +939,23 @@ function getSectionCommandDisplay(
               copyText: null,
             }
       }
+    case "guildCard":
+      {
+        const normalizedSearchAuthor = normalizeSearchAuthor(searchAuthor)
+        const command = normalizedSearchAuthor.length > 0
+          ? `cz gc ${normalizedSearchAuthor}`
+          : section.command
+
+        return {
+          label: command,
+          copyText: command,
+        }
+      }
     case "levelUps":
     case "training":
     case "heroTraining":
       {
-        const searchCommand = buildAuthorSearchCommand(searchAuthor, section.command)
+        const searchCommand = buildAuthorSearchCommand(searchAuthor, searchDate, section.command)
 
         return searchCommand
           ? {
@@ -858,7 +967,6 @@ function getSectionCommandDisplay(
               copyText: null,
             }
       }
-    case "guildCard":
     case "statCard":
       return {
         label: section.command,
@@ -887,6 +995,17 @@ function getTalentRowCommand(index: number): SectionCommandDisplay {
   return {
     label: command,
     copyText: command,
+  }
+}
+
+function getMultiEntryRowPlaceholder(section: MultiEntrySectionKey, commandLabel: string): string {
+  switch (section) {
+    case "skills":
+      return "Paste a skillpage result or learnskill/xlearnskill command here"
+    case "talents":
+      return "Paste a talentpage result or learntalent/xlearntalent command here"
+    default:
+      return `Paste ${commandLabel} output here`
   }
 }
 
@@ -957,9 +1076,34 @@ function getTarotRowCommand(
   }
 }
 
+function getTarotRowSearchCommand(
+  index: number,
+  searchAuthor: string,
+  parsedTarots: ParsedInGameImport["tarots"],
+): string | null {
+  const row = tarotImportRowOrder[index]
+  if (!row || row.key === "EquippedList") {
+    return null
+  }
+
+  const normalizedSearchAuthor = normalizeSearchAuthor(searchAuthor)
+  if (normalizedSearchAuthor.length === 0) {
+    return null
+  }
+
+  const slot = parsedTarots.equippedSlots.find((entry) => entry.rowKey === row.key)
+  if (!slot?.name) {
+    return null
+  }
+
+  return `from: ${normalizedSearchAuthor} ${slot.name}`
+}
+
 export default function InGameImportPage() {
   const [inputs, setInputs] = useState<InGameImportPageInputs>(createDefaultPageInputs)
   const [searchAuthor, setSearchAuthor] = useState("")
+  const [searchDate, setSearchDate] = useState("")
+  const [manualLevelFallbackTotal, setManualLevelFallbackTotal] = useState(0)
   const [feedback, setFeedback] = useState<FeedbackState | null>(null)
   const [isHydrated, setIsHydrated] = useState(false)
   const [hasExistingBuild, setHasExistingBuild] = useState(false)
@@ -968,15 +1112,18 @@ export default function InGameImportPage() {
     const storedInputs = window.localStorage.getItem(INPUT_STORAGE_KEY)
     if (storedInputs) {
       try {
-        const parsedInputs = JSON.parse(storedInputs) as Partial<Record<keyof InGameImportPageInputs | "searchAuthor", unknown>>
+        const parsedInputs = JSON.parse(storedInputs) as Partial<Record<keyof InGameImportPageInputs | "searchAuthor" | "searchDate", unknown>>
         setInputs(normalizePageInputs(parsedInputs))
         setSearchAuthor(typeof parsedInputs.searchAuthor === "string" ? parsedInputs.searchAuthor : "")
+        setSearchDate(typeof parsedInputs.searchDate === "string" ? parsedInputs.searchDate : "")
       } catch {
         setInputs(createDefaultPageInputs())
         setSearchAuthor("")
+        setSearchDate("")
       }
     }
 
+    setManualLevelFallbackTotal(getStoredManualLevelFallbackTotal(window.localStorage))
     setHasExistingBuild(hasStoredBuildData(window.localStorage))
     setIsHydrated(true)
   }, [])
@@ -989,12 +1136,15 @@ export default function InGameImportPage() {
     window.localStorage.setItem(INPUT_STORAGE_KEY, JSON.stringify({
       ...inputs,
       searchAuthor,
+      searchDate,
     }))
-  }, [inputs, isHydrated, searchAuthor])
+  }, [inputs, isHydrated, searchAuthor, searchDate])
 
   const parsed = useMemo(
-    () => parseInGameImportInputs(serializePageInputs(inputs)),
-    [inputs],
+    () => parseInGameImportInputs(serializePageInputs(inputs), {
+      fallbackManualLevelTotal: manualLevelFallbackTotal,
+    }),
+    [inputs, manualLevelFallbackTotal],
   )
   const coverageRows = useMemo(
     () => buildInGameImportCoverageRows(parsed).sort((left, right) => (
@@ -1010,9 +1160,10 @@ export default function InGameImportPage() {
   )
   const canImport = hasReadyInGameImport(parsed)
   const normalizedSearchAuthor = useMemo(() => normalizeSearchAuthor(searchAuthor), [searchAuthor])
+  const normalizedSearchDate = useMemo(() => normalizeSearchDate(searchDate), [searchDate])
   const hasAnyInput = useMemo(
-    () => hasAnyInputValue(inputs) || normalizedSearchAuthor.length > 0,
-    [inputs, normalizedSearchAuthor],
+    () => hasAnyInputValue(inputs) || normalizedSearchAuthor.length > 0 || normalizedSearchDate.length > 0,
+    [inputs, normalizedSearchAuthor, normalizedSearchDate],
   )
   const skillRowCount = useMemo(
     () => getPageRowCount(inputs.skills, parsed.skills.pageCoverage),
@@ -1134,6 +1285,7 @@ export default function InGameImportPage() {
   const handleClearAll = () => {
     setInputs(createDefaultPageInputs())
     setSearchAuthor("")
+    setSearchDate("")
     setFeedback({ tone: "info", text: "Cleared all import sections." })
   }
 
@@ -1143,6 +1295,7 @@ export default function InGameImportPage() {
     }
 
     dispatchBuildSnapshotUpdated()
+    setManualLevelFallbackTotal(0)
     setHasExistingBuild(false)
     setFeedback({
       tone: "info",
@@ -1152,7 +1305,7 @@ export default function InGameImportPage() {
 
   return (
     <main className="min-h-[calc(100vh-var(--top-nav-height))] bg-[radial-gradient(circle_at_top_left,rgba(14,165,233,0.12),transparent_32%),radial-gradient(circle_at_bottom_right,rgba(249,115,22,0.10),transparent_28%)]">
-      <div className="mx-auto flex w-full max-w-7xl flex-col gap-5 px-4 py-6">
+      <div className="flex w-full flex-col gap-5 px-4 py-6">
         <section className={`${cardClass} overflow-hidden`}>
           <div className="border-b border-slate-800/80 px-5 py-4">
             <div className="flex flex-col gap-2 lg:flex-row lg:items-end lg:justify-between">
@@ -1240,17 +1393,25 @@ export default function InGameImportPage() {
             <div className="space-y-1">
               <h2 className="text-lg font-semibold text-slate-100">Search User</h2>
               <p className="max-w-3xl text-sm text-slate-300">
-                Paste a Username or User ID here and the Artifact section will build `cz artifact &lt;user&gt;`, the Tarot
-                Equipped List row will build `cz tarot equippedcards &lt;user&gt;`, while the Level Up, Training, and Hero
-                Training sections copy Discord search strings for you.
+                Paste a Username or User ID here and the Guild Card and Artifact sections will build `cz gc &lt;user&gt;`
+                and `cz artifact &lt;user&gt;`, the Tarot Equipped List row will build
+                `cz tarot equippedcards &lt;user&gt;`, tarot card rows add `from: &lt;user&gt; &lt;card name&gt;`, the
+                Skills and Talents sections add learn-command searches, while the Level Up, Training, and Hero Training
+                sections copy Discord search strings for you. Set an optional date and those searches will use one day
+                earlier, like `from: &lt;user&gt; after: 2026-04-13 cz xtraining` for an entered date of `2026-04-14`.
               </p>
             </div>
-            <div className="rounded-full border border-slate-700 bg-slate-950/90 px-3 py-1 text-xs font-medium text-slate-300">
-              {normalizedSearchAuthor.length > 0 ? `Searching from: ${normalizedSearchAuthor}` : "No search user set"}
+            <div className="flex flex-wrap gap-2">
+              <div className="rounded-full border border-slate-700 bg-slate-950/90 px-3 py-1 text-xs font-medium text-slate-300">
+                {normalizedSearchAuthor.length > 0 ? `Searching from: ${normalizedSearchAuthor}` : "No search user set"}
+              </div>
+              <div className="rounded-full border border-slate-700 bg-slate-950/90 px-3 py-1 text-xs font-medium text-slate-300">
+                {normalizedSearchDate.length > 0 ? `Searches use after: ${normalizedSearchDate}` : "No after date set"}
+              </div>
             </div>
           </div>
 
-          <div className="mt-4">
+          <div className="mt-4 space-y-4">
             <label className="space-y-2">
               <span className="text-xs font-semibold uppercase tracking-[0.12em] text-slate-300">Username or User ID</span>
               <input
@@ -1261,13 +1422,40 @@ export default function InGameImportPage() {
                 className="h-11 w-full rounded-xl border border-slate-700 bg-slate-950/90 px-3 text-sm text-slate-100 outline-none transition focus:border-sky-400/70"
               />
             </label>
+
+            <div className="grid gap-4 lg:grid-cols-[minmax(0,16rem)_minmax(0,1fr)]">
+              <label className="space-y-2">
+                <span className="text-xs font-semibold uppercase tracking-[0.12em] text-slate-300">After Date</span>
+                <input
+                  type="date"
+                  value={searchDate}
+                  onChange={(event) => setSearchDate(event.target.value)}
+                  className="h-11 w-full rounded-xl border border-slate-700 bg-slate-950/90 px-3 text-sm text-slate-100 outline-none transition focus:border-sky-400/70"
+                />
+              </label>
+
+              <div className="space-y-2">
+                <span className="text-xs font-semibold uppercase tracking-[0.12em] text-slate-300">Account Search Commands</span>
+                <div className="flex flex-wrap items-center gap-2">
+                  {getUtilitySearchCommands(searchAuthor).some((command) => command.copyText)
+                    ? getUtilitySearchCommands(searchAuthor).map((command) => (
+                        command.copyText ? <CommandCopyChip key={command.copyText} command={command.copyText} /> : null
+                      ))
+                    : (
+                      <span className="rounded bg-slate-900 px-2 py-1 text-xs text-sky-100">
+                        Paste a Username or User ID above to build the command
+                      </span>
+                    )}
+                </div>
+              </div>
+            </div>
           </div>
         </section>
 
         <section className="grid gap-4 lg:grid-cols-2">
           {sectionConfigs.map((section) => {
             const summary = sectionSummaries[section.key]
-            const commandDisplay = getSectionCommandDisplay(section, searchAuthor)
+            const commandDisplay = getSectionCommandDisplay(section, searchAuthor, searchDate)
             const isSkillsSection = section.key === "skills"
             const isTalentsSection = section.key === "talents"
             const isTarotsSection = section.key === "tarots"
@@ -1284,7 +1472,17 @@ export default function InGameImportPage() {
                   <div className="flex flex-wrap items-center gap-2">
                     <CommandDisplay command={commandDisplay} />
                     {section.key === "levelUps" ? (
-                      getLevelUpSearchCommands(searchAuthor).slice(1).map((command) => (
+                      getLevelUpSearchCommands(searchAuthor, searchDate).slice(1).map((command) => (
+                        command.copyText ? <CommandCopyChip key={command.copyText} command={command.copyText} /> : null
+                      ))
+                    ) : null}
+                    {section.key === "skills" ? (
+                      getSkillLearnSearchCommands(searchAuthor, searchDate).map((command) => (
+                        command.copyText ? <CommandCopyChip key={command.copyText} command={command.copyText} /> : null
+                      ))
+                    ) : null}
+                    {section.key === "talents" ? (
+                      getTalentLearnSearchCommands(searchAuthor, searchDate).map((command) => (
                         command.copyText ? <CommandCopyChip key={command.copyText} command={command.copyText} /> : null
                       ))
                     ) : null}
@@ -1315,6 +1513,9 @@ export default function InGameImportPage() {
                           : equipmentCommandSlotOrder.length,
                     }).map((_, index) => {
                       const tarotRowLabel = isTarotsSection ? getTarotRowLabel(index, parsed.tarots) : null
+                      const tarotSearchCommand = isTarotsSection
+                        ? getTarotRowSearchCommand(index, searchAuthor, parsed.tarots)
+                        : null
                       const equipmentRow = isEquipmentSection ? equipmentCommandSlotOrder[index] : null
                       const command = isSkillsSection
                         ? getSkillRowCommand(index)
@@ -1343,12 +1544,15 @@ export default function InGameImportPage() {
                               {equipmentRow.label}
                             </div>
                           ) : null}
-                          <CommandDisplay command={command} />
+                          <div className="flex flex-wrap items-center gap-2">
+                            <CommandDisplay command={command} />
+                            {tarotSearchCommand ? <CommandCopyChip command={tarotSearchCommand} /> : null}
+                          </div>
                           <textarea
                             rows={1}
                             value={value}
                             onChange={(event) => updateListInput(section.key as MultiEntrySectionKey, index, event.target.value)}
-                            placeholder={`Paste ${command.label} output here`}
+                            placeholder={getMultiEntryRowPlaceholder(section.key as MultiEntrySectionKey, command.label)}
                             className={rowTextareaClass}
                           />
                         </div>
