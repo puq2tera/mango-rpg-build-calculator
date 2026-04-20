@@ -2,9 +2,19 @@
 
 import { useEffect, useMemo, useState } from "react"
 import CopyTextButton from "@/app/components/CopyTextButton"
+import { DUNGEON_UNLOCKS_STORAGE_KEY } from "@/app/data/dungeon_unlocks"
+import { ADDITIONAL_STAGE_STATS_STORAGE_KEY, STAGE_STAT_OVERRIDES_STORAGE_KEY } from "@/app/lib/additionalStageStats"
+import { dispatchBuildSnapshotUpdated } from "@/app/lib/buildEvents"
+import {
+  ENABLED_EQUIPMENT_STORAGE_KEY,
+  EQUIPMENT_AUTO_LINKED_TAROTS_STORAGE_KEY,
+  EQUIPMENT_SLOTS_STORAGE_KEY,
+} from "@/app/lib/equipmentSlots"
+import { EQUIPMENT_SCRIPT_GROUPS_STORAGE_KEY } from "@/app/lib/equipmentScripts"
 import {
   applyInGameImport,
   buildEquipmentImportSlotMarker,
+  buildTarotImportRowMarker,
   buildInGameImportCoverageRows,
   countManualLevelRangesByClass,
   countHeroPointDeltas,
@@ -13,6 +23,7 @@ import {
   createDefaultInGameImportInputs,
   dedupeManualLevelRanges,
   type EquipmentImportTargetKey,
+  type TarotImportRowKey,
   getHeroPointAccountingGap,
   getMissingClassLevelsByImportedRanges,
   getSkillPointAccountingGap,
@@ -23,6 +34,12 @@ import {
   type ParsedInGameImport,
   type ParsedTranscriptPageCoverage,
 } from "@/app/lib/inGameImport"
+import {
+  BUFF_SELECTION_STORAGE_KEY,
+  SKILL_SELECTION_STORAGE_KEY,
+  TALENT_SELECTION_STORAGE_KEY,
+} from "@/app/lib/learnCommands"
+import { MANUAL_TAROT_SELECTION_STORAGE_KEY } from "@/app/lib/tarotSelections"
 
 type FeedbackTone = "success" | "error" | "info"
 
@@ -40,12 +57,13 @@ type SectionSummary = {
 
 type ClassLevelCounts = Record<"tank" | "warrior" | "caster" | "healer", number>
 
-type MultiEntrySectionKey = "skills" | "talents" | "equipment"
+type MultiEntrySectionKey = "skills" | "talents" | "tarots" | "equipment"
 type SingleEntrySectionKey = Exclude<keyof InGameImportInputs, MultiEntrySectionKey>
 
 type InGameImportPageInputs = Omit<InGameImportInputs, MultiEntrySectionKey> & {
   skills: string[]
   talents: string[]
+  tarots: string[]
   equipment: string[]
 }
 
@@ -69,7 +87,40 @@ type EquipmentImportRowConfig = {
   importTarget: EquipmentImportTargetKey
 }
 
+type TarotImportRowConfig = {
+  key: TarotImportRowKey
+  label: string
+}
+
 const INPUT_STORAGE_KEY = "inGameImport:inputs"
+const CLEAR_EXISTING_BUILD_STORAGE_KEYS = [
+  SKILL_SELECTION_STORAGE_KEY,
+  TALENT_SELECTION_STORAGE_KEY,
+  BUFF_SELECTION_STORAGE_KEY,
+  "selectedBuffStacks",
+  MANUAL_TAROT_SELECTION_STORAGE_KEY,
+  "tarotStacks",
+  "SelectedRace",
+  DUNGEON_UNLOCKS_STORAGE_KEY,
+  "SelectedLevels",
+  "SelectedLevelOrder",
+  "SelectedStatPoints",
+  "SelectedStatPointsVersion",
+  "SelectedTraining",
+  "SelectedHeroPoints",
+  "SelectedManualLevelRanges",
+  "SelectedManualLevelRangesCollapsed",
+  "SelectedManualTrainingEntries",
+  "SelectedManualTrainingCollapsed",
+  "SelectedRunes",
+  EQUIPMENT_SLOTS_STORAGE_KEY,
+  ENABLED_EQUIPMENT_STORAGE_KEY,
+  EQUIPMENT_AUTO_LINKED_TAROTS_STORAGE_KEY,
+  EQUIPMENT_SCRIPT_GROUPS_STORAGE_KEY,
+  "Artifact",
+  ADDITIONAL_STAGE_STATS_STORAGE_KEY,
+  STAGE_STAT_OVERRIDES_STORAGE_KEY,
+] as const
 const searchCommandSectionKeys = new Set<keyof InGameImportPageInputs>(["levelUps", "training", "heroTraining"])
 const equipmentCommandSlotOrder: readonly EquipmentImportRowConfig[] = [
   { label: "Helm", commandType: "Helm", importTarget: "Helm" },
@@ -80,6 +131,13 @@ const equipmentCommandSlotOrder: readonly EquipmentImportRowConfig[] = [
   { label: "Mainhand", commandType: "Mainhand", importTarget: "Mainhand" },
   { label: "Offhand", commandType: "Offhand", importTarget: "Offhand" },
   { label: "Runeshard", commandType: "Runeshard", importTarget: "Runeshard" },
+] as const
+const tarotImportRowOrder: readonly TarotImportRowConfig[] = [
+  { key: "EquippedList", label: "Equipped List" },
+  { key: "FiveStar", label: "5-Star" },
+  { key: "FourStar", label: "4-Star" },
+  { key: "ThreeStar1", label: "3-Star 1" },
+  { key: "ThreeStar2", label: "3-Star 2" },
 ] as const
 const artifactRuneTierOrder = ["Low", "Middle", "High", "Legacy", "Divine"] as const
 const sectionConfigs: readonly ImportSectionConfig[] = [
@@ -129,7 +187,15 @@ Skill/Talent Points
 :blue_heart: +Healpower %
 391
 Low : 9
-Experience, Experience, Experience`,
+    Experience, Experience, Experience`,
+    minHeightClass: "min-h-[14rem]",
+  },
+  {
+    key: "tarots",
+    title: "Tarots",
+    subtitle: "Paste one `equippedcards` result, then the matching 5-star, 4-star, and two 3-star `viewmycard` results.",
+    command: "cz tarot equippedcards Username or User ID",
+    placeholder: "Paste the tarot outputs into the matching rows below.",
     minHeightClass: "min-h-[14rem]",
   },
   {
@@ -210,6 +276,9 @@ const secondaryButtonClass =
 const primaryButtonClass =
   "rounded-xl border border-sky-500/60 bg-sky-500/10 px-3 py-2 text-sm font-semibold text-sky-100 transition hover:bg-sky-500/15 disabled:cursor-not-allowed disabled:opacity-50"
 
+const dangerButtonClass =
+  "rounded-xl border border-rose-500/40 bg-rose-500/10 px-3 py-2 text-sm font-semibold text-rose-100 transition hover:bg-rose-500/15 disabled:cursor-not-allowed disabled:opacity-50"
+
 const feedbackClassByTone: Record<FeedbackTone, string> = {
   success: "border-emerald-500/40 bg-emerald-500/10 text-emerald-100",
   error: "border-rose-500/40 bg-rose-500/10 text-rose-100",
@@ -256,6 +325,7 @@ function createDefaultPageInputs(): InGameImportPageInputs {
     ...defaults,
     skills: [""],
     talents: [""],
+    tarots: Array.from({ length: tarotImportRowOrder.length }, () => ""),
     equipment: Array.from({ length: equipmentCommandSlotOrder.length }, () => ""),
   }
 }
@@ -348,6 +418,7 @@ function normalizePageInputs(raw: unknown): InGameImportPageInputs {
     heroTraining: typeof value.heroTraining === "string" ? value.heroTraining : defaults.heroTraining,
     skills: normalizeListInput(value.skills, 1),
     talents: normalizeListInput(value.talents, 1),
+    tarots: normalizeListInput(value.tarots, tarotImportRowOrder.length, true),
     equipment: normalizeEquipmentListInput(value.equipment),
   }
 }
@@ -362,6 +433,20 @@ function serializePageInputs(inputs: InGameImportPageInputs): InGameImportInputs
     heroTraining: inputs.heroTraining,
     skills: inputs.skills.map((entry) => entry.trim()).filter((entry) => entry.length > 0).join("\n\n"),
     talents: inputs.talents.map((entry) => entry.trim()).filter((entry) => entry.length > 0).join("\n\n"),
+    tarots: inputs.tarots
+      .map((entry, index) => {
+        const trimmedEntry = entry.trim()
+        if (trimmedEntry.length === 0) {
+          return ""
+        }
+
+        const row = tarotImportRowOrder[index]
+        return row
+          ? `${buildTarotImportRowMarker(row.key)}\n${trimmedEntry}`
+          : trimmedEntry
+      })
+      .filter((entry) => entry.length > 0)
+      .join("\n\n"),
     equipment: inputs.equipment
       .map((entry, index) => {
         const trimmedEntry = entry.trim()
@@ -389,6 +474,7 @@ function hasAnyInputValue(inputs: InGameImportPageInputs): boolean {
     inputs.heroTraining,
     ...inputs.skills,
     ...inputs.talents,
+    ...inputs.tarots,
     ...inputs.equipment,
   ].some((value) => value.trim().length > 0)
 }
@@ -415,6 +501,10 @@ function getHighestFilledIndex(entries: readonly string[]): number {
 
 function getPageRowCount(entries: readonly string[], coverage: ParsedTranscriptPageCoverage | null): number {
   return Math.max(coverage?.totalPages ?? 0, getHighestFilledIndex(entries), 1)
+}
+
+function hasStoredBuildData(storage: Storage): boolean {
+  return CLEAR_EXISTING_BUILD_STORAGE_KEYS.some((key) => storage.getItem(key) !== null)
 }
 
 function CommandCopyChip({ command }: { command: string }) {
@@ -522,6 +612,16 @@ function formatArtifactRuneSummary(parsedArtifact: ParsedInGameImport["artifact"
   return `Runes L/M/H/Lg/D ${counts.join("/")}`
 }
 
+function summarizeImportedTarotNames(names: readonly string[]): string {
+  if (names.length === 0) {
+    return "No tarots equipped"
+  }
+
+  return names.length <= 3
+    ? names.join(", ")
+    : `${names.slice(0, 3).join(", ")}, +${names.length - 3} more`
+}
+
 function getSectionSummaries(parsed: ParsedInGameImport): Record<keyof InGameImportPageInputs, SectionSummary> {
   const skillSummary: SectionSummary = parsed.skills.foundNames.length === 0 && !parsed.skills.pageCoverage
     ? { tone: "empty", text: "No skill pages pasted yet." }
@@ -578,6 +678,28 @@ function getSectionSummaries(parsed: ParsedInGameImport): Record<keyof InGameImp
           formatArtifactRuneSummary(parsed.artifact),
         ].join(", "),
       }
+
+  const tarotSummary: SectionSummary = parsed.tarots.namesToApply === null && parsed.tarots.viewCardsFound.length === 0
+    ? { tone: "empty", text: "No tarot transcripts pasted yet." }
+    : parsed.tarots.namesToApply === null
+      ? {
+          tone: "partial",
+          text: `${parsed.tarots.viewCardsFound.length} tarot view card transcript${parsed.tarots.viewCardsFound.length === 1 ? "" : "s"} found. Paste the equipped tarot list first.`,
+        }
+      : parsed.tarots.equippedNames.length === 0
+        ? {
+            tone: "ready",
+            text: "Equipped tarot list parsed. No tarots are equipped.",
+          }
+        : parsed.tarots.missingDetailNames.length === 0
+          ? {
+              tone: "ready",
+              text: `${parsed.tarots.equippedNames.length} equipped tarot${parsed.tarots.equippedNames.length === 1 ? "" : "s"}: ${summarizeImportedTarotNames(parsed.tarots.equippedNames)}. Awakening imported for all equipped cards.`,
+            }
+          : {
+              tone: "partial",
+              text: `${parsed.tarots.equippedNames.length} equipped tarot${parsed.tarots.equippedNames.length === 1 ? "" : "s"}: ${summarizeImportedTarotNames(parsed.tarots.equippedNames)}. Awakening imported for ${parsed.tarots.equippedNames.length - parsed.tarots.missingDetailNames.length}/${parsed.tarots.equippedNames.length}. Paste ${parsed.tarots.missingDetailNames.length} more viewmycard transcript${parsed.tarots.missingDetailNames.length === 1 ? "" : "s"}.`,
+            }
 
   const dedupedManualLevelRanges = dedupeManualLevelRanges(parsed.manualLevelRanges)
   const duplicateManualRangeCount = Math.max(0, parsed.manualLevelRanges.length - dedupedManualLevelRanges.length)
@@ -683,6 +805,7 @@ function getSectionSummaries(parsed: ParsedInGameImport): Record<keyof InGameImp
     guildCard: guildCardSummary,
     statCard: statCardSummary,
     artifact: artifactSummary,
+    tarots: tarotSummary,
     skills: skillSummary,
     talents: talentSummary,
     levelUps: levelSummary,
@@ -699,6 +822,7 @@ function getSectionCommandDisplay(
   switch (section.key) {
     case "skills":
     case "talents":
+    case "tarots":
     case "equipment":
       return {
         label: "Use row commands below",
@@ -776,11 +900,69 @@ function getEquipmentRowCommand(index: number): SectionCommandDisplay {
   }
 }
 
+function getTarotRowLabel(index: number, parsedTarots: ParsedInGameImport["tarots"]): string {
+  const row = tarotImportRowOrder[index]
+  if (!row) {
+    return `Tarot Slot ${index + 1}`
+  }
+
+  if (row.key === "EquippedList") {
+    return row.label
+  }
+
+  const slot = parsedTarots.equippedSlots.find((entry) => entry.rowKey === row.key)
+  return slot?.name ? `${row.label} (${slot.name})` : `${row.label} (None)`
+}
+
+function getTarotRowCommand(
+  index: number,
+  searchAuthor: string,
+  parsedTarots: ParsedInGameImport["tarots"],
+): SectionCommandDisplay {
+  const row = tarotImportRowOrder[index]
+
+  if (!row) {
+    return {
+      label: `Tarot Slot ${index + 1}`,
+      copyText: null,
+    }
+  }
+
+  if (row.key === "EquippedList") {
+    const normalizedSearchAuthor = normalizeSearchAuthor(searchAuthor)
+
+    return normalizedSearchAuthor.length > 0
+      ? {
+          label: `cz tarot equippedcards ${normalizedSearchAuthor}`,
+          copyText: `cz tarot equippedcards ${normalizedSearchAuthor}`,
+        }
+      : {
+          label: "Paste a Username or User ID above to build the command",
+          copyText: null,
+        }
+  }
+
+  const slot = parsedTarots.equippedSlots.find((entry) => entry.rowKey === row.key)
+  if (!slot?.name) {
+    return {
+      label: `No ${row.label.toLowerCase()} tarot equipped`,
+      copyText: null,
+    }
+  }
+
+  const command = `cz tarot viewmycard ${slot.name}`
+  return {
+    label: command,
+    copyText: command,
+  }
+}
+
 export default function InGameImportPage() {
   const [inputs, setInputs] = useState<InGameImportPageInputs>(createDefaultPageInputs)
   const [searchAuthor, setSearchAuthor] = useState("")
   const [feedback, setFeedback] = useState<FeedbackState | null>(null)
   const [isHydrated, setIsHydrated] = useState(false)
+  const [hasExistingBuild, setHasExistingBuild] = useState(false)
 
   useEffect(() => {
     const storedInputs = window.localStorage.getItem(INPUT_STORAGE_KEY)
@@ -795,6 +977,7 @@ export default function InGameImportPage() {
       }
     }
 
+    setHasExistingBuild(hasStoredBuildData(window.localStorage))
     setIsHydrated(true)
   }, [])
 
@@ -862,6 +1045,10 @@ export default function InGameImportPage() {
       rows.push("Artifact")
     }
 
+    if (parsed.tarots.namesToApply !== null || parsed.tarots.viewCardsFound.length > 0) {
+      rows.push(parsed.tarots.equippedNames.length > 0 ? `${parsed.tarots.equippedNames.length} tarots` : "Tarots")
+    }
+
     if (parsed.manualLevelRanges.length > 0) {
       rows.push(`${parsed.manualLevelRanges.length} level ranges`)
     }
@@ -900,6 +1087,8 @@ export default function InGameImportPage() {
       const nextList = [...current[key]]
       const targetLength = key === "equipment"
         ? equipmentCommandSlotOrder.length
+        : key === "tarots"
+          ? tarotImportRowOrder.length
         : Math.max(nextList.length, index + 1)
 
       while (nextList.length < targetLength) {
@@ -912,6 +1101,8 @@ export default function InGameImportPage() {
         ...current,
         [key]: key === "equipment"
           ? nextList.slice(0, equipmentCommandSlotOrder.length)
+          : key === "tarots"
+            ? nextList.slice(0, tarotImportRowOrder.length)
           : trimTrailingEmptyEntries(nextList),
       }
     })
@@ -933,6 +1124,7 @@ export default function InGameImportPage() {
       return
     }
 
+    setHasExistingBuild(hasStoredBuildData(window.localStorage))
     setFeedback({
       tone: "success",
       text: `Imported ${result.updatedSections.join(", ")}.`,
@@ -943,6 +1135,19 @@ export default function InGameImportPage() {
     setInputs(createDefaultPageInputs())
     setSearchAuthor("")
     setFeedback({ tone: "info", text: "Cleared all import sections." })
+  }
+
+  const handleClearExistingBuild = () => {
+    for (const key of CLEAR_EXISTING_BUILD_STORAGE_KEYS) {
+      window.localStorage.removeItem(key)
+    }
+
+    dispatchBuildSnapshotUpdated()
+    setHasExistingBuild(false)
+    setFeedback({
+      tone: "info",
+      text: "Cleared the existing build. Pasted import sections were kept.",
+    })
   }
 
   return (
@@ -1014,6 +1219,9 @@ export default function InGameImportPage() {
               <button type="button" onClick={handleClearAll} disabled={!hasAnyInput} className={secondaryButtonClass}>
                 Clear All Sections
               </button>
+              <button type="button" onClick={handleClearExistingBuild} disabled={!hasExistingBuild} className={dangerButtonClass}>
+                Clear Existing Build
+              </button>
               <div className="text-sm text-slate-400">
                 {importBreakdown.length === 0 ? "Nothing detected yet." : `Detected: ${importBreakdown.join(", ")}.`}
               </div>
@@ -1032,8 +1240,9 @@ export default function InGameImportPage() {
             <div className="space-y-1">
               <h2 className="text-lg font-semibold text-slate-100">Search User</h2>
               <p className="max-w-3xl text-sm text-slate-300">
-                Paste a Username or User ID here and the Artifact section will build `cz artifact &lt;user&gt;` while the Level Up,
-                Training, and Hero Training sections copy Discord search strings for you.
+                Paste a Username or User ID here and the Artifact section will build `cz artifact &lt;user&gt;`, the Tarot
+                Equipped List row will build `cz tarot equippedcards &lt;user&gt;`, while the Level Up, Training, and Hero
+                Training sections copy Discord search strings for you.
               </p>
             </div>
             <div className="rounded-full border border-slate-700 bg-slate-950/90 px-3 py-1 text-xs font-medium text-slate-300">
@@ -1061,8 +1270,9 @@ export default function InGameImportPage() {
             const commandDisplay = getSectionCommandDisplay(section, searchAuthor)
             const isSkillsSection = section.key === "skills"
             const isTalentsSection = section.key === "talents"
+            const isTarotsSection = section.key === "tarots"
             const isEquipmentSection = section.key === "equipment"
-            const isMultiEntrySection = isSkillsSection || isTalentsSection || isEquipmentSection
+            const isMultiEntrySection = isSkillsSection || isTalentsSection || isTarotsSection || isEquipmentSection
 
             return (
               <div key={section.key} className={`${cardClass} p-4`}>
@@ -1100,22 +1310,34 @@ export default function InGameImportPage() {
                         ? skillRowCount
                         : isTalentsSection
                           ? talentRowCount
+                          : isTarotsSection
+                            ? tarotImportRowOrder.length
                           : equipmentCommandSlotOrder.length,
                     }).map((_, index) => {
+                      const tarotRowLabel = isTarotsSection ? getTarotRowLabel(index, parsed.tarots) : null
                       const equipmentRow = isEquipmentSection ? equipmentCommandSlotOrder[index] : null
                       const command = isSkillsSection
                         ? getSkillRowCommand(index)
                         : isTalentsSection
                           ? getTalentRowCommand(index)
+                          : isTarotsSection
+                            ? getTarotRowCommand(index, searchAuthor, parsed.tarots)
                           : getEquipmentRowCommand(index)
                       const value = isSkillsSection
                         ? (inputs.skills[index] ?? "")
                         : isTalentsSection
                           ? (inputs.talents[index] ?? "")
+                          : isTarotsSection
+                            ? (inputs.tarots[index] ?? "")
                           : (inputs.equipment[index] ?? "")
 
                       return (
                         <div key={`${section.key}-${index}`} className="space-y-2">
+                          {tarotRowLabel ? (
+                            <div className="text-xs font-semibold uppercase tracking-[0.12em] text-slate-300">
+                              {tarotRowLabel}
+                            </div>
+                          ) : null}
                           {equipmentRow ? (
                             <div className="text-xs font-semibold uppercase tracking-[0.12em] text-slate-300">
                               {equipmentRow.label}

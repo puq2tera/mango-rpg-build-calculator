@@ -3,6 +3,7 @@ import race_data, { type RaceTag } from "@/app/data/race_data"
 import rune_data from "@/app/data/rune_data"
 import { skill_data } from "@/app/data/skill_data"
 import stat_data from "@/app/data/stat_data"
+import tarot_data from "@/app/data/tarot_data"
 import { talent_data } from "@/app/data/talent_data"
 import { normalizeArtifact, type ArtifactState } from "@/app/lib/artifactState"
 import { dispatchBuildSnapshotUpdated } from "@/app/lib/buildEvents"
@@ -64,9 +65,19 @@ type RuneTier = typeof runeTiers[number]
 const equipmentImportTargets = ["Helm", "Armor", "Amulet", "Ring1", "Ring2", "Mainhand", "Offhand", "Runeshard"] as const
 export type EquipmentImportTargetKey = typeof equipmentImportTargets[number]
 const equipmentImportSlotMarkerRegex = new RegExp(`^\\[\\[MANGO_IMPORT_SLOT:(${equipmentImportTargets.join("|")})\\]\\]$`)
+const tarotImportRows = ["EquippedList", "FiveStar", "FourStar", "ThreeStar1", "ThreeStar2"] as const
+export type TarotImportRowKey = typeof tarotImportRows[number]
+type TarotImportTier = 3 | 4 | 5
+const tarotImportRowMarkerRegex = new RegExp(`^\\[\\[MANGO_TAROT_ROW:(${tarotImportRows.join("|")})\\]\\]$`)
 type ParsedEquipmentImportSlot = {
   slot: EquipmentSlot
   targetSlot: EquipmentImportTargetKey | null
+}
+type ParsedTarotImportSlot = {
+  rowKey: Exclude<TarotImportRowKey, "EquippedList">
+  tier: TarotImportTier
+  slotIndex: number
+  name: string | null
 }
 
 export type InGameImportInputs = {
@@ -75,6 +86,7 @@ export type InGameImportInputs = {
   guildCard: string
   statCard: string
   artifact: string
+  tarots: string
   levelUps: string
   training: string
   heroTraining: string
@@ -122,12 +134,24 @@ export type ParsedArtifactImport = {
   warnings: string[]
 }
 
+export type ParsedTarotImport = {
+  equippedSlots: ParsedTarotImportSlot[]
+  equippedNames: string[]
+  viewCardsFound: string[]
+  namesToApply: string[] | null
+  stacksByName: Record<string, number>
+  equipmentSlots: ParsedEquipmentImportSlot[]
+  missingDetailNames: string[]
+  warnings: string[]
+}
+
 export type ParsedInGameImport = {
   skills: ParsedInGameNameList
   talents: ParsedInGameNameList
   guildCard: ParsedGuildCardImport
   statCard: ParsedStatCardImport
   artifact: ParsedArtifactImport
+  tarots: ParsedTarotImport
   manualLevelRanges: ManualLevelRange[]
   manualLevelWarnings: string[]
   manualTrainingEntries: ManualTrainingEntry[]
@@ -159,6 +183,7 @@ const LEVELS_STORAGE_KEY = "SelectedLevels"
 const TRAINING_STORAGE_KEY = "SelectedTraining"
 const HERO_POINTS_STORAGE_KEY = "SelectedHeroPoints"
 const RUNES_STORAGE_KEY = "SelectedRunes"
+const TAROT_STACKS_STORAGE_KEY = "tarotStacks"
 const RACE_STORAGE_KEY = "SelectedRace"
 const ARTIFACT_STORAGE_KEY = "Artifact"
 const MANUAL_LEVEL_RANGES_STORAGE_KEY = "SelectedManualLevelRanges"
@@ -212,6 +237,10 @@ const runeNameByNormalizedKey = new Map<string, string>(
   Object.keys(rune_data).map((name) => [normalizeDenseText(name), name]),
 )
 
+const tarotNameByNormalizedKey = new Map<string, string>(
+  Object.keys(tarot_data).map((name) => [normalizeDenseText(name), name]),
+)
+
 affixStatByNormalizedKey.set("penvoid", "Void Pen%")
 affixStatByNormalizedKey.set("heal", "HEAL")
 
@@ -222,6 +251,7 @@ export function createDefaultInGameImportInputs(): InGameImportInputs {
     guildCard: "",
     statCard: "",
     artifact: "",
+    tarots: "",
     levelUps: "",
     training: "",
     heroTraining: "",
@@ -231,6 +261,10 @@ export function createDefaultInGameImportInputs(): InGameImportInputs {
 
 export function buildEquipmentImportSlotMarker(target: EquipmentImportTargetKey): string {
   return `[[MANGO_IMPORT_SLOT:${target}]]`
+}
+
+export function buildTarotImportRowMarker(rowKey: TarotImportRowKey): string {
+  return `[[MANGO_TAROT_ROW:${rowKey}]]`
 }
 
 function normalizeTranscriptText(text: string): string {
@@ -383,6 +417,353 @@ function createEmptyRuneSelections(): Record<RuneTier, ImportedRuneSelection[]> 
 function parseEquipmentImportSlotMarker(line: string): EquipmentImportTargetKey | null {
   const markerMatch = line.match(equipmentImportSlotMarkerRegex)
   return markerMatch ? markerMatch[1] as EquipmentImportTargetKey : null
+}
+
+function parseTarotImportRowMarker(line: string): TarotImportRowKey | null {
+  const markerMatch = line.match(tarotImportRowMarkerRegex)
+  return markerMatch ? markerMatch[1] as TarotImportRowKey : null
+}
+
+function createEmptyTarotImportSlots(): ParsedTarotImportSlot[] {
+  return [
+    { rowKey: "FiveStar", tier: 5, slotIndex: 0, name: null },
+    { rowKey: "FourStar", tier: 4, slotIndex: 0, name: null },
+    { rowKey: "ThreeStar1", tier: 3, slotIndex: 0, name: null },
+    { rowKey: "ThreeStar2", tier: 3, slotIndex: 1, name: null },
+  ]
+}
+
+function createDefaultTarotImport(): ParsedTarotImport {
+  return {
+    equippedSlots: createEmptyTarotImportSlots(),
+    equippedNames: [],
+    viewCardsFound: [],
+    namesToApply: null,
+    stacksByName: {},
+    equipmentSlots: [],
+    missingDetailNames: [],
+    warnings: [],
+  }
+}
+
+function formatTarotImportRowLabel(rowKey: Exclude<TarotImportRowKey, "EquippedList">): string {
+  switch (rowKey) {
+    case "FiveStar":
+      return "5-star slot"
+    case "FourStar":
+      return "4-star slot"
+    case "ThreeStar1":
+      return "3-star slot 1"
+    case "ThreeStar2":
+      return "3-star slot 2"
+  }
+}
+
+function resolveTarotName(rawName: string): string | null {
+  return tarotNameByNormalizedKey.get(normalizeDenseText(rawName.trim())) ?? null
+}
+
+function isTarotEquippedCardsBlock(block: string): boolean {
+  return /\bequipped tarot cards\b/i.test(block) || /\bcz\s+tarot\s+equippedcards\b/i.test(block)
+}
+
+function isTarotViewCardBlock(block: string): boolean {
+  return /\bcz\s+tarot\s+viewmycard\b/i.test(block)
+    || (/\bawakening\b/i.test(block) && /\bstat bonus\b/i.test(block) && /\bplayer\b/i.test(block))
+}
+
+function parseTarotEquippedCardsBlock(block: string | null): {
+  equippedSlots: ParsedTarotImportSlot[]
+  equippedNames: string[]
+  warnings: string[]
+} {
+  const equippedSlots = createEmptyTarotImportSlots()
+
+  if (!block) {
+    return {
+      equippedSlots,
+      equippedNames: [],
+      warnings: [],
+    }
+  }
+
+  const warnings: string[] = []
+  const byTier: Record<TarotImportTier, Array<string | null>> = {
+    3: [],
+    4: [],
+    5: [],
+  }
+  const encounteredNames: string[] = []
+  const lines = getMeaningfulLines(block)
+
+  for (const line of lines) {
+    const slotMatch = line.match(/^\[\s*(3|4|5)\s*⭐\s*\]\s*-\s*(.+)$/u)
+    if (!slotMatch) {
+      continue
+    }
+
+    const tier = Number(slotMatch[1]) as TarotImportTier
+    const rawName = slotMatch[2].trim()
+
+    if (/^none$/i.test(rawName)) {
+      byTier[tier].push(null)
+      continue
+    }
+
+    const canonicalName = resolveTarotName(rawName)
+    if (!canonicalName) {
+      warnings.push(`Tarot equipped list included an unknown tarot "${rawName}".`)
+      byTier[tier].push(null)
+      continue
+    }
+
+    byTier[tier].push(canonicalName)
+    encounteredNames.push(canonicalName)
+  }
+
+  if (Object.values(byTier).every((entries) => entries.length === 0)) {
+    warnings.push("Tarot equipped list import could not read any equipped tarot slots.")
+  }
+
+  if (byTier[5].length > 1) {
+    warnings.push("Tarot equipped list contained more than one 5-star slot.")
+  }
+
+  if (byTier[4].length > 1) {
+    warnings.push("Tarot equipped list contained more than one 4-star slot.")
+  }
+
+  if (byTier[3].length > 2) {
+    warnings.push("Tarot equipped list contained more than two 3-star slots.")
+  }
+
+  equippedSlots[0].name = byTier[5][0] ?? null
+  equippedSlots[1].name = byTier[4][0] ?? null
+  equippedSlots[2].name = byTier[3][0] ?? null
+  equippedSlots[3].name = byTier[3][1] ?? null
+
+  return {
+    equippedSlots,
+    equippedNames: Array.from(new Set(encounteredNames)),
+    warnings,
+  }
+}
+
+function parseTarotViewCardBlock(block: string): {
+  name: string | null
+  awakening: number | null
+  equipmentSlot: ParsedEquipmentImportSlot | null
+  warnings: string[]
+} {
+  const lines = getMeaningfulLines(block)
+  const warnings: string[] = []
+  const nameCandidates: string[] = []
+
+  const commandLine = lines.find((line) => /\bcz\s+tarot\s+viewmycard\b/i.test(line)) ?? null
+  const commandMatch = commandLine?.match(/\bcz\s+tarot\s+viewmycard\s+(.+)$/i) ?? null
+  if (commandMatch) {
+    nameCandidates.push(commandMatch[1].trim())
+  }
+
+  for (const line of lines) {
+    const headerMatch = line.match(/^\[\s*[^\]]+\s*\]\s+(.+)$/)
+    if (headerMatch) {
+      nameCandidates.push(headerMatch[1].trim())
+    }
+  }
+
+  let name: string | null = null
+
+  for (const candidate of nameCandidates) {
+    const resolvedName = resolveTarotName(candidate)
+    if (resolvedName) {
+      name = resolvedName
+      break
+    }
+  }
+
+  if (!name) {
+    warnings.push("Tarot view card import could not read a recognized tarot name.")
+  }
+
+  const awakeningLine = lines.find((line) => /\bawakening\b/i.test(line)) ?? null
+  const awakeningMatch = awakeningLine?.match(/([+-]?\d[\d,]*)\s*(?:\/\s*[+-]?\d[\d,]*)?/) ?? null
+  const awakening = awakeningMatch ? parseWholeNumber(awakeningMatch[1]) : null
+
+  if (awakening === null) {
+    warnings.push(`Tarot view card${name ? ` "${name}"` : ""} did not contain a readable Awakening value.`)
+  }
+
+  let equipmentSlot: ParsedEquipmentImportSlot | null = null
+
+  if (name) {
+    const slot = createDefaultEquipmentSlot()
+    slot.name = name
+    slot.type = "Tarot"
+    slot.enabled = true
+    slot.affixes = []
+    slot.scriptGroupId = ""
+    slot.mainstat = ""
+    slot.mainstat_value = 0
+    slot.tarotAuto = false
+    slot.tarotScalingStat = tarot_data[name]?.stat_bonus ?? ""
+
+    const levelLine = lines.find((line) => /level\s*:/i.test(line)) ?? null
+    const levelMatch = levelLine?.match(/level\s*:\s*(\d+)\s*\/\s*(\d+)/i) ?? null
+    slot.tarotLevel = levelMatch ? parseWholeNumber(levelMatch[1]) : 0
+
+    if (!levelMatch) {
+      warnings.push(`Tarot view card "${name}" did not contain a readable Level value.`)
+    }
+
+    for (const line of lines) {
+      if (!line.startsWith("◘")) {
+        continue
+      }
+
+      const affix = parseEquipmentAffixLine(line)
+      if (affix) {
+        slot.affixes.push(affix)
+      }
+    }
+
+    equipmentSlot = {
+      slot: normalizeEquipmentSlot(slot),
+      targetSlot: null,
+    }
+  }
+
+  return {
+    name,
+    awakening,
+    equipmentSlot,
+    warnings,
+  }
+}
+
+function parseTarotImport(rawText: string | null): ParsedTarotImport {
+  if (!rawText) {
+    return createDefaultTarotImport()
+  }
+
+  const blocks = splitTranscriptBlocks(rawText).filter((block) => block.length > 0)
+  if (blocks.length === 0) {
+    return createDefaultTarotImport()
+  }
+
+  const warnings: string[] = []
+  let equippedListBlock: string | null = null
+  const detailBlocks: Array<{ rowKey: Exclude<TarotImportRowKey, "EquippedList"> | null; block: string }> = []
+
+  for (const block of blocks) {
+    const lines = getMeaningfulLines(block)
+    let rowKey: TarotImportRowKey | null = null
+    const cleanedLines: string[] = []
+
+    for (const line of lines) {
+      const parsedRowKey = parseTarotImportRowMarker(line)
+      if (parsedRowKey && rowKey === null) {
+        rowKey = parsedRowKey
+        continue
+      }
+
+      cleanedLines.push(line)
+    }
+
+    const cleanedBlock = cleanedLines.join("\n").trim()
+    if (cleanedBlock.length === 0) {
+      continue
+    }
+
+    if (rowKey === "EquippedList") {
+      if (equippedListBlock) {
+        warnings.push("Multiple tarot equipped list rows were pasted. Using the last one.")
+      }
+      equippedListBlock = cleanedBlock
+      continue
+    }
+
+    if (rowKey) {
+      detailBlocks.push({
+        rowKey,
+        block: cleanedBlock,
+      })
+      continue
+    }
+
+    if (isTarotEquippedCardsBlock(cleanedBlock)) {
+      if (equippedListBlock) {
+        warnings.push("Multiple tarot equipped list blocks were pasted. Using the last one.")
+      }
+      equippedListBlock = cleanedBlock
+      continue
+    }
+
+    if (isTarotViewCardBlock(cleanedBlock)) {
+      detailBlocks.push({
+        rowKey: null,
+        block: cleanedBlock,
+      })
+    }
+  }
+
+  const equippedResult = parseTarotEquippedCardsBlock(equippedListBlock)
+  warnings.push(...equippedResult.warnings)
+
+  const expectedNameByRowKey = new Map<Exclude<TarotImportRowKey, "EquippedList">, string | null>(
+    equippedResult.equippedSlots.map((slot) => [slot.rowKey, slot.name]),
+  )
+  const viewCardsFound: string[] = []
+  const stacksByName: Record<string, number> = {}
+  const equipmentSlots: ParsedEquipmentImportSlot[] = []
+
+  for (const [detailIndex, detailEntry] of detailBlocks.entries()) {
+    const parsedDetail = parseTarotViewCardBlock(detailEntry.block)
+    warnings.push(...parsedDetail.warnings.map((warning) => `Tarot detail ${detailIndex + 1}: ${warning}`))
+
+    if (detailEntry.rowKey) {
+      const expectedName = expectedNameByRowKey.get(detailEntry.rowKey) ?? null
+      if (!expectedName) {
+        warnings.push(`A ${formatTarotImportRowLabel(detailEntry.rowKey)} transcript was pasted, but no tarot is equipped in that slot.`)
+      } else if (parsedDetail.name && parsedDetail.name !== expectedName) {
+        warnings.push(`The ${formatTarotImportRowLabel(detailEntry.rowKey)} transcript parsed "${parsedDetail.name}", but the equipped list shows "${expectedName}".`)
+      }
+    }
+
+    if (!parsedDetail.name) {
+      continue
+    }
+
+    viewCardsFound.push(parsedDetail.name)
+
+    if (parsedDetail.awakening !== null) {
+      stacksByName[parsedDetail.name] = parsedDetail.awakening
+    }
+
+    if (parsedDetail.equipmentSlot) {
+      equipmentSlots.push(parsedDetail.equipmentSlot)
+    }
+
+    if (equippedListBlock && !equippedResult.equippedNames.includes(parsedDetail.name)) {
+      warnings.push(`Tarot detail "${parsedDetail.name}" is not present in the equipped tarot list.`)
+    }
+  }
+
+  const uniqueViewCardsFound = Array.from(new Set(viewCardsFound))
+  const missingDetailNames = equippedListBlock
+    ? equippedResult.equippedNames.filter((name) => stacksByName[name] === undefined)
+    : []
+
+  return {
+    equippedSlots: equippedResult.equippedSlots,
+    equippedNames: equippedResult.equippedNames,
+    viewCardsFound: uniqueViewCardsFound,
+    namesToApply: equippedListBlock ? equippedResult.equippedNames : null,
+    stacksByName,
+    equipmentSlots,
+    missingDetailNames,
+    warnings,
+  }
 }
 
 function normalizeStoredRuneSelections(value: unknown): Record<RuneTier, ImportedRuneSelection[]> {
@@ -1309,6 +1690,7 @@ function detectInGameImportInputs(rawText: string): InGameImportInputs {
   const guildCardBlock = [...blocks].reverse().find((block) => isGuildCardBlock(block)) ?? ""
   const statCardBlock = [...blocks].reverse().find((block) => isStatCardBlock(block)) ?? ""
   const artifactBlock = [...blocks].reverse().find((block) => isArtifactBlock(block)) ?? ""
+  const tarotBlocks = blocks.filter((block) => isTarotEquippedCardsBlock(block) || isTarotViewCardBlock(block))
   const equipmentBlocks = blocks.filter((block) => isEquipmentBlock(block))
   const heroTrainingBlocks = blocks.filter((block) => /\bhero training\b/i.test(block) || /\bherotraining\b/i.test(block))
   const hasLevelTranscript = /\bLevel Up!\b/i.test(rawText) || /\b(?:x?levelup)\s+(?:tank|warrior|caster|healer)\b/i.test(rawText)
@@ -1320,6 +1702,7 @@ function detectInGameImportInputs(rawText: string): InGameImportInputs {
     guildCard: guildCardBlock,
     statCard: statCardBlock,
     artifact: artifactBlock,
+    tarots: tarotBlocks.join("\n\n"),
     levelUps: hasLevelTranscript ? rawText : "",
     training: hasTrainingTranscript ? rawText : "",
     heroTraining: heroTrainingBlocks.join("\n\n"),
@@ -1340,6 +1723,7 @@ export function parseInGameImportInputs(inputs: InGameImportInputs): ParsedInGam
   const guildCard = parseGuildCardImport(inputs.guildCard.trim() || null)
   const statCard = parseStatCardImport(inputs.statCard.trim() || null)
   const artifact = parseArtifactImport(inputs.artifact.trim() || null)
+  const tarots = parseTarotImport(inputs.tarots.trim() || null)
   const { ranges: manualLevelRanges, warnings: manualLevelWarnings } = hasLevelTranscript
     ? parseManualLevelTranscript(preprocessLevelTranscript(inputs.levelUps))
     : { ranges: [], warnings: [] }
@@ -1356,6 +1740,7 @@ export function parseInGameImportInputs(inputs: InGameImportInputs): ParsedInGam
     ...guildCard.warnings,
     ...statCard.warnings,
     ...artifact.warnings,
+    ...tarots.warnings,
     ...manualLevelWarnings,
     ...trainingWarnings,
     ...heroTraining.warnings,
@@ -1378,6 +1763,7 @@ export function parseInGameImportInputs(inputs: InGameImportInputs): ParsedInGam
     guildCard,
     statCard,
     artifact,
+    tarots,
     manualLevelRanges,
     manualLevelWarnings,
     manualTrainingEntries,
@@ -1580,6 +1966,8 @@ export function hasReadyInGameImport(parsed: ParsedInGameImport): boolean {
     || parsed.statCard.statPoints !== null
     || Object.keys(parsed.artifact.values).length > 0
     || parsed.artifact.seenRuneTiers.length > 0
+    || parsed.tarots.namesToApply !== null
+    || parsed.tarots.equipmentSlots.length > 0
     || parsed.manualLevelRanges.length > 0
     || countMainStatValues(parsed.trainingTotals) > 0
     || countHeroPointDeltas(parsed.heroTraining.deltas) > 0
@@ -1647,6 +2035,34 @@ export function applyInGameImport(storage: Storage, parsed: ParsedInGameImport):
     }
   }
 
+  if (parsed.tarots.namesToApply !== null) {
+    const currentManualTarots = readStoredManualTarotSelections(storage)
+    const nextManualTarots = parsed.tarots.namesToApply
+
+    if (JSON.stringify(nextManualTarots) !== JSON.stringify(currentManualTarots)) {
+      storage.setItem(MANUAL_TAROT_SELECTION_STORAGE_KEY, JSON.stringify(nextManualTarots))
+      updatedSections.push(`tarots (${nextManualTarots.length})`)
+    }
+
+    const currentTarotStacks = readRecordOfNumbers(storage, TAROT_STACKS_STORAGE_KEY)
+    const nextTarotStacks = { ...currentTarotStacks }
+
+    for (const tarotName of nextManualTarots) {
+      if (parsed.tarots.stacksByName[tarotName] !== undefined) {
+        nextTarotStacks[tarotName] = parsed.tarots.stacksByName[tarotName]
+      } else {
+        delete nextTarotStacks[tarotName]
+      }
+    }
+
+    if (JSON.stringify(nextTarotStacks) !== JSON.stringify(currentTarotStacks)) {
+      storage.setItem(TAROT_STACKS_STORAGE_KEY, JSON.stringify(nextTarotStacks))
+      if (!updatedSections.some((section) => section.startsWith("tarots"))) {
+        updatedSections.push(`tarots (${nextManualTarots.length})`)
+      }
+    }
+  }
+
   if (parsed.manualLevelRanges.length > 0) {
     const currentRanges = normalizeManualLevelRanges(
       jsonParse(storage.getItem(MANUAL_LEVEL_RANGES_STORAGE_KEY), []),
@@ -1691,11 +2107,16 @@ export function applyInGameImport(storage: Storage, parsed: ParsedInGameImport):
     updatedSections.push(`hero training (+${countHeroPointDeltas(parsed.heroTraining.deltas)})`)
   }
 
-  if (parsed.equipmentSlots.length > 0) {
+  const importedEquipmentSlots = [
+    ...parsed.equipmentSlots,
+    ...parsed.tarots.equipmentSlots,
+  ]
+
+  if (importedEquipmentSlots.length > 0) {
     const currentEquipmentSlots = normalizeEquipmentSlots(
       jsonParse(storage.getItem(EQUIPMENT_SLOTS_STORAGE_KEY), []),
     )
-    const mergedEquipmentSlots = mergeImportedEquipmentSlots(currentEquipmentSlots, parsed.equipmentSlots)
+    const mergedEquipmentSlots = mergeImportedEquipmentSlots(currentEquipmentSlots, importedEquipmentSlots)
     const enabledEquipment = getEnabledEquipmentIndices(mergedEquipmentSlots)
     const autoLinkedTarots = getEquipmentAutoLinkedTarots(mergedEquipmentSlots, enabledEquipment)
     const autoManagedTarots = getAutoManagedTarotNames(mergedEquipmentSlots)
@@ -1708,7 +2129,13 @@ export function applyInGameImport(storage: Storage, parsed: ParsedInGameImport):
     storage.setItem(ENABLED_EQUIPMENT_STORAGE_KEY, JSON.stringify(enabledEquipment))
     storage.setItem(EQUIPMENT_AUTO_LINKED_TAROTS_STORAGE_KEY, JSON.stringify(autoLinkedTarots))
     storage.setItem(MANUAL_TAROT_SELECTION_STORAGE_KEY, JSON.stringify(filteredManualTarots))
-    updatedSections.push(`equipment (${parsed.equipmentSlots.length})`)
+    if (parsed.equipmentSlots.length > 0) {
+      updatedSections.push(`equipment (${parsed.equipmentSlots.length})`)
+    }
+
+    if (parsed.tarots.equipmentSlots.length > 0) {
+      updatedSections.push(`tarot equipment (${parsed.tarots.equipmentSlots.length})`)
+    }
   }
 
   if (updatedSections.length > 0) {
