@@ -1,5 +1,6 @@
 import { heroPointStats, type HeroPointStatId } from "@/app/data/heropoint_data"
 import race_data, { type RaceTag } from "@/app/data/race_data"
+import rune_data from "@/app/data/rune_data"
 import { skill_data } from "@/app/data/skill_data"
 import stat_data from "@/app/data/stat_data"
 import { talent_data } from "@/app/data/talent_data"
@@ -53,6 +54,20 @@ import {
 import { calculateHeroPointAvailability } from "@/app/lib/heroPoints"
 
 type PageImportKind = "skill" | "talent"
+type ImportedRuneSelection = {
+  rune: string
+  count: number
+}
+
+const runeTiers = ["Low", "Middle", "High", "Legacy", "Divine"] as const
+type RuneTier = typeof runeTiers[number]
+const equipmentImportTargets = ["Helm", "Armor", "Amulet", "Ring1", "Ring2", "Mainhand", "Offhand", "Runeshard"] as const
+export type EquipmentImportTargetKey = typeof equipmentImportTargets[number]
+const equipmentImportSlotMarkerRegex = new RegExp(`^\\[\\[MANGO_IMPORT_SLOT:(${equipmentImportTargets.join("|")})\\]\\]$`)
+type ParsedEquipmentImportSlot = {
+  slot: EquipmentSlot
+  targetSlot: EquipmentImportTargetKey | null
+}
 
 export type InGameImportInputs = {
   skills: string
@@ -102,6 +117,8 @@ export type ParsedHeroTrainingImport = {
 
 export type ParsedArtifactImport = {
   values: Partial<ArtifactState>
+  runes: Record<RuneTier, ImportedRuneSelection[]>
+  seenRuneTiers: RuneTier[]
   warnings: string[]
 }
 
@@ -117,7 +134,7 @@ export type ParsedInGameImport = {
   trainingTotals: MainStatValues
   trainingWarnings: string[]
   heroTraining: ParsedHeroTrainingImport
-  equipmentSlots: EquipmentSlot[]
+  equipmentSlots: ParsedEquipmentImportSlot[]
   equipmentWarnings: string[]
   warnings: string[]
 }
@@ -141,6 +158,7 @@ export type InGameImportCoverageRow = {
 const LEVELS_STORAGE_KEY = "SelectedLevels"
 const TRAINING_STORAGE_KEY = "SelectedTraining"
 const HERO_POINTS_STORAGE_KEY = "SelectedHeroPoints"
+const RUNES_STORAGE_KEY = "SelectedRunes"
 const RACE_STORAGE_KEY = "SelectedRace"
 const ARTIFACT_STORAGE_KEY = "Artifact"
 const MANUAL_LEVEL_RANGES_STORAGE_KEY = "SelectedManualLevelRanges"
@@ -148,6 +166,16 @@ const MANUAL_TRAINING_ENTRIES_STORAGE_KEY = "SelectedManualTrainingEntries"
 
 const mainStatKeys: readonly MainStatKey[] = ["ATK", "DEF", "MATK", "HEAL"]
 const equipmentTypeOptions = ["Helm", "Armor", "Amulet", "Ring", "Weapon", "Runeshard", "Tarot"] as const
+const equipmentImportTargetIndexByKey: Record<EquipmentImportTargetKey, number> = {
+  Helm: 0,
+  Armor: 1,
+  Amulet: 2,
+  Ring1: 3,
+  Ring2: 4,
+  Mainhand: 5,
+  Offhand: 6,
+  Runeshard: 7,
+}
 
 const heroPointCostById = new Map<HeroPointStatId, number>(
   heroPointStats.map((entry) => [entry.id, entry.cost]),
@@ -171,9 +199,17 @@ const raceTagByNormalizedKey = new Map<string, RaceTag>(
 const equipmentTypeByNormalizedKey = new Map<string, typeof equipmentTypeOptions[number]>(
   equipmentTypeOptions.map((type) => [normalizeDenseText(type), type]),
 )
+equipmentTypeByNormalizedKey.set("ring1", "Ring")
+equipmentTypeByNormalizedKey.set("ring2", "Ring")
+equipmentTypeByNormalizedKey.set("mainhand", "Weapon")
+equipmentTypeByNormalizedKey.set("offhand", "Weapon")
 
 const affixStatByNormalizedKey = new Map<string, string>(
   Object.entries(stat_data.inGameNames).map(([token, stat]) => [normalizeDenseText(token), stat]),
+)
+
+const runeNameByNormalizedKey = new Map<string, string>(
+  Object.keys(rune_data).map((name) => [normalizeDenseText(name), name]),
 )
 
 affixStatByNormalizedKey.set("penvoid", "Void Pen%")
@@ -191,6 +227,10 @@ export function createDefaultInGameImportInputs(): InGameImportInputs {
     heroTraining: "",
     equipment: "",
   }
+}
+
+export function buildEquipmentImportSlotMarker(target: EquipmentImportTargetKey): string {
+  return `[[MANGO_IMPORT_SLOT:${target}]]`
 }
 
 function normalizeTranscriptText(text: string): string {
@@ -328,6 +368,103 @@ function createEmptyLevelRecord(): Record<ManualRangeClass, number> {
     caster: 0,
     healer: 0,
   }
+}
+
+function createEmptyRuneSelections(): Record<RuneTier, ImportedRuneSelection[]> {
+  return {
+    Low: [],
+    Middle: [],
+    High: [],
+    Legacy: [],
+    Divine: [],
+  }
+}
+
+function parseEquipmentImportSlotMarker(line: string): EquipmentImportTargetKey | null {
+  const markerMatch = line.match(equipmentImportSlotMarkerRegex)
+  return markerMatch ? markerMatch[1] as EquipmentImportTargetKey : null
+}
+
+function normalizeStoredRuneSelections(value: unknown): Record<RuneTier, ImportedRuneSelection[]> {
+  const emptySelections = createEmptyRuneSelections()
+
+  if (typeof value !== "object" || value === null || Array.isArray(value)) {
+    return emptySelections
+  }
+
+  const result = createEmptyRuneSelections()
+
+  for (const tier of runeTiers) {
+    const rawEntries = (value as Partial<Record<RuneTier, unknown>>)[tier]
+    if (!Array.isArray(rawEntries)) {
+      continue
+    }
+
+    result[tier] = rawEntries
+      .filter((entry): entry is Partial<ImportedRuneSelection> => typeof entry === "object" && entry !== null)
+      .map((entry) => ({
+        rune: typeof entry.rune === "string" ? entry.rune : "",
+        count: Math.max(0, Math.floor(typeof entry.count === "number" && Number.isFinite(entry.count) ? entry.count : 0)),
+      }))
+      .filter((entry) => entry.rune.length > 0 && entry.count > 0)
+  }
+
+  return result
+}
+
+function countImportedRunesByTier(entries: readonly ImportedRuneSelection[]): number {
+  return entries.reduce((sum, entry) => sum + Math.max(0, Math.floor(entry.count)), 0)
+}
+
+function parseArtifactRuneTier(
+  tier: RuneTier,
+  expectedCount: number,
+  rawLines: readonly string[],
+  warnings: string[],
+): ImportedRuneSelection[] {
+  const joinedValue = rawLines.join(", ").trim()
+
+  if (joinedValue.length === 0 || /^none$/i.test(joinedValue)) {
+    if (expectedCount > 0) {
+      warnings.push(`Artifact ${tier} runes listed ${expectedCount}, but no rune names were found.`)
+    }
+    return []
+  }
+
+  const countsByRune = new Map<string, number>()
+  const orderedRunes: string[] = []
+
+  for (const rawName of joinedValue.split(/\s*,\s*/)) {
+    const trimmedName = rawName.trim()
+    if (trimmedName.length === 0 || /^none$/i.test(trimmedName)) {
+      continue
+    }
+
+    const canonicalName = runeNameByNormalizedKey.get(normalizeDenseText(trimmedName))
+    if (!canonicalName) {
+      warnings.push(`Artifact ${tier} runes included an unknown rune "${trimmedName}".`)
+      continue
+    }
+
+    if (!countsByRune.has(canonicalName)) {
+      countsByRune.set(canonicalName, 0)
+      orderedRunes.push(canonicalName)
+    }
+
+    countsByRune.set(canonicalName, (countsByRune.get(canonicalName) ?? 0) + 1)
+  }
+
+  const parsedSelections = orderedRunes.map((rune) => ({
+    rune,
+    count: countsByRune.get(rune) ?? 0,
+  }))
+
+  const parsedCount = countImportedRunesByTier(parsedSelections)
+  if (expectedCount !== parsedCount) {
+    warnings.push(`Artifact ${tier} runes listed ${expectedCount}, but ${parsedCount} rune${parsedCount === 1 ? "" : "s"} were parsed.`)
+  }
+
+  return parsedSelections
 }
 
 function createEmptyHeroPointDeltaRecord(): Partial<Record<HeroPointStatId, number>> {
@@ -608,6 +745,8 @@ function parseArtifactImport(block: string | null): ParsedArtifactImport {
   if (!block) {
     return {
       values: {},
+      runes: createEmptyRuneSelections(),
+      seenRuneTiers: [],
       warnings: [],
     }
   }
@@ -615,6 +754,8 @@ function parseArtifactImport(block: string | null): ParsedArtifactImport {
   const lines = getMeaningfulLines(block)
   const warnings: string[] = []
   const values: Partial<ArtifactState> = {}
+  const runes = createEmptyRuneSelections()
+  const seenRuneTiers: RuneTier[] = []
   const levelMatch = block.match(/\bArtifact\s*-\s*Level\s*([+-]?\d[\d,]*)/i)
   const atkValue = findValueAfterLabel(lines, (line) => line.includes("atk") && !line.includes("matk"))
   const defValue = findValueAfterLabel(lines, (line) => line.includes("def") && !line.includes("matk"))
@@ -646,12 +787,55 @@ function parseArtifactImport(block: string | null): ParsedArtifactImport {
     values["HEAL%"] = parseWholeNumber(parsedHeal[1])
   }
 
-  if (Object.keys(values).length === 0) {
-    warnings.push("Artifact import did not contain any parseable level or artifact stat values.")
+  let currentRuneTier: RuneTier | null = null
+  let currentExpectedRuneCount = 0
+  let currentRuneLines: string[] = []
+
+  const flushCurrentRuneTier = () => {
+    if (!currentRuneTier) {
+      return
+    }
+
+    runes[currentRuneTier] = parseArtifactRuneTier(
+      currentRuneTier,
+      currentExpectedRuneCount,
+      currentRuneLines,
+      warnings,
+    )
+  }
+
+  for (const line of lines) {
+    const tierMatch = line.match(/^(Low|Middle|High|Legacy|Divine)\s*:\s*([+-]?\d[\d,]*)\s*$/i)
+
+    if (tierMatch) {
+      flushCurrentRuneTier()
+
+      currentRuneTier = tierMatch[1][0].toUpperCase() + tierMatch[1].slice(1).toLowerCase() as RuneTier
+      currentExpectedRuneCount = parseWholeNumber(tierMatch[2])
+      currentRuneLines = []
+
+      if (!seenRuneTiers.includes(currentRuneTier)) {
+        seenRuneTiers.push(currentRuneTier)
+      }
+
+      continue
+    }
+
+    if (currentRuneTier) {
+      currentRuneLines.push(line)
+    }
+  }
+
+  flushCurrentRuneTier()
+
+  if (Object.keys(values).length === 0 && seenRuneTiers.length === 0) {
+    warnings.push("Artifact import did not contain any parseable level, artifact stat values, or equipped runes.")
   }
 
   return {
     values,
+    runes,
+    seenRuneTiers,
     warnings,
   }
 }
@@ -766,8 +950,12 @@ function parseEquipmentAffixLine(line: string): EquipmentAffix | null {
   }
 }
 
-function parseEquipmentBlock(block: string): { slot: EquipmentSlot | null; warnings: string[] } {
-  const lines = getMeaningfulLines(block)
+function parseEquipmentBlock(block: string): { slot: EquipmentSlot | null; targetSlot: EquipmentImportTargetKey | null; warnings: string[] } {
+  const rawLines = getMeaningfulLines(block)
+  const targetSlot = rawLines
+    .map((line) => parseEquipmentImportSlotMarker(line))
+    .find((value): value is EquipmentImportTargetKey => value !== null) ?? null
+  const lines = rawLines.filter((line) => parseEquipmentImportSlotMarker(line) === null)
   const warnings: string[] = []
   const slot = createDefaultEquipmentSlot()
 
@@ -794,7 +982,7 @@ function parseEquipmentBlock(block: string): { slot: EquipmentSlot | null; warni
 
   if (!slot.type) {
     const commandLine = lines.find((line) => /\bitemequipview\b/i.test(line))
-    const commandTypeMatch = commandLine?.match(/\bitemequipview\s+([A-Za-z]+)/i)
+    const commandTypeMatch = commandLine?.match(/\bitemequipview\s+([A-Za-z0-9]+)/i)
     slot.type = canonicalizeEquipmentType(commandTypeMatch?.[1] ?? null)
   }
 
@@ -826,7 +1014,7 @@ function parseEquipmentBlock(block: string): { slot: EquipmentSlot | null; warni
 
   if (!slot.name && !slot.type && slot.affixes.length === 0) {
     warnings.push("Skipped an equipment block because it did not contain a recognizable item.")
-    return { slot: null, warnings }
+    return { slot: null, targetSlot, warnings }
   }
 
   if (!slot.type) {
@@ -835,6 +1023,7 @@ function parseEquipmentBlock(block: string): { slot: EquipmentSlot | null; warni
 
   return {
     slot: normalizeEquipmentSlot(slot),
+    targetSlot,
     warnings,
   }
 }
@@ -856,14 +1045,17 @@ function getLevelCount(levels: Record<ManualRangeClass, number>): number {
   return Object.values(levels).reduce((sum, value) => sum + value, 0)
 }
 
-function parseImportedEquipmentSlots(blocks: readonly string[]): { slots: EquipmentSlot[]; warnings: string[] } {
-  const slots: EquipmentSlot[] = []
+function parseImportedEquipmentSlots(blocks: readonly string[]): { slots: ParsedEquipmentImportSlot[]; warnings: string[] } {
+  const slots: ParsedEquipmentImportSlot[] = []
   const warnings: string[] = []
 
   for (const block of blocks) {
     const parsed = parseEquipmentBlock(block)
     if (parsed.slot) {
-      slots.push(parsed.slot)
+      slots.push({
+        slot: parsed.slot,
+        targetSlot: parsed.targetSlot,
+      })
     }
 
     warnings.push(...parsed.warnings)
@@ -1062,14 +1254,30 @@ function getEquipmentSlotMatchScore(
   return Number.NEGATIVE_INFINITY
 }
 
+function ensureEquipmentSlotCapacity(slots: EquipmentSlot[], targetIndex: number): void {
+  while (slots.length <= targetIndex) {
+    slots.push(createDefaultEquipmentSlot())
+  }
+}
+
 function mergeImportedEquipmentSlots(
   existingSlots: readonly EquipmentSlot[],
-  importedSlots: readonly EquipmentSlot[],
+  importedSlots: readonly ParsedEquipmentImportSlot[],
 ): EquipmentSlot[] {
   const nextSlots = [...existingSlots]
   const usedIndices = new Set<number>()
 
-  for (const importedSlot of importedSlots) {
+  for (const importedEntry of importedSlots) {
+    const { slot: importedSlot, targetSlot } = importedEntry
+
+    if (targetSlot) {
+      const targetIndex = equipmentImportTargetIndexByKey[targetSlot]
+      ensureEquipmentSlotCapacity(nextSlots, targetIndex)
+      nextSlots[targetIndex] = importedSlot
+      usedIndices.add(targetIndex)
+      continue
+    }
+
     let bestIndex = -1
     let bestScore = Number.NEGATIVE_INFINITY
 
@@ -1371,6 +1579,7 @@ export function hasReadyInGameImport(parsed: ParsedInGameImport): boolean {
     || parsed.guildCard.levels !== null
     || parsed.statCard.statPoints !== null
     || Object.keys(parsed.artifact.values).length > 0
+    || parsed.artifact.seenRuneTiers.length > 0
     || parsed.manualLevelRanges.length > 0
     || countMainStatValues(parsed.trainingTotals) > 0
     || countHeroPointDeltas(parsed.heroTraining.deltas) > 0
@@ -1415,6 +1624,26 @@ export function applyInGameImport(storage: Storage, parsed: ParsedInGameImport):
     if (JSON.stringify(mergedArtifact) !== JSON.stringify(currentArtifact)) {
       storage.setItem(ARTIFACT_STORAGE_KEY, JSON.stringify(mergedArtifact))
       updatedSections.push("artifact")
+    }
+  }
+
+  if (parsed.artifact.seenRuneTiers.length > 0) {
+    const currentRunes = normalizeStoredRuneSelections(
+      jsonParse(storage.getItem(RUNES_STORAGE_KEY), {}),
+    )
+    const nextRunes = createEmptyRuneSelections()
+
+    for (const tier of runeTiers) {
+      nextRunes[tier] = parsed.artifact.seenRuneTiers.includes(tier)
+        ? parsed.artifact.runes[tier]
+        : currentRunes[tier]
+    }
+
+    if (JSON.stringify(nextRunes) !== JSON.stringify(currentRunes)) {
+      storage.setItem(RUNES_STORAGE_KEY, JSON.stringify(nextRunes))
+      if (!updatedSections.includes("artifact")) {
+        updatedSections.push("artifact")
+      }
     }
   }
 

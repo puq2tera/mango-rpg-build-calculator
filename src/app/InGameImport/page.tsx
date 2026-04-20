@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react"
 import CopyTextButton from "@/app/components/CopyTextButton"
 import {
   applyInGameImport,
+  buildEquipmentImportSlotMarker,
   buildInGameImportCoverageRows,
   countManualLevelRangesByClass,
   countHeroPointDeltas,
@@ -11,6 +12,7 @@ import {
   countSkillPointCost,
   createDefaultInGameImportInputs,
   dedupeManualLevelRanges,
+  type EquipmentImportTargetKey,
   getHeroPointAccountingGap,
   getMissingClassLevelsByImportedRanges,
   getSkillPointAccountingGap,
@@ -61,9 +63,25 @@ type SectionCommandDisplay = {
   copyText: string | null
 }
 
+type EquipmentImportRowConfig = {
+  label: string
+  commandType: string
+  importTarget: EquipmentImportTargetKey
+}
+
 const INPUT_STORAGE_KEY = "inGameImport:inputs"
 const searchCommandSectionKeys = new Set<keyof InGameImportPageInputs>(["levelUps", "training", "heroTraining"])
-const equipmentCommandSlotOrder = ["Helm", "Armor", "Amulet", "Ring", "Weapon", "Runeshard"] as const
+const equipmentCommandSlotOrder: readonly EquipmentImportRowConfig[] = [
+  { label: "Helm", commandType: "Helm", importTarget: "Helm" },
+  { label: "Armor", commandType: "Armor", importTarget: "Armor" },
+  { label: "Amulet", commandType: "Amulet", importTarget: "Amulet" },
+  { label: "Ring1", commandType: "Ring1", importTarget: "Ring1" },
+  { label: "Ring2", commandType: "Ring2", importTarget: "Ring2" },
+  { label: "Mainhand", commandType: "Mainhand", importTarget: "Mainhand" },
+  { label: "Offhand", commandType: "Offhand", importTarget: "Offhand" },
+  { label: "Runeshard", commandType: "Runeshard", importTarget: "Runeshard" },
+] as const
+const artifactRuneTierOrder = ["Low", "Middle", "High", "Legacy", "Divine"] as const
 const sectionConfigs: readonly ImportSectionConfig[] = [
   {
     key: "guildCard",
@@ -98,9 +116,9 @@ Skill/Talent Points
   {
     key: "artifact",
     title: "Artifact",
-    subtitle: "Imports artifact level and ATK/DEF/MATK/HEAL bonuses. Artifact rune slots are currently ignored.",
+    subtitle: "Imports artifact level, ATK/DEF/MATK/HEAL bonuses, and equipped runes.",
     command: "cz artifact",
-    placeholder: `puq2's Artifact - Level 2390 / 2391 :star:+197
+    placeholder: `Username or User ID's Artifact - Level 2390 / 2391 :star:+197
 :sparkle: Artifact
 :crossed_swords: +ATK %
 404
@@ -109,7 +127,9 @@ Skill/Talent Points
 :fire: +MATK %
 366
 :blue_heart: +Healpower %
-391`,
+391
+Low : 9
+Experience, Experience, Experience`,
     minHeightClass: "min-h-[14rem]",
   },
   {
@@ -168,7 +188,7 @@ Hero PTs Spent
   {
     key: "equipment",
     title: "Equipment",
-    subtitle: "Paste each `itemequipview` result into the matching equipment slot row.",
+    subtitle: "Paste each `itemequipview` result into the matching Helm, Armor, Amulet, Ring1, Ring2, Mainhand, Offhand, or Runeshard row.",
     command: "cz itemequipview Helm",
     placeholder: "Paste an `itemequipview` result into the matching slot row below.",
     minHeightClass: "min-h-[14rem]",
@@ -287,6 +307,29 @@ function normalizeListInput(
   return nextList
 }
 
+function normalizeEquipmentListInput(value: unknown): string[] {
+  const fromArray = Array.isArray(value)
+    ? value.map((entry) => typeof entry === "string" ? entry : "")
+    : typeof value === "string"
+      ? splitStoredBlocks(value)
+      : []
+
+  const migratedArray = fromArray.length === 6
+    ? [
+        fromArray[0] ?? "",
+        fromArray[1] ?? "",
+        fromArray[2] ?? "",
+        fromArray[3] ?? "",
+        "",
+        fromArray[4] ?? "",
+        "",
+        fromArray[5] ?? "",
+      ]
+    : fromArray
+
+  return Array.from({ length: equipmentCommandSlotOrder.length }, (_, index) => migratedArray[index] ?? "")
+}
+
 function normalizePageInputs(raw: unknown): InGameImportPageInputs {
   const defaults = createDefaultPageInputs()
 
@@ -305,7 +348,7 @@ function normalizePageInputs(raw: unknown): InGameImportPageInputs {
     heroTraining: typeof value.heroTraining === "string" ? value.heroTraining : defaults.heroTraining,
     skills: normalizeListInput(value.skills, 1),
     talents: normalizeListInput(value.talents, 1),
-    equipment: normalizeListInput(value.equipment, equipmentCommandSlotOrder.length, true),
+    equipment: normalizeEquipmentListInput(value.equipment),
   }
 }
 
@@ -319,7 +362,20 @@ function serializePageInputs(inputs: InGameImportPageInputs): InGameImportInputs
     heroTraining: inputs.heroTraining,
     skills: inputs.skills.map((entry) => entry.trim()).filter((entry) => entry.length > 0).join("\n\n"),
     talents: inputs.talents.map((entry) => entry.trim()).filter((entry) => entry.length > 0).join("\n\n"),
-    equipment: inputs.equipment.map((entry) => entry.trim()).filter((entry) => entry.length > 0).join("\n\n"),
+    equipment: inputs.equipment
+      .map((entry, index) => {
+        const trimmedEntry = entry.trim()
+        if (trimmedEntry.length === 0) {
+          return ""
+        }
+
+        const row = equipmentCommandSlotOrder[index]
+        return row
+          ? `${buildEquipmentImportSlotMarker(row.importTarget)}\n${trimmedEntry}`
+          : trimmedEntry
+      })
+      .filter((entry) => entry.length > 0)
+      .join("\n\n"),
   }
 }
 
@@ -454,6 +510,18 @@ function formatArtifactValue(value: number | undefined): string {
   return typeof value === "number" ? value.toLocaleString("en-US") : "?"
 }
 
+function formatArtifactRuneSummary(parsedArtifact: ParsedInGameImport["artifact"]): string {
+  if (parsedArtifact.seenRuneTiers.length === 0) {
+    return "Runes missing"
+  }
+
+  const counts = artifactRuneTierOrder.map((tier) => (
+    parsedArtifact.runes[tier].reduce((sum, entry) => sum + entry.count, 0)
+  ))
+
+  return `Runes L/M/H/Lg/D ${counts.join("/")}`
+}
+
 function getSectionSummaries(parsed: ParsedInGameImport): Record<keyof InGameImportPageInputs, SectionSummary> {
   const skillSummary: SectionSummary = parsed.skills.foundNames.length === 0 && !parsed.skills.pageCoverage
     ? { tone: "empty", text: "No skill pages pasted yet." }
@@ -492,20 +560,22 @@ function getSectionSummaries(parsed: ParsedInGameImport): Record<keyof InGameImp
       }
 
   const artifactFieldCount = Object.keys(parsed.artifact.values).length
+  const hasArtifactRunes = parsed.artifact.seenRuneTiers.length > 0
   const hasCompleteArtifact =
     parsed.artifact.values.Level !== undefined
     && parsed.artifact.values["ATK%"] !== undefined
     && parsed.artifact.values["DEF%"] !== undefined
     && parsed.artifact.values["MATK%"] !== undefined
     && parsed.artifact.values["HEAL%"] !== undefined
-  const artifactSummary: SectionSummary = artifactFieldCount === 0
+    && parsed.artifact.seenRuneTiers.length === artifactRuneTierOrder.length
+  const artifactSummary: SectionSummary = artifactFieldCount === 0 && !hasArtifactRunes
     ? { tone: "empty", text: "No artifact block pasted yet." }
     : {
         tone: hasCompleteArtifact ? "ready" : "partial",
         text: [
           parsed.artifact.values.Level !== undefined ? `Level ${parsed.artifact.values.Level.toLocaleString("en-US")}` : "Level missing",
           `ATK/DEF/MATK/HEAL ${formatArtifactValue(parsed.artifact.values["ATK%"])}/${formatArtifactValue(parsed.artifact.values["DEF%"])}/${formatArtifactValue(parsed.artifact.values["MATK%"])}/${formatArtifactValue(parsed.artifact.values["HEAL%"])}`,
-          "Artifact rune slots are ignored.",
+          formatArtifactRuneSummary(parsed.artifact),
         ].join(", "),
       }
 
@@ -634,6 +704,20 @@ function getSectionCommandDisplay(
         label: "Use row commands below",
         copyText: null,
       }
+    case "artifact":
+      {
+        const normalizedSearchAuthor = normalizeSearchAuthor(searchAuthor)
+
+        return normalizedSearchAuthor.length > 0
+          ? {
+              label: `cz artifact ${normalizedSearchAuthor}`,
+              copyText: `cz artifact ${normalizedSearchAuthor}`,
+            }
+          : {
+              label: "Paste a Username or User ID above to build the command",
+              copyText: null,
+            }
+      }
     case "levelUps":
     case "training":
     case "heroTraining":
@@ -683,8 +767,8 @@ function getTalentRowCommand(index: number): SectionCommandDisplay {
 }
 
 function getEquipmentRowCommand(index: number): SectionCommandDisplay {
-  const slotName = equipmentCommandSlotOrder[index] ?? `Slot ${index + 1}`
-  const command = `cz itemequipview ${slotName}`
+  const row = equipmentCommandSlotOrder[index]
+  const command = `cz itemequipview ${row?.commandType ?? `Slot${index + 1}`}`
 
   return {
     label: command,
@@ -774,7 +858,7 @@ export default function InGameImportPage() {
       rows.push("Stat Card")
     }
 
-    if (Object.keys(parsed.artifact.values).length > 0) {
+    if (Object.keys(parsed.artifact.values).length > 0 || parsed.artifact.seenRuneTiers.length > 0) {
       rows.push("Artifact")
     }
 
@@ -948,8 +1032,8 @@ export default function InGameImportPage() {
             <div className="space-y-1">
               <h2 className="text-lg font-semibold text-slate-100">Search User</h2>
               <p className="max-w-3xl text-sm text-slate-300">
-                Paste a Username or User ID here and the Level Up, Training, and Hero Training sections will copy Discord
-                search strings for you.
+                Paste a Username or User ID here and the Artifact section will build `cz artifact &lt;user&gt;` while the Level Up,
+                Training, and Hero Training sections copy Discord search strings for you.
               </p>
             </div>
             <div className="rounded-full border border-slate-700 bg-slate-950/90 px-3 py-1 text-xs font-medium text-slate-300">
@@ -1018,6 +1102,7 @@ export default function InGameImportPage() {
                           ? talentRowCount
                           : equipmentCommandSlotOrder.length,
                     }).map((_, index) => {
+                      const equipmentRow = isEquipmentSection ? equipmentCommandSlotOrder[index] : null
                       const command = isSkillsSection
                         ? getSkillRowCommand(index)
                         : isTalentsSection
@@ -1031,6 +1116,11 @@ export default function InGameImportPage() {
 
                       return (
                         <div key={`${section.key}-${index}`} className="space-y-2">
+                          {equipmentRow ? (
+                            <div className="text-xs font-semibold uppercase tracking-[0.12em] text-slate-300">
+                              {equipmentRow.label}
+                            </div>
+                          ) : null}
                           <CommandDisplay command={command} />
                           <textarea
                             rows={1}
