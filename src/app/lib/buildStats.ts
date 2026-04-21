@@ -1183,9 +1183,8 @@ function computeConversionReadyStats(statsBase: Record<string, number>): Record<
   for (const stat of stat_data.Mainstats) {
     const base = statsCombined[stat] ?? 0
     const multiplier = (statsCombined[`${stat}%`] ?? 0)
-    const globalMultiplier = (statsCombined[`Global ${stat}%`] ?? 0)
     const artifactMultiplier = statsCombined[`Art_${stat}%`] ?? 0
-    statsConversionReady[stat] = Math.floor(base * (1 + multiplier / 100) * (1 + globalMultiplier / 100) * (1 + artifactMultiplier / 100))
+    statsConversionReady[stat] = Math.floor(base * (1 + multiplier / 100) * (1 + artifactMultiplier / 100))
   }
 
   for (const stat of stat_data.AllElements) {
@@ -1210,17 +1209,15 @@ function computeConversionReadyDelta(
   for (const stat of stat_data.Mainstats) {
     const baseDelta = statsBaseDelta[stat] ?? 0
     const multiplierDelta = statsBaseDelta[`${stat}%`] ?? 0
-    const globalMultiplierDelta = statsBaseDelta[`Global ${stat}%`] ?? 0
     const artifactMultiplierDelta = statsBaseDelta[`Art_${stat}%`] ?? 0
 
-    if (baseDelta === 0 && multiplierDelta === 0 && globalMultiplierDelta === 0 && artifactMultiplierDelta === 0) {
+    if (baseDelta === 0 && multiplierDelta === 0 && artifactMultiplierDelta === 0) {
       continue
     }
 
     const nextValue = Math.floor(
       ((statsBase[stat] ?? 0) + baseDelta)
       * (1 + (((statsBase[`${stat}%`] ?? 0) + multiplierDelta) / 100))
-      * (1 + (((statsBase[`Global ${stat}%`] ?? 0) + globalMultiplierDelta) / 100))
       * (1 + (((statsBase[`Art_${stat}%`] ?? 0) + artifactMultiplierDelta) / 100)),
     )
 
@@ -1273,6 +1270,62 @@ function buildSelectedTalentConversionPercents(selectedTalentNames: readonly str
   }
 
   return selectedConversionPercents
+}
+
+function buildGlobalMainstatConversionPercents(statsBase: Record<string, number>): ConversionPercentMap {
+  const conversionPercents: ConversionPercentMap = {}
+
+  for (const stat of stat_data.Mainstats) {
+    const ratio = (statsBase[`Global ${stat}%`] ?? 0) / 100
+    addConversionPercent(conversionPercents, stat, stat, ratio)
+  }
+
+  return conversionPercents
+}
+
+function buildEffectiveConversionPercents(
+  selectedTalentNames: readonly string[],
+  statsBase: Record<string, number>,
+): ConversionPercentMap {
+  return mergeConversionPercentMaps(
+    buildSelectedTalentConversionPercents(selectedTalentNames),
+    buildGlobalMainstatConversionPercents(statsBase),
+  )
+}
+
+function getToggledTalentSelection(
+  selectedTalentNames: readonly string[],
+  talentName: string,
+  wasSelected: boolean,
+): string[] {
+  return wasSelected
+    ? selectedTalentNames.filter((name) => name !== talentName)
+    : Array.from(new Set([...selectedTalentNames, talentName]))
+}
+
+function diffConversionPercentMaps(
+  baseMap: ConversionPercentMap,
+  nextMap: ConversionPercentMap,
+): ConversionPercentMap {
+  const delta: ConversionPercentMap = {}
+  const affectedSources = new Set<string>([
+    ...Object.keys(baseMap),
+    ...Object.keys(nextMap),
+  ])
+
+  for (const source of affectedSources) {
+    const affectedTargets = new Set<string>([
+      ...Object.keys(baseMap[source] ?? {}),
+      ...Object.keys(nextMap[source] ?? {}),
+    ])
+
+    for (const target of affectedTargets) {
+      const difference = (nextMap[source]?.[target] ?? 0) - (baseMap[source]?.[target] ?? 0)
+      addConversionPercent(delta, source, target, difference)
+    }
+  }
+
+  return delta
 }
 
 function computeConversionDeltaFromMaps(
@@ -1473,11 +1526,11 @@ export function computeTalentToggledDmgReadyStatsDelta(
   wasSelected: boolean,
 ): Record<string, number> {
   const statsTalentDelta = scaleStageStats(cache.stages.StatsTalentStats[talentName] ?? {}, wasSelected ? -1 : 1)
-  const conversionPercentDelta = scaleConversionPercentMap(
-    cache.stages.StatsTalentConversionPercents[talentName] ?? {},
-    wasSelected ? -1 : 1,
-  )
   const statsBaseDelta = combineBaseStats(statsTalentDelta)
+  const nextSelectedTalents = getToggledTalentSelection(cache.snapshot.selectedTalents, talentName, wasSelected)
+  const nextStatsBase = mergeRawStageStats(cache.stages.StatsBase, statsBaseDelta)
+  const nextConversionPercents = buildEffectiveConversionPercents(nextSelectedTalents, nextStatsBase)
+  const conversionPercentDelta = diffConversionPercentMaps(cache.stages.StatsConversionPercents, nextConversionPercents)
   const statsConversionReadyDelta = computeConversionReadyDelta(
     cache.stages.StatsBase,
     cache.stages.StatsConversionReady,
@@ -1533,20 +1586,18 @@ export function applyTalentToggleToBuildStatDeltaCache(
   statsDmgReadyDelta: Record<string, number>
 } {
   const statsTalentDelta = scaleStageStats(cache.stages.StatsTalentStats[talentName] ?? {}, wasSelected ? -1 : 1)
-  const conversionPercentDelta = scaleConversionPercentMap(
-    cache.stages.StatsTalentConversionPercents[talentName] ?? {},
-    wasSelected ? -1 : 1,
-  )
   const statsBaseDelta = combineBaseStats(statsTalentDelta)
   const statsBase = mergeRawStageStats(cache.stages.StatsBase, statsBaseDelta)
   const statsXPen = computexPenStats(statsBase)
+  const normalizedSelectedTalents = Array.from(new Set(nextSelectedTalents))
+  const statsConversionPercents = buildEffectiveConversionPercents(normalizedSelectedTalents, statsBase)
+  const conversionPercentDelta = diffConversionPercentMaps(cache.stages.StatsConversionPercents, statsConversionPercents)
   const statsConversionReadyDelta = computeConversionReadyDelta(
     cache.stages.StatsBase,
     cache.stages.StatsConversionReady,
     statsBaseDelta,
   )
   const statsConversionReady = mergeRawStageStats(cache.stages.StatsConversionReady, statsConversionReadyDelta)
-  const statsConversionPercents = mergeConversionPercentMaps(cache.stages.StatsConversionPercents, conversionPercentDelta)
   const statsConvertedDelta = computeConversionDeltaFromMaps(
     cache.stages.StatsConversionReady,
     statsConversionReadyDelta,
@@ -1596,8 +1647,8 @@ export function applyTalentToggleToBuildStatDeltaCache(
     cache: {
       ...cache,
       snapshot: {
-        ...cache.snapshot,
-        selectedTalents: Array.from(new Set(nextSelectedTalents)),
+      ...cache.snapshot,
+        selectedTalents: normalizedSelectedTalents,
       },
       stages: {
         ...cache.stages,
@@ -1685,7 +1736,6 @@ export function computeBuildStatStages(
   const stageStatOverrides = groupStageStatOverrideEntries(snapshot.stageStatOverrides)
   const statsTalentStats = allTalentStageStatsByName
   const statsTalentConversionPercents = allTalentConversionPercentsByName
-  const statsConversionPercents = buildSelectedTalentConversionPercents(selectedTalents)
 
   const statsTalents = mergeRawStageStats(
     applyRawStageStatOverrides(
@@ -1716,6 +1766,7 @@ export function computeBuildStatStages(
   const statsBase = combineBaseStats(statsTalents, statsEquipment, statsLevels, statsRunes, statsArtifact)
   const statsXPen = computexPenStats(statsBase)
   const statsConversionReady = computeConversionReadyStats(statsBase)
+  const statsConversionPercents = buildEffectiveConversionPercents(selectedTalents, statsBase)
   const statsConverted = mergeRawStageStats(
     applyRawStageStatOverrides(
       computeConvertedStatsFromPercents(statsConversionReady, statsConversionPercents),

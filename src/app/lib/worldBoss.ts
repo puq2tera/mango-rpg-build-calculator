@@ -85,7 +85,7 @@ const getWorldBossStatMultiplier = (stages: BuildStatStages, stat: WorldBossStat
   1 + (
     combinePercentBonuses(
       (stages.StatsBase[`${stat}%`] ?? 0) + (stages.StatsConverted[`${stat}%`] ?? 0),
-      (stages.StatsBase[`Global ${stat}%`] ?? 0) + (stages.StatsConverted[`Global ${stat}%`] ?? 0),
+      0,
     ) / 100
   )
 
