@@ -4,9 +4,10 @@ import { DndContext, closestCenter, PointerSensor, useSensor, useSensors } from 
 import { arrayMove, SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable"
 import { SortableItem } from "@/app/components/SortableItem"
 import { skill_data } from "@/app/data/skill_data"
+import tarot_data from "@/app/data/tarot_data"
 import { BUILD_SNAPSHOT_UPDATED_EVENT, dispatchBuildSnapshotUpdated } from "@/app/lib/buildEvents"
 import { computeBuildStatStages, readBuildSnapshot } from "@/app/lib/buildStats"
-import { computeSkillDisplayEffectStats, formatWhole } from "@/app/lib/debugComparisonSummary"
+import { computeSkillDisplayEffectStats, computeTarotDisplayEffectStats, formatWhole } from "@/app/lib/debugComparisonSummary"
 import { BUFF_SELECTION_STORAGE_KEY } from "@/app/lib/learnCommands"
 import { isInternalThreatStat } from "@/app/lib/threat"
 
@@ -103,12 +104,14 @@ function formatEffectDelta(delta: number, stat: string): string {
 }
 
 function getBuffStatsDescription(
-  skillName: string,
+  effectName: string,
   sourceStats: Record<string, number>,
-  buffStacks: Record<string, number>,
-  selectedBuffNames: readonly string[],
+  stackDict: Record<string, number>,
+  orderedSelectedNames: readonly string[],
 ): string {
-  const effectStats = computeSkillDisplayEffectStats(skillName, sourceStats, buffStacks, selectedBuffNames)
+  const effectStats = effectName in skill_data
+    ? computeSkillDisplayEffectStats(effectName, sourceStats, stackDict, orderedSelectedNames)
+    : computeTarotDisplayEffectStats(effectName, sourceStats, stackDict)
   const effects = Object.entries(effectStats)
     .filter(([stat, value]) => !isInternalThreatStat(stat) && Math.abs(value) >= 0.0001)
     .sort(([leftStat, leftValue], [rightStat, rightValue]) => {
@@ -133,6 +136,7 @@ function getBuffStatsDescription(
 
 export default function BuffPriorityEditor() {
   const [buffs, setBuffs] = useState<string[]>([])
+  const [tarots, setTarots] = useState<string[]>([])
   const [buffDescriptions, setBuffDescriptions] = useState<Record<string, string>>({})
   const [isHydrated, setIsHydrated] = useState(false)
   const sensors = useSensors(useSensor(PointerSensor))
@@ -151,7 +155,17 @@ export default function BuffPriorityEditor() {
         return result
       }, {})
 
+      for (const tarotName of snapshot.selectedTarots) {
+        descriptions[tarotName] = getBuffStatsDescription(
+          tarotName,
+          stages.StatsBuffReady,
+          snapshot.tarotStacks,
+          snapshot.selectedTarots,
+        )
+      }
+
       setBuffs(snapshot.selectedBuffs)
+      setTarots(snapshot.selectedTarots)
       setBuffDescriptions(descriptions)
     }
 
@@ -168,6 +182,10 @@ export default function BuffPriorityEditor() {
   }, [])
 
   const handleReorder = (from: number, to: number) => {
+    if (from < 0 || to < 0) {
+      return
+    }
+
     const reordered = arrayMove(buffs, from, to)
     setBuffs(reordered)
     localStorage.setItem(BUFF_SELECTION_STORAGE_KEY, JSON.stringify(reordered))
@@ -199,18 +217,30 @@ export default function BuffPriorityEditor() {
           ))}
         </div>
 
-        <SortableContext items={buffs} strategy={verticalListSortingStrategy}>
-          <div className="space-y-2">
-            {buffs.map((buff) => (
-              <SortableItem
-                key={buff}
-                skillName={buff}
-                statsText={buffDescriptions[buff] ?? "No direct stat changes"}
-                description={skill_data[buff]?.description ?? ""}
-              />
-            ))}
-          </div>
-        </SortableContext>
+        <div className="space-y-2">
+          {tarots.map((tarotName) => (
+            <SortableItem
+              key={tarotName}
+              skillName={tarot_data[tarotName]?.skill_name ?? tarotName}
+              statsText={buffDescriptions[tarotName] ?? "No direct stat changes"}
+              description={tarot_data[tarotName]?.description ?? ""}
+              isLocked
+            />
+          ))}
+
+          <SortableContext items={buffs} strategy={verticalListSortingStrategy}>
+            <div className="space-y-2">
+              {buffs.map((buff) => (
+                <SortableItem
+                  key={buff}
+                  skillName={buff}
+                  statsText={buffDescriptions[buff] ?? "No direct stat changes"}
+                  description={skill_data[buff]?.description ?? ""}
+                />
+              ))}
+            </div>
+          </SortableContext>
+        </div>
       </div>
     </DndContext>
   )

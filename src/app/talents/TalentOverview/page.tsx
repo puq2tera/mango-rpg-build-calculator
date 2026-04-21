@@ -156,7 +156,7 @@ export default function TalentOverview() {
           </div>
         ) : (
           <div className="overflow-x-auto">
-            <table className="min-w-[1320px] table-fixed border-separate border-spacing-0">
+            <table className="min-w-[1640px] table-fixed border-separate border-spacing-0">
               <thead>
                 <tr>
                   {columnDefinitions.map((column) => {
@@ -181,6 +181,9 @@ export default function TalentOverview() {
                         {orderedTalentNames.length}
                       </span>
                     </div>
+                  </th>
+                  <th className={`border-b px-3 py-3 text-left align-top ${combinedColumnStyles.header}`}>
+                    <span className="font-semibold">Combined Description</span>
                   </th>
                 </tr>
               </thead>
@@ -217,6 +220,15 @@ export default function TalentOverview() {
                           </span>
                           <span>{orderedTalentNames[rowIndex]}</span>
                         </div>
+                      ) : (
+                        <span className="text-slate-600"> </span>
+                      )}
+                    </td>
+                    <td className={`border-b border-slate-800/70 px-3 py-2 text-sm text-slate-100 ${orderedTalentNames[rowIndex] ? getTalentStyles(orderedTalentNames[rowIndex]).cell : combinedColumnStyles.emptyCell}`}>
+                      {orderedTalentNames[rowIndex] ? (
+                        <span className="whitespace-normal break-words">
+                          {talent_data[orderedTalentNames[rowIndex]]?.description ?? ""}
+                        </span>
                       ) : (
                         <span className="text-slate-600"> </span>
                       )}

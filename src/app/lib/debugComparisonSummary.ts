@@ -575,6 +575,19 @@ export function computeSkillDisplayEffectStats(
   )
 }
 
+export function computeTarotDisplayEffectStats(
+  tarotName: string,
+  sourceStats: Record<string, number>,
+  stackDict: Record<string, number>,
+): Record<string, number> {
+  return computeDisplayEffectStats(
+    [tarotName],
+    stackDict,
+    sourceStats,
+    tarot_data as Record<string, EffectSourceData | undefined>,
+  )
+}
+
 function getRawBaseDisplayStats(stages: BuildStatStages): Record<string, number> {
   return mergeStats(
     stages.StatsTalents,
