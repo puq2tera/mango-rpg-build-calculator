@@ -223,8 +223,28 @@ function getSyncedLevelsFromManualRanges(
   return syncedLevels
 }
 
+function countManualLevelsByClass(ranges: readonly ManualLevelRange[]): LevelsByClass {
+  const counts = createEmptyLevelsByClass()
+  const maxTotalLevel = getManualRangeMaxTotalLevel(ranges)
+
+  for (let totalLevel = 1; totalLevel <= maxTotalLevel; totalLevel += 1) {
+    const override = getManualRangeOverride(ranges, totalLevel)
+    if (!override) {
+      continue
+    }
+
+    counts[override.className] += 1
+  }
+
+  return counts
+}
+
 function formatWhole(value: number): string {
   return Math.max(0, Math.round(value)).toLocaleString()
+}
+
+function formatClassLevelCounts(levelCounts: LevelsByClass): string {
+  return `${levelCounts.tank}/${levelCounts.warrior}/${levelCounts.caster}/${levelCounts.healer}`
 }
 
 function getNoticeClass(tone: Notice["tone"]): string {
@@ -352,6 +372,10 @@ export default function StatFixPage() {
     [classOrder, levels, manualLevelRanges],
   )
   const maxManualRangeLevel = getManualRangeMaxTotalLevel(manualLevelRanges)
+  const manuallyAccountedLevels = useMemo(
+    () => countManualLevelsByClass(manualLevelRanges),
+    [manualLevelRanges],
+  )
   const needsManualLevelSync = manualLevelRanges.length > 0 && classKeys.some(
     (className) => syncedLevels[className] !== levels[className],
   )
@@ -401,9 +425,13 @@ export default function StatFixPage() {
     }
 
     setManualLevelRanges((current) => [...current, ...ranges])
+    const importedLevelCounts = countManualLevelsByClass(ranges)
     setManualRangeImportNotice({
       tone: warnings.length > 0 ? "warning" : "success",
-      lines: [`Imported ${ranges.length} manual range${ranges.length === 1 ? "" : "s"}.`, ...warnings],
+      lines: [
+        `Imported ${ranges.length} manual range${ranges.length === 1 ? "" : "s"}. Accounted T/W/C/H ${formatClassLevelCounts(importedLevelCounts)}.`,
+        ...warnings,
+      ],
     })
   }
 
@@ -1001,6 +1029,9 @@ export default function StatFixPage() {
                 <div className="space-y-3 rounded-2xl border border-slate-800/80 bg-slate-950/55 p-4">
                   <div className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">Current Level Snapshot</div>
                   <div className="text-sm text-slate-200">{currentLevelsSummary}</div>
+                  <div className="text-xs text-slate-400">
+                    Manual accounted T/W/C/H: {formatClassLevelCounts(manuallyAccountedLevels)}
+                  </div>
                   <div className="text-xs text-slate-400">Class order from Levels: {classOrderSummary}</div>
                   <div className="text-xs text-slate-400">Highest manual total level: {maxManualRangeLevel}</div>
                   <div className="flex flex-wrap gap-2 pt-1">

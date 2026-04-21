@@ -405,17 +405,17 @@ export function parseManualLevelTranscript(
       continue
     }
 
-    const levelCount = parsedLevelUp.levelCount ?? commandCount ?? 0
+    const levelCount = commandCount ?? parsedLevelUp.levelCount ?? 0
     if (levelCount <= 0) {
       warnings.push(`Skipped ${className}: no positive level count could be derived from the Level Up points or command.`)
       continue
     }
 
-    if (parsedLevelUp.levelCount === null && commandCount !== null) {
+    if (commandCount !== null && parsedLevelUp.levelCount === null) {
       warnings.push(`Used the command count for ${className} because the Level Up block did not include any parseable skill or talent point gains.`)
     } else if (commandCount !== null && commandCount !== parsedLevelUp.levelCount) {
       warnings.push(
-        `Used ${parsedLevelUp.levelCount} levels for ${className} based on skill/talent point gains instead of the command count ${commandCount}.`,
+        `Used the command count ${commandCount} for ${className} instead of the Level Up block's parsed point total ${parsedLevelUp.levelCount}.`,
       )
     }
 
