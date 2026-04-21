@@ -93,7 +93,13 @@ type TarotImportRowConfig = {
   label: string
 }
 
+type StoredInGameImportPageInputs = Partial<Record<
+  keyof InGameImportPageInputs | "searchAuthor" | "searchDate" | "equipmentInputOrderVersion",
+  unknown
+>>
+
 const INPUT_STORAGE_KEY = "inGameImport:inputs"
+const EQUIPMENT_INPUT_ORDER_VERSION = 2
 const CLEAR_EXISTING_BUILD_STORAGE_KEYS = [
   SKILL_SELECTION_STORAGE_KEY,
   TALENT_SELECTION_STORAGE_KEY,
@@ -123,16 +129,29 @@ const CLEAR_EXISTING_BUILD_STORAGE_KEYS = [
   STAGE_STAT_OVERRIDES_STORAGE_KEY,
 ] as const
 const searchCommandSectionKeys = new Set<keyof InGameImportPageInputs>(["skills", "talents", "levelUps", "training", "heroTraining"])
+const legacyEquipmentInputOrder: readonly EquipmentImportTargetKey[] = [
+  "Helm",
+  "Armor",
+  "Amulet",
+  "Ring1",
+  "Ring2",
+  "Mainhand",
+  "Offhand",
+  "Runeshard",
+] as const
 const equipmentCommandSlotOrder: readonly EquipmentImportRowConfig[] = [
   { label: "Helm", commandType: "Helm", importTarget: "Helm" },
   { label: "Armor", commandType: "Armor", importTarget: "Armor" },
-  { label: "Amulet", commandType: "Amulet", importTarget: "Amulet" },
-  { label: "Ring1", commandType: "Ring1", importTarget: "Ring1" },
-  { label: "Ring2", commandType: "Ring2", importTarget: "Ring2" },
   { label: "Mainhand", commandType: "Mainhand", importTarget: "Mainhand" },
   { label: "Offhand", commandType: "Offhand", importTarget: "Offhand" },
+  { label: "Ring1", commandType: "Ring1", importTarget: "Ring1" },
+  { label: "Ring2", commandType: "Ring2", importTarget: "Ring2" },
+  { label: "Amulet", commandType: "Amulet", importTarget: "Amulet" },
   { label: "Runeshard", commandType: "Runeshard", importTarget: "Runeshard" },
 ] as const
+const equipmentCurrentInputOrder: readonly EquipmentImportTargetKey[] = equipmentCommandSlotOrder.map(
+  ({ importTarget }) => importTarget,
+)
 const tarotImportRowOrder: readonly TarotImportRowConfig[] = [
   { key: "EquippedList", label: "Equipped List" },
   { key: "FiveStar", label: "5-Star" },
@@ -162,14 +181,21 @@ Skill/Talent Points
   {
     key: "statCard",
     title: "Stat Card",
-    subtitle: "Allocated stat points, available stat points, and current hero points.",
+    subtitle: "Allocated stat points, available stat points, and current hero points. Supports `cz statcard` or pasted `cz statup` result blocks.",
     command: "cz statcard",
     placeholder: `cz statcard
 ...
 391 Stat Points Available to Allocate
 484 Hero Points Available
 ...
-    ATK  : +20`,
+    ATK  : +20
+
+or
+
+cz statup matk 485
+Stat Up Record
+MATK : +485
+0 Stat Points left to allocate`,
     minHeightClass: "min-h-[12rem]",
   },
   {
@@ -255,7 +281,7 @@ Hero PTs Spent
   {
     key: "equipment",
     title: "Equipment",
-    subtitle: "Paste each `itemequipview` result into the matching Helm, Armor, Amulet, Ring1, Ring2, Mainhand, Offhand, or Runeshard row.",
+    subtitle: "Paste each `itemequipview` result into the matching Helm, Armor, Mainhand, Offhand, Ring1, Ring2, Amulet, or Runeshard row.",
     command: "cz itemequipview Helm",
     placeholder: "Paste an `itemequipview` result into the matching slot row below.",
     minHeightClass: "min-h-[14rem]",
@@ -380,6 +406,20 @@ function splitStoredBlocks(value: string): string[] {
     .filter((entry) => entry.length > 0)
 }
 
+function reorderEquipmentInputs(
+  values: readonly string[],
+  sourceOrder: readonly EquipmentImportTargetKey[],
+  targetOrder: readonly EquipmentImportTargetKey[],
+): string[] {
+  const valuesByTarget = new Map<EquipmentImportTargetKey, string>()
+
+  for (const [index, target] of sourceOrder.entries()) {
+    valuesByTarget.set(target, values[index] ?? "")
+  }
+
+  return targetOrder.map((target) => valuesByTarget.get(target) ?? "")
+}
+
 function normalizeListInput(
   value: unknown,
   minimumLength: number,
@@ -402,14 +442,14 @@ function normalizeListInput(
   return nextList
 }
 
-function normalizeEquipmentListInput(value: unknown): string[] {
+function normalizeEquipmentListInput(value: unknown, storedOrderVersion = 1): string[] {
   const fromArray = Array.isArray(value)
     ? value.map((entry) => typeof entry === "string" ? entry : "")
     : typeof value === "string"
       ? splitStoredBlocks(value)
       : []
 
-  const migratedArray = fromArray.length === 6
+  const legacyExpandedArray = fromArray.length === 6
     ? [
         fromArray[0] ?? "",
         fromArray[1] ?? "",
@@ -422,7 +462,11 @@ function normalizeEquipmentListInput(value: unknown): string[] {
       ]
     : fromArray
 
-  return Array.from({ length: equipmentCommandSlotOrder.length }, (_, index) => migratedArray[index] ?? "")
+  const reorderedArray = storedOrderVersion >= EQUIPMENT_INPUT_ORDER_VERSION
+    ? legacyExpandedArray
+    : reorderEquipmentInputs(legacyExpandedArray, legacyEquipmentInputOrder, equipmentCurrentInputOrder)
+
+  return Array.from({ length: equipmentCommandSlotOrder.length }, (_, index) => reorderedArray[index] ?? "")
 }
 
 function normalizePageInputs(raw: unknown): InGameImportPageInputs {
@@ -432,7 +476,11 @@ function normalizePageInputs(raw: unknown): InGameImportPageInputs {
     return defaults
   }
 
-  const value = raw as Partial<Record<keyof InGameImportPageInputs, unknown>>
+  const value = raw as Partial<Record<keyof InGameImportPageInputs | "equipmentInputOrderVersion", unknown>>
+  const storedEquipmentInputOrderVersion =
+    typeof value.equipmentInputOrderVersion === "number" && Number.isFinite(value.equipmentInputOrderVersion)
+      ? Math.max(1, Math.floor(value.equipmentInputOrderVersion))
+      : 1
 
   return {
     guildCard: typeof value.guildCard === "string" ? value.guildCard : defaults.guildCard,
@@ -444,7 +492,7 @@ function normalizePageInputs(raw: unknown): InGameImportPageInputs {
     skills: normalizeListInput(value.skills, 1),
     talents: normalizeListInput(value.talents, 1),
     tarots: normalizeListInput(value.tarots, tarotImportRowOrder.length, true),
-    equipment: normalizeEquipmentListInput(value.equipment),
+    equipment: normalizeEquipmentListInput(value.equipment, storedEquipmentInputOrderVersion),
   }
 }
 
@@ -745,7 +793,7 @@ function getSectionSummaries(parsed: ParsedInGameImport): Record<keyof InGameImp
       }
 
   const statCardSummary: SectionSummary = parsed.statCard.statPoints === null && parsed.statCard.availableStatPoints === null && parsed.statCard.availableHeroPoints === null
-    ? { tone: "empty", text: "No Stat Card pasted yet." }
+    ? { tone: "empty", text: "No Stat Card or statup transcript pasted yet." }
     : {
         tone: parsed.statCard.statPoints !== null && parsed.statCard.availableStatPoints !== null ? "ready" : "partial",
         text: [
@@ -1112,7 +1160,7 @@ export default function InGameImportPage() {
     const storedInputs = window.localStorage.getItem(INPUT_STORAGE_KEY)
     if (storedInputs) {
       try {
-        const parsedInputs = JSON.parse(storedInputs) as Partial<Record<keyof InGameImportPageInputs | "searchAuthor" | "searchDate", unknown>>
+        const parsedInputs = JSON.parse(storedInputs) as StoredInGameImportPageInputs
         setInputs(normalizePageInputs(parsedInputs))
         setSearchAuthor(typeof parsedInputs.searchAuthor === "string" ? parsedInputs.searchAuthor : "")
         setSearchDate(typeof parsedInputs.searchDate === "string" ? parsedInputs.searchDate : "")
@@ -1137,6 +1185,7 @@ export default function InGameImportPage() {
       ...inputs,
       searchAuthor,
       searchDate,
+      equipmentInputOrderVersion: EQUIPMENT_INPUT_ORDER_VERSION,
     }))
   }, [inputs, isHydrated, searchAuthor, searchDate])
 

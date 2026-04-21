@@ -1241,10 +1241,22 @@ function parseStatCardImport(block: string | null): ParsedStatCardImport {
   const warnings: string[] = []
   const statPoints = createDefaultMainStatValues()
   let hasAnyStatRecord = false
+  let availableStatPoints: number | null = null
+  let availableHeroPoints: number | null = null
 
   for (const line of lines) {
     const recordMatch = line.match(/^(ATK|DEF|MATK|HEAL)\s*:\s*([+-]?\d[\d,]*)/i)
     if (!recordMatch) {
+      const statPointsMatch = line.match(/([+-]?\d[\d,]*)\s+Stat Points\s+(?:Available to Allocate|left to allocate)/i)
+      if (statPointsMatch) {
+        availableStatPoints = parseWholeNumber(statPointsMatch[1])
+      }
+
+      const heroPointsMatch = line.match(/([+-]?\d[\d,]*)\s+Hero Points Available/i)
+      if (heroPointsMatch) {
+        availableHeroPoints = parseWholeNumber(heroPointsMatch[1])
+      }
+
       continue
     }
 
@@ -1257,13 +1269,20 @@ function parseStatCardImport(block: string | null): ParsedStatCardImport {
     warnings.push("Stat Card import could not read any Stat Up Record rows.")
   }
 
-  const availableStatPointsMatch = block.match(/([+-]?\d[\d,]*)\s+Stat Points Available to Allocate/i)
-  const availableHeroPointsMatch = block.match(/([+-]?\d[\d,]*)\s+Hero Points Available/i)
+  if (availableStatPoints === null) {
+    const availableStatPointsMatch = block.match(/([+-]?\d[\d,]*)\s+Stat Points\s+(?:Available to Allocate|left to allocate)/i)
+    availableStatPoints = availableStatPointsMatch ? parseWholeNumber(availableStatPointsMatch[1]) : null
+  }
+
+  if (availableHeroPoints === null) {
+    const availableHeroPointsMatch = block.match(/([+-]?\d[\d,]*)\s+Hero Points Available/i)
+    availableHeroPoints = availableHeroPointsMatch ? parseWholeNumber(availableHeroPointsMatch[1]) : null
+  }
 
   return {
     statPoints: hasAnyStatRecord ? statPoints : null,
-    availableStatPoints: availableStatPointsMatch ? parseWholeNumber(availableStatPointsMatch[1]) : null,
-    availableHeroPoints: availableHeroPointsMatch ? parseWholeNumber(availableHeroPointsMatch[1]) : null,
+    availableStatPoints,
+    availableHeroPoints,
     warnings,
   }
 }
@@ -1834,7 +1853,7 @@ function detectInGameImportInputs(rawText: string): InGameImportInputs {
   const skillBlocks = blocks.filter((block) => isSkillBlock(block))
   const talentBlocks = blocks.filter((block) => isTalentBlock(block))
   const guildCardBlock = [...blocks].reverse().find((block) => isGuildCardBlock(block)) ?? ""
-  const statCardBlock = [...blocks].reverse().find((block) => isStatCardBlock(block)) ?? ""
+  const statCardBlocks = blocks.filter((block) => isStatCardBlock(block))
   const artifactBlock = [...blocks].reverse().find((block) => isArtifactBlock(block)) ?? ""
   const tarotBlocks = blocks.filter((block) => isTarotEquippedCardsBlock(block) || isTarotViewCardBlock(block))
   const equipmentBlocks = blocks.filter((block) => isEquipmentBlock(block))
@@ -1846,7 +1865,7 @@ function detectInGameImportInputs(rawText: string): InGameImportInputs {
     skills: skillBlocks.join("\n\n"),
     talents: talentBlocks.join("\n\n"),
     guildCard: guildCardBlock,
-    statCard: statCardBlock,
+    statCard: statCardBlocks.join("\n\n"),
     artifact: artifactBlock,
     tarots: tarotBlocks.join("\n\n"),
     levelUps: hasLevelTranscript ? rawText : "",
@@ -2079,8 +2098,8 @@ export function buildInGameImportCoverageRows(parsed: ParsedInGameImport): InGam
       "Unknown",
       parsed.statCard.statPoints ? "cz statcard" : "cz statcard",
       parsed.guildCard.totalLevels === null
-        ? "Paste a Guild Card and Stat Card to verify stat points."
-        : "Paste a Stat Card to see allocated and remaining stat points.",
+        ? "Paste a Guild Card and a Stat Card or statup results to verify stat points."
+        : "Paste a Stat Card or statup results to see allocated and remaining stat points.",
     ))
   }
 
