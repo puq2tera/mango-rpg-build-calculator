@@ -162,37 +162,27 @@ export function getTalentConversionOutputLabel(stat: string): string {
   return getOutputInGameTokens(stat).join(", ")
 }
 
-function getMergedConversionStatValue(
-  baseStats: Record<string, number>,
-  convertedStats: Record<string, number>,
-  stat: string,
-): number {
-  return (baseStats[stat] ?? 0) + (convertedStats[stat] ?? 0)
-}
-
 function getHighestConvertedValue(
-  baseStats: Record<string, number>,
-  convertedStats: Record<string, number>,
+  sourceStats: Record<string, number>,
   stats: readonly string[],
 ): number {
   return stats.reduce(
-    (highest, stat) => Math.max(highest, getMergedConversionStatValue(baseStats, convertedStats, stat)),
+    (highest, stat) => Math.max(highest, sourceStats[stat] ?? 0),
     0,
   )
 }
 
 function getDisplayConversionSourceValue(
-  baseStats: Record<string, number>,
-  convertedStats: Record<string, number>,
+  sourceStats: Record<string, number>,
   sourceStat: string,
 ): number {
   switch (sourceStat) {
     case "Highest Phys%":
-      return getHighestConvertedValue(baseStats, convertedStats, ["Slash%", "Pierce%", "Blunt%"])
+      return getHighestConvertedValue(sourceStats, ["Slash%", "Pierce%", "Blunt%"])
     case "Highest Phys Pen%":
-      return getHighestConvertedValue(baseStats, convertedStats, ["Slash Pen%", "Pierce Pen%", "Blunt Pen%"])
+      return getHighestConvertedValue(sourceStats, ["Slash Pen%", "Pierce Pen%", "Blunt Pen%"])
     case "Highest Magic%":
-      return getHighestConvertedValue(baseStats, convertedStats, [
+      return getHighestConvertedValue(sourceStats, [
         "Fire%",
         "Water%",
         "Lightning%",
@@ -204,7 +194,7 @@ function getDisplayConversionSourceValue(
         "Void%",
       ])
     case "Highest Magic Pen%":
-      return getHighestConvertedValue(baseStats, convertedStats, [
+      return getHighestConvertedValue(sourceStats, [
         "Fire Pen%",
         "Water Pen%",
         "Lightning Pen%",
@@ -216,31 +206,10 @@ function getDisplayConversionSourceValue(
         "Void Pen%",
       ])
     case "Post Crit Chance%":
-      return getMergedConversionStatValue(baseStats, convertedStats, "Crit Chance%")
+      return sourceStats["Crit Chance%"] ?? 0
     default:
-      return baseStats[sourceStat] ?? 0
+      return sourceStats[sourceStat] ?? 0
   }
-}
-
-function addExpandedConvertedValue(
-  convertedStats: Record<string, number>,
-  stat: string,
-  value: number,
-): void {
-  const info = stat_data.StatsInfo[stat as keyof typeof stat_data.StatsInfo]
-  if (!info || !Number.isFinite(value) || Math.abs(value) < 0.0001) {
-    return
-  }
-
-  const substats = info.sub_stats
-  if (substats?.length) {
-    for (const substat of substats) {
-      convertedStats[substat] = (convertedStats[substat] ?? 0) + value
-    }
-    return
-  }
-
-  convertedStats[stat] = (convertedStats[stat] ?? 0) + value
 }
 
 function createRow(
@@ -273,7 +242,6 @@ export function getTalentConversionRows(
 ): TalentConversionRow[] {
   const rows: TalentConversionRow[] = []
   const syntheticRowsByKey = new Map<string, TalentConversionRow>()
-  const convertedStats: Record<string, number> = {}
   let order = 0
 
   for (const talentName of snapshot.selectedTalents) {
@@ -323,7 +291,10 @@ export function getTalentConversionRows(
     }
 
     talent.conversions.forEach(({ source, ratio, resulting_stat }, index) => {
-      const sourceValue = getDisplayConversionSourceValue(stages.StatsConversionReady, convertedStats, source)
+      // Talent conversions are a one-pass calculation: every source value comes
+      // from the same pre-conversion stat snapshot, and conversions never feed
+      // into each other.
+      const sourceValue = getDisplayConversionSourceValue(stages.StatsConversionReady, source)
       const amount = truncateTowardZero(sourceValue * ratio)
 
       if (!Number.isFinite(amount) || amount === 0) {
@@ -343,7 +314,6 @@ export function getTalentConversionRows(
         ),
       )
       order += 1
-      addExpandedConvertedValue(convertedStats, resulting_stat, amount)
     })
   }
 
