@@ -4423,7 +4423,9 @@ const talent_data: Record<string, Talent> = {
         "description": "+1% Global DEF, +10% Physical Resist",
         "stats": {
             "Global DEF%": 1,
-            "Phys Res%": 10
+            "Slash Res%": 10,
+            "Pierce Res%": 10,
+            "Blunt Res%": 10
         },
         "conversions": []
     },
@@ -4447,7 +4449,12 @@ const talent_data: Record<string, Talent> = {
         "description": "+1% Global DEF, +10% Elemental Resist",
         "stats": {
             "Global DEF%": 1,
-            "Elemental Res%": 10
+            "Fire Res%": 10,
+            "Water Res%": 10,
+            "Lightning Res%": 10,
+            "Wind Res%": 10,
+            "Earth Res%": 10,
+            "Toxic Res%": 10
         },
         "conversions": []
     },
@@ -4471,7 +4478,8 @@ const talent_data: Record<string, Talent> = {
         "description": "+1% Global DEF, +10% Divine Resist",
         "stats": {
             "Global DEF%": 1,
-            "Divine Res%": 10
+            "Neg Res%": 10,
+            "Holy Res%": 10
         },
         "conversions": []
     },
@@ -4495,7 +4503,18 @@ const talent_data: Record<string, Talent> = {
         "description": "+2% Global DEF, +5% All Resist",
         "stats": {
             "Global DEF%": 2,
-            "All Res%": 5
+            "Fire Res%": 5,
+            "Water Res%": 5,
+            "Lightning Res%": 5,
+            "Wind Res%": 5,
+            "Earth Res%": 5,
+            "Toxic Res%": 5,
+            "Slash Res%": 5,
+            "Pierce Res%": 5,
+            "Blunt Res%": 5,
+            "Neg Res%": 5,
+            "Holy Res%": 5,
+            "Void Res%": 5
         },
         "conversions": []
     },
@@ -4581,7 +4600,18 @@ const talent_data: Record<string, Talent> = {
         "description": "+2% Global DEF, +5% All Resist",
         "stats": {
             "Global DEF%": 2,
-            "All Res%": 5
+            "Fire Res%": 5,
+            "Water Res%": 5,
+            "Lightning Res%": 5,
+            "Wind Res%": 5,
+            "Earth Res%": 5,
+            "Toxic Res%": 5,
+            "Slash Res%": 5,
+            "Pierce Res%": 5,
+            "Blunt Res%": 5,
+            "Neg Res%": 5,
+            "Holy Res%": 5,
+            "Void Res%": 5
         },
         "conversions": []
     },
@@ -4614,6 +4644,7 @@ const talent_data: Record<string, Talent> = {
             }
         ]
     },
+    //TODO: Verify in game how conversion appears
     "Soul Core of Mogdrolo'toth": {
         "category": "tank",
         "PreReq": [
@@ -4642,7 +4673,62 @@ const talent_data: Record<string, Talent> = {
             {
                 "source": "Void Res%",
                 "ratio": -0.12,
-                "resulting_stat": "All Res%"
+                "resulting_stat": "Fire Res%"
+            },
+            {
+                "source": "Void Res%",
+                "ratio": -0.12,
+                "resulting_stat": "Water Res%"
+            },
+            {
+                "source": "Void Res%",
+                "ratio": -0.12,
+                "resulting_stat": "Lightning Res%"
+            },
+            {
+                "source": "Void Res%",
+                "ratio": -0.12,
+                "resulting_stat": "Wind Res%"
+            },
+            {
+                "source": "Void Res%",
+                "ratio": -0.12,
+                "resulting_stat": "Earth Res%"
+            },
+            {
+                "source": "Void Res%",
+                "ratio": -0.12,
+                "resulting_stat": "Toxic Res%"
+            },
+            {
+                "source": "Void Res%",
+                "ratio": -0.12,
+                "resulting_stat": "Slash Res%"
+            },
+            {
+                "source": "Void Res%",
+                "ratio": -0.12,
+                "resulting_stat": "Pierce Res%"
+            },
+            {
+                "source": "Void Res%",
+                "ratio": -0.12,
+                "resulting_stat": "Blunt Res%"
+            },
+            {
+                "source": "Void Res%",
+                "ratio": -0.12,
+                "resulting_stat": "Neg Res%"
+            },
+            {
+                "source": "Void Res%",
+                "ratio": -0.12,
+                "resulting_stat": "Holy Res%"
+            },
+            {
+                "source": "Void Res%",
+                "ratio": -0.12,
+                "resulting_stat": "Void Res%"
             }
         ]
     },
@@ -4666,7 +4752,18 @@ const talent_data: Record<string, Talent> = {
         "description": "-40% Global DEF, +75% All Resist",
         "stats": {
             "Global DEF%": -40,
-            "All Res%": 75
+            "Fire Res%": 75,
+            "Water Res%": 75,
+            "Lightning Res%": 75,
+            "Wind Res%": 75,
+            "Earth Res%": 75,
+            "Toxic Res%": 75,
+            "Slash Res%": 75,
+            "Pierce Res%": 75,
+            "Blunt Res%": 75,
+            "Neg Res%": 75,
+            "Holy Res%": 75,
+            "Void Res%": 75
         },
         "conversions": []
     },
@@ -10804,7 +10901,9 @@ const talent_data: Record<string, Talent> = {
         "description": "+1% Global ATK, +10% Physical DMG, Conversion 5% ATK to DEF",
         "stats": {
             "Global ATK%": 1,
-            "Phys%": 10
+            "Slash%": 10,
+            "Pierce%": 10,
+            "Blunt%": 10
         },
         "conversions": [
             {
@@ -10834,7 +10933,9 @@ const talent_data: Record<string, Talent> = {
         "description": "-3% Global ATK, +20% Physical DMG, Conversion 5% ATK to DEF",
         "stats": {
             "Global ATK%": -3,
-            "Phys%": 20
+            "Slash%": 20,
+            "Pierce%": 20,
+            "Blunt%": 20
         },
         "conversions": [
             {
@@ -11227,7 +11328,18 @@ const talent_data: Record<string, Talent> = {
             "Global ATK%": 5,
             "HP%": -10,
             "Phys xDmg%": 20,
-            "All Res%": 20
+            "Fire Res%": 20,
+            "Water Res%": 20,
+            "Lightning Res%": 20,
+            "Wind Res%": 20,
+            "Earth Res%": 20,
+            "Toxic Res%": 20,
+            "Slash Res%": 20,
+            "Pierce Res%": 20,
+            "Blunt Res%": 20,
+            "Neg Res%": 20,
+            "Holy Res%": 20,
+            "Void Res%": 20
         },
         "conversions": []
     },
@@ -11350,7 +11462,9 @@ const talent_data: Record<string, Talent> = {
         "description": "+4% xPhys DMG, +20% Physical DMG, +1% Global ATK",
         "stats": {
             "Phys xDmg%": 4,
-            "Phys%": 20,
+            "Slash%": 20,
+            "Pierce%": 20,
+            "Blunt%": 20,
             "Global ATK%": 1
         },
         "conversions": []
@@ -11376,7 +11490,9 @@ const talent_data: Record<string, Talent> = {
         "description": "+4% xPhys DMG, +20% Physical DMG, +1% Global ATK",
         "stats": {
             "Phys xDmg%": 4,
-            "Phys%": 20,
+            "Slash%": 20,
+            "Pierce%": 20,
+            "Blunt%": 20,
             "Global ATK%": 1
         },
         "conversions": []
@@ -11402,7 +11518,9 @@ const talent_data: Record<string, Talent> = {
         "description": "+7% xPhys DMG, +20% Physical DMG, +3% Global ATK",
         "stats": {
             "Phys xDmg%": 7,
-            "Phys%": 20,
+            "Slash%": 20,
+            "Pierce%": 20,
+            "Blunt%": 20,
             "Global ATK%": 3
         },
         "conversions": []
@@ -16019,7 +16137,15 @@ const talent_data: Record<string, Talent> = {
         "description": "+1% Global MATK, +8% Magic DMG, Conversion 4% MATK to DEF",
         "stats": {
             "Global MATK%": 1,
-            "Magic%": 8
+            "Fire%": 8,
+            "Water%": 8,
+            "Lightning%": 8,
+            "Wind%": 8,
+            "Earth%": 8,
+            "Toxic%": 8,
+            "Neg%": 8,
+            "Holy%": 8,
+            "Void%": 8
         },
         "conversions": [
             {
@@ -16049,7 +16175,15 @@ const talent_data: Record<string, Talent> = {
         "description": "-3% Global MATK, +16% Magic DMG, Conversion 4% MATK to DEF",
         "stats": {
             "Global MATK%": -3,
-            "Magic%": 16
+            "Fire%": 16,
+            "Water%": 16,
+            "Lightning%": 16,
+            "Wind%": 16,
+            "Earth%": 16,
+            "Toxic%": 16,
+            "Neg%": 16,
+            "Holy%": 16,
+            "Void%": 16
         },
         "conversions": [
             {
@@ -16241,7 +16375,15 @@ const talent_data: Record<string, Talent> = {
         "description": "+1% Global MATK, +8% Magic DMG, Conversion 8% DEF to MATK",
         "stats": {
             "Global MATK%": 1,
-            "Magic%": 8
+            "Fire%": 8,
+            "Water%": 8,
+            "Lightning%": 8,
+            "Wind%": 8,
+            "Earth%": 8,
+            "Toxic%": 8,
+            "Neg%": 8,
+            "Holy%": 8,
+            "Void%": 8
         },
         "conversions": [
             {
@@ -16271,7 +16413,15 @@ const talent_data: Record<string, Talent> = {
         "description": "+1% Global MATK, +8% Magic DMG, Conversion 8% ATK to MATK",
         "stats": {
             "Global MATK%": 1,
-            "Magic%": 8
+            "Fire%": 8,
+            "Water%": 8,
+            "Lightning%": 8,
+            "Wind%": 8,
+            "Earth%": 8,
+            "Toxic%": 8,
+            "Neg%": 8,
+            "Holy%": 8,
+            "Void%": 8
         },
         "conversions": [
             {
@@ -16301,7 +16451,15 @@ const talent_data: Record<string, Talent> = {
         "description": "+1% Global MATK, +8% Magic DMG, Conversion 8% Healpower to MATK",
         "stats": {
             "Global MATK%": 1,
-            "Magic%": 8
+            "Fire%": 8,
+            "Water%": 8,
+            "Lightning%": 8,
+            "Wind%": 8,
+            "Earth%": 8,
+            "Toxic%": 8,
+            "Neg%": 8,
+            "Holy%": 8,
+            "Void%": 8
         },
         "conversions": [
             {
@@ -16332,7 +16490,15 @@ const talent_data: Record<string, Talent> = {
         "stats": {
             "Dmg%": 2,
             "Global MATK%": 2,
-            "Magic%": 10
+            "Fire%": 10,
+            "Water%": 10,
+            "Lightning%": 10,
+            "Wind%": 10,
+            "Earth%": 10,
+            "Toxic%": 10,
+            "Neg%": 10,
+            "Holy%": 10,
+            "Void%": 10
         },
         "conversions": []
     },
@@ -16726,7 +16892,18 @@ const talent_data: Record<string, Talent> = {
         "stats": {
             "Global MATK%": 2,
             "Magic xDmg%": 4,
-            "All Res%": 8
+            "Fire Res%": 8,
+            "Water Res%": 8,
+            "Lightning Res%": 8,
+            "Wind Res%": 8,
+            "Earth Res%": 8,
+            "Toxic Res%": 8,
+            "Slash Res%": 8,
+            "Pierce Res%": 8,
+            "Blunt Res%": 8,
+            "Neg Res%": 8,
+            "Holy Res%": 8,
+            "Void Res%": 8
         },
         "conversions": []
     },
@@ -16752,7 +16929,18 @@ const talent_data: Record<string, Talent> = {
         "stats": {
             "Global MATK%": 2,
             "Magic xDmg%": 4,
-            "All Res%": 8
+            "Fire Res%": 8,
+            "Water Res%": 8,
+            "Lightning Res%": 8,
+            "Wind Res%": 8,
+            "Earth Res%": 8,
+            "Toxic Res%": 8,
+            "Slash Res%": 8,
+            "Pierce Res%": 8,
+            "Blunt Res%": 8,
+            "Neg Res%": 8,
+            "Holy Res%": 8,
+            "Void Res%": 8
         },
         "conversions": []
     },
@@ -16778,7 +16966,18 @@ const talent_data: Record<string, Talent> = {
         "stats": {
             "Global MATK%": 3,
             "Magic xDmg%": 7,
-            "All Res%": 9
+            "Fire Res%": 9,
+            "Water Res%": 9,
+            "Lightning Res%": 9,
+            "Wind Res%": 9,
+            "Earth Res%": 9,
+            "Toxic Res%": 9,
+            "Slash Res%": 9,
+            "Pierce Res%": 9,
+            "Blunt Res%": 9,
+            "Neg Res%": 9,
+            "Holy Res%": 9,
+            "Void Res%": 9
         },
         "conversions": []
     },
@@ -20559,7 +20758,18 @@ const talent_data: Record<string, Talent> = {
         "description": "+3% Global Heal, +5% All Res",
         "stats": {
             "Global HEAL%": 3,
-            "All Res%": 5
+            "Fire Res%": 5,
+            "Water Res%": 5,
+            "Lightning Res%": 5,
+            "Wind Res%": 5,
+            "Earth Res%": 5,
+            "Toxic Res%": 5,
+            "Slash Res%": 5,
+            "Pierce Res%": 5,
+            "Blunt Res%": 5,
+            "Neg Res%": 5,
+            "Holy Res%": 5,
+            "Void Res%": 5
         },
         "conversions": []
     },
@@ -20637,7 +20847,18 @@ const talent_data: Record<string, Talent> = {
         "description": "+3% Global Heal, +5% All Res",
         "stats": {
             "Global HEAL%": 3,
-            "All Res%": 5
+            "Fire Res%": 5,
+            "Water Res%": 5,
+            "Lightning Res%": 5,
+            "Wind Res%": 5,
+            "Earth Res%": 5,
+            "Toxic Res%": 5,
+            "Slash Res%": 5,
+            "Pierce Res%": 5,
+            "Blunt Res%": 5,
+            "Neg Res%": 5,
+            "Holy Res%": 5,
+            "Void Res%": 5
         },
         "conversions": []
     },
@@ -20661,7 +20882,15 @@ const talent_data: Record<string, Talent> = {
         "description": "+1% Global Heal, +8% Magic DMG, Conversion 8% DEF to Heal",
         "stats": {
             "Global HEAL%": 1,
-            "Magic%": 8
+            "Fire%": 8,
+            "Water%": 8,
+            "Lightning%": 8,
+            "Wind%": 8,
+            "Earth%": 8,
+            "Toxic%": 8,
+            "Neg%": 8,
+            "Holy%": 8,
+            "Void%": 8
         },
         "conversions": [
             {
@@ -20691,7 +20920,15 @@ const talent_data: Record<string, Talent> = {
         "description": "+1% Global Heal, +8% Magic DMG, Conversion 8% ATK to Heal",
         "stats": {
             "Global HEAL%": 1,
-            "Magic%": 8
+            "Fire%": 8,
+            "Water%": 8,
+            "Lightning%": 8,
+            "Wind%": 8,
+            "Earth%": 8,
+            "Toxic%": 8,
+            "Neg%": 8,
+            "Holy%": 8,
+            "Void%": 8
         },
         "conversions": [
             {
@@ -20721,7 +20958,15 @@ const talent_data: Record<string, Talent> = {
         "description": "+1% Global Heal, +8% Magic DMG, Conversion 8% MATK to Heal",
         "stats": {
             "Global HEAL%": 1,
-            "Magic%": 8
+            "Fire%": 8,
+            "Water%": 8,
+            "Lightning%": 8,
+            "Wind%": 8,
+            "Earth%": 8,
+            "Toxic%": 8,
+            "Neg%": 8,
+            "Holy%": 8,
+            "Void%": 8
         },
         "conversions": [
             {
@@ -20752,7 +20997,15 @@ const talent_data: Record<string, Talent> = {
         "stats": {
             "Dmg%": 2,
             "Global HEAL%": 2,
-            "Magic%": 10
+            "Fire%": 10,
+            "Water%": 10,
+            "Lightning%": 10,
+            "Wind%": 10,
+            "Earth%": 10,
+            "Toxic%": 10,
+            "Neg%": 10,
+            "Holy%": 10,
+            "Void%": 10
         },
         "conversions": []
     },
