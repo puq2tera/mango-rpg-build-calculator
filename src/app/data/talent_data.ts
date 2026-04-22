@@ -1,3 +1,4 @@
+import { applyInGameTalentOverrides } from "@/app/data/in_game_inaccuracies_data"
 import { StatNames } from "../data/stat_data"
 
 export type Talent = {
@@ -41717,6 +41718,8 @@ const talent_data: Record<string, Talent> = {
         "conversions": []
     }
 };
+
+applyInGameTalentOverrides(talent_data)
 
 const statSet = new Set<string>()
 const convSet = new Set<string>()

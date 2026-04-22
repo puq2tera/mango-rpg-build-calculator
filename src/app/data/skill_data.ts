@@ -1,3 +1,4 @@
+import { applyInGameSkillOverrides } from "@/app/data/in_game_inaccuracies_data"
 import { StatNames } from "../data/stat_data"
 
 export type Skill = {
@@ -15540,6 +15541,8 @@ const skill_data: Record<string, Skill> = {
     { source: "HP", ratio: 0.01, resulting_stat: "Crit DMG%" },
     ],     
 }};
+
+applyInGameSkillOverrides(skill_data)
 
 // inject precomputed widths
 const __columnWidths = computeColumnWidths(skill_data)
