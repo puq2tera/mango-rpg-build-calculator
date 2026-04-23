@@ -1898,7 +1898,7 @@ function MyConversionsCard({
       <div className="relative space-y-5">
         <CardHeader
           title="My Conversions"
-          subtitle="Active talent, buff, and tarot conversions shown in the same source to percent to output format as the in-game list."
+          subtitle="Talent and build stat conversions shown in the same source to percent to output format as the in-game list."
         />
 
         {conversions.length === 0 ? (

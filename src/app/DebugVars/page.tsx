@@ -1896,7 +1896,7 @@ export default function DebugVarsPage() {
   )
   const calcBuffs = useMemo(() => (summary ? getCalcSkillBuffs(summary) : []), [summary])
   const conversionRows = useMemo(
-    () => (summary ? buildLabelValueComparisonRows(getTalentConversionComparisonRows(summary.snapshot, summary.stages), parsedConversions) : []),
+    () => (summary ? buildLabelValueComparisonRows(getTalentConversionComparisonRows(summary.snapshot, summary.charcardStages), parsedConversions) : []),
     [parsedConversions, summary],
   )
   const savedBuildCalculatedResults = useMemo(

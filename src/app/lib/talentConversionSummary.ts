@@ -1,7 +1,5 @@
 import stat_data from "@/app/data/stat_data"
-import { skill_data } from "@/app/data/skill_data"
 import { talent_data } from "@/app/data/talent_data"
-import tarot_data from "@/app/data/tarot_data"
 import type { BuildSnapshot, BuildStatStages } from "@/app/lib/buildStats"
 import { truncateTowardZero } from "@/app/lib/statRounding"
 
@@ -29,19 +27,6 @@ export type TalentConversionGroup = {
   sourceValue: number
   rows: TalentConversionRow[]
   order: number
-}
-
-type EffectSourceData = {
-  conversions?: Array<{
-    source: string
-    ratio: number
-    resulting_stat: string
-  }>
-  stack_conversions?: Array<{
-    source: string
-    ratio: number
-    resulting_stat: string
-  }>
 }
 
 const directInGameTokenByStat: Record<string, string> = {
@@ -159,7 +144,7 @@ function getOutputInGameTokens(stat: string): string[] {
   return [getDirectInGameToken(stat)]
 }
 
-export function formatTalentConversionValue(value: number, stat: string): string {
+export function formatTalentConversionValue(value: number): string {
   const absolute = formatNumber(Math.abs(value))
   return `${value < 0 ? "-" : ""}${absolute}`
 }
@@ -258,24 +243,7 @@ function getGroupSourceValue(
     return stages.StatsBase[sourceStat] ?? 0
   }
 
-  return getDisplayConversionSourceValue(stages.StatsBuffReady, sourceStat)
-}
-
-function mergeStageStats(
-  baseStats: Record<string, number>,
-  addedStats?: Record<string, number>,
-): Record<string, number> {
-  if (!addedStats || Object.keys(addedStats).length === 0) {
-    return baseStats
-  }
-
-  const merged = { ...baseStats }
-
-  for (const [stat, value] of Object.entries(addedStats)) {
-    merged[stat] = (merged[stat] ?? 0) + (value ?? 0)
-  }
-
-  return merged
+  return getDisplayConversionSourceValue(stages.StatsConversionReady, sourceStat)
 }
 
 function addOrMergeRow(
@@ -447,79 +415,6 @@ function addResourceMultiplierRows(
   return order
 }
 
-function addEffectConversionRows(
-  rows: TalentConversionRow[],
-  rowsByKey: Map<string, TalentConversionRow>,
-  args: {
-    selectedNames: readonly string[]
-    stackDict: Record<string, number>
-    sourceData: Record<string, EffectSourceData | undefined>
-    baseSourceStats: Record<string, number>
-    percentBeforeByName: Record<string, number>
-    outputsBeforeByName: Record<string, Record<string, number>>
-    nextOrder: number
-  },
-): number {
-  let order = args.nextOrder
-
-  for (const sourceName of args.selectedNames) {
-    const effectData = args.sourceData[sourceName]
-    if (!effectData) {
-      continue
-    }
-
-    const sourceStats = mergeStageStats(
-      args.baseSourceStats,
-      args.outputsBeforeByName[sourceName],
-    )
-    const buffPercent = args.percentBeforeByName[sourceName] ?? (args.baseSourceStats["Buff%"] ?? 0)
-    const buffMultiplier = 1 + (buffPercent / 100)
-
-    for (const { source, ratio, resulting_stat } of effectData.conversions ?? []) {
-      const sourceValue = getDisplayConversionSourceValue(sourceStats, source)
-      const effectiveRatio = ratio * buffMultiplier
-      const amount = truncateTowardZero(sourceValue * effectiveRatio)
-
-      addOrMergeRow(rows, rowsByKey, {
-        id: `${sourceName}:${order}:${resulting_stat}`,
-        sourceName,
-        sourceStat: source,
-        sourceValue,
-        ratio: effectiveRatio,
-        resultingStat: resulting_stat,
-        amount,
-        order,
-      })
-      order += 1
-    }
-
-    for (const { source, ratio, resulting_stat } of effectData.stack_conversions ?? []) {
-      const stackCount = args.stackDict[sourceName] ?? 0
-      if (stackCount === 0) {
-        continue
-      }
-
-      const sourceValue = getDisplayConversionSourceValue(sourceStats, source)
-      const effectiveRatio = ratio * stackCount * buffMultiplier
-      const amount = truncateTowardZero(sourceValue * effectiveRatio)
-
-      addOrMergeRow(rows, rowsByKey, {
-        id: `${sourceName}:${order}:${resulting_stat}:stack`,
-        sourceName,
-        sourceStat: source,
-        sourceValue,
-        ratio: effectiveRatio,
-        resultingStat: resulting_stat,
-        amount,
-        order,
-      })
-      order += 1
-    }
-  }
-
-  return order
-}
-
 export function getTalentConversionRows(
   snapshot: BuildSnapshot,
   stages: BuildStatStages,
@@ -531,25 +426,7 @@ export function getTalentConversionRows(
   const explicitTalentRatiosByKey = buildExplicitTalentConversionRatios(snapshot)
   order = addTalentConversionRows(rows, rowsByKey, snapshot, stages, order)
   order = addGlobalMainStatConversionRows(rows, rowsByKey, stages, explicitTalentRatiosByKey, order)
-  order = addResourceMultiplierRows(rows, rowsByKey, stages, order)
-  order = addEffectConversionRows(rows, rowsByKey, {
-    selectedNames: snapshot.selectedBuffs,
-    stackDict: snapshot.selectedBuffStacks,
-    sourceData: skill_data as Record<string, EffectSourceData | undefined>,
-    baseSourceStats: stages.StatsBuffReady,
-    percentBeforeByName: stages.StatsBuffPercents,
-    outputsBeforeByName: stages.StatsBuffOutputsBeforeByName,
-    nextOrder: order,
-  })
-  order = addEffectConversionRows(rows, rowsByKey, {
-    selectedNames: snapshot.selectedTarots,
-    stackDict: snapshot.tarotStacks,
-    sourceData: tarot_data as Record<string, EffectSourceData | undefined>,
-    baseSourceStats: stages.StatsBuffReady,
-    percentBeforeByName: stages.StatsTarotPercents,
-    outputsBeforeByName: stages.StatsTarotOutputsBeforeByName,
-    nextOrder: order,
-  })
+  addResourceMultiplierRows(rows, rowsByKey, stages, order)
 
   return rows
 }
@@ -612,11 +489,11 @@ export function getTalentConversionGroups(
 }
 
 export function getTalentConversionSourceLine(group: TalentConversionGroup): string {
-  return `◘ ${getTalentConversionSourceLabel(group.sourceStat)} : ${formatTalentConversionValue(group.sourceValue, group.sourceStat)}`
+  return `◘ ${getTalentConversionSourceLabel(group.sourceStat)} : ${formatTalentConversionValue(group.sourceValue)}`
 }
 
 export function getTalentConversionOutputLine(row: TalentConversionRow): string {
-  return `⇒  ${formatTalentConversionRatio(row.ratio)}  ⇒  ${formatTalentConversionValue(row.amount, row.resultingStat)} ${getTalentConversionOutputLabel(row.resultingStat)}`
+  return `⇒  ${formatTalentConversionRatio(row.ratio)}  ⇒  ${formatTalentConversionValue(row.amount)} ${getTalentConversionOutputLabel(row.resultingStat)}`
 }
 
 export function getTalentConversionTooltip(group: TalentConversionGroup): string {
@@ -629,7 +506,7 @@ export function getTalentConversionTooltip(group: TalentConversionGroup): string
 
       return [
         ...row.breakdown.map((entry) =>
-          `${entry.sourceName}: ⇒  ${formatTalentConversionRatio(entry.ratio)}  ⇒  ${formatTalentConversionValue(entry.amount, row.resultingStat)} ${getTalentConversionOutputLabel(row.resultingStat)}`,
+          `${entry.sourceName}: ⇒  ${formatTalentConversionRatio(entry.ratio)}  ⇒  ${formatTalentConversionValue(entry.amount)} ${getTalentConversionOutputLabel(row.resultingStat)}`,
         ),
         `Total: ${getTalentConversionOutputLine(row)}`,
       ]
