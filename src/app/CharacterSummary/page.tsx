@@ -1898,12 +1898,12 @@ function MyConversionsCard({
       <div className="relative space-y-5">
         <CardHeader
           title="My Conversions"
-          subtitle="Selected talent conversions shown in the same source to percent to output format as the in-game list."
+          subtitle="Active talent, buff, and tarot conversions shown in the same source to percent to output format as the in-game list."
         />
 
         {conversions.length === 0 ? (
           <div className="rounded-2xl border border-dashed border-slate-700/80 bg-slate-950/40 px-4 py-8 text-center text-sm text-slate-400">
-            No active talent conversions are contributing to the current build.
+            No active conversions are contributing to the current build.
           </div>
         ) : (
           <MyConversionsGrid conversions={conversions} />

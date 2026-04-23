@@ -1120,22 +1120,12 @@ function formatEffectDelta(delta: number, stat: string, label?: string): string 
 }
 
 export function getCalcSkillBuffs(summary: SummaryState): CalcSkillBuff[] {
-  const skillEffectsByName = new Map(
-    summary.activeEffects
-      .filter((effect) => effect.sourceType === "skill")
-      .map((effect) => [effect.title, effect]),
-  )
-
-  return summary.snapshot.selectedBuffs.map((name) => {
-    const effect = skillEffectsByName.get(name)
-
-    return {
-      name,
-      effects: (effect?.deltas ?? []).map((delta) => ({
+  return summary.activeEffects.map((effect) => ({
+    name: effect.title,
+    effects: effect.deltas.map((delta) => ({
         stat: delta.stat,
         value: delta.delta,
         label: formatEffectDelta(delta.delta, delta.stat, delta.label),
       })),
-    }
-  })
+  }))
 }

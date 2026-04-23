@@ -1,17 +1,19 @@
 import stat_data from "@/app/data/stat_data"
+import { skill_data } from "@/app/data/skill_data"
 import { talent_data } from "@/app/data/talent_data"
+import tarot_data from "@/app/data/tarot_data"
 import type { BuildSnapshot, BuildStatStages } from "@/app/lib/buildStats"
 import { truncateTowardZero } from "@/app/lib/statRounding"
 
 export type TalentConversionBreakdown = {
-  talentName: string
+  sourceName: string
   ratio: number
   amount: number
 }
 
 export type TalentConversionRow = {
   id: string
-  talentName: string
+  sourceName: string
   sourceStat: string
   sourceValue: number
   ratio: number
@@ -29,14 +31,27 @@ export type TalentConversionGroup = {
   order: number
 }
 
+type EffectSourceData = {
+  conversions?: Array<{
+    source: string
+    ratio: number
+    resulting_stat: string
+  }>
+  stack_conversions?: Array<{
+    source: string
+    ratio: number
+    resulting_stat: string
+  }>
+}
+
 const directInGameTokenByStat: Record<string, string> = {
   ATK: "atk",
   DEF: "def",
   MATK: "matk",
-  HEAL: "heal",
-  HP: "maxHP",
-  MP: "maxMP",
-  Focus: "maxFocus",
+  HEAL: "healpower",
+  HP: "HP",
+  MP: "MP",
+  Focus: "focus",
   "Temp HP": "tempHP",
   "Temp MP": "tempMP",
   "ATK%": "atkmulti",
@@ -106,12 +121,11 @@ const fallbackInGameTokenByStat = Object.entries(stat_data.inGameNames).reduce<R
 }, {})
 
 const syntheticResourceMultiplierMap: Record<string, {
-  sourceStat: string
-  resultingStat: string
+  percentStat: string
 }> = {
-  "HP%": { sourceStat: "HP", resultingStat: "HP" },
-  "MP%": { sourceStat: "MP", resultingStat: "MP" },
-  "Focus%": { sourceStat: "Focus", resultingStat: "Focus" },
+  HP: { percentStat: "HP%" },
+  MP: { percentStat: "MP%" },
+  Focus: { percentStat: "Focus%" },
 }
 
 function formatNumber(value: number, maxDigits = 4): string {
@@ -214,7 +228,7 @@ function getDisplayConversionSourceValue(
 
 function createRow(
   id: string,
-  talentName: string,
+  sourceName: string,
   sourceStat: string,
   sourceValue: number,
   ratio: number,
@@ -225,24 +239,99 @@ function createRow(
 ): TalentConversionRow {
   return {
     id,
-    talentName,
+    sourceName,
     sourceStat,
     sourceValue,
     ratio,
     resultingStat,
     amount,
     order,
-    breakdown: breakdown ?? [{ talentName, ratio, amount }],
+    breakdown: breakdown ?? [{ sourceName, ratio, amount }],
   }
 }
 
-export function getTalentConversionRows(
-  snapshot: BuildSnapshot,
+function getGroupSourceValue(
   stages: BuildStatStages,
-): TalentConversionRow[] {
-  const rows: TalentConversionRow[] = []
-  const syntheticRowsByKey = new Map<string, TalentConversionRow>()
-  let order = 0
+  sourceStat: string,
+): number {
+  if (sourceStat in syntheticResourceMultiplierMap) {
+    return stages.StatsBase[sourceStat] ?? 0
+  }
+
+  return getDisplayConversionSourceValue(stages.StatsBuffReady, sourceStat)
+}
+
+function mergeStageStats(
+  baseStats: Record<string, number>,
+  addedStats?: Record<string, number>,
+): Record<string, number> {
+  if (!addedStats || Object.keys(addedStats).length === 0) {
+    return baseStats
+  }
+
+  const merged = { ...baseStats }
+
+  for (const [stat, value] of Object.entries(addedStats)) {
+    merged[stat] = (merged[stat] ?? 0) + (value ?? 0)
+  }
+
+  return merged
+}
+
+function addOrMergeRow(
+  rows: TalentConversionRow[],
+  rowsByKey: Map<string, TalentConversionRow>,
+  args: {
+    id: string
+    sourceName: string
+    sourceStat: string
+    sourceValue: number
+    ratio: number
+    resultingStat: string
+    amount: number
+    order: number
+  },
+): void {
+  if (!Number.isFinite(args.ratio) || Math.abs(args.ratio) < 0.0000001) {
+    return
+  }
+
+  if (!Number.isFinite(args.amount) || args.amount === 0) {
+    return
+  }
+
+  const key = `${args.sourceStat}:${args.resultingStat}`
+  const existing = rowsByKey.get(key)
+  if (existing) {
+    existing.ratio += args.ratio
+    existing.amount += args.amount
+    existing.breakdown.push({
+      sourceName: args.sourceName,
+      ratio: args.ratio,
+      amount: args.amount,
+    })
+    return
+  }
+
+  const row = createRow(
+    args.id,
+    args.sourceName,
+    args.sourceStat,
+    args.sourceValue,
+    args.ratio,
+    args.resultingStat,
+    args.amount,
+    args.order,
+  )
+
+  rowsByKey.set(key, row)
+  rows.push(row)
+}
+
+function buildExplicitTalentConversionRatios(
+  snapshot: BuildSnapshot,
+): Map<string, number> {
+  const ratiosByKey = new Map<string, number>()
 
   for (const talentName of snapshot.selectedTalents) {
     const talent = talent_data[talentName]
@@ -250,72 +339,217 @@ export function getTalentConversionRows(
       continue
     }
 
-    for (const [stat, value] of Object.entries(talent.stats ?? {})) {
-      const syntheticConfig = syntheticResourceMultiplierMap[stat]
-      const normalizedValue = value ?? 0
-      if (!syntheticConfig || !Number.isFinite(normalizedValue) || normalizedValue === 0) {
-        continue
-      }
+    for (const { source, ratio, resulting_stat } of talent.conversions ?? []) {
+      const key = `${source}:${resulting_stat}`
+      ratiosByKey.set(key, (ratiosByKey.get(key) ?? 0) + ratio)
+    }
+  }
 
-      const ratio = normalizedValue / 100
-      const sourceValue = stages.StatsBase[syntheticConfig.sourceStat] ?? 0
-      const amount = truncateTowardZero(sourceValue * ratio)
+  return ratiosByKey
+}
 
-      if (!Number.isFinite(amount) || amount === 0) {
-        continue
-      }
+function addTalentConversionRows(
+  rows: TalentConversionRow[],
+  rowsByKey: Map<string, TalentConversionRow>,
+  snapshot: BuildSnapshot,
+  stages: BuildStatStages,
+  nextOrder: number,
+): number {
+  let order = nextOrder
 
-      const key = `synthetic:${syntheticConfig.sourceStat}:${syntheticConfig.resultingStat}`
-      const existingSyntheticRow = syntheticRowsByKey.get(key)
-      if (existingSyntheticRow) {
-        existingSyntheticRow.ratio += ratio
-        existingSyntheticRow.amount += amount
-        existingSyntheticRow.breakdown.push({ talentName, ratio, amount })
-        continue
-      }
-
-      const syntheticRow = createRow(
-        key,
-        talentName,
-        syntheticConfig.sourceStat,
-        sourceValue,
-        ratio,
-        syntheticConfig.resultingStat,
-        amount,
-        order,
-      )
-
-      syntheticRowsByKey.set(key, syntheticRow)
-      rows.push(syntheticRow)
-      order += 1
+  for (const talentName of snapshot.selectedTalents) {
+    const talent = talent_data[talentName]
+    if (!talent) {
+      continue
     }
 
-    talent.conversions.forEach(({ source, ratio, resulting_stat }, index) => {
-      // Talent conversions are a one-pass calculation: every source value comes
-      // from the same pre-conversion stat snapshot, and conversions never feed
-      // into each other.
+    for (const { source, ratio, resulting_stat } of talent.conversions ?? []) {
       const sourceValue = getDisplayConversionSourceValue(stages.StatsConversionReady, source)
       const amount = truncateTowardZero(sourceValue * ratio)
 
-      if (!Number.isFinite(amount) || amount === 0) {
-        return
+      addOrMergeRow(rows, rowsByKey, {
+        id: `${talentName}:${order}:${resulting_stat}`,
+        sourceName: talentName,
+        sourceStat: source,
+        sourceValue,
+        ratio,
+        resultingStat: resulting_stat,
+        amount,
+        order,
+      })
+      order += 1
+    }
+  }
+
+  return order
+}
+
+function addGlobalMainStatConversionRows(
+  rows: TalentConversionRow[],
+  rowsByKey: Map<string, TalentConversionRow>,
+  stages: BuildStatStages,
+  explicitTalentRatiosByKey: ReadonlyMap<string, number>,
+  nextOrder: number,
+): number {
+  let order = nextOrder
+
+  for (const [sourceStat, resultMap] of Object.entries(stages.StatsConversionPercents)) {
+    const sourceValue = getDisplayConversionSourceValue(stages.StatsConversionReady, sourceStat)
+
+    for (const [resultingStat, totalRatio] of Object.entries(resultMap)) {
+      const explicitTalentRatio = explicitTalentRatiosByKey.get(`${sourceStat}:${resultingStat}`) ?? 0
+      const remainingRatio = totalRatio - explicitTalentRatio
+      const amount = truncateTowardZero(sourceValue * remainingRatio)
+
+      addOrMergeRow(rows, rowsByKey, {
+        id: `build:${sourceStat}:${resultingStat}`,
+        sourceName: "Build Stats",
+        sourceStat,
+        sourceValue,
+        ratio: remainingRatio,
+        resultingStat,
+        amount,
+        order,
+      })
+      order += 1
+    }
+  }
+
+  return order
+}
+
+function addResourceMultiplierRows(
+  rows: TalentConversionRow[],
+  rowsByKey: Map<string, TalentConversionRow>,
+  stages: BuildStatStages,
+  nextOrder: number,
+): number {
+  let order = nextOrder
+
+  for (const [sourceStat, { percentStat }] of Object.entries(syntheticResourceMultiplierMap)) {
+    const ratio = (stages.StatsBase[percentStat] ?? 0) / 100
+    const sourceValue = stages.StatsBase[sourceStat] ?? 0
+    const amount = truncateTowardZero(sourceValue * ratio)
+
+    addOrMergeRow(rows, rowsByKey, {
+      id: `resource:${sourceStat}`,
+      sourceName: "Build Stats",
+      sourceStat,
+      sourceValue,
+      ratio,
+      resultingStat: sourceStat,
+      amount,
+      order,
+    })
+    order += 1
+  }
+
+  return order
+}
+
+function addEffectConversionRows(
+  rows: TalentConversionRow[],
+  rowsByKey: Map<string, TalentConversionRow>,
+  args: {
+    selectedNames: readonly string[]
+    stackDict: Record<string, number>
+    sourceData: Record<string, EffectSourceData | undefined>
+    baseSourceStats: Record<string, number>
+    percentBeforeByName: Record<string, number>
+    outputsBeforeByName: Record<string, Record<string, number>>
+    nextOrder: number
+  },
+): number {
+  let order = args.nextOrder
+
+  for (const sourceName of args.selectedNames) {
+    const effectData = args.sourceData[sourceName]
+    if (!effectData) {
+      continue
+    }
+
+    const sourceStats = mergeStageStats(
+      args.baseSourceStats,
+      args.outputsBeforeByName[sourceName],
+    )
+    const buffPercent = args.percentBeforeByName[sourceName] ?? (args.baseSourceStats["Buff%"] ?? 0)
+    const buffMultiplier = 1 + (buffPercent / 100)
+
+    for (const { source, ratio, resulting_stat } of effectData.conversions ?? []) {
+      const sourceValue = getDisplayConversionSourceValue(sourceStats, source)
+      const effectiveRatio = ratio * buffMultiplier
+      const amount = truncateTowardZero(sourceValue * effectiveRatio)
+
+      addOrMergeRow(rows, rowsByKey, {
+        id: `${sourceName}:${order}:${resulting_stat}`,
+        sourceName,
+        sourceStat: source,
+        sourceValue,
+        ratio: effectiveRatio,
+        resultingStat: resulting_stat,
+        amount,
+        order,
+      })
+      order += 1
+    }
+
+    for (const { source, ratio, resulting_stat } of effectData.stack_conversions ?? []) {
+      const stackCount = args.stackDict[sourceName] ?? 0
+      if (stackCount === 0) {
+        continue
       }
 
-      rows.push(
-        createRow(
-          `${talentName}:${index}:${resulting_stat}`,
-          talentName,
-          source,
-          sourceValue,
-          ratio,
-          resulting_stat,
-          amount,
-          order,
-        ),
-      )
+      const sourceValue = getDisplayConversionSourceValue(sourceStats, source)
+      const effectiveRatio = ratio * stackCount * buffMultiplier
+      const amount = truncateTowardZero(sourceValue * effectiveRatio)
+
+      addOrMergeRow(rows, rowsByKey, {
+        id: `${sourceName}:${order}:${resulting_stat}:stack`,
+        sourceName,
+        sourceStat: source,
+        sourceValue,
+        ratio: effectiveRatio,
+        resultingStat: resulting_stat,
+        amount,
+        order,
+      })
       order += 1
-    })
+    }
   }
+
+  return order
+}
+
+export function getTalentConversionRows(
+  snapshot: BuildSnapshot,
+  stages: BuildStatStages,
+): TalentConversionRow[] {
+  const rows: TalentConversionRow[] = []
+  const rowsByKey = new Map<string, TalentConversionRow>()
+  let order = 0
+
+  const explicitTalentRatiosByKey = buildExplicitTalentConversionRatios(snapshot)
+  order = addTalentConversionRows(rows, rowsByKey, snapshot, stages, order)
+  order = addGlobalMainStatConversionRows(rows, rowsByKey, stages, explicitTalentRatiosByKey, order)
+  order = addResourceMultiplierRows(rows, rowsByKey, stages, order)
+  order = addEffectConversionRows(rows, rowsByKey, {
+    selectedNames: snapshot.selectedBuffs,
+    stackDict: snapshot.selectedBuffStacks,
+    sourceData: skill_data as Record<string, EffectSourceData | undefined>,
+    baseSourceStats: stages.StatsBuffReady,
+    percentBeforeByName: stages.StatsBuffPercents,
+    outputsBeforeByName: stages.StatsBuffOutputsBeforeByName,
+    nextOrder: order,
+  })
+  order = addEffectConversionRows(rows, rowsByKey, {
+    selectedNames: snapshot.selectedTarots,
+    stackDict: snapshot.tarotStacks,
+    sourceData: tarot_data as Record<string, EffectSourceData | undefined>,
+    baseSourceStats: stages.StatsBuffReady,
+    percentBeforeByName: stages.StatsTarotPercents,
+    outputsBeforeByName: stages.StatsTarotOutputsBeforeByName,
+    nextOrder: order,
+  })
 
   return rows
 }
@@ -353,7 +587,7 @@ export function getTalentConversionGroups(
     const nextGroup: TalentConversionGroup = {
       id: key,
       sourceStat: row.sourceStat,
-      sourceValue: row.sourceValue,
+      sourceValue: getGroupSourceValue(stages, row.sourceStat),
       rows: [row],
       order: row.order,
     }
@@ -390,12 +624,12 @@ export function getTalentConversionTooltip(group: TalentConversionGroup): string
     getTalentConversionSourceLine(group),
     ...group.rows.flatMap((row) => {
       if (row.breakdown.length <= 1) {
-        return [`${row.talentName}: ${getTalentConversionOutputLine(row)}`]
+        return [`${row.sourceName}: ${getTalentConversionOutputLine(row)}`]
       }
 
       return [
         ...row.breakdown.map((entry) =>
-          `${entry.talentName}: ⇒  ${formatTalentConversionRatio(entry.ratio)}  ⇒  ${formatTalentConversionValue(entry.amount, row.resultingStat)} ${getTalentConversionOutputLabel(row.resultingStat)}`,
+          `${entry.sourceName}: ⇒  ${formatTalentConversionRatio(entry.ratio)}  ⇒  ${formatTalentConversionValue(entry.amount, row.resultingStat)} ${getTalentConversionOutputLabel(row.resultingStat)}`,
         ),
         `Total: ${getTalentConversionOutputLine(row)}`,
       ]

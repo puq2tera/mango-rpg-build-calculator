@@ -208,6 +208,15 @@ function normalizeName(value: string): string {
     .trim()
 }
 
+const buffNameAliases = new Map<string, string>([
+  [normalizeName("Essence Protect"), normalizeName("Essence Guard")],
+])
+
+function normalizeBuffName(value: string): string {
+  const normalized = normalizeName(value)
+  return buffNameAliases.get(normalized) ?? normalized
+}
+
 function getOrderedUnionLabels<CalcRow extends { label: string }, InGameRow extends { label: string }>(
   calcRows: readonly CalcRow[],
   inGameRows: readonly InGameRow[],
@@ -648,7 +657,7 @@ function getBuffComparisonStatus(calc?: ComparableBuff, inGame?: ComparableBuff)
 function buildBuffComparisons(calcBuffs: readonly CalcSkillBuff[], inGameBuffs: readonly ParsedBuff[]): ComparedBuff[] {
   const calcComparable = calcBuffs.map<ComparableBuff>((buff) => ({
     name: buff.name,
-    normalizedName: normalizeName(buff.name),
+    normalizedName: normalizeBuffName(buff.name),
     effects: buff.effects.map((effect) => ({
       display: effect.label,
       signature: `${effect.stat}:${effect.value}`,
@@ -656,7 +665,7 @@ function buildBuffComparisons(calcBuffs: readonly CalcSkillBuff[], inGameBuffs: 
   }))
   const inGameComparable = inGameBuffs.map<ComparableBuff>((buff) => ({
     name: buff.name,
-    normalizedName: buff.normalizedName,
+    normalizedName: normalizeBuffName(buff.name),
     effects: buff.effects.map((effect) => ({
       display: effect.display,
       signature: getBuffEffectSignature(effect),
@@ -724,7 +733,7 @@ function BuffComparisonSection({
         <div>
           <div className="text-base font-semibold text-slate-50">Buff Comparison</div>
           <div className="mt-1 text-xs leading-5 text-slate-400">
-            Buff names are matched case-insensitively. Effect rows compare by parsed stat key and amount when possible.
+            Buff names are matched case-insensitively, with a small alias list for known in-game naming drift. Effect rows compare by parsed stat key and amount when possible.
           </div>
         </div>
 
@@ -1887,7 +1896,7 @@ export default function DebugVarsPage() {
   )
   const calcBuffs = useMemo(() => (summary ? getCalcSkillBuffs(summary) : []), [summary])
   const conversionRows = useMemo(
-    () => (summary ? buildLabelValueComparisonRows(getTalentConversionComparisonRows(summary.snapshot, summary.charcardStages), parsedConversions) : []),
+    () => (summary ? buildLabelValueComparisonRows(getTalentConversionComparisonRows(summary.snapshot, summary.stages), parsedConversions) : []),
     [parsedConversions, summary],
   )
   const savedBuildCalculatedResults = useMemo(
@@ -1979,7 +1988,7 @@ export default function DebugVarsPage() {
         {hasBuffInput ? (
           <ComparisonBlock
             title="Buff Comparison"
-            subtitle="Compares pasted buff names and parsed effect lines against the calculator’s selected skill buffs."
+            subtitle="Compares pasted buff names and parsed effect lines against the calculator’s active skill and tarot effects."
           >
             <BuffComparisonSection calcBuffs={calcBuffs} inGameBuffs={parsedBuffs} />
           </ComparisonBlock>
