@@ -268,6 +268,130 @@ function normalizeMainResourceComparableValue(
   }
 }
 
+type ParsedConversionComparisonEntry = {
+  destinationKey: string
+  ratio: number
+  amount: number
+}
+
+const conversionComparisonNumberPattern = "[+-]?\\d[\\d,]*(?:\\.\\d+)?"
+const conversionComparisonOutputPattern = new RegExp(
+  `(?:⇒|=>)\\s*(${conversionComparisonNumberPattern})\\s*%?\\s*(?:⇒|=>)\\s*(${conversionComparisonNumberPattern})\\s*(.*)$`,
+  "u",
+)
+
+function parseConversionComparisonNumber(value: string): number | null {
+  const parsed = Number(value.replace(/,/g, ""))
+  return Number.isFinite(parsed) ? parsed : null
+}
+
+function formatCanonicalConversionNumber(value: number): string {
+  const roundedValue = Math.round(value * 10000) / 10000
+  const normalizedValue = Object.is(roundedValue, -0) ? 0 : roundedValue
+
+  return Number.isInteger(normalizedValue)
+    ? String(normalizedValue)
+    : String(normalizedValue).replace(/(\.\d*?)0+$/u, "$1").replace(/\.$/u, "")
+}
+
+function normalizeConversionDestinationKey(value: string): string {
+  return value
+    .toLowerCase()
+    .replace(/[^\p{L}\p{N}]+/gu, "")
+    .trim()
+}
+
+function getConversionDestinationKeys(value: string): string[] {
+  const destinationKeys = value
+    .split(",")
+    .map((entry) => normalizeConversionDestinationKey(entry))
+    .filter((entry) => entry.length > 0)
+
+  return destinationKeys.length > 0 ? destinationKeys : [""]
+}
+
+function parseConversionSourceValue(segment: string): number | null {
+  const match = segment.match(new RegExp(`:\\s*(${conversionComparisonNumberPattern})`, "u"))
+  return match ? parseConversionComparisonNumber(match[1]) : null
+}
+
+function normalizeConversionComparableValue(value: ComparableValue): ComparableValue {
+  const segments = value.display
+    .replace(/=>/g, "⇒")
+    .split("|")
+    .map((segment) => segment.trim())
+    .filter((segment) => segment.length > 0)
+  let sourceValue: number | null = null
+  const entries: ParsedConversionComparisonEntry[] = []
+
+  for (const segment of segments) {
+    if (!segment.includes("⇒")) {
+      sourceValue ??= parseConversionSourceValue(segment)
+      continue
+    }
+
+    const match = segment.match(conversionComparisonOutputPattern)
+    if (!match) {
+      continue
+    }
+
+    const ratio = parseConversionComparisonNumber(match[1])
+    const amount = parseConversionComparisonNumber(match[2])
+    if (ratio === null || amount === null) {
+      continue
+    }
+
+    for (const destinationKey of getConversionDestinationKeys(match[3])) {
+      entries.push({
+        destinationKey,
+        ratio,
+        amount,
+      })
+    }
+  }
+
+  if (sourceValue === null && entries.length === 0) {
+    return {
+      ...value,
+      requireNormalizedMatch: true,
+    }
+  }
+
+  const sortedEntries = [...entries].sort((left, right) => {
+    const destinationDifference = left.destinationKey.localeCompare(right.destinationKey)
+    if (destinationDifference !== 0) {
+      return destinationDifference
+    }
+
+    const ratioDifference = left.ratio - right.ratio
+    if (Math.abs(ratioDifference) >= 0.0001) {
+      return ratioDifference
+    }
+
+    return left.amount - right.amount
+  })
+  const sourceSignature = sourceValue === null
+    ? "source:?"
+    : `source:${formatCanonicalConversionNumber(sourceValue)}`
+  const entrySignatures = sortedEntries.map((entry) =>
+    [
+      entry.destinationKey,
+      formatCanonicalConversionNumber(entry.ratio),
+      formatCanonicalConversionNumber(entry.amount),
+    ].join(":"),
+  )
+
+  return {
+    display: value.display,
+    normalized: [sourceSignature, ...entrySignatures].join("|"),
+    numericParts: [
+      ...(sourceValue === null ? [] : [sourceValue]),
+      ...sortedEntries.flatMap((entry) => [entry.ratio, entry.amount]),
+    ],
+    requireNormalizedMatch: true,
+  }
+}
+
 function buildLabelValueComparisonRows(
   calcRows: readonly LabelValueRow[],
   inGameRows: readonly ParsedLabelValueRow[],
@@ -277,6 +401,24 @@ function buildLabelValueComparisonRows(
   )
   const inGameMap = new Map(
     inGameRows.map((row) => [row.label, normalizeMainResourceComparableValue(row.label, row.value)]),
+  )
+
+  return getOrderedUnionLabels(calcRows, inGameRows).map((label) => ({
+    label,
+    calc: calcMap.get(label),
+    inGame: inGameMap.get(label),
+  }))
+}
+
+function buildConversionComparisonRows(
+  calcRows: readonly LabelValueRow[],
+  inGameRows: readonly ParsedLabelValueRow[],
+): ComparableRow[] {
+  const calcMap = new Map(
+    calcRows.map((row) => [row.label, normalizeConversionComparableValue(createComparableValue(row.value))]),
+  )
+  const inGameMap = new Map(
+    inGameRows.map((row) => [row.label, normalizeConversionComparableValue(row.value)]),
   )
 
   return getOrderedUnionLabels(calcRows, inGameRows).map((label) => ({
@@ -1896,7 +2038,7 @@ export default function DebugVarsPage() {
   )
   const calcBuffs = useMemo(() => (summary ? getCalcSkillBuffs(summary) : []), [summary])
   const conversionRows = useMemo(
-    () => (summary ? buildLabelValueComparisonRows(getTalentConversionComparisonRows(summary.snapshot, summary.charcardStages), parsedConversions) : []),
+    () => (summary ? buildConversionComparisonRows(getTalentConversionComparisonRows(summary.snapshot, summary.charcardStages), parsedConversions) : []),
     [parsedConversions, summary],
   )
   const savedBuildCalculatedResults = useMemo(
@@ -2001,7 +2143,7 @@ export default function DebugVarsPage() {
           >
             <ComparisonTable
               title="My Conversions"
-              subtitle="Each row compares the source value, conversion percent, and output value together."
+              subtitle="Each row compares normalized source values, percents, amounts, and output stats so grouped destinations can still match."
               rows={conversionRows}
             />
           </ComparisonBlock>

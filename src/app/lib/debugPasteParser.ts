@@ -4,6 +4,7 @@ export type ComparableValue = {
   display: string
   normalized: string
   numericParts: number[]
+  requireNormalizedMatch?: boolean
 }
 
 export type ParsedLabelValueRow = {
@@ -264,7 +265,13 @@ export function compareComparableValues(calc?: ComparableValue, inGame?: Compara
     return { status: "missing-game" }
   }
 
+  const requiresNormalizedMatch = calc.requireNormalizedMatch || inGame.requireNormalizedMatch
+
   if (areNumericPartsEqual(calc.numericParts, inGame.numericParts)) {
+    if (requiresNormalizedMatch && calc.normalized !== inGame.normalized) {
+      return { status: "different" }
+    }
+
     return {
       status: "match",
       delta: calc.numericParts.length === 1 ? "0" : "0 / 0",
@@ -274,7 +281,9 @@ export function compareComparableValues(calc?: ComparableValue, inGame?: Compara
   if (calc.numericParts.length === 1 && inGame.numericParts.length === 1) {
     const delta = inGame.numericParts[0] - calc.numericParts[0]
     return {
-      status: Math.abs(delta) < 0.0001 ? "match" : "different",
+      status: Math.abs(delta) < 0.0001 && (!requiresNormalizedMatch || calc.normalized === inGame.normalized)
+        ? "match"
+        : "different",
       delta: `${delta >= 0 ? "+" : "-"}${formatDeltaNumber(Math.abs(delta))}`,
     }
   }
