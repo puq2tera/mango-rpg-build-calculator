@@ -10674,9 +10674,7 @@ const talent_data: Record<string, Talent> = {
         "description": "+1% Global ATK, +12% Physical Damage",
         "stats": {
             "Global ATK%": 1,
-            "Slash%": 12,
-            "Pierce%": 12,
-            "Blunt%": 12
+            "Phys%": 12
         },
         "conversions": []
     },
@@ -10701,9 +10699,7 @@ const talent_data: Record<string, Talent> = {
         "description": "+1% Global ATK, +12% Physical Damage",
         "stats": {
             "Global ATK%": 1,
-            "Slash%": 12,
-            "Pierce%": 12,
-            "Blunt%": 12
+            "Phys%": 12
         },
         "conversions": []
     },
@@ -10727,9 +10723,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+1% Global ATK, +10% Physical Penetration",
         "stats": {
-            "Slash Pen%": 10,
-            "Pierce Pen%": 10,
-            "Blunt Pen%": 10,
+            "Phys Pen%": 10,
             "Global ATK%": 1
         },
         "conversions": []
@@ -10828,9 +10822,7 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% Physical Damage, 33% of Physical Pen converted into Void Pen",
         "stats": {
-            "Slash%": 20,
-            "Pierce%": 20,
-            "Blunt%": 20
+            "Phys%": 20
         },
         "conversions": [
             {
@@ -15924,12 +15916,7 @@ const talent_data: Record<string, Talent> = {
         "description": "+1% Global MATK, +12% Elemental Damage",
         "stats": {
             "Global MATK%": 1,
-            "Fire%": 12,
-            "Water%": 12,
-            "Lightning%": 12,
-            "Wind%": 12,
-            "Earth%": 12,
-            "Toxic%": 12
+            "Elemental%": 12
         },
         "conversions": []
     },
@@ -15954,12 +15941,7 @@ const talent_data: Record<string, Talent> = {
         "description": "+1% Global MATK, +18% Elemental Damage",
         "stats": {
             "Global MATK%": 1,
-            "Fire%": 18,
-            "Water%": 18,
-            "Lightning%": 18,
-            "Wind%": 18,
-            "Earth%": 18,
-            "Toxic%": 18
+            "Elemental%": 18
         },
         "conversions": []
     },
@@ -15984,12 +15966,7 @@ const talent_data: Record<string, Talent> = {
         "description": "+1% Global MATK, +12% Elemental Penetration",
         "stats": {
             "Global MATK%": 1,
-            "Fire Pen%": 12,
-            "Water Pen%": 12,
-            "Lightning Pen%": 12,
-            "Wind Pen%": 12,
-            "Earth Pen%": 12,
-            "Toxic Pen%": 12
+            "Elemental Pen%": 12
         },
         "conversions": []
     },
@@ -16014,8 +15991,7 @@ const talent_data: Record<string, Talent> = {
         "stats": {
             "Crit Chance%": 2,
             "Global MATK%": 1,
-            "Neg%": 12,
-            "Holy%": 12
+            "Divine%": 12
         },
         "conversions": []
     },
@@ -16041,8 +16017,7 @@ const talent_data: Record<string, Talent> = {
         "stats": {
             "Crit Chance%": 3,
             "Global MATK%": 1,
-            "Neg%": 18,
-            "Holy%": 18
+            "Divine%": 18
         },
         "conversions": []
     },
@@ -16068,8 +16043,7 @@ const talent_data: Record<string, Talent> = {
         "stats": {
             "Dmg%": 1,
             "Global MATK%": 1,
-            "Neg Pen%": 12,
-            "Holy Pen%": 12
+            "Divine Pen%": 12
         },
         "conversions": []
     },
@@ -20413,8 +20387,7 @@ const talent_data: Record<string, Talent> = {
         "stats": {
             "Global HEAL%": 1,
             "Toxic%": 15,
-            "Neg%": 10,
-            "Holy%": 10
+            "Divine%": 10
         },
         "conversions": []
     },
@@ -20439,8 +20412,7 @@ const talent_data: Record<string, Talent> = {
         "stats": {
             "Toxic%": 15,
             "Global HEAL%": 1,
-            "Neg%": 10,
-            "Holy%": 10
+            "Divine%": 10
         },
         "conversions": []
     },
@@ -20465,8 +20437,7 @@ const talent_data: Record<string, Talent> = {
         "stats": {
             "Toxic Pen%": 15,
             "Global HEAL%": 1,
-            "Neg Pen%": 10,
-            "Holy Pen%": 10
+            "Divine Pen%": 10
         },
         "conversions": []
     },
@@ -26465,9 +26436,7 @@ const talent_data: Record<string, Talent> = {
         "description": "+40% ATK, +10% Physical Pen, Conversion 25% Elewater to Crit Chance, -100% Reudction to Elewater",
         "stats": {
             "ATK%": 40,
-            "Slash Pen%": 10,
-            "Pierce Pen%": 10,
-            "Blunt Pen%": 10
+            "Phys Pen%": 10
         },
         "conversions": [
             {
@@ -27791,12 +27760,7 @@ const talent_data: Record<string, Talent> = {
         "description": "+25% MATK, +5% Elemental and Void Penetration, +10% Global Elevoid, Conversion 100% Elevoid to Elemental Damage",
         "stats": {
             "MATK%": 25,
-            "Fire Pen%": 5,
-            "Water Pen%": 5,
-            "Lightning Pen%": 5,
-            "Wind Pen%": 5,
-            "Earth Pen%": 5,
-            "Toxic Pen%": 5,
+            "Elemental Pen%": 5,
             "Void Pen%": 5
         },
         "conversions": [
@@ -27924,9 +27888,7 @@ const talent_data: Record<string, Talent> = {
         "description": "+25% ATK, +5% Physical and Void Penetration, Conversion 20% Elevoid to Physical Damage",
         "stats": {
             "ATK%": 25,
-            "Slash Pen%": 5,
-            "Pierce Pen%": 5,
-            "Blunt Pen%": 5,
+            "Phys Pen%": 5,
             "Void Pen%": 5
         },
         "conversions": [
@@ -27967,9 +27929,7 @@ const talent_data: Record<string, Talent> = {
         "description": "+30% ATK, +15% Physical Damage, Conversion 120% Pennegative to Penphysical, 100% Elenegative to Crit Damage",
         "stats": {
             "ATK%": 30,
-            "Slash%": 15,
-            "Pierce%": 15,
-            "Blunt%": 15
+            "Phys%": 15
         },
         "conversions": [
             {
@@ -28014,9 +27974,7 @@ const talent_data: Record<string, Talent> = {
         "description": "+40% ATK, +15% Physical Damage, Conversion 140% Penholy to Penphysical, 15% Eleholy to MP, 4500% Eleholy to ATK",
         "stats": {
             "ATK%": 40,
-            "Slash%": 15,
-            "Pierce%": 15,
-            "Blunt%": 15
+            "Phys%": 15
         },
         "conversions": [
             {
