@@ -1,6 +1,5 @@
 import { skill_data } from "@/app/data/skill_data"
 import { talent_data } from "@/app/data/talent_data"
-import { resolveSkillName, resolveTalentName, splitPrereqTokens } from "@/app/lib/prereqTokens"
 
 export const TALENT_SELECTION_STORAGE_KEY = "selectedTalents"
 export const BUFF_SELECTION_STORAGE_KEY = "selectedBuffs"
@@ -18,7 +17,6 @@ export type LearnCommandBatch = {
 const talentNames = Object.keys(talent_data)
 const skillNames = Object.keys(skill_data)
 const talentOrderIndex = new Map(talentNames.map((name, index) => [name, index]))
-const skillOrderIndex = new Map(skillNames.map((name, index) => [name, index]))
 const validTalentNames = new Set(talentNames)
 const validSkillNames = new Set(skillNames)
 
@@ -88,66 +86,44 @@ export function readSelectedSkills(storage: Storage): string[] {
 
 function orderSelectedNames(
   selectedNames: Iterable<string>,
-  getOrderIndex: (name: string) => number,
-  getPrereqs: (name: string) => string[],
+  orderedNames: readonly string[],
 ): string[] {
   const uniqueSelected = Array.from(new Set(selectedNames))
   const selectedSet = new Set(uniqueSelected)
-  const orderedSelected = [...uniqueSelected].sort((left, right) => {
-    const difference = getOrderIndex(left) - getOrderIndex(right)
-    return difference !== 0 ? difference : left.localeCompare(right)
-  })
+  const orderedSelected = orderedNames.filter((name) => selectedSet.has(name))
 
-  const visited = new Set<string>()
-  const active = new Set<string>()
-  const result: string[] = []
-
-  const visit = (name: string) => {
-    if (visited.has(name) || active.has(name)) {
-      return
-    }
-
-    active.add(name)
-
-    const prereqs = getPrereqs(name)
-      .filter((token) => selectedSet.has(token))
-      .sort((left, right) => {
-        const difference = getOrderIndex(left) - getOrderIndex(right)
-        return difference !== 0 ? difference : left.localeCompare(right)
-      })
-
-    for (const prereq of prereqs) {
-      visit(prereq)
-    }
-
-    active.delete(name)
-    visited.add(name)
-    result.push(name)
+  if (orderedSelected.length === uniqueSelected.length) {
+    return orderedSelected
   }
 
-  for (const name of orderedSelected) {
-    visit(name)
+  const orderedSelectedSet = new Set(orderedSelected)
+  for (const name of uniqueSelected) {
+    if (!orderedSelectedSet.has(name)) {
+      orderedSelected.push(name)
+    }
   }
 
-  return result
+  return orderedSelected
 }
 
 export function getOrderedTalentNames(selectedNames: Iterable<string>): string[] {
-  return orderSelectedNames(
-    selectedNames,
-    (name) => talentOrderIndex.get(name) ?? Number.MAX_SAFE_INTEGER,
-    (name) => splitPrereqTokens(talent_data[name]?.PreReq)
-      .map((token) => resolveTalentName(token) ?? token),
-  )
+  const orderedTalentNames = orderSelectedNames(selectedNames, talentNames)
+
+  return [...orderedTalentNames].sort((left, right) => {
+    const requirementDifference = (talent_data[left]?.tp_spent ?? Number.MAX_SAFE_INTEGER)
+      - (talent_data[right]?.tp_spent ?? Number.MAX_SAFE_INTEGER)
+
+    if (requirementDifference !== 0) {
+      return requirementDifference
+    }
+
+    return (talentOrderIndex.get(left) ?? Number.MAX_SAFE_INTEGER)
+      - (talentOrderIndex.get(right) ?? Number.MAX_SAFE_INTEGER)
+  })
 }
 
 export function getOrderedSkillNames(selectedNames: Iterable<string>): string[] {
-  return orderSelectedNames(
-    selectedNames,
-    (name) => skillOrderIndex.get(name) ?? Number.MAX_SAFE_INTEGER,
-    (name) => splitPrereqTokens(skill_data[name]?.PreReq)
-      .map((token) => resolveSkillName(token) ?? token),
-  )
+  return orderSelectedNames(selectedNames, skillNames)
 }
 
 export function buildLearnCommandBatches(
