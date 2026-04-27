@@ -295,10 +295,22 @@ function formatCanonicalConversionNumber(value: number): string {
 }
 
 function normalizeConversionDestinationKey(value: string): string {
-  return value
+  const normalized = value
     .toLowerCase()
     .replace(/[^\p{L}\p{N}]+/gu, "")
     .trim()
+
+  switch (normalized) {
+    case "maxhp":
+    case "maxhealth":
+      return "hp"
+    default:
+      return normalized
+  }
+}
+
+function getConversionComparisonRowKey(label: string): string {
+  return normalizeConversionDestinationKey(label)
 }
 
 function getConversionDestinationKeys(value: string): string[] {
@@ -415,16 +427,28 @@ function buildConversionComparisonRows(
   inGameRows: readonly ParsedLabelValueRow[],
 ): ComparableRow[] {
   const calcMap = new Map(
-    calcRows.map((row) => [row.label, normalizeConversionComparableValue(createComparableValue(row.value))]),
+    calcRows.map((row) => [getConversionComparisonRowKey(row.label), normalizeConversionComparableValue(createComparableValue(row.value))]),
   )
   const inGameMap = new Map(
-    inGameRows.map((row) => [row.label, normalizeConversionComparableValue(row.value)]),
+    inGameRows.map((row) => [getConversionComparisonRowKey(row.label), normalizeConversionComparableValue(row.value)]),
   )
+  const labelsByKey = new Map<string, string>()
+  const orderedKeys: string[] = []
 
-  return getOrderedUnionLabels(calcRows, inGameRows).map((label) => ({
-    label,
-    calc: calcMap.get(label),
-    inGame: inGameMap.get(label),
+  for (const row of [...calcRows, ...inGameRows]) {
+    const key = getConversionComparisonRowKey(row.label)
+    if (labelsByKey.has(key)) {
+      continue
+    }
+
+    labelsByKey.set(key, row.label)
+    orderedKeys.push(key)
+  }
+
+  return orderedKeys.map((key) => ({
+    label: labelsByKey.get(key) ?? key,
+    calc: calcMap.get(key),
+    inGame: inGameMap.get(key),
   }))
 }
 
