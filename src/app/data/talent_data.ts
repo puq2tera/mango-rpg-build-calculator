@@ -10575,9 +10575,14 @@ const talent_data: Record<string, Talent> = {
         "stats": {
             "Crit Chance%": 5,
             "Slash%": 10,
-            "Crit DMG%": 5
         },
-        "conversions": []
+        "conversions": [
+            {
+                "source": "Crit DMG%",
+                "ratio": 0.05,
+                "resulting_stat": "Crit DMG%"
+            }
+        ]
     },
     "Legend of Nuada 1": {
         "category": "warrior",
@@ -10674,7 +10679,9 @@ const talent_data: Record<string, Talent> = {
         "description": "+1% Global ATK, +12% Physical Damage",
         "stats": {
             "Global ATK%": 1,
-            "Phys%": 12
+            "Slash%": 12,
+            "Pierce%": 12,
+            "Blunt%": 12
         },
         "conversions": []
     },
@@ -10699,7 +10706,9 @@ const talent_data: Record<string, Talent> = {
         "description": "+1% Global ATK, +12% Physical Damage",
         "stats": {
             "Global ATK%": 1,
-            "Phys%": 12
+            "Slash%": 12,
+            "Pierce%": 12,
+            "Blunt%": 12
         },
         "conversions": []
     },
@@ -10723,7 +10732,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+1% Global ATK, +10% Physical Penetration",
         "stats": {
-            "Phys Pen%": 10,
+            "Slash Pen%": 10,
+            "Pierce Pen%": 10,
+            "Blunt Pen%": 10,
             "Global ATK%": 1
         },
         "conversions": []
@@ -10822,11 +10833,23 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+20% Physical Damage, 33% of Physical Pen converted into Void Pen",
         "stats": {
-            "Phys%": 20
+            "Slash%": 20,
+            "Pierce%": 20,
+            "Blunt%": 10
         },
         "conversions": [
             {
-                "source": "Phys Pen%",
+                "source": "Slash Pen%",
+                "ratio": 0.33,
+                "resulting_stat": "Void Pen%"
+            },
+            {
+                "source": "Pierce Pen%",
+                "ratio": 0.33,
+                "resulting_stat": "Void Pen%"
+            },
+            {
+                "source": "Blunt Pen%",
                 "ratio": 0.33,
                 "resulting_stat": "Void Pen%"
             }
@@ -27927,7 +27950,9 @@ const talent_data: Record<string, Talent> = {
         "description": "+30% ATK, +15% Physical Damage, Conversion 120% Pennegative to Penphysical, 100% Elenegative to Crit Damage",
         "stats": {
             "ATK%": 30,
-            "Phys%": 15
+            "Slash%": 15,
+            "Pierce%": 15,
+            "Blunt%": 15
         },
         "conversions": [
             {
@@ -27972,7 +27997,9 @@ const talent_data: Record<string, Talent> = {
         "description": "+40% ATK, +15% Physical Damage, Conversion 140% Penholy to Penphysical, 15% Eleholy to MP, 4500% Eleholy to ATK",
         "stats": {
             "ATK%": 40,
-            "Phys%": 15
+            "Slash%": 15,
+            "Pierce%": 15,
+            "Blunt%": 15
         },
         "conversions": [
             {
