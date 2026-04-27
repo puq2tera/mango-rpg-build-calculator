@@ -60,6 +60,69 @@ export const inGameTalentInaccuracies = [
       },
     },
   },
+  {
+    name: "Mark of Golem Ninja 1",
+    description: "+1% Global ATK, +50% ATK, +30% DEF",
+    corrections: [
+      {
+        from: "50% ATK",
+        to: "50 ATK",
+      },
+      {
+        from: "30% DEF",
+        to: "30 DEF",
+      },
+    ],
+    statOverride: {
+      remove: ["ATK%", "DEF%"],
+      set: {
+        "ATK": 50,
+        "DEF": 30,
+      },
+    },
+  },
+  {
+    name: "Mark of Golem Ninja 2",
+    description: "+1% Global ATK, +50% ATK, +30% DEF",
+    corrections: [
+      {
+        from: "50% ATK",
+        to: "50 ATK",
+      },
+      {
+        from: "30% DEF",
+        to: "30 DEF",
+      },
+    ],
+    statOverride: {
+      remove: ["ATK%", "DEF%"],
+      set: {
+        "ATK": 50,
+        "DEF": 30,
+      },
+    },
+  },
+  {
+    name: "Mark of Golem Ninja 3",
+    description: "+3% Global ATK, +50% ATK, +30% DEF",
+    corrections: [
+      {
+        from: "50% ATK",
+        to: "50 ATK",
+      },
+      {
+        from: "30% DEF",
+        to: "30 DEF",
+      },
+    ],
+    statOverride: {
+      remove: ["ATK%", "DEF%"],
+      set: {
+        "ATK": 50,
+        "DEF": 30,
+      },
+    },
+  },
 ] as const satisfies readonly InGameInaccuracyEntry[]
 
 export const inGameSkillInaccuracies = [] as const satisfies readonly InGameInaccuracyEntry[]
