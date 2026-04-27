@@ -27331,8 +27331,7 @@ const talent_data: Record<string, Talent> = {
             "ATK%": 25,
             "Void Pen%": 5,
             "Shadow Break DMG%": 20,
-            "Shadow Break Crit Chance%": 50,
-            "Crit Chance%": 50
+            "Shadow Break Crit Chance%": 50
         },
         "conversions": [
             {
@@ -27463,8 +27462,7 @@ const talent_data: Record<string, Talent> = {
             "DEF%": 20,
             "Void Pen%": 5,
             "Shadow Break DMG%": 20,
-            "Shadow Break Crit Chance%": 50,
-            "Crit Chance%": 50
+            "Shadow Break Crit Chance%": 50
         },
         "conversions": [
             {
