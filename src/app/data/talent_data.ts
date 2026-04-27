@@ -7594,7 +7594,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+5% Physical Penetration",
         "stats": {
-            "Phys Pen%": 5
+            "Slash Pen%": 5,
+            "Pierce Pen%": 5,
+            "Blunt Pen%": 5,
         },
         "conversions": []
     },
@@ -7617,7 +7619,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+5% Physical Penetration",
         "stats": {
-            "Phys Pen%": 5
+            "Slash Pen%": 5,
+            "Pierce Pen%": 5,
+            "Blunt Pen%": 5,
         },
         "conversions": []
     },
@@ -7640,7 +7644,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10% Physical Penetration",
         "stats": {
-            "Phys Pen%": 10
+            "Slash Pen%": 10,
+            "Pierce Pen%": 10,
+            "Blunt Pen%": 10,
         },
         "conversions": []
     },
@@ -8447,7 +8453,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10% Physical Penetration",
         "stats": {
-            "Phys Pen%": 10
+            "Slash Pen%": 10,
+            "Pierce Pen%": 10,
+            "Blunt Pen%": 10,
         },
         "conversions": []
     },
@@ -9254,7 +9262,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10% Physical Penetration",
         "stats": {
-            "Phys Pen%": 10
+            "Slash Pen%": 10,
+            "Pierce Pen%": 10,
+            "Blunt Pen%": 10,
         },
         "conversions": []
     },
@@ -10943,9 +10953,7 @@ const talent_data: Record<string, Talent> = {
         "description": "+1% Global ATK, +10% Physical DMG, Conversion 5% ATK to DEF",
         "stats": {
             "Global ATK%": 1,
-            "Slash%": 10,
-            "Pierce%": 10,
-            "Blunt%": 10
+            "Phys%": 10
         },
         "conversions": [
             {
@@ -25363,7 +25371,9 @@ const talent_data: Record<string, Talent> = {
         "stats": {
             "ATK%": 55,
             "Void%": -60,
-            "Phys Pen%": 20
+            "Slash Pen%": 20,
+            "Pierce Pen%": 20,
+            "Blunt Pen%": 20,
         },
         "conversions": []
     },
