@@ -15957,7 +15957,12 @@ const talent_data: Record<string, Talent> = {
         "description": "+1% Global MATK, +12% Elemental Damage",
         "stats": {
             "Global MATK%": 1,
-            "Elemental%": 12
+            "Fire%": 12,
+            "Water%": 12,
+            "Lightning%": 12,
+            "Wind%": 12,
+            "Earth%": 12,
+            "Toxic%": 12
         },
         "conversions": []
     },
@@ -15982,7 +15987,12 @@ const talent_data: Record<string, Talent> = {
         "description": "+1% Global MATK, +18% Elemental Damage",
         "stats": {
             "Global MATK%": 1,
-            "Elemental%": 18
+            "Fire%": 18,
+            "Water%": 18,
+            "Lightning%": 18,
+            "Wind%": 18,
+            "Earth%": 18,
+            "Toxic%": 18
         },
         "conversions": []
     },
@@ -16007,7 +16017,12 @@ const talent_data: Record<string, Talent> = {
         "description": "+1% Global MATK, +12% Elemental Penetration",
         "stats": {
             "Global MATK%": 1,
-            "Elemental Pen%": 12
+            "Fire Pen%": 12,
+            "Water Pen%": 12,
+            "Lightning Pen%": 12,
+            "Wind Pen%": 12,
+            "Earth Pen%": 12,
+            "Toxic Pen%": 12
         },
         "conversions": []
     },
@@ -27801,7 +27816,12 @@ const talent_data: Record<string, Talent> = {
         "description": "+25% MATK, +5% Elemental and Void Penetration, +10% Global Elevoid, Conversion 100% Elevoid to Elemental Damage",
         "stats": {
             "MATK%": 25,
-            "Elemental Pen%": 5,
+            "Fire Pen%": 5,
+            "Water Pen%": 5,
+            "Lightning Pen%": 5,
+            "Wind Pen%": 5,
+            "Earth Pen%": 5,
+            "Toxic Pen%": 5,
             "Void Pen%": 5
         },
         "conversions": [
