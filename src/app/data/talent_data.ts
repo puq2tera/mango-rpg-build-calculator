@@ -8407,7 +8407,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10% Physical Damage",
         "stats": {
-            "Phys%": 10
+            "Slash%": 10,
+            "Pierce%": 10,
+            "Blunt%": 10
         },
         "conversions": []
     },
@@ -8430,7 +8432,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10% Physical Damage",
         "stats": {
-            "Phys%": 10
+            "Slash%": 10,
+            "Pierce%": 10,
+            "Blunt%": 10
         },
         "conversions": []
     },
@@ -9216,7 +9220,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15% Physical Damage",
         "stats": {
-            "Phys%": 15
+            "Slash%": 15,
+            "Pierce%": 15,
+            "Blunt%": 15
         },
         "conversions": []
     },
@@ -9239,7 +9245,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15% Physical Damage",
         "stats": {
-            "Phys%": 15
+            "Slash%": 15,
+            "Pierce%": 15,
+            "Blunt%": 15
         },
         "conversions": []
     },
@@ -10953,7 +10961,9 @@ const talent_data: Record<string, Talent> = {
         "description": "+1% Global ATK, +10% Physical DMG, Conversion 5% ATK to DEF",
         "stats": {
             "Global ATK%": 1,
-            "Phys%": 10
+            "Slash%": 10,
+            "Pierce%": 10,
+            "Blunt%": 10
         },
         "conversions": [
             {
