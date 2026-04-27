@@ -1409,7 +1409,7 @@ const tarot_data: Record<string, Tarot> = {
         stat_base: 8,
         stat_scale: 1,
         conversions: [
-            { source: "MATK", ratio: 0.08, resulting_stat: "HP"}
+            { source: "MATK", ratio: 0.08, resulting_stat: "Temp HP"}
         ]
     },
     "Doppelganger of Justice": {
