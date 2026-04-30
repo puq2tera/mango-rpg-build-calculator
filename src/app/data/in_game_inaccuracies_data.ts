@@ -139,6 +139,19 @@ export const inGameTalentInaccuracies = [
       },
     },
   },
+  {
+    name: "Dagger Path 3",
+    description: "+2% Slash Damage, +2% Pierce Damage, +2% Crit Chance",
+    corrections: [
+      {
+        from: "2% Pierce Damage",
+        to: "",
+      }
+    ],
+    statOverride: {
+      remove: ["Pierce%"]
+    },
+  },
 ] as const satisfies readonly InGameInaccuracyEntry[]
 
 export const inGameSkillInaccuracies = [] as const satisfies readonly InGameInaccuracyEntry[]
