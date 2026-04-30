@@ -123,6 +123,22 @@ export const inGameTalentInaccuracies = [
       },
     },
   },
+  {
+    name: "Emissary of Fortune",
+    description: "+12% Heal, +5% Crit Chance, +25% Crit Damage",
+    corrections: [
+      {
+        from: "12% HEAL",
+        to: "10% HEAL",
+      }
+    ],
+    statOverride: {
+      remove: ["HEAL%"],
+      set: {
+        "HEAL%": 10
+      },
+    },
+  },
 ] as const satisfies readonly InGameInaccuracyEntry[]
 
 export const inGameSkillInaccuracies = [] as const satisfies readonly InGameInaccuracyEntry[]

@@ -13196,7 +13196,7 @@ const skill_data: Record<string, Skill> = {
         description: "[ 1 Charge ] Give self Crit Damage equal to 4x current MP and current Focus. Lasts entire battle.",
         conversions: [
     { source: "MP", ratio: 4, resulting_stat: "Crit DMG%" },
-    { source: "Focus", ratio: 1, resulting_stat: "Crit DMG%" },
+    { source: "Focus", ratio: 4, resulting_stat: "Crit DMG%" },
     ],
         
 },

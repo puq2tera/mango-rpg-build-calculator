@@ -807,7 +807,9 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10% Resist to Lightning/Wind, +6% DEF",
         "stats": {
-            "DEF%": 6
+            "DEF%": 6,
+            "Lightning Res%": 10,
+            "Wind Res%": 10
         },
         "conversions": []
     },
