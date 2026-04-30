@@ -293,8 +293,6 @@ const finalStatsMagicFamilyColumns = [
 
 const finalStatsSpecialFamilyColumns = [
   { label: "Magic%", key: "Magic%", format: "percent" },
-  { label: "Magic xDmg%", key: "Magic xDmg%", format: "percent" },
-  { label: "Magic xPen%", key: "Magic xPen%", format: "percent" },
   { label: "Bow%", key: "Bow%", format: "percent" },
   { label: "NonVoid Pen%", key: "NonVoid Pen%", format: "percent" },
   { label: "Ele !Water Res%", key: "Elemental_Except_Water Res%", format: "percent" },

@@ -217,8 +217,6 @@ export const StatsInfo: Record<string, StatInfoData> = {
   "NonVoid Pen%":                { multi: 0.01, sub_stats: ["Fire Pen%", "Water Pen%", "Lightning Pen%", "Wind Pen%", "Earth Pen%", "Toxic Pen%", "Slash Pen%", "Pierce Pen%", "Blunt Pen%", "Neg Pen%", "Holy Pen%"] },
   "Elemental_Except_Water Res%": { multi: 0.01, sub_stats: ["Fire Res%", "Lightning Res%", "Wind Res%", "Earth Res%", "Toxic Res%"] },
   "Magic%":                      { multi: 0.01, sub_stats: ["Fire%", "Water%", "Lightning%", "Wind%", "Earth%", "Toxic%", "Neg%", "Holy%", "Void%"] },
-  "Magic xDmg%":                 { multi: 0.01, sub_stats: ["Fire xDmg%", "Water xDmg%", "Lightning xDmg%", "Wind xDmg%", "Earth xDmg%", "Toxic xDmg%", "Neg xDmg%", "Holy xDmg%", "Void xDmg%"] },
-  "Magic xPen%":                 { multi: 0.01, sub_stats: ["Fire xPen%", "Water xPen%", "Lightning xPen%", "Wind xPen%", "Earth xPen%", "Toxic xPen%", "Neg xPen%", "Holy xPen%", "Void xPen%"] },
 
   // All
   "All%":     { multi: 0.01, sub_stats: ["Fire%", "Water%", "Lightning%", "Wind%", "Earth%", "Toxic%", "Slash%", "Pierce%", "Blunt%", "Neg%", "Holy%", "Void%"] },
@@ -308,8 +306,7 @@ const xPenMapping: Record<string, string[]> = {
     "Phys xPen%": ["Blunt Pen%", "Pierce Pen%", "Slash Pen%"],
     "Divine xPen%": ["Neg Pen%", "Holy Pen%"],
     "Void xPen%": ["Void Pen%"],
-    "Elemental xPen%": ["Fire Pen%", "Water Pen%", "Lightning Pen%", "Wind Pen%", "Earth Pen%", "Toxic Pen%"],
-    "Magic xPen%": ["Fire Pen%", "Water Pen%", "Lightning Pen%", "Wind Pen%", "Earth Pen%", "Toxic Pen%", "Neg Pen%", "Holy Pen%", "Void Pen%"]
+    "Elemental xPen%": ["Fire Pen%", "Water Pen%", "Lightning Pen%", "Wind Pen%", "Earth Pen%", "Toxic Pen%"]
 }
 
 const heroStats: [string, number][] = [

@@ -13789,7 +13789,9 @@ const skill_data: Record<string, Skill> = {
         description: "Increase self DEF by 25% of your AVG MATK+ATK and increase all self xPen by 20% for rest of battle.",
         stats: {
     "Phys xPen%": 0.2,
-    "Magic xPen%": 0.2,
+    "Elemental xPen%": 0.2,
+    "Divine xPen%": 0.2,
+    "Void xPen%": 0.2,
     },
         conversions: [
     { source: "ATK", ratio: 0.125, resulting_stat: "DEF" },
