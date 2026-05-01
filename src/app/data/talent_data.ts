@@ -10107,10 +10107,14 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+10% Void Penetration, +15% Global MP, -50% Penalty to Void Damage",
         "stats": {
-            "Void Pen%": 10,
-            "MP%": 15
+            "Void Pen%": 10
         },
         "conversions": [
+            {
+                "source": "MP",
+                "ratio": 0.15,
+                "resulting_stat": "MP"
+            },
             {
                 "source": "Void%",
                 "ratio": -0.5,
@@ -16656,12 +16660,17 @@ const talent_data: Record<string, Talent> = {
         "description": "+1% Global MATK, -8% Global MP, +12% xMagic DMG",
         "stats": {
             "Global MATK%": 1,
-            "MP%": -8,
             "Elemental xDmg%": 12,
             "Divine xDmg%": 12,
             "Void xDmg%": 12
         },
-        "conversions": []
+        "conversions": [
+            {
+                "source": "MP",
+                "ratio": -0.08,
+                "resulting_stat": "MP"
+            }
+        ]
     },
     "Time Core of Mephis'ronan": {
         "category": "caster",
@@ -16682,10 +16691,14 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+15 MP Regen, -85% Global MP, Temp HP Start of 20% Max HP",
         "stats": {
-            "MP Regen": 15,
-            "MP%": -85
+            "MP Regen": 15
         },
         "conversions": [
+            {
+                "source": "MP",
+                "ratio": -0.85,
+                "resulting_stat": "MP"
+            },
             {
                 "source": "HP",
                 "ratio": 0.2,
@@ -17088,11 +17101,16 @@ const talent_data: Record<string, Talent> = {
         "description": "+25% Global DMG, -40% Max Mana, -80% Focus, +100% MATK",
         "stats": {
             "Dmg%": 25,
-            "MP%": -40,
             "Focus%": -80,
             "MATK%": 100
         },
-        "conversions": []
+        "conversions": [
+            {
+                "source": "MP",
+                "ratio": -0.4,
+                "resulting_stat": "MP"
+            }
+        ]
     },
     "Cursed Alchemist Blessing": {
         "category": "caster",
@@ -17138,11 +17156,16 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+100% Max MP, +10% Global MATK, +100% MATK",
         "stats": {
-            "MP%": 100,
             "Global MATK%": 10,
             "MATK%": 100
         },
-        "conversions": []
+        "conversions": [
+            {
+                "source": "MP",
+                "ratio": 1,
+                "resulting_stat": "MP"
+            }
+        ]
     },
     "Healing Study 1": {
         "category": "healer",
@@ -21651,12 +21674,17 @@ const talent_data: Record<string, Talent> = {
         },
         "description": "+25% MP, +50 Focus, +5% Global Power, +100% Healpower",
         "stats": {
-            "MP%": 25,
             "Focus": 50,
             "MAIN%": 5,
             "HEAL%": 100
         },
-        "conversions": []
+        "conversions": [
+            {
+                "source": "MP",
+                "ratio": 0.25,
+                "resulting_stat": "MP"
+            }
+        ]
     },
     "Warrior's Path": {
         "category": "hybrid",

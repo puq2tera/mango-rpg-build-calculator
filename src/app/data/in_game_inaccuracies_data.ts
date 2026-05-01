@@ -152,6 +152,22 @@ export const inGameTalentInaccuracies = [
       remove: ["Pierce%"]
     },
   },
+  {
+    name: "Magic Conduit",
+    description: "+6% MATK, +6 MP, +3% Crit Chance",
+    corrections: [
+      {
+        from: "+6 MP",
+        to: "+2 MP",
+      }
+    ],
+    statOverride: {
+      remove: ["MP"],
+      set: {
+        "MP": 2
+      },
+    },
+  },
 ] as const satisfies readonly InGameInaccuracyEntry[]
 
 export const inGameSkillInaccuracies = [] as const satisfies readonly InGameInaccuracyEntry[]
